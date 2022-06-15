@@ -1374,6 +1374,14 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         item
           Visible = True
           ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertEnter'
         end>
     end
     object BarSubItemColor: TdxBarSubItem
@@ -1480,6 +1488,15 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Action = actGridCh1ToExcel
       Category = 0
     end
+    object bbInsertEnter: TdxBarButton
+      Action = actInsertEnter
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+      ShowCaption = False
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1504,6 +1521,27 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actInsertEnter: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = '***'#1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ImageIndex = 0
+      FormName = 'TReceiptGoodsEditEnterForm'
+      FormNameParam.Value = 'TReceiptGoodsEditEnterForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2287,6 +2325,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1074' Excel'
       ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object spSelect: TdsdStoredProc

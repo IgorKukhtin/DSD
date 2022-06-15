@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , CarInfoId Integer, CarInfoName TVarChar, CarInfo_Date
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceWithVAT Boolean, isPrinted Boolean, isPrintComment Boolean
              , VATPercent TFloat, ChangePercent TFloat
@@ -130,6 +131,9 @@ BEGIN
            , Object_PriceList.ValueData                     AS PriceListName
            , Object_Partner.id                              AS PartnerId
            , Object_Partner.ValueData                       AS PartnerName
+           , Object_CarInfo.Id                              AS CarInfoId
+           , Object_CarInfo.ValueData                       AS CarInfoName
+           , MovementDate_CarInfo.ValueData     ::TDateTime AS CarInfo_Date
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
@@ -213,6 +217,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_EndBegin
                                    ON MovementDate_EndBegin.MovementId = Movement.Id
                                   AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
+
+            LEFT JOIN MovementDate AS MovementDate_CarInfo
+                                   ON MovementDate_CarInfo.MovementId = Movement.Id
+                                  AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -325,6 +333,11 @@ BEGIN
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CarInfo
+                                         ON MovementLinkObject_CarInfo.MovementId = Movement.Id
+                                        AND MovementLinkObject_CarInfo.DescId = zc_MovementLinkObject_CarInfo()
+            LEFT JOIN Object AS Object_CarInfo ON Object_CarInfo.Id = MovementLinkObject_CarInfo.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                          ON MovementLinkObject_Insert.MovementId = Movement.Id

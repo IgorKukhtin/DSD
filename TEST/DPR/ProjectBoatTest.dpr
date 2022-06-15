@@ -324,7 +324,8 @@ uses
   PriceListItemEdit_limit in '..\..\FormsBoat\Document\PriceListItemEdit_limit.pas' {PriceListItemEdit_limitForm: TParentForm},
   Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm},
   IncomeItemEdit_limit in '..\..\FormsBoat\Document\IncomeItemEdit_limit.pas' {IncomeItemEdit_limitForm: TParentForm},
-  PLZ_City in '..\..\FormsBoat\Guides\PLZ_City.pas' {PLZ_CityForm: TParentForm};
+  PLZ_City in '..\..\FormsBoat\Guides\PLZ_City.pas' {PLZ_CityForm: TParentForm},
+  ReceiptGoodsEditEnter in '..\..\FormsBoat\Guides\ReceiptGoodsEditEnter.pas' {ReceiptGoodsEditEnterForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

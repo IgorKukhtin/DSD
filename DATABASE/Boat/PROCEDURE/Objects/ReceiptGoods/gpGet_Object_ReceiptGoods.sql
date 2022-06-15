@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserCode TVarChar, Comment TVarChar
              , isMain Boolean
              , GoodsId Integer, GoodsName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
 ) AS
 $BODY$
@@ -31,9 +32,12 @@ BEGIN
            , '' :: TVarChar           AS Comment
            , FALSE :: Boolean         AS isMain
            , 0  :: Integer            AS GoodsId
-           , '' :: TVarChar           AS GoodsName
+           , '' :: TVarChar           AS GoodsName 
+           , 0  :: Integer            AS GoodsGroupId
+           , '' :: TVarChar           AS GoodsGroupName
            , 0  :: Integer            AS ColorPatternId
            , '' :: TVarChar           AS ColorPatternName
+
        ;
    ELSE
      RETURN QUERY
@@ -49,9 +53,12 @@ BEGIN
 
          , Object_Goods.Id                    ::Integer  AS GoodsId
          , Object_Goods.ValueData             ::TVarChar AS GoodsName
+         , Object_GoodsGroup.Id               AS GoodsGroupId
+         , Object_GoodsGroup.ValueData        AS GoodsGroupName
 
          , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
          , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
+
      FROM Object AS Object_ReceiptGoods
           LEFT JOIN ObjectString AS ObjectString_Code
                                  ON ObjectString_Code.ObjectId = Object_ReceiptGoods.Id
@@ -74,6 +81,11 @@ BEGIN
                               AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ReceiptGoods_ColorPattern()
           LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
      WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
       AND Object_ReceiptGoods.Id = inId
      ;
@@ -92,4 +104,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptGoods (false,false, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Object_ReceiptGoods (1, zfCalc_UserAdmin())

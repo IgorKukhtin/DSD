@@ -1,25 +1,25 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 460
-  ClientWidth = 1364
-  ExplicitWidth = 1380
+  ClientWidth = 1434
+  ExplicitWidth = 1450
   ExplicitHeight = 499
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1364
+    Width = 1434
     Height = 294
     ExplicitTop = 166
     ExplicitWidth = 1364
     ExplicitHeight = 294
     ClientRectBottom = 294
-    ClientRectRight = 1364
+    ClientRectRight = 1434
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1364
       ExplicitHeight = 270
       inherited cxGrid: TcxGrid
-        Width = 1364
+        Width = 1434
         Height = 270
         ExplicitWidth = 1364
         ExplicitHeight = 270
@@ -368,7 +368,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1364
+    Width = 1434
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1364
@@ -717,9 +717,25 @@ inherited OrderExternalForm: TOrderExternalForm
     object cbPrintComment: TcxCheckBox
       Left = 894
       Top = 108
-      Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1055#1088#1080#1084'. '#1074' '#1056#1072#1089#1093'. '#1085#1072#1082#1083'. ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1055#1088#1080#1084'. '#1074' '#1056#1072#1089#1093'. '#1085#1072#1082#1083'.'
       TabOrder = 43
       Width = 227
+    end
+    object cxLabel22: TcxLabel
+      Left = 1083
+      Top = 85
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
+    end
+    object edCarInfo_Date: TcxDateEdit
+      Left = 1083
+      Top = 103
+      EditValue = 0d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 45
+      Width = 130
     end
   end
   object cxLabel21: TcxLabel [2]
@@ -748,6 +764,23 @@ inherited OrderExternalForm: TOrderExternalForm
     State = cbsChecked
     TabOrder = 8
     Width = 207
+  end
+  object cxLabel23: TcxLabel [5]
+    Left = 1223
+    Top = 85
+    Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
+  end
+  object edCarInfo: TcxButtonEdit [6]
+    Left = 1223
+    Top = 103
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 168
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 1123
@@ -1885,6 +1918,28 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = cbPrintComment
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarInfoId'
+        Value = Null
+        Component = GuidesCarInfo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarInfoName'
+        Value = Null
+        Component = GuidesCarInfo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarInfo_Date'
+        Value = Null
+        Component = edCarInfo_Date
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2692,8 +2747,8 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 1138
-    Top = 155
+    Left = 1122
+    Top = 139
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -2994,8 +3049,8 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 816
-    Top = 72
+    Left = 784
+    Top = 64
   end
   object spGetReporNameBill: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderExternal_ReportNameBill'
@@ -3045,5 +3100,40 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 679
     Top = 352
+  end
+  object GuidesCarInfo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCarInfo
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TCarInfoForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCarInfoForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCarInfo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCarInfo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 81178
+        MultiSelectSeparator = ','
+      end>
+    Left = 1282
+    Top = 107
   end
 end

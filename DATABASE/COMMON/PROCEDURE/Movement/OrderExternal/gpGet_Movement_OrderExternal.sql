@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceListId Integer, PriceListName TVarChar
              , RetailId Integer, RetailName TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , CarInfoId Integer, CarInfoName TVarChar, CarInfo_Date
              , StatusId_wms Integer, StatusCode_wms Integer, StatusName_wms TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , DayCount TFloat
@@ -107,6 +108,9 @@ BEGIN
              , CAST ('' AS TVarChar)                            AS RetailName
              , CAST (0  AS Integer)                             AS PartnerId
              , CAST ('' AS TVarChar)                            AS PartnerName
+             , CAST (0  AS Integer)                             AS CarInfoId
+             , CAST ('' AS TVarChar)                            AS CarInfoName
+             , NULL ::TDateTime                                 AS CarInfo_Date
              , CAST (0  AS Integer)                             AS StatusId_wms
              , CAST (0  AS Integer)                             AS StatusCode_wms
              , CAST ('' AS TVarChar)                            AS StatusName_wms
@@ -199,7 +203,11 @@ BEGIN
            , Object_Retail.ValueData                    AS RetailName
            , Object_Partner.Id                          AS PartnerId
            , Object_Partner.ValueData                   AS PartnerName
-           
+
+           , Object_CarInfo.Id                          AS CarInfoId
+           , Object_CarInfo.ValueData                   AS CarInfoName
+           , COALESCE (MovementDate_CarInfo.ValueData, Null) ::TDateTime AS CarInfo_Date
+
            , Object_Status_wms.Id                       AS StatusId_wms
            --, COALESCE (Object_Status_wms.ObjectCode, zc_Enum_StatusCode_Erased()) AS StatusCode_wms
            , Object_Status_wms.ObjectCode AS StatusCode_wms
@@ -235,6 +243,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
                                    ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                   AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+
+            LEFT JOIN MovementDate AS MovementDate_CarInfo
+                                   ON MovementDate_CarInfo.MovementId = Movement.Id
+                                  AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -337,6 +349,11 @@ BEGIN
                                         AND MovementLinkObject_Status_wms.DescId = zc_MovementLinkObject_Status_wms()
             LEFT JOIN Object AS Object_Status_wms ON Object_Status_wms.Id = MovementLinkObject_Status_wms.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CarInfo
+                                         ON MovementLinkObject_CarInfo.MovementId = Movement.Id
+                                        AND MovementLinkObject_CarInfo.DescId = zc_MovementLinkObject_CarInfo()
+            LEFT JOIN Object AS Object_CarInfo ON Object_CarInfo.Id = MovementLinkObject_CarInfo.ObjectId
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_OrderExternal();
 
@@ -351,6 +368,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 14.06.22         * CarInfo
  25.06.21         * add inMask
  25.05.21         * isPrintComment
  05.08.20         *

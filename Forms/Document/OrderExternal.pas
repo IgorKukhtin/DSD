@@ -129,6 +129,11 @@ type
     mactPrint_Account: TMultiAction;
     bbPrint_Account: TdxBarButton;
     spSelectPrintBill: TdsdStoredProc;
+    cxLabel22: TcxLabel;
+    cxLabel23: TcxLabel;
+    edCarInfo: TcxButtonEdit;
+    GuidesCarInfo: TdsdGuides;
+    edCarInfo_Date: TcxDateEdit;
   private
     { Private declarations }
   public
