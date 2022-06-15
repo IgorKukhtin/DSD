@@ -998,6 +998,12 @@ CREATE OR REPLACE FUNCTION zc_Object_UserByGroupList() RETURNS Integer AS $BODY$
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_UserByGroupList', 'Элементы группировки пользователей' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_UserByGroupList');
 
+CREATE OR REPLACE FUNCTION zc_Object_CarInfo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CarInfo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_CarInfo', 'Талоны на топливо' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CarInfo');
+
+
+
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека
 

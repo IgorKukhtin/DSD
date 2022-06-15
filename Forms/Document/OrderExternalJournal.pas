@@ -95,6 +95,8 @@ type
     actPrint_Account_ReportName: TdsdExecStoredProc;
     mactPrint_Account: TMultiAction;
     bbPrint_Account: TdxBarButton;
+    CarInfo_Date: TcxGridDBColumn;
+    CarInfoName: TcxGridDBColumn;
   private
     { Private declarations }
   public

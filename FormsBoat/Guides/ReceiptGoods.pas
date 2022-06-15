@@ -186,6 +186,9 @@ type
     bbBarSeparetor: TdxBarSeparator;
     actGridCh1ToExcel: TdsdGridToExcel;
     bbGridCh1ToExcel: TdxBarButton;
+    actInsertEnter: TdsdInsertUpdateAction;
+    bbInsertEnter: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
   private
     { Private declarations }
   public

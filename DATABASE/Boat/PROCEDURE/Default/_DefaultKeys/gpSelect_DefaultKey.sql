@@ -17,7 +17,7 @@ BEGIN
               DefaultKeys.Key, 
               ((DefaultKeys.KeyData::json)->>'FormClassName')::TVarChar AS FormClassName, 
               ((DefaultKeys.KeyData::json)->>'DescName')::TVarChar AS DescName 
-         FROM DefaultKeys;
+         FROM DefaultKeys;                                                                                     
 
 END;
 $BODY$

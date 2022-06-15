@@ -22,8 +22,6 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       inherited cxGrid: TcxGrid
         Width = 1050
         Height = 339
-        ExplicitLeft = 48
-        ExplicitTop = -144
         ExplicitWidth = 1050
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -453,6 +451,23 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object CarInfo_Date: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'CarInfo_Date'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
+            Options.Editing = False
+            Width = 83
+          end
+          object CarInfoName: TcxGridDBColumn
+            Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
+            DataBinding.FieldName = 'CarInfoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
           end
           object isPromo: TcxGridDBColumn
             Caption = #1040#1082#1094#1080#1103
