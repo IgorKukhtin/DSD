@@ -1380,6 +1380,8 @@ type
     miProductionUnionTechIrna: TMenuItem;
     actCashOperationIrna: TdsdOpenForm;
     miCashOperationIrna: TMenuItem;
+    actReport_OrderExternal_Update: TdsdOpenForm;
+    miReport_OrderExternal_Update: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

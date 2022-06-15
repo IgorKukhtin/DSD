@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , PartnerId Integer, PartnerName TVarChar
-             , CarInfoId Integer, CarInfoName TVarChar, CarInfo_Date
+             , CarInfoId Integer, CarInfoName TVarChar, OperDate_CarInfo TDateTime
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceWithVAT Boolean, isPrinted Boolean, isPrintComment Boolean
              , VATPercent TFloat, ChangePercent TFloat
@@ -133,7 +133,7 @@ BEGIN
            , Object_Partner.ValueData                       AS PartnerName
            , Object_CarInfo.Id                              AS CarInfoId
            , Object_CarInfo.ValueData                       AS CarInfoName
-           , MovementDate_CarInfo.ValueData     ::TDateTime AS CarInfo_Date
+           , MovementDate_CarInfo.ValueData     ::TDateTime AS OperDate_CarInfo
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode

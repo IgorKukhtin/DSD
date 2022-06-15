@@ -26,7 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceListId Integer, PriceListName TVarChar
              , RetailId Integer, RetailName TVarChar
              , PartnerId Integer, PartnerName TVarChar
-             , CarInfoId Integer, CarInfoName TVarChar, CarInfo_Date
+             , CarInfoId Integer, CarInfoName TVarChar, OperDate_CarInfo TDateTime
              , StatusId_wms Integer, StatusCode_wms Integer, StatusName_wms TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , DayCount TFloat
@@ -110,7 +110,7 @@ BEGIN
              , CAST ('' AS TVarChar)                            AS PartnerName
              , CAST (0  AS Integer)                             AS CarInfoId
              , CAST ('' AS TVarChar)                            AS CarInfoName
-             , NULL ::TDateTime                                 AS CarInfo_Date
+             , NULL ::TDateTime                                 AS OperDate_CarInfo
              , CAST (0  AS Integer)                             AS StatusId_wms
              , CAST (0  AS Integer)                             AS StatusCode_wms
              , CAST ('' AS TVarChar)                            AS StatusName_wms
@@ -206,7 +206,7 @@ BEGIN
 
            , Object_CarInfo.Id                          AS CarInfoId
            , Object_CarInfo.ValueData                   AS CarInfoName
-           , COALESCE (MovementDate_CarInfo.ValueData, Null) ::TDateTime AS CarInfo_Date
+           , COALESCE (MovementDate_CarInfo.ValueData, Null) ::TDateTime AS OperDate_CarInfo
 
            , Object_Status_wms.Id                       AS StatusId_wms
            --, COALESCE (Object_Status_wms.ObjectCode, zc_Enum_StatusCode_Erased()) AS StatusCode_wms
@@ -383,4 +383,4 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderExternal (inMovementId:= 1, inOperDate:= CURRENT_TIMESTAMP, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_OrderExternal (inMovementId:= 1, inOperDate:= CURRENT_TIMESTAMP, inMask := false, inSession:= '9818')

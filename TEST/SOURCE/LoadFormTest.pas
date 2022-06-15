@@ -2267,13 +2267,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefermentPaymentOLAPTableDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_DefermentPaymentOLAPTableDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InventoryDetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InventoryDetailForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InventoryDetailDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InventoryDetailDialogForm');
   exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Trade_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Trade_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Trade_OlapDialogForm'));
@@ -2707,6 +2707,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
    }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_UpdateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_UpdateForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_UpdateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_UpdateDialogForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalDialogForm'));

@@ -452,9 +452,9 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object CarInfo_Date: TcxGridDBColumn
+          object OperDate_CarInfo: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
-            DataBinding.FieldName = 'CarInfo_Date'
+            DataBinding.FieldName = 'OperDate_CarInfo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
@@ -1462,6 +1462,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     object bbPrint_Account: TdxBarButton
       Action = mactPrint_Account
       Category = 0
+    end
+    object bb: TdxBarButton
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
