@@ -14,7 +14,6 @@ object IncomeForm: TIncomeForm
   OldCreateOrder = False
   PopupMenu = PopupMenu
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -494,15 +493,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 195
-    ExplicitHeight = 366
     ClientRectBottom = 346
     ClientRectRight = 1027
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 342
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -510,7 +506,6 @@ object IncomeForm: TIncomeForm
         Height = 169
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 189
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1006,7 +1001,6 @@ object IncomeForm: TIncomeForm
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
-        ExplicitTop = 197
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1191,12 +1185,13 @@ object IncomeForm: TIncomeForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 189
       end
     end
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 342
       object GridCost: TcxGrid
         Left = 0

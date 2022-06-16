@@ -13,7 +13,7 @@
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = dsdDataSetRefresh
-  AddOnFormData.Params = dsdFormParams
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel
@@ -276,7 +276,7 @@
       ImageIndex = 0
       object edName: TcxTextEdit
         Left = 40
-        Top = 113
+        Top = 114
         TabOrder = 0
         Width = 279
       end
@@ -627,8 +627,8 @@
         TabOrder = 46
         Width = 137
       end
-      object ceisArc: TcxCheckBox
-        Left = 252
+      object ceIsArc: TcxCheckBox
+        Left = 244
         Top = 393
         Caption = #1040#1088#1093#1080#1074
         TabOrder = 47
@@ -694,6 +694,9 @@
     object Child: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1091#1079#1083#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid3: TcxGrid
         Left = 0
         Top = 0
@@ -885,7 +888,7 @@
       item
         Name = 'ioId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -893,12 +896,14 @@
       item
         Name = 'inCode'
         Value = 0.000000000000000000
+        Component = ceCode
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
         Value = ''
+        Component = edName
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -906,6 +911,7 @@
       item
         Name = 'inArticle'
         Value = Null
+        Component = edArticle
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -913,6 +919,7 @@
       item
         Name = 'inArticleVergl'
         Value = Null
+        Component = edArticleVergl
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -920,6 +927,7 @@
       item
         Name = 'inEAN'
         Value = Null
+        Component = edEAN
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -927,6 +935,7 @@
       item
         Name = 'inASIN'
         Value = Null
+        Component = edASIN
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -934,6 +943,7 @@
       item
         Name = 'inMatchCode'
         Value = Null
+        Component = edMatchCode
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -941,6 +951,7 @@
       item
         Name = 'inFeeNumber'
         Value = Null
+        Component = edFeeNumber
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -948,13 +959,15 @@
       item
         Name = 'inComment'
         Value = Null
+        Component = edComment
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisArc'
+        Name = 'inIsArc'
         Value = Null
+        Component = ceIsArc
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -962,6 +975,7 @@
       item
         Name = 'inFeet'
         Value = Null
+        Component = ceFeet
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -969,6 +983,7 @@
       item
         Name = 'inMetres'
         Value = Null
+        Component = ceMetres
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -976,6 +991,7 @@
       item
         Name = 'inAmountMin'
         Value = Null
+        Component = ceMin
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -983,6 +999,7 @@
       item
         Name = 'inAmountRefer'
         Value = 0.000000000000000000
+        Component = ceRefer
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -990,6 +1007,7 @@
       item
         Name = 'inEKPrice'
         Value = Null
+        Component = edEKPrice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -997,6 +1015,7 @@
       item
         Name = 'inEmpfPrice'
         Value = Null
+        Component = edEmpfPrice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1093,7 +1112,7 @@
     Left = 120
     Top = 56
   end
-  object dsdFormParams: TdsdFormParams
+  object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
@@ -1112,7 +1131,7 @@
       item
         Name = 'Id'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1120,47 +1139,55 @@
       item
         Name = 'Name'
         Value = ''
+        Component = edName
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
+        Component = ceCode
         MultiSelectSeparator = ','
       end
       item
         Name = 'Article'
         Value = Null
+        Component = edArticle
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'ArticleVergl'
         Value = Null
+        Component = edArticleVergl
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'ASIN'
         Value = Null
+        Component = edASIN
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'EAN'
         Value = Null
+        Component = edEAN
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'MatchCode'
         Value = Null
+        Component = edMatchCode
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'FeeNumber'
         Value = Null
+        Component = edFeeNumber
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1338,31 +1365,43 @@
       item
         Name = 'AmountRefer'
         Value = 0.000000000000000000
+        Component = ceRefer
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'AmountMin'
         Value = Null
+        Component = ceMin
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'EKPrice'
         Value = Null
+        Component = edEKPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'EmpfPrice'
         Value = 0.000000000000000000
+        Component = edEmpfPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = Null
+        Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isArc'
+        Value = Null
+        Component = ceIsArc
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -1383,21 +1422,24 @@
       item
         Name = 'Feet'
         Value = Null
+        Component = ceFeet
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'Metres'
         Value = Null
+        Component = ceMetres
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 8
-    Top = 72
+    Left = 40
+    Top = 176
   end
   object GuidesMeasure: TdsdGuides
     KeyField = 'Id'
+    LookupControl = ceMeasure
     FormNameParam.Value = 'TMeasureForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1450,6 +1492,7 @@
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
+    LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1491,10 +1534,11 @@
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 40
-    Top = 64
+    Top = 56
   end
   object GuidesGoodsSize: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edGoodsSize
     FormNameParam.Value = 'TGoodsSizeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1521,6 +1565,7 @@
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edPartner
     FormNameParam.Value = 'TPartnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1542,10 +1587,12 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Top = 424
+    Left = 48
+    Top = 408
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
+    LookupControl = ceParentGroup
     FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1572,6 +1619,7 @@
   end
   object GuidesGoodsTag: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edGoodsTag
     FormNameParam.Value = 'TGoodsTagForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1598,6 +1646,7 @@
   end
   object GuidesDiscountPartner: TdsdGuides
     KeyField = 'Id'
+    LookupControl = ceDiscountParner
     FormNameParam.Value = 'TDiscountParnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1644,6 +1693,7 @@
   end
   object GuidesGoodsType: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edGoodsType
     FormNameParam.Value = 'TGoodsTypeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1698,6 +1748,7 @@
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edTaxKind
     FormNameParam.Value = 'TTaxKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1745,7 +1796,7 @@
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1774,7 +1825,7 @@
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1898,7 +1949,7 @@
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1930,7 +1981,7 @@
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2311,7 +2362,7 @@
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2362,6 +2413,7 @@
   end
   object GuidesProdEngine: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edEngine
     FormNameParam.Value = 'TProdEngineForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2443,7 +2495,7 @@
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2539,13 +2591,13 @@
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 328
-    Top = 248
+    Left = 352
+    Top = 272
   end
 end

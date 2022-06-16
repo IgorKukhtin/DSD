@@ -14,7 +14,6 @@ object InventoryForm: TInventoryForm
   OldCreateOrder = False
   PopupMenu = PopupMenu
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
