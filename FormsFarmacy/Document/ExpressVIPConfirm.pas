@@ -91,6 +91,8 @@ type
     Panel1: TPanel;
     isAutoVIPforSales: TcxGridDBColumn;
     isMobileApplication: TcxGridDBColumn;
+    isConfirmByPhone: TcxGridDBColumn;
+    DateComing: TcxGridDBColumn;
   private
     { Private declarations }
   public

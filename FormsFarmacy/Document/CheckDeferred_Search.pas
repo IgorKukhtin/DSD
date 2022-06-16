@@ -86,6 +86,8 @@ type
     isErrorRRO: TcxGridDBColumn;
     isAutoVIPforSales: TcxGridDBColumn;
     isMobileApplication: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    DateComing: TcxGridDBColumn;
   private
     { Private declarations }
   public

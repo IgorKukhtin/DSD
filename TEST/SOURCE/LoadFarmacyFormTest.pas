@@ -481,6 +481,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSummCardForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckSummCardForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_ConfirmedByPhoneCallForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheck_ConfirmedByPhoneCallForm');
 
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalDiscountExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalDiscountExternalForm');
@@ -492,9 +494,9 @@ begin
  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalUserForm');
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceDeferredCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceDeferredCheckForm');
   exit;
@@ -2928,6 +2930,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSelectionOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckSelectionOrderForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TExpressVIPConfirmForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TExpressVIPConfirmForm');
 end;
 
 procedure TLoadFormTest.LoadCheckLiki24FormTest;
@@ -2965,17 +2970,15 @@ end;
 
 procedure TLoadFormTest.LoadCheckSiteFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TExpressVIPConfirmForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TExpressVIPConfirmForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSiteForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckSiteForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSite_SearchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckSite_SearchForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDelaySiteForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCheckDelaySiteForm');}
+  TdsdFormStorageFactory.GetStorage.Load('TCheckDelaySiteForm');
 end;
 
 procedure TLoadFormTest.LoadOverFormTest;

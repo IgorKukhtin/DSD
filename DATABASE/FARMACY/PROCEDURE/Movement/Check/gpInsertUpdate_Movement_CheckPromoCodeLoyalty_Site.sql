@@ -5,7 +5,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, Boolean, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site(
  INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -23,6 +24,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site(
     IN inComment           TVarChar  , -- Комментарий клиента
     IN inisMobileApp       Boolean   , -- Заказ с мобильного приложения
     IN inUserReferals      Integer   , -- По рекомендации сотрудника
+    IN inisConfirmByPhone  Boolean   , -- Подтвердить телефонным звонком
+    IN inDateComing        TDateTime , -- Дата прихода в аптеку
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -263,6 +266,18 @@ BEGIN
       END IF;
     END IF;
 
+    -- Подтвердить телефонным звонком
+    IF COALESCE(inisConfirmByPhone, FALSE) = True
+    THEN
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_ConfirmByPhone(), ioId, True);
+    END IF;
+
+    -- Дата прихода в аптеку
+    IF inDateComing IS NOT NULL
+    THEN
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Coming(), ioId, inDateComing);
+    END IF;
+
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
@@ -279,3 +294,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (ioId := 0, inUnitId := 183292, inDate := NULL::TDateTime, inBayer := 'Test Bayer'::TVarChar, inBayerPhone:= '11-22-33', inInvNumberOrder:= '12345', inManagerName:= '5', inPromoCodeId := 297504593, inSession := '3'); -- Аптека_1 пр_Правды_6
+

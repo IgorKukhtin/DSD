@@ -402,6 +402,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Delay
                                    ON MovementDate_Delay.MovementId = Movement.Id
                                   AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
+            LEFT JOIN MovementDate AS MovementDate_Coming
+                                   ON MovementDate_Coming.MovementId = Movement.Id
+                                  AND MovementDate_Coming.DescId = zc_MovementDate_Coming()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
                                     ON MovementFloat_TotalSummCard.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
@@ -430,6 +434,9 @@ BEGIN
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_MobileApplication
                                       ON MovementBoolean_MobileApplication.MovementId = Movement.Id
                                      AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+            LEFT JOIN MovementBoolean AS MovementBoolean_ConfirmByPhone
+                                      ON MovementBoolean_ConfirmByPhone.MovementId = Movement.Id
+                                     AND MovementBoolean_ConfirmByPhone.DescId = zc_MovementBoolean_ConfirmByPhone()
 
             LEFT JOIN tmpMovementString AS MovementString_CommentCustomer
                                      ON MovementString_CommentCustomer.MovementId = Movement.Id

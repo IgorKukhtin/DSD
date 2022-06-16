@@ -14,17 +14,17 @@ inherited CheckSummCardForm: TCheckSummCardForm
     Height = 495
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 911
+    ExplicitWidth = 925
     ExplicitHeight = 495
     ClientRectBottom = 495
     ClientRectRight = 925
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 911
+      ExplicitWidth = 925
       ExplicitHeight = 495
       inherited cxGrid: TcxGrid
         Width = 925
         Height = 495
-        ExplicitWidth = 911
+        ExplicitWidth = 925
         ExplicitHeight = 495
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -248,6 +248,22 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Options.Editing = False
             Width = 83
           end
+          object isConfirmByPhone: TcxGridDBColumn
+            Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1090#1077#1083#1077#1092#1086#1085#1085#1099#1084' '#1079#1074#1086#1085#1082#1086#1084
+            DataBinding.FieldName = 'isConfirmByPhone'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
+          object DateComing: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1074' '#1072#1087#1090#1077#1082#1091
+            DataBinding.FieldName = 'DateComing'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
         end
       end
     end
@@ -255,7 +271,7 @@ inherited CheckSummCardForm: TCheckSummCardForm
   inherited Panel: TPanel
     Width = 925
     Height = 33
-    ExplicitWidth = 911
+    ExplicitWidth = 925
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       EditValue = 42370d

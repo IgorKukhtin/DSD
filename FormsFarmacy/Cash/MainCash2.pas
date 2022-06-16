@@ -468,7 +468,6 @@ type
     MainGoodsActiveSubstance: TcxGridDBColumn;
     actUpdateProgram: TAction;
     N41: TMenuItem;
-    actOpenFormPUSH: TdsdOpenForm;
     actSendCashJournalVip: TdsdOpenForm;
     VIP5: TMenuItem;
     MainGoodsDiscountName: TcxGridDBColumn;
@@ -617,7 +616,6 @@ type
     MainPriceSale1303: TcxGridDBColumn;
     RemainsUnitOneCDS: TClientDataSet;
     spRemainsUnitOne: TdsdStoredProc;
-    actOpenStaticFormPUSH: TdsdOpenStaticForm;
     actExpressVIPConfirm: TdsdOpenForm;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
@@ -2843,68 +2841,64 @@ begin
       PUSHDS.First;
       try
         TimerPUSH.Interval := 1000;
-        if PUSHDS.FieldByName('Id').AsInteger > 1000 then
+
+        if PUSHDS.FieldByName('isFormOpen').AsBoolean then
         begin
-          if PUSHDS.FieldByName('isFormOpen').AsBoolean then
-          begin
-            if PUSHDS.FieldByName('isFormLoad').AsBoolean then
-            begin
-              actOpenFormPUSH.FormNameParam.Value := PUSHDS.FieldByName('FormName').AsString;
-              actOpenFormPUSH.Execute;
-            end else
-            begin
-              actOpenStaticFormPUSH.FormNameParam.Value := PUSHDS.FieldByName('FormName').AsString;
-              actOpenStaticFormPUSH.Execute;
-            end;
-            try
-              spInsert_MovementItem_PUSH.ParamByName('inMovement').Value :=
-                PUSHDS.FieldByName('Id').AsInteger;
-              spInsert_MovementItem_PUSH.ParamByName('inResult').Value := '';
-              spInsert_MovementItem_PUSH.Execute;
-            except
-              ON E: Exception do
-                Add_Log('Marc_PUSH err=' + E.Message);
-            end;
-          end else if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult,
-            PUSHDS.FieldByName('isPoll').AsBoolean,
-            PUSHDS.FieldByName('FormName').AsString,
-            PUSHDS.FieldByName('Button').AsString,
-            PUSHDS.FieldByName('Params').AsString,
-            PUSHDS.FieldByName('TypeParams').AsString,
-            PUSHDS.FieldByName('ValueParams').AsString,
-            PUSHDS.FieldByName('isSpecialLighting').AsBoolean,
-            PUSHDS.FieldByName('TextColor').AsInteger,
-            PUSHDS.FieldByName('Color').AsInteger,
-            PUSHDS.FieldByName('isBold').AsBoolean) then
-          begin
-            try
-              spInsert_MovementItem_PUSH.ParamByName('inMovement').Value :=
-                PUSHDS.FieldByName('Id').AsInteger;
-              if PUSHDS.FieldByName('isPoll').AsBoolean then
-                spInsert_MovementItem_PUSH.ParamByName('inResult').Value
-                  := cResult
-              else
-                spInsert_MovementItem_PUSH.ParamByName('inResult').Value := '';
-              spInsert_MovementItem_PUSH.Execute;
-            except
-              ON E: Exception do
-                Add_Log('Marc_PUSH err=' + E.Message);
-            end;
+
+          if PUSHDS.FieldByName('isExecStoredProc').AsBoolean then
+            ExecStoredProc(PUSHDS.FieldByName('FormName').AsString
+                         , PUSHDS.FieldByName('Params').AsString
+                         , PUSHDS.FieldByName('TypeParams').AsString
+                         , PUSHDS.FieldByName('ValueParams').AsString)
+          else if PUSHDS.FieldByName('isFormLoad').AsBoolean then
+            OpenForm(PUSHDS.FieldByName('FormName').AsString
+                   , PUSHDS.FieldByName('Params').AsString
+                   , PUSHDS.FieldByName('TypeParams').AsString
+                   , PUSHDS.FieldByName('ValueParams').AsString)
+          else OpenStaticForm(PUSHDS.FieldByName('FormName').AsString
+                            , PUSHDS.FieldByName('Params').AsString
+                            , PUSHDS.FieldByName('TypeParams').AsString
+                            , PUSHDS.FieldByName('ValueParams').AsString);
+
+          if PUSHDS.FieldByName('Id').AsInteger > 1000 then
+          try
+            spInsert_MovementItem_PUSH.ParamByName('inMovement').Value :=
+              PUSHDS.FieldByName('Id').AsInteger;
+            spInsert_MovementItem_PUSH.ParamByName('inResult').Value := '';
+            spInsert_MovementItem_PUSH.Execute;
+          except
+            ON E: Exception do
+              Add_Log('Marc_PUSH err=' + E.Message);
           end;
-        end
-        else if (Trim(PUSHDS.FieldByName('Text').AsString) <> '') or
-          (Trim(PUSHDS.FieldByName('FormName').AsString) <> '') then
-          ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult,
-            PUSHDS.FieldByName('isPoll').AsBoolean,
-            PUSHDS.FieldByName('FormName').AsString,
-            PUSHDS.FieldByName('Button').AsString,
-            PUSHDS.FieldByName('Params').AsString,
-            PUSHDS.FieldByName('TypeParams').AsString,
-            PUSHDS.FieldByName('ValueParams').AsString,
-            PUSHDS.FieldByName('isSpecialLighting').AsBoolean,
-            PUSHDS.FieldByName('TextColor').AsInteger,
-            PUSHDS.FieldByName('Color').AsInteger,
-            PUSHDS.FieldByName('isBold').AsBoolean);
+        end else if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult,
+          PUSHDS.FieldByName('isPoll').AsBoolean,
+          PUSHDS.FieldByName('FormName').AsString,
+          PUSHDS.FieldByName('Button').AsString,
+          PUSHDS.FieldByName('Params').AsString,
+          PUSHDS.FieldByName('TypeParams').AsString,
+          PUSHDS.FieldByName('ValueParams').AsString,
+          PUSHDS.FieldByName('isFormLoad').AsBoolean,
+          PUSHDS.FieldByName('isExecStoredProc').AsBoolean,
+          PUSHDS.FieldByName('isSpecialLighting').AsBoolean,
+          PUSHDS.FieldByName('TextColor').AsInteger,
+          PUSHDS.FieldByName('Color').AsInteger,
+          PUSHDS.FieldByName('isBold').AsBoolean) then
+        begin
+          if PUSHDS.FieldByName('Id').AsInteger > 1000 then
+          try
+            spInsert_MovementItem_PUSH.ParamByName('inMovement').Value :=
+              PUSHDS.FieldByName('Id').AsInteger;
+            if PUSHDS.FieldByName('isPoll').AsBoolean then
+              spInsert_MovementItem_PUSH.ParamByName('inResult').Value
+                := cResult
+            else
+              spInsert_MovementItem_PUSH.ParamByName('inResult').Value := '';
+            spInsert_MovementItem_PUSH.Execute;
+          except
+            ON E: Exception do
+              Add_Log('Marc_PUSH err=' + E.Message);
+          end;
+        end;
       finally
         PUSHDS.Delete;
       end;

@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_PUSH_Cash(
 )
 RETURNS TABLE (Id Integer, Text TBlob, isPoll boolean,
                FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar,
-               isFormOpen boolean, isFormLoad boolean, isSpecialLighting Boolean, TextColor Integer, Color Integer, isBold Boolean)
+               isFormOpen boolean, isFormLoad boolean, isExecStoredProc boolean, 
+               isSpecialLighting Boolean, TextColor Integer, Color Integer, isBold Boolean)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -57,12 +58,13 @@ BEGIN
                            , Params TVarChar
                            , TypeParams TVarChar
                            , ValueParams TVarChar
-                           , isFormOpen boolean
-                           , isFormLoad boolean
-                           , isSpecialLighting Boolean
+                           , isFormOpen boolean Not Null Default False
+                           , isFormLoad boolean Not Null Default True
+                           , isExecStoredProc boolean Not Null Default False
+                           , isSpecialLighting Boolean Not Null Default False
                            , TextColor Integer
                            , Color Integer
-                           , isBold Boolean) ON COMMIT DROP;
+                           , isBold Boolean Not Null Default False) ON COMMIT DROP;
 
      -- Отметка посещаемости
     IF vbRetailId = 4 AND
@@ -606,6 +608,19 @@ BEGIN
        INSERT INTO _PUSH (Id, Text) VALUES (11, 'Заполнили, но не провели СУН:'||Chr(13)||Chr(13)||vbText);    
      END IF;
    END IF;
+      
+     -- Подтверждено по телефонному звонку
+   INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad) 
+   SELECT 12
+        , '' AS Text  
+        , 'TCheck_ConfirmedByPhoneCallForm'
+        , ''
+        , 'MovementId'
+        , 'ftInteger'
+        , Movement.ID::TVarChar
+        , True
+        , True
+   FROM gpSelect_Movement_Check_ConfirmByPhone (inUnitId:= vbUnitId, inSession:= inSession) AS Movement;
 
    -- PUSH уведомления
    WITH tmpMovementItemUnit AS (SELECT DISTINCT Movement.Id AS MovementId
@@ -750,7 +765,23 @@ BEGIN
         , tmpMovementPUSH.isFormLoad                                         AS isFormLoad
    FROM tmpMovementPUSH
    WHERE tmpMovementPUSH.Message <> '' OR COALESCE(tmpMovementPUSH.FormName, '') <> '' AND tmpMovementPUSH.isFormOpen = True;
-      
+   
+ /*  IF vbUserId = 3
+   THEN
+     INSERT INTO _PUSH (Id, Text, isPoll, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad)
+     SELECT
+          1111111                          AS Id
+        , ''                               AS Message
+        , False                            AS isPoll
+        , 'TCheckHelsiSignPUSHForm'        AS FormName
+        , ''                               AS Button
+        , ''                               AS Params
+        , ''                               AS TypeParams
+        , ''                               AS ValueParams
+        , True                             AS isFormOpen
+        , False                            AS isFormLoad;
+   END IF;*/
+   
    RETURN QUERY
      SELECT _PUSH.Id                                  AS Id
           , _PUSH.Text                                AS Text
@@ -762,6 +793,7 @@ BEGIN
           , _PUSH.ValueParams                         AS ValueParams
           , COALESCE(_PUSH.isFormOpen, False)         AS isFormOpen
           , COALESCE(_PUSH.isFormLoad, False)         AS isFormLoad
+          , COALESCE(_PUSH.isExecStoredProc, False)   AS isExecStoredProc
           , COALESCE(_PUSH.isSpecialLighting, False)  AS isSpecialLighting
           , _PUSH.TextColor                           AS TextColor
           , _PUSH.Color                               AS Color
