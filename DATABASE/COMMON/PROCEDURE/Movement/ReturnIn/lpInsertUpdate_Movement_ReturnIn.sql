@@ -109,10 +109,15 @@ BEGIN
                                THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
                           WHEN COALESCE (ioId, 0) = 0 AND inToId IN (8415, 428363) -- Склад ГП ф.Черкассы (Кировоград) + Склад возвратов ф.Черкассы (Кировоград)
                                THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
+
                           WHEN COALESCE (ioId, 0) = 0 AND inToId IN (3080691, 3080696) -- Склад ГП ф.Львов + Склад возвратов ф.Львов
                                THEN zc_Enum_Process_AccessKey_DocumentLviv() 
+                               
                           WHEN /*COALESCE (ioId, 0) = 0 AND*/ inToId IN (301309, 309599) -- Склад ГП ф.Запорожье + Склад возвратов ф.Запорожье
                                THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
+
+                          WHEN COALESCE (ioId, 0) = 0 AND inToId IN (8020714, 8020715) -- Склад База ГП (Ирна) + Склад Возвратов (Ирна)
+                               THEN zc_Enum_Process_AccessKey_DocumentIrna() 
 
                           ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn())
                      END;

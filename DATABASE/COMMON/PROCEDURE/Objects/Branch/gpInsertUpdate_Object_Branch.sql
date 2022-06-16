@@ -67,8 +67,11 @@ BEGIN
                                                        WHEN vbCode_calc = 11 -- филиал Запорожье
                                                             THEN zc_Enum_Process_AccessKey_TrasportZaporozhye()
 
-                                                       WHEN vbCode_calc = 12 -- филиал Запорожье
+                                                       WHEN vbCode_calc = 12 -- филиал Lviv
                                                             THEN zc_Enum_Process_AccessKey_TrasportLviv()
+
+                                                       WHEN vbCode_calc = 13 -- филиал Irna
+                                                            THEN zc_Enum_Process_AccessKey_TrasportIrna()
                                                   END);
 
    -- сохранили свойство <>

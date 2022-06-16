@@ -62,6 +62,10 @@ BEGIN
                                THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
                           WHEN inToId = 3080691 -- Склад ГП ф.Львов
                                THEN zc_Enum_Process_AccessKey_DocumentLviv() 
+
+                          WHEN inToId = 8020714 -- Склад База ГП (Ирна)
+                               THEN zc_Enum_Process_AccessKey_DocumentIrna() 
+
                           ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_OrderExternal())
                      END;
 

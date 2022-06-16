@@ -49,6 +49,9 @@ BEGIN
                           WHEN COALESCE (ioId, 0) = 0 AND inFromId = 3080691 -- Склад ГП ф.Львов
                                THEN zc_Enum_Process_AccessKey_DocumentLviv() 
 
+                          WHEN COALESCE (ioId, 0) = 0 AND inFromId = 8020714 -- Склад База ГП (Ирна)
+                               THEN zc_Enum_Process_AccessKey_DocumentIrna() 
+
                           ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Loss())
                      END;
 

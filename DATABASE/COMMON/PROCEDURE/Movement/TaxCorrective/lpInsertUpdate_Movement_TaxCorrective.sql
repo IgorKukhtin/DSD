@@ -72,10 +72,16 @@ BEGIN
                                THEN zc_Enum_Process_AccessKey_DocumentKharkov()
                           WHEN 8375 -- филиал Черкассы
                                THEN zc_Enum_Process_AccessKey_DocumentCherkassi()
+
                           WHEN 301310 -- филиал Запорожье
                                THEN zc_Enum_Process_AccessKey_DocumentZaporozhye()
+
                           WHEN 3080683 -- филиал Львов
                                THEN zc_Enum_Process_AccessKey_DocumentLviv()
+
+                          WHEN 8109544 -- филиал Ирна
+                               THEN zc_Enum_Process_AccessKey_DocumentIrna()
+
                           ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective())
                      END;
 
@@ -118,6 +124,9 @@ BEGIN
 
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentLviv()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportLviv())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentIrna()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportIrna())
                   END;
      -- проверка
    /*IF COALESCE (vbBranchId, 0) = 0 AND (inContractId > 0 OR inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())
