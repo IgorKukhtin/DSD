@@ -2,7 +2,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   Left = 0
   Top = 0
   Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
-  ClientHeight = 593
+  ClientHeight = 625
   ClientWidth = 898
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -31,7 +31,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxButton1: TcxButton
     Left = 230
-    Top = 560
+    Top = 583
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -41,7 +41,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxButton2: TcxButton
     Left = 604
-    Top = 560
+    Top = 583
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -101,7 +101,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object edSummaUrgentlySendVIP: TcxCurrencyEdit
     Left = 404
-    Top = 213
+    Top = 236
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 11
@@ -109,7 +109,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel4: TcxLabel
     Left = 20
-    Top = 214
+    Top = 237
     Caption = #1057#1091#1084#1084#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1086#1090' '#1082#1086#1090#1086#1088#1086#1081' '#1088#1072#1079#1088#1077#1096#1077#1085' '#1087#1088#1080#1079#1085#1072#1082' '#1089#1088#1086#1095#1085#1086' '
   end
   object cbBlockVIP: TcxCheckBox
@@ -134,7 +134,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object edDaySaleForSUN: TcxCurrencyEdit
     Left = 404
-    Top = 234
+    Top = 257
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 15
@@ -142,12 +142,12 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel5: TcxLabel
     Left = 20
-    Top = 235
+    Top = 258
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1088#1086#1083#1103' <'#1055#1088#1086#1076#1072#1085#1086'/'#1055#1088#1086#1076#1072#1078#1072' '#1076#1086' '#1089#1083#1077#1076' '#1057#1059#1053'>'
   end
   object edAttemptsSub: TcxCurrencyEdit
     Left = 404
-    Top = 276
+    Top = 299
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 17
@@ -155,14 +155,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel6: TcxLabel
     Left = 20
-    Top = 277
+    Top = 300
     Caption = 
       #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1086#1087#1099#1090#1086#1082' '#1076#1086' '#1091#1089#1087#1077#1096#1085#1086#1081' '#1089#1076#1072#1095#1080' '#1090#1077#1089#1090#1072' '#1076#1083#1103' '#1087#1088#1077#1076#1083#1086#1078#1077#1085#1080#1103' '#1087#1086#1076#1084#1077 +
       #1085
   end
   object edDayNonCommoditySUN: TcxCurrencyEdit
     Left = 404
-    Top = 255
+    Top = 278
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 19
@@ -170,12 +170,12 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel7: TcxLabel
     Left = 20
-    Top = 256
+    Top = 279
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103' "'#1053#1077#1090#1086#1074#1072#1088#1085#1099#1081' '#1074#1080#1076'"'
   end
   object edLowerLimitPromoBonus: TcxCurrencyEdit
     Left = 404
-    Top = 319
+    Top = 342
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 21
@@ -183,7 +183,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object edUpperLimitPromoBonus: TcxCurrencyEdit
     Left = 404
-    Top = 298
+    Top = 321
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 22
@@ -191,17 +191,17 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel8: TcxLabel
     Left = 20
-    Top = 320
+    Top = 343
     Caption = #9#1053#1080#1078#1085#1080#1081' '#1087#1088#1077#1076#1077#1083' '#1089#1088#1072#1074#1085#1077#1085#1080#1103' ('#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099')'
   end
   object cxLabel9: TcxLabel
     Left = 20
-    Top = 299
+    Top = 322
     Caption = #1042#1077#1088#1093#1085#1080#1081' '#1087#1088#1077#1076#1077#1083' '#1089#1088#1072#1074#1085#1077#1085#1080#1103' ('#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099')'
   end
   object edMinPercentPromoBonus: TcxCurrencyEdit
     Left = 404
-    Top = 340
+    Top = 363
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 25
@@ -209,12 +209,12 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel10: TcxLabel
     Left = 20
-    Top = 341
+    Top = 364
     Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1085#1072#1094#1077#1085#1082#1072' ('#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099')'
   end
   object ceDayCompensDiscount: TcxCurrencyEdit
     Left = 404
-    Top = 361
+    Top = 384
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 27
@@ -222,7 +222,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel12: TcxLabel
     Left = 20
-    Top = 362
+    Top = 385
     Caption = #1044#1085#1077#1081' '#1076#1086' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
   end
   object edMethodsAssortment: TcxButtonEdit
@@ -269,7 +269,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object ceCustomerThreshold: TcxCurrencyEdit
     Left = 404
-    Top = 383
+    Top = 406
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 35
@@ -277,12 +277,12 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel16: TcxLabel
     Left = 20
-    Top = 385
+    Top = 408
     Caption = #1055#1086#1088#1086#1075' '#1089#1088#1072#1073#1072#1090#1099#1074#1072#1085#1080#1077' '#1085#1072' '#1094#1077#1085#1091' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080' '#1079#1072#1082#1072#1079#1077' '#1082#1083#1080#1077#1085#1090#1091
   end
   object cePriceCorrectionDay: TcxCurrencyEdit
     Left = 404
-    Top = 404
+    Top = 427
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 37
@@ -290,7 +290,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel17: TcxLabel
     Left = 20
-    Top = 406
+    Top = 429
     Hint = 
       #1055#1077#1088#1080#1086#1076' '#1076#1085#1077#1081' '#1076#1083#1103' '#1089#1080#1089#1090#1077#1084#1099' '#1082#1086#1088#1088#1077#1082#1094#1080#1080' '#1094#1077#1085#1099' '#1087#1086' '#1080#1090#1086#1075#1072#1084' '#1088#1086#1089#1090#1072'/'#1087#1072#1076#1077#1085#1080#1103' '#1089 +
       #1088#1077#1076#1085#1080#1093' '#1087#1088#1086#1076#1072#1078
@@ -383,12 +383,12 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel23: TcxLabel
     Left = 20
-    Top = 427
+    Top = 450
     Caption = #1055#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1089#1090#1088#1072#1093#1086#1074#1099#1084' '#1082#1086#1084#1087#1072#1085#1080#1103#1084' '#1076#1083#1103' '#1079'/'#1087' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1072#1084
   end
   object cePercentIC: TcxCurrencyEdit
     Left = 404
-    Top = 426
+    Top = 449
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 52
@@ -396,7 +396,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cePercentUntilNextSUN: TcxCurrencyEdit
     Left = 404
-    Top = 447
+    Top = 470
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 53
@@ -404,7 +404,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel24: TcxLabel
     Left = 20
-    Top = 448
+    Top = 471
     Caption = #1055#1088#1086#1094#1077#1085#1090' '#1076#1083#1103' '#1087#1086#1076#1089#1074#1077#1090#1082#1080' '#1082#1086#1084#1077#1085#1090#1072' "'#1055#1088#1086#1076#1072#1085#1086'/'#1055#1088#1086#1076#1072#1078#1072' '#1076#1086' '#1089#1083#1077#1076' '#1057#1059#1053'"'
   end
   object cbEliminateColdSUN: TcxCheckBox
@@ -419,7 +419,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object ceTurnoverMoreSUN2: TcxCurrencyEdit
     Left = 404
-    Top = 468
+    Top = 491
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00; ;'
     TabOrder = 56
@@ -427,12 +427,12 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel25: TcxLabel
     Left = 20
-    Top = 469
+    Top = 492
     Caption = #1054#1073#1086#1088#1086#1090' '#1073#1086#1083#1100#1096#1077' '#1079#1072' '#1087#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1057#1059#1053' 2'
   end
   object ceDeySupplInSUN2: TcxCurrencyEdit
     Left = 404
-    Top = 510
+    Top = 533
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 58
@@ -440,7 +440,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object ceDeySupplOutSUN2: TcxCurrencyEdit
     Left = 404
-    Top = 489
+    Top = 512
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 59
@@ -448,17 +448,17 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel26: TcxLabel
     Left = 20
-    Top = 511
+    Top = 534
     Caption = #1055#1088#1086#1076#1072#1078#1080' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1087#1090#1077#1082' '#1082#1091#1076#1072' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053' 2'
   end
   object cxLabel27: TcxLabel
     Left = 20
-    Top = 490
+    Top = 513
     Caption = #1055#1088#1086#1076#1072#1078#1080' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1087#1090#1077#1082' '#1086#1090#1082#1091#1076#1072' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053' 2'
   end
   object ceExpressVIPConfirm: TcxCurrencyEdit
     Left = 404
-    Top = 531
+    Top = 554
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 62
@@ -466,10 +466,23 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel28: TcxLabel
     Left = 20
-    Top = 532
+    Top = 555
     Caption = 
       #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1095#1077#1082#1080' '#1089' '#1082#1086#1083'-'#1074#1086#1084' '#1087#1086#1079#1080#1094#1080#1081'  '#1076#1083#1103' '#1101#1082#1089#1087#1088#1077#1089#1089' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1042#1048 +
       #1055' '#1076#1086
+  end
+  object edPriceFormSendVIP: TcxCurrencyEdit
+    Left = 404
+    Top = 214
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 64
+    Width = 121
+  end
+  object cxLabel29: TcxLabel
+    Left = 20
+    Top = 215
+    Caption = #1062#1077#1085#1072' '#1086#1090' '#1082#1086#1090#1086#1088#1086#1081' '#1087#1086#1082#1072#1079#1072#1085' '#1090#1086#1074#1072#1088' '#1087#1088#1080' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
   end
   object ActionList: TActionList
     Left = 344
@@ -770,6 +783,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Component = ceExpressVIPConfirm
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceFormSendVIP'
+        Value = Null
+        Component = edPriceFormSendVIP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1014,6 +1035,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Name = 'ExpressVIPConfirm'
         Value = Null
         Component = ceExpressVIPConfirm
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceFormSendVIP'
+        Value = Null
+        Component = edPriceFormSendVIP
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

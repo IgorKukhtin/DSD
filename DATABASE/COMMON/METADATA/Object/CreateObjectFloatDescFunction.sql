@@ -2281,9 +2281,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_ExpressVIPConfirm() RETUR
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_ExpressVIPConfirm', 'Чеков для экспресс подтверждение ВИП' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_ExpressVIPConfirm');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_PriceFormSendVIP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PriceFormSendVIP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_PriceFormSendVIP', 'Цена от которой показан товар при формировании перемещений VIP' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PriceFormSendVIP');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 15.06.22                                                                                      * zc_ObjectFloat_CashSettings_PriceFormSendVIP
  07.06.22                                                                                      * zc_ObjectFloat_CashSettings_ExpressVIPConfirm
  20.05.22                                                                                      * zc_ObjectFloat_DiffKindPrice_Price, zc_ObjectFloat_DiffKindPrice_Amount, zc_ObjectFloat_MCRequestItem_MinPrice, zc_ObjectFloat_MCRequestItem_MarginPercent, zc_ObjectFloat_MCRequestItem_MarginPercentOld
  27.04.22         * zc_ObjectFloat_ObjectCode_Basis

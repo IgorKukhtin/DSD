@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isGetHardwareData Boolean
              , DateBanSUN TDateTime
              , SummaFormSendVIP TFloat
+             , PriceFormSendVIP TFloat
              , SummaUrgentlySendVIP TFloat
              , DaySaleForSUN Integer
              , DayNonCommoditySUN Integer
@@ -57,6 +58,7 @@ BEGIN
         , COALESCE(ObjectBoolean_CashSettings_GetHardwareData.ValueData, FALSE)    AS isGetHardwareData
         , ObjectDate_CashSettings_DateBanSUN.ValueData                             AS DateBanSUN
         , ObjectFloat_CashSettings_SummaFormSendVIP.ValueData                      AS SummaFormSendVIP
+        , ObjectFloat_CashSettings_PriceFormSendVIP.ValueData                      AS PriceFormSendVIP
         , ObjectFloat_CashSettings_SummaUrgentlySendVIP.ValueData                  AS SummaUrgentlySendVIP
         , ObjectFloat_CashSettings_DaySaleForSUN.ValueData::Integer                AS DaySaleForSUN
         , ObjectFloat_CashSettings_DayNonCommoditySUN.ValueData::Integer           AS DayNonCommoditySUN
@@ -103,6 +105,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_SummaFormSendVIP
                               ON ObjectFloat_CashSettings_SummaFormSendVIP.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_SummaFormSendVIP.DescId = zc_ObjectFloat_CashSettings_SummaFormSendVIP()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PriceFormSendVIP
+                              ON ObjectFloat_CashSettings_PriceFormSendVIP.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_PriceFormSendVIP.DescId = zc_ObjectFloat_CashSettings_PriceFormSendVIP()
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_SummaUrgentlySendVIP
                               ON ObjectFloat_CashSettings_SummaUrgentlySendVIP.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_SummaUrgentlySendVIP.DescId = zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP()

@@ -219,6 +219,7 @@ end;
 constructor THelsiApi.Create;
 begin
   FRESTClient := TRESTClient.Create('');
+//  FRESTClient.HandleRedirects := False;
   FRESTResponse := TRESTResponse.Create(Nil);
   FRESTRequest := TRESTRequest.Create(Nil);
   FRESTRequest.Client := FRESTClient;
@@ -463,8 +464,8 @@ begin
   except
   end;
 
-  if FRESTResponse.JSONValue <> Nil then InputBox('11', s, FHelsi_be + #13#10 + FRESTResponse.JSONValue.ToString)
-  else InputBox('11', s, FHelsi_be + #13#10 + IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText + #13#10 + FRESTResponse.Content);
+//  if FRESTResponse.JSONValue <> Nil then InputBox('11', s, FHelsi_be + #13#10 + IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText + #13#10 + FRESTResponse.JSONValue.ToString)
+//  else InputBox('11', s, FHelsi_be + #13#10 + IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText + #13#10 + FRESTResponse.Content);
 
   if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
   begin

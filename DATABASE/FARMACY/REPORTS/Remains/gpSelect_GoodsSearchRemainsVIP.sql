@@ -35,6 +35,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
    DECLARE vbSummaFormSendVIP TFloat;
+   DECLARE vbPriceFormSendVIP TFloat;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -60,11 +61,15 @@ BEGIN
     END IF;
 
     SELECT COALESCE(ObjectFloat_CashSettings_SummaFormSendVIP.ValueData, 0)
-    INTO vbSummaFormSendVIP
+         , COALESCE(ObjectFloat_CashSettings_PriceFormSendVIP.ValueData, 0)
+    INTO vbSummaFormSendVIP, vbPriceFormSendVIP
     FROM Object AS Object_CashSettings
          LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_SummaFormSendVIP
                                ON ObjectFloat_CashSettings_SummaFormSendVIP.ObjectId = Object_CashSettings.Id 
                               AND ObjectFloat_CashSettings_SummaFormSendVIP.DescId = zc_ObjectFloat_CashSettings_SummaFormSendVIP()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PriceFormSendVIP
+                               ON ObjectFloat_CashSettings_PriceFormSendVIP.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_PriceFormSendVIP.DescId = zc_ObjectFloat_CashSettings_PriceFormSendVIP()
     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
     LIMIT 1;
 
@@ -369,7 +374,8 @@ BEGIN
                                     AND tmpReserveSun.UnitId  = Object_Unit.UnitId
 
           WHERE COALESCE(tmpData.Amount,0) <> 0
-            AND (tmpData.Amount * COALESCE (Object_Price.Price, 0)) >= vbSummaFormSendVIP
+           -- AND (tmpData.Amount * COALESCE (Object_Price.Price, 0)) >= vbSummaFormSendVIP
+            AND COALESCE (Object_Price.Price, 0) >= vbPriceFormSendVIP
           ORDER BY Object_Unit.UnitName
                  , tmpGoodsParams.GoodsGroupName
                  , tmpGoodsParams.GoodsName
@@ -388,3 +394,5 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_GoodsSearchRemainsVIP ('4282', 'глюкоз', inSession := '3')
 -- select * from gpSelect_GoodsSearchRemainsVIP(inCodeSearch := '' , inGoodsSearch := 'маска защит' , inUnitId := 183292,   inSession := '3');
+
+select * from gpSelect_GoodsSearchRemainsVIP(inCodeSearch := '' , inGoodsSearch := 'пент' , inUnitId := 375627 ,  inSession := '3');
