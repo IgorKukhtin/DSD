@@ -46,6 +46,9 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideZaporozhye()
                     THEN 301805 -- покупатели Запорожье
 
+               WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideIrna()
+                    THEN 8235255 -- покупатели Ирна
+
                ELSE 0
           END AS JuridicalGroupId
 
@@ -85,6 +88,9 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideZaporozhye()
                     THEN 301310 -- филиал Запорожье
 
+               WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideIrna()
+                    THEN 8109544 -- филиал Ирна
+
                ELSE 0
           END AS BranchId
 
@@ -106,6 +112,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                              , zc_Enum_Process_AccessKey_GuideDoneck()
                                              , zc_Enum_Process_AccessKey_GuideZaporozhye()
                                              , zc_Enum_Process_AccessKey_GuideOdessa()
+                                             , zc_Enum_Process_AccessKey_GuideIrna()
                                               )
                                THEN AccessKeyId
                           ELSE 0
@@ -147,6 +154,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                              , zc_Enum_Process_AccessKey_PersonalServiceDoneck()
                                              , zc_Enum_Process_AccessKey_PersonalServiceOdessa() 
                                              , zc_Enum_Process_AccessKey_PersonalServiceZaporozhye()
+
+                                             , zc_Enum_Process_AccessKey_PersonalServiceIrna()
                                               )
                                THEN AccessKeyId
                           ELSE 0
@@ -234,6 +243,9 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                                                         )
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceLviv()
                                                                      AND BranchId = 3080683 -- филиал Львов
+                                                                        )
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceIrna()
+                                                                     AND BranchId = 8109544 -- филиал Ирна
                                                                         )
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceKrRog()
                                                                      AND BranchId = 8377 -- филиал Кр.Рог
