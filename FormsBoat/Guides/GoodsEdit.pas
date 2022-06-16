@@ -35,7 +35,7 @@ type
     cxButton2: TcxButton;
     ActionList: TActionList;
     spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
+    FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdFormClose: TdsdFormClose;
@@ -182,7 +182,7 @@ type
     cxLabel15: TcxLabel;
     cxLabel16: TcxLabel;
     edComment: TcxTextEdit;
-    ceisArc: TcxCheckBox;
+    ceIsArc: TcxCheckBox;
     edTaxKind: TcxButtonEdit;
     cxLabel288: TcxLabel;
     ceFeet: TcxCurrencyEdit;

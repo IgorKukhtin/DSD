@@ -48,11 +48,16 @@ BEGIN
         SELECT Object_Personal_View.MemberId
              , MAX (Object_Personal_View.PersonalId) AS PersonalId
              , Object_Personal_View.PositionId
-             , MAX (Object_Personal_View.DateIn)  AS DateIn
+             , MAX (CASE WHEN Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate 
+                              THEN Object_Personal_View.DateIn
+                         ELSE zc_DateStart()
+                    END)  AS DateIn
              , MAX (Object_Personal_View.DateOut) AS DateOut
         FROM Object_Personal_View
         WHERE ((Object_Personal_View.DateOut >= vbStartDate AND Object_Personal_View.DateOut <= vbEndDate)
-            OR (Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate))
+            OR (Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate)
+            OR 1=1
+              )
           AND Object_Personal_View.UnitId = inUnitId
         GROUP BY Object_Personal_View.MemberId
              --, Object_Personal_View.PersonalId

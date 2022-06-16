@@ -169,6 +169,9 @@ BEGIN
                           WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 301309 -- Склад ГП ф.Запорожье
                                THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
 
+                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8020714 -- Склад База ГП (Ирна)
+                               THEN zc_Enum_Process_AccessKey_DocumentIrna() 
+
                           ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner())
                      END;
 

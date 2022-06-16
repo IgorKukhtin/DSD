@@ -102,8 +102,8 @@ BEGIN
     --если јкци€ = TRUE определ€ем мес€ц
     IF inIsPromo = TRUE
     THEN
-      -- мес€ц акции определ€ем в зависимости от zc_MovementDate_EndSale (если дата 10,11, и до конца мес, тогда это тек. мес€ц, если с 1 по 9, тогда брать пред мес€ц) --06.07.2020
-      ioMonthPromo:=(CASE WHEN EXTRACT (DAY FROM inEndSale) BETWEEN 1 AND 9 THEN DATE_TRUNC ('MONTH', (inEndSale - INTERVAL '1 Month') ) ELSE DATE_TRUNC ('MONTH', inEndSale) END) :: TDateTime;
+      -- было ... мес€ц акции определ€ем в зависимости от zc_MovementDate_EndSale (если дата 10,11, и до конца мес, тогда это тек. мес€ц, если с 1 по 9, тогда брать пред мес€ц) --06.07.2020
+      ioMonthPromo:=(CASE WHEN inEndSale >= '01.06.2022' THEN DATE_TRUNC ('MONTH', inEndSale) WHEN EXTRACT (DAY FROM inEndSale) BETWEEN 1 AND 9 THEN DATE_TRUNC ('MONTH', (inEndSale - INTERVAL '1 Month') ) ELSE DATE_TRUNC ('MONTH', inEndSale) END) :: TDateTime;
     END IF;
     
     -- мес€ц акции

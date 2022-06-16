@@ -13,7 +13,6 @@ object InventoryItemEdit_limitForm: TInventoryItemEdit_limitForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13

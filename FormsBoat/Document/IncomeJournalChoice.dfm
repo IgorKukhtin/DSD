@@ -2,11 +2,11 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
   ClientHeight = 535
   ClientWidth = 765
+  AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitTop = -96
   ExplicitWidth = 781
-  ExplicitHeight = 570
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -322,6 +322,9 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   end
   inherited ActionList: TActionList
     Left = 471
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
+    end
     inherited actInsert: TdsdInsertUpdateAction
       Enabled = False
       FormName = 'TTaxForm'
@@ -357,16 +360,13 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
-      Enabled = False
-    end
     inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actSetErased: TdsdChangeMovementStatus
+    inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actMovementItemContainer: TdsdOpenForm
+    inherited actSetErased: TdsdChangeMovementStatus
       Enabled = False
     end
     object dsdChoiceGuides: TdsdChoiceGuides

@@ -65,6 +65,9 @@ BEGIN
    
                           WHEN inBranchId = (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportLviv())
                                THEN zc_Enum_Process_AccessKey_DocumentLviv()
+
+                          WHEN inBranchId = (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportIrna())
+                               THEN zc_Enum_Process_AccessKey_DocumentIrna()
                      END;
      -- !!!замена!!!
      UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Movement.Id = inMovementId AND vbAccessKeyId > 0;
