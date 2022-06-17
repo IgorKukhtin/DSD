@@ -5,8 +5,9 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, TVarChar);
-    
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, Boolean, TDateTime, TVarChar);
+      
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_Site(
  INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
     IN inUnitId            Integer   , -- Ключ объекта <Подразделение>
@@ -22,6 +23,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_Site(
     IN inComment           TVarChar  , -- Комментарий клиента
     IN inisMobileApp       Boolean   , -- Заказ с мобильного приложения
     IN inUserReferals      Integer   , -- По рекомендации сотрудника
+    IN inisConfirmByPhone  Boolean   , -- Подтвердить телефонным звонком
+    IN inDateComing        TDateTime , -- Дата прихода в аптеку
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -161,6 +164,17 @@ BEGIN
       END IF;
     END IF;
     
+    -- Подтвердить телефонным звонком
+    IF COALESCE(inisConfirmByPhone, FALSE) = True
+    THEN
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_ConfirmByPhone(), ioId, True);
+    END IF;
+
+    -- Дата прихода в аптеку
+    IF inDateComing IS NOT NULL
+    THEN
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Coming(), ioId, inDateComing);
+    END IF;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
@@ -183,4 +197,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Check_Site (0, 1, '2022-05-09 13:26:27'::TDateTime, 68870, 'Oleksii', '+38(050) 043-4130', '394725', '', False, 0 , False, '', TRUE, 123, '3'); 
+-- SELECT * FROM gpInsertUpdate_Movement_Check_Site (0, 1, '2022-05-09 13:26:27'::TDateTime, 68870, 'Oleksii', '+38(050) 043-4130', '394725', '', False, 0 , False, '', TRUE, 123, TRUE, CURRENT_DATE::tdatetime, '3'); 

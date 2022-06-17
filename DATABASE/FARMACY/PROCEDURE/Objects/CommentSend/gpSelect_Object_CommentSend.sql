@@ -43,7 +43,8 @@ BEGIN
 
    WHERE Object_CommentSend.DescId = zc_Object_CommentSend()
      AND (Object_CommentSend.isErased = False OR inisShowAll = True)
-     AND (COALESCE(inUnitId, 0) <> 377594 OR Object_CommentSend.Id NOT IN (15180138, 14883297));
+     AND (COALESCE(inUnitId, 0) <> 377594 OR Object_CommentSend.Id NOT IN (15180138, 14883297))
+     AND (COALESCE(inUnitId, 0) <> 377574 OR Object_CommentSend.Id NOT IN (14883331, 14883297, 14894408, 14911561, 14957072, 15180138));
   
   
 END;$BODY$
@@ -63,4 +64,4 @@ ALTER FUNCTION gpSelect_Object_CommentSend(boolean, TVarChar) OWNER TO postgres;
 -- тест
 -- 
 
-select * from gpSelect_Object_CommentSend(inisShowAll := 'True' , inUnitId := 377594  , inSession := '3');
+select * from gpSelect_Object_CommentSend(inisShowAll := 'True' , inUnitId := 377574  , inSession := '3');

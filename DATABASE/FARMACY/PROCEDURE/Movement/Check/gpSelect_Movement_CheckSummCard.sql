@@ -45,7 +45,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CommentCustomer TVarChar
              , isErrorRRO Boolean 
              , isMobileApplication Boolean 
-             , UserReferalsName TVarChar
+             , UserReferalsName TVarChar, isConfirmByPhone Boolean, DateComing TDateTime 
               )
 AS
 $BODY$
@@ -133,6 +133,8 @@ BEGIN
            
            , COALESCE (MovementBoolean_MobileApplication.ValueData, False)::Boolean   AS isMobileApplication
            , Object_UserReferals.ValueData                                            AS UserReferalsName
+           , COALESCE(MovementBoolean_ConfirmByPhone.ValueData, False)::Boolean      AS isConfirmByPhone
+           , MovementDate_Coming.ValueData                                AS DateComing
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -341,6 +343,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Delay
                                    ON MovementDate_Delay.MovementId = Movement_Check.Id
                                   AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
+            LEFT JOIN MovementDate AS MovementDate_Coming
+                                   ON MovementDate_Coming.MovementId = Movement_Check.Id
+                                  AND MovementDate_Coming.DescId = zc_MovementDate_Coming()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
                                          ON MovementLinkObject_CheckSourceKind.MovementId =  Movement_Check.Id
@@ -369,6 +374,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
                                       ON MovementBoolean_MobileApplication.MovementId = Movement_Check.Id
                                      AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+            LEFT JOIN MovementBoolean AS MovementBoolean_ConfirmByPhone
+                                      ON MovementBoolean_ConfirmByPhone.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_ConfirmByPhone.DescId = zc_MovementBoolean_ConfirmByPhone()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_UserReferals
                                          ON MovementLinkObject_UserReferals.MovementId = Movement_Check.Id

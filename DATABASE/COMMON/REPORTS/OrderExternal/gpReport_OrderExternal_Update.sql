@@ -121,7 +121,9 @@ BEGIN
        SELECT
              tmpMovement.OperDate              AS OperDate
            , tmpMovement.OperDatePartner       AS OperDatePartner
-           , Object_Route.ValueData            AS RouteName 
+           , Object_Route.Id                   AS RouteId 
+           , Object_Route.ValueData            AS RouteName
+           , Object_Retail.Id                  AS RetailId
            , Object_Retail.ValueData           AS RetailName
            , tmpMovement.PartnerTagName        AS PartnerTagName
            , tmpMovement.OperDate_CarInfo      ::TDateTime

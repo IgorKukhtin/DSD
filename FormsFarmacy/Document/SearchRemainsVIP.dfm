@@ -846,10 +846,12 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 464
     Top = 168
@@ -861,10 +863,12 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 632
     Top = 320
@@ -989,6 +993,18 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
         Name = 'isBlockVIP'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaFormSendVIP'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceFormSendVIP'
+        Value = Null
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

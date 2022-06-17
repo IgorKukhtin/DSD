@@ -972,6 +972,43 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         end>
       isShowModal = True
     end
+    object macUpdate_CarInfo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_CarInfo_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1048#1085#1092'. '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072#1103#1074#1086#1082'?'
+      InfoAfterExecute = #1048#1085#1092'. '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072#1103#1074#1086#1082
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1048#1085#1092'. '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072#1103#1074#1086#1082
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1048#1085#1092'. '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072#1103#1074#1086#1082
+      ImageIndex = 30
+    end
+    object macUpdate_CarInfo_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_CarInfo
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_CarInfo_list'
+    end
+    object actUpdate_CarInfo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CarInfo
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CarInfo
+        end>
+      Caption = 'actUpdate_CarInfo'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -1047,6 +1084,14 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_CarInfo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1061,6 +1106,10 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     object bbOpenDocument: TdxBarButton
       Action = mactOpenDocument
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Category = 0
+    end
+    object bbUpdate_CarInfo: TdxBarButton
+      Action = macUpdate_CarInfo
       Category = 0
     end
   end
@@ -1178,5 +1227,73 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     PackSize = 1
     Left = 760
     Top = 248
+  end
+  object spUpdate_CarInfo: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderExternal_CarInfo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RouteId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RetailId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCarInfoId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CarInfoId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate_CarInfo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_CarInfo'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 304
   end
 end

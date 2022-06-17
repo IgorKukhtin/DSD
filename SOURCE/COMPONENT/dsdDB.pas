@@ -475,7 +475,10 @@ begin
           B := DataSets[i].DataSet.GetBookmark;
         if DataSets[i].DataSet is TClientDataSet then begin
 //          TClientDataSet(DataSets[i].DataSet).XMLData := XMLResult[i];
-           FStringStream := TStringStream.Create(String(XMLResult[i]));
+//           if (dsdProject = prBoat) and SameText(Copy(XMLResult[i], 1, 19), '<?xml version="1.0"') then
+//             FStringStream := TStringStream.Create(String(XMLResult[i]), TEncoding.UTF8)
+//           else
+             FStringStream := TStringStream.Create(String(XMLResult[i]));
            XMLResult[i] := '';
            try
               TClientDataSet(DataSets[i].DataSet).LoadFromStream(FStringStream);

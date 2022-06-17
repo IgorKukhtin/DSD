@@ -58,6 +58,11 @@ type
     getMovementCheck: TdsdStoredProc;
     CountPartner: TcxGridDBColumn;
     actOpenChoiceCarInfoForm: TOpenChoiceForm;
+    spUpdate_CarInfo: TdsdStoredProc;
+    macUpdate_CarInfo_list: TMultiAction;
+    actUpdate_CarInfo: TdsdExecStoredProc;
+    macUpdate_CarInfo: TMultiAction;
+    bbUpdate_CarInfo: TdxBarButton;
   private
     { Private declarations }
   public

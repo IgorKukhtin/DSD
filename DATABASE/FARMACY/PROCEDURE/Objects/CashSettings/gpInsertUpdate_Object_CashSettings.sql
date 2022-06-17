@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, 
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
                                                            Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, Integer, 
-                                                           Integer, Integer, TVarChar);
+                                                           Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -40,6 +40,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inDeySupplOutSUN2            Integer   ,     -- Продажи дней для аптек откуда дополнения СУН 2
     IN inDeySupplInSUN2             Integer   ,     -- Продажи дней для аптек куда дополнения СУН 2
     IN inExpressVIPConfirm          Integer   ,     -- Чеков для экспресс подтверждение ВИП
+    IN inPriceFormSendVIP           TFloat    ,     -- Цена от которой показан товар при формировании перемещений VIP
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -146,6 +147,8 @@ BEGIN
       -- сохранили Чеков для экспресс подтверждение ВИП
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_ExpressVIPConfirm(), vbID, inExpressVIPConfirm);
 
+      -- сохранили Цена от которой показан товар при формировании перемещений VIP
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_PriceFormSendVIP(), vbID, inPriceFormSendVIP);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

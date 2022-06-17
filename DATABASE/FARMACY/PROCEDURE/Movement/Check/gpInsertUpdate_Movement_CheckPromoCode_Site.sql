@@ -5,7 +5,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCode_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCode_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCode_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCode_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCode_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCode_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, Boolean, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckPromoCode_Site(
  INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -23,6 +24,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckPromoCode_Site(
     IN inComment           TVarChar  , -- Комментарий клиента
     IN inisMobileApp       Boolean   , -- Заказ с мобильного приложения
     IN inUserReferals      Integer   , -- По рекомендации сотрудника
+    IN inisConfirmByPhone  Boolean   , -- Подтвердить телефонным звонком
+    IN inDateComing        TDateTime , -- Дата прихода в аптеку
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -174,6 +177,18 @@ BEGIN
                                                                                                 WHERE Object_User.DescId = zc_Object_User()
                                                                                                   AND Object_User.ObjectCode = inUserReferals));
       END IF;
+    END IF;
+
+    -- Подтвердить телефонным звонком
+    IF COALESCE(inisConfirmByPhone, FALSE) = True
+    THEN
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_ConfirmByPhone(), ioId, True);
+    END IF;
+
+    -- Дата прихода в аптеку
+    IF inDateComing IS NOT NULL
+    THEN
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Coming(), ioId, inDateComing);
     END IF;
 
     -- сохранили протокол

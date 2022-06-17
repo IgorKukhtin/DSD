@@ -11,17 +11,17 @@ inherited CheckForm: TCheckForm
     Width = 892
     Height = 219
     ExplicitTop = 261
-    ExplicitWidth = 809
+    ExplicitWidth = 892
     ExplicitHeight = 219
     ClientRectBottom = 219
     ClientRectRight = 892
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 809
+      ExplicitWidth = 892
       ExplicitHeight = 195
       inherited cxGrid: TcxGrid
         Width = 892
         Height = 195
-        ExplicitWidth = 809
+        ExplicitWidth = 892
         ExplicitHeight = 195
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -288,7 +288,7 @@ inherited CheckForm: TCheckForm
   inherited DataPanel: TPanel
     Width = 892
     Height = 235
-    ExplicitWidth = 809
+    ExplicitWidth = 892
     ExplicitHeight = 235
     inherited edInvNumber: TcxTextEdit
       Left = 7
@@ -856,7 +856,6 @@ inherited CheckForm: TCheckForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 31
-    ExplicitWidth = 809
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DetailDS
@@ -984,7 +983,6 @@ inherited CheckForm: TCheckForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
-    ExplicitWidth = 809
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 349

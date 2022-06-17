@@ -404,10 +404,19 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_NotMoveRemainder6() RETURNS intege
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_NotMoveRemainder6', 'Не перемещать остаток менее 6'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_NotMoveRemainder6');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_ConfirmByPhone() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_ConfirmByPhone'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_ConfirmByPhone', 'Подтвердить по телефону'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ConfirmByPhone');
+
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_ConfirmedByPhoneCall() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_ConfirmedByPhoneCall'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_ConfirmedByPhoneCall', 'Подтверждено по телефоному звонку'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ConfirmedByPhoneCall');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 16.06.22                                                                                   * zc_MovementBoolean_ConfirmByPhone, zc_MovementBoolean_ConfirmedByPhoneCall
  27.05.22                                                                                   * zc_MovementBoolean_NotMoveRemainder6
  15.03.22                                                                                   * zc_MovementBoolean_PaperRecipeSP
  08.03.22                                                                                   * zc_MovementBoolean_SupplierFailures

@@ -99,6 +99,8 @@ type
     isErrorRRO: TcxGridDBColumn;
     isAutoVIPforSales: TcxGridDBColumn;
     isMobileApplication: TcxGridDBColumn;
+    isConfirmByPhone: TcxGridDBColumn;
+    DateComing: TcxGridDBColumn;
   private
     { Private declarations }
   public

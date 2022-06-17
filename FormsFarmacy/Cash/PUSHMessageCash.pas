@@ -42,6 +42,8 @@ type
     FParams : string;
     FTypeParams : string;
     FValueParams : string;
+    FFormLoad : Boolean;
+    FExecStoredProc : Boolean;
     FSpecialLighting : Boolean;
   public
     { Public declarations }
@@ -55,16 +57,22 @@ type
                                AParams : string = '';
                                ATypeParams : string = '';
                                AValueParams : string = '';
+                               AFormLoad : Boolean = False;
+                               AExecStoredProc : Boolean = False;
                                ASpecialLighting : Boolean = False;
                                ATextColor : Integer = clWindowText;
                                AColor : Integer = clCream;
                                ABold : Boolean = False) : boolean;
 
+procedure OpenForm(AFormName, AParams, ATypeParams, AValueParams : string);
+procedure OpenStaticForm(AFormName, AParams, ATypeParams, AValueParams : string);
+procedure ExecStoredProc (AFormName, AParams, ATypeParams, AValueParams : string);
+
 implementation
 
 {$R *.dfm}
 
-uses DB, dsdAction, RegularExpressions, TypInfo;
+uses DB, dsdAction, dsdDB, RegularExpressions, TypInfo;
 
 procedure OpenForm(AFormName, AParams, ATypeParams, AValueParams : string);
   var actOF: TdsdOpenForm; I : Integer; Value : Variant;
@@ -73,6 +81,7 @@ begin
   actOF := TdsdOpenForm.Create(Nil);
   try
     actOF.FormNameParam.Value := AFormName;
+    actOF.isShowModal := True;
     arParams := TRegEx.Split(AParams, ',');
     arTypeParams := TRegEx.Split(ATypeParams, ',');
     arValueParams := TRegEx.Split(AValueParams, ',');
@@ -97,10 +106,75 @@ begin
   end;
 end;
 
+procedure OpenStaticForm(AFormName, AParams, ATypeParams, AValueParams : string);
+  var actOF: TdsdOpenStaticForm; I : Integer; Value : Variant;
+      arValue, arParams, arTypeParams, arValueParams: TArray<string>;
+begin
+  actOF := TdsdOpenStaticForm.Create(Nil);
+  try
+    actOF.FormNameParam.Value := AFormName;
+    actOF.isShowModal := True;
+    arParams := TRegEx.Split(AParams, ',');
+    arTypeParams := TRegEx.Split(ATypeParams, ',');
+    arValueParams := TRegEx.Split(AValueParams, ',');
+    for I := 0 to High(arParams) do
+    begin
+      if (High(arTypeParams) < I) or (High(arValueParams) < I) then Break;
+      Value := arValueParams[I];
+      case TFieldType(GetEnumValue(TypeInfo(TFieldType), arTypeParams[I])) of
+        ftDateTime : begin
+                       arValue := TRegEx.Split(Value, '-');
+                       if High(arValue) = 2 then
+                         Value := EncodeDate(StrToInt(arValue[0]), StrToInt(arValue[1]), StrToInt(arValue[2]))
+                       else Value := Date;
+                     end;
+        ftFloat : Value := StringReplace(Value, '.', FormatSettings.DecimalSeparator, [rfReplaceAll]);
+      end;
+      actOF.GuiParams.AddParam(arParams[I], TFieldType(GetEnumValue(TypeInfo(TFieldType), arTypeParams[I])), ptInput, Value);
+    end;
+    actOF.Execute;
+  finally
+    actOF.Free;
+  end;
+end;
+
+procedure ExecStoredProc (AFormName, AParams, ATypeParams, AValueParams : string);
+  var spESP: TdsdStoredProc; I : Integer; Value : Variant;
+      arValue, arParams, arTypeParams, arValueParams: TArray<string>;
+begin
+  spESP := TdsdStoredProc.Create(Nil);
+  try
+    spESP.StoredProcName := AFormName;
+    spESP.OutputType := otResult;
+    arParams := TRegEx.Split(AParams, ',');
+    arTypeParams := TRegEx.Split(ATypeParams, ',');
+    arValueParams := TRegEx.Split(AValueParams, ',');
+    for I := 0 to High(arParams) do
+    begin
+      if (High(arTypeParams) < I) or (High(arValueParams) < I) then Break;
+      Value := arValueParams[I];
+      case TFieldType(GetEnumValue(TypeInfo(TFieldType), arTypeParams[I])) of
+        ftDateTime : begin
+                       arValue := TRegEx.Split(Value, '-');
+                       if High(arValue) = 2 then
+                         Value := EncodeDate(StrToInt(arValue[0]), StrToInt(arValue[1]), StrToInt(arValue[2]))
+                       else Value := Date;
+                     end;
+        ftFloat : Value := StringReplace(Value, '.', FormatSettings.DecimalSeparator, [rfReplaceAll]);
+      end;
+      spESP.Params.AddParam(arParams[I], TFieldType(GetEnumValue(TypeInfo(TFieldType), arTypeParams[I])), ptInput, Value);
+    end;
+    spESP.Execute;
+  finally
+    spESP.Free;
+  end;
+end;
 
 procedure TPUSHMessageCashForm.btOpenFormClick(Sender: TObject);
 begin
-  OpenForm(FFormName, FParams, FTypeParams, FValueParams);
+  if FExecStoredProc then ExecStoredProc(FFormName, FParams, FTypeParams, FValueParams)
+  else if FFormLoad then OpenForm(FFormName, FParams, FTypeParams, FValueParams)
+  else OpenStaticForm(FFormName, FParams, FTypeParams, FValueParams);
   ModalResult := mrOk;
 end;
 
@@ -155,6 +229,8 @@ function ShowPUSHMessageCash(AMessage : string;
                              AParams : string = '';
                              ATypeParams : string = '';
                              AValueParams : string = '';
+                             AFormLoad : Boolean = False;
+                             AExecStoredProc : Boolean = False;
                              ASpecialLighting : Boolean = False;
                              ATextColor : Integer = clWindowText;
                              AColor : Integer = clCream;
@@ -165,7 +241,9 @@ begin
   AResult := '';
   if AMessage = '' then
   begin
-    OpenForm(AFormName, AParams, ATypeParams, AValueParams);
+    if AExecStoredProc then ExecStoredProc(AFormName, AParams, ATypeParams, AValueParams)
+    else if AFormLoad then OpenForm(AFormName, AParams, ATypeParams, AValueParams)
+    else OpenStaticForm(AFormName, AParams, ATypeParams, AValueParams);
     Result := True;
     Exit
   end;
@@ -178,6 +256,9 @@ begin
     PUSHMessageCashForm.FParams := AParams;
     PUSHMessageCashForm.FTypeParams := ATypeParams;
     PUSHMessageCashForm.FValueParams := AValueParams;
+    PUSHMessageCashForm.FFormLoad := AFormLoad;
+    PUSHMessageCashForm.FExecStoredProc := AExecStoredProc;
+
     PUSHMessageCashForm.FSpecialLighting := ASpecialLighting;
 
     if APoll then

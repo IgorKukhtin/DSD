@@ -57,6 +57,8 @@ type
     CommentCustomer: TcxGridDBColumn;
     isMobileApplication: TcxGridDBColumn;
     UserReferalsName: TcxGridDBColumn;
+    isConfirmByPhone: TcxGridDBColumn;
+    DateComing: TcxGridDBColumn;
   private
     { Private declarations }
   public

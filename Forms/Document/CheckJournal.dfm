@@ -1,31 +1,29 @@
 inherited CheckJournalForm: TCheckJournalForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080
   ClientHeight = 554
-  ClientWidth = 911
+  ClientWidth = 919
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 927
+  ExplicitWidth = 935
   ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 911
+    Width = 919
     Height = 477
     TabOrder = 3
     ExplicitTop = 77
     ExplicitWidth = 911
     ExplicitHeight = 477
     ClientRectBottom = 477
-    ClientRectRight = 911
+    ClientRectRight = 919
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 911
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
-        Width = 911
+        Width = 919
         Height = 477
-        ExplicitLeft = 736
-        ExplicitTop = 16
         ExplicitWidth = 911
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -611,12 +609,28 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 53
           end
+          object isConfirmByPhone: TcxGridDBColumn
+            Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1090#1077#1083#1077#1092#1086#1085#1085#1099#1084' '#1079#1074#1086#1085#1082#1086#1084
+            DataBinding.FieldName = 'isConfirmByPhone'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object DateComing: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1074' '#1072#1087#1090#1077#1082#1091
+            DataBinding.FieldName = 'DateComing'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 911
+    Width = 919
     Height = 51
     ExplicitWidth = 911
     ExplicitHeight = 51
