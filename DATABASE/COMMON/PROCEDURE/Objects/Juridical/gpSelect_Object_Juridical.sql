@@ -41,6 +41,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
+   DECLARE vbIsIrna Boolean;
    DECLARE vbIsConstraint Boolean;
    DECLARE vbObjectId_Constraint Integer;
    DECLARE vbObjectId_Branch_Constraint Integer;
@@ -48,6 +49,10 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Juridical());
    vbUserId:= lpGetUserBySession (inSession);
+
+
+   -- !!!Ирна!!!
+   vbIsIrna:= zfCalc_User_isIrna (vbUserId);
 
 
    -- определяется уровень доступа
@@ -357,6 +362,11 @@ BEGIN
                                     , 3470472 -- Українська залізниця АТ
                                     , 3754339 -- Амік Україна ПІІ - 30603572
                                      )
+           OR vbIsIrna = TRUE
+         )
+     AND (vbIsIrna IS NULL
+       OR (vbIsIrna = FALSE AND COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) = FALSE)
+       OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
          )
    ;
 

@@ -21,9 +21,15 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsIrna Boolean;
 BEGIN
-
+   -- проверка прав пользователя на вызов процедуры
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Movement_ProductionSeparate());
+   vbUserId:= lpGetUserBySession (inSession);
+
+   -- !!!Ирна!!!
+   vbIsIrna:= zfCalc_User_isIrna (vbUserId);
+
 
    RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -61,6 +67,24 @@ BEGIN
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ProductionSeparate() AND Movement.StatusId = tmpStatus.StatusId
 --                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                               ON MovementLinkObject_From.MovementId = Movement.Id
+                                              AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Business_from
+                                       ON ObjectLink_Unit_Business_from.ObjectId = MovementLinkObject_From.ObjectId
+                                      AND ObjectLink_Unit_Business_from.DescId   = zc_ObjectLink_Unit_Business()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                               ON MovementLinkObject_To.MovementId = Movement.Id
+                                              AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Business_to
+                                       ON ObjectLink_Unit_Business_to.ObjectId = MovementLinkObject_To.ObjectId
+                                      AND ObjectLink_Unit_Business_to.DescId   = zc_ObjectLink_Unit_Business()
+           WHERE (vbIsIrna IS NULL
+               OR (vbIsIrna = FALSE AND COALESCE (ObjectLink_Unit_Business_from.ChildObjectId, 0) <> zc_Business_Irna())
+               OR (vbIsIrna = FALSE AND COALESCE (ObjectLink_Unit_Business_to.ChildObjectId, 0)   <> zc_Business_Irna())
+               OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business_from.ChildObjectId = zc_Business_Irna())
+               OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business_to.ChildObjectId   = zc_Business_Irna())
+                 )
             ) AS tmpMovement
 
           LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -135,4 +159,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionSeparate (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inIsErased:= FALSE, inJuridicalBasisId:= 0, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_ProductionSeparate (inStartDate:= '30.01.2022', inEndDate:= '01.02.2022', inIsErased:= FALSE, inJuridicalBasisId:= 0, inSession:= '2')

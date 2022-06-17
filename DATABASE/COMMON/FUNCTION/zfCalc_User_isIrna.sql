@@ -12,6 +12,8 @@ BEGIN
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (8101714 -- Роль Ирна - все
                                                                                             , 8101715 -- Роль Ирна - производство
                                                                                              ))
+        OR EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId = zc_Enum_Process_AccessKey_UserIrna())
+
      THEN
           RETURN TRUE;
 
@@ -37,4 +39,4 @@ $BODY$
 */
 
 -- тест
--- SELECT zfCalc_User_isIrna (5) as forAdmin, zfCalc_User_isIrna (10) as forOth, zfCalc_User_isIrna (9457) as forIrna
+-- SELECT zfCalc_User_isIrna (5) as forAdmin, zfCalc_User_isIrna (10) as forOth, zfCalc_User_isIrna (4467766) as forIrna

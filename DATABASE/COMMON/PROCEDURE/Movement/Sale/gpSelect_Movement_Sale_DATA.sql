@@ -58,9 +58,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
+   DECLARE vbIsIrna Boolean;
    DECLARE vbIsXleb Boolean;
-   DECLARE vbIsZp Boolean;
+   DECLARE vbIsZp   Boolean;
 BEGIN
+
+     -- !!!Ирна!!!
+     vbIsIrna:= zfCalc_User_isIrna (inUserId);
+
      -- !!!Хлеб!!!
      vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = inUserId);
      
@@ -119,7 +124,6 @@ end if;
                        -- FROM tmpStatus
                        --      JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
                           FROM Movement
-
                           WHERE inIsPartnerDate = FALSE
                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                             AND Movement.DescId = zc_Movement_Sale()
@@ -172,9 +176,16 @@ end if;
              LEFT JOIN tmpMovementLinkObject_To ON tmpMovementLinkObject_To.MovementId = Movement.Id
              LEFT JOIN tmpJuridicalTo ON tmpJuridicalTo.ToId = tmpMovementLinkObject_To.ObjectId
              LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = tmpJuridicalTo.Id
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
+                                  ON ObjectLink_Unit_Business.ObjectId = tmpMovementLinkObject_To.ObjectId
+                                 AND ObjectLink_Unit_Business.DescId   = zc_ObjectLink_Unit_Business()
         WHERE (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0
                -- Склад ГП ф.Запорожье
             OR (vbIsZp = TRUE AND tmpMovementLinkObject_From.ObjectId = 301309)
+
+            OR vbIsIrna IS NULL
+            OR (vbIsIrna = FALSE AND COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) <> zc_Business_Irna())
+            OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business.ChildObjectId = zc_Business_Irna())
               );
 
 -- analyze tmpMovement;

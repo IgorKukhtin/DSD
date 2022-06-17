@@ -14,9 +14,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, GoodsGroupName TVarChar,
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbIsIrna Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Ирна!!!
+     vbIsIrna:= zfCalc_User_isIrna (vbUserId);
+
 
      RETURN QUERY
        WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
@@ -54,9 +59,18 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
                                ON ObjectLink_Goods_Fuel.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                  ON ObjectBoolean_Guide_Irna.ObjectId = Object_Goods.Id
+                                 AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
      WHERE Object_Goods.DescId = zc_Object_Goods()
        AND (COALESCE (ObjectLink_Goods_Fuel.ChildObjectId,0) = 0
-         OR vbUserId NOT IN (SELECT UserId FROM tmpUserTransport))
+         OR vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
+           )
+       AND (COALESCE (vbIsIrna, FALSE) = FALSE
+         OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
+           )
+
    UNION ALL
      SELECT Object_Asset.Id
           , Object_Asset.ObjectCode AS Code
@@ -81,6 +95,8 @@ BEGIN
 
      WHERE Object_Asset.DescId = zc_Object_Asset()
        AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
+       AND COALESCE (vbIsIrna, FALSE) = FALSE
+
    UNION ALL
      SELECT Object_Fuel.Id
           , Object_Fuel.ObjectCode AS Code     
@@ -94,6 +110,7 @@ BEGIN
      FROM Object AS Object_Fuel
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Fuel.DescId
      WHERE Object_Fuel.DescId = zc_Object_Fuel()
+       AND COALESCE (vbIsIrna, FALSE) = FALSE
    ;
 
 END;

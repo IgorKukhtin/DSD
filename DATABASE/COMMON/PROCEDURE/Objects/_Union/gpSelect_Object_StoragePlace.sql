@@ -11,12 +11,25 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isEra
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbIsIrna Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     RETURN QUERY
+     -- !!!Ирна!!!
+     vbIsIrna:= zfCalc_User_isIrna (vbUserId);
+
+
+    RETURN QUERY
        WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport() AND 1=0)
+         , tmpPersonal AS (SELECT lfSelect.MemberId
+                                , lfSelect.PersonalId
+                                , lfSelect.UnitId
+                                , lfSelect.PositionId
+                                , lfSelect.BranchId
+                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                           WHERE lfSelect.Ord = 1
+                          )
      SELECT Object_Unit_View.Id
           , Object_Unit_View.Code     
           , Object_Unit_View.Name
@@ -24,7 +37,14 @@ BEGIN
           , Object_Unit_View.isErased
      FROM Object_Unit_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit_View.DescId
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
+                               ON ObjectLink_Unit_Business.ObjectId = Object_Unit_View.Id
+                              AND ObjectLink_Unit_Business.DescId   = zc_ObjectLink_Unit_Business()
      WHERE vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
+       AND (COALESCE (vbIsIrna, FALSE) = FALSE
+            OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business.ChildObjectId = zc_Business_Irna())
+           )
+
     UNION ALL
      SELECT Object_Car.Id
           , Object_Car.ObjectCode AS Code     
@@ -35,8 +55,17 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Car.DescId
           LEFT JOIN ObjectLink AS ObjectLink_Car ON ObjectLink_Car.DescId = zc_ObjectLink_Asset_Car() AND ObjectLink_Car.ObjectId = Object_Car.Id
           LEFT JOIN Object  ON Object.Id = ObjectLink_Car.ChildObjectId
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                  ON ObjectBoolean_Guide_Irna.ObjectId = Object_Car.Id
+                                 AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
      WHERE Object_Car.DescId IN (zc_Object_Car()) -- , zc_Object_Asset()
        AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
+       AND (COALESCE (vbIsIrna, FALSE) = FALSE
+            OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
+           )
+
     UNION ALL
      SELECT Object_Member.Id
           , Object_Member.ObjectCode AS Code     
@@ -45,8 +74,15 @@ BEGIN
           , Object_Member.isErased
      FROM Object AS Object_Member
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
+          LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Member.Id
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
+                               ON ObjectLink_Unit_Business.ObjectId = tmpPersonal.UnitId
+                              AND ObjectLink_Unit_Business.DescId   = zc_ObjectLink_Unit_Business()
      WHERE Object_Member.DescId = zc_Object_Member()
        AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
+       AND (COALESCE (vbIsIrna, FALSE) = FALSE
+            OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business.ChildObjectId = zc_Business_Irna())
+           )
    /*
     UNION ALL
      SELECT View_Personal.PersonalId AS Id       

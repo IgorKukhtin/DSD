@@ -25,10 +25,15 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsIrna Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ProductionUnion());
    vbUserId:= lpGetUserBySession (inSession);
+
+   -- !!!Ирна!!!
+   vbIsIrna:= zfCalc_User_isIrna (vbUserId);
+
 
    -- Результат
    RETURN QUERY
@@ -85,9 +90,28 @@ BEGIN
            , COALESCE (MovementBoolean_Closed.ValueData, False)   :: Boolean AS isClosed
 
      FROM (SELECT Movement.id
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ProductionUnion() AND Movement.StatusId = tmpStatus.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+           FROM tmpStatus
+                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ProductionUnion() AND Movement.StatusId = tmpStatus.StatusId
+                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                            AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                LEFT JOIN ObjectLink AS ObjectLink_Unit_Business_from
+                                     ON ObjectLink_Unit_Business_from.ObjectId = MovementLinkObject_From.ObjectId
+                                    AND ObjectLink_Unit_Business_from.DescId   = zc_ObjectLink_Unit_Business()
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                             ON MovementLinkObject_To.MovementId = Movement.Id
+                                            AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                LEFT JOIN ObjectLink AS ObjectLink_Unit_Business_to
+                                     ON ObjectLink_Unit_Business_to.ObjectId = MovementLinkObject_To.ObjectId
+                                    AND ObjectLink_Unit_Business_to.DescId   = zc_ObjectLink_Unit_Business()
+           WHERE (tmpRoleAccessKey.AccessKeyId > 0
+               OR vbIsIrna IS NULL
+               OR (vbIsIrna = FALSE AND COALESCE (ObjectLink_Unit_Business_from.ChildObjectId, 0) <> zc_Business_Irna())
+               OR (vbIsIrna = FALSE AND COALESCE (ObjectLink_Unit_Business_to.ChildObjectId, 0)   <> zc_Business_Irna())
+               OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business_from.ChildObjectId = zc_Business_Irna())
+               OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business_to.ChildObjectId   = zc_Business_Irna())
+                 )
             ) AS tmpMovement
 
           LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -176,4 +200,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionUnion (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased:=true, inIsPeresort:=false, inJuridicalBasisId:=0, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_ProductionUnion (inStartDate:= '01.08.2022', inEndDate:= '01.08.2022', inIsErased:=true, inIsPeresort:=false, inJuridicalBasisId:=0, inSession:= '2')

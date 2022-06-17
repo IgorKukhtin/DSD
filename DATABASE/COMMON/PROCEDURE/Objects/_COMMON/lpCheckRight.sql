@@ -26,6 +26,8 @@ BEGIN
                AND Object_UserRole_User.ChildObjectId = vbUserId)
      -- Расчет с/с
      OR vbUserId = zc_Enum_Process_Auto_PrimeCost()
+     -- 
+     OR zfCalc_User_isIrna (vbUserId) = TRUE
   THEN
       RETURN vbUserId;
 

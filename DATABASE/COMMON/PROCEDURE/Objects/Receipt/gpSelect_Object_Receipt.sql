@@ -36,9 +36,16 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbIsIrna Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Receipt());
+     vbUserId:= lpGetUserBySession (inSession);
+
+   -- !!!Ирна!!!
+   vbIsIrna:= zfCalc_User_isIrna (vbUserId);
+
 
    RETURN QUERY
      WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
@@ -339,12 +346,14 @@ BEGIN
        AND (ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId OR inGoodsKindId = 0)
      --AND (ObjectBoolean_Disabled.ObjectId IS NULL OR inShowAll = TRUE)
        AND ObjectBoolean_Disabled.ObjectId IS NULL
+       AND (COALESCE (vbIsIrna, FALSE) = FALSE
+         OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
+           )
       ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Receipt (Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

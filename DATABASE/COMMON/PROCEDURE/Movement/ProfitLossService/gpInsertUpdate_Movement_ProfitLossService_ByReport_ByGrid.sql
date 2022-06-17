@@ -47,9 +47,9 @@ BEGIN
      outId:= lpInsertUpdate_Movement_ProfitLossService (ioId                := 0
                                                       , inInvNumber         := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
                                                       , inOperDate          := inOperDate
-                                                      , inAmountIn          := COALESCE (inSumIn,0)              :: TFloat
-                                                      , inAmountOut         := COALESCE (inSum_Bonus,0)          :: TFloat
-                                                      , inBonusValue        := CAST (CASE WHEN COALESCE (inKoeff,0) = 0 THEN inValue ELSE inValue / inKoeff END AS NUMERIC (16, 2)) :: TFloat
+                                                      , inAmountIn          := CASE WHEN COALESCE (inKoeff,0) = 0 THEN COALESCE (inSumIn,0)     ELSE CAST (COALESCE (inSumIn,0)     / inKoeff AS NUMERIC (16, 2)) END :: TFloat
+                                                      , inAmountOut         := CASE WHEN COALESCE (inKoeff,0) = 0 THEN COALESCE (inSum_Bonus,0) ELSE CAST (COALESCE (inSum_Bonus,0) / inKoeff AS NUMERIC (16, 2)) END :: TFloat
+                                                      , inBonusValue        := inValue
                                                       , inAmountCurrency    := COALESCE (inAmountCurrency,0)     :: TFloat
                                                       , inComment           := inComment                         :: TVarChar
                                                       , inContractId        := inContractId_find

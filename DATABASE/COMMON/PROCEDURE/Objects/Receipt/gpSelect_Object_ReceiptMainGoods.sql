@@ -17,11 +17,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbIsIrna Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Goods());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Ирна!!!
+     vbIsIrna:= zfCalc_User_isIrna (vbUserId);
 
    RETURN QUERY
      WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_GuideTech()))
@@ -56,9 +59,16 @@ BEGIN
                                                              ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
                                                             AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
 
+                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                                             ON ObjectBoolean_Guide_Irna.ObjectId = Object_Receipt.Id
+                                                            AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
                                   WHERE Object_Receipt.DescId = zc_Object_Receipt()
                                     AND Object_Receipt.isErased = FALSE
                                     AND (ObjectLink_Receipt_GoodsKind.ChildObjectId = zc_GoodsKind_WorkProgress() OR ObjectLink_Receipt_GoodsKind.ChildObjectId IS NULL)
+                                    AND (COALESCE (vbIsIrna, FALSE) = FALSE
+                                      OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
+                                        )
                             )
 
  

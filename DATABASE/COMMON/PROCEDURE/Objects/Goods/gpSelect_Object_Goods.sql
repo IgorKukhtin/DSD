@@ -37,12 +37,17 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbAccessKeyRight Boolean;
+  DECLARE vbIsIrna Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
      vbUserId:= lpGetUserBySession (inSession);
      -- определяется - есть ли ограничения
      -- vbAccessKeyRight:= NOT zfCalc_AccessKey_GuideAll (vbUserId) AND EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId);
+
+     -- !!!Ирна!!!
+     vbIsIrna:= zfCalc_User_isIrna (vbUserId);
+
 
      -- Результат
      RETURN QUERY
@@ -104,8 +109,8 @@ BEGIN
             , CASE WHEN Object_Goods_basis.Id > 0 AND Object_Goods_basis.Id <> COALESCE (Object_Goods_main.Id, 0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_basis
             , CASE WHEN Object_Goods_main.Id  > 0 AND Object_Goods_main. Id <> COALESCE (Object_Goods.Id,      0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_main
 
-            , COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE)     :: Boolean AS isNameOrig 
-            
+            , COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE)     :: Boolean AS isNameOrig
+
             , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
 
             , Object_Goods.isErased       AS isErased
@@ -188,7 +193,7 @@ BEGIN
                                    ON ObjectFloat_WeightTare.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_WeightTare.DescId   = zc_ObjectFloat_Goods_WeightTare()
              LEFT JOIN ObjectFloat AS ObjectFloat_CountForWeight
-                                   ON ObjectFloat_CountForWeight.ObjectId = Object_Goods.Id 
+                                   ON ObjectFloat_CountForWeight.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_CountForWeight.DescId = zc_ObjectFloat_Goods_CountForWeight()
 
              LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
@@ -243,6 +248,9 @@ BEGIN
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId
 
        WHERE Object_Goods.DescId = zc_Object_Goods()
+       AND (COALESCE (vbIsIrna, FALSE) = FALSE
+         OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
+           )
 
       UNION ALL
        SELECT 0                   :: Integer  AS Id

@@ -34,6 +34,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
+   DECLARE vbIsIrna Boolean;
    DECLARE vbIsXleb Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -41,9 +42,12 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- !!!Ирна!!!
+     vbIsIrna:= zfCalc_User_isIrna (vbUserId);
+
      -- !!!Хлеб!!!
      vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = vbUserId);
-
+     
 
      -- Результат
      RETURN QUERY
@@ -129,14 +133,26 @@ BEGIN
            , Object_ReestrKind.Id                    AS ReestrKindId
            , Object_ReestrKind.ValueData             AS ReestrKindName
 
-       FROM (SELECT Movement.id
+       FROM (SELECT Movement.Id
+                  , MovementLinkObject_To.ObjectId AS ToId
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Income() AND Movement.StatusId = tmpStatus.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                  LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
                   LEFT JOIN MovementBoolean AS MovementBoolean_is20202
                                             ON MovementBoolean_is20202.MovementId = Movement.Id
                                            AND MovementBoolean_is20202.DescId = zc_MovementBoolean_is20202()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                               ON MovementLinkObject_To.MovementId = Movement.Id
+                                              AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
+                                       ON ObjectLink_Unit_Business.ObjectId = MovementLinkObject_To.ObjectId
+                                      AND ObjectLink_Unit_Business.DescId   = zc_ObjectLink_Unit_Business()
              WHERE COALESCE (MovementBoolean_is20202.ValueData, FALSE) = FALSE
+               AND (tmpRoleAccessKey.AccessKeyId > 0
+                 OR vbIsIrna IS NULL
+                 OR (vbIsIrna = FALSE AND COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) <> zc_Business_Irna())
+                 OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business.ChildObjectId = zc_Business_Irna())
+                   )
              ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -199,10 +215,10 @@ BEGIN
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
             LEFT JOIN ObjectDesc AS ObjectDesc_from ON ObjectDesc_from.Id = Object_From.DescId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()*/
+            LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId -- MovementLinkObject_To.ObjectId
             LEFT JOIN ObjectDesc AS ObjectDesc_to ON ObjectDesc_to.Id = Object_To.DescId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind

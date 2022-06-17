@@ -44,6 +44,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
+   DECLARE vbIsIrna       Boolean;
    DECLARE vbIsUserOrder  Boolean;
    DECLARE vbIsConstraint Boolean;
    DECLARE vbObjectId_Constraint Integer;
@@ -54,11 +55,14 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
 
+   -- !!!Ирна!!!
+   vbIsIrna:= zfCalc_User_isIrna (vbUserId);
+
    -- определяется уровень доступа
    vbIsUserOrder:= vbUserId <> 6950843 AND EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0);
    vbObjectId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId), 0 );
    vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
-   vbIsConstraint:= vbObjectId_Constraint > 0 OR vbBranchId_Constraint > 0;
+   vbIsConstraint:= vbObjectId_Constraint > 0 OR vbBranchId_Constraint > 0 OR vbIsIrna = FALSE;
 
 
    IF inShowAll= TRUE THEN
@@ -318,8 +322,14 @@ BEGIN
                               ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
                              AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                ON ObjectBoolean_Guide_Irna.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
    WHERE Object_Partner.DescId = zc_Object_Partner()
-     AND (Object_Contract_View.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId OR tmpContractPartner_Juridical.ContractId IS NULL)
+     AND (Object_Contract_View.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId OR tmpContractPartner_Juridical.ContractId IS NULL
+          OR vbIsIrna = TRUE
+         )
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
            AND vbBranchId_Constraint > 0)
        OR (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
@@ -334,6 +344,7 @@ BEGIN
            AND vbIsUserOrder = TRUE)
        OR (Object_InfoMoney_View.InfoMoneyId = 8942 AND vbIsUserOrder = FALSE) -- Кротон
        OR (Object_Juridical.Id = 15222 AND vbIsUserOrder = FALSE) -- Кротон НВКФ ТОВ
+       OR vbIsIrna = TRUE
          )
      --
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
@@ -346,7 +357,7 @@ BEGIN
           OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 3080683 AND vbBranchId_Constraint = 8379)
           --
           OR vbIsConstraint = FALSE
-          OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
+         OR (Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
                                  , 17344 -- Білла 9221,Запорожье,ул.Яценко,2*500239
                                  , 79360 -- ВК № 37 Вел.Киш.,Запорожье,ГОРЬКОГО,71
                                  , 268754 -- ВК №37 Запорожье, Горького, 71 ВЕЛ.КИШ.ФУДМЕРЕЖА
@@ -356,6 +367,13 @@ BEGIN
                                  , 128902 -- ФОЗЗИ  ФУД, Запорожье Ленина,147
                                  , 128903 -- ФОЗЗИ  ФУД, Запорожье,ул.Иванова,1а
                                   )
+             AND COALESCE (vbIsIrna, FALSE) = FALSE
+            )
+          OR vbIsIrna = TRUE
+         )
+     AND (vbIsIrna IS NULL
+       OR (vbIsIrna = FALSE AND COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) = FALSE)
+       OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
          )
   ;
 
@@ -643,9 +661,15 @@ BEGIN
                               ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
                              AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                ON ObjectBoolean_Guide_Irna.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE
-     AND (Object_Contract_View.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId OR tmpContractPartner_Juridical.ContractId IS NULL)
+     AND (Object_Contract_View.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId OR tmpContractPartner_Juridical.ContractId IS NULL
+          OR vbIsIrna = TRUE
+         )
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
            AND vbBranchId_Constraint > 0)
        OR (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
@@ -660,6 +684,7 @@ BEGIN
            AND vbIsUserOrder = TRUE)
        OR (Object_InfoMoney_View.InfoMoneyId = 8942 AND vbIsUserOrder = FALSE) -- Кротон
        OR (Object_Juridical.Id = 15222 AND vbIsUserOrder = FALSE) -- Кротон НВКФ ТОВ
+       OR vbIsIrna = TRUE
          )
      --
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
@@ -673,7 +698,7 @@ BEGIN
           --
           OR ObjectBoolean_isBranchAll.ValueData = TRUE
           OR vbIsConstraint = FALSE
-          OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
+         OR (Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
                                  , 17344 -- Білла 9221,Запорожье,ул.Яценко,2*500239
                                  , 79360 -- ВК № 37 Вел.Киш.,Запорожье,ГОРЬКОГО,71
                                  , 268754 -- ВК №37 Запорожье, Горького, 71 ВЕЛ.КИШ.ФУДМЕРЕЖА
@@ -683,6 +708,13 @@ BEGIN
                                  , 128902 -- ФОЗЗИ  ФУД, Запорожье Ленина,147
                                  , 128903 -- ФОЗЗИ  ФУД, Запорожье,ул.Иванова,1а
                                   )
+             AND COALESCE (vbIsIrna, FALSE) = FALSE
+            )
+          OR vbIsIrna = TRUE
+         )
+     AND (vbIsIrna IS NULL
+       OR (vbIsIrna = FALSE AND COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) = FALSE)
+       OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
          )
   ;
 
@@ -708,5 +740,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession:= '2030723');
+-- select * from gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession:= '4467766');
 -- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession:= zfCalc_UserAdmin())
