@@ -116,6 +116,12 @@ BEGIN
        CREATE TEMP TABLE _tmpGoods_Sun_exception_Supplement_V2   (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      END IF;
 
+     -- Что приходило по СУН и не отдаем
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpSUN_Send_Supplement_V2'))
+     THEN
+       CREATE TEMP TABLE _tmpSUN_Send_Supplement_V2 (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
+     END IF;
+
      -- исключаем такие перемещения
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SunExclusion_Supplement_V2'))
      THEN
@@ -150,6 +156,8 @@ BEGIN
      DELETE FROM _tmpGoods_TP_exception_Supplement_V2;
      -- Уже использовано в текущем СУН
      DELETE FROM _tmpGoods_Sun_exception_Supplement_V2;
+     -- Что приходило по СУН и не отдаем
+     DELETE FROM _tmpSUN_Send_Supplement_V2;
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      DELETE FROM _tmpRemains_all_Supplement_V2;
      -- 3. распределяем-1 остатки - по всем аптекам
@@ -315,6 +323,48 @@ BEGIN
           AND Object.isErased = FALSE
            ;
            
+     -- Что приходило по СУН и не отдаем
+     WITH
+     tmpUnit AS (SELECT OB.ObjectId AS UnitId
+                      , CASE WHEN COALESCE(OF_DS.ValueData, 10) > COALESCE (OF_DSA.ValueData, 0) 
+                             THEN COALESCE(OF_DS.ValueData, 10) 
+                             ELSE COALESCE (OF_DSA.ValueData, 0) END :: Integer AS DaySendSUN
+                 FROM ObjectBoolean AS OB
+                      LEFT JOIN ObjectFloat   AS OF_DS            ON OF_DS.ObjectId            = OB.ObjectId AND OF_DS.DescId            = zc_ObjectFloat_Unit_HT_SUN_v2()
+                      LEFT JOIN ObjectFloat   AS OF_DSA           ON OF_DSA.ObjectId           = OB.ObjectId AND OF_DSA.DescId           = zc_ObjectFloat_Unit_HT_SUN_All()
+                 WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_V2()
+                 ),
+     tmpSUN_Send AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
+                          , MovementItem.ObjectId            AS GoodsId
+                     FROM Movement
+                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+
+                          INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                     ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                    AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                                    AND MovementBoolean_SUN.ValueData  = TRUE
+                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = FALSE
+                                                 AND MovementItem.Amount     > 0
+
+                          LEFT JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
+
+                     WHERE Movement.OperDate BETWEEN inOperDate - ((SELECT MAX(tmpUnit.DaySendSUN) AS DaySendSUNAll FROM tmpUnit) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                       AND Movement.DescId   = zc_Movement_Send()
+                       AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                     GROUP BY MovementLinkObject_To.ObjectId
+                            , MovementItem.ObjectId
+                     HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (tmpUnit.DaySendSUN :: TVarChar || ' DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                           THEN MovementItem.Amount
+                                      ELSE 0
+                                 END) > 0
+                    )
+                            
+     INSERT INTO _tmpSUN_Send_Supplement_V2 (UnitId, GoodsId)
+     SELECT tmpSUN_Send.UnitId_to, tmpSUN_Send.GoodsId FROM tmpSUN_Send;
 
      -- все Товары для схемы SUN Supplement_V2
      INSERT INTO _tmpGoods_SUN_Supplement_V2 (GoodsId, KoeffSUN)
@@ -696,9 +746,13 @@ BEGIN
                                                             ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_Supplement_V2.UnitId
                                                            AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_Supplement_V2.GoodsId
 
+            LEFT JOIN _tmpSUN_Send_Supplement_V2 ON _tmpSUN_Send_Supplement_V2.GoodsID = _tmpRemains_all_Supplement_V2.GoodsId
+                                                AND _tmpSUN_Send_Supplement_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId  
+
        WHERE COALESCE (_tmpRemains_all_Supplement_V2.Give, 0) > 0
          AND _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_out = True
          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+         AND COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) = 0
        ORDER BY _tmpRemains_all_Supplement_V2.Give DESC
               , _tmpRemains_all_Supplement_V2.UnitId
               , _tmpRemains_all_Supplement_V2.GoodsId
@@ -863,4 +917,4 @@ $BODY$
 
 -- 
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2_Sum (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2_Sum (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);

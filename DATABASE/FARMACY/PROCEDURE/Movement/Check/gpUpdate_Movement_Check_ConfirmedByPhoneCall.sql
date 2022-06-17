@@ -16,7 +16,14 @@ BEGIN
   vbUserId := inSession;
 
   --Подтверждено по телефонному звонку
-  Perform lpInsertUpdate_MovementBoolean(zc_MovementBoolean_ConfirmedByPhoneCall(), inMovementId, inisConfirmedByPhoneCall);
+  IF inisConfirmedByPhoneCall = TRUE
+  THEN
+      -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKindClient(), inMovementId, zc_Enum_ConfirmedKind_PhoneCall());
+  ELSE
+      -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKindClient(), inMovementId, zc_Enum_ConfirmedKind_SmsNo());
+  END IF;
   
   -- сохранили протокол
   PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
@@ -38,5 +45,5 @@ LANGUAGE PLPGSQL VOLATILE;
  16.06.22                                                       *
 */
 
--- тест
-select * from gpUpdate_Movement_Check_ConfirmedByPhoneCall(inMovementId := 20526322 , inisConfirmedByPhoneCall := 'True' ,  inSession := '3');
+-- тест select * from gpUpdate_Movement_Check_ConfirmedByPhoneCall(inMovementId := 20526322 , inisConfirmedByPhoneCall := 'True' ,  inSession := '3');
+

@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TestingUser (Integer, Intege
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TestingUser(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inUserId              Integer   , -- Сотрудник
-    IN inPassed              Boolean    , -- Результат теста
+    IN inPassed              Boolean   , -- Результат теста
     IN inResult              TFloat    , -- Результат теста
     IN inDateTest            TDateTime , -- Дата теста
     IN inLastMonth           Boolean   , -- Сдача за предыдущий месяц
@@ -72,6 +72,9 @@ BEGIN
   THEN
     vbPositionCode := 2;
   END IF;
+
+  inPassed := CASE WHEN vbPositionCode = 1 THEN inResult >= 85 ELSE inResult >= 80 END;
+  
 
    -- Проверяем если уже есть по такому сотруднику
   IF COALESCE (ioId, 0) = 0 AND EXISTS(SELECT Id FROM MovementItem WHERE MovementId = vbMovement AND ObjectId = inUserId)
@@ -141,7 +144,7 @@ BEGIN
     END IF;
     
      -- Начисляем 500 грн штрафа
-/*    IF vbPositionCode = 1 AND vbPassed = False AND inPassed = False  AND inDateTest >= '01.11.2021' AND vbAttempts = 10
+    IF vbPositionCode = 1 AND vbPassed = False AND inPassed = False  AND COALESCE(inLastMonth, FALSE) = FALSE AND inDateTest >= '01.11.2021' AND vbAttempts = 10
     THEN
       BEGIN
         PERFORM gpUpdate_MovementItem_Wages_PenaltyExam (inOperDate := inDateTest, inUserID := inUserId, inSession := zfCalc_UserAdmin());
@@ -150,7 +153,7 @@ BEGIN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
          PERFORM lpLog_Run_Schedule_Function('lpInsertUpdate_MovementItem_TestingUser', True, text_var1::TVarChar, vbUserId);
       END;    
-    END IF;*/
+    END IF;
       
   END IF;
 
@@ -161,7 +164,6 @@ BEGIN
   THEN
     RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%> <%>', inUserId, inResult, inDateTest, inPassed, vbPassed;
   END IF;
-
 
 END;
 $BODY$
