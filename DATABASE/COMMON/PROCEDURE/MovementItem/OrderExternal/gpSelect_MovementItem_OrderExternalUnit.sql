@@ -21,6 +21,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , ArticleGLN TVarChar
              , isErased Boolean
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
+             , Amount_child TFloat
+             , AmountSecond_child TFloat
+             , AmountDiff_child TFloat
               )
 AS
 $BODY$
@@ -82,6 +85,22 @@ BEGIN
                              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                              )
 
+          , tmpMI_Child AS (SELECT MovementItem.ParentId
+                                 , SUM (COALESCE (MovementItem.Amount,0))            AS Amount
+                                 , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
+                                 , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_diff
+                            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                        AND MovementItem.DescId     = zc_MI_Child()
+                                                        AND MovementItem.isErased   = tmpIsErased.isErased
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                             ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                            GROUP BY MovementItem.ParentId
+                            )
+
+
        SELECT
              0                          AS Id
            , tmpGoods.GoodsId           AS GoodsId
@@ -121,6 +140,10 @@ BEGIN
            , NULL                 :: TDateTime  AS EndBegin
            , 0                    :: TFloat     AS diffBegin_sec
 
+           , 0                    ::TFloat AS Amount_child
+           , 0                    ::TFloat AS AmountSecond_child
+           , 0                    ::TFloat AS AmountDiff_child
+           
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
@@ -216,6 +239,10 @@ BEGIN
            , MIDate_EndBegin.ValueData                     AS EndBegin
            , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
 
+           , tmpMI_Child.Amount       ::TFloat AS Amount_child
+           , tmpMI_Child.AmountSecond ::TFloat AS AmountSecond_child
+           , tmpMI_Child.Amount_diff  ::TFloat AS AmountDiff_child
+
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
@@ -275,6 +302,8 @@ BEGIN
 
             LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.GoodsId     = MovementItem.ObjectId
                                            AND tmpGoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+            
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
             ;
      ELSE
 
@@ -298,6 +327,22 @@ BEGIN
                                                                AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                       WHERE ObjectString_ArticleGLN.ValueData <> ''
                                      )
+
+          , tmpMI_Child AS (SELECT MovementItem.ParentId
+                                 , SUM (COALESCE (MovementItem.Amount,0))            AS Amount
+                                 , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
+                                 , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_diff
+                            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                        AND MovementItem.DescId     = zc_MI_Child()
+                                                        AND MovementItem.isErased   = tmpIsErased.isErased
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                             ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                            GROUP BY MovementItem.ParentId
+                            )
+
        SELECT
              MovementItem.Id                        AS Id
            , Object_Goods.Id                        AS GoodsId
@@ -337,6 +382,10 @@ BEGIN
            , MIDate_StartBegin.ValueData                   AS StartBegin
            , MIDate_EndBegin.ValueData                     AS EndBegin
            , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
+
+           , tmpMI_Child.Amount       ::TFloat AS Amount_child
+           , tmpMI_Child.AmountSecond ::TFloat AS AmountSecond_child
+           , tmpMI_Child.Amount_diff  ::TFloat AS AmountDiff_child
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -397,6 +446,8 @@ BEGIN
 
             LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.GoodsId     = MovementItem.ObjectId
                                            AND tmpGoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+            
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
            ;
 
      END IF;

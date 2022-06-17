@@ -21,6 +21,9 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , isErased Boolean
              , isPriceEDIDiff Boolean
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
+             , Amount_child TFloat
+             , AmountSecond_child TFloat
+             , AmountDiff_child TFloat
               )
 AS
 $BODY$
@@ -548,6 +551,21 @@ BEGIN
                                                                            )
                                )*/
                         )
+
+          , tmpMI_Child AS (SELECT MovementItem.ParentId
+                                 , SUM (COALESCE (MovementItem.Amount,0))            AS Amount
+                                 , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
+                                 , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_diff
+                            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                        AND MovementItem.DescId     = zc_MI_Child()
+                                                        AND MovementItem.isErased   = tmpIsErased.isErased
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                             ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                            GROUP BY MovementItem.ParentId
+                            )
              
        SELECT
              0 :: Integer               AS Id
@@ -593,7 +611,11 @@ BEGIN
            , NULL                 :: TDateTime  AS StartBegin
            , NULL                 :: TDateTime  AS EndBegin
            , 0                    :: TFloat     AS diffBegin_sec
-           
+
+           , 0                    ::TFloat AS Amount_child
+           , 0                    ::TFloat AS AmountSecond_child
+           , 0                    ::TFloat AS AmountDiff_child
+
        FROM tmpGoods
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpGoods.GoodsId
@@ -696,6 +718,12 @@ BEGIN
            , tmpMI.StartBegin                  AS StartBegin
            , tmpMI.EndBegin                    AS EndBegin
            , tmpMI.diffBegin_sec               AS diffBegin_sec
+           
+           , tmpMI_Child.Amount       ::TFloat AS Amount_child
+           , tmpMI_Child.AmountSecond ::TFloat AS AmountSecond_child
+           , tmpMI_Child.Amount_diff  ::TFloat AS AmountDiff_child
+
+
        FROM tmpMI_all AS tmpMI
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpMI.GoodsKindId OR tmpPromo.GoodsKindId = 0)
@@ -720,6 +748,8 @@ BEGIN
                                            AND tmpGoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
 
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI.MovementId_Promo
+            
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.MovementItemId
            ;
 
      ELSE
@@ -1068,6 +1098,22 @@ BEGIN
                                                                AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                       WHERE ObjectString_ArticleGLN.ValueData <> ''
                                      )
+
+          , tmpMI_Child AS (SELECT MovementItem.ParentId
+                                 , SUM (COALESCE (MovementItem.Amount,0))            AS Amount
+                                 , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
+                                 , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_diff
+                            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                        AND MovementItem.DescId     = zc_MI_Child()
+                                                        AND MovementItem.isErased   = tmpIsErased.isErased
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                             ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                            GROUP BY MovementItem.ParentId
+                            )
+
        SELECT
              tmpMI.MovementItemId :: Integer    AS Id
            , CAST (row_number() OVER (ORDER BY tmpMI.MovementItemId) AS Integer) AS LineNum
@@ -1129,6 +1175,9 @@ BEGIN
            , tmpMI.EndBegin                    AS EndBegin
            , tmpMI.diffBegin_sec               AS diffBegin_sec
 
+           , tmpMI_Child.Amount       ::TFloat AS Amount_child
+           , tmpMI_Child.AmountSecond ::TFloat AS AmountSecond_child
+           , tmpMI_Child.Amount_diff  ::TFloat AS AmountDiff_child
        FROM tmpMI_all AS tmpMI
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpMI.GoodsKindId OR tmpPromo.GoodsKindId = 0)
@@ -1157,6 +1206,8 @@ BEGIN
             LEFT JOIN Movement_Promo_View AS Movement_Promo_View_2
                                           ON Movement_Promo_View_2.Id = tmpPromo.MovementId
                                          AND tmpMI.MovementId_Promo <> COALESCE (tmpPromo.MovementId, 0) AND tmpMI.MovementId_Promo <> 0
+
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.MovementItemId
        ;
 
      END IF;

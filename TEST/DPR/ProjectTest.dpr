@@ -904,7 +904,6 @@ uses
   MobilePriceListItems_Object in '..\..\Forms\Guides\MobilePriceListItems_Object.pas' {MobilePriceListItems_ObjectForm: TParentForm},
   MobileConst_Object in '..\..\Forms\Guides\MobileConst_Object.pas' {MobileConst_ObjectForm: TParentForm},
   MobileContract_Object in '..\..\Forms\Guides\MobileContract_Object.pas' {MobileContract_ObjectForm: TParentForm},
-  OrderExternal in '..\..\Forms\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
   MobileOrderExternalJournal in '..\..\Forms\Document\MobileOrderExternalJournal.pas' {MobileOrderExternalJournalForm: TParentForm},
   MobileOrderExternal in '..\..\Forms\Document\MobileOrderExternal.pas' {MobileOrderExternalForm: TParentForm},
   TaskJournal in '..\..\Forms\Document\TaskJournal.pas' {TaskJournalForm: TParentForm},
@@ -1369,7 +1368,8 @@ uses
   CarInfoEdit in '..\..\Forms\Guides\CarInfoEdit.pas' {CarInfoEditForm: TParentForm},
   CarInfo in '..\..\Forms\Guides\CarInfo.pas' {CarInfoForm: TParentForm},
   Report_OrderExternal_Update in '..\..\Forms\Report\Report_OrderExternal_Update.pas' {Report_OrderExternal_UpdateForm: TParentForm},
-  Report_OrderExternal_UpdateDialog in '..\..\Forms\Report\Report_OrderExternal_UpdateDialog.pas' {Report_OrderExternal_UpdateDialogForm: TParentForm};
+  Report_OrderExternal_UpdateDialog in '..\..\Forms\Report\Report_OrderExternal_UpdateDialog.pas' {Report_OrderExternal_UpdateDialogForm: TParentForm},
+  OrderExternal in '..\..\Forms\Document\OrderExternal.pas' {OrderExternalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

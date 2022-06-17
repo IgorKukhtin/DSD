@@ -134,6 +134,24 @@ type
     edCarInfo: TcxButtonEdit;
     GuidesCarInfo: TdsdGuides;
     edCarInfo_Date: TcxDateEdit;
+    cxTabSheet1: TcxTabSheet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    GoodsGroupNameFull_ch: TcxGridDBColumn;
+    GoodsCode_ch: TcxGridDBColumn;
+    GoodsName_ch: TcxGridDBColumn;
+    GoodsKindName_ch: TcxGridDBColumn;
+    MeasureName_ch: TcxGridDBColumn;
+    Amount_ch: TcxGridDBColumn;
+    AmountSecond_ch: TcxGridDBColumn;
+    InvNumber_income_ch: TcxGridDBColumn;
+    isErased_ch: TcxGridDBColumn;
+    OperDate_income_ch: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    dsdDBViewAddOnChild: TdsdDBViewAddOn;
+    spSelectChild: TdsdStoredProc;
   private
     { Private declarations }
   public
