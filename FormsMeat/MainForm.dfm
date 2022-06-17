@@ -8447,7 +8447,7 @@ inherited MainForm: TMainForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1062#1045#1061' '#1082#1086#1083#1073#1072#1089#1085#1099#1081')'
-      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1057#1099#1088#1100#1077')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1062#1045#1061' '#1082#1086#1083#1073#1072#1089#1085#1099#1081')'
       FormName = 'TOrderInternalBasisJournalForm'
       FormNameParam.Value = 'TOrderInternalBasisJournalForm'
       FormNameParam.DataType = ftString
@@ -8903,6 +8903,90 @@ inherited MainForm: TMainForm
           Name = 'ToName'
           Value = #1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1072
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOrderInternalIrna: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1045#1061' '#1048#1088#1085#1072')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')'
+      FormName = 'TOrderInternalJournalForm'
+      FormNameParam.Value = 'TOrderInternalJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8020714'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToId'
+          Value = '8020711'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRemains'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOrderInternalBasisIrna: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1062#1045#1061' '#1048#1088#1085#1072')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1062#1045#1061' '#1048#1088#1085#1072')'
+      FormName = 'TOrderInternalBasisJournalForm'
+      FormNameParam.Value = 'TOrderInternalBasisJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8020711'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToid'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRemains'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOrderInternalBasisPackIrna: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1062#1045#1061' '#1091#1087#1072#1082#1086#1074#1082#1080' '#1048#1088#1085#1072' ('#1055#1083#1077#1085#1082#1072')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1062#1045#1061' '#1091#1087#1072#1082#1086#1074#1082#1080' '#1048#1088#1085#1072' ('#1055#1083#1077#1085#1082#1072')'
+      FormName = 'TOrderInternalBasisPackJournalForm'
+      FormNameParam.Value = 'TOrderInternalBasisPackJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8020713'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToid'
+          Value = '8020772'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRemains'
+          Value = False
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -9392,10 +9476,6 @@ inherited MainForm: TMainForm
       object N190: TMenuItem
         Action = actReport_MovementProtocol
       end
-      object N254: TMenuItem
-        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1086#1081
-        Hint = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1086#1081
-      end
     end
     object N42: TMenuItem [1]
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
@@ -9469,7 +9549,7 @@ inherited MainForm: TMainForm
       object miOrderInternalPackRemains: TMenuItem
         Action = actOrderInternalPackRemains
       end
-      object N206: TMenuItem
+      object miOrderInternalBasisPack: TMenuItem
         Action = actOrderInternalBasisPack
       end
       object miOrderInternalBasis: TMenuItem
@@ -9489,6 +9569,18 @@ inherited MainForm: TMainForm
       end
       object N187: TMenuItem
         Action = actGoodsReportSale
+      end
+      object N255: TMenuItem
+        Caption = '-'
+      end
+      object miOrderInternalIrna: TMenuItem
+        Action = actOrderInternalIrna
+      end
+      object miOrderInternalBasisIrna: TMenuItem
+        Action = actOrderInternalBasisIrna
+      end
+      object miOrderInternalBasisPackIrna: TMenuItem
+        Action = actOrderInternalBasisPackIrna
       end
       object N46: TMenuItem
         Caption = '-'
@@ -10357,7 +10449,7 @@ inherited MainForm: TMainForm
       object N94: TMenuItem
         Action = actReport_SaleOrderExternalList
       end
-      object N58: TMenuItem
+      object miReport_GoodsBalance: TMenuItem
         Action = actReport_GoodsBalance
       end
       object miReport_GoodsBalance_Server: TMenuItem

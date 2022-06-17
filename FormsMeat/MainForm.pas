@@ -574,7 +574,7 @@ type
     cxStyleRepository1: TcxStyleRepository;
     cxStyle1: TcxStyle;
     actReport_GoodsBalance: TdsdOpenForm;
-    N58: TMenuItem;
+    miReport_GoodsBalance: TMenuItem;
     actReport_MotionGoods_Upak: TdsdOpenForm;
     N59: TMenuItem;
     actReport_MotionGoods_Ceh: TdsdOpenForm;
@@ -1067,7 +1067,7 @@ type
     actReport_Movement_ProfitLossService: TdsdOpenForm;
     miReport_Movement_ProfitLossService: TMenuItem;
     actOrderInternalBasisPack: TdsdOpenForm;
-    N206: TMenuItem;
+    miOrderInternalBasisPack: TMenuItem;
     actReestrTTN: TdsdOpenForm;
     actReestrStartTTN: TdsdOpenForm;
     actReestrPartnerInTTN: TdsdOpenForm;
@@ -1371,7 +1371,6 @@ type
     actReestrDouble: TdsdOpenForm;
     miReestrDouble: TMenuItem;
     miReestrScan: TMenuItem;
-    N254: TMenuItem;
     actBankAccountDocumentIrna: TdsdOpenForm;
     miBankAccountDocumentIrna: TMenuItem;
     actProductionUnionTechIrna: TdsdOpenForm;
@@ -1382,6 +1381,13 @@ type
     miCashOperationIrna: TMenuItem;
     actReport_OrderExternal_Update: TdsdOpenForm;
     miReport_OrderExternal_Update: TMenuItem;
+    N255: TMenuItem;
+    actOrderInternalIrna: TdsdOpenForm;
+    miOrderInternalIrna: TMenuItem;
+    miOrderInternalBasisIrna: TMenuItem;
+    actOrderInternalBasisIrna: TdsdOpenForm;
+    actOrderInternalBasisPackIrna: TdsdOpenForm;
+    miOrderInternalBasisPackIrna: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
