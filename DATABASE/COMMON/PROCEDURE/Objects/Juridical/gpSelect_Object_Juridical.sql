@@ -364,8 +364,8 @@ BEGIN
                                      )
            OR vbIsIrna = TRUE
          )
-     AND (vbIsIrna IS NULL
-       OR (vbIsIrna = FALSE AND COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) = FALSE)
+     AND (COALESCE (vbIsIrna, FALSE) = FALSE
+     --OR (vbIsIrna = FALSE AND COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) = FALSE)
        OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
          )
    ;
