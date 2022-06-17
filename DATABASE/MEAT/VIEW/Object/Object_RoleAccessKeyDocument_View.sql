@@ -26,6 +26,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                               , zc_Enum_Process_AccessKey_CashDoneck()
                                               , zc_Enum_Process_AccessKey_CashOdessa()
                                               , zc_Enum_Process_AccessKey_CashZaporozhye()
+
+                                              , zc_Enum_Process_AccessKey_CashIrna()
                                                )
                                          THEN TRUE
                                     ELSE NULL
@@ -40,6 +42,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                               , zc_Enum_Process_AccessKey_DocumentNikolaev()
                                               , zc_Enum_Process_AccessKey_DocumentKharkov()
                                               , zc_Enum_Process_AccessKey_DocumentCherkassi()
+                                              , zc_Enum_Process_AccessKey_DocumentIrna()
                                                )
                                          THEN TRUE
                                     ELSE NULL
@@ -54,6 +57,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                               , zc_Enum_Process_AccessKey_TrasportDoneck()
                                               , zc_Enum_Process_AccessKey_TrasportZaporozhye()
                                               , zc_Enum_Process_AccessKey_TrasportOdessa()
+                                              , zc_Enum_Process_AccessKey_TrasportIrna()
                                                )
                                          THEN TRUE
                                     ELSE NULL

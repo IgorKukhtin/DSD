@@ -1,4 +1,4 @@
--- View: Object_Unit_View
+-- View: Movement_Medoc_View
 
 DROP VIEW IF EXISTS Movement_Medoc_View;
 
