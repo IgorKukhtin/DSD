@@ -1,10 +1,9 @@
 -- Function: gpUpdate_Movement_CashSend_CommentMoveMoney()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_CashSend_CommentMoveMoney(Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_CashSend_CommentMoveMoney(Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_CashSend_CommentMoveMoney(
     IN inId                   Integer   , -- Ключ объекта <Документ>
-    IN inKindName             TVarChar  , -- признак приход / расход
     IN inCommentMoveMoney     TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )                              
@@ -13,19 +12,20 @@ $BODY$
    DECLARE vbUserId Integer; 
    DECLARE vbMovementItemId Integer;
    DECLARE vbCommentMoveMoneyId Integer;
+   DECLARE vbUser_isAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_CashSend_CommentMoveMoney());
      --vbUserId:= lpGetUserBySession (inSession);
 
      -- определяем <Элемент документа>
-     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
+     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = inId AND MovementItem.DescId = zc_MI_Master();
      
      -- Доступ
      vbUser_isAll:= lpCheckUser_isAll (vbUserId);
 
      -- Проверка -
-     IF COALESCE (inMI_Id,0) = 0 
+     IF COALESCE (inId,0) = 0 
      THEN
         RAISE EXCEPTION 'Ошибка.Корректировка не сохранена.';
      END IF;
@@ -58,7 +58,7 @@ IF COALESCE (inCommentMoveMoney,'') <> ''
      END IF;                                                          
      
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentMoveMoney(), vbMovementItemId, inCommentMoveMoneyId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentMoveMoney(), vbMovementItemId, vbCommentMoveMoneyId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, FALSE);

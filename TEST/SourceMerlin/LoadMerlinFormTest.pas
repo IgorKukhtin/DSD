@@ -196,6 +196,11 @@ end;
 
 procedure TLoadFormTest.LoadCommentFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentInfoMoneyDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentInfoMoneyDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentMoveMoneyDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentMoveMoneyDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentInfoMoneyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentInfoMoneyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentInfoMoneyEditForm'));

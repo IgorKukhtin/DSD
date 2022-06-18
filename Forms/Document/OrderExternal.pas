@@ -152,6 +152,14 @@ type
     ChildCDS: TClientDataSet;
     dsdDBViewAddOnChild: TdsdDBViewAddOn;
     spSelectChild: TdsdStoredProc;
+    spUpdateMIChild_Amount: TdsdStoredProc;
+    spUpdateMIChild_AmountSecond: TdsdStoredProc;
+    actUpdateMIChild_Amount: TdsdExecStoredProc;
+    macUpdateMIChild_Amount: TMultiAction;
+    actUpdateMIChild_AmountSecond: TdsdExecStoredProc;
+    macUpdateMIChild_AmountSecond: TMultiAction;
+    bbUpdateMIChild_Amount: TdxBarButton;
+    bbUpdateMIChild_AmountSecond: TdxBarButton;
   private
     { Private declarations }
   public

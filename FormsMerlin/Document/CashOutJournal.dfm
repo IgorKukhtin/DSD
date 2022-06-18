@@ -3,7 +3,7 @@ object CashOutJournalForm: TCashOutJournalForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072' '#1056#1072#1089#1093#1086#1076'>'
   ClientHeight = 381
-  ClientWidth = 869
+  ClientWidth = 986
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,10 +22,11 @@ object CashOutJournalForm: TCashOutJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 869
+    Width = 986
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 869
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -83,12 +84,13 @@ object CashOutJournalForm: TCashOutJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 869
+    Width = 986
     Height = 324
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 869
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -529,7 +531,23 @@ object CashOutJournalForm: TCashOutJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateCommentInfoMoney'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -651,6 +669,10 @@ object CashOutJournalForm: TCashOutJournalForm
       Visible = ivAlways
       ImageIndex = 3
       ShortCut = 16464
+    end
+    object bbUpdateCommentInfoMoney: TdxBarButton
+      Action = macUpdateCommentInfoMoney
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -1114,6 +1136,19 @@ object CashOutJournalForm: TCashOutJournalForm
       Status = mtDelete
       DataSource = DataSource
     end
+    object actUpdateCommentInfoMoney: TdsdDataSetRefresh
+      Category = 'Update'
+      MoveParams = <>
+      StoredProc = spUpdateCommentInfoMoney
+      StoredProcList = <
+        item
+          StoredProc = spUpdateCommentInfoMoney
+        end>
+      Caption = 'actUpdateCommentInfoMoney'
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 24
+      RefreshOnTabSetChanges = True
+    end
     object actCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1471,6 +1506,44 @@ object CashOutJournalForm: TCashOutJournalForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object macUpdateCommentInfoMoney: TMultiAction
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCommentInfoMoneyDialog
+        end
+        item
+          Action = actUpdateCommentInfoMoney
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+      ImageIndex = 43
+    end
+    object actCommentInfoMoneyDialog: TExecuteDialog
+      Category = 'Update'
+      MoveParams = <>
+      Caption = 'actCommentInfoMoneyDialog'
+      FormName = 'TCommentInfoMoneyDialogForm'
+      FormNameParam.Value = 'TCommentInfoMoneyDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'CommentInfoMoneyName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CommentInfoMoneyName'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Cash'
@@ -1827,5 +1900,40 @@ object CashOutJournalForm: TCashOutJournalForm
       end>
     Left = 521
     Top = 5
+  end
+  object spUpdateCommentInfoMoney: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Cash_CommentInfoMoney'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKindName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKindName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentInfoMoney'
+        Value = '0'
+        Component = ClientDataSet
+        ComponentItem = 'CommentInfoMoneyName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 728
+    Top = 145
   end
 end

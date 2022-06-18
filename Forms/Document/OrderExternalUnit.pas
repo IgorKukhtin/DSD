@@ -98,7 +98,7 @@ type
     MultiAmountRemain: TMultiAction;
     spUpdateAmountPartner: TdsdStoredProc;
     MultiAmountPartner: TMultiAction;
-    dsdRefreshMI: TdsdDataSetRefresh;
+    actRefreshMI: TdsdDataSetRefresh;
     actUpdateAmountAll: TMultiAction;
     spUpdateAmountForecast: TdsdStoredProc;
     MultiAmountForecast: TMultiAction;
@@ -150,6 +150,15 @@ type
     ChildCDS: TClientDataSet;
     dsdDBViewAddOnChild: TdsdDBViewAddOn;
     spSelectChild: TdsdStoredProc;
+    spUpdateMIChild_Amount: TdsdStoredProc;
+    spUpdateMIChild_AmountSecond: TdsdStoredProc;
+    actUpdateMIChild_Amount: TdsdExecStoredProc;
+    macUpdateMIChild_Amount: TMultiAction;
+    actRefreshMIChild: TdsdDataSetRefresh;
+    actUpdateMIChild_AmountSecond: TdsdExecStoredProc;
+    macUpdateMIChild_AmountSecond: TMultiAction;
+    bbUpdateMIChild_Amount: TdxBarButton;
+    bbUpdateMIChild_AmountSecond: TdxBarButton;
   private
     { Private declarations }
   public

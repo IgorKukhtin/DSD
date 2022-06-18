@@ -104,6 +104,11 @@ type
     AmountIn: TcxGridDBColumn;
     CurrencyName_from: TcxGridDBColumn;
     CurrencyName_to: TcxGridDBColumn;
+    spUpdateCommentMoveMoney: TdsdStoredProc;
+    actUpdateCommentMoveMoney: TdsdDataSetRefresh;
+    actCommentMoveMoneyDialog: TExecuteDialog;
+    macUpdateCommenMoveMoney: TMultiAction;
+    bbUpdateCommenMoveMoney: TdxBarButton;
   private
   public
   end;
