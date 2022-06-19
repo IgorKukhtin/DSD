@@ -9,12 +9,12 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal_Update(
 )
 RETURNS TABLE (OperDate        TDateTime
              , OperDatePartner TDateTime
-             , RouteName TVarChar
-             , RetailName TVarChar
+             , RouteId Integer, RouteName TVarChar
+             , RetailId Integer, RetailName TVarChar
              , PartnerTagName TVarChar
              , OperDate_CarInfo TDateTime
              , CarInfoId Integer, CarInfoName TVarChar 
-             , ToCode Integer, ToName TVarChar
+             , ToId Integer, ToCode Integer, ToName TVarChar
              , Amount TFloat
              , AmountSh TFloat
              , AmountWeight TFloat
@@ -31,13 +31,12 @@ BEGIN
      RETURN QUERY
      WITH 
        tmpMovementAll AS (SELECT Movement.*
-                             , MovementLinkObject_To.ObjectId AS ToId
+                               , MovementLinkObject_To.ObjectId AS ToId
                         FROM Movement
                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                        AND (COALESCE (MovementLinkObject_To.ObjectId,0) = inToId OR inToId = 0)
-
+                                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                         AND (COALESCE (MovementLinkObject_To.ObjectId,0) = inToId OR inToId = 0)
                         WHERE Movement.OperDate = inOperDate
                           AND Movement.StatusId = zc_Enum_Status_Complete()
                           AND Movement.DescId = zc_Movement_OrderExternal()
@@ -129,6 +128,7 @@ BEGIN
            , tmpMovement.OperDate_CarInfo      ::TDateTime
            , Object_CarInfo.Id                    AS CarInfoId
            , Object_CarInfo.ValueData             AS CarInfoName
+           , Object_To.Id                         AS ToId
            , Object_To.ObjectCode                 AS ToCode
            , Object_To.ValueData                  AS ToName
           --

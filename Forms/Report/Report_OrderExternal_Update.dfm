@@ -1252,6 +1252,15 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inOperDate_CarInfo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_CarInfo'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inToid'
         Value = Null
         Component = MasterCDS
@@ -1280,15 +1289,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CarInfoId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate_CarInfo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperDate_CarInfo'
-        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -2952,10 +2952,6 @@
 				<Form>MobileContract_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderExternal.pas">
-				<Form>OrderExternalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\MobileOrderExternalJournal.pas">
 				<Form>MobileOrderExternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4752,6 +4748,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_OrderExternal_UpdateDialog.pas">
 				<Form>Report_OrderExternal_UpdateDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderExternal.pas">
+				<Form>OrderExternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

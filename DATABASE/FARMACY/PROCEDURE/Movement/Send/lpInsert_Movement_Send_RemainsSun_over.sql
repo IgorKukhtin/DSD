@@ -462,6 +462,34 @@ BEGIN
           AND Object.isErased = FALSE
            ;
 
+     -- Уже использовано в текущем СУН
+     WITH
+          tmpSUN AS (SELECT MovementLinkObject_From.ObjectId AS UnitId
+                          , MovementItem.ObjectId            AS GoodsId
+                          , SUM (MovementItem.Amount)        AS Amount
+                     FROM Movement
+                          INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                        ON MovementLinkObject_From.MovementId = Movement.Id
+                                                       AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                          INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                     ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                    AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                                    AND MovementBoolean_SUN.ValueData  = TRUE
+                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = FALSE
+                                                 AND MovementItem.Amount     > 0
+                     WHERE Movement.OperDate = inOperDate
+                       AND Movement.DescId   = zc_Movement_Send()
+                       AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                     GROUP BY MovementLinkObject_From.ObjectId
+                            , MovementItem.ObjectId
+                    )
+     -- Результат-1
+     INSERT INTO _tmpGoods_Sun_exception (UnitId, GoodsId, Amount)
+        SELECT tmpSUN.UnitId, tmpSUN.GoodsId, tmpSUN.Amount
+        FROM tmpSUN;
+        
      -- 2.1. вся статистика продаж
      -- CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
      INSERT INTO _tmpSale_over (UnitId, GoodsId, Amount_t1, Summ_t1, Amount_t2, Summ_t2)
@@ -1763,6 +1791,12 @@ BEGIN
                                                       ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc.UnitId
                                                      AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc.GoodsId
 
+                                        
+                 -- отключена Получать товар который отдавался
+                 LEFT JOIN _tmpGoods_Sun_exception AS _tmpGoods_Sun_exception
+                                                   ON _tmpGoods_Sun_exception.UnitId  = _tmpRemains_calc.UnitId
+                                                  AND _tmpGoods_Sun_exception.GoodsId = _tmpRemains_calc.GoodsId
+
 /*                 -- отбросили !!исключения!!
                  LEFT JOIN _tmpUnit_SunExclusion ON _tmpUnit_SunExclusion.UnitId_from = vbUnitId_from
                                                 AND _tmpUnit_SunExclusion.UnitId_to   = _tmpRemains_calc.UnitId
@@ -1771,6 +1805,7 @@ BEGIN
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+              AND COALESCE(_tmpGoods_Sun_exception.Amount, 0) = 0
             --  AND _tmpUnit_SunExclusion.UnitId_to IS NULL
 
             ORDER BY --начинаем с аптек, где ПОТРЕБНОСТЬ - максимальным

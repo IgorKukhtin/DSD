@@ -529,7 +529,19 @@ object CashInJournalForm: TCashInJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateCommentInfoMoney'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -651,6 +663,10 @@ object CashInJournalForm: TCashInJournalForm
       Visible = ivAlways
       ImageIndex = 3
       ShortCut = 16464
+    end
+    object bbUpdateCommentInfoMoney: TdxBarButton
+      Action = macUpdateCommentInfoMoney
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -1471,6 +1487,58 @@ object CashInJournalForm: TCashInJournalForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object actUpdateCommentInfoMoney: TdsdDataSetRefresh
+      Category = 'Update'
+      MoveParams = <>
+      StoredProc = spUpdateCommentInfoMoney
+      StoredProcList = <
+        item
+          StoredProc = spUpdateCommentInfoMoney
+        end>
+      Caption = 'actUpdateCommentInfoMoney'
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 43
+      RefreshOnTabSetChanges = True
+    end
+    object actCommentInfoMoneyDialog: TExecuteDialog
+      Category = 'Update'
+      MoveParams = <>
+      Caption = 'actCommentInfoMoneyDialog'
+      ImageIndex = 43
+      FormName = 'TCommentInfoMoneyDialogForm'
+      FormNameParam.Value = 'TCommentInfoMoneyDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'CommentInfoMoneyName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CommentInfoMoneyName'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateCommentInfoMoney: TMultiAction
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCommentInfoMoneyDialog
+        end
+        item
+          Action = actUpdateCommentInfoMoney
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+      ImageIndex = 43
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Cash'
@@ -1827,5 +1895,40 @@ object CashInJournalForm: TCashInJournalForm
       end>
     Left = 521
     Top = 5
+  end
+  object spUpdateCommentInfoMoney: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Cash_CommentInfoMoney'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKindName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKindName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentInfoMoney'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CommentInfoMoneyName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 728
+    Top = 145
   end
 end

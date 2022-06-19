@@ -98,7 +98,7 @@ type
     MultiAmountRemain: TMultiAction;
     spUpdateAmountPartner: TdsdStoredProc;
     MultiAmountPartner: TMultiAction;
-    dsdRefreshMI: TdsdDataSetRefresh;
+    actRefreshMI: TdsdDataSetRefresh;
     actUpdateAmountAll: TMultiAction;
     spUpdateAmountForecast: TdsdStoredProc;
     MultiAmountForecast: TMultiAction;
@@ -131,6 +131,34 @@ type
     ChangeGuidesStatuswms2: TChangeGuidesStatus;
     ChangeGuidesStatuswms3: TChangeGuidesStatus;
     GuidesStatus_wms: TdsdGuides;
+    cxTabSheet1: TcxTabSheet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    LineNum_ch: TcxGridDBColumn;
+    GoodsGroupNameFull_ch: TcxGridDBColumn;
+    GoodsCode_ch: TcxGridDBColumn;
+    GoodsName_ch: TcxGridDBColumn;
+    GoodsKindName_ch: TcxGridDBColumn;
+    MeasureName_ch: TcxGridDBColumn;
+    Amount_ch: TcxGridDBColumn;
+    AmountSecond_ch: TcxGridDBColumn;
+    InvNumber_income_ch: TcxGridDBColumn;
+    OperDate_income_ch: TcxGridDBColumn;
+    isErased_ch: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    dsdDBViewAddOnChild: TdsdDBViewAddOn;
+    spSelectChild: TdsdStoredProc;
+    spUpdateMIChild_Amount: TdsdStoredProc;
+    spUpdateMIChild_AmountSecond: TdsdStoredProc;
+    actUpdateMIChild_Amount: TdsdExecStoredProc;
+    macUpdateMIChild_Amount: TMultiAction;
+    actRefreshMIChild: TdsdDataSetRefresh;
+    actUpdateMIChild_AmountSecond: TdsdExecStoredProc;
+    macUpdateMIChild_AmountSecond: TMultiAction;
+    bbUpdateMIChild_Amount: TdxBarButton;
+    bbUpdateMIChild_AmountSecond: TdxBarButton;
   private
     { Private declarations }
   public

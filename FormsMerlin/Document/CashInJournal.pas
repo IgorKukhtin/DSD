@@ -111,6 +111,11 @@ type
     cxLabel14: TcxLabel;
     ceCash: TcxButtonEdit;
     GuidesCash: TdsdGuides;
+    spUpdateCommentInfoMoney: TdsdStoredProc;
+    actUpdateCommentInfoMoney: TdsdDataSetRefresh;
+    actCommentInfoMoneyDialog: TExecuteDialog;
+    macUpdateCommentInfoMoney: TMultiAction;
+    bbUpdateCommentInfoMoney: TdxBarButton;
   private
   public
   end;

@@ -64,6 +64,8 @@ BEGIN
 
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      CREATE TEMP TABLE _tmpGoods_TP_exception   (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
+     -- Уже использовано в текущем СУН
+     CREATE TEMP TABLE _tmpGoods_Sun_exception   (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
 
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      CREATE TEMP TABLE _tmpRemains_all   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, isCloseMCS boolean) ON COMMIT DROP;
@@ -312,7 +314,7 @@ BEGIN
 
 
 
-   --RAISE EXCEPTION '<ok>';
+     -- RAISE EXCEPTION '<ok> %', (SELECT Count(*) FROM _tmpResult_Partion_a WHERE _tmpResult_Partion_a.MovementId > 0);
 
 
 END;
@@ -326,4 +328,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE - INTERVAL '2 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- SELECT * FROM gpInsert_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+
+

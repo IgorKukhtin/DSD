@@ -3,7 +3,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   ClientHeight = 399
   ClientWidth = 1024
   ExplicitWidth = 1040
-  ExplicitHeight = 434
+  ExplicitHeight = 438
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -74,6 +74,21 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountCalcOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSecond_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff_child
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -130,6 +145,21 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSecond_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff_child
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -366,6 +396,42 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 100
           end
+          object Amount_child: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090'.'
+            DataBinding.FieldName = 'Amount_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072
+            Options.Editing = False
+            Width = 87
+          end
+          object AmountSecond_child: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'AmountSecond_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072
+            Options.Editing = False
+            Width = 104
+          end
+          object AmountDiff_child: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089' ('#1079#1072#1082#1072#1079' + '#1076#1086#1079#1072#1082#1072#1079')'
+            DataBinding.FieldName = 'AmountDiff_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089' ('#1079#1072#1082#1072#1079' + '#1076#1086#1079#1072#1082#1072#1079')'
+            Options.Editing = False
+            Width = 87
+          end
           object StartBegin: TcxGridDBColumn
             Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1086
             DataBinding.FieldName = 'StartBegin'
@@ -393,6 +459,201 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 70
           end
+        end
+      end
+    end
+    object cxTabSheet1: TcxTabSheet
+      Caption = #1056#1077#1079#1077#1088#1074
+      ImageIndex = 1
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1024
+        Height = 209
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSecond_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSecond_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object LineNum_ch: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'LineNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object GoodsGroupNameFull_ch: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 126
+          end
+          object GoodsCode_ch: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object GoodsName_ch: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 242
+          end
+          object GoodsKindName_ch: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MeasureName_ch: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object Amount_ch: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090'.'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072
+            Options.Editing = False
+            Width = 87
+          end
+          object AmountSecond_ch: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'AmountSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072
+            Options.Editing = False
+            Width = 104
+          end
+          object InvNumber_income_ch: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'InvNumber_income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 210
+          end
+          object OperDate_income_ch: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'OperDate_income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 135
+          end
+          object isErased_ch: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            Options.Editing = False
+            Width = 50
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
         end
       end
     end
@@ -810,6 +1071,19 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Left = 31
     Top = 270
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end>
       RefreshOnTabSetChanges = True
     end
     inherited actPrint: TdsdPrintAction
@@ -938,7 +1212,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
           Action = actUpdateAmountRemains
         end
         item
-          Action = dsdRefreshMI
+          Action = actRefreshMI
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1054#1089#1090#1072#1090#1086#1082'>?'
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1054#1089#1090#1072#1090#1086#1082'>'
@@ -980,7 +1254,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
           Action = actUpdateAmountPartner
         end
         item
-          Action = dsdRefreshMI
+          Action = actRefreshMI
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>?'
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
@@ -1009,7 +1283,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
           Action = actUpdateAmountForecast
         end
         item
-          Action = dsdRefreshMI
+          Action = actRefreshMI
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>?'
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>'
@@ -1017,7 +1291,77 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>'
       ImageIndex = 49
     end
-    object dsdRefreshMI: TdsdDataSetRefresh
+    object macUpdateMIChild_Amount: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_Amount
+        end
+        item
+          Action = actRefreshMIChild
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' c'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' c'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
+      ImageIndex = 68
+    end
+    object actUpdateMIChild_Amount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_Amount
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_Amount
+        end>
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
+      ImageIndex = 68
+    end
+    object macUpdateMIChild_AmountSecond: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_Amount
+        end
+        item
+          Action = actRefreshMIChild
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' c'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' c'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 69
+    end
+    object actUpdateMIChild_AmountSecond: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_AmountSecond
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_AmountSecond
+        end>
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 69
+    end
+    object actRefreshMIChild: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectChild
+      StoredProcList = <
+        item
+          StoredProc = spSelectChild
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshMI: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1027,7 +1371,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actUpdateAmountAll: TMultiAction
@@ -1044,7 +1387,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
           Action = actUpdateAmountForecast
         end
         item
-          Action = dsdRefreshMI
+          Action = actRefreshMI
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077'?'
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '
@@ -1060,7 +1403,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
           Action = actInsertFromOrder
         end
         item
-          Action = dsdRefreshMI
+          Action = actRefreshMI
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
@@ -1275,6 +1618,22 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMIChild_Amount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_AmountSecond'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1322,6 +1681,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
     object bb: TdxBarButton
       Action = mactUpdateFromOrder
+      Category = 0
+    end
+    object bbUpdateMIChild_Amount: TdxBarButton
+      Action = macUpdateMIChild_Amount
+      Category = 0
+    end
+    object bbUpdateMIChild_AmountSecond: TdxBarButton
+      Action = macUpdateMIChild_AmountSecond
       Category = 0
     end
   end
@@ -2892,5 +3259,119 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Params = <>
     Left = 320
     Top = 88
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 848
+    Top = 248
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 896
+    Top = 248
+  end
+  object dsdDBViewAddOnChild: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <
+      item
+        Column = GoodsCode
+        FindByFullValue = True
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
+    ColumnEnterList = <
+      item
+        Column = GoodsCode
+      end
+      item
+        Column = GoodsName
+      end
+      item
+        Column = Amount
+      end>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 5
+      end>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 950
+    Top = 249
+  end
+  object spSelectChild: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_OrderExternalChild'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 808
+    Top = 248
+  end
+  object spUpdateMIChild_Amount: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_Amount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 714
+    Top = 200
+  end
+  object spUpdateMIChild_AmountSecond: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecond'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 810
+    Top = 200
   end
 end
