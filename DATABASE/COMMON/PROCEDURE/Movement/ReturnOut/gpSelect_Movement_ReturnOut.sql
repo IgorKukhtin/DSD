@@ -112,7 +112,6 @@ BEGIN
              WHERE inIsPartnerDate = FALSE
                AND (tmpRoleAccessKey.AccessKeyId > 0
                  OR vbIsIrna IS NULL
-                 OR (vbIsIrna = FALSE AND COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) <> zc_Business_Irna())
                  OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business.ChildObjectId = zc_Business_Irna())
                    )
             UNION ALL
@@ -132,8 +131,6 @@ BEGIN
                AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                AND (tmpRoleAccessKey.AccessKeyId > 0
-                 OR vbIsIrna IS NULL
-                 OR (vbIsIrna = FALSE AND COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) <> zc_Business_Irna())
                  OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business.ChildObjectId = zc_Business_Irna())
                    )
             ) AS tmpMovement

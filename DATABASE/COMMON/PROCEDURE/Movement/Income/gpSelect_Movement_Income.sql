@@ -150,7 +150,6 @@ BEGIN
              WHERE COALESCE (MovementBoolean_is20202.ValueData, FALSE) = FALSE
                AND (tmpRoleAccessKey.AccessKeyId > 0
                  OR vbIsIrna IS NULL
-                 OR (vbIsIrna = FALSE AND COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) <> zc_Business_Irna())
                  OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business.ChildObjectId = zc_Business_Irna())
                    )
              ) AS tmpMovement

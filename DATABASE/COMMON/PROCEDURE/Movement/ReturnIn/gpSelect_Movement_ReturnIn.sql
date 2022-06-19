@@ -64,12 +64,16 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
+   DECLARE vbIsIrna Boolean;
    DECLARE vbIsXleb Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- !!!Ирна!!!
+     vbIsIrna:= zfCalc_User_isIrna (vbUserId);
 
      -- !!!Хлеб!!!
      vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = vbUserId);
@@ -108,18 +112,39 @@ BEGIN
                                , Movement.OperDate
                           FROM tmpStatus
                                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.StatusId = tmpStatus.StatusId
-                               JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                               LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
+                                                    ON ObjectLink_Unit_Business.ObjectId = MovementLinkObject_To.ObjectId
+                                                   AND ObjectLink_Unit_Business.DescId   = zc_ObjectLink_Unit_Business()
                           WHERE inIsPartnerDate = FALSE
+                            AND (tmpRoleAccessKey.AccessKeyId > 0
+                              OR vbIsIrna IS NULL
+                              OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business.ChildObjectId = zc_Business_Irna())
+                                )
+
                          UNION ALL
                           SELECT MovementDate_OperDatePartner.MovementId  AS Id
                                , Movement.OperDate
                           FROM MovementDate AS MovementDate_OperDatePartner
                                JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnIn()
                                JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                               JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                               LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
+                                                    ON ObjectLink_Unit_Business.ObjectId = MovementLinkObject_To.ObjectId
+                                                   AND ObjectLink_Unit_Business.DescId   = zc_ObjectLink_Unit_Business()
                           WHERE inIsPartnerDate = TRUE
                             AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                             AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                            AND (tmpRoleAccessKey.AccessKeyId > 0
+                              OR vbIsIrna IS NULL
+                              OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business.ChildObjectId = zc_Business_Irna())
+                                )
                          )
         -- Эспедитор из заявки  (найти заявку по PartnerId + OperDatePartner = OperDate из возврата, если вдруг несколько заявок - можно взять МАКС (экспедитор_ФИО))
         , tmpPersonal_Calc AS (SELECT tmp.MovementId
@@ -640,4 +665,4 @@ having  MIFloat_AmountPartner.ValueData <>  SUM (coalesce (MovementItem_Child.Am
 */
 -- тест
 -- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.12.2015', inEndDate:= '01.12.2015', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
---select * from gpSelect_Movement_ReturnIn(instartdate := ('28.03.2022')::TDateTime , inenddate := ('28.03.2022')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '9457');
+-- SELECT * FROM gpSelect_Movement_ReturnIn (instartdate := ('28.03.2022')::TDateTime , inenddate := ('28.03.2022')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '9457');

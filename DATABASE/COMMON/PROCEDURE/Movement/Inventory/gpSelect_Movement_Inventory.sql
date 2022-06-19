@@ -84,7 +84,6 @@ BEGIN
                                       AND ObjectLink_Unit_Business_from.DescId   = zc_ObjectLink_Unit_Business()
              WHERE (tmpRoleAccessKey.AccessKeyId > 0
                  OR vbIsIrna IS NULL
-                 OR (vbIsIrna = FALSE AND COALESCE (ObjectLink_Unit_Business_from.ChildObjectId, 0) <> zc_Business_Irna())
                  OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business_from.ChildObjectId = zc_Business_Irna())
                    )
             ) AS tmpMovement
