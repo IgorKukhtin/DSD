@@ -1,9 +1,10 @@
 -- Function: lpInsertUpdate_MI_OrderExternal_Child()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderExternal_Child (Integer, Integer, Integer, TFloat, TFloat, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderExternal_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderExternal_Child(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
+ INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа> 
+    IN inParentId            Integer   , -- Ключ объекта
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
@@ -12,7 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderExternal_Child(
     IN inMovementId_Send     Integer   , -- № документа приход
     IN inUserId              Integer     -- пользователь
 )
-RETURNS RECORD AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
  BEGIN
@@ -21,7 +22,7 @@ $BODY$
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId);
 
      -- сохранили свойство <MovementId->
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, COALESCE (inMovementId_Send, 0));
@@ -39,7 +40,7 @@ $BODY$
 
      IF vbUserId = 9457 OR vbUserId = 5
      THEN
-         RAISE EXCEPTION 'Ошибка.Админ ничего не меняет;
+         RAISE EXCEPTION 'Ошибка.Админ ничего не меняет';
      END IF;
 
 END;

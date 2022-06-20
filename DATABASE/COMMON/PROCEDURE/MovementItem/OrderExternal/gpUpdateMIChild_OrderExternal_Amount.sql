@@ -36,8 +36,8 @@ BEGIN
       WHERE Movement.Id = inMovementId;
                
        -- данные из мастера + остатки и данные из чайлдов др. док.
-       CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, GoodsKindId Integer, Amount TFloat, AmountSecond TFloat) ON COMMIT DROP;
-       INSERT INTO tmpMIMaster (GoodsId, GoodsKindId, Amount, AmountSecond)                    
+       CREATE TEMP TABLE tmpMIMaster (Id Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, Remains TFloat) ON COMMIT DROP;
+       INSERT INTO tmpMIMaster (Id, GoodsId, GoodsKindId, Amount, Remains)                    
   
         WITH
         tmpMI AS (SELECT MovementItem.Id
@@ -73,13 +73,16 @@ BEGIN
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                              AND MLO_To.ObjectId = vbToId
                              AND Movement.Id <> inMovementId
+                           GROUP BY MovementItem.ObjectId
+                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                            )                    
         -- Остатки
       , tmpContainer AS (SELECT Container.Id AS ContainerId
                               , Container.ObjectId AS GoodsId
                               , Container.Amount
                          FROM Container
-                              INNER JOIN ContainerLinkObject ON CLO_Unit.ContainerId = Container.Id
+                              INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                             ON CLO_Unit.ContainerId = Container.Id
                                                             AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                                             AND CLO_Unit.ObjectId = vbToId
                               INNER JOIN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
@@ -116,7 +119,7 @@ BEGIN
               , tmpMI.GoodsId
               , tmpMI.GoodsKindId
               , tmpMI.Amount
-              , (COALESCE (tmpRemains.Amount,0) - COALESCE (tmpMIChild_All.Amount,0)) AS Amount_diff 
+              --, (COALESCE (tmpRemains.Amount,0) - COALESCE (tmpMIChild_All.Amount,0)) AS Amount_diff 
               , COALESCE (tmpRemains.Amount,0)                                        AS Remains
          FROM tmpMI
               LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI.GoodsId
@@ -129,24 +132,21 @@ BEGIN
 
    -- сохранили
    PERFORM lpInsertUpdate_MI_OrderExternal_Child (ioId                 := COALESCE (MovementItem.Id, 0) :: integer
+                                                , inParentId           := tmpMIMaster.Id
                                                 , inMovementId         := inMovementId
-                                                , inGoodsId            := MovementItem.ObjectId 
+                                                , inGoodsId            := tmpMIMaster.GoodsId 
                                                                        -- если Остаток > итого в заявке, тогда zc_MI_Child.Amount =  итого в заявке ИНАЧЕ Остаток + в этой проц обнуляем все zc_MI_Child.AmountSecond
                                                 , inAmount             := CASE WHEN COALESCE (tmpMIMaster.Remains,0) > COALESCE (tmpMIMaster.Amount,0) THEN COALESCE (tmpMIMaster.Amount,0) ELSE COALESCE (tmpMIMaster.Remains,0) END :: TFloat  
                                                 , inAmountSecond       := 0 :: TFloat 
-                                                , inGoodsKindId        := tmpMI.GoodsKindId 
+                                                , inGoodsKindId        := tmpMIMaster.GoodsKindId 
                                                 , inMovementId_Send    := 0
                                                 , inUserId             := vbUserId
                                                 )
-     FROM MovementItem   
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-          LEFT JOIN tmpMIMaster ON tmpMIMaster.GoodsId = MovementItem.ObjectId
-                               AND tmpMIMaster.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-     WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.DescId = zc_MI_Child()
-       AND MovementItem.isErased = FALSE
+     FROM tmpMIMaster
+          LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                AND MovementItem.DescId = zc_MI_Child()
+                                AND MovementItem.isErased = FALSE
+                                AND MovementItem.ParentId = tmpMIMaster.Id     
     ;
 
 END;
