@@ -160,6 +160,7 @@ type
     macUpdateMIChild_AmountSecond: TMultiAction;
     bbUpdateMIChild_Amount: TdxBarButton;
     bbUpdateMIChild_AmountSecond: TdxBarButton;
+    actRefreshChild: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

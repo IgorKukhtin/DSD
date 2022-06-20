@@ -1067,6 +1067,19 @@ inherited OrderExternalForm: TOrderExternalForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
+    object actRefreshChild: TdsdDataSetRefresh [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectChild
+      StoredProcList = <
+        item
+          StoredProc = spSelectChild
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -1083,7 +1096,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object actPrintTotal: TdsdPrintAction [9]
+    object actPrintTotal: TdsdPrintAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTotal
@@ -1127,7 +1140,7 @@ inherited OrderExternalForm: TOrderExternalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_2: TdsdPrintAction [10]
+    object actPrint_2: TdsdPrintAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1224,7 +1237,7 @@ inherited OrderExternalForm: TOrderExternalForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1251,7 +1264,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       isShowModal = True
     end
-    object actRefreshPrice: TdsdDataSetRefresh [21]
+    object actRefreshPrice: TdsdDataSetRefresh [22]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1541,6 +1554,7 @@ inherited OrderExternalForm: TOrderExternalForm
           Action = actUpdateMIChild_Amount
         end
         item
+          Action = actRefreshChild
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')?'
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
@@ -1566,9 +1580,10 @@ inherited OrderExternalForm: TOrderExternalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdateMIChild_Amount
+          Action = actUpdateMIChild_AmountSecond
         end
         item
+          Action = actRefreshChild
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')?'
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
