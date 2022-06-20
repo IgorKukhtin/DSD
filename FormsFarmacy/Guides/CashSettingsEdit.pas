@@ -91,6 +91,8 @@ type
     cxLabel28: TcxLabel;
     edPriceFormSendVIP: TcxCurrencyEdit;
     cxLabel29: TcxLabel;
+    ceMinPriceSale: TcxCurrencyEdit;
+    cxLabel30: TcxLabel;
   private
     { Private declarations }
   public

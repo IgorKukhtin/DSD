@@ -3648,6 +3648,15 @@ begin
           end;
         end;
 
+//        if (FieldByName('Amount').AsCurrency > 0) and
+//           ((FieldByName('Price').AsCurrency < UnitConfigCDS.FieldByName('MinPriceSale').AsCurrency) and (DiscountServiceForm.gCode = 0) and (FormParams.ParamByName('SPKindId').Value = 0) or
+//           (FieldByName('Price').AsCurrency < UnitConfigCDS.FieldByName('MinPriceSale').AsCurrency) and (FieldByName('Price').AsCurrency > 0) AND
+//           ((DiscountServiceForm.gCode <> 0) or (FormParams.ParamByName('SPKindId').Value <> 0))) then
+//        begin
+//          ShowMessage('ѕродажа товаров с ценой менее ' + UnitConfigCDS.FieldByName('MinPriceSale').AsString + ' грн. запрещена');
+//          exit;
+//        end;
+
         Next;
       end;
     end;

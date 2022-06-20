@@ -1557,9 +1557,14 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_MorionSP() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_MorionSP', 'Код мориона(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MorionSP');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_ApplicationAward() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ApplicationAward'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_ApplicationAward', 'Премия за приложение' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ApplicationAward');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 20.05.22                                                                                                     * zc_MIFloat_ApplicationAward
  14.05.22                                                                                                     * zc_MIFloat_ExchangeRate
  30.03.22         * zc_MIFloat_PriceTare
  28.03.22                                                                                                     * zc_MIFloat_SupplierFailures

@@ -21,7 +21,7 @@ BEGIN
 
    vbDateStart := date_trunc('month', CURRENT_DATE);
    
-   IF date_part('DAY',  CURRENT_DATE) <= date_part('DAY',  vbDateStart + INTERVAL '1 MONTH' - INTERVAL '7 DAY')
+   IF date_part('DAY',  CURRENT_DATE) <= date_part('DAY',  vbDateStart + INTERVAL '1 MONTH' - INTERVAL '5 DAY')
    THEN
      RETURN;
    END IF;

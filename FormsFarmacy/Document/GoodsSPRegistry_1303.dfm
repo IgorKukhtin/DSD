@@ -20,8 +20,6 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
       inherited cxGrid: TcxGrid
         Width = 1043
         Height = 444
-        ExplicitLeft = 144
-        ExplicitTop = -24
         ExplicitWidth = 1043
         ExplicitHeight = 444
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -37,6 +35,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsView.CellAutoHeight = True
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil

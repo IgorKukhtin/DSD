@@ -484,6 +484,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_ConfirmedByPhoneCallForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheck_ConfirmedByPhoneCallForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_RefusalConfirmedForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheck_RefusalConfirmedForm');
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalDiscountExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalDiscountExternalForm');
   Exit;

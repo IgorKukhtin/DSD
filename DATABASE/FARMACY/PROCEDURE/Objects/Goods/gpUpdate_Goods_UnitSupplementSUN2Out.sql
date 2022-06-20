@@ -33,6 +33,9 @@ BEGIN
         PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_UnitSupplementSUN2Out', text_var1::TVarChar, vbUserId);
    END;
 
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (inGoodsMainId, vbUserId);
+
 END;
 $BODY$
 

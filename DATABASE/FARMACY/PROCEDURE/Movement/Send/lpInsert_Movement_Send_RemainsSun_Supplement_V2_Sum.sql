@@ -122,6 +122,12 @@ BEGIN
        CREATE TEMP TABLE _tmpSUN_Send_Supplement_V2 (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
      END IF;
 
+     -- Что приходило по СУН и не отдаем
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpSUN_Send_SupplementAll_V2'))
+     THEN
+       CREATE TEMP TABLE _tmpSUN_Send_SupplementAll_V2 (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
+     END IF;
+
      -- исключаем такие перемещения
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SunExclusion_Supplement_V2'))
      THEN
@@ -158,6 +164,7 @@ BEGIN
      DELETE FROM _tmpGoods_Sun_exception_Supplement_V2;
      -- Что приходило по СУН и не отдаем
      DELETE FROM _tmpSUN_Send_Supplement_V2;
+     DELETE FROM _tmpSUN_Send_SupplementAll_V2;
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      DELETE FROM _tmpRemains_all_Supplement_V2;
      -- 3. распределяем-1 остатки - по всем аптекам
@@ -326,13 +333,11 @@ BEGIN
      -- Что приходило по СУН и не отдаем
      WITH
      tmpUnit AS (SELECT OB.ObjectId AS UnitId
-                      , CASE WHEN COALESCE(OF_DS.ValueData, 10) > COALESCE (OF_DSA.ValueData, 0) 
-                             THEN COALESCE(OF_DS.ValueData, 10) 
-                             ELSE COALESCE (OF_DSA.ValueData, 0) END :: Integer AS DaySendSUN
+                      , COALESCE (OF_DSA.ValueData, 0):: Integer AS DaySendSUN
                  FROM ObjectBoolean AS OB
                       LEFT JOIN ObjectFloat   AS OF_DS            ON OF_DS.ObjectId            = OB.ObjectId AND OF_DS.DescId            = zc_ObjectFloat_Unit_HT_SUN_v2()
                       LEFT JOIN ObjectFloat   AS OF_DSA           ON OF_DSA.ObjectId           = OB.ObjectId AND OF_DSA.DescId           = zc_ObjectFloat_Unit_HT_SUN_All()
-                 WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_V2()
+                 WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_V2() AND COALESCE (OF_DSA.ValueData, 0) > 0
                  ),
      tmpSUN_Send AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
                           , MovementItem.ObjectId            AS GoodsId
@@ -363,8 +368,34 @@ BEGIN
                                  END) > 0
                     )
                             
-     INSERT INTO _tmpSUN_Send_Supplement_V2 (UnitId, GoodsId)
+     INSERT INTO _tmpSUN_Send_SupplementAll_V2 (UnitId, GoodsId)
      SELECT tmpSUN_Send.UnitId_to, tmpSUN_Send.GoodsId FROM tmpSUN_Send;
+     
+     -- исключаем такие перемещения
+     INSERT INTO _tmpUnit_SunExclusion_Supplement_V2 (UnitId_from, UnitId_to)
+        SELECT COALESCE (ObjectLink_From.ChildObjectId, 0) AS UnitId_from
+             , COALESCE (ObjectLink_To.ChildObjectId,   0) AS UnitId_to
+        FROM Object
+             INNER JOIN ObjectBoolean AS OB
+                                      ON OB.ObjectId  = Object.Id
+                                     AND OB.DescId    = zc_ObjectBoolean_SunExclusion_v1()
+                                     AND OB.ValueData = TRUE
+             LEFT JOIN ObjectLink AS ObjectLink_From
+                                  ON ObjectLink_From.ObjectId = Object.Id
+                                 AND ObjectLink_From.DescId   = zc_ObjectLink_SunExclusion_From()
+             -- в этом случае возьмем всех
+             LEFT JOIN _tmpUnit_SUN_Supplement_V2 AS _tmpUnit_SUN_From ON ObjectLink_From.ChildObjectId IS NULL
+
+             LEFT JOIN ObjectLink AS ObjectLink_To
+                                  ON ObjectLink_To.ObjectId = Object.Id
+                                 AND ObjectLink_To.DescId   = zc_ObjectLink_SunExclusion_To()
+             -- в этом случае возьмем всех
+             LEFT JOIN _tmpUnit_SUN_Supplement_V2 AS _tmpUnit_SUN_To ON ObjectLink_To.ChildObjectId IS NULL
+
+        WHERE Object.DescId   = zc_Object_SunExclusion()
+          AND Object.isErased = FALSE
+           ;
+
 
      -- все Товары для схемы SUN Supplement_V2
      INSERT INTO _tmpGoods_SUN_Supplement_V2 (GoodsId, KoeffSUN)
@@ -749,10 +780,14 @@ BEGIN
             LEFT JOIN _tmpSUN_Send_Supplement_V2 ON _tmpSUN_Send_Supplement_V2.GoodsID = _tmpRemains_all_Supplement_V2.GoodsId
                                                 AND _tmpSUN_Send_Supplement_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId  
 
+            LEFT JOIN _tmpSUN_Send_SupplementAll_V2 ON _tmpSUN_Send_SupplementAll_V2.GoodsID = _tmpRemains_all_Supplement_V2.GoodsId
+                                                   AND _tmpSUN_Send_SupplementAll_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId  
+
        WHERE COALESCE (_tmpRemains_all_Supplement_V2.Give, 0) > 0
          AND _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_out = True
          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
          AND COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) = 0
+         AND COALESCE(_tmpSUN_Send_SupplementAll_V2.GoodsID, 0) = 0
        ORDER BY _tmpRemains_all_Supplement_V2.Give DESC
               , _tmpRemains_all_Supplement_V2.UnitId
               , _tmpRemains_all_Supplement_V2.GoodsId

@@ -22,7 +22,7 @@ BEGIN
     outPort := 3306;
     outDataBase := 'neboley';
     outUsername := 'neboley';
-    outPassword := 'db2012Ne8ol';
+    outPassword := 'H4i7Lohx';
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
