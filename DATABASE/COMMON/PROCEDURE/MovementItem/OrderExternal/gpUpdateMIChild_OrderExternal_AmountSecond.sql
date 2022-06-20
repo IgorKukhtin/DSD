@@ -38,8 +38,8 @@ BEGIN
       WHERE Movement.Id = inMovementId;
                
        -- данные из мастера +  приход перемещение на склад √ѕ   минус за этот день за€вки в которых есть zc_MI_Child.AmountSecond
-       CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, GoodsKindId Integer, MovementId_send Integer, Amount TFloat, Amount_diff TFloat, Amount_send TFloat, AmountSecond TFloat) ON COMMIT DROP;
-       INSERT INTO tmpMIMaster (GoodsId, GoodsKindId, MovementId_send,  Amount, Amount_diff, Amount_send, AmountSecond)                    
+       CREATE TEMP TABLE tmpMIMaster (Id Integer,GoodsId Integer, GoodsKindId Integer, MovementId_send Integer, Amount TFloat, Amount_diff TFloat, Amount_send TFloat, AmountSecond TFloat) ON COMMIT DROP;
+       INSERT INTO tmpMIMaster (Id, GoodsId, GoodsKindId, MovementId_send,  Amount, Amount_diff, Amount_send, AmountSecond)                    
   
         WITH
         tmpMI AS (SELECT MovementItem.Id
