@@ -16,6 +16,11 @@ BEGIN
     --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
     vbUserId := inSession;
 
+    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) 
+    THEN
+       RAISE EXCEPTION 'Ошибка. У васнет правв изменять признак "Дополнение СУН1".';
+    END IF;      
+
     -- определяется <Торговая сеть>
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
      
@@ -45,6 +50,9 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Товар с кодом <%> не найден.', inGoodsCode;
     END IF;
     
+    -- сохранили протокол
+    PERFORM lpInsert_ObjectProtocol (vbGoodsId, vbUserId);
+
 
 END;
 $BODY$

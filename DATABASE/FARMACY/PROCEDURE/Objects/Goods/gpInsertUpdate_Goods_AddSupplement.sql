@@ -8,10 +8,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Goods_AddSupplement(
 )
 RETURNS VOID AS
 $BODY$
-   DECLARE vbUserId            Integer;
+   DECLARE vbUserId        Integer;
+   DECLARE vbGoodsMainId   Integer;
    DECLARE vbUnitId Integer;
+
+   DECLARE vbUnit1Id Integer;
+   DECLARE vbUnit2Id Integer;
+
    DECLARE vbUnitKey TVarChar;
    DECLARE vbDay Integer;
+   DECLARE text_var1 text;
 BEGIN
 
    IF COALESCE(inGoodsId, 0) = 0 THEN
@@ -24,6 +30,10 @@ BEGIN
       vbUnitKey := '0';
    END IF;
    vbUnitId := vbUnitKey::Integer;
+   
+   vbUnit1Id := Null;
+   vbUnit2Id := Null;
+   vbGoodsMainId := (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inGoodsId);
    
    IF EXISTS(SELECT 1
              FROM ObjectBoolean AS ObjectBoolean_SUN_v1_SupplementAdd30Cash
@@ -39,6 +49,24 @@ BEGIN
    IF COALESCE (vbUnitId, 0) = 0
    THEN
      RAISE EXCEPTION 'Ошибка определения аптеки сотрудника.';          
+   END IF;
+   
+    IF EXISTS(SELECT 1
+             FROM Object_Goods_Retail
+                  INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                                              AND Object_Goods_Main.isSupplementSUN1 = TRUE
+                                              AND (COALESCE(Object_Goods_Main.UnitSupplementSUN1OutId, 0) = vbUnitId
+                                                   OR COALESCE(Object_Goods_Main.UnitSupplementSUN2OutId, 0) = vbUnitId)
+             WHERE Object_Goods_Retail.Id = inGoodsId) OR
+       EXISTS(SELECT 1
+             FROM Object_Goods_Retail
+                  INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                                              AND Object_Goods_Main.isSupplementSUN1 = TRUE
+                                              AND COALESCE(Object_Goods_Main.UnitSupplementSUN1OutId, 0) <> 0
+                                              AND COALESCE(Object_Goods_Main.UnitSupplementSUN2OutId, 0) <> 0
+             WHERE Object_Goods_Retail.Id = inGoodsId)
+   THEN
+     RETURN;
    END IF;
    
     -- Проверяем остаток и срок
@@ -100,7 +128,7 @@ BEGIN
                  WHERE Object_Goods_Retail.Id = inGoodsId)
    THEN
 
-     IF EXISTS(SELECT
+     IF EXISTS(SELECT 1
                FROM Object_Goods_Retail
                     INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
                                                 AND COALESCE(Object_Goods_Main.UnitSupplementSUN1OutId, 0) <> 0
@@ -115,17 +143,13 @@ BEGIN
        THEN
 
          -- сохранили свойство <Дополнение СУН1> и <Прописали аптеку>
-         PERFORM gpUpdate_Goods_UnitSupplementSUN1Out(inGoodsMainId := Object_Goods_Retail.GoodsMainId, inUnitSupplementSUN1OutiD := Null::Integer ,  inSession := inSession)
-               , gpUpdate_Goods_UnitSupplementSUN2Out(inGoodsMainId := Object_Goods_Retail.GoodsMainId, inUnitSupplementSUN2OutiD := Null::Integer ,  inSession := inSession) 
-         FROM Object_Goods_Retail
-         WHERE Object_Goods_Retail.Id = inGoodsId;
+         vbUnit1Id := Null;
+         vbUnit2Id := Null;
        
        ELSE  
        
          -- сохранили свойство <Прописали аптеку 2>
-         PERFORM gpUpdate_Goods_UnitSupplementSUN2Out(inGoodsMainId := Object_Goods_Retail.GoodsMainId, inUnitSupplementSUN2OutiD := vbUnitId ,  inSession := inSession)
-         FROM Object_Goods_Retail
-         WHERE Object_Goods_Retail.Id = inGoodsId;
+         vbUnit2Id := vbUnitId;
          
        END IF;
 
@@ -140,16 +164,35 @@ BEGIN
    THEN
    
      -- сохранили свойство <Дополнение СУН1> и <Прописали аптеку>
-     PERFORM gpUpdate_Goods_inSupplementSUN1(inGoodsMainId := Object_Goods_Retail.GoodsMainId, inisSupplementSUN1 := True,  inSession := inSession)
-           , gpUpdate_Goods_UnitSupplementSUN1Out(inGoodsMainId := Object_Goods_Retail.GoodsMainId, inUnitSupplementSUN1OutiD := vbUnitId ,  inSession := inSession)
-     FROM Object_Goods_Retail
-     WHERE Object_Goods_Retail.Id = inGoodsId;
+     vbUnitId := vbUnitId;
    END IF;
+
+   -- сохранили свойство <Дополнение СУН1>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SupplementSUN1(), vbGoodsMainId, True);
+   -- сохранили свойство <Дополнение СУН1>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UnitSupplementSUN1Out(), vbGoodsMainId, vbUnit1Id);
+   -- сохранили свойство <Дополнение СУН1>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UnitSupplementSUN2Out(), vbGoodsMainId, vbUnit2Id);
+   
+    -- Сохранили в плоскую таблицй
+   BEGIN
+     UPDATE Object_Goods_Main SET isSupplementSUN1 = True
+                                , UnitSupplementSUN1OutId = vbUnit1Id
+                                , UnitSupplementSUN2OutId = vbUnit2Id
+     WHERE Object_Goods_Main.Id = vbGoodsMainId;  
+   EXCEPTION
+      WHEN others THEN 
+        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+        PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_inSupplementSUN1', text_var1::TVarChar, vbUserId);
+   END;
+
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (vbGoodsMainId, vbUserId);
 
    -- !!!ВРЕМЕННО для ТЕСТА!!!
    IF inSession = zfCalc_UserAdmin()
    THEN
-       RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inGoodsId, vbUnitId, inSession;
+       RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%>', inGoodsId, vbGoodsMainId, vbUnitId, inSession;
    END IF;
     
 END;
@@ -166,4 +209,4 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 --
--- select * from gpInsertUpdate_Goods_AddSupplement(inGoodsId := 1231 ,  inSession := '3');
+-- select * from gpInsertUpdate_Goods_AddSupplement(inGoodsId := 4429  ,  inSession := '3');

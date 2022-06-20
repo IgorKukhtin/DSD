@@ -17,9 +17,14 @@ BEGIN
    IF COALESCE(inGoodsMainId, 0) = 0 THEN
       RETURN;
    END IF;
-
+   
    vbUserId := lpGetUserBySession (inSession);
    
+   IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) 
+   THEN
+       RAISE EXCEPTION 'Ошибка. У васнет правв изменять признак "Дополнение СУН1".';
+   END IF;      
+
    -- сохранили свойство <Дополнение СУН1>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SupplementSUN1(), inGoodsMainId, inisSupplementSUN1);
    
@@ -32,6 +37,9 @@ BEGIN
         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
         PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_inSupplementSUN1', text_var1::TVarChar, vbUserId);
    END;
+
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (inGoodsMainId, vbUserId);
 
 END;
 $BODY$

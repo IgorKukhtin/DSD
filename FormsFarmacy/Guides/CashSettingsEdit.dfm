@@ -484,6 +484,20 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Top = 215
     Caption = #1062#1077#1085#1072' '#1086#1090' '#1082#1086#1090#1086#1088#1086#1081' '#1087#1086#1082#1072#1079#1072#1085' '#1090#1086#1074#1072#1088' '#1087#1088#1080' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
   end
+  object ceMinPriceSale: TcxCurrencyEdit
+    Left = 759
+    Top = 384
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.EditFormat = ',0.00'
+    TabOrder = 66
+    Width = 121
+  end
+  object cxLabel30: TcxLabel
+    Left = 540
+    Top = 385
+    Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -791,6 +805,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMinPriceSale'
+        Value = Null
+        Component = ceMinPriceSale
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1041,6 +1063,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Name = 'PriceFormSendVIP'
         Value = Null
         Component = edPriceFormSendVIP
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MinPriceSale'
+        Value = Null
+        Component = ceMinPriceSale
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

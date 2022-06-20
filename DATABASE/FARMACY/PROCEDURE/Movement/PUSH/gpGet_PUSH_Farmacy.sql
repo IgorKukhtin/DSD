@@ -534,7 +534,7 @@ BEGIN
      END IF;
    END IF;
 
-   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_VIPManager())
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_VIPManager()) or vbUserId = 3
    THEN
      vbText := '';
      
@@ -718,8 +718,7 @@ BEGIN
                                                     AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()                                                       
                                                       
                          WHERE Movement.DescId = zc_Movement_Check()
-                           AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
-                           AND Movement.OperDate >= '20.04.2021'
+                           AND Movement.OperDate >= CURRENT_DATE - INTERVAL '20 DAY'
                            AND COALESCE (Object_CancelReason.ObjectCode, 0) <> 2
                            )
          , tmpMIAll AS (SELECT tmpMovement.*
@@ -821,6 +820,84 @@ BEGIN
          VALUES (17, 'Установите время работы', 'TEmployeeScheduleUserVIPForm', 'Ввод времени прихода и ухода', ' ', ' ', ' ');
        END IF;
      END IF;
+     
+     -- Tовар не пришел, если не пришел вчера
+     vbText := '';
+            WITH tmpMovement AS (SELECT Movement.*
+                                , MovementString_InvNumberOrder.ValueData  AS InvNumberOrder
+                                , MovementFloat_TotalSumm.ValueData        AS TotalSumm
+                                , COALESCE(Object_BuyerForSite.ValueData,
+                                           MovementString_Bayer.ValueData, '')           AS Bayer
+                                , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
+                                            MovementString_BayerPhone.ValueData, '')     AS BayerPhone
+                                , MovementLinkObject_Unit.ObjectId                       AS UnitId
+                                , MovementDate_Coming.ValueData                          AS DateComing 
+                         FROM Movement
+                                
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                           
+                              INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                         ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                        AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                        AND MovementBoolean_Deferred.ValueData = TRUE
+                                                          
+                              INNER JOIN MovementString AS MovementString_InvNumberOrder
+                                                        ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                                       AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()                                
+                                
+                              INNER JOIN MovementDate AS MovementDate_Coming
+                                                      ON MovementDate_Coming.MovementId = Movement.Id
+                                                     AND MovementDate_Coming.DescId = zc_MovementDate_Coming()                                
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                                           ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
+                                                          AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
+
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                                       
+                              LEFT JOIN MovementString AS MovementString_Bayer
+                                                       ON MovementString_Bayer.MovementId = Movement.Id
+                                                      AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+                              LEFT JOIN MovementString AS MovementString_BayerPhone
+                                                       ON MovementString_BayerPhone.MovementId = Movement.Id
+                                                      AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                                           ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
+                                                          AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+                              LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+                              LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                                                     ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
+                                                    AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()                                                       
+                                                      
+                               WHERE Movement.DescId = zc_Movement_Check()
+                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                 AND Movement.OperDate >= CURRENT_DATE - INTERVAL '20 DAY'
+                                 AND MovementDate_Coming.ValueData < CURRENT_DATE - INTERVAL '1 DAY'
+                                 AND MovementDate_Coming.ValueData > vbDatePUSH
+                                 AND COALESCE (MovementLinkObject_ConfirmedKind.ObjectId, zc_Enum_ConfirmedKind_UnComplete()) = zc_Enum_ConfirmedKind_UnComplete()
+                           )
+                                                  
+     SELECT STRING_AGG('  № '||Movement.InvNumber||
+                       ', дата прихода на аптеку '||TO_CHAR(Movement.DateComing, 'DD.MM.YYYY')||
+                       ', сумма '||zfConvert_FloatToString(Movement.TotalSumm)||
+                       ', покупатель '||COALESCE(Movement.Bayer, '')||
+                       ', номер телефона '||COALESCE(Movement.BayerPhone, '')||
+                       ', номер заказа '||COALESCE(Movement.InvNumberOrder, ''), Chr(13))
+           
+     INTO vbText
+     FROM tmpMovement AS Movement;       
+
+     IF COALESCE (vbText, '') <> ''
+     THEN
+       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, Beep)
+       VALUES (18, 'Tовар не пришел на аптеки:'||Chr(13)||vbText, '', '', '', '', '', 1);
+     END IF;
+     
    END IF;
 
    IF date_part('DOW', CURRENT_DATE)::Integer in (1, 4)
@@ -850,7 +927,7 @@ BEGIN
        IF COALESCE (vbText, '') <> ''
        THEN
          INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
-         VALUES (18, 'Возможна оплата частями:'||Chr(13)||vbText, '', '', '', '', '');
+         VALUES (19, 'Возможна оплата частями:'||Chr(13)||vbText, '', '', '', '', '');
        END IF;
      END IF;
    END IF;
@@ -903,7 +980,7 @@ BEGIN
      IF COALESCE (vbText, '') <> ''
      THEN         
        INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
-       VALUES (19, 'Появилась новая галка-чек:'||CHR(13)||CHR(13)||vbText, 
+       VALUES (20, 'Появилась новая галка-чек:'||CHR(13)||CHR(13)||vbText, 
                    'TReport_Check_JackdawsSumForm', 'Галки чеки за период', 
                    'StartDate,EndDate,UnitId,UnitName', 
                    'ftDateTime,ftDateTime,ftInteger,ftString', TO_CHAR(CURRENT_DATE - INTERVAL '3 DAY', 'YYYY-MM-DD')||','||TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD')||',0,');
