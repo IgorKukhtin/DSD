@@ -1,9 +1,9 @@
--- Function: gpUpdateMIChild_OrderExternal_Amount()
+-- Function: gpUpdateMIChild_OrderExternal_AmountSecond()
 
-DROP FUNCTION IF EXISTS gpUpdateMIChild_OrderExternal_Amount (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMIChild_OrderExternal_AmountSecond (Integer, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpUpdateMIChild_OrderExternal_Amount(
+CREATE OR REPLACE FUNCTION gpUpdateMIChild_OrderExternal_AmountSecond(
     IN inMovementId      Integer      , -- ключ Документа
     IN inSession         TVarChar       -- сессия пользователя
 )
@@ -25,6 +25,8 @@ BEGIN
       END IF;
       */
       
+      -- 8458 "Склад База ГП"
+      
      -- данные из документа 
       SELECT Movement.OperDate                 AS OperDate
            , MLO_To.ObjectId                   AS ToId
@@ -35,9 +37,9 @@ BEGIN
                                         AND MLO_To.DescId = zc_MovementLinkObject_To()
       WHERE Movement.Id = inMovementId;
                
-       -- данные из мастера + остатки и данные из чайлдов др. док.
-       CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, GoodsKindId Integer, Amount TFloat, AmountSecond TFloat) ON COMMIT DROP;
-       INSERT INTO tmpMIMaster (GoodsId, GoodsKindId, Amount, AmountSecond)                    
+       -- данные из мастера +  приход перемещение на склад ГП   минус за этот день заявки в которых есть zc_MI_Child.AmountSecond
+       CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, GoodsKindId Integer, MovementId_send Integer, Amount TFloat, Amount_diff TFloat, Amount_send TFloat, AmountSecond TFloat) ON COMMIT DROP;
+       INSERT INTO tmpMIMaster (GoodsId, GoodsKindId, MovementId_send,  Amount, Amount_diff, Amount_send, AmountSecond)                    
   
         WITH
         tmpMI AS (SELECT MovementItem.Id
@@ -52,10 +54,12 @@ BEGIN
                     AND MovementItem.DescId = zc_MI_Master()
                     AND MovementItem.isErased = FALSE
                   ) 
-        -- ВСЕ заявки в которых есть zc_MI_Child.Amount за этот день 
+       
+        -- ВСЕ заявки в которых есть zc_MI_Child.AmountSecond за этот день 
       , tmpMIChild_All AS (SELECT MovementItem.ObjectId                         AS GoodsId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                 , SUM (COALESCE (MovementItem.Amount,0))        AS Amount
+                                , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
                            FROM Movement
                                 INNER JOIN MovementLinkObject AS MLO_To
                                                               ON MLO_To.MovementId = Movement.Id
@@ -63,8 +67,12 @@ BEGIN
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Child()
                                                        AND MovementItem.isErased = FALSE
-                                                       AND COALESCE (MovementItem.Amount,0) <> 0
-                                INNER JOIN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+                                INNER JOIN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId 
+
+                               LEFT JOIN tmpMI_Float AS MIFloat_AmountSecond
+                                                     ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -74,53 +82,37 @@ BEGIN
                              AND MLO_To.ObjectId = vbToId
                              AND Movement.Id <> inMovementId
                            )                    
-        -- Остатки
-      , tmpContainer AS (SELECT Container.Id AS ContainerId
-                              , Container.ObjectId AS GoodsId
-                              , Container.Amount
-                         FROM Container
-                              INNER JOIN ContainerLinkObject ON CLO_Unit.ContainerId = Container.Id
-                                                            AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                            AND CLO_Unit.ObjectId = vbToId
-                              INNER JOIN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
-  
-                              LEFT JOIN ContainerLinkObject AS CLO_Account
-                                                            ON CLO_Account.ContainerId = CLO_Unit.ContainerId
-                                                           AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
-                         WHERE Container.DescId = zc_Container_Count()
-                           AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
-                         )
-      , tmpCLO_GoodsKind_rem AS (SELECT CLO_GoodsKind.*
-                                 FROM ContainerLinkObject AS CLO_GoodsKind
-                                 WHERE CLO_GoodsKind.ContainerId IN (SELECT DISTINCT tmpContainer.ContainerId FROM tmpContainer)
-                                   AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                )
+        --  приход перемещение на склад ГП
+      , tmpSendIn AS (SELECT Movement.Id                                   AS MovementId
+                           , MovementItem.ObjectId                         AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                           , MovementItem.Amount
+                      FROM Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId = zc_MI_Child()
+                                                  AND MovementItem.isErased = FALSE
+                           INNER JOIN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
 
-      , tmpRemains AS (SELECT tmpContainer.GoodsId
-                            , COALESCE (CLO_GoodsKind.ObjectId, 0)   AS GoodsKindId
-                            , tmpContainer.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS Amount --на начало дня
-                       FROM tmpContainer
-                            LEFT JOIN tmpCLO_GoodsKind_rem AS CLO_GoodsKind
-                                                           ON CLO_GoodsKind.ContainerId = tmpContainer.ContainerId
-                                                          AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                            LEFT JOIN MovementItemContainer AS MIContainer
-                                                            ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                           AND MIContainer.OperDate >= vbOperDate
-                       GROUP BY tmpContainer.GoodsId
-                              , COALESCE (CLO_GoodsKind.ObjectId, 0)
-                              , tmpContainer.Amount
-                       HAVING SUM (COALESCE (tmpContainer.Amount,0)) <> 0
-                       )
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                      WHERE Movement.OperDate = vbOperDate
+                        AND Movement.DescId = zc_Movement_Send()
+                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                        AND MLO_To.ObjectId = 8458    --"Склад База ГП"
+                      )
 
          SELECT tmpMI.Id 
               , tmpMI.GoodsId
               , tmpMI.GoodsKindId
+              , tmpSendIn.MovementId AS MovementId_send
               , tmpMI.Amount
-              , (COALESCE (tmpRemains.Amount,0) - COALESCE (tmpMIChild_All.Amount,0)) AS Amount_diff 
-              , COALESCE (tmpRemains.Amount,0)                                        AS Remains
+              , (COALESCE (tmpSendIn.Amount,0) - COALESCE (tmpMIChild_All.AmountSecond,0)) AS Amount_diff 
+              , COALESCE (tmpSendIn.Amount,0)                                        AS Amount_send
+              , COALESCE (tmpMIChild_All.AmountSecond,0))                            AS AmountSecond
          FROM tmpMI
-              LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI.GoodsId
-                                  AND tmpRemains.GoodsKindId = tmpMI.GoodsKindId
+              LEFT JOIN tmpSendIn ON tmpSendIn.GoodsId = tmpMI.GoodsId
+                                 AND tmpSendIn.GoodsKindId = tmpMI.GoodsKindId
               LEFT JOIN tmpMIChild_All ON tmpMIChild_All.GoodsId = tmpMI.GoodsId
                                       AND tmpMIChild_All.GoodsKindId = tmpMI.GoodsKindId
 
@@ -130,12 +122,13 @@ BEGIN
    -- сохранили
    PERFORM lpInsertUpdate_MI_OrderExternal_Child (ioId                 := COALESCE (MovementItem.Id, 0) :: integer
                                                 , inMovementId         := inMovementId
-                                                , inGoodsId            := MovementItem.ObjectId 
-                                                                       -- если Остаток > итого в заявке, тогда zc_MI_Child.Amount =  итого в заявке ИНАЧЕ Остаток + в этой проц обнуляем все zc_MI_Child.AmountSecond
-                                                , inAmount             := CASE WHEN COALESCE (tmpMIMaster.Remains,0) > COALESCE (tmpMIMaster.Amount,0) THEN COALESCE (tmpMIMaster.Amount,0) ELSE COALESCE (tmpMIMaster.Remains,0) END :: TFloat  
-                                                , inAmountSecond       := 0 :: TFloat 
+                                                , inGoodsId            := MovementItem.ObjectId
+                                                , inAmount             :=  COALESCE (MovementItem.Amount,0) 
+                                                                       -- если Перемещ > (итого в заявке - zc_MI_Child.Amount), тогда zc_MI_Child.AmountSecond =  (итого в заявке - zc_MI_Child.Amount) ИНАЧЕ Перемещение + при этом  заполняем zc_MIFloat_MovementId
+                                                , inAmountSecond       := CASE WHEN COALESCE (tmpMIMaster.Amount_send,0) > COALESCE (MovementItem.Amount,0) THEN COALESCE (tmpMIMaster.Amount,0) - COALESCE (MovementItem.Amount,0)
+                                                                               ELSE COALESCE (tmpMIMaster.Amount_send,0) END :: TFloat  
                                                 , inGoodsKindId        := tmpMI.GoodsKindId 
-                                                , inMovementId_Send    := 0
+                                                , inMovementId_Send    := CASE WHEN COALESCE (tmpMIMaster.Amount_send,0) > COALESCE (MovementItem.Amount,0) THEN 0 ELSE tmpMIMaster.MovementId_send END
                                                 , inUserId             := vbUserId
                                                 )
      FROM MovementItem   
