@@ -40,7 +40,7 @@ RETURNS TABLE (NPP Integer
              , TotalSummPLBalance TFloat, TotalSummPLToBalance TFloat, TotalSummPLToBalance_start TFloat
              , TotalSummPL TFloat, TotalSummPLTo TFloat, TotalSummPLTo_start TFloat 
 
-             , TotalSummPL_disc TFloat
+             , TotalSummPL_disc TFloat                            --в названиях колонок где есть TotalSummPriceList  заменила    PriceList на PL, колонкис длинными названиями не отображаются в делфи,  
              , TotalSummPLTo_disc TFloat
              , TotalSummPLBalance_disc TFloat
              , TotalSummPLToBalance_disc TFloat
