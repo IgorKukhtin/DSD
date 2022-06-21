@@ -3728,7 +3728,7 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 810
+    Left = 866
     Top = 200
   end
 end

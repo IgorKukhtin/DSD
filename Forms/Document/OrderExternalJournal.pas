@@ -97,7 +97,16 @@ type
     bbPrint_Account: TdxBarButton;
     OperDate_CarInfo: TcxGridDBColumn;
     CarInfoName: TcxGridDBColumn;
-    bb: TdxBarButton;
+    bbUpdateMIChild_Amount: TdxBarButton;
+    spUpdateMIChild_AmountSecond: TdsdStoredProc;
+    spUpdateMIChild_Amount: TdsdStoredProc;
+    actUpdateMIChild_Amount: TdsdExecStoredProc;
+    actUpdateMIChild_AmountSecond: TdsdExecStoredProc;
+    macUpdateMIChild_AmountSecond_list: TMultiAction;
+    macUpdateMIChild_Amount_list: TMultiAction;
+    macUpdateMIChild_Amount: TMultiAction;
+    macUpdateMIChild_AmountSecond: TMultiAction;
+    bbUpdateMIChild_AmountSecond: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1107,10 +1107,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
-  exit;
+  {exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
   //
@@ -1120,7 +1120,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitJournalForm');
   //

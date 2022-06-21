@@ -644,7 +644,30 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   inherited ActionList: TActionList
     Left = 15
     Top = 194
-    object actPrintSilent: TdsdPrintAction [0]
+    object actUpdateMIChild_Amount: TdsdExecStoredProc [0]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_Amount
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_Amount
+        end>
+      Caption = 'actUpdateMIChild_Amount'
+      ImageIndex = 68
+    end
+    object macUpdateMIChild_Amount_list: TMultiAction [1]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_Amount
+        end>
+      View = cxGridDBTableView
+      Caption = 'MultiAction1'
+      ImageIndex = 68
+    end
+    object actPrintSilent: TdsdPrintAction [2]
       Category = 'Print'
       MoveParams = <
         item
@@ -700,7 +723,58 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object mactSilentPrint: TMultiAction [1]
+    object macUpdateMIChild_Amount: TMultiAction [3]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMIChild_Amount_list
+        end>
+      QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082') '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082') '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
+      ImageIndex = 68
+    end
+    object actUpdateMIChild_AmountSecond: TdsdExecStoredProc [4]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_AmountSecond
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_AmountSecond
+        end>
+      Caption = 'actUpdateMIChild_Amount'
+      ImageIndex = 69
+    end
+    object macUpdateMIChild_AmountSecond_list: TMultiAction [5]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_AmountSecond
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateMIChild_AmountSecond_list'
+      ImageIndex = 69
+    end
+    object macUpdateMIChild_AmountSecond: TMultiAction [6]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMIChild_AmountSecond_list
+        end>
+      QuestionBeforeExecute = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086 +
+        #1074'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 69
+    end
+    object mactSilentPrint: TMultiAction [7]
       Category = 'Print'
       MoveParams = <
         item
@@ -725,7 +799,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
     end
-    object actPrintTotal: TdsdPrintAction [2]
+    object actPrintTotal: TdsdPrintAction [8]
       Category = 'Print'
       MoveParams = <
         item
@@ -780,7 +854,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object mactSilentList: TMultiAction [3]
+    object mactSilentList: TMultiAction [9]
       Category = 'Print'
       MoveParams = <
         item
@@ -805,7 +879,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
       ImageIndex = 3
     end
-    inherited actUpdate: TdsdInsertUpdateAction [4]
+    inherited actUpdate: TdsdInsertUpdateAction [10]
       FormName = 'TOrderExternalForm'
       GuiParams = <
         item
@@ -836,29 +910,29 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actUnComplete: TdsdChangeMovementStatus [5]
+    inherited actUnComplete: TdsdChangeMovementStatus [11]
     end
-    inherited actComplete: TdsdChangeMovementStatus [6]
+    inherited actComplete: TdsdChangeMovementStatus [12]
     end
-    inherited actSetErased: TdsdChangeMovementStatus [7]
+    inherited actSetErased: TdsdChangeMovementStatus [13]
     end
-    inherited mactReCompleteList: TMultiAction [8]
+    inherited mactReCompleteList: TMultiAction [14]
     end
-    inherited mactCompleteList: TMultiAction [9]
+    inherited mactCompleteList: TMultiAction [15]
     end
-    inherited mactUnCompleteList: TMultiAction [10]
+    inherited mactUnCompleteList: TMultiAction [16]
     end
-    inherited mactSetErasedList: TMultiAction [11]
+    inherited mactSetErasedList: TMultiAction [17]
     end
-    inherited actRefresh: TdsdDataSetRefresh [12]
+    inherited actRefresh: TdsdDataSetRefresh [18]
     end
-    inherited actMovementItemContainer: TdsdOpenForm [13]
+    inherited actMovementItemContainer: TdsdOpenForm [19]
     end
-    inherited actGridToExcel: TdsdGridToExcel [14]
+    inherited actGridToExcel: TdsdGridToExcel [20]
     end
-    inherited MovementProtocolOpenForm: TdsdOpenForm [15]
+    inherited MovementProtocolOpenForm: TdsdOpenForm [21]
     end
-    object actRefreshStart: TdsdDataSetRefresh [16]
+    object actRefreshStart: TdsdDataSetRefresh [22]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet_UserJuridicalBasis
@@ -874,7 +948,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    inherited actInsert: TdsdInsertUpdateAction [17]
+    inherited actInsert: TdsdInsertUpdateAction [23]
       FormName = 'TOrderExternalForm'
       GuiParams = <
         item
@@ -902,13 +976,13 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actShowErased: TBooleanStoredProcAction [18]
+    inherited actShowErased: TBooleanStoredProcAction [24]
     end
-    object actShowMessage: TShowMessageAction [19]
+    object actShowMessage: TShowMessageAction [25]
       Category = 'DSDLib'
       MoveParams = <>
     end
-    object ExecuteDialog: TExecuteDialog [20]
+    object ExecuteDialog: TExecuteDialog [26]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
@@ -939,11 +1013,11 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    inherited mactSimpleReCompleteList: TMultiAction [21]
+    inherited mactSimpleReCompleteList: TMultiAction [27]
     end
-    inherited mactSimpleErasedList: TMultiAction [22]
+    inherited mactSimpleErasedList: TMultiAction [28]
     end
-    object actOpenReportForm: TdsdOpenForm [23]
+    object actOpenReportForm: TdsdOpenForm [29]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -983,15 +1057,15 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end>
       isShowModal = False
     end
-    inherited mactSimpleUncompleteList: TMultiAction [24]
+    inherited mactSimpleUncompleteList: TMultiAction [30]
     end
-    inherited spCompete: TdsdExecStoredProc [25]
+    inherited spCompete: TdsdExecStoredProc [31]
     end
-    inherited spUncomplete: TdsdExecStoredProc [26]
+    inherited spUncomplete: TdsdExecStoredProc [32]
     end
-    inherited spErased: TdsdExecStoredProc [27]
+    inherited spErased: TdsdExecStoredProc [33]
     end
-    object actPrint: TdsdPrintAction [28]
+    object actPrint: TdsdPrintAction [34]
       Category = 'Print'
       MoveParams = <
         item
@@ -1046,11 +1120,11 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited mactSimpleCompleteList: TMultiAction [29]
+    inherited mactSimpleCompleteList: TMultiAction [35]
     end
-    inherited spReCompete: TdsdExecStoredProc [30]
+    inherited spReCompete: TdsdExecStoredProc [36]
     end
-    inherited actInsertMask: TdsdInsertUpdateAction [31]
+    inherited actInsertMask: TdsdInsertUpdateAction [37]
       FormName = 'TOrderExternalForm'
       FormNameParam.Value = 'TOrderExternalForm'
       GuiParams = <
@@ -1392,6 +1466,22 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_Amount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_AmountSecond'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1463,11 +1553,13 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Action = mactPrint_Account
       Category = 0
     end
-    object bb: TdxBarButton
-      Caption = 'New Item'
+    object bbUpdateMIChild_Amount: TdxBarButton
+      Action = macUpdateMIChild_Amount
       Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
+    end
+    object bbUpdateMIChild_AmountSecond: TdxBarButton
+      Action = macUpdateMIChild_AmountSecond
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1829,5 +1921,39 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     PackSize = 1
     Left = 823
     Top = 248
+  end
+  object spUpdateMIChild_AmountSecond: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecond'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 930
+    Top = 232
+  end
+  object spUpdateMIChild_Amount: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_Amount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 922
+    Top = 176
   end
 end
