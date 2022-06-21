@@ -38,7 +38,7 @@ $BODY$
      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 
-     IF vbUserId = 9457 OR vbUserId = 5
+     IF 1=0 AND (inUserId = 9457 OR inUserId = 5)
      THEN
          RAISE EXCEPTION 'Ошибка.Админ ничего не меняет';
      END IF;
