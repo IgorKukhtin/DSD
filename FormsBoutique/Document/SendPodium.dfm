@@ -131,6 +131,26 @@ object SendPodiumForm: TSendPodiumForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPriceListToBalance_start
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceList_disc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceListBalance_disc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceListTo_disc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceListToBalance_disc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -223,6 +243,26 @@ object SendPodiumForm: TSendPodiumForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPriceListToBalance_start
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceList_disc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceListBalance_disc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceListTo_disc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceListToBalance_disc
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -545,6 +585,20 @@ object SendPodiumForm: TSendPodiumForm
             Options.Editing = False
             Width = 80
           end
+          object TotalSummPriceList_disc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1091#1095'. '#1089#1082'. ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'TotalSummPriceList_disc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1054#1090' '#1082#1086#1075#1086' c '#1091#1095'. '#1089#1077#1079#1086#1085'. '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 80
+          end
           object TotalSummPriceListBalance: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053' ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'TotalSummPriceListBalance'
@@ -555,6 +609,21 @@ object SendPodiumForm: TSendPodiumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1074' '#1043#1056#1053' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1054#1090' '#1082#1086#1075#1086
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalSummPriceListBalance_disc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053' '#1089' '#1091#1095'. '#1089#1082'. ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'TotalSummPriceListBalance_disc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1057#1091#1084#1084#1072' '#1074' '#1043#1056#1053' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1054#1090' '#1082#1086#1075#1086' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080 +
+              #1076#1082#1080
             Options.Editing = False
             Width = 70
           end
@@ -673,6 +742,33 @@ object SendPodiumForm: TSendPodiumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1074' '#1043#1056#1053' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1050#1086#1084#1091
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalSummPriceListTo_disc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1091#1095'. '#1089#1082'. ('#1050#1086#1084#1091', '#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'TotalSummPriceListTo_disc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1050#1086#1084#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalSummPriceListToBalance_disc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053' '#1089' '#1091#1095'. '#1089#1082'. ('#1050#1086#1084#1091', '#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'TotalSummPriceListToBalance_disc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1057#1091#1084#1084#1072' '#1074' '#1043#1056#1053' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1050#1086#1084#1091'  '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082 +
+              #1080
             Options.Editing = False
             Width = 80
           end
@@ -935,7 +1031,7 @@ object SendPodiumForm: TSendPodiumForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -943,7 +1039,7 @@ object SendPodiumForm: TSendPodiumForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -2285,7 +2381,7 @@ object SendPodiumForm: TSendPodiumForm
         end
         item
           Name = 'inStartDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -2808,6 +2904,7 @@ object SendPodiumForm: TSendPodiumForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <
@@ -2965,7 +3062,7 @@ object SendPodiumForm: TSendPodiumForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime

@@ -46,6 +46,7 @@ type
     cbGoods: TcxCheckBox;
     cbGoodsKind: TcxCheckBox;
     cbPartionGoods: TcxCheckBox;
+    cbDate: TcxCheckBox;
   private
     { Private declarations }
   public

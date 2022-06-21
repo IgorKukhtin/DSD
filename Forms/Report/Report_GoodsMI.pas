@@ -154,6 +154,9 @@ type
     SummOut_Promo_real: TcxGridDBColumn;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    cbDate: TcxCheckBox;
+    OperDate: TcxGridDBColumn;
+    OperDatePartner: TcxGridDBColumn;
   private
     { Private declarations }
   public

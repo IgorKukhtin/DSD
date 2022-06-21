@@ -43,7 +43,10 @@ $BODY$
    DECLARE vbParValue_to TFloat;
 
    DECLARE vbStartDate_plTo_find TDateTime;
-   DECLARE vbOperPriceListTo_find TFloat;
+   DECLARE vbOperPriceListTo_find TFloat; 
+   
+   DECLARE vbDiscountTax_From TFloat;
+   DECLARE vbDiscountTax_To TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -312,6 +315,39 @@ BEGIN
              ioOperPriceListTo:= vbOperPriceListTo_find;
          END IF;
      END IF;
+
+         ---сезонная скидка
+     vbDiscountTax_From := (SELECT ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+                            FROM tmpUnitList
+                                 INNER JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Goods
+                                                       ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = vbGoodsId
+                                 INNER JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Unit
+                                                       ON ObjectLink_DiscountPeriodItem_Unit.ObjectId      = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                                      AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = vbFromId
+                                 INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
+                                                          ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                                         AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
+                                                         AND vbOperDate >= ObjectHistory_DiscountPeriodItem.StartDate AND vbOperDate < ObjectHistory_DiscountPeriodItem.EndDate
+                                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
+                                                              ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                             AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+                           ); 
+     vbDiscountTax_To := (SELECT ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+                          FROM tmpUnitList
+                               INNER JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Goods
+                                                     ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = vbGoodsId
+                               INNER JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Unit
+                                                     ON ObjectLink_DiscountPeriodItem_Unit.ObjectId      = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                                    AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = vbToId
+                               INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
+                                                        ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                                       AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
+                                                       AND vbOperDate >= ObjectHistory_DiscountPeriodItem.StartDate AND vbOperDate < ObjectHistory_DiscountPeriodItem.EndDate
+                               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
+                                                            ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                           AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+                         );
+
 
 
      -- сохранили <Элемент документа>

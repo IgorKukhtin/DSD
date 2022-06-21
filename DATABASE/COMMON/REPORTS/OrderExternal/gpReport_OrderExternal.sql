@@ -63,13 +63,23 @@ RETURNS TABLE (MovementId             Integer
 
              , Amount_WeightSK TFloat
              
-             , AmountWeight_calc   TFloat, AmountWeight_calc1  TFloat, AmountWeight_calc2  TFloat, AmountWeight_calc3  TFloat
+             , AmountWeight_calc   TFloat, AmountWeight_calc1  TFloat, AmountWeight_calc2  TFloat, AmountWeight_calc3  TFloat 
+             
+             , Amount_Child        TFloat
+             , AmountSecond_Child  TFloat
+             , TotalAmount_Child   TFloat
+             , Amount_diff         TFloat -- разница с итого заявка 
+
+
              , DatePrint TDateTime, DatePrint1 TDateTime, DatePrint2 TDateTime
 
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyCode_goods Integer, InfoMoneyName_goods TVarChar, InfoMoneyName_goods_all TVarChar
              , Comment TVarChar
              , CodeSticker TVarChar
+
+             , CarInfoName  TVarChar
+             , OperDate_CarInfo TDateTime
               )
 AS
 $BODY$
@@ -132,16 +142,19 @@ BEGIN
                              , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30102(), zc_Enum_InfoMoney_30103()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END AS GoodsKindId
                              , ObjectLink_Goods_InfoMoney.ChildObjectId                 AS InfoMoneyId
                   
-                             , SUM (CASE WHEN Movement.OperDate =  COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN MovementItem.Amount ELSE 0 END) AS Amount1
-                             , SUM (CASE WHEN Movement.OperDate <> COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN MovementItem.Amount ELSE 0 END) AS Amount2
-                             , SUM (CASE WHEN Movement.OperDate =  COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSecond1
-                             , SUM (CASE WHEN Movement.OperDate <> COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSecond2
+                             , SUM (CASE WHEN Movement.OperDate =  COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AND MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS Amount1
+                             , SUM (CASE WHEN Movement.OperDate <> COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AND MovementItem.DescId = zc_MI_Master()THEN MovementItem.Amount ELSE 0 END) AS Amount2
+                             , SUM (CASE WHEN Movement.OperDate =  COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AND MovementItem.DescId = zc_MI_Master()THEN COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSecond1
+                             , SUM (CASE WHEN Movement.OperDate <> COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AND MovementItem.DescId = zc_MI_Master()THEN COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSecond2
                              
                              --
-                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = inStartDate    THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc
-                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = vbStartDate_1  THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc1
-                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = vbStartDate_2  THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc2
-                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= vbStartDate_3 THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc3 
+                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = inStartDate    AND MovementItem.DescId = zc_MI_Master() THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc
+                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = vbStartDate_1  AND MovementItem.DescId = zc_MI_Master() THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc1
+                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = vbStartDate_2  AND MovementItem.DescId = zc_MI_Master() THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc2
+                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= vbStartDate_3 AND MovementItem.DescId = zc_MI_Master() THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc3 
+                             --сhild
+                             , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS Amount_Child
+                             , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child()THEN COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSecond_Child
                              --
                              , CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                          THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
@@ -164,7 +177,11 @@ BEGIN
                              , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementString_Comment.ValueData,'') ELSE '' END ::TVarChar AS Comment
                              
                              , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId), COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)) AS GoodsPropertyId
-                             , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)      AS GoodsPropertyId_basis
+                             , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)      AS GoodsPropertyId_basis 
+
+                             , MovementLinkObject_CarInfo.ObjectId            AS CarInfoId
+                             , MovementDate_CarInfo.ValueData     ::TDateTime AS OperDate_CarInfo
+
                         FROM Movement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -188,7 +205,11 @@ BEGIN
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                                          ON MovementLinkObject_Personal.MovementId = Movement.Id
                                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
-                 
+
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_CarInfo
+                                                         ON MovementLinkObject_CarInfo.MovementId = Movement.Id
+                                                        AND MovementLinkObject_CarInfo.DescId = zc_MovementLinkObject_CarInfo()
+
                             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -206,7 +227,11 @@ BEGIN
                             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                    ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                 
+
+                            LEFT JOIN MovementDate AS MovementDate_CarInfo
+                                                   ON MovementDate_CarInfo.MovementId = Movement.Id
+                                                  AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
+
                             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -222,13 +247,14 @@ BEGIN
                                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                   --AND MovementItem.DescId     = zc_MI_Master()
                                                    AND MovementItem.isErased   = FALSE
                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
                  
                             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                  ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                AND MovementItem.DescId     = zc_MI_Master()
                  
                             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
@@ -241,9 +267,11 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                       AND MovementItem.DescId     = zc_MI_Master()
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                                       AND MovementItem.DescId     = zc_MI_Master()
 
                             LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount 
                                                   ON ObjectFloat_DocumentDayCount.ObjectId = MovementLinkObject_From.ObjectId 
@@ -280,7 +308,9 @@ BEGIN
                             , MovementLinkObject_Partner.ObjectId
                             , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE Null END
                             , CASE WHEN inIsByDoc = TRUE THEN (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) ELSE Null END
-                            , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementString_Comment.ValueData,'') ELSE '' END
+                            , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementString_Comment.ValueData,'') ELSE '' END 
+                            , MovementLinkObject_CarInfo.ObjectId
+                            , MovementDate_CarInfo.ValueData
                           )
 
      , tmpMovement AS (SELECT tmpMovement2.MovementId
@@ -301,6 +331,8 @@ BEGIN
                             , tmpMovement2.Comment
                             , tmpMovement2.GoodsPropertyId
                             , tmpMovement2.GoodsPropertyId_basis
+                            , tmpMovement2.CarInfoId
+                            , tmpMovement2.OperDate_CarInfo
                 
                             , SUM (Amount1 + Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2) AS Amount
                             , SUM (Amount1 + Amount2 )                                AS AmountZakaz
@@ -314,8 +346,24 @@ BEGIN
                             , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountSecond1 ELSE 0 END)                    AS AmountSecond_Sh1
                             , SUM (tmpMovement2.AmountSecond1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight1
                             , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountSecond2 ELSE 0 END)                    AS AmountSecond_Sh2
-                            , SUM (tmpMovement2.AmountSecond2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight2
-                 
+                            , SUM (tmpMovement2.AmountSecond2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight2        
+                            -- child
+                            , SUM (tmpMovement2.Amount_Child) AS Amount_child
+                            , SUM (tmpMovement2.AmountSecond_child) AS AmountSecond_Child
+                            , SUM (tmpMovement2.Amount_Child + tmpMovement2.AmountSecond_child) AS TotalAmount_child
+
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.Amount_Child ELSE 0 END)       AS AmountSh_child
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountSecond_child ELSE 0 END) AS AmountSecondSh_Child
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.Amount_Child + tmpMovement2.AmountSecond_child ELSE 0 END) AS TotalAmountSh_child
+
+                            , SUM (tmpMovement2.Amount_Child
+                                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_child
+                            , SUM (tmpMovement2.AmountSecond_child
+                                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountSecondWeight_Child
+                            , SUM (tmpMovement2.Amount_Child + tmpMovement2.AmountSecond_child
+                                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS TotalAmountWeight_child
+                            --
+
                             , SUM (Amount1 * Price) AS Summ1
                             , SUM (Amount2 * Price) AS Summ2
                             , SUM (tmpMovement2.AmountSecond1 * Price) AS SummSecond1
@@ -351,6 +399,8 @@ BEGIN
                               , tmpMovement2.Comment
                               , tmpMovement2.GoodsPropertyId
                               , tmpMovement2.GoodsPropertyId_basis
+                              , tmpMovement2.CarInfoId
+                              , tmpMovement2.OperDate_CarInfo
                       )
      -- выбираем для заказов документы продажи и перемещения по цене 
      , tmpMLM AS (SELECT MovementLinkMovement.*
@@ -500,7 +550,14 @@ BEGIN
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc1 ELSE 0 END  :: TFloat AS AmountWeight_calc1
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc2 ELSE 0 END  :: TFloat AS AmountWeight_calc2
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc3 ELSE 0 END  :: TFloat AS AmountWeight_calc3  
-           
+             
+                                       -- child
+           , tmpMovement.Amount_Child        ::TFloat AS Amount_Child
+           , tmpMovement.AmountSecond_child  ::TFloat AS AmountSecond_Child
+           , tmpMovement.TotalAmount_child   ::TFloat AS TotalAmount_Child
+           , ((COALESCE (tmpMovement.AmountZakaz,0) + COALESCE (tmpMovement.AmountSecond1,0) + COALESCE (tmpMovement.AmountSecond2,0))
+              - COALESCE (tmpMovement.TotalAmount_child,0) ) ::TFloat AS Amount_diff-- разница с итого заявка 
+
            , inStartDate   ::TDateTime AS DatePrint
            , vbStartDate_1 ::TDateTime AS DatePrint1
            , vbStartDate_2 ::TDateTime AS DatePrint2
@@ -517,7 +574,10 @@ BEGIN
            
            --, COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, tmpObject_GoodsPropertyValue_basis.CodeSticker)  ::TVarChar AS CodeSticker
            --временно классификатор Алан
-           , tmpObject_GoodsPropertyValue_basis.CodeSticker  ::TVarChar AS CodeSticker
+           , tmpObject_GoodsPropertyValue_basis.CodeSticker  ::TVarChar AS CodeSticker 
+
+           , Object_CarInfo.ValueData      ::TVarChar   AS CarInfoName
+           , tmpMovement.OperDate_CarInfo  ::TDateTime  AS OperDate_CarInfo
        FROM tmpMovement
           LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
           LEFT JOIN MovementString AS MovementString_InvNumberPartner
@@ -531,7 +591,9 @@ BEGIN
           LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpMovement.PersonalId
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMovement.PaidKindId
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovement.GoodsId
-          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMovement.GoodsKindId
+          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMovement.GoodsKindId  
+          
+          LEFT JOIN Object AS Object_CarInfo ON Object_CarInfo.Id = tmpMovement.CarInfoId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -603,6 +665,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.22         *
  12.03.21         *
  14.12.20         * add Comment
  26.06.18         *
