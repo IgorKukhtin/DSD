@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_WagesUser(
 )
 RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , HolidaysHospital TFloat, Marketing TFloat, MarketingRepayment TFloat, Director TFloat, IlliquidAssets TFloat
-             , IlliquidAssetsRepayment TFloat, PenaltySUN TFloat, PenaltyExam TFloat
+             , IlliquidAssetsRepayment TFloat, PenaltySUN TFloat, PenaltyExam TFloat, ApplicationAward TFloat
              , AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
@@ -257,6 +257,7 @@ BEGIN
                         THEN - MIFloat_IlliquidAssets.ValueData ELSE MIFloat_IlliquidAssetsRepayment.ValueData END::TFloat                             AS IlliquidAssetsRepayment
                  , MIFloat_PenaltySUN.ValueData                 AS PenaltySUN
                  , MIFloat_PenaltyExam.ValueData                AS PenaltyExam
+                 , MIFloat_ApplicationAward.ValueData           AS ApplicationAward
                  , MIF_AmountCard.ValueData                     AS AmountCard
                  , (MIAmount.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
@@ -268,7 +269,8 @@ BEGIN
                          WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
                          THEN 0 ELSE COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0)  END +
                     COALESCE (MIFloat_PenaltySUN.ValueData, 0) +
-                    COALESCE (MIFloat_PenaltyExam.ValueData, 0) -
+                    COALESCE (MIFloat_PenaltyExam.ValueData, 0) +
+                    COALESCE (MIFloat_ApplicationAward.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
 
@@ -355,6 +357,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_PenaltyExam
                                               ON MIFloat_PenaltyExam.MovementItemId = MovementItem.Id
                                              AND MIFloat_PenaltyExam.DescId = zc_MIFloat_PenaltyExam()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_ApplicationAward
+                                              ON MIFloat_ApplicationAward.MovementItemId = MovementItem.Id
+                                             AND MIFloat_ApplicationAward.DescId = zc_MIFloat_ApplicationAward()
 
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id

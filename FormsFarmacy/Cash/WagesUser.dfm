@@ -26,7 +26,7 @@ inherited WagesUserForm: TWagesUserForm
         Width = 654
         Height = 128
         ExplicitWidth = 654
-        ExplicitHeight = 129
+        ExplicitHeight = 128
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -385,6 +385,34 @@ inherited WagesUserForm: TWagesUserForm
           Left = 8
           Top = 111
           Caption = #1057#1076#1072#1095#1072' '#1101#1082#1079#1072#1084#1077#1085#1072':'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+        end
+        object ceApplicationAward: TcxCurrencyEdit
+          Left = 478
+          Top = 111
+          ParentFont = False
+          Properties.DecimalPlaces = 2
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+          TabOrder = 22
+          Width = 156
+        end
+        object cxLabel32: TcxLabel
+          Left = 298
+          Top = 111
+          Caption = #1055#1088#1077#1084#1080#1103' '#1079#1072' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
@@ -1141,6 +1169,13 @@ inherited WagesUserForm: TWagesUserForm
         Value = Null
         Component = deDateCalculation
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ApplicationAward'
+        Value = Null
+        Component = ceApplicationAward
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

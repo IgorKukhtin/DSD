@@ -98,6 +98,8 @@ type
     cxLabel30: TcxLabel;
     cePenaltyExam: TcxCurrencyEdit;
     cxLabel31: TcxLabel;
+    ceApplicationAward: TcxCurrencyEdit;
+    cxLabel32: TcxLabel;
   private
     { Private declarations }
   public

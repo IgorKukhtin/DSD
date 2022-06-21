@@ -34,7 +34,12 @@ BEGIN
    vbUnit1Id := Null;
    vbUnit2Id := Null;
    vbGoodsMainId := (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inGoodsId);
-   
+
+   SELECT Object_Goods_Main.UnitSupplementSUN1OutId, Object_Goods_Main.UnitSupplementSUN2OutId
+   INTO vbUnit1Id, vbUnit2Id
+   FROM Object_Goods_Main  
+   WHERE Object_Goods_Main.Id = vbGoodsMainId;
+         
    IF EXISTS(SELECT 1
              FROM ObjectBoolean AS ObjectBoolean_SUN_v1_SupplementAdd30Cash
              WHERE ObjectBoolean_SUN_v1_SupplementAdd30Cash.ObjectId = vbUnitId
@@ -50,23 +55,21 @@ BEGIN
    THEN
      RAISE EXCEPTION 'Ошибка определения аптеки сотрудника.';          
    END IF;
-   
-    IF EXISTS(SELECT 1
-             FROM Object_Goods_Retail
-                  INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-                                              AND Object_Goods_Main.isSupplementSUN1 = TRUE
-                                              AND (COALESCE(Object_Goods_Main.UnitSupplementSUN1OutId, 0) = vbUnitId
-                                                   OR COALESCE(Object_Goods_Main.UnitSupplementSUN2OutId, 0) = vbUnitId)
-             WHERE Object_Goods_Retail.Id = inGoodsId) OR
-       EXISTS(SELECT 1
-             FROM Object_Goods_Retail
-                  INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-                                              AND Object_Goods_Main.isSupplementSUN1 = TRUE
-                                              AND COALESCE(Object_Goods_Main.UnitSupplementSUN1OutId, 0) <> 0
-                                              AND COALESCE(Object_Goods_Main.UnitSupplementSUN2OutId, 0) <> 0
-             WHERE Object_Goods_Retail.Id = inGoodsId)
+
+   IF COALESCE (vbUnit1Id, 0) = vbUnitId OR COALESCE (vbUnit2Id, 0) = vbUnitId
    THEN
-     RETURN;
+     IF EXISTS(SELECT Object_Goods_Main.Id
+               FROM Object_Goods_Main  
+               WHERE Object_Goods_Main.Id = vbGoodsMainId
+                 AND COALESCE (Object_Goods_Main.isSupplementSUN1, False) = False)
+        THEN     
+          -- сохранили свойство <Дополнение СУН1>
+          PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SupplementSUN1(), vbGoodsMainId, True);
+          
+          -- сохранили протокол
+          PERFORM lpInsert_ObjectProtocol (vbGoodsMainId, vbUserId);
+        END IF;
+     RETURN;          
    END IF;
    
     -- Проверяем остаток и срок
@@ -114,57 +117,12 @@ BEGIN
    THEN
      RAISE EXCEPTION 'Для добавления товара необходим остаток как минимум 1 уп. сроком более % дней.', vbDay;          
    END IF;
-
-   IF EXISTS(SELECT 1
-             FROM Object_Goods_Retail
-                  INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-                                              AND Object_Goods_Main.isSupplementSUN1 = TRUE
-             WHERE Object_Goods_Retail.Id = inGoodsId ) AND 
-      NOT EXISTS(SELECT
-                 FROM Object_Goods_Retail
-                      INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
-                                                  AND (COALESCE(Object_Goods_Main.UnitSupplementSUN1OutId, 0) = vbUnitId
-                                                    OR COALESCE(Object_Goods_Main.UnitSupplementSUN2OutId, 0) = vbUnitId)
-                 WHERE Object_Goods_Retail.Id = inGoodsId)
+      
+   IF COALESCE (vbUnit1Id, 0) = 0
    THEN
-
-     IF EXISTS(SELECT 1
-               FROM Object_Goods_Retail
-                    INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
-                                                AND COALESCE(Object_Goods_Main.UnitSupplementSUN1OutId, 0) <> 0
-               WHERE Object_Goods_Retail.Id = inGoodsId)
-     THEN
-     
-       IF EXISTS(SELECT
-                 FROM Object_Goods_Retail
-                      INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
-                                                  AND COALESCE(Object_Goods_Main.UnitSupplementSUN2OutId, 0) <> 0
-                 WHERE Object_Goods_Retail.Id = inGoodsId)
-       THEN
-
-         -- сохранили свойство <Дополнение СУН1> и <Прописали аптеку>
-         vbUnit1Id := Null;
-         vbUnit2Id := Null;
-       
-       ELSE  
-       
-         -- сохранили свойство <Прописали аптеку 2>
-         vbUnit2Id := vbUnitId;
-         
-       END IF;
-
-     END IF;
-   END IF;
-
-   IF NOT EXISTS(SELECT 1
-                 FROM Object_Goods_Retail
-                      INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-                                                  AND Object_Goods_Main.isSupplementSUN1 = TRUE
-                 WHERE Object_Goods_Retail.Id = inGoodsId )
-   THEN
-   
-     -- сохранили свойство <Дополнение СУН1> и <Прописали аптеку>
-     vbUnitId := vbUnitId;
+     vbUnit1Id := vbUnitId;
+   ELSE
+     vbUnit2Id := vbUnitId;
    END IF;
 
    -- сохранили свойство <Дополнение СУН1>
@@ -185,6 +143,10 @@ BEGIN
         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
         PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_inSupplementSUN1', text_var1::TVarChar, vbUserId);
    END;
+
+   PERFORM gpInsertUpdate_GoodsBlob_UnitSupplementSUN1Out(inGoodsMainId               := vbGoodsMainId
+                                                        , inUnitSupplementSUN1OutId   := vbUnitId
+                                                        , inSession                   := inSession);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbGoodsMainId, vbUserId);

@@ -140,6 +140,9 @@ BEGIN
                                             , inSession         := inSession)
        FROM Object_Goods_Main 
        WHERE Object_Goods_Main.isSupplementSUN1 = True;
+       
+       UPDATE Object_Goods_Blob SET UnitSupplementSUN1Out = NULL
+       WHERE Object_Goods_Blob.UnitSupplementSUN1Out IS NOT NULL;  
      END IF;
         
         

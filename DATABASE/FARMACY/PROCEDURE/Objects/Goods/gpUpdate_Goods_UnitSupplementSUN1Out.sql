@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Goods_UnitSupplementSUN1Out(Integer, Integer, T
 
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_UnitSupplementSUN1Out(
     IN inGoodsMainId               Integer   ,   -- ключ объекта <Товар>
-    IN inUnitSupplementSUN1OutiD   Integer  ,    -- Подразделения для отправки по дополнению СУН1
+    IN inUnitSupplementSUN1OutId   Integer  ,    -- Подразделения для отправки по дополнению СУН1
     IN inSession                   TVarChar      -- текущий пользователь
 )
 RETURNS VOID AS
@@ -20,18 +20,38 @@ BEGIN
 
    vbUserId := lpGetUserBySession (inSession);
    
+
+   IF EXISTS(SELECT Object_Goods_Main.UnitSupplementSUN1OutId
+             FROM Object_Goods_Main  
+             WHERE Object_Goods_Main.Id = inGoodsMainId
+               AND COALESCE (Object_Goods_Main.UnitSupplementSUN1OutId, 0) <> 0)
+   THEN
+     PERFORM gpDelete_GoodsBlob_UnitSupplementSUN1Out(inGoodsMainId               := inGoodsMainId
+                                                    , inUnitSupplementSUN1OutId   := (SELECT Object_Goods_Main.UnitSupplementSUN1OutId
+                                                                                      FROM Object_Goods_Main  
+                                                                                      WHERE Object_Goods_Main.Id = inGoodsMainId)
+                                                    , inSession                   := inSession);
+   END IF; 
+      
    -- сохранили свойство <Дополнение СУН1>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UnitSupplementSUN1Out(), inGoodsMainId, inUnitSupplementSUN1OutiD);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UnitSupplementSUN1Out(), inGoodsMainId, inUnitSupplementSUN1OutId);
    
     -- Сохранили в плоскую таблицй
    BEGIN
-     UPDATE Object_Goods_Main SET UnitSupplementSUN1OutId = inUnitSupplementSUN1OutiD
+     UPDATE Object_Goods_Main SET UnitSupplementSUN1OutId = inUnitSupplementSUN1OutId
      WHERE Object_Goods_Main.Id = inGoodsMainId;  
    EXCEPTION
       WHEN others THEN 
         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
         PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_UnitSupplementSUN1Out', text_var1::TVarChar, vbUserId);
    END;
+   
+   IF COALESCE (inUnitSupplementSUN1OutId, 0) <> 0
+   THEN
+     PERFORM gpInsertUpdate_GoodsBlob_UnitSupplementSUN1Out(inGoodsMainId               := inGoodsMainId
+                                                          , inUnitSupplementSUN1OutId   := inUnitSupplementSUN1OutId
+                                                          , inSession                   := inSession);
+   END IF; 
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inGoodsMainId, vbUserId);
@@ -49,4 +69,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- select * from gpUpdate_Goods_UnitSupplementSUN1Out(inGoodsMainId := 2389216 , inUnitSupplementSUN1Out := 377610 ,  inSession := '3');
+-- select * from gpUpdate_Goods_UnitSupplementSUN1Out(inGoodsMainId := 24168 , inUnitSupplementSUN1OutId := 375626 ,  inSession := '3');
+-- select * from gpUpdate_Goods_UnitSupplementSUN1Out(inGoodsMainId := 24168 , inUnitSupplementSUN1OutId := 1529734 ,  inSession := '3');

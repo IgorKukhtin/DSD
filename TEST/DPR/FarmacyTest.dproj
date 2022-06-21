@@ -4382,6 +4382,10 @@
 				<Form>Check_RefusalConfirmedForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsUnitSupplementSUN1.pas">
+				<Form>GoodsUnitSupplementSUN1Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
