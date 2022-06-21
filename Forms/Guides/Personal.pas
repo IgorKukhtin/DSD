@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdGuides;
 
 type
   TPersonalForm = class(TParentForm)
@@ -89,7 +89,7 @@ type
     actInsertMask: TdsdInsertUpdateAction;
     bbCopy: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
-    bb: TdxBarButton;
+    bbProtocolOpenForm: TdxBarButton;
     PersonalServiceListName: TcxGridDBColumn;
     PersonalServiceListOfficialName: TcxGridDBColumn;
     PersonalServiceListOfficialChoice: TOpenChoiceForm;
@@ -115,6 +115,16 @@ type
     macUpdate_isIrna_list: TMultiAction;
     macUpdate_isIrna: TMultiAction;
     bbUpdate_isIrna: TdxBarButton;
+    cxLabel8: TcxLabel;
+    cePersonalServiceList: TcxButtonEdit;
+    GuidesPersonalServiceList: TdsdGuides;
+    bcPersonalServiceList: TdxBarControlContainerItem;
+    bcPersonalServiceList_text: TdxBarControlContainerItem;
+    spUpdate_PersonalServiceList: TdsdStoredProc;
+    actUpdate_PersonalServiceList: TdsdExecStoredProc;
+    macUpdate_PersonalServiceList_list: TMultiAction;
+    macUpdate_PersonalServiceList: TMultiAction;
+    bbUpdate_PersonalServiceList: TdxBarButton;
   private
     { Private declarations }
   public
