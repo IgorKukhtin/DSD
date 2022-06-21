@@ -19,7 +19,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendPodium(
    OUT outTotalSummPriceList           TFloat    , -- Сумма по прайсу
    OUT outTotalSummPriceListTo         TFloat    , -- Сумма (Кому, прайс)
    OUT outTotalSummPriceListBalance    TFloat    , -- Сумма ГРН (От кого, прайс)
-   OUT outTotalSummPriceListToBalance  TFloat    , -- Сумма ГРН (Кому, прайс)
+   OUT outTotalSummPriceListToBalance  TFloat    , -- Сумма ГРН (Кому, прайс) 
+
+   OUT outTotalSummPriceList_disc           TFloat    , -- Сумма по прайсу с уч. сез.скидки
+   OUT outTotalSummPriceListTo_disc         TFloat    , -- Сумма (Кому, прайс) с уч. сез.скидки
+   OUT outTotalSummPriceListBalance_disc    TFloat    , -- Сумма ГРН (От кого, прайс) с уч. сез.скидки
+   OUT outTotalSummPriceListToBalance_disc  TFloat    , -- Сумма ГРН (Кому, прайс)  с уч. сез.скидки
+
    OUT outCurrencyValue                TFloat    , --
    OUT outParValue                     TFloat    , --
    OUT outGoodsSizeName                TVarChar  , --
@@ -279,7 +285,7 @@ BEGIN
              ioOperPriceListTo_start:= vbOperPriceListTo_find;
          END IF;
      END IF;
-
+      
      -- PriceListTo - если есть цена и прайс для подр. кому определен сохраняем цену
      IF COALESCE (vbPriceListId_to,0) <> 0 AND COALESCE (ioOperPriceListTo,0) <> 0
      THEN
@@ -318,27 +324,29 @@ BEGIN
 
          ---сезонная скидка
      vbDiscountTax_From := (SELECT ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
-                            FROM tmpUnitList
-                                 INNER JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Goods
-                                                       ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = vbGoodsId
+                            FROM ObjectLink AS ObjectLink_DiscountPeriodItem_Goods
                                  INNER JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Unit
                                                        ON ObjectLink_DiscountPeriodItem_Unit.ObjectId      = ObjectLink_DiscountPeriodItem_Goods.ObjectId
                                                       AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = vbFromId
+                                                      AND ObjectLink_DiscountPeriodItem_Unit.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
                                  INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
                                                           ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
                                                          AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
-                                                         AND vbOperDate >= ObjectHistory_DiscountPeriodItem.StartDate AND vbOperDate < ObjectHistory_DiscountPeriodItem.EndDate
+                                                         AND vbOperDate >= ObjectHistory_DiscountPeriodItem.StartDate
+                                                         AND vbOperDate < ObjectHistory_DiscountPeriodItem.EndDate
                                  LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
                                                               ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                              AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
-                           ); 
+                            WHERE ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = vbGoodsId
+                              AND ObjectLink_DiscountPeriodItem_Goods.DescId = zc_ObjectLink_DiscountPeriodItem_Goods()
+                            );
+                            
      vbDiscountTax_To := (SELECT ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
-                          FROM tmpUnitList
-                               INNER JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Goods
-                                                     ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = vbGoodsId
+                          FROM ObjectLink AS ObjectLink_DiscountPeriodItem_Goods
                                INNER JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Unit
                                                      ON ObjectLink_DiscountPeriodItem_Unit.ObjectId      = ObjectLink_DiscountPeriodItem_Goods.ObjectId
                                                     AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = vbToId
+                                                    AND ObjectLink_DiscountPeriodItem_Unit.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
                                INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
                                                         ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
                                                        AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
@@ -346,7 +354,9 @@ BEGIN
                                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
                                                             ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                            AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
-                         );
+                          WHERE ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = vbGoodsId
+                            AND ObjectLink_DiscountPeriodItem_Goods.DescId = zc_ObjectLink_DiscountPeriodItem_Goods()
+                          );
 
 
 
@@ -432,6 +442,29 @@ BEGIN
                                                                              THEN 1
                                                                              ELSE vbCurrencyValue_to / CASE WHEN vbParValue_to <> 0 THEN vbParValue_to ELSE 1 END
                                                                         END AS NUMERIC (16, 2))) ;
+
+
+     -- с уч. сез. скидки 
+     -- расчитали сумму по прайсу по элементу, для грида
+     outTotalSummPriceList_disc := CAST ((ioAmount * ioOperPriceList 
+                                          * (1 - COALESCE (vbDiscountTax_From, 0) / 100)) AS NUMERIC (16, 2));
+
+     -- расчитали Сумма (Кому, прайс)
+     outTotalSummPriceListTo_disc := CAST ( (ioAmount * ioOperPriceListTo
+                                          * (1 - COALESCE (vbDiscountTax_To, 0) / 100))  AS NUMERIC (16, 2));
+
+     -- Сумма ГРН (От кого, прайс)
+     outTotalSummPriceListBalance_disc   := (CAST (outTotalSummPriceList * CASE WHEN vbCurrencyId = zc_Currency_Basis()
+                                                                                THEN 1
+                                                                                ELSE outCurrencyValue / CASE WHEN outParValue <> 0 THEN outParValue ELSE 1 END
+                                                                           END
+                                          * (1 - COALESCE (vbDiscountTax_From, 0) / 100) AS NUMERIC (16, 2) )) ;
+     -- Сумма ГРН (Кому, прайс)
+     outTotalSummPriceListToBalance_disc := (CAST (outTotalSummPriceListTo * CASE WHEN vbCurrencyId_pl_to = zc_Currency_Basis()
+                                                                                  THEN 1
+                                                                                  ELSE vbCurrencyValue_to / CASE WHEN vbParValue_to <> 0 THEN vbParValue_to ELSE 1 END
+                                                                             END
+                                          * (1 - COALESCE (vbDiscountTax_To, 0) / 100)   AS NUMERIC (16, 2))) ;
 
 
      -- пересчитали Итоговые суммы по накладной

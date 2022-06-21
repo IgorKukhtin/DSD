@@ -159,6 +159,8 @@ type
     macUpdateMIChild_AmountSecond: TMultiAction;
     bbUpdateMIChild_Amount: TdxBarButton;
     bbUpdateMIChild_AmountSecond: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public

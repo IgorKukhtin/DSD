@@ -110,47 +110,47 @@ object SendPodiumForm: TSendPodiumForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListTo
+              Column = TotalSummPLTo
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListBalance
+              Column = TotalSummPLBalance
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListToBalance
+              Column = TotalSummPLToBalance
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListTo_start
+              Column = TotalSummPLTo_start
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListToBalance_start
+              Column = TotalSummPLToBalance_start
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceList_disc
+              Column = TotalSummPL_disc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListBalance_disc
+              Column = TotalSummPLBalance_disc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListTo_disc
+              Column = TotalSummPLTo_disc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListToBalance_disc
+              Column = TotalSummPLToBalance_disc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -222,47 +222,47 @@ object SendPodiumForm: TSendPodiumForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListTo
+              Column = TotalSummPLTo
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListBalance
+              Column = TotalSummPLBalance
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListToBalance
+              Column = TotalSummPLToBalance
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListTo_start
+              Column = TotalSummPLTo_start
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListToBalance_start
+              Column = TotalSummPLToBalance_start
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceList_disc
+              Column = TotalSummPL_disc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListBalance_disc
+              Column = TotalSummPLBalance_disc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListTo_disc
+              Column = TotalSummPLTo_disc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceListToBalance_disc
+              Column = TotalSummPLToBalance_disc
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -573,7 +573,7 @@ object SendPodiumForm: TSendPodiumForm
           end
           object TotalSummPriceList: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummPriceList'
+            DataBinding.FieldName = 'TotalSummPL'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -585,9 +585,9 @@ object SendPodiumForm: TSendPodiumForm
             Options.Editing = False
             Width = 80
           end
-          object TotalSummPriceList_disc: TcxGridDBColumn
+          object TotalSummPL_disc: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1091#1095'. '#1089#1082'. ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummPriceList_disc'
+            DataBinding.FieldName = 'TotalSummPL_disc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -599,9 +599,9 @@ object SendPodiumForm: TSendPodiumForm
             Options.Editing = False
             Width = 80
           end
-          object TotalSummPriceListBalance: TcxGridDBColumn
+          object TotalSummPLBalance: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053' ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummPriceListBalance'
+            DataBinding.FieldName = 'TotalSummPLBalance'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -612,9 +612,9 @@ object SendPodiumForm: TSendPodiumForm
             Options.Editing = False
             Width = 70
           end
-          object TotalSummPriceListBalance_disc: TcxGridDBColumn
+          object TotalSummPLBalance_disc: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053' '#1089' '#1091#1095'. '#1089#1082'. ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummPriceListBalance_disc'
+            DataBinding.FieldName = 'TotalSummPLBalance_disc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -660,9 +660,9 @@ object SendPodiumForm: TSendPodiumForm
               ' '#1074' '#1080#1089#1090#1086#1088#1080#1080')'
             Width = 80
           end
-          object TotalSummPriceListTo_start: TcxGridDBColumn
+          object TotalSummPLTo_start: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1077#1095'. ('#1050#1086#1084#1091', '#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummPriceListTo_start'
+            DataBinding.FieldName = 'TotalSummPLTo_start'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -673,13 +673,12 @@ object SendPodiumForm: TSendPodiumForm
             Options.Editing = False
             Width = 80
           end
-          object TotalSummPriceListToBalance_start: TcxGridDBColumn
+          object TotalSummPLToBalance_start: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1077#1095'. '#1043#1056#1053' ('#1050#1086#1084#1091', '#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummPriceListToBalance_start'
+            DataBinding.FieldName = 'TotalSummPLToBalance_start'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1074' '#1043#1056#1053' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1050#1086#1084#1091
@@ -720,9 +719,9 @@ object SendPodiumForm: TSendPodiumForm
             Options.Editing = False
             Width = 80
           end
-          object TotalSummPriceListTo: TcxGridDBColumn
+          object TotalSummPLTo: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1050#1086#1084#1091', '#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummPriceListTo'
+            DataBinding.FieldName = 'TotalSummPLTo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -733,9 +732,9 @@ object SendPodiumForm: TSendPodiumForm
             Options.Editing = False
             Width = 80
           end
-          object TotalSummPriceListToBalance: TcxGridDBColumn
+          object TotalSummPLToBalance: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053' ('#1050#1086#1084#1091', '#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummPriceListToBalance'
+            DataBinding.FieldName = 'TotalSummPLToBalance'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -745,9 +744,9 @@ object SendPodiumForm: TSendPodiumForm
             Options.Editing = False
             Width = 80
           end
-          object TotalSummPriceListTo_disc: TcxGridDBColumn
+          object TotalSummPLTo_disc: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1091#1095'. '#1089#1082'. ('#1050#1086#1084#1091', '#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummPriceListTo_disc'
+            DataBinding.FieldName = 'TotalSummPLTo_disc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -758,9 +757,9 @@ object SendPodiumForm: TSendPodiumForm
             Options.Editing = False
             Width = 80
           end
-          object TotalSummPriceListToBalance_disc: TcxGridDBColumn
+          object TotalSummPLToBalance_disc: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053' '#1089' '#1091#1095'. '#1089#1082'. ('#1050#1086#1084#1091', '#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummPriceListToBalance_disc'
+            DataBinding.FieldName = 'TotalSummPLToBalance_disc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -2841,7 +2840,7 @@ object SendPodiumForm: TSendPodiumForm
         Name = 'outTotalSummPriceList'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'TotalSummPriceList'
+        ComponentItem = 'TotalSummPL'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2849,7 +2848,7 @@ object SendPodiumForm: TSendPodiumForm
         Name = 'outTotalSummPriceListTo'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'TotalSummPriceListTo'
+        ComponentItem = 'TotalSummPLTo'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2857,7 +2856,7 @@ object SendPodiumForm: TSendPodiumForm
         Name = 'outTotalSummPriceListBalance'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'TotalSummPriceListBalance'
+        ComponentItem = 'TotalSummPLBalance'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2865,7 +2864,39 @@ object SendPodiumForm: TSendPodiumForm
         Name = 'outTotalSummPriceListToBalance'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'TotalSummPriceListToBalance'
+        ComponentItem = 'TotalSummPLToBalance'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPriceList_disc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPL_disc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPriceListTo_disc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPLTo_disc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPriceListBalance_disc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPLBalance_disc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPriceListToBalance_disc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPLToBalance_disc'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -3417,8 +3448,8 @@ object SendPodiumForm: TSendPodiumForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 134
-    Top = 343
+    Left = 102
+    Top = 359
   end
   object spInsertUpdate_Discount: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_DiscountPeriodItemLast'
@@ -3817,8 +3848,8 @@ object SendPodiumForm: TSendPodiumForm
       item
         Component = GuidesGoodsPrint
       end>
-    Left = 200
-    Top = 336
+    Left = 208
+    Top = 312
   end
   object spUpdate_Part_isOlap_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_PartionGoods_ReportOLAP'

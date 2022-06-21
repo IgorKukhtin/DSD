@@ -340,7 +340,8 @@ uses
   PriceListGoodsItemPodium in '..\..\FormsBoutique\Guides\PriceListGoodsItemPodium.pas' {PriceListGoodsItemPodiumForm: TParentForm},
   PriceListGoodsItemPodiumEdit in '..\..\FormsBoutique\Guides\PriceListGoodsItemPodiumEdit.pas' {PriceListGoodsItemPodiumEditForm: TParentForm},
   FormsUnit in '..\..\FormsBoutique\System\FormsUnit.pas' {FormsForm: TParentForm},
-  DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas';
+  DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

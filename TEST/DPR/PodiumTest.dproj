@@ -1171,6 +1171,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

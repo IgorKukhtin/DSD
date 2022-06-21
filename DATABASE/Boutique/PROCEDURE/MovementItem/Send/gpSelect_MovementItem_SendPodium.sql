@@ -37,13 +37,13 @@ RETURNS TABLE (NPP Integer
 
              , TotalSumm TFloat , TotalSummBalance TFloat
 
-             , TotalSummPriceListBalance TFloat, TotalSummPriceListToBalance TFloat, TotalSummPriceListToBalance_start TFloat
-             , TotalSummPriceList TFloat, TotalSummPriceListTo TFloat, TotalSummPriceListTo_start TFloat 
+             , TotalSummPLBalance TFloat, TotalSummPLToBalance TFloat, TotalSummPLToBalance_start TFloat
+             , TotalSummPL TFloat, TotalSummPLTo TFloat, TotalSummPLTo_start TFloat 
 
-             , TotalSummPriceList_disc TFloat
-             , TotalSummPriceListTo_disc TFloat
-             , TotalSummPriceListBalance_disc TFloat
-             , TotalSummPriceListToBalance_disc TFloat
+             , TotalSummPL_disc TFloat
+             , TotalSummPLTo_disc TFloat
+             , TotalSummPLBalance_disc TFloat
+             , TotalSummPLToBalance_disc TFloat
 
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyName_pl TVarChar, CurrencyName_pl_to TVarChar
