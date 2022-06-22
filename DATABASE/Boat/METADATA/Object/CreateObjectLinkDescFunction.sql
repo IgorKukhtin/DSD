@@ -138,11 +138,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdOptItems_ProdOptPattern() RETURNS I
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdOptItems_ProdOptPattern', 'Шаблоны Опций (Лодка)', zc_Object_ProdOptItems(), zc_Object_ProdOptions() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptItems_ProdOptPattern');
 
-
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdOptItems_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptItems_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdOptItems_Goods', 'Комплектующие', zc_Object_ProdOptItems(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptItems_Goods');
-
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorPattern_ProdColorGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorPattern_ProdColorGroup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -354,6 +352,15 @@ SELECT 'zc_ObjectLink_ProdOptions_Model', 'Модель', zc_Object_ProdOptions(), zc_
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdOptions_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdOptions_Goods', 'Комплектующие', zc_Object_ProdOptions(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_Goods');
+
+-- CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdOptions_ProdColor() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_ProdColor'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+-- SELECT 'zc_ObjectLink_ProdOptions_ProdColor', 'Цвет', zc_Object_ProdOptions(), zc_Object_ProdColor() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_ProdColor');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdOptions_MaterialOptions() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_MaterialOptions'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ProdOptions_MaterialOptions', 'Категория Опций', zc_Object_ProdOptions(), zc_Object_MaterialOptions() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_MaterialOptions');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoney_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)

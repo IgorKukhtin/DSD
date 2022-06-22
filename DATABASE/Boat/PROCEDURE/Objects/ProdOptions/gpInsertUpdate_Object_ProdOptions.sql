@@ -34,7 +34,7 @@ BEGIN
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ProdOptions()); 
 
    -- проверка уникальности для свойства <Название >
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdOptions(), inName, vbUserId);
+   -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdOptions(), inName, vbUserId);
 
    -- проверка - у таких опций здесь нельзя установить значение <Комплектующие>
    IF inGoodsId > 0

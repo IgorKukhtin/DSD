@@ -231,7 +231,7 @@ BEGIN
        FROM tmpData AS tmpPrice
           LEFT JOIN Object AS Object_Goods
                            ON Object_Goods.Id = tmpPrice.GoodsId
-                          AND Object_Goods.DescId IN (zc_Object_Goods(), zc_Object_ReceiptProdModel())
+                        --AND Object_Goods.DescId IN (zc_Object_Goods(), zc_Object_ReceiptProdModel())
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
           
           LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
@@ -403,7 +403,7 @@ BEGIN
                                ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                               AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id       = ObjectLink_PriceListItem_Goods.ChildObjectId
-                                          AND Object_Goods.isErased = FALSE
+                                       -- AND Object_Goods.isErased = FALSE
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
 
           LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
@@ -471,6 +471,7 @@ BEGIN
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
          AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
+         AND COALESCE (Object_Goods.isErased, FALSE) = FALSE
        ;
   END IF;
 

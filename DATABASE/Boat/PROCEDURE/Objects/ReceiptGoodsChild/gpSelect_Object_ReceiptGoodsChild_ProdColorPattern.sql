@@ -136,7 +136,13 @@ BEGIN
           , Object_GoodsGroup.ValueData                AS GoodsGroupName
           , ObjectString_Article.ValueData             AS Article
             -- значение Farbe
-          , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL THEN ObjectString_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
+          , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL AND tmpProdColorPattern.Comment <> ''
+                      THEN tmpProdColorPattern.Comment
+                 WHEN ObjectLink_Goods.ChildObjectId IS NULL
+                      THEN ObjectString_Comment.ValueData
+                 ELSE Object_ProdColor.ValueData
+            END :: TVarChar AS ProdColorName
+
           , Object_Measure.ValueData                   AS MeasureName
 
             -- Цена вх. без НДС
