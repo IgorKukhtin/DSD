@@ -751,6 +751,9 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TSiteDiscontDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TSiteDiscontDialogForm');
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsUnitSupplementSUN1Form'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsUnitSupplementSUN1Form');
+
 {    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
 

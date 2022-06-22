@@ -14163,7 +14163,7 @@ begin
                 RemainsCDS.FieldByName('Color_IPE').AsInteger := PlanEmployeeCDS.FieldByName('Color').AsInteger;
                 RemainsCDS.Post;
               end;
-            RemainsCDS.Next;
+              RemainsCDS.Next;
             end;
             PlanEmployeeCDS.Next;
           end;

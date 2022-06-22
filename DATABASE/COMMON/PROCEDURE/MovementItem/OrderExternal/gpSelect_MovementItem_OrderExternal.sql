@@ -555,7 +555,7 @@ BEGIN
           , tmpMI_Child AS (SELECT MovementItem.ParentId
                                  , SUM (COALESCE (MovementItem.Amount,0))            AS Amount
                                  , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
-                                 , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_diff
+                                 , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_all
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Child()
@@ -721,7 +721,7 @@ BEGIN
            
            , tmpMI_Child.Amount       ::TFloat AS Amount_child
            , tmpMI_Child.AmountSecond ::TFloat AS AmountSecond_child
-           , tmpMI_Child.Amount_diff  ::TFloat AS AmountDiff_child
+           , (tmpMI_Child.Amount_all - (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) )  ::TFloat AS AmountDiff_child
 
 
        FROM tmpMI_all AS tmpMI
@@ -1102,7 +1102,7 @@ BEGIN
           , tmpMI_Child AS (SELECT MovementItem.ParentId
                                  , SUM (COALESCE (MovementItem.Amount,0))            AS Amount
                                  , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
-                                 , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_diff
+                                 , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_all
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Child()
@@ -1177,7 +1177,7 @@ BEGIN
 
            , tmpMI_Child.Amount       ::TFloat AS Amount_child
            , tmpMI_Child.AmountSecond ::TFloat AS AmountSecond_child
-           , tmpMI_Child.Amount_diff  ::TFloat AS AmountDiff_child
+           , (tmpMI_Child.Amount_all - (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) )  ::TFloat AS AmountDiff_child
        FROM tmpMI_all AS tmpMI
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpMI.GoodsKindId OR tmpPromo.GoodsKindId = 0)

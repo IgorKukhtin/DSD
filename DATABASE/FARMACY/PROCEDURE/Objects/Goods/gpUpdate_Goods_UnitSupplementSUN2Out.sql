@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Goods_UnitSupplementSUN2Out(Integer, Integer, T
 
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_UnitSupplementSUN2Out(
     IN inGoodsMainId               Integer   ,   -- ключ объекта <Товар>
-    IN inUnitSupplementSUN2OutiD   Integer  ,    -- Подразделения для отправки по дополнению СУН1
+    IN inUnitSupplementSUN2OutId   Integer  ,    -- Подразделения для отправки по дополнению СУН1
     IN inSession                   TVarChar      -- текущий пользователь
 )
 RETURNS VOID AS
@@ -20,18 +20,37 @@ BEGIN
 
    vbUserId := lpGetUserBySession (inSession);
    
+   IF EXISTS(SELECT Object_Goods_Main.UnitSupplementSUN2OutId
+             FROM Object_Goods_Main  
+             WHERE Object_Goods_Main.Id = inGoodsMainId
+               AND COALESCE (Object_Goods_Main.UnitSupplementSUN2OutId, 0) <> 0)
+   THEN
+     PERFORM gpDelete_GoodsBlob_UnitSupplementSUN1Out(inGoodsMainId               := inGoodsMainId
+                                                    , inUnitSupplementSUN1OutId   := (SELECT Object_Goods_Main.UnitSupplementSUN2OutId
+                                                                                      FROM Object_Goods_Main  
+                                                                                      WHERE Object_Goods_Main.Id = inGoodsMainId)
+                                                    , inSession                   := inSession);
+   END IF; 
+
    -- сохранили свойство <Дополнение СУН1>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UnitSupplementSUN2Out(), inGoodsMainId, inUnitSupplementSUN2OutiD);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UnitSupplementSUN2Out(), inGoodsMainId, inUnitSupplementSUN2OutId);
    
     -- Сохранили в плоскую таблицй
    BEGIN
-     UPDATE Object_Goods_Main SET UnitSupplementSUN2OutId = inUnitSupplementSUN2OutiD
+     UPDATE Object_Goods_Main SET UnitSupplementSUN2OutId = inUnitSupplementSUN2OutId
      WHERE Object_Goods_Main.Id = inGoodsMainId;  
    EXCEPTION
       WHEN others THEN 
         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
         PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_UnitSupplementSUN2Out', text_var1::TVarChar, vbUserId);
    END;
+
+   IF COALESCE (inUnitSupplementSUN2OutId, 0) <> 0
+   THEN
+     PERFORM gpInsertUpdate_GoodsBlob_UnitSupplementSUN1Out(inGoodsMainId               := inGoodsMainId
+                                                          , inUnitSupplementSUN1OutId   := inUnitSupplementSUN2OutId
+                                                          , inSession                   := inSession);
+   END IF; 
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inGoodsMainId, vbUserId);

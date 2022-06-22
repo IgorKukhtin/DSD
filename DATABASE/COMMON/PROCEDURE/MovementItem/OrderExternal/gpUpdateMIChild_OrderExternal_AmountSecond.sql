@@ -85,7 +85,7 @@ BEGIN
                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                            )
                                                
-        --  приход перемещение на склад ГП
+        --  приход перемещение на склад
       , tmpSendIn AS (SELECT Movement.Id                                   AS MovementId
                            , MovementItem.ObjectId                         AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -94,7 +94,7 @@ BEGIN
                            INNER JOIN MovementLinkObject AS MLO_To
                                                          ON MLO_To.MovementId = Movement.Id
                                                         AND MLO_To.DescId = zc_MovementLinkObject_To()
-                                                        AND MLO_To.ObjectId = 8458    --"Склад База ГП"
+                                                        AND MLO_To.ObjectId = vbToId   
                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                   AND MovementItem.DescId = zc_MI_Master()
                                                   AND MovementItem.isErased = FALSE
@@ -143,7 +143,12 @@ BEGIN
           LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                 AND MovementItem.DescId = zc_MI_Child()
                                 AND MovementItem.isErased = FALSE
-                                AND MovementItem.ParentId = tmpMIMaster.Id    ;
+                                AND MovementItem.ParentId = tmpMIMaster.Id
+          LEFT JOIN tmpMI_Float AS MIFloat_Movement
+                                ON MIFloat_Movement.MovementItemId = MovementItem.Id
+                               AND MIFloat_Movement.DescId = zc_MIFloat_MovementId()
+     WHERE MIFloat_Movement.ValueData IS NOT NULL
+    ;
 
 END;
 $BODY$

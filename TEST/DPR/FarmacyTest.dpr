@@ -1211,7 +1211,8 @@ uses
   ExpressVIPConfirm in '..\..\FormsFarmacy\Document\ExpressVIPConfirm.pas' {ExpressVIPConfirmForm: TParentForm},
   GoodsCategoryAddGoods in '..\..\FormsFarmacy\Guides\GoodsCategoryAddGoods.pas' {GoodsCategoryAddGoodsForm: TParentForm},
   Check_ConfirmedByPhoneCall in '..\..\FormsFarmacy\Cash\Check_ConfirmedByPhoneCall.pas' {Check_ConfirmedByPhoneCallForm: TParentForm},
-  Check_RefusalConfirmed in '..\..\FormsFarmacy\Cash\Check_RefusalConfirmed.pas' {Check_RefusalConfirmedForm: TParentForm};
+  Check_RefusalConfirmed in '..\..\FormsFarmacy\Cash\Check_RefusalConfirmed.pas' {Check_RefusalConfirmedForm: TParentForm},
+  GoodsUnitSupplementSUN1 in '..\..\FormsFarmacy\Guides\GoodsUnitSupplementSUN1.pas' {GoodsUnitSupplementSUN1Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1527,7 +1527,6 @@ inherited SendJournalForm: TSendJournalForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'FromName'
           GridView = cxGridDBTableView
         end>
       Params = <>

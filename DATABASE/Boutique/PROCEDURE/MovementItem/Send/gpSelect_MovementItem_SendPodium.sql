@@ -37,8 +37,14 @@ RETURNS TABLE (NPP Integer
 
              , TotalSumm TFloat , TotalSummBalance TFloat
 
-             , TotalSummPriceListBalance TFloat, TotalSummPriceListToBalance TFloat, TotalSummPriceListToBalance_start TFloat
-             , TotalSummPriceList TFloat, TotalSummPriceListTo TFloat, TotalSummPriceListTo_start TFloat
+             , TotalSummPLBalance TFloat, TotalSummPLToBalance TFloat, TotalSummPLToBalance_start TFloat
+             , TotalSummPL TFloat, TotalSummPLTo TFloat, TotalSummPLTo_start TFloat 
+
+             , TotalSummPL_disc TFloat                            --в названиях колонок где есть TotalSummPriceList  заменила    PriceList на PL, колонкис длинными названиями не отображаются в делфи,  
+             , TotalSummPLTo_disc TFloat
+             , TotalSummPLBalance_disc TFloat
+             , TotalSummPLToBalance_disc TFloat
+
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyName_pl TVarChar, CurrencyName_pl_to TVarChar
              , DiscountTax_From TFloat, DiscountTax_To TFloat
@@ -397,6 +403,11 @@ BEGIN
                , 0                          :: TFloat AS TotalSummPriceListTo
                , 0                          :: TFloat AS TotalSummPriceListTo_start
 
+               , 0                          :: TFloat AS  TotalSummPriceList_disc
+               , 0                          :: TFloat AS  TotalSummPriceListTo_disc
+               , 0                          :: TFloat AS  TotalSummPriceListBalance_disc
+               , 0                          :: TFloat AS  TotalSummPriceListToBalance_disc
+
                , tmpPartion.CurrencyValue   ::TFloat
                , tmpPartion.ParValue        ::TFloat
 
@@ -544,7 +555,22 @@ BEGIN
                , tmpMI.TotalSummPriceListTo        :: TFloat
                  -- Сумма-start по прайсу - для магазина Кому
                , tmpMI.TotalSummPriceListTo_start  :: TFloat
-
+                
+                --итого с учетом сезонной скидки
+               , CAST (tmpMI.TotalSummPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS TotalSummPriceList_disc
+               , CAST (tmpMI.TotalSummPriceListTo * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS TotalSummPriceListTo_disc
+               , CAST ((tmpMI.TotalSummPriceList * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_Basis()
+                                                        THEN 1
+                                                        ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                                   END)
+                        * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS TotalSummPriceListBalance_disc
+  
+               , CAST ((tmpMI.TotalSummPriceListTo * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_Basis()
+                                                                THEN 1
+                                                                ELSE tmpCurrency_to.CurrencyValue / CASE WHEN tmpCurrency_to.ParValue <> 0 THEN tmpCurrency_to.ParValue ELSE 1 END
+                                                           END)
+                        * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS TotalSummPriceListToBalance_disc
+             
                  -- курс
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat
@@ -886,6 +912,21 @@ BEGIN
                  -- Сумма-start по прайсу - для магазина Кому
                , tmpMI.TotalSummPriceListTo_start :: TFloat
 
+                --итого с учетом сезонной скидки
+               , CAST (tmpMI.TotalSummPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS TotalSummPriceList_disc
+               , CAST (tmpMI.TotalSummPriceListTo * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS TotalSummPriceListTo_disc
+               , CAST ((tmpMI.TotalSummPriceList * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_Basis()
+                                                        THEN 1
+                                                        ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                                   END)
+                        * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS TotalSummPriceListBalance_disc
+  
+               , CAST ((tmpMI.TotalSummPriceListTo * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_Basis()
+                                                                THEN 1
+                                                                ELSE tmpCurrency_to.CurrencyValue / CASE WHEN tmpCurrency_to.ParValue <> 0 THEN tmpCurrency_to.ParValue ELSE 1 END
+                                                           END)
+                        * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS TotalSummPriceListToBalance_disc
+             
                  -- курс
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat

@@ -5,7 +5,7 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1080
-  ExplicitHeight = 452
+  ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -844,6 +844,80 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
       Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
       ImageIndex = 3
     end
+    object actUpdateMIChild_Amount: TdsdExecStoredProc
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_Amount
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_Amount
+        end>
+      Caption = 'actUpdateMIChild_Amount'
+      ImageIndex = 68
+    end
+    object macUpdateMIChild_Amount_list: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_Amount
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateMIChild_Amount_list'
+      ImageIndex = 68
+    end
+    object macUpdateMIChild_Amount: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMIChild_Amount_list
+        end>
+      QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082') '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082') '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
+      ImageIndex = 68
+    end
+    object actUpdateMIChild_AmountSecond: TdsdExecStoredProc
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_AmountSecond
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_AmountSecond
+        end>
+      Caption = 'actUpdateMIChild_Amount'
+      ImageIndex = 69
+    end
+    object macUpdateMIChild_AmountSecond_list: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_AmountSecond
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateMIChild_AmountSecond_list'
+      ImageIndex = 69
+    end
+    object macUpdateMIChild_AmountSecond: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMIChild_AmountSecond_list
+        end>
+      QuestionBeforeExecute = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086 +
+        #1074'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 69
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -944,6 +1018,22 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_Amount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_AmountSecond'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -969,6 +1059,14 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
     end
     object bbPrint: TdxBarButton
       Action = mactPrint_Order
+      Category = 0
+    end
+    object bbUpdateMIChild_Amount: TdxBarButton
+      Action = macUpdateMIChild_Amount
+      Category = 0
+    end
+    object bbUpdateMIChild_AmountSecond: TdxBarButton
+      Action = macUpdateMIChild_AmountSecond
       Category = 0
     end
   end
@@ -1247,5 +1345,39 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spUpdateMIChild_Amount: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_Amount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 842
+    Top = 160
+  end
+  object spUpdateMIChild_AmountSecond: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecond'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 850
+    Top = 216
   end
 end

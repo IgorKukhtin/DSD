@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
     IN inStartDate         TDateTime ,
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
     IN inIsGoods           Boolean   , --
     IN inIsGoodsKind       Boolean   , --
     IN inIsPartionGoods    Boolean   , --
+    IN inIsDate            Boolean   , --
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -129,6 +131,8 @@ RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull
 
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InfoMoneyGroupName_goods TVarChar, InfoMoneyDestinationName_goods TVarChar, InfoMoneyCode_goods Integer, InfoMoneyName_goods TVarChar
+             , OperDate          TDateTime
+             , OperDatePartner   TDateTime
              )
 AS
 $BODY$
@@ -425,7 +429,11 @@ BEGIN
          , View_InfoMoney_Goods.InfoMoneyCode                   AS InfoMoneyCode_goods
          , View_InfoMoney_Goods.InfoMoneyName                   AS InfoMoneyName_goods
 
+         , tmpOperationGroup.OperDate          ::TDateTime
+         , tmpOperationGroup.OperDatePartner   ::TDateTime
      FROM (SELECT tmpContainer.LocationId
+                , tmpContainer.OperDate
+                , tmpContainer.OperDatePartner
                 -- , tmpContainer.GoodsId
                 , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END AS GoodsId
                 , tmpContainer.GoodsKindId
@@ -544,7 +552,10 @@ BEGIN
                       , COALESCE (MLO_Business.ObjectId, 0) AS BusinessId
                       , COALESCE (MLO_Branch.ObjectId, 0)   AS BranchId
                       -- , _tmpGoods.InfoMoneyId AS InfoMoneyId_goods
-                      -- , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END AS TradeMarkId
+                      -- , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END AS TradeMarkId  
+                      
+                      , CASE WHEN inIsDate = TRUE THEN Movement.OperDate ELSE NULL END AS OperDate
+                      , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END AS OperDatePartner
 
                         -- 1.1. Кол-во, без AnalyzerId
                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossCount_20200() THEN -1 * MIContainer.Amount
@@ -628,6 +639,9 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MLO_Branch ON MLO_Branch.MovementItemId = MIContainer.MovementItemId
                                                                     AND MLO_Branch.DescId = zc_MILinkObject_Branch()
 
+                      LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                                        AND inIsDate = TRUE
+
                  GROUP BY MIContainer.WhereObjectId_analyzer
                         -- , CASE WHEN inIsGoods        = TRUE THEN MIContainer.ObjectId_analyzer    ELSE 0 END
                         , MIContainer.ObjectId_analyzer
@@ -641,7 +655,9 @@ BEGIN
                         , MLO_Business.ObjectId
                         , MLO_Branch.ObjectId
                         -- , _tmpGoods.InfoMoneyId
-                        -- , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END
+                        -- , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END 
+                      , CASE WHEN inIsDate = TRUE THEN Movement.OperDate ELSE NULL END
+                      , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END
 
                   ) AS tmpContainer
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
@@ -683,7 +699,8 @@ BEGIN
                              , CASE WHEN inIsPartner = TRUE THEN COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) ELSE 0 END
                              , CLO_PartionGoods.ObjectId
                              , ContainerLinkObject_InfoMoney.ObjectId
-
+                             , tmpContainer.OperDate
+                             , tmpContainer.OperDatePartner
                     ) AS tmpOperationGroup
 
           LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpOperationGroup.LocationId

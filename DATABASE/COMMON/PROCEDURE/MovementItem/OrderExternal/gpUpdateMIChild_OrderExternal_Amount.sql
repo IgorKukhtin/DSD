@@ -43,11 +43,14 @@ BEGIN
         tmpMI AS (SELECT MovementItem.Id
                        , MovementItem.ObjectId                         AS GoodsId
                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                       , MovementItem.Amount
+                       , (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0))   AS Amount
                   FROM MovementItem   
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                       LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                   ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
                   WHERE MovementItem.MovementId = inMovementId
                     AND MovementItem.DescId = zc_MI_Master()
                     AND MovementItem.isErased = FALSE
@@ -135,8 +138,13 @@ BEGIN
                                                 , inParentId           := tmpMIMaster.Id
                                                 , inMovementId         := inMovementId
                                                 , inGoodsId            := tmpMIMaster.GoodsId 
-                                                                       -- если Остаток > итого в заявке, тогда zc_MI_Child.Amount =  итого в заявке ИНАЧЕ Остаток + в этой проц обнуляем все zc_MI_Child.AmountSecond
-                                                , inAmount             := CASE WHEN COALESCE (tmpMIMaster.Remains,0) > COALESCE (tmpMIMaster.Amount,0) THEN COALESCE (tmpMIMaster.Amount,0) ELSE COALESCE (tmpMIMaster.Remains,0) END :: TFloat  
+                                                                       -- если Остаток > итого в заявке, тогда zc_MI_Child.Amount =  итого в заявке ИНАЧЕ Остаток + в этой проц обнуляем все zc_MI_Child.AmountSecond                                            
+
+                                                , inAmount             := CASE WHEN COALESCE (tmpMIMaster.Remains,0) > COALESCE (tmpMIMaster.Amount,0) 
+                                                                               THEN COALESCE (tmpMIMaster.Amount,0)
+                                                                               WHEN COALESCE (tmpMIMaster.Remains,0) > 0 THEN COALESCE (tmpMIMaster.Remains,0) 
+                                                                               ELSE 0
+                                                                          END :: TFloat  
                                                 , inAmountSecond       := 0 :: TFloat 
                                                 , inGoodsKindId        := tmpMIMaster.GoodsKindId 
                                                 , inMovementId_Send    := 0
@@ -146,7 +154,11 @@ BEGIN
           LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                 AND MovementItem.DescId = zc_MI_Child()
                                 AND MovementItem.isErased = FALSE
-                                AND MovementItem.ParentId = tmpMIMaster.Id     
+                                AND MovementItem.ParentId = tmpMIMaster.Id
+          LEFT JOIN tmpMI_Float AS MIFloat_Movement
+                                ON MIFloat_Movement.MovementItemId = MovementItem.Id
+                               AND MIFloat_Movement.DescId = zc_MIFloat_MovementId()
+     WHERE MIFloat_Movement.ValueData IS NULL     
     ;
 
 END;

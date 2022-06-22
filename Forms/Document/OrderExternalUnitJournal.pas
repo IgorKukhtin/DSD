@@ -79,6 +79,16 @@ type
     mactSilentPrint: TMultiAction;
     mactSilentList: TMultiAction;
     N13: TMenuItem;
+    spUpdateMIChild_Amount: TdsdStoredProc;
+    spUpdateMIChild_AmountSecond: TdsdStoredProc;
+    bbUpdateMIChild_Amount: TdxBarButton;
+    bbUpdateMIChild_AmountSecond: TdxBarButton;
+    actUpdateMIChild_Amount: TdsdExecStoredProc;
+    macUpdateMIChild_Amount_list: TMultiAction;
+    macUpdateMIChild_Amount: TMultiAction;
+    actUpdateMIChild_AmountSecond: TdsdExecStoredProc;
+    macUpdateMIChild_AmountSecond_list: TMultiAction;
+    macUpdateMIChild_AmountSecond: TMultiAction;
   private
     { Private declarations }
   public

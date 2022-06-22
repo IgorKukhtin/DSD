@@ -508,14 +508,24 @@ BEGIN
          WHEN others THEN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_WagesVIP_CalculationAllDay', True, text_var1::TVarChar, vbUserId);
+      END;          
+      
+      -- Премия за приложение
+      BEGIN
+         PERFORM gpSelect_Movement_Wages_ApplicationAward(inOperDate := CURRENT_DATE,  inSession := inSession);
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Movement_Wages_ApplicationAward', True, text_var1::TVarChar, vbUserId);
       END;    
-
+      
     END IF;    
 
-      -- Расчет ЗП випам за предыдущий месяц
     IF date_part('DAY',  CURRENT_DATE)::Integer <= 3 AND date_part('HOUR',  CURRENT_TIME)::Integer = 18 AND 
        date_part('MINUTE',  CURRENT_TIME)::Integer >= 0 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
     THEN
+
+      -- Расчет ЗП випам за предыдущий месяц
       BEGIN
          PERFORM gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := Movement.Id,  inSession := inSession)
          FROM Movement
@@ -527,6 +537,15 @@ BEGIN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_WagesVIP_CalculationAllDay', True, text_var1::TVarChar, vbUserId);
       END;         
+
+      -- Премия за приложение за предыдущий месяц
+      BEGIN
+         PERFORM gpSelect_Movement_Wages_ApplicationAward(inOperDate := CURRENT_DATE - INTERVAL '10 DAY',  inSession := inSession);
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Movement_Wages_ApplicationAward', True, text_var1::TVarChar, vbUserId);
+      END;    
     END IF;    
 
 END;

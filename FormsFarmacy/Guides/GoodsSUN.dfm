@@ -1692,6 +1692,35 @@ inherited GoodsSUNForm: TGoodsSUNForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'2'
       ImageIndex = 66
     end
+    object actGoodsUnitSupplementSUN1: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1'
+      Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1'
+      ImageIndex = 42
+      FormName = 'TGoodsUnitSupplementSUN1Form'
+      FormNameParam.Value = 'TGoodsUnitSupplementSUN1Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsMainId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1781,6 +1810,14 @@ inherited GoodsSUNForm: TGoodsSUNForm
         item
           Visible = True
           ItemName = 'dxBarSubItem6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsUnitSupplementSUN1'
         end
         item
           Visible = True
@@ -2251,6 +2288,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
     end
     object dxBarButton22: TdxBarButton
       Action = macLoadinSupplementSUN2
+      Category = 0
+    end
+    object bbGoodsUnitSupplementSUN1: TdxBarButton
+      Action = actGoodsUnitSupplementSUN1
       Category = 0
     end
   end
@@ -3028,7 +3069,7 @@ inherited GoodsSUNForm: TGoodsSUNForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitSupplementSUN1Out'
+        Name = 'inUnitSupplementSUN1OutId'
         Value = Null
         Component = FormParams
         ComponentItem = 'UnitSupplementSUN1'
@@ -3053,7 +3094,7 @@ inherited GoodsSUNForm: TGoodsSUNForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitSupplementSUN1'
+        Name = 'inUnitSupplementSUN1OutId'
         Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3076,7 +3117,7 @@ inherited GoodsSUNForm: TGoodsSUNForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitSupplementSUN2Out'
+        Name = 'inUnitSupplementSUN2OutId'
         Value = Null
         Component = FormParams
         ComponentItem = 'UnitSupplementSUN1'
@@ -3101,7 +3142,7 @@ inherited GoodsSUNForm: TGoodsSUNForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitSupplementSUN2'
+        Name = 'inUnitSupplementSUN2OutId'
         Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','

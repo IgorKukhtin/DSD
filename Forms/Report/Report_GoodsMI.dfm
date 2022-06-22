@@ -6,7 +6,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 572
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1809,6 +1809,22 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 129
           end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object OperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
@@ -2003,6 +2019,14 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     TabOrder = 10
     Width = 85
   end
+  object cbDate: TcxCheckBox [7]
+    Left = 655
+    Top = 87
+    Caption = #1087#1086' '#1044#1072#1090#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 11
+    Width = 74
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -2100,7 +2124,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2111,7 +2135,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2165,7 +2189,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         end
         item
           Name = 'isGoods'
-          Value = 'False'
+          Value = False
           Component = cbGoods
           DataType = ftBoolean
           ParamType = ptInput
@@ -2173,7 +2197,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         end
         item
           Name = 'isPartner'
-          Value = 'False'
+          Value = False
           Component = cbPartner
           DataType = ftBoolean
           ParamType = ptInput
@@ -2181,7 +2205,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         end
         item
           Name = 'isTradeMark'
-          Value = 'False'
+          Value = False
           Component = cbTradeMark
           DataType = ftBoolean
           ParamType = ptInput
@@ -2189,7 +2213,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
@@ -2197,7 +2221,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
@@ -2245,7 +2269,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2256,7 +2280,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2539,6 +2563,14 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           DataType = ftBoolean
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDate'
+          Value = Null
+          Component = cbDate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2641,7 +2673,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         end
         item
           Name = 'IsPartner'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2768,6 +2800,14 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Name = 'inIsPartionGoods'
         Value = Null
         Component = cbPartionGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDate'
+        Value = Null
+        Component = cbDate
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

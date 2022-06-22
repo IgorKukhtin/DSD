@@ -204,6 +204,14 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     TabOrder = 22
     Width = 88
   end
+  object cbDate: TcxCheckBox
+    Left = 353
+    Top = 48
+    Caption = #1087#1086' '#1044#1072#1090#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 23
+    Width = 79
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -234,6 +242,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -241,6 +250,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupId'
@@ -248,6 +258,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupName'
@@ -256,6 +267,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
@@ -263,6 +275,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = InfoMoneyGuide
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -271,6 +284,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
@@ -278,6 +292,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -286,6 +301,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
@@ -293,6 +309,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -301,6 +318,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -308,6 +326,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -316,6 +335,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitGroupId'
@@ -323,6 +343,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = GuidesUnitGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitGroupName'
@@ -331,6 +352,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isPartner'
@@ -338,6 +360,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = cbPartner
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isGoods'
@@ -345,6 +368,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = cbGoods
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isGoodsKind'
@@ -352,6 +376,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = cbGoodsKind
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isPartionGoods'
@@ -359,6 +384,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = cbPartionGoods
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isTradeMark'
@@ -366,6 +392,15 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = cbTradeMark
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDate'
+        Value = Null
+        Component = cbDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 255
@@ -375,6 +410,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -385,6 +421,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -393,6 +430,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 135
@@ -402,6 +440,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     LookupControl = edInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -412,6 +451,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -420,6 +460,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 183
@@ -429,6 +470,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -439,6 +481,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -447,6 +490,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 88
@@ -456,6 +500,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -466,6 +511,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -474,6 +520,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 143
@@ -484,6 +531,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     FormNameParam.Name = 'TJuridical_ObjectForm'
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -493,6 +541,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -501,6 +550,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 97
     Top = 192
@@ -510,6 +560,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     LookupControl = edUnitGroup
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -521,6 +572,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -529,6 +581,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 71

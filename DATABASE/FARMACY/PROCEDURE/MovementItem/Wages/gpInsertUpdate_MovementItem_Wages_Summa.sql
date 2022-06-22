@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Wages_Summa()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Summa(
     IN ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -30,6 +30,7 @@ $BODY$
    DECLARE vbIlliquidAssets TFloat;
    DECLARE vbPenaltySUN TFloat;
    DECLARE vbPenaltyExam TFloat;
+   DECLARE vbApplicationAward TFloat;
    DECLARE vbAmountCard TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -96,6 +97,7 @@ BEGIN
            , COALESCE (MIFloat_IlliquidAssets.ValueData, 0)
            , COALESCE (MIFloat_PenaltySUN.ValueData, 0)
            , COALESCE (MIFloat_PenaltyExam.ValueData, 0)
+           , COALESCE (MIFloat_ApplicationAward.ValueData, 0)
            , COALESCE (MIF_AmountCard.ValueData, 0)
       INTO vbisIssuedBy
          , vbHolidaysHospital
@@ -104,6 +106,7 @@ BEGIN
          , vbIlliquidAssets
          , vbPenaltySUN
          , vbPenaltyExam
+         , vbApplicationAward
          , vbAmountCard   
       FROM  MovementItem
 
@@ -130,6 +133,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_PenaltyExam
                                         ON MIFloat_PenaltyExam.MovementItemId = MovementItem.Id
                                        AND MIFloat_PenaltyExam.DescId = zc_MIFloat_PenaltyExam()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_ApplicationAward
+                                        ON MIFloat_ApplicationAward.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ApplicationAward.DescId = zc_MIFloat_ApplicationAward()
 
             LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                         ON MIF_AmountCard.MovementItemId = MovementItem.Id
@@ -252,7 +259,8 @@ BEGIN
                    WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
                    THEN 0 ELSE COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0)  END +
               COALESCE (MIFloat_PenaltySUN.ValueData, 0) +
-              COALESCE (MIFloat_PenaltyExam.ValueData, 0) - 
+              COALESCE (MIFloat_PenaltyExam.ValueData, 0) +
+              COALESCE (MIFloat_ApplicationAward.ValueData, 0) - 
               COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
       INTO outAmountHand
       FROM  MovementItem
@@ -288,6 +296,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_PenaltyExam
                                         ON MIFloat_PenaltyExam.MovementItemId = MovementItem.Id
                                        AND MIFloat_PenaltyExam.DescId = zc_MIFloat_PenaltyExam()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_ApplicationAward
+                                        ON MIFloat_ApplicationAward.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ApplicationAward.DescId = zc_MIFloat_ApplicationAward()
 
             LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                         ON MIF_AmountCard.MovementItemId = MovementItem.Id
