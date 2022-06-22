@@ -824,6 +824,8 @@ type
 
     FUpdateKey_expireDate: Boolean;
 
+    FTextError : String;
+
     aDistributionPromoId : array of Integer;
     aDistributionPromoAmount : array of Currency;
     aDistributionPromoSum : array of Currency;
@@ -929,6 +931,8 @@ type
 
     // Пропись выполнения плана по сотруднику
     procedure UpdateImplementationPlanEmployee;
+    // Заполнение шапки главной формы
+    procedure SetMainFormCaption;
 
 
   public
@@ -4214,6 +4218,8 @@ begin
         ReleaseMutex(MutexGoodsExpirationDate);
       end;
       UpdateImplementationPlanEmployee;
+      // Заполнение шапки главной формы
+      SetMainFormCaption;
     finally
       RemainsCDS.EnableControls;
       ExpirationDateCDS.EnableControls;
@@ -8212,6 +8218,7 @@ begin
   FOldAnalogFilter := '';
   FAnalogFilter := 0;
   FUpdateKey_expireDate := False;
+  FTextError := '';
 
   isLog_RRO := iniLog_RRO;
 
@@ -8220,9 +8227,7 @@ begin
   LoadUnitConfig;
   LoadTaxUnitNight;
   SetTaxUnitNight;
-
-  Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) + ')' +
-          ' <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>'  + ' - <' + IniUtils.gUserName + '>';
+  SetMainFormCaption;
 end;
 
 function TMainCashForm2.InitLocalStorage: Boolean;
@@ -13039,8 +13044,8 @@ begin
       fBlinkVIP := lMovementId_BlinkVIP <> '';
 
       // если сюда дошли, значит ON-line режим режим для VIP-чеков
-      Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) + ')' +
-        ' - <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>' + ' - <' + IniUtils.gUserName + '>';
+      FTextError := '';
+      SetMainFormCaption;
 
       // если список изменился ИЛИ надо "по любому обновить" - запустим "не самое долгое" обновление грида
       if (lMovementId_BlinkVIP <> MovementId_BlinkVIP) or (isRefresh = True)
@@ -13056,9 +13061,10 @@ begin
     except
       Inc(FError_Blink);
       if FError_Blink > 3 then
-        Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) +
-          ') - OFF-line режим для VIP-чеков' + ' - <' + IniUtils.gUnitName + '>' +
-          ' <' + IntToStr(IniUtils.gUserCode) + '>' + ' - <' + IniUtils.gUserName + '>'
+      begin
+        FTextError := ' - OFF-line режим для VIP-чеков - ';
+        SetMainFormCaption;
+      end;
     end;
 end;
 
@@ -13086,20 +13092,18 @@ begin
 
       // если сюда дошли, значит ON-line режим режим для проверки "ошибка - расч/факт остаток"
       if fBlinkCheck = True then
-        Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) +
-          ') : есть ошибки - расч/факт остаток' + ' - <' + IniUtils.gUnitName +
-          '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>' + ' - <' + IniUtils.gUserName + '>'
-      else
-        Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) + ')' +
-          ' <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>'  + ' - <' + IniUtils.gUserName + '>';
+        FTextError := ' - есть ошибки - расч/факт остаток - '
+      else FTextError := '';
+      SetMainFormCaption;
 
       FError_Blink := 0;
     except
       Inc(FError_Blink);
       if FError_Blink > 3 then
-        Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) +
-          ') - OFF-line режим для чеков с ошибкой' + ' - <' + IniUtils.gUnitName +
-          '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>' + ' - <' + IniUtils.gUserName + '>'
+      begin
+        FTextError := ' - OFF-line режим для чеков с ошибкой - ';
+        SetMainFormCaption;
+      end;
     end;
 end;
 
@@ -13316,6 +13320,8 @@ begin
         ReleaseMutex(MutexGoodsExpirationDate);
       end;
       UpdateImplementationPlanEmployee;
+      // Заполнение шапки главной формы
+      SetMainFormCaption;
       // корректируем новые остатки с учетом того, что уже было в чеке
       CheckCDS.First;
       while not CheckCDS.Eof do
@@ -14177,6 +14183,45 @@ begin
       end;
     finally
       ReleaseMutex(MutexImplementationPlanEmployee);
+    end;
+  end;
+
+end;
+
+// Заполнение шапки главной формы
+procedure TMainCashForm2.SetMainFormCaption;
+  var ds : TClientDataSet;
+begin
+
+  Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) + ')' +  FTextError +
+          ' <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>'  + ' - <' + IniUtils.gUserName + '>';
+
+  // Пропись итогов выполнения плана по сотруднику
+  if FileExists(ImplementationPlanEmployeeUser_lcl) then
+  begin
+    ds := TClientDataSet.Create(nil);
+    try
+      WaitForSingleObject(MutexImplementationPlanEmployeeUser, INFINITE);
+      try
+        try
+
+          LoadLocalData(ds, ImplementationPlanEmployeeUser_lcl);
+          if not ds.Active then ds.Open;
+
+          if ds.IsEmpty then Exit;
+          if (ds.FieldByName('UserID').AsString = gc_User.Session) or (gc_User.Session = '3') then
+          begin
+             Self.Caption := Self.Caption + ' <Маркетинг: ' + FormatFloat(',0.00', ds.FieldByName('Total').AsCurrency) + '>'
+          end;
+
+        Except ON E:Exception do
+          Add_Log('Ошибка загрузки итогов выполнения плана сотрудника:' + E.Message);
+        end;
+      finally
+        ReleaseMutex(MutexImplementationPlanEmployeeUser);
+      end;
+    finally
+      freeAndNil(ds);
     end;
   end;
 

@@ -4386,6 +4386,10 @@
 				<Form>GoodsUnitSupplementSUN1Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeUser.pas">
+				<Form>Report_ImplementationPlanEmployeeUserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

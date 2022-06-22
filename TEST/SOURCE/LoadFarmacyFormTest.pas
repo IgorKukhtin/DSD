@@ -1111,10 +1111,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CompetitorMarkupsForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPlanEmployeeUserForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CompetitorMarkupsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CompetitorMarkupsForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RecalcMCSDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RecalcMCSDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RecalcMCSDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RecalcMCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RecalcMCSForm');

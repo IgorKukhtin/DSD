@@ -69,6 +69,10 @@ type
     isDeferred: TcxGridDBColumn;
     actPrintOptima: TdsdPrintAction;
     bbPrintOptima: TdxBarButton;
+    actPrintFilter: TdsdPrintAction;
+    macPrintFilter: TMultiAction;
+    actDirectoryDialog: TFileDialogAction;
+    bbPrintFilter: TdxBarButton;
   private
     { Private declarations }
   public

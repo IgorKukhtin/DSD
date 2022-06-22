@@ -796,6 +796,116 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       Caption = 'actPUSHMessage'
       PUSHMessageType = pmtInformation
     end
+    object actPrintFilter: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport_find'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_ShowDialog'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ExportDirectory'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'FileDirectory'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FileNameExport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PrefixFileNameExport'
+          Value = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' - '
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintFilter: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actDirectoryDialog
+      ActionList = <
+        item
+          Action = actPrintFilter
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1100' '#1101#1082#1089#1087#1086#1088#1090' '#1074#1089#1077#1093' '#1074#1086#1079#1074#1088#1072#1090#1085#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1074' PDF?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1074#1089#1077#1093' '#1074#1086#1079#1074#1088#1072#1090#1085#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1074' PDF'
+      Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074#1089#1077#1093' '#1074#1086#1079#1074#1088#1072#1090#1085#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1074' PDF'
+      ImageIndex = 21
+    end
+    object actDirectoryDialog: TFileDialogAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      FileOpenDialog.FavoriteLinks = <>
+      FileOpenDialog.FileTypes = <>
+      FileOpenDialog.Options = [fdoPickFolders]
+      Param.Value = Null
+      Param.Component = FormParams
+      Param.ComponentItem = 'FileDirectory'
+      Param.DataType = ftString
+      Param.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -918,6 +1028,14 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintFilter'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintOptima'
         end
         item
@@ -998,6 +1116,10 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     object bbPrintOptima: TdxBarButton
       Action = actPrintOptima
       Caption = #1055#1077#1095#1072#1090#1100' ('#1054#1087#1090#1080#1084#1072')'
+      Category = 0
+    end
+    object bbPrintFilter: TdxBarButton
+      Action = macPrintFilter
       Category = 0
     end
   end
@@ -1132,6 +1254,12 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = MasterCDS
         ComponentItem = 'AdjustingOurDate'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileDirectory'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 400
