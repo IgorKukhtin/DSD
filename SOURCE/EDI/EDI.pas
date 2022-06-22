@@ -3101,7 +3101,7 @@ begin
       ParamByName('inGoodsName').Value := s;
       //
       if isMetro = TRUE
-      then ParamByName('inGLNCode').Value := PRODUCTIDBUYER //BUYERPARTNUMBER
+      then ParamByName('inGLNCode').Value := BUYERPARTNUMBER //PRODUCTIDBUYER
       else ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
       try ParamByName('inAmountOrder').Value := gfStrToFloat(ORDEREDQUANTITY); except ParamByName('inAmountOrder').Value := 0; end;
       try ParamByName('inPriceOrder').Value := gfStrToFloat(ORDERPRICE); except ParamByName('inPriceOrder').Value := 0; end;
