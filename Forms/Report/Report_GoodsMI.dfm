@@ -3046,7 +3046,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 328
+    Left = 368
     Top = 170
   end
   object UnitGuides: TdsdGuides
