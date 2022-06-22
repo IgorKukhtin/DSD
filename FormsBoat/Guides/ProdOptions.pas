@@ -79,6 +79,9 @@ type
     spInsertUpdate: TdsdStoredProc;
     SalePrice: TcxGridDBColumn;
     SalePriceWVAT: TcxGridDBColumn;
+    MaterialOptionsName: TcxGridDBColumn;
+    Id_Site: TcxGridDBColumn;
+    CodeVergl: TcxGridDBColumn;
   private
     { Private declarations }
   public

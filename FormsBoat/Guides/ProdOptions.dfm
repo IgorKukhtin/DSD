@@ -12,7 +12,6 @@ object ProdOptionsForm: TProdOptionsForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
@@ -183,23 +182,29 @@ object ProdOptionsForm: TProdOptionsForm
         Options.Editing = False
         Width = 100
       end
-      object TaxKindName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1053#1044#1057
-        DataBinding.FieldName = 'TaxKindName'
-        Visible = False
+      object MaterialOptionsName: TcxGridDBColumn
+        Caption = ' '#1050#1072#1090#1077#1075#1086#1088#1080#1103
+        DataBinding.FieldName = 'MaterialOptionsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 70
       end
-      object TaxKind_Value: TcxGridDBColumn
-        Caption = #1053#1044#1057
-        DataBinding.FieldName = 'TaxKind_Value'
-        Visible = False
+      object Id_Site: TcxGridDBColumn
+        Caption = 'Id '#1057#1072#1081#1090
+        DataBinding.FieldName = 'Id_Site'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 45
+        Width = 70
+      end
+      object CodeVergl: TcxGridDBColumn
+        Caption = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081' '#1082#1086#1076
+        DataBinding.FieldName = 'CodeVergl'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -343,6 +348,24 @@ object ProdOptionsForm: TProdOptionsForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 179
+      end
+      object TaxKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1053#1044#1057
+        DataBinding.FieldName = 'TaxKindName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object TaxKind_Value: TcxGridDBColumn
+        Caption = #1053#1044#1057
+        DataBinding.FieldName = 'TaxKind_Value'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -1137,6 +1160,7 @@ object ProdOptionsForm: TProdOptionsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_ProdOptions_excel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions_excel(Integer, Integer, TVarChar, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions_excel (TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions_excel(
     IN inId_site         TVarChar  ,    -- 
@@ -8,15 +8,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions_excel(
     IN inOptName         TVarChar  ,    -- 
     IN inMaterialOptions TVarChar  ,    -- 
     IN inSalePrice       TFloat    ,
-    IN inComment         TVarChar  ,
+    IN inCodeVergl       TVarChar  ,
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbUserId  Integer;
-   DECLARE vbId      Integer;
-   DECLARE vbModelId Integer;
+   DECLARE vbId                Integer;
+   DECLARE vbModelId           Integer;
+   DECLARE vbMaterialOptionsId Integer;
 BEGIN
 
      -- Поиск     
@@ -28,13 +28,14 @@ BEGIN
 
      -- Поиск     
      vbMaterialOptionsId := (SELECT Id FROM Object WHERE DescId = zc_Object_MaterialOptions() AND ValueData ILIKE inMaterialOptions);
-     IF COALESCE (vbMaterialOptionsId, 0) = 0
+     IF COALESCE (vbMaterialOptionsId, 0) = 0 AND TRIM (inMaterialOptions) <> ''
      THEN
          -- сохранили
          vbMaterialOptionsId:= lpInsertUpdate_Object (vbMaterialOptionsId, zc_Object_MaterialOptions(), lfGet_ObjectCode (inCode, zc_Object_MaterialOptions()), inMaterialOptions);
      END IF;
 
 
+     -- Поиск - 1
      vbId:= (SELECT Object_ProdOptions.Id
              FROM Object AS Object_ProdOptions
                   LEFT JOIN ObjectLink AS ObjectLink_Model
@@ -43,14 +44,33 @@ BEGIN
                   LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
                                        ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
                                       AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
-             WHERE Object_ProdOptions.DescId = zc_Object_ProdOptions()
-               AND ObjectLink_Model.ChildObjectId = vbModelId
-             --AND ObjectLink_MaterialOptions.ChildObjectId     = vbMaterialOptionsId
-               AND Object_ProdOptions.isErased = FALSE
+             WHERE Object_ProdOptions.DescId                = zc_Object_ProdOptions()
+               AND ObjectLink_Model.ChildObjectId           = vbModelId
+               AND ObjectLink_MaterialOptions.ChildObjectId = vbMaterialOptionsId
+               AND Object_ProdOptions.isErased              = FALSE
                AND inOptName ILIKE Object_ProdOptions.ValueData
             );
+     -- Поиск - 2
+     IF COALESCE (vbId, 0) = 0
+     THEN
+         vbId:= (SELECT Object_ProdOptions.Id
+                 FROM Object AS Object_ProdOptions
+                      LEFT JOIN ObjectLink AS ObjectLink_Model
+                                           ON ObjectLink_Model.ObjectId = Object_ProdOptions.Id
+                                          AND ObjectLink_Model.DescId = zc_ObjectLink_ProdOptions_Model()
+                      LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                           ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                                          AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+                 WHERE Object_ProdOptions.DescId                = zc_Object_ProdOptions()
+                   AND ObjectLink_Model.ChildObjectId           = vbModelId
+                   AND COALESCE (ObjectLink_MaterialOptions.ChildObjectId, 0) = 0
+                   AND Object_ProdOptions.isErased              = FALSE
+                   AND inOptName ILIKE Object_ProdOptions.ValueData
+                );
+     END IF;
             
    
+     -- сохранили
      vbId:= gpInsertUpdate_Object_ProdOptions (ioId           := vbId
                                              , inCode         := COALESCE ((SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbId), 0)
                                              , inName         := COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = vbId), inOptName)
@@ -64,6 +84,12 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptions_TaxKind(), vbId, vbMaterialOptionsId);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Id_Site(), vbId, inId_site);
+
+   -- сохранили свойство <>
+   --PERFORM lpInsertUpdate_ObjectString (zc_ObjectFloat_ProdOptions_CodeVergl(), vbId, inCodeVergl);
 
 END;
 $BODY$

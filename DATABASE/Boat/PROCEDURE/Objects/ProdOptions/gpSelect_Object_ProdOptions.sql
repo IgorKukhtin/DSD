@@ -27,7 +27,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
-) AS
+             , MaterialOptionsName TVarChar
+             , Id_Site TVarChar
+             , CodeVergl Integer
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPriceWithVAT Boolean;
@@ -218,6 +222,10 @@ BEGIN
          , COALESCE (tmpProdColorPattern.ProdColorName, Object_ProdColor.ValueData)                 ::TVarChar  AS ProdColorName
          , COALESCE (tmpProdColorPattern.MeasureName, Object_Measure.ValueData)                     ::TVarChar  AS MeasureName
 
+         , Object_MaterialOptions.ValueData                       AS MaterialOptionsName
+         , ObjectString_Id_Site.ValueData                         AS Id_Site
+         , ObjectFloat_ProdOptions_CodeVergl.ValueData :: Integer AS CodeVergl
+
      FROM Object AS Object_ProdOptions
           LEFT JOIN ObjectString AS ObjectString_Comment
           
@@ -241,6 +249,18 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                 ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+
+          LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                               ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                              AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+          LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Id_Site
+                                 ON ObjectString_Id_Site.ObjectId = Object_ProdOptions.Id
+                                AND ObjectString_Id_Site.DescId = zc_ObjectString_Id_Site()
+          LEFT JOIN ObjectFloat AS ObjectFloat_ProdOptions_CodeVergl
+                                ON ObjectFloat_ProdOptions_CodeVergl.ObjectId = Object_ProdOptions.Id
+                               AND ObjectFloat_ProdOptions_CodeVergl.DescId = zc_ObjectFloat_ProdOptions_CodeVergl()
 
           -- Модель
           LEFT JOIN ObjectLink AS ObjectLink_Model
