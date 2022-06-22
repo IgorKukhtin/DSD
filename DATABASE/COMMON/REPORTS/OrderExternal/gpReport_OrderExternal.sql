@@ -70,6 +70,13 @@ RETURNS TABLE (MovementId             Integer
              , TotalAmount_Child   TFloat
              , Amount_diff         TFloat -- разница с итого заявка 
 
+             , AmountRemains            TFloat
+             , AmountRemains_Sh         TFloat
+             , AmountRemains_Weight     TFloat
+             , AmountRemains_diff       TFloat
+             , AmountRemainsSH_diff     TFloat
+             , AmountRemainsWeight_diff TFloat
+
 
              , DatePrint TDateTime, DatePrint1 TDateTime, DatePrint2 TDateTime
 
@@ -121,6 +128,49 @@ BEGIN
                   WHERE Object.DescId = zc_Object_Goods()
                     AND COALESCE (inGoodsGroupId, 0) = 0
                  )
+
+--остатки   ( расчет остатка на начало по выбранному складу + сколько осталось отгрузить по заявкам(если дата пок = выбр дате, а дата заявки < выбр даты) - когда нет детализации и за один день + показать информативно разницу "сколько не хватает для заявка + дозаказ" - в весе и в шт., разницу показать только когда делаем расч остатка, т.е. если период >1 дня или есть детализация, то и в разнице будет пусто)
+     , tmpRemains AS (WITH
+                      tmpContainer AS (SELECT Container.Id       AS ContainerId
+                                            , CLO_Unit.ObjectId  AS ToId
+                                            , Container.ObjectId AS GoodsId
+                                            , Container.Amount
+                                       FROM Container
+                                            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
+                                            LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                                          ON CLO_Unit.ContainerId = Container.Id
+                                                                         AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                            LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                                          ON CLO_Account.ContainerId = CLO_Unit.ContainerId
+                                                                         AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                       WHERE Container.DescId = zc_Container_Count()
+                                         AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!! 
+                                         AND (CLO_Unit.ObjectId = inToId OR inToId = 0)
+                                         AND (inStartDate = inEndDate)
+                                       )
+                    , tmpCLO_GoodsKind_rem AS (SELECT CLO_GoodsKind.*
+                                               FROM ContainerLinkObject AS CLO_GoodsKind
+                                               WHERE CLO_GoodsKind.ContainerId IN (SELECT DISTINCT tmpContainer.ContainerId FROM tmpContainer)
+                                                 AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                               )
+                     SELECT tmpContainer.ToId
+                          , tmpContainer.GoodsId
+                          , COALESCE (CLO_GoodsKind.ObjectId, 0)   AS GoodsKindId
+                          , tmpContainer.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS Amount --на начало дня
+                     FROM tmpContainer
+                          LEFT JOIN tmpCLO_GoodsKind_rem AS CLO_GoodsKind
+                                                         ON CLO_GoodsKind.ContainerId = tmpContainer.ContainerId
+                                                        AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                          LEFT JOIN MovementItemContainer AS MIContainer
+                                                          ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                         AND MIContainer.OperDate >= inStartDate
+                     WHERE inStartDate = inEndDate   --если за 1 день
+                     GROUP BY tmpContainer.GoodsId
+                            , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                            , tmpContainer.Amount
+                            , tmpContainer.ToId
+                     HAVING SUM (COALESCE (tmpContainer.Amount,0)) <> 0
+                     )
 
      , tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
 
@@ -180,7 +230,9 @@ BEGIN
                              , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)      AS GoodsPropertyId_basis 
 
                              , MovementLinkObject_CarInfo.ObjectId            AS CarInfoId
-                             , MovementDate_CarInfo.ValueData     ::TDateTime AS OperDate_CarInfo
+                             , MovementDate_CarInfo.ValueData     ::TDateTime AS OperDate_CarInfo 
+                             
+                             , SUM (CASE WHEN CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = inStartDate AND Movement.OperDate < inStartDate AND inIsByDoc = FALSE THEN tmpRemains.Amount ELSE 0 END) AS AmountRemains
 
                         FROM Movement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -276,7 +328,10 @@ BEGIN
                             LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount 
                                                   ON ObjectFloat_DocumentDayCount.ObjectId = MovementLinkObject_From.ObjectId 
                                                  AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
-
+                            
+                            LEFT JOIN tmpRemains ON tmpRemains.ToId = MovementLinkObject_To.ObjectId
+                                                AND tmpRemains.GoodsId = MovementItem.ObjectId
+                                                AND tmpRemains.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.StatusId = zc_Enum_Status_Complete()
                           AND Movement.DescId = zc_Movement_OrderExternal()
@@ -373,7 +428,15 @@ BEGIN
                             , SUM (tmpMovement2.Amount_calc  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_calc
                             , SUM (tmpMovement2.Amount_calc1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_calc1
                             , SUM (tmpMovement2.Amount_calc2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_calc2
-                            , SUM (tmpMovement2.Amount_calc3 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_calc3
+                            , SUM (tmpMovement2.Amount_calc3 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_calc3 
+
+                            , SUM (tmpMovement2.AmountRemains) AS AmountRemains
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountRemains ELSE 0 END) AS AmountRemains_Sh
+                            , SUM (tmpMovement2.AmountRemains * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountRemains_Weight
+                            
+                            , SUM ( (tmpMovement2.Amount1 + tmpMovement2.Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2)
+                                    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS Amount_Weight
+                            , SUM ( CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN (tmpMovement2.Amount1 + tmpMovement2.Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2) ELSE 0 END) AS Amount_Sh    
                 
                        FROM tmpMovement2
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMovement2.GoodsId
@@ -402,6 +465,7 @@ BEGIN
                               , tmpMovement2.CarInfoId
                               , tmpMovement2.OperDate_CarInfo
                       )
+
      -- выбираем для заказов документы продажи и перемещения по цене 
      , tmpMLM AS (SELECT MovementLinkMovement.*
                   FROM MovementLinkMovement
@@ -467,7 +531,9 @@ BEGIN
                                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                                                         ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                        AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
-                                             )
+                                             ) 
+
+     
 
        -- Результат
        SELECT
@@ -551,12 +617,22 @@ BEGIN
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc2 ELSE 0 END  :: TFloat AS AmountWeight_calc2
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc3 ELSE 0 END  :: TFloat AS AmountWeight_calc3  
              
-                                       -- child
-           , tmpMovement.Amount_Child        ::TFloat AS Amount_Child
-           , tmpMovement.AmountSecond_child  ::TFloat AS AmountSecond_Child
-           , tmpMovement.TotalAmount_child   ::TFloat AS TotalAmount_Child
-           , ((COALESCE (tmpMovement.AmountZakaz,0) + COALESCE (tmpMovement.AmountSecond1,0) + COALESCE (tmpMovement.AmountSecond2,0))
-              - COALESCE (tmpMovement.TotalAmount_child,0) ) ::TFloat AS Amount_diff-- разница с итого заявка 
+              -- child
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.Amount_Child  ELSE 0 END        ::TFloat AS Amount_Child
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountSecond_child  ELSE 0 END  ::TFloat AS AmountSecond_Child
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.TotalAmount_child  ELSE 0 END   ::TFloat AS TotalAmount_Child
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (COALESCE (tmpMovement.Amount,0) - COALESCE (tmpMovement.TotalAmount_child,0) ) ELSE 0 END ::TFloat AS Amount_diff-- разница резерв с итого заявка  
+             --остатки
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountRemains ELSE 0 END         ::TFloat  AS AmountRemains
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountRemains_Sh ELSE 0 END      ::TFloat  AS AmountRemains_Sh
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountRemains_Weight ELSE 0 END  ::TFloat  AS AmountRemains_Weight
+            --разница остаток и заказ
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (COALESCE (tmpMovement.Amount,0)- COALESCE (tmpMovement.AmountRemains,0) )
+                  ELSE 0
+             END ::TFloat AS AmountRemains_diff
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN CASE WHEN COALESCE (tmpMovement.Amount_Sh,0) > COALESCE (tmpMovement.AmountRemains_Sh,0) THEN (COALESCE (tmpMovement.Amount_Sh,0) - COALESCE (tmpMovement.AmountRemains_Sh,0)) ELSE 0 END ELSE 0 END ::TFloat AS AmountRemainsSH_diff
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN CASE WHEN COALESCE (tmpMovement.Amount_Weight,0) > COALESCE (tmpMovement.AmountRemains_Weight,0) THEN (COALESCE (tmpMovement.Amount_Weight,0) - COALESCE (tmpMovement.AmountRemains_Weight,0)) ELSE 0 END ELSE 0 END ::TFloat AS AmountRemainsWeight_diff
+             ------           
 
            , inStartDate   ::TDateTime AS DatePrint
            , vbStartDate_1 ::TDateTime AS DatePrint1
