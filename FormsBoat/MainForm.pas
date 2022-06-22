@@ -252,6 +252,8 @@ type
     N20: TMenuItem;
     actReport_Movement_PriceList: TdsdOpenForm;
     miReport_Movement_PriceList: TMenuItem;
+    actMaterialOptions: TdsdOpenForm;
+    miMaterialOptions: TMenuItem;
   private
     { Private declarations }
   public

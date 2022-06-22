@@ -262,6 +262,14 @@ BEGIN
                                 ON ObjectFloat_ProdOptions_CodeVergl.ObjectId = Object_ProdOptions.Id
                                AND ObjectFloat_ProdOptions_CodeVergl.DescId = zc_ObjectFloat_ProdOptions_CodeVergl()
 
+          LEFT JOIN ObjectString AS ObjectString_Id_Site
+                                 ON ObjectString_Id_Site.ObjectId = Object_ProdOptions.Id
+                                AND ObjectString_Id_Site.DescId = zc_ObjectString_Id_Site()  
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_CodeVergl
+                                ON ObjectFloat_CodeVergl.ObjectId = Object_ProdOptions.Id
+                               AND ObjectFloat_CodeVergl.DescId = zc_ObjectFloat_ProdOptions_CodeVergl()
+
           -- Модель
           LEFT JOIN ObjectLink AS ObjectLink_Model
                                ON ObjectLink_Model.ObjectId = Object_ProdOptions.Id
@@ -277,6 +285,11 @@ BEGIN
                                ON ObjectLink_ProdEngine.ObjectId = Object_Model.Id
                               AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
           LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                               ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                              AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+          LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
 
           -- Комплектующие
           LEFT JOIN ObjectLink AS ObjectLink_Goods

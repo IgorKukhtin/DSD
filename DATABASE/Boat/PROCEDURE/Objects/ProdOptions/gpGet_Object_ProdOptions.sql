@@ -13,7 +13,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsId Integer, GoodsName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , SalePrice TFloat
-             , Comment TVarChar
+             , Comment TVarChar 
+
+             , MaterialOptionsId    Integer 
+             , MaterialOptionsName  TVarChar
+             , Id_Site              TVarChar
+             , CodeVergl            :: Integer  
+
              ) AS
 $BODY$BEGIN
    
@@ -42,6 +48,11 @@ $BODY$BEGIN
 
            , CAST (0 AS TFloat)       AS SalePrice
            , CAST ('' AS TVarChar)    AS Comment
+
+           , 0  :: Integer            AS MaterialOptionsId
+           , '' :: TVarChar           AS MaterialOptionsName
+           , '' :: TVarChar           AS Id_Site
+           , CAST (0 AS :: Integer)   AS CodeVergl
        FROM Object AS Object_TaxKind
        WHERE Object_TaxKind.Id = zc_Enum_TaxKind_Basis()
       ;
@@ -68,15 +79,28 @@ $BODY$BEGIN
 
          , ObjectFloat_SalePrice.ValueData    AS SalePrice
          , ObjectString_Comment.ValueData     AS Comment
-        
+
+         , Object_MaterialOptions.Id        :: Integer   AS MaterialOptionsId
+         , Object_MaterialOptions.ValueData :: TVarChar  AS MaterialOptionsName
+         , ObjectString_Id_Site.ValueData   :: TVarChar  AS Id_Site
+         , ObjectFloat_CodeVergl.ValueData  :: Integer   AS CodeVergl
+
      FROM Object AS Object_ProdOptions
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdOptions.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ProdOptions_Comment()  
 
+          LEFT JOIN ObjectString AS ObjectString_Id_Site
+                                 ON ObjectString_Id_Site.ObjectId = Object_ProdOptions.Id
+                                AND ObjectString_Id_Site.DescId = zc_ObjectString_Id_Site()  
+
           LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
                                 ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
                                AND ObjectFloat_SalePrice.DescId = zc_ObjectFloat_ProdOptions_SalePrice()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_CodeVergl
+                                ON ObjectFloat_CodeVergl.ObjectId = Object_ProdOptions.Id
+                               AND ObjectFloat_CodeVergl.DescId = zc_ObjectFloat_ProdOptions_CodeVergl()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods
                                ON ObjectLink_Goods.ObjectId = Object_ProdOptions.Id
@@ -102,6 +126,12 @@ $BODY$BEGIN
                                ON ObjectLink_ProdEngine.ObjectId = Object_Model.Id
                               AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
           LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                               ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                              AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+          LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+
        WHERE Object_ProdOptions.Id = inId;
    END IF;
    
@@ -112,6 +142,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.06.22         *
  25.12.20         *
  08.10.20         *
 */

@@ -1,4 +1,4 @@
-unit ProdOptionsEdit;
+unit MaterialOptionsEdit;
 
 interface
 
@@ -22,7 +22,7 @@ uses
   dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
-  TProdOptionsEditForm = class(TParentForm)
+  TMaterialOptionsEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -38,32 +38,6 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cxLabel3: TcxLabel;
-    edComment: TcxTextEdit;
-    cxLabel6: TcxLabel;
-    edSalePrice: TcxCurrencyEdit;
-    cxLabel12: TcxLabel;
-    edModel: TcxButtonEdit;
-    cxLabel11: TcxLabel;
-    edBrand: TcxButtonEdit;
-    cxLabel4: TcxLabel;
-    edProdEngine: TcxButtonEdit;
-    GuidesModel: TdsdGuides;
-    GuidesBrand: TdsdGuides;
-    GuidesProdEngine: TdsdGuides;
-    cxLabel5: TcxLabel;
-    edTaxKind: TcxButtonEdit;
-    GuidesTaxKind: TdsdGuides;
-    cxLabel7: TcxLabel;
-    edGoods: TcxButtonEdit;
-    GuidesGoods: TdsdGuides;
-    cxLabel8: TcxLabel;
-    edMaterialOptions: TcxButtonEdit;
-    GuidesMaterialOptions: TdsdGuides;
-    edCodeVergl: TcxCurrencyEdit;
-    cxLabel9: TcxLabel;
-    cxLabel10: TcxLabel;
-    edId_Site: TcxTextEdit;
   private
     { Private declarations }
   public
@@ -75,6 +49,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProdOptionsEditForm);
+  RegisterClass(TMaterialOptionsEditForm);
 
 end.

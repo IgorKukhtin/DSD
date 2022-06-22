@@ -325,7 +325,9 @@ uses
   Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm},
   IncomeItemEdit_limit in '..\..\FormsBoat\Document\IncomeItemEdit_limit.pas' {IncomeItemEdit_limitForm: TParentForm},
   PLZ_City in '..\..\FormsBoat\Guides\PLZ_City.pas' {PLZ_CityForm: TParentForm},
-  ReceiptGoodsEditEnter in '..\..\FormsBoat\Guides\ReceiptGoodsEditEnter.pas' {ReceiptGoodsEditEnterForm: TParentForm};
+  ReceiptGoodsEditEnter in '..\..\FormsBoat\Guides\ReceiptGoodsEditEnter.pas' {ReceiptGoodsEditEnterForm: TParentForm},
+  MaterialOptionsEdit in '..\..\FormsBoat\Guides\MaterialOptionsEdit.pas' {MaterialOptionsEditForm: TParentForm},
+  MaterialOptions in '..\..\FormsBoat\Guides\MaterialOptions.pas' {MaterialOptionsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

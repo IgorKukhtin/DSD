@@ -41,6 +41,7 @@ type
     procedure LoadKindFormTest;
     procedure LoadLanguageFormTest;
     procedure LoadLossFormTest;
+    procedure LoadMaterialOptionsFormTest;
     procedure LoadMemberFormTest;
     procedure LoadMeasureFormTest;
     procedure LoadMeasureCodeFormTest;
@@ -498,6 +499,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMeasureCodeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMeasureCodeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMeasureCodeEditForm');
+end;
+
+procedure TLoadFormTest.LoadMaterialOptionsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMaterialOptionsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMaterialOptionsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMaterialOptionsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMaterialOptionsEditForm');
 end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
