@@ -69,8 +69,8 @@ BEGIN
                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                   AND MovementItem.DescId     = zc_MI_Master()
                                                   AND MovementItem.isErased   = FALSE
-                                                  AND ((MovementItem.Amount < 0 AND inKindName = 'zc_Enum_InfoMoney_Out')
-                                                    OR (MovementItem.Amount > 0 AND inKindName = 'zc_Enum_InfoMoney_In')
+                                                  AND ((MovementItem.Amount <= 0 AND inKindName = 'zc_Enum_InfoMoney_Out')
+                                                    OR (MovementItem.Amount >  0 AND inKindName = 'zc_Enum_InfoMoney_In')
                                                       )
                                                   AND (MovementItem.ObjectId = inCashId OR inCashId = 0)
                      )

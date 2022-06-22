@@ -25,6 +25,11 @@ $BODY$
 BEGIN
 
      -- проверка
+     IF COALESCE (inAmount, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.<Сумма> не введена.';
+     END IF;
+     -- проверка
      IF COALESCE (inInfoMoneyId, 0) = 0
      THEN
         RAISE EXCEPTION 'Ошибка.<Статья> не выбрана.';
