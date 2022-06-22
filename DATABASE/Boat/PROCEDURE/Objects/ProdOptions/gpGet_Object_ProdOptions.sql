@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MaterialOptionsId    Integer 
              , MaterialOptionsName  TVarChar
              , Id_Site              TVarChar
-             , CodeVergl            :: Integer  
+             , CodeVergl            Integer  
 
              ) AS
 $BODY$BEGIN
@@ -52,7 +52,7 @@ $BODY$BEGIN
            , 0  :: Integer            AS MaterialOptionsId
            , '' :: TVarChar           AS MaterialOptionsName
            , '' :: TVarChar           AS Id_Site
-           , CAST (0 AS :: Integer)   AS CodeVergl
+           , CAST (0 AS Integer)   AS CodeVergl
        FROM Object AS Object_TaxKind
        WHERE Object_TaxKind.Id = zc_Enum_TaxKind_Basis()
       ;
