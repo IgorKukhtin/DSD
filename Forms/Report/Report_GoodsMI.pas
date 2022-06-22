@@ -157,6 +157,7 @@ type
     cbDate: TcxCheckBox;
     OperDate: TcxGridDBColumn;
     OperDatePartner: TcxGridDBColumn;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

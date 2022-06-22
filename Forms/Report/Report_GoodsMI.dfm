@@ -2867,6 +2867,10 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2952,6 +2956,13 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
       Category = 0
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = #1087#1086' '#1044#1072#1090#1072#1084
+      Category = 0
+      Hint = #1087#1086' '#1044#1072#1090#1072#1084
+      Visible = ivAlways
+      Control = cbDate
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
