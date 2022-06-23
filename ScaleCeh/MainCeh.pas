@@ -772,11 +772,11 @@ begin
             else begin
                 ShowMessage('Ошибка.Продукция не взвешена.');
                 exit;
-            end
-       else begin
-           ShowMessage('Ошибка.Продукция не взвешена.');
-           exit;
-       end;
+            end;
+       //else begin
+       //    ShowMessage('Ошибка.Продукция не взвешена.');
+       //    exit;
+       //end;
        //Проверка - если есть несохраненный элемент, тогда формирование документа не произойдет
        if (ParamsMI.ParamByName('GoodsId').AsInteger <> 0)and (SettingMain.isModeSorting = FALSE) then
        begin
