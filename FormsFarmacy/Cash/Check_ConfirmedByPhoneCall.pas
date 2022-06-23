@@ -84,6 +84,7 @@ type
     actUpdate_ConfirmedByPhoneCall: TdsdExecStoredProc;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

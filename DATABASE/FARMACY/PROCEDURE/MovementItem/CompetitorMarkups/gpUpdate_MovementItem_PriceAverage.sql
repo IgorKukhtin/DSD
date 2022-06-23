@@ -33,14 +33,26 @@ BEGIN
                                                           )
     FROM MovementItem
     
-         INNER JOIN (SELECT AnalysisContainerItem.GoodsId
-                          , (SUM(AnalysisContainerItem.AmountCheckSum) / SUM(AnalysisContainerItem.AmountCheck))::TFloat AS Price
-                     FROM AnalysisContainerItem
-                     WHERE AnalysisContainerItem.OperDate >= inOperDate - ((inDay + 1)::tvarchar||' DAY')::INTERVAL 
-                       AND AnalysisContainerItem.OperDate < inOperDate
-                     GROUP BY AnalysisContainerItem.GoodsId
-                     HAVING SUM(AnalysisContainerItem.AmountCheck) > 0) AS tmpPrice
-                                                                        ON tmpPrice.GoodsId = MovementItem.ObjectId  
+         INNER JOIN (SELECT MovementItemContainer.Objectid_Analyzer        AS GoodsId
+                          , ROUND(SUM(COALESCE(MIFloat_PriceSale.ValueData, MovementItemContainer.Price)) / COUNT(*), 2)::TFloat AS Price
+                     FROM MovementItemContainer
+                     
+                          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItemContainer.WhereObjectId_Analyzer
+                          
+                          LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                                      ON MIFloat_PriceSale.MovementItemId = MovementItemContainer.MovementItemId
+                                                     AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                          
+                     WHERE MovementItemContainer.OperDate >= inOperDate - ((inDay + 1)::tvarchar||' DAY')::INTERVAL 
+                       AND MovementItemContainer.OperDate < inOperDate
+                       AND MovementItemContainer.Objectid_Analyzer IN (SELECT MovementItem.ObjectId FROM MovementItem  
+                                                                       WHERE MovementItem.MovementId = inMovementId 
+                                                                         AND MovementItem.DescId = zc_MI_Master()
+                                                                         AND MovementItem.isErased = False)
+                       AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                       AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                     GROUP BY MovementItemContainer.Objectid_Analyzer) AS tmpPrice
+                                                                       ON tmpPrice.GoodsId = MovementItem.ObjectId  
 
          LEFT JOIN MovementItemFloat AS MIFloat_Price
                                      ON MIFloat_Price.MovementItemId =  MovementItem.Id

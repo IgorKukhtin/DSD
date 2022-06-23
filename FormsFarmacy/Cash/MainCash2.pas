@@ -13442,6 +13442,7 @@ begin
       bRemovingPrograms := UnitConfigCDS.FindField('isRemovingPrograms').AsBoolean;
     end else bOverload := False;
 
+    UnitConfigCDS.Close;
     LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
 
     if bOverload then
@@ -14197,7 +14198,7 @@ begin
           ' <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>'  + ' - <' + IniUtils.gUserName + '>';
 
   // ѕропись итогов выполнени€ плана по сотруднику
-  if FileExists(ImplementationPlanEmployeeUser_lcl) then
+  if UnitConfigCDS.Active and UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean and FileExists(ImplementationPlanEmployeeUser_lcl) then
   begin
     ds := TClientDataSet.Create(nil);
     try

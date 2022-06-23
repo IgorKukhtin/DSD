@@ -217,6 +217,7 @@ type
     FSaveRealAllRunning: boolean;
     FirstRemainsReceived: boolean;
     FHasError: boolean;
+    FisShowPlanEmployeeUser: boolean;
 
     function SetFarmacyNameByUser : boolean;
 
@@ -2165,6 +2166,7 @@ begin
         WaitForSingleObject(MutexUnitConfig, INFINITE); // только дл€ формы2;  защищаем так как есть в приложениее и сервисе
         try
           SaveLocalData(ds,UnitConfig_lcl);
+          FisShowPlanEmployeeUser := ds.FieldByName('isShowPlanEmployeeUser').AsBoolean;
         finally
           Add_Log('End MutexUnitConfig');
           ReleaseMutex(MutexUnitConfig);
@@ -2627,6 +2629,8 @@ var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
 begin
+  if not FisShowPlanEmployeeUser then Exit;
+
   tiServise.Hint := 'ѕолучение ¬ыполнени€ плана продаж';
   sp := TdsdStoredProc.Create(nil);
   try

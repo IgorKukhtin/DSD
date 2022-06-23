@@ -622,7 +622,7 @@ BEGIN
         , True
    FROM gpSelect_Movement_Check_ConfirmByPhone (inUnitId:= vbUnitId, inSession:= inSession) AS Movement;
 
-     -- Подтверждено по телефонному звонку
+     -- Обработка просрочки
    IF vbUserId = 3
    THEN
    INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad) 

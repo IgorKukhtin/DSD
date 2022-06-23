@@ -1240,10 +1240,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_ExpressVIPConfirm() RETURNS Int
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_ExpressVIPConfirm', 'Экспресс подтверждение ВИП' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ExpressVIPConfirm');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_ShowPlanEmployeeUser() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ShowPlanEmployeeUser'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_ShowPlanEmployeeUser', 'Показывать итог по выполнению плана продаж' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ShowPlanEmployeeUser');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 22.06.22                                                                                                          * zc_ObjectBoolean_Unit_ShowPlanEmployeeUser
  07.06.22                                                                                                          * zc_ObjectBoolean_Unit_ExpressVIPConfirm
  18.05.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_SupplementAdd30Cash
  12.05.22                                                                                                          * zc_ObjectBoolean_CheckoutTesting_ReloadCurrent

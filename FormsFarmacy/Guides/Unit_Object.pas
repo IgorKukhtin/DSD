@@ -477,6 +477,11 @@ type
     mactUpdate_ExpressVIPConfirm: TMultiAction;
     actUpdate_ExpressVIPConfirm: TdsdExecStoredProc;
     dxBarButton35: TdxBarButton;
+    isShowPlanEmployeeUser: TcxGridDBColumn;
+    spUpdate_ShowPlanEmployeeUser: TdsdStoredProc;
+    mactUpdate_ShowPlanEmployeeUser: TMultiAction;
+    actUpdate_ShowPlanEmployeeUser: TdsdExecStoredProc;
+    dxBarButton36: TdxBarButton;
   private
     { Private declarations }
   public

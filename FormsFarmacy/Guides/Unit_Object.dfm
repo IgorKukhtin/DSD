@@ -1081,6 +1081,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 88
           end
+          object isShowPlanEmployeeUser: TcxGridDBColumn
+            Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'isShowPlanEmployeeUser'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
     end
@@ -4148,6 +4156,37 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_SupplementAdd30Cash'
     end
+    object mactUpdate_ShowPlanEmployeeUser: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_ShowPlanEmployeeUser
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088 +
+        #1086#1076#1072#1078'"?'
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088 +
+        #1086#1076#1072#1078'"'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088 +
+        #1086#1076#1072#1078'"'
+      ImageIndex = 79
+    end
+    object actUpdate_ShowPlanEmployeeUser: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ShowPlanEmployeeUser
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ShowPlanEmployeeUser
+        end>
+      Caption = 'actUpdate_ShowPlanEmployeeUser'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4923,6 +4962,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton36'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -5078,6 +5121,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton35: TdxBarButton
       Action = mactUpdate_ExpressVIPConfirm
+      Category = 0
+    end
+    object dxBarButton36: TdxBarButton
+      Action = mactUpdate_ShowPlanEmployeeUser
       Category = 0
     end
   end
@@ -8270,5 +8317,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 912
     Top = 515
+  end
+  object spUpdate_ShowPlanEmployeeUser: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_ShowPlanEmployeeUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowPlanEmployeeUser'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isShowPlanEmployeeUser'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 80
+    Top = 475
   end
 end

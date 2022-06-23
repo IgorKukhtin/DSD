@@ -15,7 +15,13 @@ $BODY$
   DECLARE vbChangeIncmePaymentId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_ReturnOut());
+     vbUserId := inSession;
+
+     -- Разрешаем только сотрудникам с правами админа    
+     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_UnComplete()))
+     THEN
+       vbUserId := lpCheckRight(inSession, zc_Enum_Process_UnComplete_ReturnOut());
+     END IF;
 
      -- проверка - если <Master> Удален, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');

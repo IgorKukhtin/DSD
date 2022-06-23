@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Check_ConfirmedByPhoneCall(
     IN inisConfirmedByPhoneCall   Boolean   , -- Подтверждено по телефонному звонку
     IN inSession                  TVarChar    -- сессия пользователя
 )
-RETURNS Boolean AS
+RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
