@@ -1,6 +1,7 @@
 -- Function: gpReport_OrderExternal()
 
 DROP FUNCTION IF EXISTS gpReport_OrderExternal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderExternal(
     IN inStartDate          TDateTime , --
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal(
     IN inRouteSortingId     Integer   , -- Сортировки маршрутов
     IN inGoodsGroupId       Integer   ,
     IN inIsByDoc            Boolean   ,
+    IN inIsRemains          Boolean   , -- свернуть и показать остатки  
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId             Integer
@@ -76,7 +78,7 @@ RETURNS TABLE (MovementId             Integer
              , AmountOrder              TFloat
              , AmountOrder_Sh           TFloat
              , AmountOrder_Weight       TFloat
-             , AmountRemains_diff       TFloat
+             --, AmountRemains_diff       TFloat
              , AmountRemainsSH_diff     TFloat
              , AmountRemainsWeight_diff TFloat
 
@@ -117,6 +119,12 @@ BEGIN
     vbStartDate_2 := inStartDate + INTERVAL '2 DAY';
     vbStartDate_3 := inStartDate + INTERVAL '3 DAY';
 
+    IF inIsRemains = TRUE
+    THEN
+        --если выбрано показать остатки данные за 1 день
+        inEndDate := inStartDate;
+        inIsByDoc := FALSE;
+    END IF;
 
      RETURN QUERY
      WITH 
@@ -183,13 +191,7 @@ BEGIN
                      HAVING SUM (COALESCE (tmpContainer.Amount,0)) > 0
                      )
       --Данные по заявкам(если дата пок = выбр дате, а дата заявки < выбр даты)
-     , tmpOrder AS (SELECT MovementLinkObject_Contract.ObjectId                     AS ContractId
-                         , ObjectLink_Partner_Juridical.ChildObjectId               AS JuridicalId
-                         , ObjectLink_Juridical_Retail.ChildObjectId                AS RetailId
-                         , MovementLinkObject_From.ObjectId                         AS FromId
-                         , MovementLinkObject_To.ObjectId                           AS ToId
-                         , MovementLinkObject_Route.ObjectId                        AS RouteId
-                         , MovementLinkObject_PaidKind.ObjectId                     AS PaidKindId
+     , tmpOrder AS (SELECT MovementLinkObject_To.ObjectId                           AS ToId
                          , MovementItem.ObjectId                                    AS GoodsId
                          , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30102(), zc_Enum_InfoMoney_30103()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END AS GoodsKindId
               
@@ -258,37 +260,30 @@ BEGIN
                       AND (COALESCE (ObjectLink_Partner_Juridical.ChildObjectId,0) = CASE WHEN inJuridicalId <> 0 THEN inJuridicalId ELSE COALESCE (ObjectLink_Partner_Juridical.ChildObjectId,0) END)
                       AND (COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) = CASE WHEN inRetailId <> 0 THEN inRetailId ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) END)
                     GROUP BY
-                          MovementLinkObject_Contract.ObjectId
-                        , MovementLinkObject_From.ObjectId
-                        , MovementLinkObject_To.ObjectId
-                        , MovementLinkObject_Route.ObjectId
-                        , MovementLinkObject_PaidKind.ObjectId
+                          MovementLinkObject_To.ObjectId
                         , MovementItem.ObjectId
                         , MILinkObject_GoodsKind.ObjectId
-                        , ObjectLink_Partner_Juridical.ChildObjectId
-                        , ObjectLink_Juridical_Retail.ChildObjectId
                         , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30102(), zc_Enum_InfoMoney_30103()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END
                       )
 
      , tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
 
      , tmpMovement2 AS (SELECT CASE WHEN inIsByDoc = TRUE THEN Movement.Id ELSE 0 END   AS MovementId
-                             , MovementLinkObject_Contract.ObjectId                     AS ContractId
-                             , ObjectLink_Partner_Juridical.ChildObjectId               AS JuridicalId
-                             , ObjectLink_Juridical_Retail.ChildObjectId                AS RetailId
-                             , MovementLinkObject_From.ObjectId                         AS FromId
+                             , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_Contract.ObjectId ELSE 0 END AS ContractId
+                             , CASE WHEN inIsRemains = FALSE THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END               AS JuridicalId
+                             , CASE WHEN inIsRemains = FALSE THEN ObjectLink_Juridical_Retail.ChildObjectId ELSE 0 END                AS RetailId
+                             , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_From.ObjectId ELSE 0 END                         AS FromId
                              , MovementLinkObject_To.ObjectId                           AS ToId
-                             , MovementLinkObject_Route.ObjectId                        AS RouteId
-                             -- , MovementLinkObject_RouteSorting.ObjectId                 AS RouteSortingId
+                             , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_Route.ObjectId ELSE 0 END                        AS RouteId
                              , 0                                                        AS RouteSortingId
-                             , MovementLinkObject_Personal.ObjectId                     AS PersonalId
-                             , MovementLinkObject_PaidKind.ObjectId                     AS PaidKindId
-                             , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) AS isPriceWithVAT
-                             , COALESCE (MovementFloat_VATPercent.ValueData, 0)         AS VATPercent
-                             , COALESCE (MovementFloat_ChangePercent.ValueData, 0)      AS ChangePercent
+                             , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_Personal.ObjectId ELSE 0 END                     AS PersonalId
+                             , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_PaidKind.ObjectId ELSE 0 END                     AS PaidKindId
+                             , CASE WHEN inIsRemains = FALSE THEN COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) ELSE FALSE END AS isPriceWithVAT
+                             , CASE WHEN inIsRemains = FALSE THEN COALESCE (MovementFloat_VATPercent.ValueData, 0)  ELSE 0 END        AS VATPercent
+                             , CASE WHEN inIsRemains = FALSE THEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) ELSE 0 END      AS ChangePercent
                              , MovementItem.ObjectId                                    AS GoodsId
                              , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30102(), zc_Enum_InfoMoney_30103()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END AS GoodsKindId
-                             , ObjectLink_Goods_InfoMoney.ChildObjectId                 AS InfoMoneyId
+                             , CASE WHEN inIsRemains = FALSE THEN ObjectLink_Goods_InfoMoney.ChildObjectId ELSE 0 END                 AS InfoMoneyId
                   
                              , SUM (CASE WHEN Movement.OperDate =  COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AND MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS Amount1
                              , SUM (CASE WHEN Movement.OperDate <> COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AND MovementItem.DescId = zc_MI_Master()THEN MovementItem.Amount ELSE 0 END) AS Amount2
@@ -304,19 +299,22 @@ BEGIN
                              , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS Amount_Child
                              , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child()THEN COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSecond_Child
                              --
-                             , CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                         THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
-                                    ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                               END
-                             * CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
-                                         THEN (1 + MovementFloat_ChangePercent.ValueData / 100)
-                                    ELSE 1
-                               END
-                             * CASE WHEN COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) = TRUE OR COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0
-                                           -- если цены с НДС или %НДС=0
-                                           THEN 1
-                                      ELSE -- если цены без НДС
-                                           1 + MovementFloat_VATPercent.ValueData / 100
+                             , CASE WHEN inIsRemains = FALSE 
+                                    THEN CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                                   THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
+                                              ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                         END
+                                       * CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                                                   THEN (1 + MovementFloat_ChangePercent.ValueData / 100)
+                                              ELSE 1
+                                         END
+                                       * CASE WHEN COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) = TRUE OR COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0
+                                                     -- если цены с НДС или %НДС=0
+                                                     THEN 1
+                                                ELSE -- если цены без НДС
+                                                     1 + MovementFloat_VATPercent.ValueData / 100
+                                         END
+                                    ELSE 0
                                END AS Price
 
                              , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE Null END  :: TDateTime  AS OperDatePartner_order
@@ -324,11 +322,11 @@ BEGIN
                              
                              , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementString_Comment.ValueData,'') ELSE '' END ::TVarChar AS Comment
                              
-                             , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId), COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)) AS GoodsPropertyId
-                             , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)      AS GoodsPropertyId_basis 
+                             , CASE WHEN inIsRemains = FALSE THEN zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId), COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId))  ELSE 0 END AS GoodsPropertyId
+                             , CASE WHEN inIsRemains = FALSE THEN zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)  ELSE 0 END     AS GoodsPropertyId_basis 
 
-                             , MovementLinkObject_CarInfo.ObjectId            AS CarInfoId
-                             , MovementDate_CarInfo.ValueData     ::TDateTime AS OperDate_CarInfo 
+                             , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_CarInfo.ObjectId  ELSE 0 END           AS CarInfoId
+                             , CASE WHEN inIsRemains = FALSE THEN MovementDate_CarInfo.ValueData  ELSE NULL END    ::TDateTime AS OperDate_CarInfo 
                              
                         FROM Movement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -436,29 +434,53 @@ BEGIN
                           AND (COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) = CASE WHEN inRetailId <> 0 THEN inRetailId ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) END)
                         GROUP BY
                               CASE WHEN inIsByDoc = TRUE THEN Movement.Id ELSE 0 END
-                            , MovementLinkObject_Contract.ObjectId
-                            , MovementLinkObject_From.ObjectId
+                            , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_Contract.ObjectId ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_From.ObjectId ELSE 0 END
                             , MovementLinkObject_To.ObjectId
-                            , MovementLinkObject_Route.ObjectId
-                            -- , MovementLinkObject_RouteSorting.ObjectId
-                            , MovementLinkObject_Personal.ObjectId
-                            , MovementLinkObject_PaidKind.ObjectId
-                            , MovementBoolean_PriceWithVAT.ValueData
-                            , MovementFloat_VATPercent.ValueData
-                            , MovementFloat_ChangePercent.ValueData
+                            , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_Route.ObjectId ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_Personal.ObjectId ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_PaidKind.ObjectId ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN MovementFloat_VATPercent.ValueData ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN MovementFloat_ChangePercent.ValueData ELSE 0 END
                             , MovementItem.ObjectId
                             , MILinkObject_GoodsKind.ObjectId
-                            , ObjectLink_Goods_InfoMoney.ChildObjectId
-                            , MIFloat_CountForPrice.ValueData
-                            , MIFloat_Price.ValueData
-                            , ObjectLink_Partner_Juridical.ChildObjectId
-                            , ObjectLink_Juridical_Retail.ChildObjectId
-                            , MovementLinkObject_Partner.ObjectId
+                            , CASE WHEN inIsRemains = FALSE THEN  ObjectLink_Goods_InfoMoney.ChildObjectId ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                            , CASE WHEN inIsRemains = FALSE THEN MIFloat_Price.ValueData ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN ObjectLink_Juridical_Retail.ChildObjectId ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_Partner.ObjectId ELSE 0 END
                             , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE Null END
                             , CASE WHEN inIsByDoc = TRUE THEN (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) ELSE Null END
                             , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementString_Comment.ValueData,'') ELSE '' END 
-                            , MovementLinkObject_CarInfo.ObjectId
-                            , MovementDate_CarInfo.ValueData
+                            , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_CarInfo.ObjectId ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN MovementDate_CarInfo.ValueData ELSE NULL END
+                            , CASE WHEN inIsRemains = FALSE THEN COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) ELSE FALSE END 
+                            , CASE WHEN inIsRemains = FALSE THEN COALESCE (MovementFloat_VATPercent.ValueData, 0)  ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE 
+                                   THEN CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                                  THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
+                                             ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                        END
+                                      * CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                                                  THEN (1 + MovementFloat_ChangePercent.ValueData / 100)
+                                             ELSE 1
+                                        END
+                                      * CASE WHEN COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) = TRUE OR COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0
+                                                    -- если цены с НДС или %НДС=0
+                                                    THEN 1
+                                               ELSE -- если цены без НДС
+                                                    1 + MovementFloat_VATPercent.ValueData / 100
+                                        END
+                                   ELSE 0
+                              END
+                            , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30102(), zc_Enum_InfoMoney_30103()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END
+                            , CASE WHEN inIsRemains = FALSE THEN zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId), COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId))  ELSE 0 END
+                             , CASE WHEN inIsRemains = FALSE THEN zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)  ELSE 0 END 
+
+                             , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_CarInfo.ObjectId  ELSE 0 END
+                             , CASE WHEN inIsRemains = FALSE THEN MovementDate_CarInfo.ValueData  ELSE NULL END
                           )
 
      , tmpMovement AS (SELECT tmpMovement2.MovementId
@@ -527,12 +549,6 @@ BEGIN
                                     * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS Amount_Weight
                             , SUM ( CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN (tmpMovement2.Amount1 + tmpMovement2.Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2) ELSE 0 END) AS Amount_Sh    
                            
-                            , SUM ( (tmpMovement2.Amount1 + tmpMovement2.Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2)
-                                    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
-                                   OVER (PARTITION BY tmpMovement2.ToId, tmpMovement2.GoodsId, tmpMovement2.GoodsKindId)  AS AmountAll_Weight
-                            , SUM ( CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN (tmpMovement2.Amount1 + tmpMovement2.Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2) ELSE 0 END)
-                                   OVER (PARTITION BY tmpMovement2.ToId, tmpMovement2.GoodsId, tmpMovement2.GoodsKindId) AS AmountAll_Sh
-                            , ROW_NUMBER () OVER (PARTITION BY tmpMovement2.ToId, tmpMovement2.GoodsId, tmpMovement2.GoodsKindId) AS Ord_goods
                        FROM tmpMovement2
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMovement2.GoodsId
                                                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -719,17 +735,18 @@ BEGIN
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.TotalAmount_child  ELSE 0 END   ::TFloat AS TotalAmount_Child
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (COALESCE (tmpMovement.Amount,0) - COALESCE (tmpMovement.TotalAmount_child,0) ) ELSE 0 END ::TFloat AS Amount_diff-- разница резерв с итого заявка  
              --остатки
-           , CASE WHEN COALESCE (tmpMovement.Ord_goods, 1) = 1 THEN tmpRemains.Amount ELSE 0 END         ::TFloat  AS AmountRemains
-           , CASE WHEN COALESCE (tmpMovement.Ord_goods, 1) = 1 THEN tmpRemains.Amount_Sh ELSE 0 END      ::TFloat  AS AmountRemains_Sh
-           , CASE WHEN COALESCE (tmpMovement.Ord_goods, 1) = 1 THEN tmpRemains.Amount_Weight ELSE 0 END  ::TFloat  AS AmountRemains_Weight
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpRemains.Amount ELSE 0 END         ::TFloat  AS AmountRemains
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpRemains.Amount_Sh ELSE 0 END      ::TFloat  AS AmountRemains_Sh
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpRemains.Amount_Weight ELSE 0 END  ::TFloat  AS AmountRemains_Weight
             
-            --заказ дата пок = выбр дате, а дата заявки < выбр даты
-           , CASE WHEN COALESCE (tmpMovement.Ord_goods, 1) = 1 THEN tmpOrder.Amount ELSE 0 END         ::TFloat  AS AmountOrder
-           , CASE WHEN COALESCE (tmpMovement.Ord_goods, 1) = 1 THEN tmpOrder.Amount_Sh ELSE 0 END      ::TFloat  AS AmountOrder_Sh
-           , CASE WHEN COALESCE (tmpMovement.Ord_goods, 1) = 1 THEN tmpOrder.Amount_Weight ELSE 0 END  ::TFloat  AS AmountOrder_Weight
+            --заказ дата пок = выбр дате, а дата заявки < выбр даты   , те. заказы прошлого дня
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount ELSE 0 END         ::TFloat  AS AmountOrder
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount_Sh ELSE 0 END      ::TFloat  AS AmountOrder_Sh
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount_Weight ELSE 0 END  ::TFloat  AS AmountOrder_Weight
+           
            --разница остаток и заказ 
-           , CASE WHEN COALESCE (tmpMovement.Ord_goods, 1) = 1 THEN CASE WHEN (COALESCE (tmpMovement.AmountAll_Sh,0)+COALESCE (tmpOrder.Amount_Sh,0) > COALESCE (tmpRemains.Amount_Sh,0) THEN COALESCE (tmpMovement.AmountAll_Sh,0)+COALESCE (tmpOrder.Amount_Sh,0) - COALESCE (tmpRemains.Amount_Sh,0) ELSE 0 END ELSE 0 END ::TFloat  AS AmountRemainsSH_diff
-           , CASE WHEN COALESCE (tmpMovement.Ord_goods, 1) = 1 THEN CASE WHEN COALESCE (tmpMovement.AmountAll_Weight,0)+COALESCE (tmpOrder.Amount_Weight,0) > COALESCE (tmpRemains.Amount_Weight,0) THEN COALESCE (tmpMovement.AmountAll_Weight,0)+COALESCE (tmpOrder.Amount_Weight,0) - COALESCE (tmpRemains.Amount_Weight,0) ELSE 0 END ELSE 0 END ::TFloat  AS AmountRemainsWeight_diff
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN CASE WHEN COALESCE (tmpMovement.Amount_Sh,0)+COALESCE (tmpOrder.Amount_Sh,0) > COALESCE (tmpRemains.Amount_Sh,0) THEN COALESCE (tmpMovement.Amount_Sh,0)+COALESCE (tmpOrder.Amount_Sh,0) - COALESCE (tmpRemains.Amount_Sh,0) ELSE 0 END ELSE 0 END ::TFloat  AS AmountRemainsSH_diff
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN CASE WHEN COALESCE (tmpMovement.Amount_Weight,0)+COALESCE (tmpOrder.Amount_Weight,0) > COALESCE (tmpRemains.Amount_Weight,0) THEN COALESCE (tmpMovement.Amount_Weight,0)+COALESCE (tmpOrder.Amount_Weight,0) - COALESCE (tmpRemains.Amount_Weight,0) ELSE 0 END ELSE 0 END ::TFloat  AS AmountRemainsWeight_diff
              ------           
 
            , inStartDate   ::TDateTime AS DatePrint
@@ -829,20 +846,12 @@ BEGIN
           
           LEFT JOIN tmpOrder ON tmpOrder.GoodsId = tmpMovement.GoodsId
                             AND tmpOrder.GoodsKindId = tmpMovement.GoodsKindId
-                            AND tmpOrder.FromId = tmpMovement.FromId
                             AND tmpOrder.ToId = tmpMovement.ToId
-                            AND tmpMovement.Ord_goods = 1
+                            --AND tmpMLM_All.Ord = 1
           LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMovement.GoodsId
                               AND COALESCE (tmpRemains.GoodsKindId,0) = COALESCE (tmpMovement.GoodsKindId,0)
-                              AND tmpOrder.ToId = tmpMovement.ToId 
-                              AND tmpMovement.Ord_goods = 1
-                             /*tmpOrder.ContractId = tmpMovement.ContractId
-                            AND tmpOrder.RetailId = tmpMovement.RetailId
-                            AND tmpOrder.RouteId = tmpMovement.RouteId
-                            AND tmpOrder.JuridicalId = tmpMovement.JuridicalId
-                            AND tmpOrder.PaidKindId = tmpMovement.PaidKindId*/
-
-                            
+                              AND tmpRemains.ToId = tmpMovement.ToId 
+                        
 
 
 
@@ -870,4 +879,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal (inStartDate:= '01.10.2017', inEndDate:= '01.10.2017', inJuridicalId:=0, inRetailId:= 0, inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := False, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_OrderExternal (inStartDate:= '21.06.2022', inEndDate:= '21.06.2022', inJuridicalId:=0, inRetailId:= 0, inFromId := 0, inToId := 346093, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 1986, inIsByDoc := False, inIsRemains := TRUE, inSession:= zfCalc_UserAdmin())
+ --WHERE GOODSID = 7493
