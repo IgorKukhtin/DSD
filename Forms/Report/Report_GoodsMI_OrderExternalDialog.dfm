@@ -185,6 +185,13 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
     TabOrder = 20
     Width = 180
   end
+  object cbinIsRemains: TcxCheckBox
+    Left = 256
+    Top = 234
+    Caption = #1054#1089#1090#1072#1090#1082#1080' ('#1044#1072'/'#1053#1077#1090')'
+    TabOrder = 21
+    Width = 137
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -351,6 +358,14 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         Component = GuidesRetail
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsRemains'
+        Value = Null
+        Component = cbinIsRemains
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

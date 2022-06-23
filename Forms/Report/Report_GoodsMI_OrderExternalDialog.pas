@@ -45,6 +45,7 @@ type
     cxLabel5: TcxLabel;
     edRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
+    cbinIsRemains: TcxCheckBox;
   private
     { Private declarations }
   public
