@@ -4390,6 +4390,14 @@
 				<Form>Report_ImplementationPlanEmployeeUserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\GoodsSPSearch_1303.pas">
+				<Form>GoodsSPSearch_1303Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\GoodsSPSearch_1303Journal.pas">
+				<Form>GoodsSPSearch_1303JournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

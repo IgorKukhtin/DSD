@@ -28,8 +28,6 @@ uses
 
 type
   TGoodsSPSearch_1303Form = class(TAncestorDocumentForm)
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint_GoodsSP: TdsdStoredProc;
     N2: TMenuItem;
@@ -73,14 +71,8 @@ type
     Dosage_1303Name: TcxGridDBColumn;
     actGoodsMain: TOpenChoiceForm;
     spClearGoods: TdsdStoredProc;
-    actClearGoods: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
-    isSale: TcxGridDBColumn;
-    NDS: TcxGridDBColumn;
-    PriceSale: TcxGridDBColumn;
-    PriceSaleOOC: TcxGridDBColumn;
     Color_Count: TcxGridDBColumn;
-    PriceOOC: TcxGridDBColumn;
   private
     { Private declarations }
   public

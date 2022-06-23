@@ -12,7 +12,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_GoodsSPSearch_1303());
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_GoodsSP_1303());
 
     -- проверка - если <Master> Удален, то <Ошибка>
     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');

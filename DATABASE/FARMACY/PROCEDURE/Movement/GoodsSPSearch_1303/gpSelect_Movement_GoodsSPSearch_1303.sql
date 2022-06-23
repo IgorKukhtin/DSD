@@ -36,10 +36,6 @@ BEGIN
             , Object_Status.ValueData               AS StatusName
             , MovementDate_OperDateStart.ValueData  AS OperDateStart
             , MovementDate_OperDateEnd.ValueData    AS OperDateEnd
-            , Object_MedicalProgramSP.Id            AS MedicalProgramSPId
-            , Object_MedicalProgramSP.ObjectCode    AS MedicalProgramSPCode
-            , Object_MedicalProgramSP.ValueData     AS MedicalProgramSPName
-            , MovementFloat_PercentMarkup.ValueData AS PercentMarkup
 
        FROM tmpStatus
             LEFT JOIN Movement ON Movement.DescId = zc_Movement_GoodsSPSearch_1303()
@@ -71,3 +67,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_GoodsSPSearch_1303 (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '3')
+
+select * from gpSelect_Movement_GoodsSPSearch_1303(instartdate := ('23.06.2022')::TDateTime , inenddate := ('23.06.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');

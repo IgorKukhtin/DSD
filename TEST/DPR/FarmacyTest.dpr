@@ -1213,7 +1213,9 @@ uses
   Check_ConfirmedByPhoneCall in '..\..\FormsFarmacy\Cash\Check_ConfirmedByPhoneCall.pas' {Check_ConfirmedByPhoneCallForm: TParentForm},
   Check_RefusalConfirmed in '..\..\FormsFarmacy\Cash\Check_RefusalConfirmed.pas' {Check_RefusalConfirmedForm: TParentForm},
   GoodsUnitSupplementSUN1 in '..\..\FormsFarmacy\Guides\GoodsUnitSupplementSUN1.pas' {GoodsUnitSupplementSUN1Form: TParentForm},
-  Report_ImplementationPlanEmployeeUser in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeUser.pas' {Report_ImplementationPlanEmployeeUserForm: TParentForm};
+  Report_ImplementationPlanEmployeeUser in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeUser.pas' {Report_ImplementationPlanEmployeeUserForm: TParentForm},
+  GoodsSPSearch_1303 in '..\..\FormsFarmacy\Document\GoodsSPSearch_1303.pas' {GoodsSPSearch_1303Form: TParentForm},
+  GoodsSPSearch_1303Journal in '..\..\FormsFarmacy\Document\GoodsSPSearch_1303Journal.pas' {GoodsSPSearch_1303JournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
