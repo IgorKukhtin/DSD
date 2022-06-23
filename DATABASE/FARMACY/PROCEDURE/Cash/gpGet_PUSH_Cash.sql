@@ -623,8 +623,6 @@ BEGIN
    FROM gpSelect_Movement_Check_ConfirmByPhone (inUnitId:= vbUnitId, inSession:= inSession) AS Movement;
 
      -- Обработка просрочки
-   IF vbUserId = 3
-   THEN
    INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad) 
    SELECT 13
         , '' AS Text  
@@ -636,7 +634,6 @@ BEGIN
         , True
         , True
    FROM gpSelect_Movement_Check_RefusalConfirmed (inUnitId:= vbUnitId, inSession:= inSession) AS Movement;
-   END IF;
 
    -- PUSH уведомления
    WITH tmpMovementItemUnit AS (SELECT DISTINCT Movement.Id AS MovementId

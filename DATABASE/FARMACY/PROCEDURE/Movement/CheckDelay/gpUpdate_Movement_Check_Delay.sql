@@ -46,6 +46,9 @@ BEGIN
     -- сохранили отметку <Просрочка>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Delay(), inMovementId, True);
 
+    -- сохранили свойство <Дата создания просрочки>
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Delay(), inMovementId, CURRENT_TIMESTAMP);
+
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
 
@@ -56,7 +59,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 18.04.19                                                                    *
  04.04.19                                                                    *
 */
 -- тест
--- select * from gpUpdate_Movement_Check_Delay(inId := 7784533 ,  inSession := '3');
+-- select * from gpUpdate_Movement_Check_Delay(inMovementId := 7784533 ,  inSession := '3');

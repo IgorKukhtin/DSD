@@ -51,13 +51,19 @@ BEGIN
         -- Результат такой
         CREATE TEMP TABLE _tmpGoods ON COMMIT DROP AS (
             WITH tmpPriceSubgroups AS (select * from gpSelect_MovementItem_PriceSubgroups(inMovementId := inMovementId , inIsErased := 'False' ,  inSession := inSession)),
-                 tmpPrice AS (SELECT AnalysisContainerItem.GoodsId
-                                   , (SUM(AnalysisContainerItem.AmountCheckSum) / SUM(AnalysisContainerItem.AmountCheck))::TFloat   AS Price
-                              FROM AnalysisContainerItem
-                              WHERE AnalysisContainerItem.OperDate > vbOperDate - INTERVAL '11 DAY'
-                                AND AnalysisContainerItem.OperDate <= vbOperDate
-                              GROUP BY AnalysisContainerItem.GoodsId
-                              HAVING SUM(AnalysisContainerItem.AmountCheck) > 0)
+                 tmpPrice AS (SELECT MovementItemContainer.Objectid_Analyzer        AS GoodsId
+                                   , ROUND(SUM(COALESCE(MIFloat_PriceSale.ValueData, MovementItemContainer.Price)) / COUNT(*), 2)::TFloat AS Price
+                              FROM MovementItemContainer
+                          
+                                   LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                                               ON MIFloat_PriceSale.MovementItemId = MovementItemContainer.MovementItemId
+                                                              AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                                                              
+                              WHERE MovementItemContainer.OperDate > vbOperDate - INTERVAL '11 DAY'
+                                AND MovementItemContainer.OperDate <= vbOperDate
+                                AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                              GROUP BY MovementItemContainer.Objectid_Analyzer)
 
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS GoodsID

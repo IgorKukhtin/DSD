@@ -53,7 +53,7 @@ BEGIN
           , COALESCE(MovementBoolean_Daily.ValueData, False)           AS Daily
           , COALESCE(MovementBoolean_Poll.ValueData, False)            AS isPoll
 
-          , COALESCE(NULLIF(MovementString_Function.ValueData, '') , MovementBlob_Message.ValueData)::TBlob AS Message
+          , COALESCE(NULLIF(MovementString_Function.ValueData, ''), NULLIF(MovementBlob_Message.ValueData, ''), MovementString_Form.ValueData)::TBlob AS Message
 
           , Object_Insert.ValueData                                    AS InsertName
           , MovementDate_Insert.ValueData                              AS InsertDate
@@ -95,6 +95,10 @@ BEGIN
                                      ON MovementString_Function.MovementId = Movement.Id
                                     AND MovementString_Function.DescId = zc_MovementString_Function()
 
+            LEFT JOIN MovementString AS MovementString_Form
+                                     ON MovementString_Form.MovementId = Movement.Id
+                                    AND MovementString_Form.DescId = zc_MovementString_Form()
+
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
@@ -123,3 +127,5 @@ ALTER FUNCTION gpSelect_Movement_PUSH (TDateTime, TDateTime, Boolean, TVarChar) 
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_PUSH (inStartDate:= '01.08.2016', inEndDate:= '01.08.2020', inIsErased := FALSE, inSession:= zfCalc_UserAdmin());
+
+select * from gpSelect_Movement_PUSH(inStartDate := ('01.10.2017')::TDateTime , inEndDate := ('30.04.2025')::TDateTime , inIsErased := 'False' ,  inSession := '3');

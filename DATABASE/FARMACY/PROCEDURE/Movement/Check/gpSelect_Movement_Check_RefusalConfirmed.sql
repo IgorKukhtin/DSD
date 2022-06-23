@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Check_RefusalConfirmed(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer -- ключ документа
-             , InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , InvNumber TVarChar, OperDate TDateTime, DateDelay TDateTime,  StatusCode Integer, StatusName TVarChar
              , UnitId Integer    -- ключ аптеки
              , UnitName TVarChar -- название аптеки
              , Bayer TVarChar      -- ФИО Покупателя
@@ -26,6 +26,7 @@ BEGIN
      RETURN QUERY
      WITH
          tmpMovAll AS (SELECT Movement.*
+                            , MovementDate_Delay.ValueData AS DateDelay
                        FROM Movement
                             INNER JOIN MovementBoolean AS MovementBoolean_Delay
                                                        ON MovementBoolean_Delay.MovementId = Movement.Id
@@ -34,10 +35,14 @@ BEGIN
                             LEFT JOIN MovementBoolean AS MovementBoolean_RefusalConfirmed
                                                       ON MovementBoolean_RefusalConfirmed.MovementId = Movement.Id
                                                      AND MovementBoolean_RefusalConfirmed.DescId    = zc_MovementBoolean_RefusalConfirmed()
+                            LEFT JOIN MovementDate AS MovementDate_Delay
+                                                   ON MovementDate_Delay.MovementId = Movement.Id
+                                                  AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
                                                      
                        WHERE Movement.DescId = zc_Movement_Check()
                          AND Movement.StatusId = zc_Enum_Status_Erased()
-                         AND Movement.OperDate >= CURRENT_TIMESTAMP - INTERVAL '3 DAY'
+                         AND Movement.OperDate >= CURRENT_TIMESTAMP - INTERVAL '10 DAY'
+                         AND MovementDate_Delay.ValueData  >= '21.06.2022'
                          AND COALESCE (MovementBoolean_RefusalConfirmed.ValueData, False) = False
                     )
        , tmpMov AS (SELECT Movement.*
@@ -56,6 +61,7 @@ BEGIN
                Movement.Id
              , Movement.InvNumber
              , Movement.OperDate
+             , Movement.DateDelay
              , Movement.StatusId AS StatusCode
              , zc_Enum_Status_Erased() :: TVarChar AS StatusName
              
@@ -105,7 +111,7 @@ BEGIN
                                   AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
                                    
         WHERE COALESCE (MovementString_InvNumberOrder.ValueData, '') <> ''
-           OR COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki(); 
+          AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = 0; 
 
 
 END;
