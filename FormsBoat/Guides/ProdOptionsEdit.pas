@@ -64,6 +64,9 @@ type
     cxLabel9: TcxLabel;
     cxLabel10: TcxLabel;
     edId_Site: TcxTextEdit;
+    GuidesProdColorPattern: TdsdGuides;
+    edProdColorPattern: TcxButtonEdit;
+    cxLabel13: TcxLabel;
   private
     { Private declarations }
   public

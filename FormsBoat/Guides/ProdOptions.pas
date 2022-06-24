@@ -82,6 +82,8 @@ type
     MaterialOptionsName: TcxGridDBColumn;
     Id_Site: TcxGridDBColumn;
     CodeVergl: TcxGridDBColumn;
+    ProdColorPatternName: TcxGridDBColumn;
+    actChoiceFormProdColorPattern: TOpenChoiceForm;
   private
     { Private declarations }
   public
