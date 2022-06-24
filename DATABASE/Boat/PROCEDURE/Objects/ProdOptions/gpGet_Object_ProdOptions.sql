@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , SalePrice TFloat
              , Comment TVarChar 
-
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , MaterialOptionsId    Integer 
              , MaterialOptionsName  TVarChar
              , Id_Site              TVarChar
@@ -49,6 +49,8 @@ $BODY$BEGIN
            , CAST (0 AS TFloat)       AS SalePrice
            , CAST ('' AS TVarChar)    AS Comment
 
+           , 0  :: Integer            AS ProdColorPatternId
+           , '' :: TVarChar           AS ProdColorPatternName
            , 0  :: Integer            AS MaterialOptionsId
            , '' :: TVarChar           AS MaterialOptionsName
            , '' :: TVarChar           AS Id_Site
@@ -80,8 +82,12 @@ $BODY$BEGIN
          , ObjectFloat_SalePrice.ValueData    AS SalePrice
          , ObjectString_Comment.ValueData     AS Comment
 
+         , Object_ProdColorPattern.Id        :: Integer   AS ProdColorPatternId
+         , Object_ProdColorPattern.ValueData :: TVarChar  AS ProdColorPatternName
+
          , Object_MaterialOptions.Id        :: Integer   AS MaterialOptionsId
          , Object_MaterialOptions.ValueData :: TVarChar  AS MaterialOptionsName
+         
          , ObjectString_Id_Site.ValueData   :: TVarChar  AS Id_Site
          , ObjectFloat_CodeVergl.ValueData  :: Integer   AS CodeVergl
 
@@ -131,6 +137,12 @@ $BODY$BEGIN
                                ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
                               AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
           LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                               ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdOptions.Id
+                              AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern()
+          LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
+
 
        WHERE Object_ProdOptions.Id = inId;
    END IF;

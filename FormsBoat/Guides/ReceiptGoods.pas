@@ -189,6 +189,9 @@ type
     actInsertEnter: TdsdInsertUpdateAction;
     bbInsertEnter: TdxBarButton;
     dxBarSeparator1: TdxBarSeparator;
+    MaterialOptionsName_ch1: TcxGridDBColumn;
+    actChoiceFormMaterialOptions_1: TOpenChoiceForm;
+    actChoiceFormMaterialOptions_2: TOpenChoiceForm;
   private
     { Private declarations }
   public

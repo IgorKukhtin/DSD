@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ModelId Integer, ModelCode Integer, ModelName TVarChar
              , BrandId Integer, BrandName TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
-             , ProdColorPatternId Integer
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , GoodsId Integer, GoodsId_choice Integer, GoodsCode Integer, GoodsName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , EKPrice TFloat, EKPriceWVAT TFloat
@@ -141,7 +141,9 @@ BEGIN
                                        LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
                                   WHERE ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions()
-                                 )
+                                 )      
+
+
      -- Результат
      SELECT
            Object_ProdOptions.Id           AS Id
@@ -156,7 +158,10 @@ BEGIN
          , Object_ProdEngine.Id               AS ProdEngineId
          , Object_ProdEngine.ValueData        AS ProdEngineName
 
-         , COALESCE (tmpProdColorPattern.ProdColorPatternId, 0) :: Integer  AS ProdColorPatternId
+         --, COALESCE (tmpProdColorPattern.ProdColorPatternId, 0) :: Integer  AS ProdColorPatternId  -- 23,06,2022 т.к. есть        zc_ObjectLink_ProdOptions_ProdColorPattern
+         
+         , Object_ProdColorPattern.Id        :: Integer   AS ProdColorPatternId
+         , Object_ProdColorPattern.ValueData :: TVarChar  AS ProdColorPatternName
 
          , Object_Goods.Id                                                   :: Integer  AS GoodsId
          , COALESCE (tmpProdColorPattern.GoodsId, Object_Goods.Id)           :: Integer  AS GoodsId_choice
@@ -262,14 +267,6 @@ BEGIN
                                 ON ObjectFloat_ProdOptions_CodeVergl.ObjectId = Object_ProdOptions.Id
                                AND ObjectFloat_ProdOptions_CodeVergl.DescId = zc_ObjectFloat_ProdOptions_CodeVergl()
 
-          LEFT JOIN ObjectString AS ObjectString_Id_Site
-                                 ON ObjectString_Id_Site.ObjectId = Object_ProdOptions.Id
-                                AND ObjectString_Id_Site.DescId = zc_ObjectString_Id_Site()  
-
-          LEFT JOIN ObjectFloat AS ObjectFloat_CodeVergl
-                                ON ObjectFloat_CodeVergl.ObjectId = Object_ProdOptions.Id
-                               AND ObjectFloat_CodeVergl.DescId = zc_ObjectFloat_ProdOptions_CodeVergl()
-
           -- Модель
           LEFT JOIN ObjectLink AS ObjectLink_Model
                                ON ObjectLink_Model.ObjectId = Object_ProdOptions.Id
@@ -286,10 +283,10 @@ BEGIN
                               AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
           LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
-                               ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
-                              AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
-          LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                               ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdOptions.Id
+                              AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern()
+          LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
 
           -- Комплектующие
           LEFT JOIN ObjectLink AS ObjectLink_Goods

@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, ReceiptGoodsId Integer
              , ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
                -- Цвет /либо Comment из Boat Structure
-             , ColorPatternId Integer, ColorPatternName TVarChar
+             , ColorPatternId Integer, ColorPatternName TVarChar 
+             , MaterialOptionsId Integer, MaterialOptionsName TVarChar
                --
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
@@ -70,6 +71,7 @@ BEGIN
                             , ObjectLink_Object.ChildObjectId                 AS ObjectId
                               -- нашли Элемент Boat Structure
                             , ObjectLink_ProdColorPattern.ChildObjectId       AS ProdColorPatternId
+                            , ObjectLink_MaterialOptions.ChildObjectId        AS MaterialOptionsId
                               -- значение
                             , ObjectFloat_Value.ValueData                     AS Value
                               --
@@ -86,7 +88,12 @@ BEGIN
                                                 AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
                             LEFT JOIN ObjectLink AS ObjectLink_Object
                                                  ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
-                                                AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                                AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object() 
+
+                            LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                 ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                                                AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+
                             -- значение в сборке
                             LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                   ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
@@ -101,6 +108,7 @@ BEGIN
                             , COALESCE (tmpItems.ReceiptGoodsId, tmpObject.ReceiptGoodsId)         AS ReceiptGoodsId
 
                             , COALESCE (tmpItems.ProdColorPatternId, tmpObject.ProdColorPatternId) AS ProdColorPatternId
+                            , tmpItems.MaterialOptionsId
                             , tmpItems.Value                                                       AS Value
                             , tmpItems.Comment                                                     AS Comment
                             , COALESCE (tmpItems.isErased, FALSE)                                  AS isErased
@@ -127,6 +135,9 @@ BEGIN
           , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
           , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
           , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
+
+          , Object_MaterialOptions.Id          ::Integer  AS MaterialOptionsId
+          , Object_MaterialOptions.ValueData   ::TVarChar AS MaterialOptionsName
 
           , Object_Goods.Id                    ::Integer  AS GoodsId
           , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
@@ -158,6 +169,7 @@ BEGIN
 
      FROM tmpProdColorPattern
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId
+          LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = tmpProdColorPattern.MaterialOptionsId
 
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
@@ -215,6 +227,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.06.22         * MaterialOptions
  14.12.20         *
  01.12.20         *
 */

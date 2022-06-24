@@ -156,7 +156,7 @@ BEGIN
                                        WHERE Container.DescId = zc_Container_Count()
                                          AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета “ранзит!!! 
                                          AND (CLO_Unit.ObjectId = inToId OR inToId = 0)
-                                         AND (inStartDate = inEndDate)
+                                         AND inIsRemains = TRUE
                                        )
                     , tmpCLO_GoodsKind_rem AS (SELECT CLO_GoodsKind.*
                                                FROM ContainerLinkObject AS CLO_GoodsKind
@@ -181,7 +181,7 @@ BEGIN
                           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                 ON ObjectFloat_Weight.ObjectId = tmpContainer.GoodsId
                                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                     WHERE inStartDate = inEndDate   --если за 1 день
+                     WHERE inIsRemains = TRUE   --если за 1 день
                      GROUP BY tmpContainer.GoodsId
                             , COALESCE (CLO_GoodsKind.ObjectId, 0)
                             , tmpContainer.Amount
@@ -251,7 +251,7 @@ BEGIN
                                               ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
     
-                    WHERE inStartDate = inEndDate
+                    WHERE inIsRemains = TRUE
                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                       AND MovementDate_OperDatePartner.ValueData = inStartDate
                       AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)

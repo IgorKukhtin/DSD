@@ -112,6 +112,7 @@ type
     actOpenForm: TdsdOpenForm;
     bbOpenDocument: TdxBarButton;
     getMovementCheck: TdsdStoredProc;
+    cbinIsRemains: TcxCheckBox;
   private
     { Private declarations }
   public

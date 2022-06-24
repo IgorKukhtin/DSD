@@ -1,28 +1,28 @@
 inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   Caption = #1054#1090#1095#1077#1090' <'#1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 483
-  ClientWidth = 1187
+  ClientWidth = 1203
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1203
+  ExplicitWidth = 1219
   ExplicitHeight = 522
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
-    Width = 1187
+    Width = 1203
     Height = 392
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1187
     ExplicitHeight = 392
     ClientRectBottom = 392
-    ClientRectRight = 1187
+    ClientRectRight = 1203
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1187
       ExplicitHeight = 392
       inherited cxGrid: TcxGrid
-        Width = 1187
+        Width = 1203
         Height = 392
         ExplicitWidth = 1187
         ExplicitHeight = 392
@@ -1109,7 +1109,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1187
+    Width = 1203
     Height = 65
     ExplicitWidth = 1187
     ExplicitHeight = 65
@@ -1204,9 +1204,9 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     object edByDoc: TcxCheckBox
       Left = 937
       Top = 34
-      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'  ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       TabOrder = 12
-      Width = 218
+      Width = 168
     end
     object cxLabel6: TcxLabel
       Left = 204
@@ -1224,6 +1224,13 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       Properties.ReadOnly = True
       TabOrder = 14
       Width = 157
+    end
+    object cbinIsRemains: TcxCheckBox
+      Left = 1113
+      Top = 34
+      Caption = #1054#1089#1090#1072#1090#1082#1080
+      TabOrder = 15
+      Width = 74
     end
   end
   object edTo: TcxButtonEdit [2]
@@ -1896,6 +1903,14 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsRemains'
+          Value = Null
+          Component = cbinIsRemains
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2064,6 +2079,14 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         Name = 'inIsByDoc'
         Value = False
         Component = edByDoc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRemains'
+        Value = Null
+        Component = cbinIsRemains
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
