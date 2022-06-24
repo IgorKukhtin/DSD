@@ -1079,15 +1079,6 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMask'
-        Value = False
-        Component = FormParams
-        ComponentItem = 'inMask'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inOperDate'
         Value = Null
         Component = FormParams

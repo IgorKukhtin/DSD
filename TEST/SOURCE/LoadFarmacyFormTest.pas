@@ -487,6 +487,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_RefusalConfirmedForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheck_RefusalConfirmedForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicForSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMedicForSaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicForSaleEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMedicForSaleEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBuyerForSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBuyerForSaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBuyerForSaleEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBuyerForSaleEditForm');
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalDiscountExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalDiscountExternalForm');
   Exit;

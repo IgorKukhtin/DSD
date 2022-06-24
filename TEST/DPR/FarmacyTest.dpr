@@ -1215,7 +1215,11 @@ uses
   GoodsUnitSupplementSUN1 in '..\..\FormsFarmacy\Guides\GoodsUnitSupplementSUN1.pas' {GoodsUnitSupplementSUN1Form: TParentForm},
   Report_ImplementationPlanEmployeeUser in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeUser.pas' {Report_ImplementationPlanEmployeeUserForm: TParentForm},
   GoodsSPSearch_1303 in '..\..\FormsFarmacy\Document\GoodsSPSearch_1303.pas' {GoodsSPSearch_1303Form: TParentForm},
-  GoodsSPSearch_1303Journal in '..\..\FormsFarmacy\Document\GoodsSPSearch_1303Journal.pas' {GoodsSPSearch_1303JournalForm: TParentForm};
+  GoodsSPSearch_1303Journal in '..\..\FormsFarmacy\Document\GoodsSPSearch_1303Journal.pas' {GoodsSPSearch_1303JournalForm: TParentForm},
+  MedicForSale in '..\..\FormsFarmacy\Guides\MedicForSale.pas' {MedicForSaleForm: TParentForm},
+  BuyerForSale in '..\..\FormsFarmacy\Guides\BuyerForSale.pas' {BuyerForSaleForm: TParentForm},
+  MedicForSaleEdit in '..\..\FormsFarmacy\Guides\MedicForSaleEdit.pas' {MedicForSaleEditForm: TParentForm},
+  BuyerForSaleEdit in '..\..\FormsFarmacy\Guides\BuyerForSaleEdit.pas' {BuyerForSaleEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

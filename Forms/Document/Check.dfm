@@ -1,25 +1,25 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
   ClientHeight = 600
-  ClientWidth = 892
-  ExplicitWidth = 908
+  ClientWidth = 810
+  ExplicitWidth = 826
   ExplicitHeight = 639
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 261
-    Width = 892
+    Width = 810
     Height = 219
     ExplicitTop = 261
     ExplicitWidth = 892
     ExplicitHeight = 219
     ClientRectBottom = 219
-    ClientRectRight = 892
+    ClientRectRight = 810
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 892
       ExplicitHeight = 195
       inherited cxGrid: TcxGrid
-        Width = 892
+        Width = 810
         Height = 195
         ExplicitWidth = 892
         ExplicitHeight = 195
@@ -286,7 +286,7 @@ inherited CheckForm: TCheckForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 892
+    Width = 810
     Height = 235
     ExplicitWidth = 892
     ExplicitHeight = 235
@@ -851,11 +851,12 @@ inherited CheckForm: TCheckForm
   object cxGrid1: TcxGrid [27]
     Left = 0
     Top = 488
-    Width = 892
+    Width = 810
     Height = 112
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 31
+    ExplicitWidth = 892
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DetailDS
@@ -978,11 +979,12 @@ inherited CheckForm: TCheckForm
   object cxSplitter1: TcxSplitter [28]
     Left = 0
     Top = 480
-    Width = 892
+    Width = 810
     Height = 8
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
+    ExplicitWidth = 892
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 349
@@ -2098,6 +2100,76 @@ inherited CheckForm: TCheckForm
       ImageIndex = 7
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>?'
     end
+    object actUpdate_MedicForSale: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actChoicespMedicForSale
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MedicForSale
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MedicForSale
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1060#1048#1054' '#1074#1088#1072#1095#1072' ('#1085#1072' '#1087#1088#1086#1076#1072#1078#1091')"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1060#1048#1054' '#1074#1088#1072#1095#1072' ('#1085#1072' '#1087#1088#1086#1076#1072#1078#1091')"'
+      ImageIndex = 8
+    end
+    object actChoicespMedicForSale: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoicespMedicForSale'
+      FormName = 'TMedicForSaleForm'
+      FormNameParam.Value = 'TMedicForSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MedicForSaleId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdate_BuyerForSale: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actChoiceBuyerForSale
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_BuyerForSale
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_BuyerForSale
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1060#1048#1054' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1085#1072' '#1087#1088#1086#1076#1072#1078#1091')"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1060#1048#1054' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1085#1072' '#1087#1088#1086#1076#1072#1078#1091')"'
+      ImageIndex = 8
+    end
+    object actChoiceBuyerForSale: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceBuyerForSale'
+      FormName = 'TBuyerForSaleForm'
+      FormNameParam.Value = 'TBuyerForSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'BuyerForSaleId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -2181,18 +2253,6 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateUnit'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarButton4'
         end
         item
@@ -2225,19 +2285,11 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton13'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton14'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton16'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton19'
+          ItemName = 'dxBarSubItem1'
         end
         item
           Visible = True
@@ -2245,27 +2297,7 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateMemberSp'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton11'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateSpParam'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton10'
         end
         item
           Visible = True
@@ -2373,6 +2405,84 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton19: TdxBarButton
       Action = actUpdate_OffsetVIP
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 8
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateSpParam'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMemberSp'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton21'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton20'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton10'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton13'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton14'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton16'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton19'
+        end>
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object dxBarButton20: TdxBarButton
+      Action = actUpdate_BuyerForSale
+      Category = 0
+    end
+    object dxBarButton21: TdxBarButton
+      Action = actUpdate_MedicForSale
       Category = 0
     end
   end
@@ -2495,6 +2605,16 @@ inherited CheckForm: TCheckForm
         Name = 'FormCaption'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicForSaleId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BuyerForSaleId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 56
@@ -3616,7 +3736,7 @@ inherited CheckForm: TCheckForm
       end>
     PackSize = 1
     Left = 754
-    Top = 217
+    Top = 177
   end
   object SPUpdate_NotMCS: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check__NotMCS'
@@ -3922,5 +4042,55 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 258
     Top = 441
+  end
+  object spUpdate_MedicForSale: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_MedicForSale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMedicForSaleId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MedicForSaleId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 138
+    Top = 264
+  end
+  object spUpdate_BuyerForSale: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_BuyerForSale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBuyerForSaleId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BuyerForSaleId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 250
+    Top = 264
   end
 end

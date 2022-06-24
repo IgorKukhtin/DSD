@@ -52,6 +52,6 @@ END;$BODY$
  27.12.19                                                       *
 */
 
--- тест select gpInsertUpdate_Object_BuyerForSale(0, 'Сидоров О.О.', '3');
+-- тест  select gpInsertUpdate_Object_BuyerForSale(0, 'Черненко', '(067)622-45-81', '3');
 
 

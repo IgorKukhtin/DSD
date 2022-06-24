@@ -211,6 +211,16 @@ type
     spUpdate_OffsetVIP: TdsdStoredProc;
     dxBarButton19: TdxBarButton;
     cbErrorRRO: TcxCheckBox;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarSeparator1: TdxBarSeparator;
+    spUpdate_MedicForSale: TdsdStoredProc;
+    spUpdate_BuyerForSale: TdsdStoredProc;
+    actUpdate_MedicForSale: TdsdExecStoredProc;
+    actChoicespMedicForSale: TOpenChoiceForm;
+    actUpdate_BuyerForSale: TdsdExecStoredProc;
+    actChoiceBuyerForSale: TOpenChoiceForm;
+    dxBarButton20: TdxBarButton;
+    dxBarButton21: TdxBarButton;
   private
     { Private declarations }
   public

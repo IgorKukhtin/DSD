@@ -1,9 +1,9 @@
-object BuyerForm: TBuyerForm
+object BuyerForSaleForm: TBuyerForSaleForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1048#1054' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1085#1072' '#1087#1088#1086#1076#1072#1078#1091') >'
   ClientHeight = 331
-  ClientWidth = 642
+  ClientWidth = 539
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object BuyerForm: TBuyerForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 642
+    Width = 539
     Height = 305
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 642
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -76,30 +77,6 @@ object BuyerForm: TBuyerForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
-      end
-      object DateBirth: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
-        DataBinding.FieldName = 'DateBirth'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object Sex: TcxGridDBColumn
-        Caption = #1055#1086#1083
-        DataBinding.FieldName = 'Sex'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
-      end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -170,11 +147,11 @@ object BuyerForm: TBuyerForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
-          ItemName = 'bbEdit'
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -233,12 +210,19 @@ object BuyerForm: TBuyerForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Action = actInsert
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
+      Visible = ivAlways
+      ImageIndex = 0
+      ShortCut = 45
     end
     object bbEdit: TdxBarButton
-      Action = actUpdate
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      Visible = ivAlways
+      ImageIndex = 1
+      ShortCut = 115
     end
     object bbSetErased: TdxBarButton
       Action = dsdSetErased
@@ -266,6 +250,14 @@ object BuyerForm: TBuyerForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = actInsert
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -277,8 +269,8 @@ object BuyerForm: TBuyerForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TBuyerEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TBuyerForSaleEditForm'
+      FormNameParam.Value = 'TBuyerForSaleEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -299,8 +291,8 @@ object BuyerForm: TBuyerForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TBuyerEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TBuyerForSaleEditForm'
+      FormNameParam.Value = 'TBuyerForSaleEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -348,7 +340,7 @@ object BuyerForm: TBuyerForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Phone'
+          ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -357,14 +349,6 @@ object BuyerForm: TBuyerForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Name'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Name'
-          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -444,7 +428,7 @@ object BuyerForm: TBuyerForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Buyer'
+    StoredProcName = 'gpSelect_Object_BuyerForSale'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -492,7 +476,6 @@ object BuyerForm: TBuyerForm
         ShortCut = 13
       end
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
