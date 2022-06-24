@@ -1018,8 +1018,6 @@ object ProductForm: TProductForm
           VisibleForCustomization = False
           Width = 55
         end
-        object cxGridDBTableViewProdOptItemsColumn1: TcxGridDBColumn
-        end
       end
       object cxGridLevel1: TcxGridLevel
         GridView = cxGridDBTableViewProdOptItems

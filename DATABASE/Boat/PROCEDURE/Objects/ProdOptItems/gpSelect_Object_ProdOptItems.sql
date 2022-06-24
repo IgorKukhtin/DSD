@@ -426,6 +426,7 @@ BEGIN
                          , tmpProdOptions.ProdColorPatternId
                          , tmpProdOptions.ProdColorId
                          , tmpProdOptions.ProdColorName
+                         , tmpProdOptItems.MaterialOptionsId
 
                            -- % скидки
                          , 0     :: TFloat   AS DiscountTax
