@@ -58,6 +58,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    NameUkr: TcxGridDBColumn;
   private
     { Private declarations }
   public

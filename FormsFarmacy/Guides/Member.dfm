@@ -61,6 +61,14 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 85
       end
+      object NameUkr: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1085#1072' '#1059#1082#1088#1072#1080#1085#1089#1082#1086#1084' '#1103#1079#1099#1082#1077
+        DataBinding.FieldName = 'NameUkr'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 97
+      end
       object INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
@@ -801,6 +809,15 @@ object MemberForm: TMemberForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNameUkr'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'NameUkr'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

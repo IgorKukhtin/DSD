@@ -50,6 +50,8 @@ type
     UnitGuides: TdsdGuides;
     ceNotSchedule: TcxCheckBox;
     cbReleasedMarketingPlan: TcxCheckBox;
+    edMeasureNameUkr: TcxTextEdit;
+    cxLabel13: TcxLabel;
   private
     { Private declarations }
   public

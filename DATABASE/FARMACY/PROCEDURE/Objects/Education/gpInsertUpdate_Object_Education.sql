@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_Object_Education()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Education(Integer ,Integer ,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Education(Integer ,Integer , TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Education(
- INOUT ioId	             Integer   ,    -- ключ объекта <Должности> 
+ INOUT ioId	                 Integer   ,    -- ключ объекта <Должности> 
     IN inCode                Integer   ,    -- код объекта 
-    IN inName                TVarChar  ,    -- Название объекта <
+    IN inName                TVarChar  ,    -- Название объекта
+    IN inNameUkr             TVarChar  ,    -- Наименование на Украинском языке
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -33,13 +34,16 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Education(), vbCode_calc, inName);
 
+   -- сохранили Наименование на Украинском языке
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Education_NameUkr(), ioId, inNameUkr);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Education(Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Education(Integer, Integer, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

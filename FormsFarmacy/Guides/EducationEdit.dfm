@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1087#1077#1094#1080#1072#1083#1100#1085#1086#1089#1090#1100'>'
-  ClientHeight = 155
+  ClientHeight = 212
   ClientWidth = 370
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 64
-    Top = 120
+    Top = 168
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 208
-    Top = 120
+    Top = 168
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,6 +60,17 @@
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 273
+  end
+  object edMeasureNameUkr: TcxTextEdit
+    Left = 32
+    Top = 134
+    TabOrder = 6
+    Width = 273
+  end
+  object cxLabel2: TcxLabel
+    Left = 32
+    Top = 111
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072' '#1059#1082#1088#1072#1080#1085#1089#1082#1086#1084' '#1103#1079#1099#1082#1077
   end
   object ActionList: TActionList
     Left = 304
@@ -105,12 +116,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -118,6 +131,15 @@
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNameUkr'
+        Value = Null
+        Component = edMeasureNameUkr
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -129,6 +151,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 120
@@ -144,17 +167,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edMeasureName
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NameUkr'
+        Value = Null
+        Component = edMeasureNameUkr
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 176
@@ -173,7 +206,7 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 24
-    Top = 80
+    Top = 64
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
