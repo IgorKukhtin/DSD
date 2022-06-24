@@ -414,10 +414,20 @@ INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MILinkObject_Country_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Country_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_Country_1303', 'Країна (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Country_1303');
+
+CREATE OR REPLACE FUNCTION zc_MILinkObject_IntenalSP_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_IntenalSP_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_IntenalSP_1303', 'Міжнародна непатентована або загальноприйнята назва лікарського засобу' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_IntenalSP_1303');
+  
+CREATE OR REPLACE FUNCTION zc_MILinkObject_MakerCountrySP_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_MakerCountrySP_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_MakerCountrySP_1303', 'Найменування виробника, країна (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_MakerCountrySP_1303');
+  
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 24.06.22                                                                    * zc_MILinkObject_IntenalSP_1303, zc_MILinkObject_MakerCountrySP_1303
  16.05.22                                                                    * zc_MILinkObject_KindOutSP_1303, zc_MILinkObject_Dosage_1303, zc_MILinkObject_CountSP_1303, zc_MILinkObject_MakerSP_1303, zc_MILinkObject_Country_1303
  05.05.22         * zc_MILinkObject_Double
                     zc_MILinkObject_Scan

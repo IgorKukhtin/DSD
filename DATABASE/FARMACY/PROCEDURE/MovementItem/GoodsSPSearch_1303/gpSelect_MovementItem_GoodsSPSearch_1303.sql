@@ -17,12 +17,11 @@ RETURNS TABLE (Id            Integer
              , CodeATX       TVarChar
              , ReestrSP      TVarChar
 
-             , ReestrDateSP  TDateTime
-             , ValiditySP    TDateTime
-             , OrderDateSP   TDateTime
+             , ValiditySP       TDateTime
+             , OrderDateSP      TDateTime
 
-             , IntenalSPId   Integer 
-             , IntenalSPName TVarChar
+             , IntenalSP_1303Id   Integer 
+             , IntenalSP_1303Name TVarChar
              , BrandSPId     Integer 
              , BrandSPName   TVarChar
              , KindOutSP_1303Id   Integer 
@@ -31,12 +30,10 @@ RETURNS TABLE (Id            Integer
              , Dosage_1303Name TVarChar             
              , CountSP_1303Id   Integer 
              , CountSP_1303Name TVarChar             
-             , MakerSP_1303Id   Integer 
-             , MakerSP_1303Name TVarChar             
-             , Country_1303Id   Integer 
-             , Country_1303Name TVarChar             
+             , MakerCountrySP_1303Id   Integer 
+             , MakerCountrySP_1303Name TVarChar             
              , CurrencyId   Integer 
-             , CurrencyName TVarChar
+             , CurrencyName TVarChar             
              
              , Color_Count   Integer
 
@@ -60,7 +57,6 @@ BEGIN
                                   , MIFloat_OrderNumberSP.ValueData::Integer              AS OrderNumberSP
 
                                   , MIDate_OrderDateSP.ValueData                          AS OrderDateSP
-                                  , MIDate_ReestrDateSP.ValueData                         AS ReestrDateSP
                                   , MIDate_ValiditySP.ValueData                           AS ValiditySP
 
                                   , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MIDate_OrderDateSP.ValueData DESC) AS Ord
@@ -77,15 +73,12 @@ BEGIN
                                                                ON MIFloat_ExchangeRate.MovementItemId = MovementItem.Id
                                                               AND MIFloat_ExchangeRate.DescId = zc_MIFloat_ExchangeRate()
 
-                                   LEFT JOIN MovementItemDate AS MIDate_ReestrDateSP
-                                                              ON MIDate_ReestrDateSP.MovementItemId = MovementItem.Id
-                                                             AND MIDate_ReestrDateSP.DescId = zc_MIDate_ReestrDateSP()
-                                   LEFT JOIN MovementItemDate AS MIDate_ValiditySP
-                                                              ON MIDate_ValiditySP.MovementItemId = MovementItem.Id
-                                                             AND MIDate_ValiditySP.DescId = zc_MIDate_ValiditySP()
                                    LEFT JOIN MovementItemDate AS MIDate_OrderDateSP
                                                               ON MIDate_OrderDateSP.MovementItemId = MovementItem.Id
                                                              AND MIDate_OrderDateSP.DescId = zc_MIDate_OrderDateSP()
+                                   LEFT JOIN MovementItemDate AS MIDate_ValiditySP
+                                                              ON MIDate_ValiditySP.MovementItemId = MovementItem.Id
+                                                             AND MIDate_ValiditySP.DescId = zc_MIDate_ValiditySP()
 
                                WHERE MovementItem.DescId = zc_MI_Master()
                                  AND MovementItem.MovementId = inMovementId
@@ -102,12 +95,11 @@ BEGIN
              , MIString_CodeATX.ValueData                            AS CodeATX
              , MIString_ReestrSP.ValueData                           AS ReestrSP
 
-             , MovementItem.ReestrDateSP                         AS ReestrDateSP
-             , MovementItem.ValiditySP                           AS ValiditySP
+             , MovementItem.ValiditySP                               AS ValiditySP
              , MovementItem.OrderDateSP                              AS OrderDateSP
 
-             , COALESCE (Object_IntenalSP.Id ,0)          ::Integer  AS IntenalSPId
-             , COALESCE (Object_IntenalSP.ValueData,'')   ::TVarChar AS IntenalSPName
+             , COALESCE (Object_IntenalSP_1303.Id ,0)          ::Integer  AS IntenalSP_1303Id
+             , COALESCE (Object_IntenalSP_1303.ValueData,'')   ::TVarChar AS IntenalSP_1303Name
              , COALESCE (Object_BrandSP.Id ,0)            ::Integer  AS BrandSPId
              , COALESCE (Object_BrandSP.ValueData,'')     ::TVarChar AS BrandSPName
              , COALESCE (Object_KindOutSP_1303.Id ,0)          ::Integer  AS KindOutSP_1303Id
@@ -116,10 +108,8 @@ BEGIN
              , COALESCE (Object_Dosage_1303.ValueData,'')   ::TVarChar AS Dosage_1303Name
              , COALESCE (Object_CountSP_1303.Id ,0)          ::Integer  AS CountSP_1303Id
              , COALESCE (Object_CountSP_1303.ValueData,'')   ::TVarChar AS CountSP_1303Name
-             , COALESCE (Object_MakerSP_1303.Id ,0)          ::Integer  AS MakerSP_1303Id
-             , COALESCE (Object_MakerSP_1303.ValueData,'')   ::TVarChar AS MakerSP_1303Name
-             , COALESCE (Object_Country_1303.Id ,0)          ::Integer  AS Country_1303Id
-             , COALESCE (Object_Country_1303.ValueData,'')   ::TVarChar AS Country_1303Name
+             , COALESCE (Object_MakerCountrySP_1303.Id ,0)          ::Integer  AS MakerCountrySP_1303Id
+             , COALESCE (Object_MakerCountrySP_1303.ValueData,'')   ::TVarChar AS MakerCountrySP_1303Name
              , COALESCE (Object_Currency.Id ,0)          ::Integer  AS CurrencyId
              , COALESCE (Object_Currency.ValueData,'')   ::TVarChar AS CurrencyName
 
@@ -140,10 +130,10 @@ BEGIN
                                          AND MIString_ReestrSP.DescId = zc_MIString_ReestrSP()
 
 
-             LEFT JOIN tmpMILinkObject AS MI_IntenalSP
-                                              ON MI_IntenalSP.MovementItemId = MovementItem.Id
-                                             AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
-             LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = MI_IntenalSP.ObjectId 
+             LEFT JOIN tmpMILinkObject AS MI_IntenalSP_1303
+                                              ON MI_IntenalSP_1303.MovementItemId = MovementItem.Id
+                                             AND MI_IntenalSP_1303.DescId = zc_MILinkObject_IntenalSP_1303()
+             LEFT JOIN Object AS Object_IntenalSP_1303 ON Object_IntenalSP_1303.Id = MI_IntenalSP_1303.ObjectId 
 
              LEFT JOIN tmpMILinkObject AS MI_BrandSP
                                               ON MI_BrandSP.MovementItemId = MovementItem.Id
@@ -165,15 +155,10 @@ BEGIN
                                              AND MI_CountSP_1303.DescId = zc_MILinkObject_CountSP_1303()
              LEFT JOIN Object AS Object_CountSP_1303 ON Object_CountSP_1303.Id = MI_CountSP_1303.ObjectId 
 
-             LEFT JOIN MovementItemLinkObject AS MI_MakerSP_1303
-                                              ON MI_MakerSP_1303.MovementItemId = MovementItem.Id
-                                             AND MI_MakerSP_1303.DescId = zc_MILinkObject_MakerSP_1303()
-             LEFT JOIN Object AS Object_MakerSP_1303 ON Object_MakerSP_1303.Id = MI_MakerSP_1303.ObjectId 
-
-             LEFT JOIN MovementItemLinkObject AS MI_Country_1303
-                                              ON MI_Country_1303.MovementItemId = MovementItem.Id
-                                             AND MI_Country_1303.DescId = zc_MILinkObject_Country_1303()
-             LEFT JOIN Object AS Object_Country_1303 ON Object_Country_1303.Id = MI_Country_1303.ObjectId 
+             LEFT JOIN MovementItemLinkObject AS MI_MakerCountrySP_1303
+                                              ON MI_MakerCountrySP_1303.MovementItemId = MovementItem.Id
+                                             AND MI_MakerCountrySP_1303.DescId = zc_MILinkObject_MakerCountrySP_1303()
+             LEFT JOIN Object AS Object_MakerCountrySP_1303 ON Object_MakerCountrySP_1303.Id = MI_MakerCountrySP_1303.ObjectId 
 
              LEFT JOIN MovementItemLinkObject AS MI_Currency
                                               ON MI_Currency.MovementItemId = MovementItem.Id
