@@ -2214,6 +2214,23 @@ object ProductForm: TProductForm
           ComponentItem = 'MaterialOptionsName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdOptionsId'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdOptionsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdOptionsName'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdOptionsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end

@@ -503,6 +503,8 @@ end;
 
 procedure TLoadFormTest.LoadMaterialOptionsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMaterialOptionsChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMaterialOptionsChoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMaterialOptionsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMaterialOptionsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMaterialOptionsEditForm'));
