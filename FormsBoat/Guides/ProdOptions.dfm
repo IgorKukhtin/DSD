@@ -183,7 +183,7 @@ object ProdOptionsForm: TProdOptionsForm
         Width = 100
       end
       object MaterialOptionsName: TcxGridDBColumn
-        Caption = ' '#1050#1072#1090#1077#1075#1086#1088#1080#1103
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
         DataBinding.FieldName = 'MaterialOptionsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

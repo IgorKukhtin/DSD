@@ -809,6 +809,21 @@ object ProductForm: TProductForm
           HeaderAlignmentVert = vaCenter
           Width = 100
         end
+        object MaterialOptionsName_ch2: TcxGridDBColumn
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+          DataBinding.FieldName = 'MaterialOptionsName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actactChoiceFormMaterialOptions
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
         object GoodsGroupNameFull_ch2: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
           DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -1002,6 +1017,8 @@ object ProductForm: TProductForm
           Visible = False
           VisibleForCustomization = False
           Width = 55
+        end
+        object cxGridDBTableViewProdOptItemsColumn1: TcxGridDBColumn
         end
       end
       object cxGridLevel1: TcxGridLevel
@@ -2168,6 +2185,33 @@ object ProductForm: TProductForm
           Value = Null
           Component = ProdOptItemsCDS
           ComponentItem = 'ProdOptPatternName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actactChoiceFormMaterialOptions: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdOptions'
+      FormName = 'TMaterialOptionsChoiceForm'
+      FormNameParam.Value = 'TMaterialOptionsChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'MaterialOptionsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'MaterialOptionsName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -3364,6 +3408,14 @@ object ProductForm: TProductForm
         Value = Null
         Component = ProdOptItemsCDS
         ComponentItem = 'ProdColorPatternId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaterialOptionsId'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'MaterialOptionsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

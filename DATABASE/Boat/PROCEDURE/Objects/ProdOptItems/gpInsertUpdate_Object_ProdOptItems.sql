@@ -2,6 +2,7 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
  INOUT ioId                     Integer   , -- Ключ
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
     IN inProdOptionsId          Integer   ,
     IN inProdOptPatternId       Integer   ,
     IN inProdColorPatternId     Integer   ,
+    IN inMaterialOptionsId      Integer   ,
     IN inMovementId_OrderClient Integer   ,
  INOUT ioGoodsId                Integer   ,
    OUT outGoodsName             TVarChar  ,
