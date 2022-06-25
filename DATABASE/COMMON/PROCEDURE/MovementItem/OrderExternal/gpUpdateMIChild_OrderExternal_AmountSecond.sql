@@ -37,7 +37,7 @@ BEGIN
                                         AND MLO_To.DescId = zc_MovementLinkObject_To()
       WHERE Movement.Id = inMovementId;
                
-       -- данные из мастера +  приход перемещение на склад ГП   минус за этот день заявки в которых есть zc_MI_Child.AmountSecond
+       -- данные из мастера +  приход перемещение на склад    минус за этот день заявки в которых есть zc_MI_Child.AmountSecond
        CREATE TEMP TABLE tmpMIMaster (Id Integer,GoodsId Integer, GoodsKindId Integer, MovementId_send Integer, Amount TFloat, Amount_diff TFloat, Amount_send TFloat, AmountSecond TFloat) ON COMMIT DROP;
        INSERT INTO tmpMIMaster (Id, GoodsId, GoodsKindId, MovementId_send,  Amount, Amount_diff, Amount_send, AmountSecond)                    
   
