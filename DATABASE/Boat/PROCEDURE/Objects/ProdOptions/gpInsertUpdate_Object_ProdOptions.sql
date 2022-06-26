@@ -2,33 +2,34 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVarChar, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVarChar, TFloat, TVarChar, Integer, Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVarChar, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVarChar, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, Integer, TVarChar, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions(
- INOUT ioId                Integer   ,    -- ключ объекта <Названия опций>
-    IN inCode              Integer   ,    -- Код объекта 
-    IN inCodeVergl         Integer   ,    --  	Альтернативный код
-    IN inName              TVarChar  ,    -- Название объекта 
-    IN inSalePrice         TFloat    ,
-    IN inComment           TVarChar  , 
-    IN inId_Site           TVarChar  , --    Id Сайт
-    IN inGoodsId           Integer   ,
-    IN inModelId           Integer   ,
-    IN inTaxKindId         Integer   ,
-    IN inMaterialOptionsId Integer   , -- Категория Опций
-    IN inProdColorPatternId Integer  ,
-    IN inSession           TVarChar       -- сессия пользователя
+ INOUT ioId                  Integer   ,    -- ключ объекта <Названия опций>
+    IN inCode                Integer   ,    -- Код объекта
+    IN inCodeVergl           Integer   ,    -- Альтернативный код
+    IN inName                TVarChar  ,    -- Название объекта
+    IN inSalePrice           TFloat    ,
+    IN inComment             TVarChar  ,
+    IN inId_Site             TVarChar  ,    -- Id Сайт
+    IN inGoodsId             Integer   ,
+    IN inModelId             Integer   ,
+    IN inTaxKindId           Integer   ,
+    IN inMaterialOptionsId   Integer   ,    -- Категория Опций
+    IN inProdColorPatternId  Integer   ,
+    IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
-   DECLARE vbIsInsert Boolean; 
+   DECLARE vbIsInsert Boolean;
 BEGIN
-   
+
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdOptions());
    vbUserId:= lpGetUserBySession (inSession);
@@ -37,17 +38,25 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ProdOptions()); 
+   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ProdOptions());
 
    -- проверка уникальности для свойства <Название >
    -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdOptions(), inName, vbUserId);
 
+   -- проверка
+   IF COALESCE (inModelId, 0) = 0 
+   THEN
+       RAISE EXCEPTION 'Ошибка.Для выбранной Опции не установлено значение <Модель Лодки>.'
+   END IF;
+
    -- проверка - у таких опций здесь нельзя установить значение <Комплектующие>
    IF inGoodsId > 0
-      AND EXISTS (SELECT 1 FROM ObjectLink AS ObjectLink_ProdColorPattern_ProdOptions
-                  WHERE ObjectLink_ProdColorPattern_ProdOptions.ChildObjectId = ioId
-                    AND ObjectLink_ProdColorPattern_ProdOptions.DescId        = zc_ObjectLink_ProdColorPattern_ProdOptions()
-                 )
+      AND (EXISTS (SELECT 1 FROM ObjectLink AS ObjectLink_ProdColorPattern_ProdOptions
+                   WHERE ObjectLink_ProdColorPattern_ProdOptions.ChildObjectId = ioId
+                     AND ObjectLink_ProdColorPattern_ProdOptions.DescId        = zc_ObjectLink_ProdColorPattern_ProdOptions()
+                  )
+        OR inProdColorPatternId > 0
+          )
    THEN
        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Для выбранной Опции нельзя установить значение <Комплектующие>.Т.к. значение определено в <Boat Structure>.'
                                              , inProcedureName := 'gpInsertUpdate_Object_ProdOptions'
@@ -81,11 +90,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptions_MaterialOptions(), ioId, inMaterialOptionsId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptions_ProdColorPattern(), ioId, inProdColorPatternId);
-   
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_CodeVergl(), ioId, inCodeVergl);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Id_Site(), ioId, inId_Site);    
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Id_Site(), ioId, inId_Site);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>

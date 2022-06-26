@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MaterialOptionsName TVarChar
              , Id_Site TVarChar
              , CodeVergl Integer
+             , NPP Integer
               )
 AS
 $BODY$
@@ -51,8 +52,7 @@ BEGIN
                                                                      , inOperDate   := CURRENT_DATE) AS tmp
                            )
           -- Опции, которые определены как Boat Structure
-        , tmpProdColorPattern AS (SELECT ObjectLink_ProdOptions.ObjectId      AS ProdColorPatternId
-                                       , ObjectLink_ProdOptions.ChildObjectId AS ProdOptionsId
+        , tmpProdColorPattern AS (SELECT Object_ProdColorPattern.Id                    AS ProdColorPatternId
 
                                        , Object_Goods.Id                    ::Integer  AS GoodsId
                                        , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
@@ -72,7 +72,7 @@ BEGIN
                                        , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
                                         -- Цена вх. с НДС
                                       , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
-                                            * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
+                                            * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT -- расчет входной цены с НДС, до 4 знаков
 
                                         -- Цена продажи без НДС
                                       , CASE WHEN vbPriceWithVAT = FALSE
@@ -85,14 +85,8 @@ BEGIN
                                              ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
                                         END ::TFloat  AS BasisPriceWVAT
 
-                                        -- № п/п - на всякий случай
-                                      , ROW_NUMBER() OVER (PARTITION BY Object_ProdOptions.Id ORDER BY Object_ProdColorPattern.Id ASC) AS Ord
-
-                                  FROM ObjectLink AS ObjectLink_ProdOptions
-                                       INNER JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
-                                       -- Элемент Boat Structure не удален
-                                       INNER JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id       = ObjectLink_ProdOptions.ObjectId
-                                                                                   AND Object_ProdColorPattern.isErased = FALSE
+                                  FROM -- Элемент Boat Structure не удален
+                                       Object AS Object_ProdColorPattern
                                        LEFT JOIN ObjectString AS ObjectString_Comment
                                                               ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
                                                              AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorPattern_Comment()
@@ -140,7 +134,8 @@ BEGIN
 
                                        LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
-                                  WHERE ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions()
+                                  WHERE Object_ProdColorPattern.DescId   = zc_Object_ProdColorPattern()
+                                    AND Object_ProdColorPattern.isErased = FALSE
                                  )      
 
 
@@ -158,10 +153,9 @@ BEGIN
          , Object_ProdEngine.Id               AS ProdEngineId
          , Object_ProdEngine.ValueData        AS ProdEngineName
 
-         --, COALESCE (tmpProdColorPattern.ProdColorPatternId, 0) :: Integer  AS ProdColorPatternId  -- 23,06,2022 т.к. есть        zc_ObjectLink_ProdOptions_ProdColorPattern
          
          , Object_ProdColorPattern.Id        :: Integer   AS ProdColorPatternId
-         , Object_ProdColorPattern.ValueData :: TVarChar  AS ProdColorPatternName
+         , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END) :: TVarChar  AS ProdColorPatternName
 
          , Object_Goods.Id                                                   :: Integer  AS GoodsId
          , COALESCE (tmpProdColorPattern.GoodsId, Object_Goods.Id)           :: Integer  AS GoodsId_choice
@@ -179,7 +173,7 @@ BEGIN
            CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
               * (1 + (COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT
 
-           -- Цена продажи без НДС - всегда из товара
+           -- Цена продажи без ндс (Artikel)
          , COALESCE (tmpProdColorPattern.BasisPrice,
            CASE WHEN vbPriceWithVAT = FALSE
                 THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
@@ -187,7 +181,7 @@ BEGIN
            END) :: TFloat AS BasisPrice
 
            -- Цена продажи с НДС
-         , COALESCE (tmpProdColorPattern.BasisPrice,
+         , COALESCE (tmpProdColorPattern.BasisPriceWVAT,
            CASE WHEN vbPriceWithVAT = FALSE
                 THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
                 ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
@@ -230,17 +224,19 @@ BEGIN
          , Object_MaterialOptions.ValueData                       AS MaterialOptionsName
          , ObjectString_Id_Site.ValueData                         AS Id_Site
          , ObjectFloat_ProdOptions_CodeVergl.ValueData :: Integer AS CodeVergl
+         
+         , ROW_NUMBER() OVER (PARTITION BY Object_Model.Id
+                              ORDER BY CASE WHEN Object_ProdColorPattern.Id > 0 THEN 0 ELSE 1 END ASC
+                                     , COALESCE (Object_ProdColorPattern.ObjectCode, 0) ASC
+                                     , COALESCE (ObjectFloat_ProdOptions_CodeVergl.ValueData, 0) ASC
+                                     , Object_ProdOptions.ObjectCode
+                             ) :: Integer AS NPP
 
      FROM Object AS Object_ProdOptions
           LEFT JOIN ObjectString AS ObjectString_Comment
           
                                  ON ObjectString_Comment.ObjectId = Object_ProdOptions.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ProdOptions_Comment()
-
-          -- Boat Structure
-          LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ProdOptionsId = Object_ProdOptions.Id
-                                       -- на всякий случай
-                                       AND tmpProdColorPattern.Ord           = 1
 
           -- Цена продажи Опции
           LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
@@ -287,6 +283,14 @@ BEGIN
                                ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdOptions.Id
                               AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern()
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                               ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_ProdColorGroup.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+          LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+          -- Boat Structure
+          LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ProdColorPatternId = Object_ProdColorPattern.Id
 
           -- Комплектующие
           LEFT JOIN ObjectLink AS ObjectLink_Goods

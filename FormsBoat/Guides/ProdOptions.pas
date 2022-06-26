@@ -84,6 +84,7 @@ type
     CodeVergl: TcxGridDBColumn;
     ProdColorPatternName: TcxGridDBColumn;
     actChoiceFormProdColorPattern: TOpenChoiceForm;
+    NPP: TcxGridDBColumn;
   private
     { Private declarations }
   public

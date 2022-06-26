@@ -14,9 +14,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions_excel(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbId                Integer;
-   DECLARE vbModelId           Integer;
-   DECLARE vbMaterialOptionsId Integer;
+   DECLARE vbId                  Integer;
+   DECLARE vbModelId             Integer;
+   DECLARE vbMaterialOptionsId   Integer;
+   DECLARE vbProdColorPatternId  Integer;
 BEGIN
 
      -- Поиск     
@@ -33,7 +34,7 @@ BEGIN
          -- сохранили
          vbMaterialOptionsId:= lpInsertUpdate_Object (vbMaterialOptionsId, zc_Object_MaterialOptions(), lfGet_ObjectCode (0, zc_Object_MaterialOptions()), inMaterialOptions);
      END IF;
-
+     
 
      -- Поиск - 1
      IF 1 < (SELECT COUNT(*)
@@ -110,27 +111,44 @@ BEGIN
      END IF;
             
    
+     -- Поиск
+     vbProdColorPatternId:= (SELECT MAX (CASE WHEN inOptName ILIKE 'Hypalon Primary'   AND gpSelect.ProdColorGroupName ILIKE 'Hypalon' AND  gpSelect.Name ILIKE 'primary'
+                                                   THEN gpSelect.Id
+                                              WHEN inOptName ILIKE 'Hypalon Secondary' AND gpSelect.ProdColorGroupName ILIKE 'Hypalon' AND  gpSelect.Name ILIKE 'secondary'
+                                                   THEN gpSelect.Id
+                                              WHEN inOptName ILIKE 'Upholstery' AND gpSelect.ProdColorGroupName ILIKE 'Upholstery' AND  gpSelect.Name ILIKE 'primary'
+                                                   THEN gpSelect.Id
+                                              WHEN inOptName ILIKE 'Teak' AND gpSelect.ProdColorGroupName ILIKE 'Teak color'
+                                                   THEN gpSelect.Id
+                                              WHEN inOptName ILIKE 'Hull' AND gpSelect.ProdColorGroupName ILIKE 'Fiberglass - Hull'
+                                                   THEN gpSelect.Id
+                                              WHEN inOptName ILIKE 'Deck' AND gpSelect.ProdColorGroupName ILIKE 'Fiberglass - Deck'
+                                                   THEN gpSelect.Id
+                                              WHEN inOptName ILIKE 'Steering Console' AND gpSelect.ProdColorGroupName ILIKE 'Fiberglass SteeringConsole'
+                                                   THEN gpSelect.Id
+                                              ELSE 0
+                                         END)
+                             FROM gpSelect_Object_ProdColorPattern (inColorPatternId:= (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_ColorPattern_Model() AND OL.ChildObjectId = vbModelId)
+                                                                  , inIsErased:= 'FALSE', inIsShowAll:= 'FALSE', inSession:= inSession
+                                                                   ) AS gpSelect
+                            );
 
      -- сохранили
-     vbId:= gpInsertUpdate_Object_ProdOptions (ioId           := vbId
-                                             , inCode         := COALESCE ((SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbId), 0)
-                                             , inName         := COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = vbId), inOptName)
-                                             , inSalePrice    := inSalePrice
-                                             , inComment      := ''
-                                             , inGoodsId      := NULL
-                                             , inModelId      := vbModelId
-                                             , inTaxKindId    := NULL
-                                             , inSession      := inSession
+     vbId:= gpInsertUpdate_Object_ProdOptions (ioId                := vbId
+                                             , inCode              := COALESCE ((SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbId), 0)
+                                             , inCodeVergl         := zfConvert_StringToNumber (inCodeVergl)
+                                             , inName              := COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = vbId), inOptName)
+                                             , inSalePrice         := inSalePrice
+                                             , inComment           := ''
+                                             , inId_Site           := inId_site
+                                             , inGoodsId           := NULL
+                                             , inModelId           := vbModelId
+                                             , inTaxKindId         := NULL
+                                             , inMaterialOptionsId := vbMaterialOptionsId
+                                             , inProdColorPatternId:= vbProdColorPatternId
+                                             , inSession           := inSession
                                               );
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptions_MaterialOptions(), vbId, vbMaterialOptionsId);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Id_Site(), vbId, inId_site);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_CodeVergl(), vbId, zfConvert_StringToFloat(inCodeVergl));
 
 END;
 $BODY$
