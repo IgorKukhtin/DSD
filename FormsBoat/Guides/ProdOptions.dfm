@@ -183,12 +183,27 @@ object ProdOptionsForm: TProdOptionsForm
         Width = 100
       end
       object MaterialOptionsName: TcxGridDBColumn
-        Caption = ' '#1050#1072#1090#1077#1075#1086#1088#1080#1103
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
         DataBinding.FieldName = 'MaterialOptionsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object ProdColorPatternName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' Boat Structure'
+        DataBinding.FieldName = 'ProdColorPatternName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormProdColorPattern
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 97
       end
       object Id_Site: TcxGridDBColumn
         Caption = 'Id '#1057#1072#1081#1090
@@ -797,6 +812,14 @@ object ProdOptionsForm: TProdOptionsForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'ProdColorPatternName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdColorPatternName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'GoodsId'
           Value = Null
           Component = MasterCDS
@@ -971,6 +994,33 @@ object ProdOptionsForm: TProdOptionsForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ProdEngineName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoiceFormProdColorPattern: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdColorPattern'
+      FormName = 'TProdColorPatternForm'
+      FormNameParam.Value = 'TProdColorPatternForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdColorPatternId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdColorPatternName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1276,6 +1326,14 @@ object ProdOptionsForm: TProdOptionsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCodeVergl'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CodeVergl'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inName'
         Value = ''
         Component = MasterCDS
@@ -1303,6 +1361,15 @@ object ProdOptionsForm: TProdOptionsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inId_Site'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id_Site'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = ''
         Component = MasterCDS
@@ -1323,6 +1390,22 @@ object ProdOptionsForm: TProdOptionsForm
         Value = ''
         Component = MasterCDS
         ComponentItem = 'TaxKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaterialOptionsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MaterialOptionsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdColorPatternId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ProdColorPatternId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

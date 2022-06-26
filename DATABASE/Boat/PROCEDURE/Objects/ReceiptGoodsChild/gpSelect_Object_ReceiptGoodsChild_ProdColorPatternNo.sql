@@ -21,6 +21,8 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , Article TVarChar , Article_all TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
+             , MaterialOptionsId Integer, MaterialOptionsName TVarChar
+
                -- Цена вх. без НДС - Товар/Услуги
              , EKPrice TFloat
                -- Цена вх. с НДС, до 2-х знаков - Товар/Услуги
@@ -77,6 +79,9 @@ BEGIN
          , Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
          , Object_Measure.ValueData              ::TVarChar  AS MeasureName
 
+         , Object_MaterialOptions.Id          ::Integer  AS MaterialOptionsId
+         , Object_MaterialOptions.ValueData   ::TVarChar AS MaterialOptionsName
+
            -- Цена вх. без НДС - Товар/Услуги
          , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
            -- расчет Цена вх. с НДС, до 2-х знаков - Товар/Услуги
@@ -114,6 +119,11 @@ BEGIN
                                ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
                               AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
           LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                               ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+          LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptGoodsChild.Id

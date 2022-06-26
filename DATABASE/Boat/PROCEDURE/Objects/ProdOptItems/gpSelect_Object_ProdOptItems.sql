@@ -19,6 +19,7 @@ RETURNS TABLE (MovementId_OrderClient Integer
              , ProductId Integer, ProductName TVarChar
              , ProdOptionsId Integer, ProdOptionsName TVarChar
              , ProdOptPatternId Integer, ProdOptPatternName TVarChar
+             , MaterialOptionsId Integer, MaterialOptionsName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
 
              , ProdColorPatternId Integer
@@ -146,6 +147,7 @@ BEGIN
                                    , Object_ProdColor.Id            AS ProdColorId
                                    , Object_ProdColor.ValueData     AS ProdColorName
                                    , 0                              AS ProdColorPatternId
+                                   , ObjectLink_MaterialOptions.ChildObjectId AS MaterialOptionsId
 
                                      -- Кол-во
                                    , 1                             AS Value
@@ -178,10 +180,17 @@ BEGIN
                                                          ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Goods.ChildObjectId
                                                         AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
 
+<<<<<<< HEAD
                                    -- Цена продажи без НДС Опции
                                    LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
                                                          ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
                                                         AND ObjectFloat_SalePrice.DescId   = zc_ObjectFloat_ProdOptions_SalePrice()
+=======
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                        ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                                                       AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+>>>>>>> origin/master
 
                               WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
                                 AND Object_ProdOptions.isErased = FALSE
@@ -203,6 +212,7 @@ BEGIN
                                    , tmpProdColorPattern.ProdColorName
                                      -- Boat Structure
                                    , tmpProdColorPattern.ProdColorPatternId
+                                   , ObjectLink_MaterialOptions.ChildObjectId AS MaterialOptionsId
 
                                      -- Кол-во
                                    , tmpProdColorPattern.Value       AS Value
@@ -217,6 +227,11 @@ BEGIN
                                    LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
                                                          ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
                                                         AND ObjectFloat_SalePrice.DescId   = zc_ObjectFloat_ProdOptions_SalePrice()
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                        ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                                                       AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+
                               WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
                                 AND Object_ProdOptions.isErased = FALSE
                              )
@@ -288,7 +303,8 @@ BEGIN
                                  -- Цена вх. без НДС - Комплектующие - факт
                                , ObjectFloat_EKPrice.ValueData AS EKPrice
 
-                               , tmpProdOptions.ProdColorPatternId
+                               , tmpProdOptions.ProdColorPatternId 
+                               , tmpProdOptions.MaterialOptionsId
 
 
                                  -- для этой структуры
@@ -392,8 +408,9 @@ BEGIN
 
                          , tmpProdOptItems.ProdColorPatternId
                          , tmpProdOptItems.ProdColorId
-                         , tmpProdOptItems.ProdColorName
-
+                         , tmpProdOptItems.ProdColorName  
+                         , tmpProdOptItems.MaterialOptionsId
+                         
                            -- % скидки
                          , tmpProdOptItems.DiscountTax
 
@@ -424,6 +441,7 @@ BEGIN
                          , tmpProdOptions.ProdColorPatternId
                          , tmpProdOptions.ProdColorId
                          , tmpProdOptions.ProdColorName
+                         , tmpProdOptItems.MaterialOptionsId
 
                            -- % скидки
                          , 0     :: TFloat   AS DiscountTax
@@ -507,6 +525,8 @@ BEGIN
 
          , Object_ProdOptPattern.Id           ::Integer  AS ProdOptPatternId
          , Object_ProdOptPattern.ValueData    ::TVarChar AS ProdOptPatternName
+         , Object_MaterialOptions.Id          ::Integer  AS MaterialOptionsId
+         , Object_MaterialOptions.ValueData   ::TVarChar AS MaterialOptionsName
 
          , tmpGoods.GoodsId
          , tmpGoods.GoodsCode
@@ -553,8 +573,9 @@ BEGIN
            END :: Integer AS Color_fon
 
      FROM tmpRes
-          LEFT JOIN Object AS Object_ProdOptions    ON Object_ProdOptions.Id    = tmpRes.ProdOptionsId
-          LEFT JOIN Object AS Object_ProdOptPattern ON Object_ProdOptPattern.Id = tmpRes.ProdOptPatternId
+          LEFT JOIN Object AS Object_ProdOptions     ON Object_ProdOptions.Id    = tmpRes.ProdOptionsId
+          LEFT JOIN Object AS Object_ProdOptPattern  ON Object_ProdOptPattern.Id = tmpRes.ProdOptPatternId
+          LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = tmpRes.MaterialOptionsId
 
           LEFT JOIN tmpProduct ON tmpProduct.Id    = tmpRes.ProductId
           LEFT JOIN tmpGoods   ON tmpGoods.GoodsId = tmpRes.GoodsId

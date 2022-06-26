@@ -327,7 +327,8 @@ uses
   PLZ_City in '..\..\FormsBoat\Guides\PLZ_City.pas' {PLZ_CityForm: TParentForm},
   ReceiptGoodsEditEnter in '..\..\FormsBoat\Guides\ReceiptGoodsEditEnter.pas' {ReceiptGoodsEditEnterForm: TParentForm},
   MaterialOptionsEdit in '..\..\FormsBoat\Guides\MaterialOptionsEdit.pas' {MaterialOptionsEditForm: TParentForm},
-  MaterialOptions in '..\..\FormsBoat\Guides\MaterialOptions.pas' {MaterialOptionsForm: TParentForm};
+  MaterialOptions in '..\..\FormsBoat\Guides\MaterialOptions.pas' {MaterialOptionsForm: TParentForm},
+  MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

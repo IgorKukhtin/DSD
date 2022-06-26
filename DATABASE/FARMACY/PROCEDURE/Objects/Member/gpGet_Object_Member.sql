@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Member(
     IN inId          Integer,        -- Физические лица 
     IN inSession     TVarChar        -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameUkr TVarChar
              , INN TVarChar, DriverCertificate TVarChar, Comment TVarChar
              , EMail TVarChar, Phone TVarChar, Address TVarChar
              , EMailSign Tblob, Photo Tblob
@@ -28,6 +28,7 @@ BEGIN
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_Member()) AS Code
            , CAST ('' as TVarChar)  AS NAME
+           , CAST ('' as TVarChar)  AS NameUkr
            
            , CAST ('' as TVarChar)  AS INN
            , CAST ('' as TVarChar)  AS DriverCertificate
@@ -57,9 +58,10 @@ BEGIN
    ELSE
        RETURN QUERY 
      SELECT 
-           Object_Member.Id         AS Id
-         , Object_Member.ObjectCode AS Code
-         , Object_Member.ValueData  AS Name
+           Object_Member.Id                AS Id
+         , Object_Member.ObjectCode        AS Code
+         , Object_Member.ValueData         AS Name
+         , ObjectString_NameUkr.ValueData  AS NameUkr
          
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
@@ -101,6 +103,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment ON ObjectString_Comment.ObjectId = Object_Member.Id 
                 AND ObjectString_Comment.DescId = zc_ObjectString_Member_Comment()
 
+          LEFT JOIN ObjectString AS ObjectString_NameUkr
+                                 ON ObjectString_NameUkr.ObjectId = Object_Member.Id
+                                AND ObjectString_NameUkr.DescId = zc_ObjectString_Member_NameUkr()
           LEFT JOIN ObjectString AS ObjectString_EMail
                                  ON ObjectString_EMail.ObjectId = Object_Member.Id 
                                 AND ObjectString_EMail.DescId = zc_ObjectString_Member_EMail()

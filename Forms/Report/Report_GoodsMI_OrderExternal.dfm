@@ -1,30 +1,30 @@
 inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   Caption = #1054#1090#1095#1077#1090' <'#1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 483
-  ClientWidth = 1187
+  ClientWidth = 1203
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1203
+  ExplicitWidth = 1219
   ExplicitHeight = 522
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
-    Width = 1187
+    Width = 1203
     Height = 392
     TabOrder = 3
     ExplicitTop = 91
-    ExplicitWidth = 1187
+    ExplicitWidth = 1203
     ExplicitHeight = 392
     ClientRectBottom = 392
-    ClientRectRight = 1187
+    ClientRectRight = 1203
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1187
+      ExplicitWidth = 1203
       ExplicitHeight = 392
       inherited cxGrid: TcxGrid
-        Width = 1187
+        Width = 1203
         Height = 392
-        ExplicitWidth = 1187
+        ExplicitWidth = 1203
         ExplicitHeight = 392
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -147,6 +147,61 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOrder_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOrder_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemainsSH_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemainsWeight_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -268,6 +323,61 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOrder_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOrder_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemainsSH_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemainsWeight_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend_Weight
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -870,6 +980,135 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Options.Editing = False
             Width = 87
           end
+          object AmountRemains: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'AmountRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095'.'#1076#1085#1103
+            Width = 60
+          end
+          object AmountRemains_Sh: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082', '#1096#1090' '
+            DataBinding.FieldName = 'AmountRemains_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082', '#1096#1090'  '#1085#1072' '#1085#1072#1095'.'#1076#1085#1103
+            Width = 70
+          end
+          object AmountRemains_Weight: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082', '#1074#1077#1089
+            DataBinding.FieldName = 'AmountRemains_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082',  '#1074#1077#1089' '#1085#1072' '#1085#1072#1095'.'#1076#1085#1103
+            Width = 70
+          end
+          object AmountOrder: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1079#1072#1082#1072#1079#1099' '#1087#1088#1086#1096#1083'. '#1087#1077#1088#1080#1086#1076#1072')'
+            DataBinding.FieldName = 'AmountOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' ('#1079#1072#1082#1072#1079#1099' '#1087#1088#1086#1096#1083'.'#1087#1077#1088#1080#1086#1076#1072')'
+            Width = 60
+          end
+          object AmountOrder_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1096#1090' ('#1079#1072#1082#1072#1079#1099' '#1087#1088#1086#1096#1083'. '#1087#1077#1088#1080#1086#1076#1072')'
+            DataBinding.FieldName = 'AmountOrder_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1096#1090' ('#1079#1072#1082#1072#1079#1099' '#1087#1088#1086#1096#1083'.'#1087#1077#1088#1080#1086#1076#1072')'
+            Width = 70
+          end
+          object AmountOrder_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1079#1072#1082#1072#1079#1099' '#1087#1088#1086#1096#1083'.'#1087#1077#1088#1080#1086#1076#1072')'
+            DataBinding.FieldName = 'AmountOrder_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1079#1072#1082#1072#1079#1099' '#1087#1088#1086#1096#1083'.'#1087#1077#1088#1080#1086#1076#1072')'
+            Width = 70
+          end
+          object AmountRemainsSH_diff: TcxGridDBColumn
+            Caption = #1050' '#1086#1090#1075#1088#1091#1079#1082#1077',  '#1096#1090
+            DataBinding.FieldName = 'AmountRemainsSH_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1082#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1083#1086#1089#1100' '#1086#1090#1075#1088#1091#1079#1080#1090#1100' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084', '#1096#1090
+            Width = 70
+          end
+          object AmountRemainsWeight_diff: TcxGridDBColumn
+            Caption = #1050' '#1086#1090#1075#1088#1091#1079#1082#1077', '#1074#1077#1089
+            DataBinding.FieldName = 'AmountRemainsWeight_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1082#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1083#1086#1089#1100' '#1086#1090#1075#1088#1091#1079#1080#1090#1100' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084', '#1074#1077#1089
+            Width = 70
+          end
+          object AmountSend: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1077#1088#1077#1084#1077#1097'. '#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'AmountSend'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' ('#1087#1077#1088#1077#1084#1077#1097'. '#1087#1088#1080#1093#1086#1076')'
+            Width = 60
+          end
+          object AmountSend_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1096#1090' ('#1087#1077#1088#1077#1084#1077#1097'. '#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'AmountSend_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1096#1090' ('#1087#1077#1088#1077#1084#1077#1097'. '#1087#1088#1080#1093#1086#1076')'
+            Width = 70
+          end
+          object AmountSend_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1087#1077#1088#1077#1084#1077#1097'. '#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'AmountSend_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1087#1077#1088#1077#1084#1077#1097'. '#1087#1088#1080#1093#1086#1076')'
+            Width = 70
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055' ('#1076#1086#1075'.)'
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -935,9 +1174,9 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1187
+    Width = 1203
     Height = 65
-    ExplicitWidth = 1187
+    ExplicitWidth = 1203
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 113
@@ -1030,9 +1269,9 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     object edByDoc: TcxCheckBox
       Left = 937
       Top = 34
-      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'  ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       TabOrder = 12
-      Width = 218
+      Width = 168
     end
     object cxLabel6: TcxLabel
       Left = 204
@@ -1050,6 +1289,13 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       Properties.ReadOnly = True
       TabOrder = 14
       Width = 157
+    end
+    object cbinIsRemains: TcxCheckBox
+      Left = 1113
+      Top = 34
+      Caption = #1054#1089#1090#1072#1090#1082#1080
+      TabOrder = 15
+      Width = 74
     end
   end
   object edTo: TcxButtonEdit [2]
@@ -1406,6 +1652,46 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_byRemains: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectRemains
+      StoredProcList = <
+        item
+          StoredProc = spSelectRemains
+        end>
+      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1054#1089#1090#1072#1090#1082#1080')'
+      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1054#1089#1090#1072#1090#1082#1080')'
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = ItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'ToName;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1054#1089#1090#1072#1090#1082#1080')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1054#1089#1090#1072#1090#1082#1080')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint_byRouteGroup: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1722,6 +2008,14 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsRemains'
+          Value = Null
+          Component = cbinIsRemains
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1893,6 +2187,14 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRemains'
+        Value = Null
+        Component = cbinIsRemains
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 200
@@ -2009,7 +2311,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbPrint_byRouteGroup'
         end
         item
           Visible = True
@@ -2018,6 +2320,14 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         item
           Visible = True
           ItemName = 'bbPrint_byCross'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_byRemains'
         end
         item
           Visible = True
@@ -2073,13 +2383,17 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       Category = 0
       ImageIndex = 3
     end
-    object bb: TdxBarButton
+    object bbPrint_byRouteGroup: TdxBarButton
       Action = actPrint_byRouteGroup
       Category = 0
     end
     object bbOpenDocument: TdxBarButton
       Action = mactOpenDocument
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Category = 0
+    end
+    object bbPrint_byRemains: TdxBarButton
+      Action = actPrint_byRemains
       Category = 0
     end
   end
@@ -2469,5 +2783,108 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     PackSize = 1
     Left = 760
     Top = 248
+  end
+  object spSelectRemains: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderExternal'
+    DataSet = ItemsCDS
+    DataSets = <
+      item
+        DataSet = ItemsCDS
+      end
+      item
+      end
+      item
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 43101d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 43101d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteSortingId'
+        Value = ''
+        Component = GuidesRouteSorting
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsByDoc'
+        Value = False
+        Component = edByDoc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRemains'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 296
   end
 end

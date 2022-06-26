@@ -14,13 +14,12 @@ $BODY$
    DECLARE vbCashRegisterId Integer;
    DECLARE vbZReport Integer;
    DECLARE vbFiscalCheckNumber TVarChar;
+   DECLARE vbJackdawsChecksId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    --vbUserId := lpGetUserBySession (inSession);
---    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Check_OperDate());
+    vbUserId := lpGetUserBySession (inSession);
 
-    IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND
-      8001630 <> inSession::Integer AND 9560329 <> inSession::Integer
+    IF vbUserId NOT IN (3, 375661, 4183126, 8001630, 9560329, 9383066)
     THEN
       RAISE EXCEPTION 'Выполнение операции вам запрещено.';
     END IF;
@@ -34,12 +33,14 @@ BEGIN
       StatusId,
       COALESCE(MovementLinkObject_CashRegister.ObjectId, 0),
       COALESCE(MovementFloat_ZReport.ValueData, 0),
-      COALESCE(MovementString_FiscalCheckNumber.ValueData, '')
+      COALESCE(MovementString_FiscalCheckNumber.ValueData, ''),
+      COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0)
     INTO
       vbStatusId,
       vbCashRegisterId,
       vbZReport,
-      vbFiscalCheckNumber
+      vbFiscalCheckNumber,
+      vbJackdawsChecksId
     FROM Movement
 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
@@ -51,11 +52,15 @@ BEGIN
          LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
                                   ON MovementString_FiscalCheckNumber.MovementId = Movement.Id
                                  AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
+                                     ON MovementLinkObject_JackdawsChecks.MovementId = Movement.Id
+                                    AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
     WHERE Id = inId;
     
     IF vbCashRegisterId <> 0 OR
       vbZReport <> 0 OR
-      vbFiscalCheckNumber <> ''
+      vbFiscalCheckNumber <> '' OR
+      vbJackdawsChecksId <> 0
     THEN
     
         -- Сохранили связь с кассовым аппаратом
@@ -76,6 +81,12 @@ BEGIN
         PERFORM lpInsertUpdate_MovementString(zc_MovementString_FiscalCheckNumber(), inId, '');
       END IF;
 
+        -- Сохранили связь с кассовым аппаратом
+      IF vbJackdawsChecksId <> 0
+      THEN
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JackdawsChecks(), inId, 0);
+      END IF;
+
       -- сохранили протокол
       PERFORM lpInsert_MovementProtocol (inId, vbUserId, False);
     END IF;
@@ -90,4 +101,5 @@ $BODY$
  13.09.21                                                                                    *
 */
 -- тест
--- select * from gpUpdate_Movement_Check_ClearFiscal(inId := 24824105 ,  inSession := '3');
+-- 
+select * from gpUpdate_Movement_Check_ClearFiscal(inId := 28050651 ,  inSession := '3');

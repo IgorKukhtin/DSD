@@ -14,19 +14,14 @@ $BODY$
   DECLARE vbUnit        Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
-     
-    -- проверка прав пользователя на вызов процедуры
-    IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
+    vbUserId := inSession;
+
+    -- Разрешаем только сотрудникам с правами админа    
+    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_UnComplete()))
     THEN
-        -- Разрешаем только сотрудникам с правами админа    
-        IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_UnComplete()))
-        THEN
-          RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
-        END IF;
+      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
     END IF;
      
-
      -- проверка - если <Master> Удален, то <Ошибка>
     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
     

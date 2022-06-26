@@ -6,19 +6,22 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_User_For_Site(
     IN inUnitId        Integer,       -- Аптека
     IN inSession       TVarChar       -- сессия пользователя    
 )
-RETURNS TABLE (Id             Integer    -- Ключ пользователя
-             , Name           TVarChar   -- ФИО
-             , MemberName     TVarChar   -- ФИО физ.лица
-             , Name_Only      TVarChar   -- Только Имя
-             , Foto           TVarChar   -- Фото
-             , DateIn         TDateTime  -- Дата с которого числа работает
-             , DateAction     TDateTime  -- Дата/ время последней активности
-             , DateAction_1   TDateTime  -- Дата/ время последней активности
-             , DateAction_2   TDateTime  -- Дата/ время последней активности
-             , UnitId         Integer    -- Ключ Аптеки
-             , UnitName       TVarChar   -- Аптека
-             , PositionName   TVarChar   -- должность
-             , isSite         Boolean    --
+RETURNS TABLE (Id              Integer    -- Ключ пользователя
+             , Name            TVarChar   -- ФИО
+             , MemberName      TVarChar   -- ФИО физ.лица
+             , Name_Only       TVarChar   -- Только Имя
+             , MemberNameUkr   TVarChar   -- ФИО физ.лица на Украинском языке
+             , NameUkr_Only    TVarChar   -- Только Имя на Украинском языке
+             , Foto            TVarChar   -- Фото
+             , DateIn          TDateTime  -- Дата с которого числа работает
+             , DateAction      TDateTime  -- Дата/ время последней активности
+             , DateAction_1    TDateTime  -- Дата/ время последней активности
+             , DateAction_2    TDateTime  -- Дата/ время последней активности
+             , UnitId          Integer    -- Ключ Аптеки
+             , UnitName        TVarChar   -- Аптека
+             , PositionName    TVarChar   -- должность
+             , PositionNameUkr TVarChar   -- должность на Украинском языке
+             , isSite          Boolean    --
               )
 AS
 $BODY$
@@ -47,9 +50,11 @@ BEGIN
           , tmpUser AS (SELECT Object_User.Id                    AS UserId
                              , Object_Member.Id                  AS MemberId
                              , Object_Member.ValueData           AS MemberName
+                             , ObjectString_NameUkr.ValueData    AS MemberNameUkr
                              , Object_User.ValueData             AS Name
                              , ObjectString_Foto.ValueData       AS Foto
                              , Object_Education.ValueData        AS EducationName
+                             , ObjectString_Education_NameUkr.ValueData  AS EducationNameUkr
                              , zfConvert_StringToNumber (lpGet_DefaultValue('zc_Object_Unit', Object_User.Id)) AS UnitId
                              , ObjectDate_Personal_In.ValueData AS DateIn
                              , Object_User.isSite
@@ -66,11 +71,18 @@ BEGIN
                                                   ON ObjectLink_User_Member.ObjectId = Object_User.Id
                                                  AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                              LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+                             LEFT JOIN ObjectString AS ObjectString_NameUkr
+                                                    ON ObjectString_NameUkr.ObjectId = Object_Member.Id
+                                                   AND ObjectString_NameUkr.DescId = zc_ObjectString_Member_NameUkr()
                                 
                              LEFT JOIN ObjectLink AS ObjectLink_Member_Education
                                                   ON ObjectLink_Member_Education.ObjectId = Object_Member.Id
                                                  AND ObjectLink_Member_Education.DescId = zc_ObjectLink_Member_Education()
                              LEFT JOIN Object AS Object_Education ON Object_Education.Id = ObjectLink_Member_Education.ChildObjectId
+
+                             LEFT JOIN ObjectString AS ObjectString_Education_NameUkr
+                                                    ON ObjectString_Education_NameUkr.ObjectId = Object_Education.Id 
+                                                   AND ObjectString_Education_NameUkr.DescId = zc_ObjectString_Education_NameUkr()
              
                         WHERE Object_User.UnitId = inUnitId OR COALESCE (inUnitId, 0) = 0
                        )
@@ -92,6 +104,8 @@ BEGIN
            , tmpUser.Name       :: TVarChar AS Name
            , tmpUser.MemberName :: TVarChar AS MemberName
            , zfConvert_FIO_Name (tmpUser.MemberName) :: TVarChar AS Name_Only
+           , tmpUser.MemberNameUkr :: TVarChar AS MemberNameUkr
+           , zfConvert_FIO_Name (tmpUser.MemberNameUkr) :: TVarChar AS NameUkr_Only
            , tmpUser.Foto          
            , tmpUser.DateIn
            , CASE WHEN COALESCE (tmpProtocol.OperDate, zc_DateStart()) > COALESCE (tmpCashSession.LastConnect, zc_DateStart())
@@ -106,6 +120,7 @@ BEGIN
            , Object_Unit.ValueData     AS UnitName
            --, Object_Position.ValueData AS PositionName
            , tmpUser.EducationName     AS PositionName
+           , tmpUser.EducationNameUkr  AS PositionNameUkr
            , tmpUser.isSite             :: Boolean
            
         FROM tmpUser
@@ -132,5 +147,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_User_For_Site (inUnitId:= 375626, inSession:= '3'); -- Аптека_1 пр_Героев_40 WHERE DateAction >= '08.09.2017'
+-- 
 
+SELECT * FROM gpSelect_Object_User_For_Site (inUnitId:= 375626, inSession:= '3'); -- Аптека_1 пр_Героев_40 WHERE DateAction >= '08.09.2017'

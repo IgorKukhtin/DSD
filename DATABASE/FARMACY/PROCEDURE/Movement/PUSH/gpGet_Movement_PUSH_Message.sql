@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_PUSH()
+-- Function: gpGet_Movement_PUSH_Message()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_PUSH_Message (TBlob, TVarChar, TVarChar, Integer, Integer, Integer);
 
@@ -25,7 +25,7 @@ $BODY$
    DECLARE vbRec Record;
 BEGIN
 
-  if COALESCE(inFunction, '') <> '' AND  COALESCE(inForm, '') <> ''
+  IF COALESCE(inFunction, '') <> '' AND  COALESCE(inForm, '') <> ''
   THEN
     BEGIN
        FOR vbRec IN EXECUTE 'SELECT Count(*) AS CountRecord FROM '||inFunction||'('''||inUserId::TVarChar||''')'
@@ -48,7 +48,7 @@ BEGIN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
        PERFORM lpLog_Run_Schedule_Function('gpGet_Movement_PUSH_Message', True, text_var1::TVarChar, inUserId);
     END;
-  ELSEif COALESCE(inFunction, '') <> ''
+  ELSEIF COALESCE(inFunction, '') <> ''
   THEN
     BEGIN
        FOR vbRec IN EXECUTE 'SELECT * FROM '||inFunction||'('||COALESCE(inMovementID, 0)::TVarChar||', '||inUnitID::TVarChar||', '||inUserId::TVarChar||')'
@@ -88,4 +88,4 @@ $BODY$
 
 -- SELECT * FROM Log_Run_Schedule_Function
 -- 
-SELECT * FROM gpGet_Movement_PUSH_Message( '', '', 'TCheckHelsiSignPUSHForm', 18971753 , 183292 , 3);
+SELECT * FROM gpGet_Movement_PUSH_Message( 'Коллеги, не забудьте провести сверку чеков Хелси. Если чек не погашен - погасите через кнопку Погасить рецепт', '', '', 18971753 , 16001195   , 3);

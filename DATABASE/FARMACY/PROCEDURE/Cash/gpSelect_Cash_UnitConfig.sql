@@ -32,7 +32,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer,
                LikiDneproeHealthURL TVarChar, LikiDneproeLocation TVarChar, LikiDneproeHealthToken TVarChar,
                isRemovingPrograms Boolean, ExpressVIPConfirm Integer, isErrorRROToVIP Boolean, LayoutFileCount Integer, LayoutFileID Integer, 
-               isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, MinPriceSale TFloat
+               isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, MinPriceSale TFloat
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -370,6 +370,7 @@ BEGIN
        
        , COALESCE (ObjectBoolean_SUN_v2_SupplementAddCash.ValueData, FALSE):: Boolean     AS isSupplementAddCash
        , COALESCE (ObjectBoolean_ExpressVIPConfirm.ValueData, FALSE):: Boolean            AS isExpressVIPConfirm
+       , COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE):: Boolean         AS isShowPlanEmployeeUser
        
        , tmpCashSettings.MinPriceSale
 
@@ -489,6 +490,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RedeemByHandSP
                                 ON ObjectBoolean_RedeemByHandSP.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RedeemByHandSP.DescId = zc_ObjectBoolean_Unit_RedeemByHandSP()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanEmployeeUser
+                                ON ObjectBoolean_ShowPlanEmployeeUser.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ShowPlanEmployeeUser.DescId = zc_ObjectBoolean_Unit_ShowPlanEmployeeUser()
 
         LEFT JOIN tmpLoyalty ON 1 = 1
         LEFT JOIN tmpLoyaltySaveMoney ON 1 = 1

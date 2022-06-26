@@ -50,6 +50,7 @@ BEGIN
                                    , Price_Goods.ChildObjectId                  AS GoodsId
                                    , Object_Goods_Main.Name                     AS Name
                                    , Object_Goods_Main.NameUkr                  AS NameUkr
+                                   , Object_Goods_Main.Id                       AS GoodsMainId
                               FROM Object AS Object_PriceSite
 
                                    INNER JOIN ObjectLink AS Price_Goods
@@ -113,6 +114,65 @@ BEGIN
                                 GROUP BY Container.ObjectId  
                                 HAVING SUM(Container.Amount) > 0
                                 )
+          , tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
+                                                                -- № п/п - на всякий случай
+                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                           FROM Movement
+                                INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                                        ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                       AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                                       AND MovementDate_OperDateStart.ValueData  <= CURRENT_DATE
+ 
+                                INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                        ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                       AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                                       AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+                                INNER JOIN MovementLinkObject AS MLO_MedicalProgramSP
+                                                              ON MLO_MedicalProgramSP.MovementId = Movement.Id
+                                                             AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+ 
+                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+ 
+ 
+                           WHERE Movement.DescId = zc_Movement_GoodsSP()
+                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          )
+          , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId                           AS GoodsMainId
+                                      , Object_Object.Id                                          AS GoodsDiscountId
+                                      , Object_Object.ValueData                                   AS GoodsDiscountName
+                                      , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
+                                      /*, MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat  AS MaxPrice 
+                                      , MAX(ObjectFloat_DiscountProcent.ValueData)::TFloat        AS DiscountProcent*/ 
+                                 FROM Object AS Object_BarCode
+                                      INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                            ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                           AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                      INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = ObjectLink_BarCode_Goods.ChildObjectId
+
+                                      LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                           ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                          AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                      LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId
+
+                                      LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
+                                                              ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id
+                                                             AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
+
+                                      /*LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                                            ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                                           AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
+                                                            ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
+                                                           AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()*/
+                                                                   
+                                 WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                   AND Object_BarCode.isErased = False
+                                 GROUP BY Object_Goods_Retail.GoodsMainId
+                                        , Object_Object.Id
+                                        , Object_Object.ValueData
+                                        , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False))
                               
                            
 
@@ -121,11 +181,13 @@ BEGIN
              , Price_Site.Name                                              AS Name
              , Price_Site.NameUkr                                           AS NameUkr
 
-             , CASE WHEN COALESCE (inUnitId, 0) <> 0 AND COALESCE (tmpContainerAll.Remains, 0) = 0
-                    THEN Null
-                    WHEN COALESCE (inUnitId, 0) <> 0
-                    THEN tmpObject_Price.Price 
-                    ELSE Price_Site.Price END ::TFloat                      AS Price
+             , zfCalc_PriceCash(CASE WHEN COALESCE (inUnitId, 0) <> 0 AND COALESCE (tmpContainerAll.Remains, 0) = 0
+                                THEN Null
+                                WHEN COALESCE (inUnitId, 0) <> 0
+                                THEN tmpObject_Price.Price
+                                ELSE Price_Site.Price END, 
+                                CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) ::TFloat     AS Price
              , tmpContainerAll.Remains::TFloat                              AS Remains
              
         FROM tmpPrice_Site AS Price_Site         
@@ -134,6 +196,12 @@ BEGIN
              
              LEFT JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Price_Site.GoodsId
              
+             -- Соц Проект
+             LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Price_Site.GoodsMainId
+                                 AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
+
+             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Price_Site.GoodsMainId
+
         WHERE COALESCE (inSearch, '') = '' OR 
               CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END ILIKE '%'||inSearch||'%'
 
@@ -160,6 +228,5 @@ $BODY$
 --
  
 SELECT * FROM gpSelect_GoodsPrice_ForSite (inCategoryId := 394964 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Мило', inUnitId := 472116, inSession:= zfCalc_UserSite());
-
 
 

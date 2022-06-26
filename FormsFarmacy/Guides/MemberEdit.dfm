@@ -1,40 +1,43 @@
 ﻿inherited MemberEditForm: TMemberEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 440
+  ClientHeight = 497
   ClientWidth = 354
   ExplicitWidth = 360
-  ExplicitHeight = 469
+  ExplicitHeight = 526
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 73
-    Top = 407
+    Top = 458
     TabOrder = 1
     ExplicitLeft = 73
-    ExplicitTop = 407
+    ExplicitTop = 458
   end
   inherited bbCancel: TcxButton
     Left = 205
-    Top = 407
+    Top = 458
     TabOrder = 2
     ExplicitLeft = 205
-    ExplicitTop = 407
+    ExplicitTop = 458
   end
   object cxPageControl1: TcxPageControl [2]
     Left = 0
     Top = 0
     Width = 354
-    Height = 401
+    Height = 441
     Align = alTop
     TabOrder = 0
     Properties.ActivePage = tsCommon
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 401
+    ClientRectBottom = 441
     ClientRectRight = 354
     ClientRectTop = 24
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
+      ExplicitLeft = -64
+      ExplicitTop = 0
+      ExplicitHeight = 409
       object edMeasureName: TcxTextEdit
         Left = 7
         Top = 66
@@ -61,34 +64,34 @@
       end
       object ceINN: TcxTextEdit
         Left = 7
-        Top = 107
+        Top = 146
         TabOrder = 3
         Width = 157
       end
       object cxLabel2: TcxLabel
         Left = 7
-        Top = 90
+        Top = 129
         Caption = #1048#1053#1053
       end
       object cxLabel3: TcxLabel
         Left = 171
-        Top = 90
+        Top = 129
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       end
       object cxLabel4: TcxLabel
         Left = 7
-        Top = 233
+        Top = 272
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
       end
       object ceDriverCertificate: TcxTextEdit
         Left = 171
-        Top = 107
+        Top = 146
         TabOrder = 4
         Width = 157
       end
       object ceComment: TcxTextEdit
         Left = 7
-        Top = 251
+        Top = 290
         TabOrder = 5
         Width = 321
       end
@@ -102,12 +105,12 @@
       end
       object cxLabel7: TcxLabel
         Left = 171
-        Top = 138
+        Top = 177
         Caption = #1057#1087#1077#1094#1080#1072#1083#1100#1085#1086#1089#1090#1100
       end
       object ceEducation: TcxButtonEdit
         Left = 171
-        Top = 155
+        Top = 194
         Properties.Buttons = <
           item
             Default = True
@@ -119,29 +122,29 @@
       end
       object cxLabel8: TcxLabel
         Left = 7
-        Top = 138
+        Top = 177
         Caption = #1058#1077#1083#1077#1092#1086#1085
       end
       object edPhone: TcxTextEdit
         Left = 7
-        Top = 155
+        Top = 194
         TabOrder = 14
         Width = 157
       end
       object cxLabel9: TcxLabel
         Left = 7
-        Top = 182
+        Top = 221
         Caption = #1052#1077#1089#1090#1086' '#1087#1088#1086#1078#1080#1074#1072#1085#1080#1103
       end
       object edAddress: TcxTextEdit
         Left = 7
-        Top = 202
+        Top = 241
         TabOrder = 16
         Width = 321
       end
       object cePosition: TcxButtonEdit
         Left = 7
-        Top = 301
+        Top = 340
         Properties.Buttons = <
           item
             Default = True
@@ -153,7 +156,7 @@
       end
       object cxLabel11: TcxLabel
         Left = 7
-        Top = 284
+        Top = 323
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
       end
       object ceManagerPharmacy: TcxCheckBox
@@ -166,7 +169,7 @@
       end
       object ceUnit: TcxButtonEdit
         Left = 8
-        Top = 346
+        Top = 385
         Properties.Buttons = <
           item
             Default = True
@@ -178,7 +181,7 @@
       end
       object cxLabel12: TcxLabel
         Left = 7
-        Top = 328
+        Top = 367
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       end
       object ceNotSchedule: TcxCheckBox
@@ -196,6 +199,17 @@
         Caption = #1054#1089#1074#1086#1073#1086#1078#1076#1077#1085' '#1086#1090' '#1087#1083#1072#1085#1072' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
         TabOrder = 23
         Width = 211
+      end
+      object edMeasureNameUkr: TcxTextEdit
+        Left = 7
+        Top = 105
+        TabOrder = 24
+        Width = 273
+      end
+      object cxLabel13: TcxLabel
+        Left = 7
+        Top = 89
+        Caption = #1060#1048#1054' '#1085#1072' '#1059#1082#1088#1072#1080#1085#1089#1082#1086#1084' '#1103#1079#1099#1082#1077
       end
     end
     object tsContact: TcxTabSheet
@@ -295,6 +309,14 @@
         Name = 'inName'
         Value = ''
         Component = edMeasureName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNameUkr'
+        Value = Null
+        Component = edMeasureNameUkr
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -427,6 +449,13 @@
         Name = 'Name'
         Value = ''
         Component = edMeasureName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NameUkr'
+        Value = Null
+        Component = edMeasureNameUkr
         DataType = ftString
         MultiSelectSeparator = ','
       end

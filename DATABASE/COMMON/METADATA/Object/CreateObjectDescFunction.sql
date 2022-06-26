@@ -1573,6 +1573,16 @@ CREATE OR REPLACE FUNCTION zc_Object_MCRequestItem() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_MCRequestItem', 'Элемент запроса на изменение категории наценки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MCRequestItem');
     
+CREATE OR REPLACE FUNCTION zc_Object_IntenalSP_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_IntenalSP_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_IntenalSP_1303', 'Міжнародна непатентована або загальноприйнята назва лікарського засобу (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_IntenalSP_1303');
+    
+
+CREATE OR REPLACE FUNCTION zc_Object_MakerCountrySP_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MakerCountrySP_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MakerCountrySP_1303', 'Найменування виробника, країна (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MakerCountrySP_1303');
+    
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1593,6 +1603,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 24.06.22                                                                                        * zc_Object_IntenalSP_1303, zc_Object_MakerCountrySP_1303
  20.05.22                                                                                        * zc_Object_DiffKindPrice, zc_Object_MCRequest, zc_Object_MCRequestItem
  14.05.22                                                                                        * zc_Object_..._1303()
  04.05.22                                                                                        * zc_Object_Competitor

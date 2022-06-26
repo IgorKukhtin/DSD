@@ -578,6 +578,21 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Options.Editing = False
           Width = 70
         end
+        object MaterialOptionsName_ch1: TcxGridDBColumn
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
+          DataBinding.FieldName = 'MaterialOptionsName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormMaterialOptions_1
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
         object MeasureName_ch1: TcxGridDBColumn
           Caption = #1045#1076'. '#1080#1079#1084'.'
           DataBinding.FieldName = 'MeasureName'
@@ -885,6 +900,21 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 80
+        end
+        object MaterialOptionsName_ch2: TcxGridDBColumn
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
+          DataBinding.FieldName = 'MaterialOptionsName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormMaterialOptions_2
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
         end
         object Value_ch2: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
@@ -1854,6 +1884,60 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         end>
       isShowModal = False
     end
+    object actChoiceFormMaterialOptions_2: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormMaterialOptions_2'
+      FormName = 'TMaterialOptionsForm'
+      FormNameParam.Value = 'TMaterialOptionsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'MaterialOptionsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'MaterialOptionsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoiceFormMaterialOptions_1: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormMaterialOptions_1'
+      FormName = 'TMaterialOptionsForm'
+      FormNameParam.Value = 'TMaterialOptionsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'MaterialOptionsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'MaterialOptionsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actChoiceFormGoods_1: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2443,8 +2527,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
   end
   object Child1DS: TDataSource
     DataSet = Child1CDS
-    Left = 280
-    Top = 328
+    Left = 264
+    Top = 392
   end
   object dsdDBViewAddOnGoods: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2559,6 +2643,14 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMaterialOptionsId'
+        Value = Null
+        Component = Child1CDS
+        ComponentItem = 'MaterialOptionsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioValue'
         Value = Null
         Component = Child1CDS
@@ -2632,8 +2724,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
-    Top = 256
+    Left = 280
+    Top = 224
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2851,6 +2943,14 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         Value = 'ProdColorPatternId'
         Component = Child2CDS
         ComponentItem = 'ProdColorPatternId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaterialOptionsId'
+        Value = Null
+        Component = Child2CDS
+        ComponentItem = 'MaterialOptionsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

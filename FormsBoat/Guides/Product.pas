@@ -197,6 +197,7 @@ type
     Amount_ch1: TcxGridDBColumn;
     actUpdate2: TdsdInsertUpdateAction;
     bbUpdate2: TdxBarButton;
+    actactChoiceFormMaterialOptions: TOpenChoiceForm;
   private
     { Private declarations }
   public

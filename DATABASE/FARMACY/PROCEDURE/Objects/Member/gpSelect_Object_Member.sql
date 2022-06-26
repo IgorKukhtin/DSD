@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member(
     IN inIsShowAll        Boolean,       --
     IN inSession          TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameUkr TVarChar
              , INN TVarChar, DriverCertificate TVarChar, Comment TVarChar
              , EMail TVarChar, Phone TVarChar, Address TVarChar
              , EMailSign Tblob, Photo Tblob
@@ -49,9 +49,10 @@ BEGIN
                       GROUP BY ObjectLink_User_Member.ChildObjectId)
 
      SELECT
-           Object_Member.Id         AS Id
-         , Object_Member.ObjectCode AS Code
-         , Object_Member.ValueData  AS Name
+           Object_Member.Id                AS Id
+         , Object_Member.ObjectCode        AS Code
+         , Object_Member.ValueData         AS Name
+         , ObjectString_NameUkr.ValueData  AS NameUkr
 
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
@@ -107,6 +108,9 @@ BEGIN
                      GROUP BY View_Personal.MemberId
                     ) AS View_Personal_Branch ON View_Personal_Branch.MemberId = Object_Member.Id
 
+          LEFT JOIN ObjectString AS ObjectString_NameUkr
+                                 ON ObjectString_NameUkr.ObjectId = Object_Member.Id
+                                AND ObjectString_NameUkr.DescId = zc_ObjectString_Member_NameUkr()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
                                   ON ObjectBoolean_Official.ObjectId = Object_Member.Id
                                  AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
@@ -181,6 +185,7 @@ BEGIN
              CAST (0 as Integer)    AS Id
            , 0    AS Code
            , CAST ('ÓÄÀËÈÒÜ' as TVarChar)  AS NAME
+           , CAST ('ÂÈËÓ×ÈÒÈ' as TVarChar) AS NameUkr
            , CAST ('' as TVarChar)  AS INN
            , CAST ('' as TVarChar)  AS DriverCertificate
            , CAST ('' as TVarChar)  AS Comment

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Check_RefusalConfirmed(
     IN inisRefusalConfirmed   Boolean   , -- Подтвержден отказ покупателя
     IN inSession              TVarChar    -- сессия пользователя
 )
-RETURNS Boolean AS
+RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -38,4 +38,4 @@ LANGUAGE PLPGSQL VOLATILE;
  16.06.22                                                       *
 */
 
--- тест select * from gpUpdate_Movement_Check_RefusalConfirmed(inMovementId := 20526322 , inisConfirmedByPhoneCall := 'True' ,  inSession := '3');
+-- тест select * from gpUpdate_Movement_Check_RefusalConfirmed(inMovementId := 20526322 , inisRefusalConfirmed := True ,  inSession := '3');

@@ -2808,7 +2808,7 @@ begin
 
     if FPUSHStart then
     begin
-      ShowPUSHMessageCash('Уважаемые коллеги!'#13#10 +
+      ShowPUSHMessageCash('Уважаемые коллеги!'#13#10#13#10 +
         '1. Сделайте Х-отчет, убедитесь, что он пустой 0,00.'#13#10 +
         '   Форс-Мажор РРО: звоним в любое время Татьяна (099-641-59-21), Юлия (0957767101)'#13#10
         + '2. Сделайте нулевой чек, проверьте дату и время.'#13#10 +
@@ -2816,6 +2816,9 @@ begin
 
       if isServiseOld then
         ShowPUSHMessageCash('Не обновлена служба FCash Service.'#13#10#13#10'Обратитесь в IT отдел.', cResult);
+
+      ShowPUSHMessageCash('Уважаемые коллеги!'#13#10#13#10 +
+        'Проверьте работоспособность вашего служебного телефона! В случае неисправности - напишите Максиму (IT).', cResult);
 
       Load_PUSH(True);
     end
@@ -13442,6 +13445,7 @@ begin
       bRemovingPrograms := UnitConfigCDS.FindField('isRemovingPrograms').AsBoolean;
     end else bOverload := False;
 
+    UnitConfigCDS.Close;
     LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
 
     if bOverload then
@@ -14197,7 +14201,7 @@ begin
           ' <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>'  + ' - <' + IniUtils.gUserName + '>';
 
   // Пропись итогов выполнения плана по сотруднику
-  if FileExists(ImplementationPlanEmployeeUser_lcl) then
+  if UnitConfigCDS.Active and UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean and FileExists(ImplementationPlanEmployeeUser_lcl) then
   begin
     ds := TClientDataSet.Create(nil);
     try

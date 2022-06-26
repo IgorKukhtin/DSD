@@ -80,6 +80,7 @@ type
     UserList: TcxGridDBColumn;
     isNotSchedule: TcxGridDBColumn;
     isReleasedMarketingPlan: TcxGridDBColumn;
+    NameUkr: TcxGridDBColumn;
   private
     { Private declarations }
   public

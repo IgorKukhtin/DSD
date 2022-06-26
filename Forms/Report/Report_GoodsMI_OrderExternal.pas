@@ -106,12 +106,16 @@ type
     WeightTotal: TcxGridDBColumn;
     CodeSticker: TcxGridDBColumn;
     actPrint_byRouteGroup: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrint_byRouteGroup: TdxBarButton;
     mactOpenDocument: TMultiAction;
     actMovementCheck: TdsdExecStoredProc;
     actOpenForm: TdsdOpenForm;
     bbOpenDocument: TdxBarButton;
     getMovementCheck: TdsdStoredProc;
+    cbinIsRemains: TcxCheckBox;
+    actPrint_byRemains: TdsdPrintAction;
+    bbPrint_byRemains: TdxBarButton;
+    spSelectRemains: TdsdStoredProc;
   private
     { Private declarations }
   public

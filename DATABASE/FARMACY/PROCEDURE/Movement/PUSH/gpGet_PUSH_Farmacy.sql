@@ -498,8 +498,8 @@ BEGIN
      INSERT INTO _PUSH (Id, Text) VALUES (12, 'ѕеремещени€ VIP по которым установлен признак не подтвержден:'||CHR(13)||CHR(13)||vbText);
    END IF;
 
-   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_PartialSale(), zc_Enum_Role_PharmacyManager()))
-      AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_SendVIP(), 12084491))
+   IF (EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_PartialSale(), zc_Enum_Role_PharmacyManager()))
+      AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_SendVIP(), 12084491)) OR vbUserId = 183242)
       AND date_part('DOW', CURRENT_DATE)::Integer in (1, 4) AND (--inNumberPUSH = 1 OR
       (DATE_PART('HOUR', CURRENT_TIME)::Integer IN (10, 16) AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 00 AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20))
    THEN
@@ -517,7 +517,7 @@ BEGIN
      END IF;
    END IF;
 
-   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PharmacyManager()))
+/*   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PharmacyManager()))
       AND DATE_PART('DOW', CURRENT_DATE)::Integer in (2, 5)
       AND (DATE_PART('HOUR', CURRENT_TIME)::Integer IN (15) AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 0 AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20)
    THEN
@@ -532,9 +532,9 @@ BEGIN
                    'TReport_PriceCheckForm', 'ѕроверка цен между подразделени€ми', 'Percent,UserId,UserName', 'ftFloat,ftInteger,ftString',
                    '20,'||inSession::TVarChar||','||(SELECT Object.ValueData FROM Object WHERE Object.Id = vbUserId));
      END IF;
-   END IF;
+   END IF;*/
 
-   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_VIPManager()) or vbUserId = 3
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_VIPManager())
    THEN
      vbText := '';
      
