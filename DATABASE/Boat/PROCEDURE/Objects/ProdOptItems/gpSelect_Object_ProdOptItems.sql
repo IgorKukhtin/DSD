@@ -151,8 +151,8 @@ BEGIN
                                    , 1                             AS Value
                                      -- Цена вх. без НДС - Комплектующие
                                    , ObjectFloat_EKPrice.ValueData AS EKPrice
-                                     -- Цена продажи без НДС - Комплектующие
-                                   , tmpPriceBasis.ValuePrice      AS SalePrice
+                                     -- Цена продажи без НДС - Опции/Комплектующие
+                                   , CASE WHEN ObjectFloat_SalePrice.ValueData > 0 THEN ObjectFloat_SalePrice.ValueData ELSE tmpPriceBasis.ValuePrice END AS SalePrice
 
                               FROM Object AS Object_ProdOptions
                                    -- Модель лодки
@@ -177,6 +177,11 @@ BEGIN
                                    LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                                          ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Goods.ChildObjectId
                                                         AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+
+                                   -- Цена продажи без НДС Опции
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
+                                                         ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
+                                                        AND ObjectFloat_SalePrice.DescId   = zc_ObjectFloat_ProdOptions_SalePrice()
 
                               WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
                                 AND Object_ProdOptions.isErased = FALSE
@@ -291,12 +296,20 @@ BEGIN
                                            THEN -- Цена продажи без НДС - Опция
                                                 tmpProdOptions.SalePrice
 
+                                      WHEN tmpProdOptions.SalePrice > 0
+                                           THEN -- Цена продажи без НДС - Опция
+                                                tmpProdOptions.SalePrice
+
                                       ELSE -- Цена продажи без НДС - Комплектующие - факт
                                            tmpPriceBasis.ValuePrice
                                  END AS SalePrice
 
                                  -- для этой структуры
                                , CASE WHEN tmpProdOptions.ProdColorPatternId > 0
+                                           THEN -- Цена продажи с НДС - Опция
+                                                zfCalc_SummWVAT (tmpProdOptions.SalePrice, tmpProduct.VATPercent)
+
+                                      WHEN tmpProdOptions.SalePrice > 0
                                            THEN -- Цена продажи с НДС - Опция
                                                 zfCalc_SummWVAT (tmpProdOptions.SalePrice, tmpProduct.VATPercent)
 
@@ -575,5 +588,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdOptItems (true, false,true, zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_ProdOptItems (false, false, false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdOptItems (0, true, false,true, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdOptItems (0, false, false, false, zfCalc_UserAdmin())

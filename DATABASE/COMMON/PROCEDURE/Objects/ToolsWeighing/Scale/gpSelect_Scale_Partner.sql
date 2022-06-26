@@ -41,6 +41,7 @@ RETURNS TABLE (PartnerId     Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsIrna Boolean;
 
    DECLARE vbIsConstraint Boolean;
    DECLARE vbObjectId_Constraint Integer;
@@ -49,6 +50,9 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Scale_Partner());
    vbUserId:= lpGetUserBySession (inSession);
+
+   -- !!!Ирна!!!
+   vbIsIrna:= zfCalc_User_isIrna (vbUserId);
 
 
    IF (inBranchCode > 1000)
@@ -179,13 +183,18 @@ BEGIN
                                     ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  tmpPartner.PartnerId
                                    AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
                                    AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                    ON ObjectBoolean_Guide_Irna.ObjectId = Object_Juridical.Id
+                                   AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+       WHERE COALESCE (vbIsIrna, FALSE) = FALSE
+          OR (vbIsIrna = TRUE AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
            ;
    ELSE
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId), 0);
    vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
-   vbIsConstraint:= vbObjectId_Constraint > 0 OR vbBranchId_Constraint > 0;
+   vbIsConstraint:= (vbObjectId_Constraint > 0 OR vbBranchId_Constraint > 0) AND COALESCE (vbIsIrna, FALSE) = FALSE;
 
 
     -- Результат
@@ -471,6 +480,13 @@ BEGIN
                                     ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  tmpPartner.PartnerId
                                    AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
                                    AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                    ON ObjectBoolean_Guide_Irna.ObjectId = Object_Juridical.Id
+                                   AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
+       WHERE COALESCE (vbIsIrna, FALSE) = FALSE
+          OR (vbIsIrna = TRUE AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
+
       UNION ALL
        SELECT Object_ArticleLoss.Id          AS PartnerId
             , Object_ArticleLoss.ObjectCode  AS PartnerCode

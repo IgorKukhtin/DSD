@@ -69,13 +69,13 @@ BEGIN
 
 
    -- проверка
-   IF COALESCE (inGoodsSubId, 0) <> COALESCE (inGoodsPackId, 0) AND inGoodsPackId > 0
+   IF COALESCE (inGoodsSubId, 0) <> COALESCE (inGoodsPackId, 0) AND inGoodsPackId > 0 AND inGoodsSubId > 0
    THEN 
        RAISE EXCEPTION 'Ошибка.Значение Товар (пересорт. - расход) = <%>  и значение Товар (упак., главный) = <%> должны совпадать.', lfGet_Object_ValueData (inGoodsSubId), lfGet_Object_ValueData (inGoodsPackId);
    END IF;   
 
    -- проверка
-   IF COALESCE (inGoodsKindSubId, 0) <> COALESCE (inGoodsKindPackId, 0) AND inGoodsPackId > 0
+   IF COALESCE (inGoodsKindSubId, 0) <> COALESCE (inGoodsKindPackId, 0) AND inGoodsPackId > 0 AND inGoodsKindSubId > 0
    THEN 
        RAISE EXCEPTION 'Ошибка.Значение Вид (пересорт. - расход) = <%>  и Вид (упак., главный) = <%> должны совпадать.', lfGet_Object_ValueData (inGoodsKindSubId), lfGet_Object_ValueData (inGoodsKindPackId);
    END IF;   

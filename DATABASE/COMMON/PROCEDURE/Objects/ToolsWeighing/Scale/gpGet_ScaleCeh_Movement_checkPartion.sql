@@ -118,7 +118,7 @@ BEGIN
                                 LIMIT 1
                                );
           -- только для Участок Бойни
-          IF vbFromId = 8442 AND vbToId = 8442
+          IF vbFromId = 8442 AND vbToId = 8442 AND 1=0
           THEN
               -- поиск3 существующего документа <Приход от поставщика> по ВСЕМ параметрам + партия + за vbOperDate    -- за 2 дня
               vbMovementId_find3:=
@@ -275,7 +275,7 @@ BEGIN
                   RETURN QUERY
                     SELECT 1 AS Code
                          , ('Ошибка.' || CHR(10) || CHR(13) || CASE WHEN vbIsProductionIn = TRUE THEN 'Приход' ELSE 'Расход' END || ' с бойни сформировать нельзя.'
-                                      || CHR(10) || CHR(13) || 'Не найден приход от поставщика для партии <' || vbPartionGoods_partner || '>.'
+                                      || CHR(10) || CHR(13) || 'Не найден приход от поставщика для партии <' || vbPartionGoods_partner || '>.Дата прихода = <' || zfConvert_DateToString (vbOperDate) || '>'
                            ) :: TVarChar AS MessageStr
                          , 0 :: Integer AS ValueStep
                    ;

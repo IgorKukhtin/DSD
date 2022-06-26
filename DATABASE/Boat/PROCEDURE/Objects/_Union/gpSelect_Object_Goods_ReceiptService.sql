@@ -60,6 +60,30 @@ BEGIN
                                WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
                                  AND Object_ReceiptGoods.isErased = FALSE
                               )
+         , tmpGoods_limit AS (SELECT Object_Goods.*
+                              FROM Object AS Object_Goods
+                              WHERE Object_Goods.DescId = zc_Object_Goods()
+                                AND Object_Goods.isErased = FALSE
+                              ORDER BY Object_Goods.Id DESC
+                              LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=0 THEN 25000 ELSE 350000 END
+                             )
+     , tmpGoods_all AS (SELECT tmpGoods_limit.*
+                        FROM tmpGoods_limit
+                       UNION
+                        SELECT Object_Goods.*
+                        FROM Object AS Object_Goods
+                        WHERE Object_Goods.DescId = zc_Object_Goods()
+                          AND Object_Goods.Id IN (SELECT DISTINCT tmpReceiptGoods.GoodsId FROM tmpReceiptGoods)
+                       UNION
+                        SELECT Object_Goods.*
+                        FROM Object AS Object_Goods
+                             INNER JOIN ObjectString AS ObjectString_Article
+                                                     ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                                    AND ObjectString_Article.DescId = zc_ObjectString_Article()
+                                                    AND ObjectString_Article.ValueData ILIKE 'AGL000%'
+                        WHERE Object_Goods.DescId = zc_Object_Goods()
+                          AND inIsLimit_100 = TRUE
+                       )
             -- Комплектующие
           , tmpGoods AS (SELECT Object_Goods.Id                     AS Id
                               , Object_Goods.ObjectCode             AS Code
@@ -131,7 +155,7 @@ BEGIN
 
                               , Object_Goods.isErased              AS isErased
 
-                         FROM Object AS Object_Goods
+                         FROM tmpGoods_all AS Object_Goods
                               LEFT JOIN ObjectString AS ObjectString_Comment
                                                      ON ObjectString_Comment.ObjectId = Object_Goods.Id
                                                     AND ObjectString_Comment.DescId = zc_ObjectString_Goods_Comment()
@@ -244,11 +268,6 @@ BEGIN
                                LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
 
                                LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
-
-                         WHERE Object_Goods.DescId = zc_Object_Goods()
-                           AND Object_Goods.isErased = FALSE
-                         ORDER BY CASE WHEN tmpReceiptGoods.GoodsId > 0 THEN 0 ELSE 1 END ASC, Object_Goods.Id DESC
-                         LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 200 ELSE 300000 END
                         )
        -- Результат
        -- Комплектующие

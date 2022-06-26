@@ -160,7 +160,7 @@ BEGIN
                               WHERE Object_Goods.DescId = zc_Object_Goods()
                               --AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
                               ORDER BY Object_Goods.Id DESC
-                              LIMIT CASE WHEN vbUserId = 5 AND 1=0 THEN 50000 WHEN inIsLimit_100 = TRUE THEN 100 ELSE 350000 END
+                              LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=0 THEN 25000 ELSE 350000 END
                              )
          , tmpGoods AS (SELECT tmpGoods_limit.*
                         FROM tmpGoods_limit
@@ -168,7 +168,16 @@ BEGIN
                         SELECT Object_Goods.*
                         FROM Object AS Object_Goods
                         WHERE Object_Goods.DescId = zc_Object_Goods()
-                        AND Object_Goods.Id IN (SELECT DISTINCT tmpReceiptGoods.GoodsId FROM tmpReceiptGoods)
+                          AND Object_Goods.Id IN (SELECT DISTINCT tmpReceiptGoods.GoodsId FROM tmpReceiptGoods)
+                       UNION
+                        SELECT Object_Goods.*
+                        FROM Object AS Object_Goods
+                             INNER JOIN ObjectString AS ObjectString_Article
+                                                     ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                                    AND ObjectString_Article.DescId = zc_ObjectString_Article()
+                                                    AND ObjectString_Article.ValueData ILIKE 'AGL000%'
+                        WHERE Object_Goods.DescId = zc_Object_Goods()
+                          AND inIsLimit_100 = TRUE
                        )
 
        -- Результат

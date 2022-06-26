@@ -218,6 +218,7 @@ BEGIN
            -- только для Участок Бойни
            IF 8442 = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
           AND 8442 = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+          AND 1=0
            THEN
                -- определили <Партия товара> - для поставщика
                vbPartionGoods_partner:= zfFormat_PartionGoods (vbPartionGoods);
@@ -567,7 +568,7 @@ BEGIN
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmpIncome.GoodsId
                                                         , inGoodsKindId         := MILinkObject_StorageLine.ObjectId
-                                                        , inStorageLineId       := tmpIncome.StorageLineId
+                                                        , inStorageLineId       := NULL
                                                         , inAmount              := tmpIncome.Amount
                                                         , inLiveWeight          := tmpIncome.LiveWeight
                                                         , inHeadCount           := tmpIncome.HeadCount

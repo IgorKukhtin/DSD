@@ -58,6 +58,8 @@ $BODY$
    DECLARE vbUserId     Integer;
    DECLARE vbBranchId   Integer;
    DECLARE vbOperDate_Begin1 TDateTime;
+   DECLARE vbMovementId_BarCode Integer;
+   DECLARE vbInvNumber_BarCode  TVarChar;
 BEGIN
    -- сразу запомнили время начала выполнения Проц.
    vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -76,19 +78,22 @@ BEGIN
     vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
                       ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
                  END;
+    -- определяется
+    vbMovementId_BarCode:= (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13);
+    -- определяется
+    vbInvNumber_BarCode:= (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13);
+
 
     -- список
     CREATE TEMP TABLE _tmpMovement_find_all ON COMMIT DROP
-                              AS (WITH tmpBarCode   AS (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13)
-                                     , tmpInvNumber AS (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13)
-                                  -- по Ш/К
+                              AS (-- по Ш/К
                                   SELECT Movement.Id
                                        , Movement.InvNumber
                                        , Movement.DescId
                                        , Movement.OperDate
                                        , Movement.StatusId
                                   FROM Movement
-                                  WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
+                                  WHERE Movement.Id = vbMovementId_BarCode
                                     AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice(), zc_Movement_ReturnIn())
                                     AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
                                  -- AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -100,7 +105,7 @@ BEGIN
                                        , Movement.OperDate
                                        , Movement.StatusId
                                   FROM Movement
-                                  WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
+                                  WHERE Movement.Id = vbMovementId_BarCode
                                     AND Movement.DescId = zc_Movement_OrderIncome()
                                     AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
                                   --AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -112,14 +117,15 @@ BEGIN
                                        , Movement.DescId
                                        , Movement.OperDate
                                        , Movement.StatusId
-                                  FROM tmpInvNumber AS tmp
-                                       INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
-                                                          AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice(), zc_Movement_ReturnIn())
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
-                                                        --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  FROM Movement 
                                        LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                                                              AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                   WHERE inBranchCode NOT BETWEEN 201 AND 210
+                                    AND Movement.InvNumber = vbInvNumber_BarCode
+                                    AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice(), zc_Movement_ReturnIn())
+                                    AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
+                                  --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    AND vbInvNumber_BarCode <> ''
 
                                  UNION
                                   -- 1.2. по № документа
@@ -128,15 +134,16 @@ BEGIN
                                        , Movement.DescId
                                        , Movement.OperDate
                                        , Movement.StatusId
-                                  FROM tmpInvNumber AS tmp
-                                       INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
-                                                          AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal())
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
-                                                        --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  FROM Movement 
                                        LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                                                              AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                   WHERE inBranchCode BETWEEN 201 AND 210
                                     AND MLO_To.ObjectId = 133049 -- Склад реализации мясо
+                                    AND Movement.InvNumber = vbInvNumber_BarCode
+                                    AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal())
+                                    AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
+                                  --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    AND vbInvNumber_BarCode <> ''
 
                                  UNION
                                   -- по № документа - Приход, т.к. период 80 дней
@@ -145,12 +152,13 @@ BEGIN
                                        , Movement.DescId
                                        , Movement.OperDate
                                        , Movement.StatusId
-                                  FROM tmpInvNumber AS tmp
-                                       INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
-                                                          AND Movement.DescId = zc_Movement_OrderIncome()
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
-                                                        --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  FROM Movement 
                                   WHERE inBranchCode BETWEEN 301 AND 310
+                                    AND Movement.InvNumber = vbInvNumber_BarCode
+                                    AND Movement.DescId = zc_Movement_OrderIncome()
+                                    AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
+                                  --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    AND vbInvNumber_BarCode <> ''
                                  );
 
     -- DELETE
@@ -584,6 +592,14 @@ BEGIN
                         WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                           AND MovementLinkObject.DescId = zc_MovementLinkObject_Personal()
                        )
+    , tmpMovement_ContractGoods AS (SELECT MLO_Contract.ObjectId AS ContractId
+                                    FROM Movement
+                                         INNER JOIN MovementLinkObject AS MLO_Contract
+                                                                       ON MLO_Contract.MovementId = Movement.Id
+                                                                      AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                    WHERE Movement.DescId    = zc_Movement_ContractGoods()
+                                      AND Movement.StatusId  = zc_Enum_Status_Complete()
+                                   )
 
        -- Результат
        SELECT tmpMovement.Id                                 AS MovementId
@@ -705,13 +721,8 @@ BEGIN
             , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax      , COALESCE (tmpJuridicalPrint.CountTax, 0)       :: TFloat AS CountTax
 
             , EXISTS (SELECT 1
-                      FROM Movement
-                           INNER JOIN MovementLinkObject AS MLO_Contract
-                                                         ON MLO_Contract.MovementId = Movement.Id
-                                                        AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
-                                                        AND MLO_Contract.ObjectId   = View_Contract_InvNumber.ContractId
-                      WHERE Movement.DescId    = zc_Movement_ContractGoods()
-                        AND Movement.StatusId  = zc_Enum_Status_Complete()
+                      FROM tmpMovement_ContractGoods
+                      WHERE tmpMovement_ContractGoods.ContractId   = View_Contract_InvNumber.ContractId
                      ) :: Boolean AS isContractGoods
 
             , ('№ <' || tmpMovement.InvNumber || '>' || ' от <' || DATE (tmpMovement.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master

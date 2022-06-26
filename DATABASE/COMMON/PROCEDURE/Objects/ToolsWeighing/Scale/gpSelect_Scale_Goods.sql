@@ -53,6 +53,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
 AS
 $BODY$
     DECLARE vbUserId Integer;
+    DECLARE vbIsIrna Boolean;
 
     DECLARE vbRetailId     Integer;
     DECLARE vbFromId_group Integer;
@@ -64,6 +65,10 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
+
+   -- !!!Ирна!!!
+   vbIsIrna:= zfCalc_User_isIrna (vbUserId);
+
 
 -- if vbUserId = 5 then return; end if;
 -- if vbUserId = 5 then inMovementId:= 7505643; end if;
@@ -1334,6 +1339,13 @@ BEGIN
                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
                                                 ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                        ON ObjectBoolean_Guide_Irna.ObjectId = tmpGoods.GoodsId
+                                       AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
+           WHERE COALESCE (vbIsIrna, FALSE) = FALSE
+              OR (vbIsIrna = TRUE AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
 
            ORDER BY tmpGoods.GoodsName
                   -- , ObjectString_Goods_GoodsGroupFull.ValueData

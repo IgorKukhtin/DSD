@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions_excel(
     IN inCodeVergl       TVarChar  ,
     IN inSession         TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS VOID
 AS
 $BODY$
    DECLARE vbId                Integer;
@@ -31,10 +31,29 @@ BEGIN
      IF COALESCE (vbMaterialOptionsId, 0) = 0 AND TRIM (inMaterialOptions) <> ''
      THEN
          -- сохранили
-         vbMaterialOptionsId:= lpInsertUpdate_Object (vbMaterialOptionsId, zc_Object_MaterialOptions(), lfGet_ObjectCode (inCode, zc_Object_MaterialOptions()), inMaterialOptions);
+         vbMaterialOptionsId:= lpInsertUpdate_Object (vbMaterialOptionsId, zc_Object_MaterialOptions(), lfGet_ObjectCode (0, zc_Object_MaterialOptions()), inMaterialOptions);
      END IF;
 
 
+     -- Поиск - 1
+     IF 1 < (SELECT COUNT(*)
+             FROM Object AS Object_ProdOptions
+                  LEFT JOIN ObjectLink AS ObjectLink_Model
+                                       ON ObjectLink_Model.ObjectId = Object_ProdOptions.Id
+                                      AND ObjectLink_Model.DescId = zc_ObjectLink_ProdOptions_Model()
+                  LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                       ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                                      AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+             WHERE Object_ProdOptions.DescId                = zc_Object_ProdOptions()
+               AND ObjectLink_Model.ChildObjectId           = vbModelId
+               AND ObjectLink_MaterialOptions.ChildObjectId = vbMaterialOptionsId
+               AND Object_ProdOptions.isErased              = FALSE
+               AND Object_ProdOptions.ValueData ILIKE (inOptName || '%')
+            )
+     THEN
+         RAISE EXCEPTION 'Ошибка1.vbModelId = <%> vbMaterialOptionsId = <%> inOptName = <%>'
+                       , lfGet_Object_ValueData_sh (vbModelId), lfGet_Object_ValueData_sh (vbMaterialOptionsId), inOptName;
+     END IF;
      -- Поиск - 1
      vbId:= (SELECT Object_ProdOptions.Id
              FROM Object AS Object_ProdOptions
@@ -48,8 +67,29 @@ BEGIN
                AND ObjectLink_Model.ChildObjectId           = vbModelId
                AND ObjectLink_MaterialOptions.ChildObjectId = vbMaterialOptionsId
                AND Object_ProdOptions.isErased              = FALSE
-               AND inOptName ILIKE Object_ProdOptions.ValueData
+               AND Object_ProdOptions.ValueData ILIKE (inOptName || '%')
             );
+
+
+     -- Поиск - 2
+     IF 1 < (SELECT COUNT(*)
+             FROM Object AS Object_ProdOptions
+                  LEFT JOIN ObjectLink AS ObjectLink_Model
+                                       ON ObjectLink_Model.ObjectId = Object_ProdOptions.Id
+                                      AND ObjectLink_Model.DescId = zc_ObjectLink_ProdOptions_Model()
+                  LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                       ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                                      AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+             WHERE Object_ProdOptions.DescId                = zc_Object_ProdOptions()
+               AND ObjectLink_Model.ChildObjectId           = vbModelId
+               AND COALESCE (ObjectLink_MaterialOptions.ChildObjectId, 0) = 0
+               AND Object_ProdOptions.isErased              = FALSE
+               AND Object_ProdOptions.ValueData ILIKE (inOptName || '%')
+            )
+     THEN
+         RAISE EXCEPTION 'Ошибка2.vbModelId = <%> vbMaterialOptionsId = <%> inOptName = <%>'
+                       , lfGet_Object_ValueData_sh (vbModelId), lfGet_Object_ValueData_sh (vbMaterialOptionsId), inOptName;
+     END IF;
      -- Поиск - 2
      IF COALESCE (vbId, 0) = 0
      THEN
@@ -65,11 +105,12 @@ BEGIN
                    AND ObjectLink_Model.ChildObjectId           = vbModelId
                    AND COALESCE (ObjectLink_MaterialOptions.ChildObjectId, 0) = 0
                    AND Object_ProdOptions.isErased              = FALSE
-                   AND inOptName ILIKE Object_ProdOptions.ValueData
+                   AND Object_ProdOptions.ValueData ILIKE (inOptName || '%')
                 );
      END IF;
             
    
+
      -- сохранили
      vbId:= gpInsertUpdate_Object_ProdOptions (ioId           := vbId
                                              , inCode         := COALESCE ((SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbId), 0)
@@ -83,13 +124,13 @@ BEGIN
                                               );
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptions_TaxKind(), vbId, vbMaterialOptionsId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptions_MaterialOptions(), vbId, vbMaterialOptionsId);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Id_Site(), vbId, inId_site);
 
    -- сохранили свойство <>
-   --PERFORM lpInsertUpdate_ObjectString (zc_ObjectFloat_ProdOptions_CodeVergl(), vbId, inCodeVergl);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_CodeVergl(), vbId, zfConvert_StringToFloat(inCodeVergl));
 
 END;
 $BODY$
