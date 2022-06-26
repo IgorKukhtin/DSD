@@ -46,7 +46,14 @@ BEGIN
                             , MovementDate_OperDatePartner.ValueData                   AS OperDatePartner
                             , Movement.ToId                                            AS ToId
                             , MovementLinkObject_Route.ObjectId                        AS RouteId
-                            , CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE ObjectLink_Juridical_Retail.ChildObjectId END AS RetailId
+                            , CASE WHEN Object_From.DescId = zc_Object_Unit()
+                                        THEN Object_From.Id
+                                   -- временно
+                                   WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
+                                     OR Object_Route.ValueData ILIKE 'Самов%'
+                                           THEN 0
+                                   ELSE ObjectLink_Juridical_Retail.ChildObjectId
+                              END AS RetailId
                             , STRING_AGG (DISTINCT Object_PartnerTag.ValueData, '; ') ::TVarChar AS PartnerTagName
                             , MovementLinkObject_CarInfo.ObjectId                      AS CarInfoId
                             , MovementDate_CarInfo.ValueData               ::TDateTime AS OperDate_CarInfo
@@ -78,6 +85,7 @@ BEGIN
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                                          ON MovementLinkObject_Route.MovementId = Movement.Id
                                                         AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+                            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
 
                             LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
                                                  ON ObjectLink_Partner_PartnerTag.ObjectId = MovementLinkObject_From.ObjectId
@@ -110,7 +118,14 @@ BEGIN
                                , MovementDate_OperDatePartner.ValueData
                                , Movement.ToId
                                , MovementLinkObject_Route.ObjectId
-                               , CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE ObjectLink_Juridical_Retail.ChildObjectId END
+                               , CASE WHEN Object_From.DescId = zc_Object_Unit()
+                                           THEN Object_From.Id
+                                      -- временно
+                                      WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
+                                        OR Object_Route.ValueData ILIKE 'Самов%'
+                                           THEN 0
+                                      ELSE ObjectLink_Juridical_Retail.ChildObjectId
+                                 END
                                , MovementLinkObject_CarInfo.ObjectId
                                , MovementDate_CarInfo.ValueData
                           )
@@ -155,4 +170,4 @@ $BODY$
 */
 
 -- тест
---  select * from gpReport_OrderExternal_Update(inOperDate := ('15.06.2022')::TDateTime , inToId := 346093 ,  inSession := '9457');
+-- SELECT * FROM gpReport_OrderExternal_Update(inOperDate := ('15.06.2022')::TDateTime , inToId := 346093 ,  inSession := '9457');

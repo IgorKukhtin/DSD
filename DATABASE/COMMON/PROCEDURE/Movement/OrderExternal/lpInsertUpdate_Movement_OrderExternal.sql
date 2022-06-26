@@ -80,6 +80,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateMark(), ioId, inOperDateMark);
      -- сохранили свойство <Дата отгрузки контрагенту>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
+     -- !!!временно!!!
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), ioId, inOperDatePartner);
 
      -- сохранили свойство <Номер заявки у контрагента>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
