@@ -183,6 +183,15 @@ BEGIN
                         FROM MovementProtocol
                              INNER JOIN tmpUser ON tmpUser.UserId = MovementProtocol.UserId
                         WHERE MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
+
+                       UNION ALL
+                        SELECT MovementProtocol.UserId
+                             , DATE_TRUNC ('DAY', MovementProtocol.OperDate) AS OperDate
+                             , MovementProtocol.OperDate                     AS OperDate_Protocol
+                             , MovementProtocol.MovementId                   AS Id
+                        FROM MovementProtocol_arc AS MovementProtocol
+                             INNER JOIN tmpUser ON tmpUser.UserId = MovementProtocol.UserId
+                        WHERE MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
                        ) 
     -- Данные из протокола строк документа
   , tmpMI_Protocol AS (SELECT MovementItemProtocol.UserId
@@ -190,6 +199,15 @@ BEGIN
                             , MovementItemProtocol.OperDate                     AS OperDate_Protocol
                             , MovementItemProtocol.MovementItemId               AS Id
                        FROM MovementItemProtocol
+                            INNER JOIN tmpUser ON tmpUser.UserId = MovementItemProtocol.UserId
+                       WHERE MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
+ 
+                      UNION ALL
+                       SELECT MovementItemProtocol.UserId
+                            , DATE_TRUNC ('DAY', MovementItemProtocol.OperDate) AS OperDate
+                            , MovementItemProtocol.OperDate                     AS OperDate_Protocol
+                            , MovementItemProtocol.MovementItemId               AS Id
+                       FROM MovementItemProtocol_arc AS MovementItemProtocol
                             INNER JOIN tmpUser ON tmpUser.UserId = MovementItemProtocol.UserId
                        WHERE MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
                       ) 
@@ -494,5 +512,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  07.11.16         *
 */
+
 -- тест
--- SELECT * FROM gpReport_UserProtocol (inStartDate:= '07.11.2016', inEndDate:= '11.11.2016', inBranchId:= 0, inUnitId:= 0, inUserId:= 0, inIsDay:=False, inSession:= '5');
+-- SELECT * FROM gpReport_UserProtocol (inStartDate:= '07.11.2022', inEndDate:= '11.11.2022', inBranchId:= 0, inUnitId:= 0 , inUserId:= 0, inIsDay:=False,  inIsShowAll:= FALSE, inDiff:= 0, inSession:= '5');

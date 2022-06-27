@@ -31,6 +31,7 @@ BEGIN
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , ContainerId_Summ Integer, ContainerId_Goods Integer, ContainerId_CountSupplier Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, UnitId_Asset Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
                                , ContainerId_GoodsTicketFuel Integer, GoodsId_TicketFuel Integer
+                               , ContainerId_Goods_Unit Integer, GoodsId_Unit Integer
                                , OperCount TFloat, OperCount_Partner TFloat, OperCount_Packer TFloat
                                , tmpOperSumm TFloat, OperSumm TFloat
                                , tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Partner_Currency TFloat, OperSumm_Partner_Currency TFloat, Price_Currency TFloat
@@ -44,6 +45,8 @@ BEGIN
                                 ) ON COMMIT DROP;
      -- таблица - элементы 20202 
      CREATE TEMP TABLE _tmpItemPartion_20202 (MovementItemId Integer, PartionGoodsId Integer, ContainerId_Goods Integer, ContainerId_Summ Integer, PartionGoods TVarChar, OperCount TFloat, OperSumm TFloat) ON COMMIT DROP;
+     -- таблица - суммовые элементы документа
+     CREATE TEMP TABLE _tmpItemSumm_Unit (MovementItemId Integer, ContainerId_From Integer, AccountId_From Integer, OperSumm TFloat) ON COMMIT DROP;
 
 
 END;$BODY$

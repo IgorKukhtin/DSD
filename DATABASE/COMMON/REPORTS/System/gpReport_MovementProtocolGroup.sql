@@ -108,6 +108,48 @@ BEGIN
                               AND (Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
                               AND inIsMovement = TRUE
      
+                           UNION ALL
+                            SELECT MovementProtocol.Id                  AS Id
+                                 , MovementProtocol.UserId              AS UserId
+                                 , MovementProtocol.OperDate            AS OperDate_Protocol
+                                 , MovementProtocol.MovementId          AS MovementId
+                                 , Movement.ParentId                    AS ParentId
+                                 , Movement.StatusId                    AS StatusId_Movement
+                                 , Movement.OperDate                    AS OperDate_Movement
+                                 , Movement.InvNumber                   AS InvNumber_Movement
+                                 , Movement.DescId                      AS DescId_Movement
+                                 , MovementDesc.ItemName                AS DescName_Movement
+                                   -- ¹ ï/ï
+                                 , ROW_NUMBER() OVER (PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.Id ASC) AS Ord
+                            FROM MovementProtocol_arc AS MovementProtocol
+                                 LEFT JOIN Movement ON Movement.Id = MovementProtocol.MovementId
+                                 LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+     
+                            WHERE (MovementProtocol.UserId = inUserId OR inUserId = 0)
+                              AND (MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY')
+                              AND inIsMovement = FALSE
+
+                           UNION ALL
+                            SELECT MovementProtocol.Id                  AS Id
+                                 , MovementProtocol.UserId              AS UserId
+                                 , MovementProtocol.OperDate            AS OperDate_Protocol
+                                 , MovementProtocol.MovementId          AS MovementId
+                                 , Movement.ParentId                    AS ParentId
+                                 , Movement.StatusId                    AS StatusId_Movement
+                                 , Movement.OperDate                    AS OperDate_Movement
+                                 , Movement.InvNumber                   AS InvNumber_Movement
+                                 , Movement.DescId                      AS DescId_Movement
+                                 , MovementDesc.ItemName                AS DescName_Movement
+                                   -- ¹ ï/ï
+                                 , ROW_NUMBER() OVER (PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.Id ASC) AS Ord
+                            FROM Movement
+                                 LEFT JOIN MovementProtocol_arc AS MovementProtocol ON MovementProtocol.MovementId = Movement.Id
+                                 LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+     
+                            WHERE (MovementProtocol.UserId = inUserId OR inUserId = 0)
+                              AND (Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
+                              AND inIsMovement = TRUE
+     
                            )
         , tmpMovementDate AS (SELECT MovementDate.*
                               FROM MovementDate
@@ -130,13 +172,29 @@ BEGIN
                                                         )
                      )
 
-        , tmpMovementProtocol_insert AS(SELECT MovementProtocol.MovementId
+    , tmpMovementProtocol_insert_all AS(SELECT MovementProtocol.MovementId
                                              , MIN (MovementProtocol.Id)       AS Id
                                              , MIN (MovementProtocol.OperDate) AS OperDate
                                         FROM MovementProtocol
                                         WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMovementProtocol.MovementId FROM tmpMovementProtocol
                                                                         UNION SELECT DISTINCT tmpMovementProtocol.ParentId   FROM tmpMovementProtocol
                                                                              )
+                                        GROUP BY MovementProtocol.MovementId
+
+                                       UNION ALL
+                                        SELECT MovementProtocol.MovementId
+                                             , MIN (MovementProtocol.Id)       AS Id
+                                             , MIN (MovementProtocol.OperDate) AS OperDate
+                                        FROM MovementProtocol_arc AS MovementProtocol
+                                        WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMovementProtocol.MovementId FROM tmpMovementProtocol
+                                                                        UNION SELECT DISTINCT tmpMovementProtocol.ParentId   FROM tmpMovementProtocol
+                                                                             )
+                                        GROUP BY MovementProtocol.MovementId
+                                       )
+        , tmpMovementProtocol_insert AS(SELECT MovementProtocol.MovementId
+                                             , MIN (MovementProtocol.Id)       AS Id
+                                             , MIN (MovementProtocol.OperDate) AS OperDate
+                                        FROM tmpMovementProtocol_insert_all AS MovementProtocol
                                         GROUP BY MovementProtocol.MovementId
                                        )
         , tmpMI AS (SELECT MI.*
@@ -152,7 +210,7 @@ BEGIN
                                                                                          )
                                            )
                       AND MI.DescId = zc_MI_Master()
-                    )
+                   )
 
         , tmpMILO AS (SELECT MILO_MoneyPlace.*
                       FROM MovementItemLinkObject AS MILO_MoneyPlace

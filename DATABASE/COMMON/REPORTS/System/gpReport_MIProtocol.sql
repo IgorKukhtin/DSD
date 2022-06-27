@@ -156,6 +156,62 @@ BEGIN
                               )
                           AND (tmpUnit_from.UnitId > 0  OR tmpUnit_to.UnitId > 0)
                           --AND ( (MovementLinkObject_From.ObjectId = inUnitId OR MovementLinkObject_To.ObjectId = inUnitId) OR inUnitId = 0)
+                      UNION ALL
+                       SELECT MovementItemProtocol.UserId
+                            --, DATE_TRUNC ('DAY', MovementItemProtocol.OperDate) AS OperDate
+                            , MovementItemProtocol.OperDate        AS OperDate_Protocol
+                            , MovementItemProtocol.MovementItemId  AS MovementItemId
+                            , MovementItem.DescId                  AS DescId_MovementItem
+                            , Movement.Id                          AS MovementId
+                            , Movement.StatusId                    AS StatusId_Movement
+                            , Movement.OperDate                    AS OperDate_Movement
+                            , Movement.Invnumber                   AS Invnumber_Movement
+                            , Movement.DescId                      AS DescId_Movement
+                            , MovementDesc.ItemName                AS DescName_Movement
+                            , MovementLinkObject_From.ObjectId     AS FromId_Movement
+                            , MovementLinkObject_To.ObjectId       AS ToId_Movement
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ключ объекта"]            /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','') ::integer   AS GoodsId
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Виды товаров"]            /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS GoodsKindName
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Значение"]                /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS Amount
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Количество у контрагента"]/@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS AmountPartner
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Цена"]                    /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS Price
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Удален"]                  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS isErased
+                            , MovementItemProtocol.IsInsert        AS IsInsert
+                       FROM MovementItemProtocol_arc AS MovementItemProtocol
+                            LEFT JOIN MovementItem ON MovementItem.Id = MovementItemProtocol.MovementItemId
+                            LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+                            INNER JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                                                      AND MovementDesc.Id IN (zc_Movement_ReturnOut()
+                                                                            , zc_Movement_Send()
+                                                                            , zc_Movement_SendAsset()
+                                                                            , zc_Movement_SendOnPrice()
+                                                                            , zc_Movement_Sale()
+                                                                            , zc_Movement_ReturnIn()
+                                                                            , zc_Movement_Loss()
+                                                                            , zc_Movement_ProductionSeparate()
+                                                                            , zc_Movement_ProductionUnion()
+                                                                            , zc_Movement_Inventory()
+                                                                            , zc_Movement_Income()
+                                                                            , zc_Movement_WeighingPartner()
+                                                                            , zc_Movement_WeighingProduction())
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+                            LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MovementLinkObject_From.ObjectId
+                            LEFT JOIN tmpUnit AS tmpUnit_to   ON tmpUnit_to.UnitId   = MovementLinkObject_To.ObjectId
+
+                       WHERE  (MovementItemProtocol.UserId = inUserId OR inUserId = 0)
+                          AND ( (inIsMovement = FALSE AND MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY')
+                               OR
+                                (inIsMovement = TRUE AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
+                              )
+                          AND (tmpUnit_from.UnitId > 0  OR tmpUnit_to.UnitId > 0)
+                          --AND ( (MovementLinkObject_From.ObjectId = inUnitId OR MovementLinkObject_To.ObjectId = inUnitId) OR inUnitId = 0)
                       )
    ------------------------
 

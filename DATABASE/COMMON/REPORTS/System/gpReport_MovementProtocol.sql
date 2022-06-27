@@ -124,6 +124,56 @@ BEGIN
                                OR 
                                 (inIsMovement = TRUE AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
                               )
+ 
+                      UNION ALL  
+                       SELECT MovementProtocol.UserId              AS UserId
+                            , MovementProtocol.IsInsert            AS IsInsert
+                            , MovementProtocol.OperDate            AS OperDate_Protocol
+                            , MovementProtocol.MovementId          AS MovementId
+                            , Movement.StatusId                    AS StatusId_Movement
+                            , Movement.OperDate                    AS OperDate_Movement
+                            , Movement.Invnumber                   AS Invnumber_Movement
+                            , Movement.DescId                      AS DescId_Movement
+                            , MovementDesc.ItemName                AS DescName_Movement
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Дата накладной у контрагента"] /@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS OperDatePartner
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Дата документа"]               /@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS OperDate
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Статус"]                       /@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS StatusName
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "От кого (в документе)"]        /@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS FromName
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Кому (в документе)"]           /@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS ToName
+                       FROM MovementProtocol_arc AS MovementProtocol
+                            LEFT JOIN Movement ON Movement.Id = MovementProtocol.MovementId
+                            INNER JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                                                   AND MovementDesc.Id IN (zc_Movement_ReturnOut()
+                                                                         , zc_Movement_Send()
+                                                                         , zc_Movement_SendAsset()
+                                                                         , zc_Movement_SendOnPrice()       
+                                                                         , zc_Movement_Sale()              
+                                                                         , zc_Movement_ReturnIn()          
+                                                                         , zc_Movement_Loss()              
+                                                                         , zc_Movement_ProductionSeparate()
+                                                                         , zc_Movement_ProductionUnion()   
+                                                                         , zc_Movement_Inventory()         
+                                                                         , zc_Movement_Income()            
+                                                                         , zc_Movement_WeighingPartner()   
+                                                                         , zc_Movement_WeighingProduction())
+                                                                         
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                           
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+                            INNER JOIN tmpUnit ON (tmpUnit.UnitId = MovementLinkObject_From.ObjectId 
+                                                  OR 
+                                                   tmpUnit.UnitId = MovementLinkObject_To.ObjectId)
+
+                       WHERE  (MovementProtocol.UserId = inUserId OR inUserId = 0)
+                          AND ( (inIsMovement = FALSE AND MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY')
+                               OR 
+                                (inIsMovement = TRUE AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
+                              )
                         
                       ) 
    ------------------------
