@@ -319,6 +319,14 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             HeaderAlignmentVert = vaCenter
             Width = 138
           end
+          object CarComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1082' '#1086#1090#1075#1088'.'
+            DataBinding.FieldName = 'CarComment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1082' '#1086#1090#1075#1088#1091#1079#1082#1077
+            Width = 132
+          end
           object AmountSh: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086',  '#1096#1090' '
             DataBinding.FieldName = 'AmountSh'
@@ -1289,6 +1297,15 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CarInfoId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCarComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CarComment'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -1,6 +1,7 @@
 -- Function: gpUpdate_Movement_OrderExternal_CarInfo()
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderExternal_CarInfo(
     IN inOperDate                TDateTime , -- Дата документа
@@ -9,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderExternal_CarInfo(
     IN inToId                    Integer   , -- Кому (в документе)
     IN inRouteId                 Integer   , -- Маршрут
     IN inRetailId                Integer   , -- торг. сеть
-    IN inCarInfoId               Integer   , --
+    IN inCarInfoId               Integer   , --  информация   
+    IN inCarComment              TVarChar  , -- примечание к отгрузке
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -23,6 +25,7 @@ BEGIN
      ---
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), tmp.Id, inOperDate_CarInfo)        -- Дата/время отгрузки
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CarInfo(), tmp.Id, inCarInfoId)   -- Информация по отгрузке 
+           , lpInsertUpdate_MovementString (zc_MovementString_CarComment(), ioId, inCarComment)         -- примечание к отгрузке
      FROM (SELECT Movement.Id
            FROM Movement
                INNER JOIN MovementDate AS MovementDate_OperDatePartner
@@ -64,7 +67,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.06.22         *
  16.06.22         *
 */
 

@@ -469,6 +469,15 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 95
           end
+          object CarComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1082' '#1086#1090#1075#1088'.'
+            DataBinding.FieldName = 'CarComment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1082' '#1086#1090#1075#1088#1091#1079#1082#1077
+            Options.Editing = False
+            Width = 70
+          end
           object isPromo: TcxGridDBColumn
             Caption = #1040#1082#1094#1080#1103
             DataBinding.FieldName = 'isPromo'
