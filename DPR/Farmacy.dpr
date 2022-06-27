@@ -114,6 +114,7 @@ begin
   // !!! Real
   ConnectionPath := '..\INIT\farmacy_init.php';
   gc_ProgramName := 'Farmacy.exe';
+  dsdProject := prFarmacy;
   // !!! DEMO
   // ConnectionPath := 'Demo.php';
   // gc_ProgramName := 'FDemo.exe';

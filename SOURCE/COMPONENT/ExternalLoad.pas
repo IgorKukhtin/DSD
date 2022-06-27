@@ -142,7 +142,7 @@ implementation
 
 uses VCL.ActnList, SysUtils, Dialogs, SimpleGauge, VKDBFDataSet, UnilWin,
      DBClient, TypInfo, Variants, UtilConvert, WinApi.Windows, StrUtils,
-     System.Types, Registry;
+     System.Types, Registry, UtilConst;
 
 const cArchive = 'Archive';
 
@@ -710,6 +710,18 @@ var i: integer;
         Result := Result + '1/2'
       else if Code = 190 then
         Result := Result + '3/4'
+      else if ((Code = 822) or (Code = -4051)) and (dsdProject = prFarmacy) then
+        Result := Result + '-'
+      else if ((Code = 945) or (Code = 593) or (Code = -3999)) and (dsdProject = prFarmacy) then
+        Result := Result + 'a'
+      else if (Code = 946) and (dsdProject = prFarmacy) then
+        Result := Result + 'b'
+      else if (Code = 947) and (dsdProject = prFarmacy) then
+        Result := Result + 'y'
+      else if ((Code = 180) or (Code = 8125) or (Code = 700)) and (dsdProject = prFarmacy) then
+        Result := Result + '`'
+//      else if ((Code <= 0) or (Code >= 822) and (Code < 1000)) and (dsdProject = prFarmacy) then
+//        Result := Result  + C
       else
         Result := Result + C;
     end;
@@ -992,7 +1004,7 @@ begin
   Result.Query := GetStoredProc.Params.ParamByName('Query').Value;
   Result.JSONParamName := GetStoredProc.Params.ParamByName('JSONParamName').Value;
 
-  //if Result.Directory = '' then begin
+//  if Result.Directory = '' then begin
   if Result.JSONParamName <> '' then begin
      Result.StoredProc.OutputType := otResult;
      Result.StoredProc.PackSize := 1;

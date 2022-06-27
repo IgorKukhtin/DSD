@@ -34,7 +34,7 @@ BEGIN
    ioId := lpInsertUpdate_Object(ioId, zc_Object_CountSP_1303(), vbCode_calc, inName);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   -- PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
 

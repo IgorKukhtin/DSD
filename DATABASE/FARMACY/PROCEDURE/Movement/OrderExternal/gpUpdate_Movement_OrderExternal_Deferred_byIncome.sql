@@ -21,12 +21,14 @@ BEGIN
 --     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
      vbUserId:= inSession;
      
+--raise notice 'Value 03: <%', CURRENT_TIMESTAMP;       
+
      -- Определить от кого, кому, договор, дата аптеки
      SELECT MLO_From.ObjectId                     AS JuridicalId
           , MLO_To.ObjectId                       AS ToId
           , COALESCE (MLO_Contract.ObjectId, 0)   AS ContractId
           , Movement.OperDate                     AS OperDate
-            INTO vbJuridicalId, vbToId, vbContractId, vbOperDate
+     INTO vbJuridicalId, vbToId, vbContractId, vbOperDate
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From 
                                        ON MLO_From.MovementId = inMovementId 
@@ -40,6 +42,7 @@ BEGIN
      WHERE Movement.Id = inMovementId 
        AND Movement.DescId = zc_Movement_Income();
 
+--raise notice 'Value 03: <%', CURRENT_TIMESTAMP;       
    
      -- Снять заказ из отложенных, привязанный к этому приходу
      SELECT MLM.MovementChildId 
@@ -60,11 +63,14 @@ BEGIN
          -- сохранили протокол
          PERFORM lpInsert_MovementProtocol (vbOrderId, vbUserId, FALSE);
      END IF;
+
+--raise notice 'Value 03: <%', CURRENT_TIMESTAMP;       
      
      -- снимается ОТЛОЖЕН у ВСЕХ заявок с этой точки до даты прихода
      PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), Movement.Id, FALSE)            -- сохранили свойство Отложен  НЕТ
            , lpInsert_MovementProtocol (Movement.Id, vbUserId, FALSE)                                     -- сохранили протокол
-     FROM Movement
+     FROM  Movement
+             
           INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                      ON MovementBoolean_Deferred.MovementId = Movement.Id
                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
@@ -92,9 +98,18 @@ BEGIN
           
      WHERE Movement.DescId   = zc_Movement_OrderExternal()
        AND Movement.OperDate <= vbOperDate
+       AND Movement.OperDate >= vbOperDate - INTERVAL '1 MONTH'
        AND Movement.StatusId in (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
        AND COALESCE (ObjectBoolean_Deferred.ValueData, FALSE) = FALSE
        ;
+
+--raise notice 'Value 03: <%', CURRENT_TIMESTAMP;       
+
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%> ', inSession;
+    END IF;
 
 END;
 $BODY$
@@ -107,3 +122,5 @@ $BODY$
 */
 
 -- тест
+    
+select * from gpUpdate_Movement_OrderExternal_Deferred_byIncome(inMovementId := 28341986 ,  inSession := '3');
