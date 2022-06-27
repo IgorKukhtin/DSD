@@ -361,6 +361,8 @@ BEGIN
                       , MovementFloat_ChangePercent.ValueData  AS ChangePercent
                       , MovementDate_OperDatePartner.ValueData AS OperDatePartner
                       , MovementLinkObject_PriceList.ObjectId  AS PriceListId
+                      , ObjectBoolean_PriceWithVAT.ValueData   AS isPriceWithVAT   ---для прайса
+                      , ObjectFloat_VATPercent.ValueData       AS VATPercent       ---для прайса
                       , tmpListContainerSumm.JuridicalId
                       , tmpListContainerSumm.PartnerId
                       , tmpListContainerSumm.InfoMoneyId
@@ -399,6 +401,12 @@ BEGIN
                       LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                                    ON MovementLinkObject_PriceList.MovementId = tmpListContainerSumm.MovementId
                                                   AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                                              ON ObjectBoolean_PriceWithVAT.ObjectId = MovementLinkObject_PriceList.ObjectId
+                                             AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+                      LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                                            ON ObjectFloat_VATPercent.ObjectId =  MovementLinkObject_PriceList.ObjectId
+                                           AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
                  GROUP BY MovementDesc.ItemName
                         , Movement.Id
                         , Movement.InvNumber
@@ -406,6 +414,8 @@ BEGIN
                         , MovementFloat_ChangePercent.ValueData
                         , MovementDate_OperDatePartner.ValueData
                         , MovementLinkObject_PriceList.ObjectId
+                        , ObjectBoolean_PriceWithVAT.ValueData   
+                        , ObjectFloat_VATPercent.ValueData
                         , tmpListContainerSumm.JuridicalId
                         , tmpListContainerSumm.PartnerId
                         , tmpListContainerSumm.InfoMoneyId
@@ -478,10 +488,13 @@ BEGIN
          , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName   
          
          , COALESCE (lfSelectPrice.ValuePrice, lfSelectPrice_.ValuePrice) :: TFloat AS Price_onDate
-         , ((tmpOperationGroup.AmountPartner * COALESCE (lfSelectPrice.ValuePrice, lfSelectPrice_.ValuePrice) ) * (1- COALESCE (tmpOperationGroup.ChangePercent,0)/100)) :: TFloat AS Summ_onDate  --сумма по цене прайса наа дату
+         , (((tmpOperationGroup.AmountPartner * COALESCE (lfSelectPrice.ValuePrice, lfSelectPrice_.ValuePrice) ) * (1+ COALESCE (tmpOperationGroup.ChangePercent,0)/100))
+           * CASE WHEN tmpOperationGroup.isPriceWithVAT = TRUE THEN 1 ELSE (1 + tmpOperationGroup.VATPercent/100) END) :: TFloat AS Summ_onDate  --сумма по цене прайса наа дату
          , CASE WHEN  lfSelectPrice.ValuePrice IS NULL THEN 0 ELSE Object_GoodsKind.Id END             AS GoodsKindId_price
          , CASE WHEN  lfSelectPrice.ValuePrice IS NULL THEN '' ELSE Object_GoodsKind.ValueData END ::TVarChar  AS GoodsKindName_price
 
+
+--(1 + vbVATPercent / 100)
      FROM tmpOperationGroup
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
@@ -549,6 +562,6 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 
 
 
-select * from gpReport_GoodsMI_byMovement(inStartDate := ('03.05.2022')::TDateTime , inEndDate := ('03.05.2022')::TDateTime,inPriceDate:=('03.05.2022')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 7835 ,  inSession := '9457');
+--select * from gpReport_GoodsMI_byMovement(inStartDate := ('03.05.2022')::TDateTime , inEndDate := ('03.05.2022')::TDateTime,inPriceDate:=('03.05.2022')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 7835 ,  inSession := '9457');
 
 
