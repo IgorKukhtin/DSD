@@ -13,7 +13,7 @@ RETURNS TABLE (OperDate        TDateTime
              , RetailId Integer, RetailName TVarChar
              , PartnerTagName TVarChar
              , OperDate_CarInfo TDateTime
-             , CarInfoId Integer, CarInfoName TVarChar 
+             , CarInfoId Integer, CarInfoName TVarChar, CarComment TVarChar 
              , ToId Integer, ToCode Integer, ToName TVarChar
              , Amount TFloat
              , AmountSh TFloat
@@ -56,7 +56,9 @@ BEGIN
                               END AS RetailId
                             , STRING_AGG (DISTINCT Object_PartnerTag.ValueData, '; ') ::TVarChar AS PartnerTagName
                             , MovementLinkObject_CarInfo.ObjectId                      AS CarInfoId
-                            , MovementDate_CarInfo.ValueData               ::TDateTime AS OperDate_CarInfo
+                            , MovementDate_CarInfo.ValueData               ::TDateTime AS OperDate_CarInfo 
+                            , MovementString_CarComment.ValueData          ::TVarChar  AS CarComment
+                            
                             --, SUM (COALESCE (MovementItem.Amount,0))                   AS Amount
                             --, SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0) )      AS AmountSecond
                             , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
@@ -73,6 +75,10 @@ BEGIN
                             LEFT JOIN MovementDate AS MovementDate_CarInfo
                                                    ON MovementDate_CarInfo.MovementId = Movement.Id
                                                   AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
+
+                            LEFT JOIN MovementString AS MovementString_CarComment
+                                                     ON MovementString_CarComment.MovementId = Movement.Id
+                                                    AND MovementString_CarComment.DescId = zc_MovementString_CarComment()
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_CarInfo
                                                          ON MovementLinkObject_CarInfo.MovementId = Movement.Id
@@ -128,6 +134,7 @@ BEGIN
                                  END
                                , MovementLinkObject_CarInfo.ObjectId
                                , MovementDate_CarInfo.ValueData
+                               , MovementString_CarComment.ValueData
                           )
 
  
@@ -141,11 +148,12 @@ BEGIN
            , Object_Retail.ValueData           AS RetailName
            , tmpMovement.PartnerTagName        AS PartnerTagName
            , tmpMovement.OperDate_CarInfo      ::TDateTime
-           , Object_CarInfo.Id                    AS CarInfoId
-           , Object_CarInfo.ValueData             AS CarInfoName
-           , Object_To.Id                         AS ToId
-           , Object_To.ObjectCode                 AS ToCode
-           , Object_To.ValueData                  AS ToName
+           , Object_CarInfo.Id                 AS CarInfoId
+           , Object_CarInfo.ValueData          AS CarInfoName
+           , tmpMovement.CarComment ::TVarChar AS CarComment
+           , Object_To.Id                      AS ToId
+           , Object_To.ObjectCode              AS ToCode
+           , Object_To.ValueData               AS ToName
           --
            , tmpMovement.Amount         :: TFloat AS Amount 
            , tmpMovement.AmountSh       :: TFloat AS AmountSh
