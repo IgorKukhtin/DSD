@@ -2,28 +2,38 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat,  TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderExternal_CarInfo(
     IN inOperDate                TDateTime , -- Дата документа
     IN inOperDatePartner         TDateTime , -- Дата отгрузки со склада
-    IN inOperDate_CarInfo        TDateTime , --
+    --IN inOperDate_CarInfo        TDateTime , --
     IN inToId                    Integer   , -- Кому (в документе)
     IN inRouteId                 Integer   , -- Маршрут
     IN inRetailId                Integer   , -- торг. сеть
-    IN inCarInfoId               Integer   , --  информация   
+    IN inCarInfoId               Integer   , --  информация 
+    IN inDays                    Integer   , --  +/- кол-во дней
+    IN inTimes                   TFloat    , --  время
     IN inCarComment              TVarChar  , -- примечание к отгрузке
     IN inSession                 TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbOperDate_CarInfo TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
-
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal()); 
      
+     vbOperDate_CarInfo := ((inOperDatePartner + ( inDays||' Day') ::interval)::Date
+                           ||' '||REPLACE (CAST (inTimes AS NUMERIC (16,2)) ::TVarChar,'.' ,':') ) TDateTime; 
+     
+      --RAISE EXCEPTION '<%>', vbOperDate_CarInfo;
+                                                        
      ---
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), tmp.Id, inOperDate_CarInfo)        -- Дата/время отгрузки
+     PERFORM --lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), tmp.Id, inOperDate_CarInfo)        -- Дата/время отгрузки
+             lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), tmp.Id, vbOperDate_CarInfo)        -- Дата/время отгрузки
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CarInfo(), tmp.Id, inCarInfoId)   -- Информация по отгрузке 
            , lpInsertUpdate_MovementString (zc_MovementString_CarComment(), ioId, inCarComment)         -- примечание к отгрузке
      FROM (SELECT Movement.Id

@@ -19,6 +19,7 @@ RETURNS TABLE (OperDate        TDateTime
              , AmountSh TFloat
              , AmountWeight TFloat
              , CountPartner TFloat
+             , Days Integer, Times TFloat
              )  
 
 AS
@@ -155,10 +156,12 @@ BEGIN
            , Object_To.ObjectCode              AS ToCode
            , Object_To.ValueData               AS ToName
           --
-           , tmpMovement.Amount         :: TFloat AS Amount 
-           , tmpMovement.AmountSh       :: TFloat AS AmountSh
-           , tmpMovement.AmountWeight   :: TFloat AS AmountWeight
-           , tmpMovement.CountPartner   :: TFloat AS CountPartner
+           , tmpMovement.Amount         :: TFloat  AS Amount 
+           , tmpMovement.AmountSh       :: TFloat  AS AmountSh
+           , tmpMovement.AmountWeight   :: TFloat  AS AmountWeight
+           , tmpMovement.CountPartner   :: TFloat  AS CountPartner
+           , 0                          :: Integer AS Days
+           , 0                          :: TFloat  AS Times
 
       FROM tmpMovement
           LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId

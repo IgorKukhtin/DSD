@@ -302,6 +302,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             DataBinding.FieldName = 'OperDate_CarInfo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 103
           end
           object CarInfoName: TcxGridDBColumn
@@ -357,6 +358,16 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 224
+          end
+          object Days: TcxGridDBColumn
+            Caption = '+/- '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'Days'
+            Width = 70
+          end
+          object Times: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103
+            DataBinding.FieldName = 'Times'
+            Width = 70
           end
         end
       end
@@ -1260,15 +1271,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDate_CarInfo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperDate_CarInfo'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inToid'
         Value = Null
         Component = MasterCDS
@@ -1301,12 +1303,37 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDays'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Days'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTimes'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Times'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inCarComment'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CarComment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_CarInfo'
+        DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
