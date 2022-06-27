@@ -1,32 +1,32 @@
 inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'  ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')>'
   ClientHeight = 373
-  ClientWidth = 1128
+  ClientWidth = 1152
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1144
+  ExplicitWidth = 1168
   ExplicitHeight = 412
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1128
+    Width = 1152
     Height = 293
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1128
-    ExplicitHeight = 294
+    ExplicitWidth = 1152
+    ExplicitHeight = 293
     ClientRectBottom = 293
-    ClientRectRight = 1128
+    ClientRectRight = 1152
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1128
-      ExplicitHeight = 294
+      ExplicitWidth = 1152
+      ExplicitHeight = 293
       inherited cxGrid: TcxGrid
-        Width = 1128
+        Width = 1152
         Height = 293
-        ExplicitWidth = 1128
-        ExplicitHeight = 294
+        ExplicitWidth = 1152
+        ExplicitHeight = 293
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -113,6 +113,11 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = SummPartner_10100
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_onDate
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -199,6 +204,11 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = SummPartner_10100
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_onDate
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -358,6 +368,27 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
+          end
+          object Price_onDate: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1085#1072' '#1076#1072#1090#1091
+            DataBinding.FieldName = 'Price_onDate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object Summ_onDate: TcxGridDBColumn
+            Caption = 'C'#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1085#1072' '#1076#1072#1090#1091' '#1089' '#1091#1095'. '#1089#1082'.'
+            DataBinding.FieldName = 'Summ_onDate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 'C'#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1085#1072' '#1076#1072#1090#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
+            Width = 92
           end
           object Amount_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'.'#1074#1077#1089'  ('#1089#1082#1083#1072#1076')'
@@ -596,9 +627,9 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     end
   end
   inherited Panel: TPanel
-    Width = 1128
+    Width = 1152
     Height = 54
-    ExplicitWidth = 1128
+    ExplicitWidth = 1152
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 59
@@ -647,7 +678,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     end
     object edInDescName: TcxTextEdit
       AlignWithMargins = True
-      Left = 924
+      Left = 984
       Top = 5
       ParentCustomHint = False
       BeepOnEnter = False
@@ -661,7 +692,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
-      Width = 194
+      Width = 152
     end
     object cxLabel3: TcxLabel
       Left = 164
@@ -703,7 +734,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 868
+      Left = 872
       Top = 30
       Properties.Buttons = <
         item
@@ -712,22 +743,28 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 12
-      Width = 250
+      Width = 264
     end
     object cxLabel5: TcxLabel
-      Left = 785
+      Left = 745
       Top = 6
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+      Hint = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+      Caption = #1060#1054':'
+      ParentShowHint = False
+      ShowHint = True
     end
     object edPaidKind: TcxButtonEdit
-      Left = 868
+      Left = 769
       Top = 5
+      Hint = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+      ParentShowHint = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 14
       Width = 50
     end
@@ -747,6 +784,19 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
       Properties.ReadOnly = True
       TabOrder = 16
       Width = 180
+    end
+    object cxLabel9: TcxLabel
+      Left = 827
+      Top = 6
+      Caption = #1044#1072#1090#1072' ('#1087#1088#1072#1081#1089')'
+    end
+    object dePriceDate: TcxDateEdit
+      Left = 898
+      Top = 5
+      EditValue = 42005d
+      Properties.ShowTime = False
+      TabOrder = 18
+      Width = 80
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -790,6 +840,11 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = dePriceDate
+        Properties.Strings = (
+          'Date')
       end>
   end
   inherited ActionList: TActionList
@@ -921,10 +976,76 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceDate'
+          Value = Null
+          Component = dePriceDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPriceListGoods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
+      ImageIndex = 28
+      FormName = 'TPriceListGoodsItemForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'PriceListId'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'PriceListId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'PriceListName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId_price'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName_price'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -950,6 +1071,14 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
         Name = 'inEndDate'
         Value = 41640d
         Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceDate'
+        Value = Null
+        Component = dePriceDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1045,6 +1174,18 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1054,6 +1195,10 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actPriceListGoods
       Category = 0
     end
   end
