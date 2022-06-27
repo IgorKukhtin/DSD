@@ -105,7 +105,7 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
   object cxLabel6: TcxLabel
     Left = 197
     Top = 75
-    Caption = #1054#1087#1094#1080#1103':'
+    Caption = #1069#1083#1077#1084#1077#1085#1090' Boat Structure:'
   end
   object edProdColorPattern: TcxButtonEdit
     Left = 239
