@@ -27,7 +27,6 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 541
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -108,7 +107,7 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
     Top = 75
     Caption = #1054#1087#1094#1080#1103':'
   end
-  object edProdOptions: TcxButtonEdit
+  object edProdColorPattern: TcxButtonEdit
     Left = 239
     Top = 74
     Properties.Buttons = <
@@ -299,7 +298,7 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
       Category = 0
       Hint = 'ProdOptions'
       Visible = ivAlways
-      Control = edProdOptions
+      Control = edProdColorPattern
     end
   end
   object ActionList: TActionList
@@ -502,9 +501,9 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
       end>
     Params = <
       item
-        Name = 'inProdOptionsId'
+        Name = 'inProdColorPatternId'
         Value = Null
-        Component = GuidesProdOptions
+        Component = GuidesProdColorPattern
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -604,19 +603,19 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
     Left = 432
     Top = 128
   end
-  object GuidesProdOptions: TdsdGuides
+  object GuidesProdColorPattern: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edProdOptions
-    FormNameParam.Value = 'TProdOptionsForm'
+    LookupControl = edProdColorPattern
+    FormNameParam.Value = 'TProdColorPatternForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TProdOptionsForm'
+    FormName = 'TProdColorPatternForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesProdOptions
+        Component = GuidesProdColorPattern
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -624,28 +623,28 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
       item
         Name = 'ModelName_full'
         Value = ''
-        Component = GuidesProdOptions
+        Component = GuidesProdColorPattern
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 344
-    Top = 56
+    Top = 64
   end
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'ProdOptionsId'
+        Name = 'ProdColorPatternId'
         Value = ''
-        Component = GuidesProdOptions
+        Component = GuidesProdColorPattern
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ProdOptionsName'
+        Name = 'ProdColorPatternName'
         Value = ''
-        Component = GuidesProdOptions
+        Component = GuidesProdColorPattern
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -659,7 +658,7 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = GuidesProdOptions
+        Component = GuidesProdColorPattern
       end>
     Left = 488
     Top = 56

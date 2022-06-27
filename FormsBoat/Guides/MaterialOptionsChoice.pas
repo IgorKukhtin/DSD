@@ -64,8 +64,8 @@ type
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     cxLabel6: TcxLabel;
-    edProdOptions: TcxButtonEdit;
-    GuidesProdOptions: TdsdGuides;
+    edProdColorPattern: TcxButtonEdit;
+    GuidesProdColorPattern: TdsdGuides;
     FormParams: TdsdFormParams;
     bbProdOptionsText: TdxBarControlContainerItem;
     bbProdOptions: TdxBarControlContainerItem;
