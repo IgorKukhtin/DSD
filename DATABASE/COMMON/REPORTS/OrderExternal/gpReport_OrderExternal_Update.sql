@@ -1,9 +1,12 @@
 -- Function: gpReport_OrderExternal_Update()
 
 DROP FUNCTION IF EXISTS gpReport_OrderExternal_Update (TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal_Update (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderExternal_Update(
-    IN inOperDate          TDateTime , --
+    IN inStartDate         TDateTime , -- 
+    IN inEndDate           TDateTime , -- 
+    IN inIsDate_CarInfo    Boolean   , -- по  дате  Дата/время отгрузки
     IN inToId              Integer   , -- Кому (в документе)
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -20,6 +23,11 @@ RETURNS TABLE (OperDate        TDateTime
              , AmountWeight TFloat
              , CountPartner TFloat
              , Days Integer, Times TFloat
+
+             , DayOfWeekName          TVarChar
+             , DayOfWeekName_Partner  TVarChar
+             , DayOfWeekName_CarInfo  TVarChar
+
              )  
 
 AS
@@ -33,15 +41,28 @@ BEGIN
      WITH 
        tmpMovementAll AS (SELECT Movement.*
                                , MovementLinkObject_To.ObjectId AS ToId
-                        FROM Movement
+                          FROM (SELECT Movement.*
+                                FROM Movement    
+                                WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  AND Movement.DescId = zc_Movement_OrderExternal()
+                                  AND inIsDate_CarInfo = False
+                               UNION
+                                SELECT Movement.*
+                                FROM MovementDate AS MovementDate_CarInfo
+                                     INNER JOIN Movement ON Movement.Id = MovementDate_CarInfo.MovementId
+                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                        AND Movement.DescId = zc_Movement_OrderExternal()
+                                WHERE MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
+                                  AND MovementDate_CarInfo.ValueData >= inStartDate
+                                  AND MovementDate_CarInfo.ValueData <= inEndDate
+                                  AND inIsDate_CarInfo = TRUE
+                                ) AS Movement
                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                          AND (COALESCE (MovementLinkObject_To.ObjectId,0) = inToId OR inToId = 0)
-                        WHERE Movement.OperDate = inOperDate
-                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                          AND Movement.DescId = zc_Movement_OrderExternal()
-                          )
+                           )
 
      , tmpMovement AS (SELECT Movement.OperDate
                             , MovementDate_OperDatePartner.ValueData                   AS OperDatePartner
@@ -161,13 +182,20 @@ BEGIN
            , tmpMovement.AmountWeight   :: TFloat  AS AmountWeight
            , tmpMovement.CountPartner   :: TFloat  AS CountPartner
            , 0                          :: Integer AS Days
-           , 0                          :: TFloat  AS Times
+           , 0                          :: TFloat  AS Times 
+           
+           , tmpWeekDay.DayOfWeekName_Full         ::TVarChar AS DayOfWeekName
+           , tmpWeekDay_Partner.DayOfWeekName_Full ::TVarChar AS DayOfWeekName_Partner
+           , tmpWeekDay_CarInfo.DayOfWeekName_Full ::TVarChar AS DayOfWeekName_CarInfo
 
       FROM tmpMovement
           LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
           LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMovement.RouteId
           LEFT JOIN Object AS Object_CarInfo ON Object_CarInfo.Id = tmpMovement.CarInfoId
-          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = tmpMovement.RetailId
+          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = tmpMovement.RetailId 
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate) AS tmpWeekDay ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner) AS tmpWeekDay_Partner ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo) AS tmpWeekDay_CarInfo ON 1=1
          ;
 
 END;

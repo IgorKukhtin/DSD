@@ -242,6 +242,15 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             Options.Editing = False
             Width = 60
           end
+          object DayOfWeekName: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072' '#1079#1072#1103#1074#1082#1080')'
+            DataBinding.FieldName = 'DayOfWeekName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072' '#1079#1072#1103#1074#1082#1080')'
+            Options.Editing = False
+            Width = 93
+          end
           object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
             DataBinding.FieldName = 'OperDatePartner'
@@ -249,6 +258,15 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object DayOfWeekName_Partner: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072' '#1086#1090#1075#1088'.)'
+            DataBinding.FieldName = 'DayOfWeekName_Partner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080')'
+            Options.Editing = False
+            Width = 80
           end
           object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -304,6 +322,15 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 103
+          end
+          object DayOfWeekName_CarInfo: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072'/'#1074#1088'. '#1086#1090#1075#1088#1091#1079#1082#1080')'
+            DataBinding.FieldName = 'DayOfWeekName_CarInfo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080')'
+            Options.Editing = False
+            Width = 92
           end
           object CarInfoName: TcxGridDBColumn
             Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
@@ -382,26 +409,35 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       EditValue = 43101d
       Properties.SaveTime = False
       ExplicitLeft = 113
+      ExplicitWidth = 82
+      Width = 82
     end
     inherited deEnd: TcxDateEdit
-      Left = 830
+      Left = 313
       EditValue = 43101d
       Properties.SaveTime = False
-      Visible = False
-      ExplicitLeft = 830
+      ExplicitLeft = 313
+      ExplicitWidth = 81
+      Width = 81
     end
     inherited cxLabel1: TcxLabel
       Left = 25
       ExplicitLeft = 25
     end
     inherited cxLabel2: TcxLabel
-      Left = 723
-      Visible = False
-      ExplicitLeft = 723
+      Left = 203
+      ExplicitLeft = 203
+    end
+    object edIsDate_CarInfo: TcxCheckBox
+      Left = 400
+      Top = 5
+      Action = actRefresh_Car
+      TabOrder = 4
+      Width = 117
     end
   end
   object edTo: TcxButtonEdit [2]
-    Left = 251
+    Left = 580
     Top = 5
     Properties.Buttons = <
       item
@@ -412,7 +448,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     Width = 310
   end
   object cxLabel8: TcxLabel [3]
-    Left = 211
+    Left = 539
     Top = 6
     Caption = #1057#1082#1083#1072#1076':'
   end
@@ -443,8 +479,24 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
   inherited ActionList: TActionList
     Left = 519
     Top = 231
+    object actRefresh_Car: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086' '#1076#1072#1090#1077' '#1086#1090#1075#1088#1091#1079#1082#1080
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     inherited actRefresh: TdsdDataSetRefresh
       TabSheet = tsMain
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     end
     object actPrint_byType_Group: TdsdPrintAction
       Category = 'DSDLib'
@@ -877,6 +929,14 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'ToId'
           Value = ''
           Component = GuidesTo
@@ -889,6 +949,14 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
           Value = ''
           Component = GuidesTo
           ComponentItem = 'TextValue'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsDate_CarInfo'
+          Value = Null
+          Component = edIsDate_CarInfo
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1048,10 +1116,26 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       end>
     Params = <
       item
-        Name = 'inOperDate'
+        Name = 'inStartDate'
         Value = 41640d
         Component = deStart
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDate_CarInfo'
+        Value = Null
+        Component = edIsDate_CarInfo
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1139,10 +1223,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     Left = 144
   end
   inherited PeriodChoice: TPeriodChoice
-    DateStart = nil
-    DateEnd = nil
-    Left = 896
-    Top = 0
+    Left = 240
+    Top = 65528
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1212,8 +1294,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 287
-    Top = 65532
+    Left = 591
+    Top = 4
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>

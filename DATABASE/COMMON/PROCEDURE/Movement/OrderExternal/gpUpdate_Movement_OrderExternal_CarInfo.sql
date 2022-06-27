@@ -15,8 +15,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderExternal_CarInfo(
     IN inRetailId                Integer   , -- торг. сеть
     IN inDays                    Integer   , --  +/- кол-во дней
     IN inTimes                   TFloat    , --  время
-    IN inCarComment              TVarChar  , -- примечание к отгрузке 
     IN inCarInfoName             TVarChar  , --  информация
+    IN inCarComment              TVarChar  , -- примечание к отгрузке 
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -40,7 +40,7 @@ BEGIN
          --сохраняем
          vbCarInfoId := gpInsertUpdate_Object_CarInfo ( ioId       := 0     Integer   ,     -- ключ объекта <Регионы> 
                                                       , inCode     := 0     Integer   ,     -- Код объекта  
-                                                      , inName     := TRIM inCarInfoName() ::TVarChar  ,     -- Название объекта 
+                                                      , inName     := TRIM (inCarInfoName) ::TVarChar  ,     -- Название объекта 
                                                       , inSession  := inSession            ::TVarChar        -- сессия пользователя
                                                       );
      END IF;
