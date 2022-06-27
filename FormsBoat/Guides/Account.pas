@@ -51,7 +51,7 @@ type
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     dsdChoiceGuides: TdsdChoiceGuides;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     AccountGroupName: TcxGridDBColumn;

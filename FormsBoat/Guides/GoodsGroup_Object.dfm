@@ -217,6 +217,7 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = actProtocol

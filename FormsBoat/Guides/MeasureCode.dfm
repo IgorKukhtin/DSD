@@ -26,8 +26,6 @@ object MeasureCodeForm: TMeasureCodeForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -110,8 +108,6 @@ object MeasureCodeForm: TMeasureCodeForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = -8
-    ExplicitTop = -6
     object cxLabel1: TcxLabel
       Left = 9
       Top = 7
@@ -248,7 +244,7 @@ object MeasureCodeForm: TMeasureCodeForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbProtocolOpenForm'
         end
         item
           Visible = True
@@ -256,7 +252,7 @@ object MeasureCodeForm: TMeasureCodeForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
+          ItemName = 'bbToExcel'
         end
         item
           Visible = True
@@ -297,6 +293,7 @@ object MeasureCodeForm: TMeasureCodeForm
       Category = 0
       Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
@@ -490,14 +487,14 @@ object MeasureCodeForm: TMeasureCodeForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
   end
   object spSelect: TdsdStoredProc

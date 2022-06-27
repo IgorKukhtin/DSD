@@ -47,7 +47,7 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dxBarStatic: TdxBarStatic;

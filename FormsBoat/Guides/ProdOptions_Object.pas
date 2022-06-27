@@ -1,4 +1,4 @@
-unit ProdOptions;
+unit ProdOptions_Object;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxLabel;
 
 type
-  TProdOptionsForm = class(TParentForm)
+  TProdOptions_ObjectForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -96,6 +96,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProdOptionsForm);
+  RegisterClass(TProdOptions_ObjectForm);
 
 end.

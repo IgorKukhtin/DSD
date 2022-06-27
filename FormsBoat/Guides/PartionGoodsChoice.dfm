@@ -471,6 +471,9 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
     object bbShowAll: TdxBarButton
       Action = actShowAll
       Category = 0

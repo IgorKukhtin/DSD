@@ -1,7 +1,7 @@
-object ProdOptionsForm: TProdOptionsForm
+object ProdOptions_ObjectForm: TProdOptions_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1087#1094#1080#1080'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <***'#1054#1087#1094#1080#1080'>'
   ClientHeight = 376
   ClientWidth = 785
   Color = clBtnFace
@@ -136,10 +136,11 @@ object ProdOptionsForm: TProdOptionsForm
       object MaterialOptionsName: TcxGridDBColumn
         Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
         DataBinding.FieldName = 'MaterialOptionsName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 70
       end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -152,6 +153,7 @@ object ProdOptionsForm: TProdOptionsForm
       object CodeVergl: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1079#1072#1084#1077#1085#1099
         DataBinding.FieldName = 'CodeVergl'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1074#1079#1072#1080#1084#1086#1079#1072#1084#1077#1085#1099
@@ -165,7 +167,7 @@ object ProdOptionsForm: TProdOptionsForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 150
+        Width = 220
       end
       object ProdColorName: TcxGridDBColumn
         Caption = 'Farbe'
@@ -387,6 +389,7 @@ object ProdOptionsForm: TProdOptionsForm
       object Id_Site: TcxGridDBColumn
         Caption = 'Id '#1057#1072#1081#1090
         DataBinding.FieldName = 'Id_Site'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1126,7 +1129,7 @@ object ProdOptionsForm: TProdOptionsForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ProdOptions'
+    StoredProcName = 'gpSelect_Object_ProdOptionsChoice'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -1138,6 +1141,13 @@ object ProdOptionsForm: TProdOptionsForm
         Value = Null
         Component = GuidesProdModel
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

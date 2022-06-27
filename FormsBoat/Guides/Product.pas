@@ -118,7 +118,7 @@ type
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     actChoiceFormProdColorGroup: TOpenChoiceForm;
-    actChoiceFormProdOptions: TOpenChoiceForm;
+    actChoiceFormProdOptions_Object: TOpenChoiceForm;
     actShowAllOptItems: TBooleanStoredProcAction;
     actShowAllColorItems: TBooleanStoredProcAction;
     bbShowAllColorItems: TdxBarButton;

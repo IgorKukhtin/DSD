@@ -2,7 +2,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
   ClientWidth = 419
   ExplicitWidth = 435
-  ExplicitHeight = 346
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -110,6 +110,9 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
   end
 end

@@ -163,6 +163,14 @@ object AccountGroupForm: TAccountGroupForm
         end
         item
           Visible = True
+          ItemName = 'bbChoiceGuide'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -176,10 +184,6 @@ object AccountGroupForm: TAccountGroupForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuide'
         end>
       OneOnRow = True
       Row = 0
@@ -212,6 +216,7 @@ object AccountGroupForm: TAccountGroupForm
       Category = 0
       Hint = '      '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -233,10 +238,10 @@ object AccountGroupForm: TAccountGroupForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -384,7 +389,7 @@ object AccountGroupForm: TAccountGroupForm
       isShowModal = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_AccountGroup'
     DataSet = ClientDataSet
     DataSets = <
@@ -442,10 +447,13 @@ object AccountGroupForm: TAccountGroupForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 168
     Top = 240
   end

@@ -25,7 +25,6 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 597
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -216,6 +215,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
       Category = 0
       Hint = '    '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = actChoiceGuides
@@ -303,14 +303,14 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
   end
   object spSelect: TdsdStoredProc
@@ -356,6 +356,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

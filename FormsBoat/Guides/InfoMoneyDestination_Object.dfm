@@ -205,6 +205,7 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
       Category = 0
       Hint = '    '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = actChoiceGuides
@@ -299,10 +300,13 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 360
     Top = 192
   end

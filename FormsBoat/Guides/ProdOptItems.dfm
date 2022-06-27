@@ -249,6 +249,10 @@ object ProdOptItemsForm: TProdOptItemsForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item

@@ -166,7 +166,11 @@ object InfoMoneyGroupForm: TInfoMoneyGroupForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -174,7 +178,11 @@ object InfoMoneyGroupForm: TInfoMoneyGroupForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0
@@ -211,6 +219,7 @@ object InfoMoneyGroupForm: TInfoMoneyGroupForm
       Category = 0
       Hint = '    '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = actChoiceGuides
@@ -400,10 +409,13 @@ object InfoMoneyGroupForm: TInfoMoneyGroupForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 360
     Top = 192
   end

@@ -204,6 +204,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
       Category = 0
       Hint = '    '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
@@ -319,10 +320,12 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 320
     Top = 208

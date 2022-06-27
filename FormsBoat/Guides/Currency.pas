@@ -39,7 +39,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     isErased: TcxGridDBColumn;

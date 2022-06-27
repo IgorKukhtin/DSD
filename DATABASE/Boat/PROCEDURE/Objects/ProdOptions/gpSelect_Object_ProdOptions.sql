@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptions(Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdOptions(
     IN inModelId     Integer,
-    IN inIsShowAll   Boolean,
+    IN inIsErased    Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -347,7 +347,7 @@ BEGIN
 
      WHERE Object_ProdOptions.DescId = zc_Object_ProdOptions()
       AND (ObjectLink_Model.ChildObjectId = inModelId OR inModelId = 0 OR COALESCE (ObjectLink_Model.ChildObjectId,0) = 0)
-      AND (Object_ProdOptions.isErased = FALSE OR inIsShowAll = TRUE);
+      AND (Object_ProdOptions.isErased = FALSE OR inIsErased = TRUE);
 
 END;
 $BODY$

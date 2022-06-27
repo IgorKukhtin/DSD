@@ -140,6 +140,10 @@ object AccountDirectionForm: TAccountDirectionForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -169,6 +173,14 @@ object AccountDirectionForm: TAccountDirectionForm
         end
         item
           Visible = True
+          ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -182,10 +194,6 @@ object AccountDirectionForm: TAccountDirectionForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
       Row = 0
@@ -222,6 +230,7 @@ object AccountDirectionForm: TAccountDirectionForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
@@ -239,10 +248,10 @@ object AccountDirectionForm: TAccountDirectionForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -390,7 +399,7 @@ object AccountDirectionForm: TAccountDirectionForm
       isShowModal = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_AccountDirection'
     DataSet = ClientDataSet
     DataSets = <
@@ -427,10 +436,13 @@ object AccountDirectionForm: TAccountDirectionForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 160
     Top = 208
   end

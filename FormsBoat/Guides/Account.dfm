@@ -228,6 +228,10 @@ object AccountForm: TAccountForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -265,6 +269,14 @@ object AccountForm: TAccountForm
         end
         item
           Visible = True
+          ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -278,10 +290,6 @@ object AccountForm: TAccountForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
       Row = 0
@@ -318,6 +326,7 @@ object AccountForm: TAccountForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
@@ -339,10 +348,10 @@ object AccountForm: TAccountForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -559,7 +568,7 @@ object AccountForm: TAccountForm
       WithoutNext = True
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Account'
     DataSet = ClientDataSet
     DataSets = <
@@ -596,6 +605,7 @@ object AccountForm: TAccountForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

@@ -180,6 +180,10 @@ object ProdColorGroupForm: TProdColorGroupForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item

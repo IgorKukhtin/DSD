@@ -785,7 +785,7 @@ object ProductForm: TProductForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actChoiceFormProdOptions
+              Action = actChoiceFormProdOptions_Object
               Default = True
               Kind = bkEllipsis
             end>
@@ -2232,13 +2232,13 @@ object ProductForm: TProductForm
         end>
       isShowModal = False
     end
-    object actChoiceFormProdOptions: TOpenChoiceForm
+    object actChoiceFormProdOptions_Object: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormProdOptions'
-      FormName = 'TProdOptionsForm'
-      FormNameParam.Value = 'TProdOptionsForm'
+      Caption = 'actChoiceFormProdOptions_Object'
+      FormName = 'TProdOptions_ObjectForm'
+      FormNameParam.Value = 'TProdOptions_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

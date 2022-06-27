@@ -215,7 +215,7 @@ object GoodsTagForm: TGoodsTagForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbProtocolOpenForm'
         end
         item
           Visible = True
@@ -223,7 +223,7 @@ object GoodsTagForm: TGoodsTagForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
+          ItemName = 'bbToExcel'
         end
         item
           Visible = True
@@ -264,6 +264,7 @@ object GoodsTagForm: TGoodsTagForm
       Category = 0
       Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
@@ -447,14 +448,14 @@ object GoodsTagForm: TGoodsTagForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -519,10 +520,12 @@ object GoodsTagForm: TGoodsTagForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216
