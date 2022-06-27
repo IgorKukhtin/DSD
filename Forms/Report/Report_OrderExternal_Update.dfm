@@ -315,7 +315,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 138
@@ -1295,14 +1294,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCarInfoId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CarInfoId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inDays'
         Value = Null
         Component = MasterCDS
@@ -1316,6 +1307,15 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         Component = MasterCDS
         ComponentItem = 'Times'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCarInfoName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CarInfoName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

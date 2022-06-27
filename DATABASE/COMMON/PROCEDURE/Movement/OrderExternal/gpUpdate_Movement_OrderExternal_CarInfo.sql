@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDat
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat,  TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderExternal_CarInfo(
     IN inOperDate                TDateTime , -- Дата документа
@@ -12,15 +13,16 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderExternal_CarInfo(
     IN inToId                    Integer   , -- Кому (в документе)
     IN inRouteId                 Integer   , -- Маршрут
     IN inRetailId                Integer   , -- торг. сеть
-    IN inCarInfoId               Integer   , --  информация 
     IN inDays                    Integer   , --  +/- кол-во дней
     IN inTimes                   TFloat    , --  время
-    IN inCarComment              TVarChar  , -- примечание к отгрузке
+    IN inCarComment              TVarChar  , -- примечание к отгрузке 
+    IN inCarInfoName             TVarChar  , --  информация
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbCarInfoId Integer;
    DECLARE vbOperDate_CarInfo TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -30,11 +32,23 @@ BEGIN
                            ||' '||REPLACE (CAST (inTimes AS NUMERIC (16,2)) ::TVarChar,'.' ,':') ) TDateTime; 
      
       --RAISE EXCEPTION '<%>', vbOperDate_CarInfo;
-                                                        
+      
+     -- пробуем найти  CarInfoId
+     vbCarInfoId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_CarInfo() AND Object.ValueData = TRIM (inCarInfoName) AND Object.isErased = False);
+     IF COALESCE (vbCarInfoId,0) = 0
+     THEN
+         --сохраняем
+         vbCarInfoId := gpInsertUpdate_Object_CarInfo ( ioId       := 0     Integer   ,     -- ключ объекта <Регионы> 
+                                                      , inCode     := 0     Integer   ,     -- Код объекта  
+                                                      , inName     := TRIM inCarInfoName() ::TVarChar  ,     -- Название объекта 
+                                                      , inSession  := inSession            ::TVarChar        -- сессия пользователя
+                                                      );
+     END IF;
+                                                      
      ---
      PERFORM --lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), tmp.Id, inOperDate_CarInfo)        -- Дата/время отгрузки
              lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), tmp.Id, vbOperDate_CarInfo)        -- Дата/время отгрузки
-           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CarInfo(), tmp.Id, inCarInfoId)   -- Информация по отгрузке 
+           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CarInfo(), tmp.Id, vbCarInfoId)   -- Информация по отгрузке 
            , lpInsertUpdate_MovementString (zc_MovementString_CarComment(), ioId, inCarComment)         -- примечание к отгрузке
      FROM (SELECT Movement.Id
            FROM Movement
