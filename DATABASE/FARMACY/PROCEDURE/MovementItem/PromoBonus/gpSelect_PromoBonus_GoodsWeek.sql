@@ -20,7 +20,11 @@ BEGIN
 
     -- Результат такой
     RETURN QUERY
-    WITH tmpMovementItem AS (SELECT MovementItem.Id        
+    WITH tmpMovement AS (SELECT Movement.id FROM Movement
+                         WHERE Movement.OperDate <= CURRENT_DATE
+                           AND Movement.DescId = zc_Movement_PromoBonus()
+                           AND Movement.StatusId = zc_Enum_Status_Complete()),
+         tmpMovementItem AS (SELECT MovementItem.Id        
                                   , MovementItem.ObjectId                      AS GoodsId
                                   , Object_Maker.ValueData                     AS MakerName
                                   , MovementItem.Amount                        AS Amount
@@ -38,10 +42,7 @@ BEGIN
                                                               AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
                                   LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = MovementLinkObject_Maker.ObjectId
 
-                             WHERE MovementItem.MovementId = (SELECT MAX(Movement.id) FROM Movement
-                                                              WHERE Movement.OperDate <= CURRENT_DATE
-                                                                AND Movement.DescId = zc_Movement_PromoBonus()
-                                                                AND Movement.StatusId = zc_Enum_Status_Complete())
+                             WHERE MovementItem.MovementId = (SELECT MAX(Movement.id) FROM tmpMovement AS Movement)
                                AND MovementItem.DescId = zc_MI_Master()
                                AND MovementItem.isErased = False
                                AND MovementItem.Amount > 0
@@ -76,3 +77,8 @@ $BODY$
  05.03.21                                                      *
 */
 -- select * from gpSelect_PromoBonus_GoodsWeek(inSession := '3');
+
+SELECT PromoBonus.Id                            AS Id
+                             , PromoBonus.GoodsId                   AS GoodsId
+                             , PromoBonus.Amount                        AS Amount
+                        FROM gpSelect_PromoBonus_GoodsWeek ('3' /*inSession*/) AS PromoBonus

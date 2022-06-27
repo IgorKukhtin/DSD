@@ -1,11 +1,13 @@
  -- Function: gpReport_GoodsMI_byMovement ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_byMovement (
     IN inStartDate    TDateTime ,  
-    IN inEndDate      TDateTime ,
+    IN inEndDate      TDateTime ,  
+    IN inPriceDate    TDateTime ,
     IN inDescId       Integer   , -- zc_Movement_Sale or zc_Movement_ReturnIn
     IN inUnitId       Integer   , 
     IN inJuridicalId  Integer   , 
@@ -15,12 +17,14 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_byMovement (
     IN inGoodsId      Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, ChangePercent TFloat, PriceListName TVarChar
+RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, ChangePercent TFloat
+             , PriceListId Integer, PriceListName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
              , Price TFloat
              , Amount_Weight TFloat, Amount_Sh TFloat
              , AmountChangePercent_Weight TFloat, AmountChangePercent_Sh TFloat
@@ -34,7 +38,9 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDa
              , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
              , ChangePercentAmount TFloat
              , isBarCode  Boolean
-             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar    
+             , Price_onDate TFloat, Summ_onDate TFloat  
+             , GoodsKindId_price Integer, GoodsKindName_price TVarChar
              )   
 AS
 $BODY$
@@ -188,7 +194,8 @@ BEGIN
                             , COALESCE (MovementFloat_VATPercent.ValueData, 0)     AS VATPercent
                             , COALESCE (MovementFloat_ChangePercent.ValueData, 0)  AS ChangePercent
                             , _tmpGoods.MeasureId
-                            , _tmpGoods.Weight
+                            , _tmpGoods.Weight 
+
                        FROM (SELECT AnalyzerId, isSale, isCost, isSumm, FALSE AS isLoss
                              FROM Constant_ProfitLoss_AnalyzerId_View
                              WHERE (isSale = TRUE  AND isCost = FALSE AND inDescId = zc_Movement_Sale())
@@ -415,7 +422,8 @@ BEGIN
          , tmpOperationGroup.InvNumber
          , tmpOperationGroup.OperDate
          , tmpOperationGroup.OperDatePartner
-         , tmpOperationGroup.ChangePercent
+         , tmpOperationGroup.ChangePercent 
+         , Object_PriceList.Id         AS PriceListId
          , Object_PriceList.ValueData  AS PriceListName
          , Object_Juridical.ObjectCode AS JuridicalCode
          , Object_Juridical.ValueData  AS JuridicalName
@@ -425,8 +433,10 @@ BEGIN
          , Object_Unit.ValueData       AS UnitName
          , Object_GoodsGroup.ValueData            AS GoodsGroupName
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+         , Object_Goods.Id                        AS GoodsId
          , Object_Goods.ObjectCode                AS GoodsCode
          , Object_Goods.ValueData                 AS GoodsName
+         , Object_GoodsKind.Id                    AS GoodsKindId
          , Object_GoodsKind.ValueData             AS GoodsKindName
          , Object_Measure.ValueData               AS MeasureName
 
@@ -465,7 +475,12 @@ BEGIN
          , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
          , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
          , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
-         , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
+         , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName   
+         
+         , COALESCE (lfSelectPrice.ValuePrice, lfSelectPrice_.ValuePrice) :: TFloat AS Price_onDate
+         , ((tmpOperationGroup.AmountPartner * COALESCE (lfSelectPrice.ValuePrice, lfSelectPrice_.ValuePrice) ) * (1- COALESCE (tmpOperationGroup.ChangePercent,0)/100)) :: TFloat AS Summ_onDate  --сумма по цене прайса наа дату
+         , CASE WHEN  lfSelectPrice.ValuePrice IS NULL THEN 0 ELSE Object_GoodsKind.Id END             AS GoodsKindId_price
+         , CASE WHEN  lfSelectPrice.ValuePrice IS NULL THEN '' ELSE Object_GoodsKind.ValueData END ::TVarChar  AS GoodsKindName_price
 
      FROM tmpOperationGroup
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
@@ -496,7 +511,17 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
-   ;
+          
+          LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= tmpOperationGroup.PriceListId
+                                                        , inOperDate   := inPriceDate
+                                                         ) AS lfSelectPrice ON lfSelectPrice.GoodsId =tmpOperationGroup.GoodsId
+                                                                           AND lfSelectPrice.GoodsKindId = tmpOperationGroup.GoodsKindId
+
+          LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= tmpOperationGroup.PriceListId
+                                                        , inOperDate   := inPriceDate
+                                                         ) AS lfSelectPrice_ ON lfSelectPrice_.GoodsId =tmpOperationGroup.GoodsId
+                                                                            AND lfSelectPrice_.GoodsKindId IS Null
+     ;
 
 END;
 $BODY$
@@ -520,4 +545,10 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 
 -- тест
 -- SELECT SUM (AmountPartner_Weight), SUM (SummPartner) FROM gpReport_GoodsMI_byMovement (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inDescId:= zc_Movement_Sale(), inUnitId:= 0, inJuridicalId:= 0, inInfoMoneyId:= 0, inPaidKindId:= 0, inGoodsGroupId:= 0, inGoodsId:=0, inSession:= zfCalc_UserAdmin());
---select * from gpReport_GoodsMI_byMovement (inStartDate := ('24.11.2022')::TDateTime , inEndDate := ('24.11.2022')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 1613498 ,  inSession := '9457');
+--select * from gpReport_GoodsMI_byMovement (inStartDate := ('24.11.2022')::TDateTime , inEndDate := ('24.11.2022')::TDateTime, inPriceDate := ('24.11.2022')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 1613498 ,  inSession := '9457');
+
+
+
+select * from gpReport_GoodsMI_byMovement(inStartDate := ('03.05.2022')::TDateTime , inEndDate := ('03.05.2022')::TDateTime,inPriceDate:=('03.05.2022')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 7835 ,  inSession := '9457');
+
+

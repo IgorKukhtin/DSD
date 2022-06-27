@@ -22,7 +22,7 @@ RETURNS TABLE (MovementId_OrderClient Integer
              , MaterialOptionsId Integer, MaterialOptionsName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
 
-             , ProdColorPatternId Integer
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
 
              , isSale Boolean
              , isEnabled Boolean
@@ -180,17 +180,14 @@ BEGIN
                                                          ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Goods.ChildObjectId
                                                         AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
 
-<<<<<<< HEAD
                                    -- Цена продажи без НДС Опции
                                    LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
                                                          ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
                                                         AND ObjectFloat_SalePrice.DescId   = zc_ObjectFloat_ProdOptions_SalePrice()
-=======
 
                                    LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
                                                         ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
                                                        AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
->>>>>>> origin/master
 
                               WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
                                 AND Object_ProdOptions.isErased = FALSE
@@ -532,7 +529,8 @@ BEGIN
          , tmpGoods.GoodsCode
          , tmpGoods.GoodsName
 
-         , tmpRes.ProdColorPatternId          :: Integer AS ProdColorPatternId
+         , tmpRes.ProdColorPatternId          :: Integer  AS ProdColorPatternId
+         , Object_ProdColorPattern.ValueData  :: TVarChar AS ProdColorPatternName
 
          , tmpProduct.isSale                  ::Boolean   AS isSale
          , tmpRes.isEnabled                   ::Boolean   AS isEnabled
@@ -576,6 +574,7 @@ BEGIN
           LEFT JOIN Object AS Object_ProdOptions     ON Object_ProdOptions.Id    = tmpRes.ProdOptionsId
           LEFT JOIN Object AS Object_ProdOptPattern  ON Object_ProdOptPattern.Id = tmpRes.ProdOptPatternId
           LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = tmpRes.MaterialOptionsId
+          LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpRes.ProdColorPatternId
 
           LEFT JOIN tmpProduct ON tmpProduct.Id    = tmpRes.ProductId
           LEFT JOIN tmpGoods   ON tmpGoods.GoodsId = tmpRes.GoodsId

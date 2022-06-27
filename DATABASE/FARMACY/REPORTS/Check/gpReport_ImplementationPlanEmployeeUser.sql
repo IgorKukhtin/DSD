@@ -42,7 +42,7 @@ BEGIN
 
     IF inSession = '3'
     THEN
-      vbUserId := 12625219;
+      vbUserId := 4085634;
     END IF;
 
     vbDateStart := date_trunc('month', inStartDate);
@@ -695,7 +695,7 @@ BEGIN
           LEFT JOIN tmPersonal_View AS Personal_View 
                                     ON Personal_View.UserID =  Result.UserId
                                    AND Personal_View.Ord = 1  
-          
+     WHERE Personal_View.isReleasedMarketingPlan = False
      ORDER BY Result.ID;
 
 END;

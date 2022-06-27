@@ -28,7 +28,7 @@ BEGIN
        WITH 
        tmpObject AS (SELECT '<Field FieldName = "Значение" FieldValue = "' || zfStrToXmlStr(Object.ValueData) || '"/>'
                          || '<Field FieldName = "Код" FieldValue = "' || Object.ObjectCode || '"/>'
-                         || '<Field FieldName = "Доступ" FieldValue = "' || CASE WHEN Object.AccessKeyId IS NULL THEN 'NULL' ELSE Object.AccessKeyId :: TVarChar END || '"/>'
+                         || '<Field FieldName = "Доступ" FieldValue = "' || CASE WHEN Object.AccessKeyId IS NULL THEN 'NULL' ELSE Object.AccessKeyId :: TBlob END || '"/>'
                          || '<Field FieldName = "Удален" FieldValue = "' || Object.isErased || '"/>' AS FieldXML
                           , 1 AS GroupId
                           , Object.DescId
@@ -36,7 +36,7 @@ BEGIN
                      WHERE Object.Id = inObjectId
                         )
   
-     , tmpObjectFloat AS (SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectFloatDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+     , tmpObjectFloat AS (SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectFloatDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectFloat.ValueData :: TBlob, 'NULL') || '"/>' AS FieldXML 
                                , 2 AS GroupId
                                , ObjectFloat.DescId
                           FROM ObjectFloat
@@ -56,7 +56,7 @@ BEGIN
                                                                                                )
                                                                           THEN zfConvert_DateTimeShortToString (ObjectDate.ValueData)
                                                                      ELSE zfConvert_DateToString (ObjectDate.ValueData)
-                                                                END, 'NULL') || '"/>' :: TVarChar AS FieldXML 
+                                                                END, 'NULL') || '"/>' :: TBlob AS FieldXML 
                               , 3 AS GroupId
                               , ObjectDate.DescId
                          FROM ObjectDate
@@ -85,7 +85,7 @@ BEGIN
                              AND ObjectString.DescId <> zc_ObjectString_Goods_Analog()
                           )
   
-     , tmpObjectBoolean AS (SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectBooleanDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+     , tmpObjectBoolean AS (SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectBooleanDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectBoolean.ValueData :: TBlob, 'NULL') || '"/>' AS FieldXML 
                                  , 6 AS GroupId
                                  , ObjectBoolean.DescId
                             FROM ObjectBoolean

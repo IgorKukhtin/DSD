@@ -2214,18 +2214,18 @@ object ProductForm: TProductForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ProdOptionsId'
+          Name = 'ProdColorPatternId'
           Value = Null
           Component = ProdOptItemsCDS
-          ComponentItem = 'ProdOptionsId'
+          ComponentItem = 'ProdColorPatternId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ProdOptionsName'
+          Name = 'ProdColorPatternName'
           Value = Null
           Component = ProdOptItemsCDS
-          ComponentItem = 'ProdOptionsName'
+          ComponentItem = 'ProdColorPatternName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

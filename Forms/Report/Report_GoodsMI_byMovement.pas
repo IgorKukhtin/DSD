@@ -75,6 +75,10 @@ type
     SummPartner_10250: TcxGridDBColumn;
     ChangePercent: TcxGridDBColumn;
     PriceListName: TcxGridDBColumn;
+    cxLabel9: TcxLabel;
+    dePriceDate: TcxDateEdit;
+    actPriceListGoods: TdsdOpenForm;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

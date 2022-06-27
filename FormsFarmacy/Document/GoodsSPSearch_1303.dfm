@@ -27,6 +27,11 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
+            end
+            item
+              Format = #1057#1090#1088#1086#1082' 0'
+              Kind = skCount
+              Column = IntenalSP_1303Name
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -42,7 +47,9 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
           Styles.Footer = nil
           Styles.Header = nil
           object IntenalSP_1303Name: TcxGridDBColumn [0]
-            Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            Caption = 
+              #9#1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1072#1073#1086' '#1079#1072#1075#1072#1083#1100#1085#1086#1087#1088#1080#1081#1085#1103#1090#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086 +
+              ' '#1079#1072#1089#1086#1073#1091
             DataBinding.FieldName = 'IntenalSP_1303Name'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -54,7 +61,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 97
+            Width = 151
           end
           object BrandSPName: TcxGridDBColumn [1]
             Caption = #1058#1086#1088#1075#1086#1074#1077#1083#1100#1085#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
@@ -116,9 +123,9 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 134
           end
-          object MakerSP_1303Name: TcxGridDBColumn [5]
+          object MakerCountrySP_1303Name: TcxGridDBColumn [5]
             Caption = #1053#1072#1081#1084#1077#1085#1091#1074#1072#1085#1085#1103' '#1074#1080#1088#1086#1073#1085#1080#1082#1072', '#1082#1088#1072#1111#1085#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
-            DataBinding.FieldName = 'MakerSP_1303Name'
+            DataBinding.FieldName = 'MakerCountrySP_1303Name'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item

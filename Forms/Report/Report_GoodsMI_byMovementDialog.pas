@@ -41,6 +41,8 @@ type
     cxLabel8: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    dePriceDate: TcxDateEdit;
   private
     { Private declarations }
   public

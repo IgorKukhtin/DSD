@@ -3,9 +3,9 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_MaterialOptionsChoice (Integer,Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MaterialOptionsChoice(
-    IN inProdOptionsId Integer,
-    IN inIsShowAll     Boolean,            -- признак показать удаленные да / нет 
-    IN inSession       TVarChar            -- сессия пользователя
+    IN inProdColorPatternId Integer,
+    IN inIsShowAll          Boolean,            -- признак показать удаленные да / нет 
+    IN inSession            TVarChar            -- сессия пользователя
    
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -35,8 +35,12 @@ BEGIN
        FROM Object AS Object_MaterialOptions
 
           LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
-                                ON ObjectLink_MaterialOptions.ChildObjectId = Object_MaterialOptions.Id
-                               AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+                               ON ObjectLink_MaterialOptions.ChildObjectId = Object_MaterialOptions.Id
+                              AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                               ON ObjectLink_ProdColorPattern.ObjectId = ObjectLink_MaterialOptions.ObjectId
+                              AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern()
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_MaterialOptions.Id
@@ -48,7 +52,7 @@ BEGIN
                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
        WHERE Object_MaterialOptions.DescId = zc_Object_MaterialOptions()
          AND (Object_MaterialOptions.isErased = FALSE OR inIsShowAll = TRUE)
-         AND (ObjectLink_MaterialOptions.ObjectId = inProdOptionsId OR inProdOptionsId = 0)
+         AND (ObjectLink_ProdColorPattern.ChildObjectId = inProdColorPatternId OR inProdColorPatternId = 0)
        ;
 
 END;
@@ -63,4 +67,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_MaterialOptionsChoice (0,inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_MaterialOptionsChoice (inProdColorPatternId :=0, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
