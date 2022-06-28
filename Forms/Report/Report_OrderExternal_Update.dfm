@@ -1,29 +1,29 @@
 inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
   Caption = #1054#1090#1095#1077#1090' <'#1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' - '#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077'>'
-  ClientHeight = 483
+  ClientHeight = 590
   ClientWidth = 928
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 944
-  ExplicitHeight = 522
+  ExplicitHeight = 629
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
     Width = 928
-    Height = 424
+    Height = 317
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 928
     ExplicitHeight = 424
-    ClientRectBottom = 424
+    ClientRectBottom = 317
     ClientRectRight = 928
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 928
       ExplicitHeight = 424
       inherited cxGrid: TcxGrid
         Width = 928
-        Height = 424
+        Height = 317
         ExplicitWidth = 928
         ExplicitHeight = 424
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -480,6 +480,55 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     Left = 539
     Top = 6
     Caption = #1057#1082#1083#1072#1076':'
+  end
+  object cxSplitter1: TcxSplitter [4]
+    Left = 0
+    Top = 376
+    Width = 928
+    Height = 8
+    HotZoneClassName = 'TcxMediaPlayer8Style'
+    AlignSplitter = salBottom
+    Control = grChart
+    ExplicitTop = 269
+    ExplicitWidth = 8
+  end
+  object grChart: TcxGrid [5]
+    Left = 0
+    Top = 384
+    Width = 928
+    Height = 206
+    Align = alBottom
+    TabOrder = 9
+    ExplicitTop = 277
+    ExplicitWidth = 894
+    object grChartDBChartView1: TcxGridDBChartView
+      DataController.DataSource = MasterDS
+      DiagramArea.Values.LineWidth = 2
+      DiagramLine.Active = True
+      DiagramLine.Values.LineWidth = 2
+      ToolBox.CustomizeButton = True
+      ToolBox.DiagramSelector = True
+      object dgOperDate_CarInfo: TcxGridDBChartDataGroup
+        DataBinding.FieldName = 'OperDate_CarInfo'
+        DisplayText = #1044#1072#1090#1072'/'#1074#1088' '#1086#1090#1075#1088#1091#1079#1082#1080
+      end
+      object grDayOfWeekName_CarInfo: TcxGridDBChartDataGroup
+        DataBinding.FieldName = 'DayOfWeekName_CarInfo'
+        DisplayText = #1044#1077#1085#1100' '#1086#1090#1075#1088#1091#1079#1082#1080
+      end
+      object serCountPartner: TcxGridDBChartSeries
+        DataBinding.FieldName = 'CountPartner'
+        DisplayText = #1048#1090#1086#1075#1086' '#1058#1058'/'#1044#1086#1082'.'
+      end
+      object serAmountWeight: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AmountWeight'
+        DisplayText = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086', '#1074#1077#1089
+        Visible = False
+      end
+    end
+    object grChartLevel1: TcxGridLevel
+      GridView = grChartDBChartView1
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -1566,6 +1615,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       end>
     PackSize = 1
     Left = 624
-    Top = 360
+    Top = 232
   end
 end

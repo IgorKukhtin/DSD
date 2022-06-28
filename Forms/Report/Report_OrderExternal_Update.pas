@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxGridChartView, cxGridDBChartView, cxSplitter;
 
 type
   TReport_OrderExternal_UpdateForm = class(TAncestorReportForm)
@@ -73,6 +74,14 @@ type
     spUpdate_CarInfo_grid: TdsdStoredProc;
     actUpdate_CarInfo_grid: TdsdExecStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    cxSplitter1: TcxSplitter;
+    grChart: TcxGrid;
+    grChartDBChartView1: TcxGridDBChartView;
+    dgOperDate_CarInfo: TcxGridDBChartDataGroup;
+    serCountPartner: TcxGridDBChartSeries;
+    serAmountWeight: TcxGridDBChartSeries;
+    grChartLevel1: TcxGridLevel;
+    grDayOfWeekName_CarInfo: TcxGridDBChartDataGroup;
   private
     { Private declarations }
   public
