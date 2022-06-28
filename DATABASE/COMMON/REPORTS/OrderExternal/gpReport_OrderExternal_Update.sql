@@ -22,7 +22,7 @@ RETURNS TABLE (OperDate        TDateTime
              , AmountSh TFloat
              , AmountWeight TFloat
              , CountPartner TFloat
-             , Days Integer, Times TFloat
+             , Days Integer, Times TVarChar
 
              , DayOfWeekName          TVarChar
              , DayOfWeekName_Partner  TVarChar
@@ -191,7 +191,7 @@ BEGIN
            , tmpMovement.AmountWeight   :: TFloat  AS AmountWeight
            , tmpMovement.CountPartner   :: TFloat  AS CountPartner
            , 0                          :: Integer AS Days
-           , 0                          :: TFloat  AS Times 
+           , ''                         ::TVarChar AS Times
            
            , tmpWeekDay.DayOfWeekName         ::TVarChar AS DayOfWeekName
            , tmpWeekDay_Partner.DayOfWeekName ::TVarChar AS DayOfWeekName_Partner
