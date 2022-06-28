@@ -79,6 +79,7 @@ type
     dePriceDate: TcxDateEdit;
     actPriceListGoods: TdsdOpenForm;
     bb: TdxBarButton;
+    ContractName: TcxGridDBColumn;
   private
     { Private declarations }
   public

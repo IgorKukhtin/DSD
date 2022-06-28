@@ -455,10 +455,11 @@ object Check_RefusalConfirmedForm: TCheck_RefusalConfirmedForm
       ImageIndex = 80
       QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1085#1077' '#1087#1088#1080#1076#1077#1090'"?'
     end
-    object actMovementUnComplete: TdsdChangeMovementStatus
+    object actMovementUnComplete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       AfterAction = FormClose
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -467,7 +468,6 @@ object Check_RefusalConfirmedForm: TCheck_RefusalConfirmedForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1095#1077#1082
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1095#1077#1082
       ImageIndex = 11
-      Status = mtUncomplete
       QuestionBeforeExecute = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1095#1077#1082'?'
     end
   end

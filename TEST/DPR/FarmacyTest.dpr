@@ -1219,7 +1219,9 @@ uses
   MedicForSale in '..\..\FormsFarmacy\Guides\MedicForSale.pas' {MedicForSaleForm: TParentForm},
   BuyerForSale in '..\..\FormsFarmacy\Guides\BuyerForSale.pas' {BuyerForSaleForm: TParentForm},
   MedicForSaleEdit in '..\..\FormsFarmacy\Guides\MedicForSaleEdit.pas' {MedicForSaleEditForm: TParentForm},
-  BuyerForSaleEdit in '..\..\FormsFarmacy\Guides\BuyerForSaleEdit.pas' {BuyerForSaleEditForm: TParentForm};
+  BuyerForSaleEdit in '..\..\FormsFarmacy\Guides\BuyerForSaleEdit.pas' {BuyerForSaleEditForm: TParentForm},
+  Report_Check_SiteDelayDialog in '..\..\FormsFarmacy\Report\Report_Check_SiteDelayDialog.pas' {Report_Check_SiteDelayDialogForm: TParentForm},
+  Report_Check_SiteDelay in '..\..\FormsFarmacy\Report\Report_Check_SiteDelay.pas' {Report_Check_SiteDelayForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

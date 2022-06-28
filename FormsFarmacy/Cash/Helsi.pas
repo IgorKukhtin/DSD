@@ -219,7 +219,7 @@ end;
 constructor THelsiApi.Create;
 begin
   FRESTClient := TRESTClient.Create('');
-//  FRESTClient.HandleRedirects := False;
+  FRESTClient.HandleRedirects := False;
   FRESTResponse := TRESTResponse.Create(Nil);
   FRESTRequest := TRESTRequest.Create(Nil);
   FRESTRequest.Client := FRESTClient;
@@ -463,6 +463,11 @@ begin
     FRESTRequest.Execute;
   except
   end;
+
+  ShowMessage(FHelsi_be + '/receipts/' + FNumber);
+
+  ShowMessage(IntToStr(FRESTResponse.StatusCode) + ' ' + FRESTResponse.StatusText + #13#10 + FRESTResponse.Content);
+
 
 //  if FRESTResponse.JSONValue <> Nil then InputBox('11', s, FHelsi_be + #13#10 + IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText + #13#10 + FRESTResponse.JSONValue.ToString)
 //  else InputBox('11', s, FHelsi_be + #13#10 + IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText + #13#10 + FRESTResponse.Content);
@@ -1283,9 +1288,10 @@ begin
 end;
 
 function GetHelsiReceiptState(const AReceipt : String; var AState, AProgramMedicationId : string; var AIniError : boolean) : boolean;
-  var I : integer;
+  var I : integer; bIniError : boolean;
 begin
   Result := False;
+  bIniError := AIniError;
   AState := 'Error';
 
   if not CheckRequest_Number(AReceipt) then Exit;
@@ -1316,7 +1322,7 @@ begin
 
   if HelsiApi.FShow_eHealth then
   begin
-    ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(HelsiApi.FShow_Location), nil, nil, SW_SHOWNORMAL);
+    if not bIniError then ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(HelsiApi.FShow_Location), nil, nil, SW_SHOWNORMAL);
     HelsiApi.FShow_eHealth := False;
     HelsiApi.FShow_Location := '';
     Exit;

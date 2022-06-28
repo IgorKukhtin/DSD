@@ -958,6 +958,8 @@ type
     N355: TMenuItem;
     actGoodsSPSearch_1303Journal: TdsdOpenForm;
     N13034: TMenuItem;
+    actReport_Check_SiteDelay: TdsdOpenForm;
+    N356: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

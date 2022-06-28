@@ -266,6 +266,15 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object ContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
+            Width = 70
+          end
           object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
             DataBinding.FieldName = 'PartnerCode'
