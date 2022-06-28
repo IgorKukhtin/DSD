@@ -1,7 +1,7 @@
 -- Function: gpSelect_Object_ReceiptProdModelChild_ProdColorPattern()
 
---DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (Integer,Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModelChild_ProdColorPattern(
     IN inReceiptLevelId  Integer,
@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, ReceiptProdModelId Integer
              , isErased Boolean
              , NPP Integer
 
+             , MaterialOptionsId Integer, MaterialOptionsName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
@@ -75,6 +76,8 @@ BEGIN
                                        , ObjectLink_Object.ChildObjectId                 AS ObjectId
                                          -- нашли Элемент Boat Structure
                                        , ObjectLink_ProdColorPattern.ChildObjectId       AS ProdColorPatternId
+                                         -- Категория Опций
+                                       , ObjectLink_MaterialOptions.ChildObjectId        AS MaterialOptionsId
                                          -- умножили
                                        , tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData AS Value
                                   FROM tmpReceiptProdModelChild
@@ -103,6 +106,10 @@ BEGIN
                                        LEFT JOIN ObjectLink AS ObjectLink_Object
                                                             ON ObjectLink_Object.ObjectId      = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                                            AND ObjectLink_Object.DescId        = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                       -- Категория Опций
+                                       LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                            ON ObjectLink_MaterialOptions.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                           AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
                                        -- значение в сборке
                                        LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                              ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
@@ -116,6 +123,9 @@ BEGIN
           , tmpProdColorPattern.isErased      :: Boolean  AS isErased
           , ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptProdModelId ORDER BY Object_ProdColorPattern.ObjectCode ASC) :: Integer AS NPP
 
+          , Object_MaterialOptions.Id          ::Integer  AS MaterialOptionsId
+          , Object_MaterialOptions.ValueData   ::TVarChar AS MaterialOptionsName
+
           , Object_ProdColorPattern.Id              AS ProdColorPatternId
           , Object_ProdColorPattern.ObjectCode      AS ProdColorPatternCode
           , Object_ProdColorPattern.ValueData       AS ProdColorPatternName
@@ -124,7 +134,7 @@ BEGIN
           , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
           , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
           , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
-
+          
           , Object_Goods.Id                    ::Integer  AS GoodsId
           , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
           , Object_Goods.ValueData             ::TVarChar AS GoodsName
@@ -149,6 +159,9 @@ BEGIN
 
      FROM tmpProdColorPattern
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId
+          
+          LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = tmpProdColorPattern.MaterialOptionsId
+          
 
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
@@ -213,4 +226,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (0, FALSE, zfCalc_UserAdmin())

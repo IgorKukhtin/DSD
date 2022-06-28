@@ -96,7 +96,7 @@ BEGIN
                                    , lpSelect.Value
                                      --
                                    , lpSelect.ProdColorPatternId
-                                   , lpSelect.ProdOptionsId, lpSelect.ProdOptionsCode, lpSelect.ProdOptionsName
+                                 --, lpSelect.ProdOptionsId, lpSelect.ProdOptionsCode, lpSelect.ProdOptionsName
                                      -- Цвет /либо Comment из Boat Structure
                                    , lpSelect.ProdColorId, lpSelect.ProdColorName
 
@@ -120,7 +120,7 @@ BEGIN
                                    , tmpProdColorPattern_all.Value
                                      --
                                    , tmpProdColorPattern_all.ProdColorPatternId
-                                   , tmpProdColorPattern_all.ProdOptionsId, tmpProdColorPattern_all.ProdOptionsCode, tmpProdColorPattern_all.ProdOptionsName
+                                 --, tmpProdColorPattern_all.ProdOptionsId, tmpProdColorPattern_all.ProdOptionsCode, tmpProdColorPattern_all.ProdOptionsName
                                      -- Цвет /либо Comment из Boat Structure
                                    , tmpProdColorPattern_all.ProdColorId, tmpProdColorPattern_all.ProdColorName
 
@@ -143,11 +143,11 @@ BEGIN
                                      -- как правило не установлена
                                    , COALESCE (ObjectLink_Model.ChildObjectId, 0) AS ModelId
                                      -- 
-                                   , ObjectLink_Goods.ChildObjectId AS GoodsId
-                                   , Object_ProdColor.Id            AS ProdColorId
-                                   , Object_ProdColor.ValueData     AS ProdColorName
-                                   , 0                              AS ProdColorPatternId
-                                   , ObjectLink_MaterialOptions.ChildObjectId AS MaterialOptionsId
+                                   , ObjectLink_Goods.ChildObjectId               AS GoodsId
+                                   , Object_ProdColor.Id                          AS ProdColorId
+                                   , Object_ProdColor.ValueData                   AS ProdColorName
+                                   , ObjectLink_ProdColorPattern.ChildObjectId    AS ProdColorPatternId
+                                   , ObjectLink_MaterialOptions.ChildObjectId     AS MaterialOptionsId
 
                                      -- Кол-во
                                    , 1                             AS Value
@@ -180,14 +180,17 @@ BEGIN
                                                          ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Goods.ChildObjectId
                                                         AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
 
+                                   LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                        ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdOptions.Id
+                                                       AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern()
+                                   LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                        ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                                                       AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+
                                    -- Цена продажи без НДС Опции
                                    LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
                                                          ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
                                                         AND ObjectFloat_SalePrice.DescId   = zc_ObjectFloat_ProdOptions_SalePrice()
-
-                                   LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
-                                                        ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
-                                                       AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
 
                               WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
                                 AND Object_ProdOptions.isErased = FALSE
@@ -438,7 +441,7 @@ BEGIN
                          , tmpProdOptions.ProdColorPatternId
                          , tmpProdOptions.ProdColorId
                          , tmpProdOptions.ProdColorName
-                         , tmpProdOptItems.MaterialOptionsId
+                         , tmpProdOptions.MaterialOptionsId
 
                            -- % скидки
                          , 0     :: TFloat   AS DiscountTax
@@ -507,7 +510,15 @@ BEGIN
          , tmpRes.Id
          , tmpRes.Code
          , tmpRes.Name
-         , ROW_NUMBER() OVER (PARTITION BY tmpProduct.Id ORDER BY CASE WHEN tmpRes.Id > 0 THEN 0 WHEN tmpRes.ProdColorPatternId > 0 THEN 1 ELSE 2 END, tmpRes.Id ASC, Object_ProdOptions.ObjectCode ASC) :: Integer AS NPP
+         , ROW_NUMBER() OVER (PARTITION BY tmpProduct.Id ORDER BY CASE WHEN tmpRes.ProdColorPatternId > 0 THEN 0
+                                                                       WHEN tmpRes.Id > 0 THEN 1
+                                                                       ELSE 2
+                                                                  END
+                                                                , COALESCE (Object_ProdColorPattern.ObjectCode, 0) ASC
+                                                                , tmpRes.Id ASC
+                                                                , COALESCE (ObjectFloat_ProdOptions_CodeVergl.ValueData, 0) ASC
+                                                                , Object_ProdOptions.ObjectCode ASC
+                                                                 ) :: Integer AS NPP
 
          , ObjectString_PartNumber.ValueData  ::TVarChar  AS PartNumber
          , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
@@ -594,6 +605,10 @@ BEGIN
           LEFT JOIN ObjectDate AS ObjectDate_Insert
                                ON ObjectDate_Insert.ObjectId = tmpRes.Id
                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_ProdOptions_CodeVergl
+                                ON ObjectFloat_ProdOptions_CodeVergl.ObjectId = Object_ProdOptions.Id
+                               AND ObjectFloat_ProdOptions_CodeVergl.DescId = zc_ObjectFloat_ProdOptions_CodeVergl()
     ;
 
 END;

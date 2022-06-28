@@ -334,8 +334,8 @@
 				<Form>ProdColorGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptions.pas">
-				<Form>ProdOptionsForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptions_Object.pas">
+				<Form>ProdOptions_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorGroupEdit.pas">
@@ -1122,6 +1122,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\MaterialOptionsChoice.pas">
 				<Form>MaterialOptionsChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptions.pas">
+				<Form>ProdOptionsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

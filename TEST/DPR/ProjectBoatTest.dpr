@@ -126,7 +126,7 @@ uses
   ProdEngine in '..\..\FormsBoat\Guides\ProdEngine.pas' {ProdEngineForm: TParentForm},
   ProdEngineEdit in '..\..\FormsBoat\Guides\ProdEngineEdit.pas' {ProdEngineEditForm: TParentForm},
   ProdColorGroup in '..\..\FormsBoat\Guides\ProdColorGroup.pas' {ProdColorGroupForm: TParentForm},
-  ProdOptions in '..\..\FormsBoat\Guides\ProdOptions.pas' {ProdOptionsForm: TParentForm},
+  ProdOptions_Object in '..\..\FormsBoat\Guides\ProdOptions_Object.pas' {ProdOptions_ObjectForm: TParentForm},
   ProdColorGroupEdit in '..\..\FormsBoat\Guides\ProdColorGroupEdit.pas' {ProdColorGroupEditForm: TParentForm},
   ProdOptionsEdit in '..\..\FormsBoat\Guides\ProdOptionsEdit.pas' {ProdOptionsEditForm: TParentForm},
   ProdColor_goods in '..\..\FormsBoat\Guides\ProdColor_goods.pas' {ProdColor_goodsForm: TParentForm},
@@ -328,7 +328,8 @@ uses
   ReceiptGoodsEditEnter in '..\..\FormsBoat\Guides\ReceiptGoodsEditEnter.pas' {ReceiptGoodsEditEnterForm: TParentForm},
   MaterialOptionsEdit in '..\..\FormsBoat\Guides\MaterialOptionsEdit.pas' {MaterialOptionsEditForm: TParentForm},
   MaterialOptions in '..\..\FormsBoat\Guides\MaterialOptions.pas' {MaterialOptionsForm: TParentForm},
-  MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm};
+  MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm},
+  ProdOptions in '..\..\FormsBoat\Guides\ProdOptions.pas' {ProdOptionsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

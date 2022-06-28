@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptionsChoice (Integer, Boolean, Boo
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdOptionsChoice(
     IN inModelId     Integer,
-    IN inIsShowAll    Boolean,
+    IN inIsShowAll   Boolean,
     IN inIsErased    Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -54,8 +54,8 @@ BEGIN
      -- Результат
      SELECT
            MIN (tmpSelect.Id)    :: Integer  AS Id
-         , MIN (tmpSelect.Code)  :: Integer  AS
-         , MIN (tmpSelect.Name)  :: TVarChar AS Name
+         , MIN (tmpSelect.Code)  :: Integer  AS Code
+         , tmpSelect.Name        :: TVarChar AS Name
 
          , tmpSelect.ModelId
          , tmpSelect.ModelCode
@@ -112,7 +112,8 @@ BEGIN
 
      FROM tmpSelect
 
-     GROUP BY tmpSelect.ModelId
+     GROUP BY tmpSelect.Name
+            , tmpSelect.ModelId
             , tmpSelect.ModelCode
             , tmpSelect.ModelName
             , tmpSelect.BrandId

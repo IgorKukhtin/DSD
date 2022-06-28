@@ -193,6 +193,7 @@ type
     Panel4: TPanel;
     actGridGoodsToExcel: TdsdGridToExcel;
     bbGridGoodsToExcel: TdxBarButton;
+    MaterialOptionsName_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

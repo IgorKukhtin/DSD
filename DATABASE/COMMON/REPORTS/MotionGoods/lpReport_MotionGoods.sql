@@ -556,6 +556,8 @@ end if;
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
+                                                    -- НЕ заправка со склада - расход
+                                                    AND (MIContainer.isActive = TRUE OR MIContainer.Amount >= 0)
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS CountIncome
@@ -578,6 +580,13 @@ end if;
                                                     AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                     AND MIContainer.isActive = FALSE
                                                         THEN -1 * MIContainer.Amount
+
+                                                   -- заправка со склада - расход
+                                                   WHEN _tmpContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
+                                                    AND (MIContainer.isActive = FALSE AND MIContainer.Amount < 0)
+                                                        THEN -1 * MIContainer.Amount
+
                                                    ELSE 0
                                               END) AS CountSendOut
 
@@ -750,6 +759,8 @@ end if;
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
+                                                   -- НЕ заправка со склада - расход
+                                                   AND (MIContainer.isActive = TRUE OR MIContainer.Amount >= 0)
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS SummIncome
@@ -772,6 +783,13 @@ end if;
                                                    AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                    AND MIContainer.isActive = FALSE
                                                        THEN -1 * MIContainer.Amount
+
+                                                   -- заправка со склада - расход
+                                                   WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
+                                                   AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
+                                                   AND (MIContainer.isActive = FALSE AND MIContainer.Amount < 0)
+                                                       THEN -1 * MIContainer.Amount
+
                                                   ELSE 0
                                              END) AS SummSendOut
 
@@ -1016,6 +1034,8 @@ end if;
                                          SUM (CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
+                                                    -- НЕ заправка со склада - расход
+                                                    AND (MIContainer.isActive = TRUE OR MIContainer.Amount >= 0)
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) <> 0 -- AS CountIncome
@@ -1038,6 +1058,13 @@ end if;
                                                     AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                     AND MIContainer.isActive = FALSE
                                                         THEN -1 * MIContainer.Amount
+
+                                                   -- заправка со склада - расход
+                                                   WHEN _tmpContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
+                                                    AND (MIContainer.isActive = FALSE AND MIContainer.Amount < 0)
+                                                        THEN -1 * MIContainer.Amount
+
                                                    ELSE 0
                                               END) <> 0 -- AS CountSendOut
 
@@ -1200,6 +1227,8 @@ end if;
                                       OR SUM (CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
+                                                   -- НЕ заправка со склада - расход
+                                                   AND (MIContainer.isActive = TRUE OR MIContainer.Amount >= 0)
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) <> 0 -- AS SummIncome
@@ -1221,6 +1250,11 @@ end if;
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                    AND MIContainer.isActive = FALSE
+                                                       THEN -1 * MIContainer.Amount
+                                                   -- заправка со склада - расход
+                                                   WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
+                                                   AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
+                                                   AND (MIContainer.isActive = FALSE AND MIContainer.Amount < 0)
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) <> 0 -- AS SummSendOut

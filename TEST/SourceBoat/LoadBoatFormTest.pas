@@ -697,6 +697,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProdOptionsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptionsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProdOptionsEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptions_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdOptions_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadProdOptItemsFormTest;

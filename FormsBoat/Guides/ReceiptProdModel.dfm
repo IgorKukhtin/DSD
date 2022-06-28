@@ -437,6 +437,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Options.Editing = False
           Width = 80
         end
+        object MaterialOptionsName_ch2: TcxGridDBColumn
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
+          DataBinding.FieldName = 'MaterialOptionsName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object Value_ch2: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
           PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1238,8 +1246,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = 2
-      ExplicitTop = 1
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -2337,6 +2343,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1074' Excel'
       ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object spSelect: TdsdStoredProc

@@ -229,7 +229,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_ProdColorPattern.Id > 0 THEN 0 ELSE 1 END ASC
                                      , COALESCE (Object_ProdColorPattern.ObjectCode, 0) ASC
                                      , COALESCE (ObjectFloat_ProdOptions_CodeVergl.ValueData, 0) ASC
-                                     , Object_ProdOptions.ObjectCode
+                                     , Object_ProdOptions.ObjectCode ASC
                              ) :: Integer AS NPP
 
      FROM Object AS Object_ProdOptions
