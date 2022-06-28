@@ -20,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_byMovement (
 RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, ChangePercent TFloat
              , PriceListId Integer, PriceListName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
+             , ContractId Integer, ContractName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -225,8 +226,6 @@ BEGIN
                                                          ON MIFloat_CountForPrice.MovementItemId = MIContainer.MovementItemId
                                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
-
-
                              LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                        ON MovementBoolean_PriceWithVAT.MovementId =  MIContainer.MovementId
                                                       AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -353,6 +352,31 @@ BEGIN
                         , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.isBarCode   ELSE FALSE END
                         , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.ChangePercentAmount ELSE 0 END
                 )
+
+       , tmpMLO_PriceList AS (SELECT MovementLinkObject_PriceList.*
+                              FROM MovementLinkObject AS MovementLinkObject_PriceList
+                              WHERE MovementLinkObject_PriceList.MovementId IN (SELECT DISTINCT tmpOperationGroup_all.MovementId FROM tmpOperationGroup_all)
+                                AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+                              )
+
+       , tmpMLO_Contract AS (SELECT MovementLinkObject_Contract.*
+                             FROM MovementLinkObject AS MovementLinkObject_Contract
+                             WHERE MovementLinkObject_Contract.MovementId IN (SELECT DISTINCT tmpOperationGroup_all.MovementId FROM tmpOperationGroup_all)
+                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                            )
+
+       , tmpMD_OperDatePartner AS (SELECT MovementDate.*
+                                   FROM MovementDate
+                                   WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpOperationGroup_all.MovementId FROM tmpOperationGroup_all)
+                                     AND MovementDate.DescId = zc_MovementDate_OperDatePartner()
+                                  )
+
+       , tmpMF_ChangePercent AS (SELECT MovementFloat.*
+                                   FROM MovementFloat
+                                   WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpOperationGroup_all.MovementId FROM tmpOperationGroup_all)
+                                     AND MovementFloat.DescId = zc_MovementFloat_ChangePercent()
+                                  )
+
        , tmpOperationGroup AS
                 (SELECT MovementDesc.ItemName
                       , Movement.Id                            AS MovementId
@@ -392,15 +416,15 @@ BEGIN
                  FROM tmpOperationGroup_all AS tmpListContainerSumm
                       LEFT JOIN Movement ON Movement.Id = tmpListContainerSumm.MovementId
                       LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-                      LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                             ON MovementDate_OperDatePartner.MovementId =  tmpListContainerSumm.MovementId
-                                            AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
-                      LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                              ON MovementFloat_ChangePercent.MovementId =  tmpListContainerSumm.MovementId
-                                             AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-                      LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
-                                                   ON MovementLinkObject_PriceList.MovementId = tmpListContainerSumm.MovementId
-                                                  AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+                      LEFT JOIN tmpMD_OperDatePartner AS MovementDate_OperDatePartner
+                                                      ON MovementDate_OperDatePartner.MovementId =  tmpListContainerSumm.MovementId
+                                                     AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                      LEFT JOIN tmpMF_ChangePercent AS MovementFloat_ChangePercent
+                                                    ON MovementFloat_ChangePercent.MovementId =  tmpListContainerSumm.MovementId
+                                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                      LEFT JOIN tmpMLO_PriceList AS MovementLinkObject_PriceList
+                                                 ON MovementLinkObject_PriceList.MovementId = tmpListContainerSumm.MovementId
+                                                AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
                       LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
                                               ON ObjectBoolean_PriceWithVAT.ObjectId = MovementLinkObject_PriceList.ObjectId
                                              AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
@@ -426,7 +450,9 @@ BEGIN
                         , tmpListContainerSumm.Price
                         , tmpListContainerSumm.isBarCode
                         , tmpListContainerSumm.ChangePercentAmount
-                )
+                )      
+
+
     -- Результат
     SELECT tmpOperationGroup.ItemName
          , tmpOperationGroup.InvNumber
@@ -436,7 +462,9 @@ BEGIN
          , Object_PriceList.Id         AS PriceListId
          , Object_PriceList.ValueData  AS PriceListName
          , Object_Juridical.ObjectCode AS JuridicalCode
-         , Object_Juridical.ValueData  AS JuridicalName
+         , Object_Juridical.ValueData  AS JuridicalName 
+         , Object_Contract.Id          AS ContractId
+         , Object_Contract.ValueData   AS ContractName
          , Object_Partner.ObjectCode   AS PartnerCode
          , Object_Partner.ValueData    AS PartnerName
          , Object_Unit.ObjectCode      AS UnitCode
@@ -533,7 +561,12 @@ BEGIN
           LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= tmpOperationGroup.PriceListId
                                                         , inOperDate   := inPriceDate
                                                          ) AS lfSelectPrice_ ON lfSelectPrice_.GoodsId =tmpOperationGroup.GoodsId
-                                                                            AND lfSelectPrice_.GoodsKindId IS Null
+                                                                            AND lfSelectPrice_.GoodsKindId IS Null   
+
+          LEFT JOIN tmpMLO_Contract AS MovementLinkObject_Contract
+                                    ON MovementLinkObject_Contract.MovementId = tmpOperationGroup.MovementId
+          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
      ;
 
 END;
