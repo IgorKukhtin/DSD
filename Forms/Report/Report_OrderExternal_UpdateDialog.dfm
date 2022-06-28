@@ -39,7 +39,7 @@ object Report_OrderExternal_UpdateDialogForm: TReport_OrderExternal_UpdateDialog
   object deStart: TcxDateEdit
     Left = 124
     Top = 6
-    EditValue = 42005d
+    EditValue = 44562d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 86
@@ -66,17 +66,19 @@ object Report_OrderExternal_UpdateDialogForm: TReport_OrderExternal_UpdateDialog
     Width = 271
   end
   object cxLabel2: TcxLabel
-    Left = 8
+    Left = 5
     Top = 44
     Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    Visible = False
   end
   object deEnd: TcxDateEdit
     Left = 124
     Top = 43
-    EditValue = 43101d
+    EditValue = 44562d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 7
+    Visible = False
     Width = 86
   end
   object edIsDate_CarInfo: TcxCheckBox
@@ -84,6 +86,7 @@ object Report_OrderExternal_UpdateDialogForm: TReport_OrderExternal_UpdateDialog
     Top = 8
     Caption = #1055#1086' '#1076#1072#1090#1077' '#1086#1090#1075#1088#1091#1079#1082#1080
     TabOrder = 8
+    Visible = False
     Width = 117
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

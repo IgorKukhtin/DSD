@@ -1,19 +1,20 @@
--- Function: zfConvert_StringToNumber
+-- Function: zfConvert_StringToTime
 
--- DROP FUNCTION IF EXISTS zfConvert_StringToNumber (TVarChar);
+-- DROP FUNCTION IF EXISTS zfConvert_StringToTime (TVarChar);
 
-CREATE OR REPLACE FUNCTION zfConvert_StringToNumber(Number TVarChar)
-RETURNS Integer AS
+CREATE OR REPLACE FUNCTION zfConvert_StringToTime (Value TVarChar)
+RETURNS TDateTime AS
 $BODY$
 BEGIN
-  RETURN Number :: Integer;
+
+  RETURN Value :: TDateTime;
 EXCEPTION
   WHEN OTHERS THEN	
-     RETURN 0;
+     RETURN zc_DateStart();
+     
 END;
 $BODY$
-  LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION zfConvert_StringToNumber (TVarChar) OWNER TO postgres;
+  LANGUAGE PLPGSQL VOLATILE;
 
 
 /*-------------------------------------------------------------------------------*/
@@ -24,5 +25,4 @@ ALTER FUNCTION zfConvert_StringToNumber (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM zfConvert_StringToNumber ('TVarChar')
--- SELECT * FROM zfConvert_StringToNumber ('10')
+-- SELECT * FROM zfConvert_StringToTime ('10:00'), zc_DateStart()

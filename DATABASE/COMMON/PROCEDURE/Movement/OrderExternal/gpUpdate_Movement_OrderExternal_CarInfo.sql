@@ -10,47 +10,83 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDat
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderExternal_CarInfo(
     IN inOperDate                TDateTime , -- Дата документа
     IN inOperDatePartner         TDateTime , -- Дата отгрузки со склада
-    --IN inOperDate_CarInfo        TDateTime , --
    OUT outOperDate_CarInfo       TDateTime , --
+   OUT outDayName                TVarChar  , --
     IN inToId                    Integer   , -- Кому (в документе)
     IN inRouteId                 Integer   , -- Маршрут
     IN inRetailId                Integer   , -- торг. сеть
     IN inDays                    Integer   , --  +/- кол-во дней
-    IN inTimes                   TVarChar  , --  время
+ INOUT ioTimes                   TVarChar  , --  время
     IN inCarInfoName             TVarChar  , --  информация
     IN inCarComment              TVarChar  , -- примечание к отгрузке 
     IN inSession                 TVarChar    -- сессия пользователя
 )
-RETURNS TDateTime AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCarInfoId Integer;
+   DECLARE vbTimes TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal()); 
      
-     outOperDate_CarInfo := ((inOperDatePartner + ( inDays||' Day') ::interval)::Date
-                           ||' '||REPLACE (REPLACE (inTimes,'.' ,':')::TVarChar ,',' ,':')) TDateTime; 
+     -- Замена
+     IF TRIM (ioTimes) = '' THEN ioTimes:= '0'; END IF;
+
+     -- Расчет
+     vbTimes:= CASE WHEN STRPOS (REPLACE (REPLACE (REPLACE (ioTimes,'-' ,':'),'.' ,':'),',' ,':'), ':') > 0
+                         THEN REPLACE (REPLACE (REPLACE (ioTimes,'-' ,':'),'.' ,':'),',' ,':')
+                    ELSE ioTimes || ':00'
+               END;
+
+     --
+     IF COALESCE (inRouteId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Маршрут не установлен';
+     END IF;
+
+     --
+     IF STRPOS (vbTimes, ':') > 0
+     THEN
+         IF zfConvert_StringToTime ((inOperDatePartner + (inDays || ' Day') :: INTERVAL) :: Date ||' ' || vbTimes) = zc_DateStart()
+         THEN
+             RAISE EXCEPTION 'Ошибка.Неверный формат для времени : <%>', ioTimes;
+         END IF;
+     ELSE
+         IF ioTimes <> '0' AND (zfConvert_StringToNumber (ioTimes) = 0 OR zfConvert_StringToNumber (ioTimes) > 23)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Неверный формат для времени : <%>', ioTimes;
+         END IF;
+     END IF;
+     
+     
+        
+     --
+     outOperDate_CarInfo := ((inOperDatePartner + (inDays || ' Day') :: INTERVAL) :: Date ||' ' || vbTimes) TDateTime; 
+     --
+     outDayName:= (SELECT zfCalc.DayOfWeekName FROM zfCalc_DayOfWeekName (outOperDate_CarInfo) AS zfCalc);
+     --
+     ioTimes:= CASE WHEN zfConvert_TimeShortToString (outOperDate_CarInfo) = '00:00' THEN '' ELSE zfConvert_TimeShortToString (outOperDate_CarInfo) END;
      
      --RAISE EXCEPTION '<%>', outOperDate_CarInfo;
       
      -- пробуем найти  CarInfoId
-     vbCarInfoId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_CarInfo() AND Object.ValueData = TRIM (inCarInfoName) AND Object.isErased = False);
-     IF COALESCE (vbCarInfoId,0) = 0
+     vbCarInfoId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_CarInfo() AND Object.ValueData = TRIM (inCarInfoName) AND Object.isErased = FALSE AND inCarInfoName <> '');
+     IF COALESCE (vbCarInfoId,0) = 0 AND TRIM (inCarInfoName) <> ''
      THEN
          --сохраняем
-         vbCarInfoId := gpInsertUpdate_Object_CarInfo ( ioId       := 0     ::Integer        -- ключ объекта <Регионы> 
-                                                      , inCode     := 0     ::Integer        -- Код объекта  
-                                                      , inName     := TRIM (inCarInfoName) ::TVarChar        -- Название объекта 
-                                                      , inSession  := inSession            ::TVarChar        -- сессия пользователя
+         vbCarInfoId := gpInsertUpdate_Object_CarInfo (ioId       := 0     ::Integer        -- ключ объекта <Регионы> 
+                                                     , inCode     := 0     ::Integer        -- Код объекта  
+                                                     , inName     := TRIM (inCarInfoName) ::TVarChar        -- Название объекта 
+                                                     , inSession  := inSession            ::TVarChar        -- сессия пользователя
                                                       );
      END IF;
                                                       
      ---
-     PERFORM --lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), tmp.Id, inOperDate_CarInfo)       -- Дата/время отгрузки
-             lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), tmp.Id, outOperDate_CarInfo)        -- Дата/время отгрузки
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), tmp.Id, outOperDate_CarInfo)        -- Дата/время отгрузки
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CarInfo(), tmp.Id, vbCarInfoId)    -- Информация по отгрузке 
-           , lpInsertUpdate_MovementString (zc_MovementString_CarComment(), ioId, inCarComment)          -- примечание к отгрузке
+           , lpInsertUpdate_MovementString (zc_MovementString_CarComment(), tmp.Id, inCarComment)        -- примечание к отгрузке
      FROM (SELECT Movement.Id
            FROM Movement
                INNER JOIN MovementDate AS MovementDate_OperDatePartner
@@ -82,7 +118,9 @@ BEGIN
            WHERE Movement.OperDate = inOperDate
              AND Movement.StatusId = zc_Enum_Status_Complete()
              AND Movement.DescId = zc_Movement_OrderExternal()
-             AND inRetailId = COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE ObjectLink_Juridical_Retail.ChildObjectId END, 0)
+             AND (inRetailId = CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0) END
+               OR COALESCE (inRetailId, 0) = 0
+                 )
              AND COALESCE (MovementLinkObject_Route.ObjectId, 0) = inRouteId
              ) AS tmp;  
              

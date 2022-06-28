@@ -118,11 +118,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountWeight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountPartner
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -217,11 +212,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
               Column = AmountWeight
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountPartner
-            end
-            item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = RouteName
@@ -237,36 +227,123 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
             DataBinding.FieldName = 'OperDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 70
           end
           object DayOfWeekName: TcxGridDBColumn
-            Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072' '#1079#1072#1103#1074#1082#1080')'
+            Caption = #1044#1077#1085#1100' '#1079#1072#1103#1074#1082#1080
             DataBinding.FieldName = 'DayOfWeekName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Alignment.Horz = taCenter
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072' '#1079#1072#1103#1074#1082#1080')'
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
             Options.Editing = False
-            Width = 93
+            Width = 70
           end
-          object OperDatePartner: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
-            DataBinding.FieldName = 'OperDatePartner'
+          object OperDate_CarInfo: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'OperDate_CarInfo'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm hh:mm'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object DayOfWeekName_Partner: TcxGridDBColumn
-            Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072' '#1086#1090#1075#1088'.)'
-            DataBinding.FieldName = 'DayOfWeekName_Partner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080')'
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1092#1072#1082#1090
             Options.Editing = False
             Width = 80
+          end
+          object DayOfWeekName_CarInfo: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'DayOfWeekName_CarInfo'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Alignment.Horz = taCenter
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1092#1072#1082#1090
+            Options.Editing = False
+            Width = 70
+          end
+          object Days: TcxGridDBColumn
+            Caption = #1086#1090#1082#1083'. '#1076#1085'. +/-'
+            DataBinding.FieldName = 'Days'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.Alignment.Horz = taCenter
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1086#1090#1082#1083#1086#1085#1077#1085#1085#1080#1077' '#1074' '#1076#1085#1103#1093' '#1086#1090' '#1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1088#1072#1089#1095#1077#1090
+            Width = 70
+          end
+          object Times: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103
+            DataBinding.FieldName = 'Times'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1092#1072#1082#1090
+            Width = 70
+          end
+          object OperDatePartner: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'OperDatePartner'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1088#1072#1089#1095#1077#1090
+            Options.Editing = False
+            Width = 70
+          end
+          object DayOfWeekName_Partner: TcxGridDBColumn
+            Caption = '***'#1044#1077#1085#1100' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'DayOfWeekName_Partner'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Alignment.Horz = taCenter
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1088#1072#1089#1095#1077#1090
+            Options.Editing = False
+            Width = 70
+          end
+          object CarInfoName: TcxGridDBColumn
+            Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1076#1083#1103' '#1092#1072#1082#1090' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'CarInfoName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenChoiceCarInfoForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 138
+          end
+          object CarComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1083#1103' '#1092#1072#1082#1090' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'CarComment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 132
           end
           object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -274,7 +351,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 150
           end
           object ToName: TcxGridDBColumn
             Caption = #1057#1082#1083#1072#1076
@@ -291,91 +368,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1080#1090#1086#1075')'
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object AmountWeight: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086', '#1074#1077#1089
-            DataBinding.FieldName = 'AmountWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object OperDate_CarInfo: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
-            DataBinding.FieldName = 'OperDate_CarInfo'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 103
-          end
-          object DayOfWeekName_CarInfo: TcxGridDBColumn
-            Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072'/'#1074#1088'. '#1086#1090#1075#1088#1091#1079#1082#1080')'
-            DataBinding.FieldName = 'DayOfWeekName_CarInfo'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080')'
-            Options.Editing = False
-            Width = 92
-          end
-          object CarInfoName: TcxGridDBColumn
-            Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
-            DataBinding.FieldName = 'CarInfoName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actOpenChoiceCarInfoForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 138
-          end
-          object CarComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1082' '#1086#1090#1075#1088'.'
-            DataBinding.FieldName = 'CarComment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1082' '#1086#1090#1075#1088#1091#1079#1082#1077
-            Width = 132
-          end
-          object AmountSh: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086',  '#1096#1090' '
-            DataBinding.FieldName = 'AmountSh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object CountPartner: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'CountPartner'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
-            Options.Editing = False
-            Width = 99
+            Width = 150
           end
           object PartnerTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1058#1058
@@ -383,17 +376,50 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 224
+            Width = 100
           end
-          object Days: TcxGridDBColumn
-            Caption = '+/- '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
-            DataBinding.FieldName = 'Days'
+          object CountPartner: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1058#1058'/'#1044#1086#1082'.'
+            DataBinding.FieldName = 'CountPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1058#1058'/'#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountWeight: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086', '#1074#1077#1089
+            DataBinding.FieldName = 'AmountWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
-          object Times: TcxGridDBColumn
-            Caption = #1042#1088#1077#1084#1103
-            DataBinding.FieldName = 'Times'
+          object AmountSh: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086',  '#1096#1090' '
+            DataBinding.FieldName = 'AmountSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
         end
       end
@@ -405,17 +431,18 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     ExplicitWidth = 928
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 113
-      EditValue = 43101d
+      Left = 117
+      EditValue = 44562d
       Properties.SaveTime = False
-      ExplicitLeft = 113
+      ExplicitLeft = 117
       ExplicitWidth = 82
       Width = 82
     end
     inherited deEnd: TcxDateEdit
       Left = 313
-      EditValue = 43101d
+      EditValue = 44562d
       Properties.SaveTime = False
+      Visible = False
       ExplicitLeft = 313
       ExplicitWidth = 81
       Width = 81
@@ -425,14 +452,16 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       ExplicitLeft = 25
     end
     inherited cxLabel2: TcxLabel
-      Left = 203
-      ExplicitLeft = 203
+      Left = 205
+      Visible = False
+      ExplicitLeft = 205
     end
     object edIsDate_CarInfo: TcxCheckBox
       Left = 400
       Top = 5
       Action = actRefresh_Car
       TabOrder = 4
+      Visible = False
       Width = 117
     end
   end
@@ -1375,7 +1404,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inToid'
+        Name = 'inToId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ToId'
@@ -1407,7 +1436,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inTimes'
+        Name = 'ioTimes'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Times'
@@ -1431,14 +1460,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         ComponentItem = 'CarComment'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperDate_CarInfo'
-        DataType = ftDateTime
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1477,7 +1498,15 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inToid'
+        Name = 'outDayName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DayOfWeekName_CarInfo'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ToId'
@@ -1509,12 +1538,12 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inTimes'
+        Name = 'ioTimes'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Times'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

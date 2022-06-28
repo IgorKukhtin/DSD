@@ -60,16 +60,16 @@ BEGIN
 
      FROM gpSelect_Object_Member(inIsShowAll, inSession) AS tmpMemberTransport
        LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_Member()
+
   UNION 
-     
      SELECT   
            tmpFounder.Id         AS Id
          , tmpFounder.Code
          , tmpFounder.Name
          
-         , CAST ('' as TVarChar)  AS INN
-         , CAST ('' as TVarChar)  AS DriverCertificate
-         , CAST ('' as TVarChar)  AS Comment
+         , CAST ('' AS TVarChar)  AS INN
+         , CAST ('' AS TVarChar)  AS DriverCertificate
+         , CAST ('' AS TVarChar)  AS Comment
 
          , FALSE AS isOfficial
  
@@ -81,14 +81,14 @@ BEGIN
          , CAST (NULL AS TDateTime) AS StartSummerDate
          , CAST (NULL AS TDateTime) AS EndSummerDate
 
-         , CAST (0 as TFloat)       AS AmountFuel
+         , CAST (0 AS TFloat)       AS AmountFuel
          
-         , CAST (0 as TFloat)       AS Reparation
+         , CAST (0 AS TFloat)       AS Reparation
          , tmpFounder.LimitMoney
-         , CAST (0 as TFloat)       AS LimitDistance
+         , CAST (0 AS TFloat)       AS LimitDistance
 
-         , CAST ('' as TVarChar)    AS CarName
-         , CAST ('' as TVarChar)    AS CarModelName
+         , CAST ('' AS TVarChar)    AS CarName
+         , CAST ('' AS TVarChar)    AS CarModelName
          
          , ObjectDesc.ItemName     AS DescName 
          , tmpFounder.isErased
@@ -96,6 +96,42 @@ BEGIN
      FROM gpSelect_Object_Founder(inSession) AS tmpFounder
         LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_Founder()
   
+  UNION 
+     SELECT   
+           tmpObject.Id
+         , tmpObject.ObjectCode
+         , tmpObject.ValueData
+         
+         , CAST ('' AS TVarChar)  AS INN
+         , CAST ('' AS TVarChar)  AS DriverCertificate
+         , CAST ('' AS TVarChar)  AS Comment
+
+         , FALSE AS isOfficial
+ 
+         , CAST (0 AS Integer)      AS InfoMoneyId
+         , CAST (0 AS Integer)      AS InfoMoneyCode
+         , CAST ('' AS TVarChar)    AS InfoMoneyName
+         , CAST ('' AS TVarChar)    AS InfoMoneyName_all
+
+         , CAST (NULL AS TDateTime) AS StartSummerDate
+         , CAST (NULL AS TDateTime) AS EndSummerDate
+
+         , CAST (0 AS TFloat)       AS AmountFuel
+         
+         , CAST (0 AS TFloat)       AS Reparation
+         , CAST (0 AS TFloat)       AS LimitMoney
+         , CAST (0 AS TFloat)       AS LimitDistance
+
+         , CAST ('' AS TVarChar)    AS CarName
+         , CAST ('' AS TVarChar)    AS CarModelName
+         
+         , ObjectDesc.ItemName     AS DescName 
+         , tmpObject.isErased
+
+     FROM Object AS tmpObject
+        LEFT JOIN ObjectDesc ON ObjectDesc.Id = tmpObject.DescId
+     WHERE tmpObject.DescId = zc_Object_Unit()
+       AND tmpObject.Id = 8289613 -- Склад ГСМ (бочки)
     ;
 
 END;
@@ -111,6 +147,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_MemberTransport_Choice (inSession := zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_MemberTransport_Choice (inSession := '9818')
-
+-- SELECT * FROM gpSelect_Object_MemberTransport_Choice (inOperDate:= CURRENT_DATE, inIsShowAll:= FALSE, inSession := zfCalc_UserAdmin())

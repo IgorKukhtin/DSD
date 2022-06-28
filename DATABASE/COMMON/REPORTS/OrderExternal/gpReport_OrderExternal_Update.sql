@@ -21,7 +21,7 @@ RETURNS TABLE (OperDate        TDateTime
              , Amount TFloat
              , AmountSh TFloat
              , AmountWeight TFloat
-             , CountPartner TFloat
+             , CountPartner TVarChar
              , Days Integer, Times TVarChar
 
              , DayOfWeekName          TVarChar
@@ -33,8 +33,10 @@ RETURNS TABLE (OperDate        TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer; 
-
 BEGIN
+
+     inIsDate_CarInfo:= TRUE;
+     inEndDate:= inStartDate;
 
 
      RETURN QUERY
@@ -55,7 +57,9 @@ BEGIN
                                                         AND Movement.DescId = zc_Movement_OrderExternal()
                                 WHERE MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
                                   AND MovementDate_CarInfo.ValueData >= inStartDate
-                                  AND MovementDate_CarInfo.ValueData <= inEndDate
+                                --AND MovementDate_CarInfo.ValueData <= inEndDate
+                                  AND inStartDate = inEndDate
+                                  AND inStartDate >= CURRENT_DATE - INTERVAL '5 DAY'
                                   AND inIsDate_CarInfo = TRUE
                                 ) AS Movement
                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -95,6 +99,7 @@ BEGIN
                             , SUM ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
                                    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight
                             , COUNT (DISTINCT Object_From.Id) AS CountPartner
+                            , COUNT (DISTINCT Movement.Id) AS CountDoc
 
                        FROM tmpMovementAll AS Movement
                             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -176,7 +181,7 @@ BEGIN
            , Object_Route.Id                   AS RouteId 
            , Object_Route.ValueData            AS RouteName
            , Object_Retail.Id                  AS RetailId
-           , CASE WHEN Object_Retail.Id > 0 OR 1=1 THEN Object_Retail.ValueData ELSE tmpMovement.Retail_list END :: TVarChar AS RetailName
+           , CASE WHEN Object_Retail.Id > 0 THEN Object_Retail.ValueData ELSE tmpMovement.Retail_list END :: TVarChar AS RetailName
            , tmpMovement.PartnerTagName        AS PartnerTagName
            , tmpMovement.OperDate_CarInfo      ::TDateTime
            , Object_CarInfo.Id                 AS CarInfoId
@@ -189,9 +194,17 @@ BEGIN
            , tmpMovement.Amount         :: TFloat  AS Amount 
            , tmpMovement.AmountSh       :: TFloat  AS AmountSh
            , tmpMovement.AmountWeight   :: TFloat  AS AmountWeight
-           , tmpMovement.CountPartner   :: TFloat  AS CountPartner
-           , 0                          :: Integer AS Days
-           , ''                         ::TVarChar AS Times
+           , (zfConvert_IntToString (tmpMovement.CountPartner) || ' / '  || zfConvert_IntToString (tmpMovement.CountDoc))  :: TFloat  AS CountPartner
+           , CASE WHEN tmpMovement.OperDate_CarInfo < tmpMovement.OperDatePartner
+                       THEN -1 * EXTRACT (DAY FROM tmpMovement.OperDatePartner - DATE_TRUNC ('DAY', tmpMovement.OperDate_CarInfo))
+                  WHEN tmpMovement.OperDatePartner < tmpMovement.OperDate_CarInfo
+                       THEN  1 * EXTRACT (DAY FROM DATE_TRUNC ('DAY', tmpMovement.OperDate_CarInfo) - tmpMovement.OperDatePartner)
+                  ELSE 0
+             END :: Integer AS Days
+           , CASE WHEN zfConvert_TimeShortToString (tmpMovement.OperDate_CarInfo) = '00:00'
+                  THEN ''
+                  ELSE zfConvert_TimeShortToString (tmpMovement.OperDate_CarInfo)
+             END ::TVarChar AS Times
            
            , tmpWeekDay.DayOfWeekName         ::TVarChar AS DayOfWeekName
            , tmpWeekDay_Partner.DayOfWeekName ::TVarChar AS DayOfWeekName_Partner
