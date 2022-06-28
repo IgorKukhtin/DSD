@@ -73,9 +73,16 @@ BEGIN
                                    -- временно
                                    WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
                                      OR Object_Route.ValueData ILIKE 'Самов%'
+                                     OR Object_Route.ValueData ILIKE '%-колбаса'
                                            THEN 0
                                    ELSE ObjectLink_Juridical_Retail.ChildObjectId
                               END AS RetailId
+                            , STRING_AGG (DISTINCT CASE WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
+                                                          OR Object_Route.ValueData ILIKE 'Самов%'
+                                                          OR Object_Route.ValueData ILIKE '%-колбаса' 
+                                                        THEN Object_Retail.ValueData
+                                                        ELSE ''
+                                                   END, '; ') ::TVarChar AS Retail_list
                             , STRING_AGG (DISTINCT Object_PartnerTag.ValueData, '; ') ::TVarChar AS PartnerTagName
                             , MovementLinkObject_CarInfo.ObjectId                      AS CarInfoId
                             , MovementDate_CarInfo.ValueData               ::TDateTime AS OperDate_CarInfo 
@@ -126,6 +133,7 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
   
                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                    AND MovementItem.DescId     = zc_MI_Master()
@@ -151,6 +159,7 @@ BEGIN
                                       -- временно
                                       WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
                                         OR Object_Route.ValueData ILIKE 'Самов%'
+                                        OR Object_Route.ValueData ILIKE '%-колбаса'
                                            THEN 0
                                       ELSE ObjectLink_Juridical_Retail.ChildObjectId
                                  END
@@ -167,7 +176,7 @@ BEGIN
            , Object_Route.Id                   AS RouteId 
            , Object_Route.ValueData            AS RouteName
            , Object_Retail.Id                  AS RetailId
-           , Object_Retail.ValueData           AS RetailName
+           , CASE WHEN Object_Retail.Id > 0 OR 1=1 THEN Object_Retail.ValueData ELSE tmpMovement.Retail_list END :: TVarChar AS RetailName
            , tmpMovement.PartnerTagName        AS PartnerTagName
            , tmpMovement.OperDate_CarInfo      ::TDateTime
            , Object_CarInfo.Id                 AS CarInfoId
@@ -184,9 +193,9 @@ BEGIN
            , 0                          :: Integer AS Days
            , 0                          :: TFloat  AS Times 
            
-           , tmpWeekDay.DayOfWeekName_Full         ::TVarChar AS DayOfWeekName
-           , tmpWeekDay_Partner.DayOfWeekName_Full ::TVarChar AS DayOfWeekName_Partner
-           , tmpWeekDay_CarInfo.DayOfWeekName_Full ::TVarChar AS DayOfWeekName_CarInfo
+           , tmpWeekDay.DayOfWeekName         ::TVarChar AS DayOfWeekName
+           , tmpWeekDay_Partner.DayOfWeekName ::TVarChar AS DayOfWeekName_Partner
+           , tmpWeekDay_CarInfo.DayOfWeekName ::TVarChar AS DayOfWeekName_CarInfo
 
       FROM tmpMovement
           LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
@@ -209,4 +218,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal_Update(inOperDate := ('15.06.2022')::TDateTime , inToId := 346093 ,  inSession := '9457');
+-- SELECT * FROM gpReport_OrderExternal_Update (inStartDate:= '15.06.2022', inEndDate:= '15.06.2022', inIsDate_CarInfo:= FALSE, inToId := 346093 ,  inSession := '9457');
