@@ -1084,6 +1084,17 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       View = cxGridDBTableView
       Caption = 'macUpdate_CarInfo_list'
     end
+    object actUpdate_CarInfo_grid: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CarInfo_grid
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CarInfo_grid
+        end>
+      Caption = 'actUpdate_CarInfo'
+    end
     object actUpdate_CarInfo: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1094,6 +1105,18 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
           StoredProc = spUpdate_CarInfo
         end>
       Caption = 'actUpdate_CarInfo'
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CarInfo_grid
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CarInfo_grid
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -1388,7 +1411,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Times'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1421,5 +1444,99 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     PackSize = 1
     Left = 624
     Top = 304
+  end
+  object spUpdate_CarInfo_grid: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderExternal_CarInfo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDate_CarInfo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_CarInfo'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RouteId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RetailId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDays'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Days'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTimes'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Times'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCarInfoName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CarInfoName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCarComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CarComment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 360
   end
 end

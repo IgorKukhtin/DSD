@@ -70,6 +70,9 @@ type
     DayOfWeekName_CarInfo: TcxGridDBColumn;
     edIsDate_CarInfo: TcxCheckBox;
     actRefresh_Car: TdsdDataSetRefresh;
+    spUpdate_CarInfo_grid: TdsdStoredProc;
+    actUpdate_CarInfo_grid: TdsdExecStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
