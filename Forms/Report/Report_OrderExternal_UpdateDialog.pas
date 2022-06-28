@@ -23,6 +23,10 @@ type
     cxLabel8: TcxLabel;
     edTo: TcxButtonEdit;
     GuidesTo: TdsdGuides;
+    cxLabel2: TcxLabel;
+    deEnd: TcxDateEdit;
+    edIsDate_CarInfo: TcxCheckBox;
+    PeriodChoice: TPeriodChoice;
   private
     { Private declarations }
   public

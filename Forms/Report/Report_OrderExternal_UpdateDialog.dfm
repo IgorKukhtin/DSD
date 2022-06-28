@@ -3,7 +3,7 @@ object Report_OrderExternal_UpdateDialogForm: TReport_OrderExternal_UpdateDialog
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' - '#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077'>'
-  ClientHeight = 146
+  ClientHeight = 199
   ClientWidth = 364
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_OrderExternal_UpdateDialogForm: TReport_OrderExternal_UpdateDialog
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 61
-    Top = 104
+    Left = 69
+    Top = 152
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_OrderExternal_UpdateDialogForm: TReport_OrderExternal_UpdateDialog
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 209
-    Top = 104
+    Left = 217
+    Top = 152
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,37 +37,58 @@ object Report_OrderExternal_UpdateDialogForm: TReport_OrderExternal_UpdateDialog
     TabOrder = 1
   end
   object deStart: TcxDateEdit
-    Left = 11
-    Top = 27
+    Left = 124
+    Top = 6
     EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 2
-    Width = 90
+    Width = 86
   end
   object cxLabel6: TcxLabel
-    Left = 11
+    Left = 24
     Top = 7
-    Caption = #1044#1072#1090#1072' '#1089' :'
+    Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
   end
   object cxLabel8: TcxLabel
-    Left = 123
-    Top = 9
+    Left = 8
+    Top = 89
     Caption = #1057#1082#1083#1072#1076
   end
   object edTo: TcxButtonEdit
-    Left = 123
-    Top = 27
+    Left = 50
+    Top = 88
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 5
-    Width = 230
+    Width = 271
+  end
+  object cxLabel2: TcxLabel
+    Left = 8
+    Top = 44
+    Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+  end
+  object deEnd: TcxDateEdit
+    Left = 124
+    Top = 43
+    EditValue = 43101d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 7
+    Width = 86
+  end
+  object edIsDate_CarInfo: TcxCheckBox
+    Left = 225
+    Top = 8
+    Caption = #1055#1086' '#1076#1072#1090#1077' '#1086#1090#1075#1088#1091#1079#1082#1080
+    TabOrder = 8
+    Width = 117
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 176
-    Top = 48
+    Left = 144
+    Top = 32
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -79,8 +100,8 @@ object Report_OrderExternal_UpdateDialogForm: TReport_OrderExternal_UpdateDialog
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 112
-    Top = 60
+    Left = 104
+    Top = 84
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -88,6 +109,14 @@ object Report_OrderExternal_UpdateDialogForm: TReport_OrderExternal_UpdateDialog
         Name = 'StartDate'
         Value = 41579d
         Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = Null
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -108,9 +137,17 @@ object Report_OrderExternal_UpdateDialogForm: TReport_OrderExternal_UpdateDialog
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsDate_CarInfo'
+        Value = Null
+        Component = edIsDate_CarInfo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 304
-    Top = 66
+    Left = 320
+    Top = 114
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -141,5 +178,11 @@ object Report_OrderExternal_UpdateDialogForm: TReport_OrderExternal_UpdateDialog
       end>
     Left = 263
     Top = 22
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 224
+    Top = 32
   end
 end

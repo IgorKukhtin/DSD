@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , PartnerId Integer, PartnerName TVarChar
-             , CarInfoId Integer, CarInfoName TVarChar, OperDate_CarInfo TDateTime
+             , CarInfoId Integer, CarInfoName TVarChar, CarComment TVarChar, OperDate_CarInfo TDateTime
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceWithVAT Boolean, isPrinted Boolean, isPrintComment Boolean
              , VATPercent TFloat, ChangePercent TFloat
@@ -133,6 +133,7 @@ BEGIN
            , Object_Partner.ValueData                       AS PartnerName
            , Object_CarInfo.Id                              AS CarInfoId
            , Object_CarInfo.ValueData                       AS CarInfoName
+           , MovementString_CarComment.ValueData ::TVarChar AS CarComment
            , MovementDate_CarInfo.ValueData     ::TDateTime AS OperDate_CarInfo
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
@@ -233,6 +234,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_CarComment
+                                     ON MovementString_CarComment.MovementId = Movement.Id
+                                    AND MovementString_CarComment.DescId = zc_MovementString_CarComment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

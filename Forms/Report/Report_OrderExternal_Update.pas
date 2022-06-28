@@ -63,6 +63,13 @@ type
     actUpdate_CarInfo: TdsdExecStoredProc;
     macUpdate_CarInfo: TMultiAction;
     bbUpdate_CarInfo: TdxBarButton;
+    Days: TcxGridDBColumn;
+    Times: TcxGridDBColumn;
+    DayOfWeekName: TcxGridDBColumn;
+    DayOfWeekName_Partner: TcxGridDBColumn;
+    DayOfWeekName_CarInfo: TcxGridDBColumn;
+    edIsDate_CarInfo: TcxCheckBox;
+    actRefresh_Car: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
