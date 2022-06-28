@@ -43,17 +43,19 @@ BEGIN
 
   -- Результат
   RETURN QUERY
-  WITH tmpMovement AS (SELECT Movement.id
+  WITH tmpMovementAll AS (SELECT DISTINCT tblDataJSON.id
+                          FROM tblDataJSON) 
+     , tmpMovement AS (SELECT Movement.id
                             , REPLACE(COALESCE (Object_ProvinceCity_From.ValueData, Object_Area_From.ValueData, '')||' - '||
                                       COALESCE (Object_ProvinceCity_To.ValueData, Object_Area_To.ValueData, ''), 'г. ', '') AS WayName
-                       FROM tblDataJSON 
+                       FROM tmpMovementAll AS tblDataJSON 
                        
                             INNER JOIN Movement ON Movement.Id = tblDataJSON.Id
 
-                            INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                           /* INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                                        ON MovementBoolean_SUN.MovementId = Movement.Id
                                                       AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-                                                      AND MovementBoolean_SUN.ValueData = TRUE
+                                                      AND MovementBoolean_SUN.ValueData = TRUE*/
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -140,4 +142,3 @@ LANGUAGE PLPGSQL VOLATILE;
 -- тест 
 
 select * from gpSelect_Movement_Send_DataForTTN(inDataJson := '[{"id":27448252},{"id":27448302},{"id":27448385},{"id":27448532},{"id":27448628},{"id":27448670},{"id":27448735},{"id":27448790},{"id":27448833},{"id":27448858},{"id":27448917},{"id":27448942},{"id":27448984},{"id":27449051},{"id":27449116},{"id":27449141},{"id":27449231},{"id":27449268},{"id":27449297},{"id":27449408},{"id":27449464},{"id":27449471},{"id":27449556},{"id":27449614},{"id":27449619},{"id":27449668},{"id":27449723},{"id":27449727},{"id":27449734},{"id":27449761},{"id":27449793},{"id":27449799},{"id":27449873},{"id":27449912}]' ,  inSession := '3');
-

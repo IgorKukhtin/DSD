@@ -1120,10 +1120,15 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeUserForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_SiteDelayDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_SiteDelayDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_SiteDelayForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_SiteDelayForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPlanEmployeeUserForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CompetitorMarkupsForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CompetitorMarkupsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CompetitorMarkupsForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RecalcMCSDialogForm'));

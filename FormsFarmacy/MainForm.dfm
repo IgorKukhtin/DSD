@@ -5177,6 +5177,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Check_SiteDelay: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1088#1086#1095#1082#1072' '#1074' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1077' '#1080' '#1089#1091#1084#1084#1077' '#1087#1086' '#1087#1088#1086#1073#1080#1090#1099#1084' '#1079#1072#1082#1072#1079#1072#1084
+      FormName = 'TReport_Check_SiteDelayForm'
+      FormNameParam.Value = 'TReport_Check_SiteDelayForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6003,6 +6014,9 @@
       end
       object N350: TMenuItem
         Action = actReport_CompetitorMarkups
+      end
+      object N356: TMenuItem
+        Action = actReport_Check_SiteDelay
       end
     end
     object N36: TMenuItem [5]

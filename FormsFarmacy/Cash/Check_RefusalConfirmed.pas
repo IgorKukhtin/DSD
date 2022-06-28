@@ -84,7 +84,7 @@ type
     actUpdate_RefusalConfirmed: TdsdExecStoredProc;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
-    actMovementUnComplete: TdsdChangeMovementStatus;
+    actMovementUnComplete: TdsdExecStoredProc;
     spMovementUnComplete: TdsdStoredProc;
     cxButton3: TcxButton;
   private
