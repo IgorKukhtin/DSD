@@ -77,7 +77,7 @@ type
     cxSplitter1: TcxSplitter;
     grChart: TcxGrid;
     grChartDBChartView1: TcxGridDBChartView;
-    dgOperDate_CarInfo: TcxGridDBChartDataGroup;
+    dgOperDate_CarInfo_str: TcxGridDBChartDataGroup;
     serCount_Partner: TcxGridDBChartSeries;
     serAmountWeight: TcxGridDBChartSeries;
     grChartLevel1: TcxGridLevel;
