@@ -192,6 +192,8 @@ type
     MaterialOptionsName_ch1: TcxGridDBColumn;
     actChoiceFormMaterialOptions_1: TOpenChoiceForm;
     actChoiceFormMaterialOptions_2: TOpenChoiceForm;
+    MaterialOptionsName: TcxGridDBColumn;
+    ProdColorName_pcp: TcxGridDBColumn;
   private
     { Private declarations }
   public

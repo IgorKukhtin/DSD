@@ -11,6 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isMain Boolean
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
+             , MaterialOptionsName TVarChar, ProdColorName_pcp TVarChar
+
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -72,6 +74,18 @@ BEGIN
                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                      , inOperDate   := CURRENT_DATE) AS lfSelect
                            )
+          -- Элементы сборки Узлов - Boat Structure
+        , tmpReceiptGoodsChild_ProdColorPattern AS (SELECT gpSelect.ReceiptGoodsId
+                                                         , gpSelect.GoodsId
+                                                         , gpSelect.ProdColorName
+                                                         , gpSelect.MaterialOptionsName
+                                                           -- Сумма вх. с НДС, до 2-х знаков
+                                                         , gpSelect.EKPrice_summ
+                                                           -- Сумма вх. с НДС, до 2-х знаков
+                                                         , gpSelect.EKPriceWVAT_summ
+
+                                                    FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPattern (inIsShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
+                                                   )
           -- ВСЕ Элементы сборки Узлов
         , tmpReceiptGoodsChild_all AS (-- Элементы сборки Узлов - Товар
                                        SELECT gpSelect.ReceiptGoodsId
@@ -97,7 +111,7 @@ BEGIN
                                               -- Сумма вх. с НДС, до 2-х знаков
                                             , SUM (gpSelect.EKPriceWVAT_summ) AS EKPriceWVAT_summ_colPat
 
-                                       FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPattern (inIsShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
+                                       FROM tmpReceiptGoodsChild_ProdColorPattern AS gpSelect
                                        GROUP BY gpSelect.ReceiptGoodsId
                                    )
           -- собрали в 1 строку
@@ -130,6 +144,9 @@ BEGIN
 
          , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
          , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
+
+         , tmpMaterialOptions.MaterialOptionsName :: TVarChar AS MaterialOptionsName
+         , tmpProdColorPattern.ProdColorName      :: TVarChar AS ProdColorName_pcp
 
          , Object_Insert.ValueData            AS InsertName
          , Object_Update.ValueData            AS UpdateName
@@ -232,6 +249,20 @@ BEGIN
           LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
           LEFT JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptGoodsId = Object_ReceiptGoods.Id
+          
+          LEFT JOIN (SELECT tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId, MAX (tmpReceiptGoodsChild_ProdColorPattern.MaterialOptionsName) AS MaterialOptionsName
+                     FROM tmpReceiptGoodsChild_ProdColorPattern
+                     WHERE tmpReceiptGoodsChild_ProdColorPattern.MaterialOptionsName <> ''
+                     GROUP BY tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
+                    ) AS tmpMaterialOptions
+                      ON tmpMaterialOptions.ReceiptGoodsId = Object_ReceiptGoods.Id
+          LEFT JOIN (SELECT tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
+                          , STRING_AGG (tmpReceiptGoodsChild_ProdColorPattern.ProdColorName, ';') AS ProdColorName
+                     FROM tmpReceiptGoodsChild_ProdColorPattern
+                     WHERE tmpReceiptGoodsChild_ProdColorPattern.GoodsId > 0
+                     GROUP BY tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
+                    ) AS tmpProdColorPattern
+                      ON tmpProdColorPattern.ReceiptGoodsId = Object_ReceiptGoods.Id
 
      WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
       AND (Object_ReceiptGoods.isErased = FALSE OR inIsErased = TRUE)

@@ -168,6 +168,21 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Options.Editing = False
           Width = 125
         end
+        object MaterialOptionsName: TcxGridDBColumn
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
+          DataBinding.FieldName = 'MaterialOptionsName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
+        object ProdColorName_pcp: TcxGridDBColumn
+          Caption = 'Farbe'
+          DataBinding.FieldName = 'ProdColorName_pcp'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = 'Farbe Boat Structure'
+          Width = 70
+        end
         object Article: TcxGridDBColumn
           Caption = 'Artikel Nr'
           DataBinding.FieldName = 'Article'
@@ -1077,6 +1092,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Color = clLime
       ParentBackground = False
       TabOrder = 1
+      ExplicitLeft = -2
     end
   end
   object cxSplitter1: TcxSplitter

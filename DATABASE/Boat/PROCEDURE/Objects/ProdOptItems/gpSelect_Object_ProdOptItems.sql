@@ -121,6 +121,7 @@ BEGIN
                                      --
                                    , tmpProdColorPattern_all.ProdColorPatternId
                                  --, tmpProdColorPattern_all.ProdOptionsId, tmpProdColorPattern_all.ProdOptionsCode, tmpProdColorPattern_all.ProdOptionsName
+
                                      -- ÷вет /либо Comment из Boat Structure
                                    , tmpProdColorPattern_all.ProdColorId, tmpProdColorPattern_all.ProdColorName
 

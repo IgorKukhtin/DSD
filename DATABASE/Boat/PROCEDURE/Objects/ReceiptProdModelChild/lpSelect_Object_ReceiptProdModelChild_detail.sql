@@ -25,19 +25,23 @@ RETURNS TABLE (ModelId Integer, ModelName TVarChar
                -- Цвет /либо Comment из Boat Structure
              , ProdColorId Integer, ProdColorName TVarChar
                -- если это Boat Structure и этот элемент может идти как опция
-             , ProdOptionsId Integer, ProdOptionsCode Integer, ProdOptionsName TVarChar
-              --
+          --, ProdOptionsId Integer, ProdOptionsCode Integer, ProdOptionsName TVarChar
+
+               --
+             , MaterialOptionsId Integer, MaterialOptionsCode Integer, MaterialOptionsName TVarChar
+ 
+               --
              , TaxKindId_parent Integer, TaxKindValue_parent TFloat
              , EKPrice_parent TFloat, EKPriceWVAT_parent TFloat
              , BasisPrice_parent TFloat, BasisPriceWVAT_parent TFloat
                --
-             , TaxKindId Integer, TaxKindId_opt Integer
-             , TaxKindValue TFloat, TaxKindValue_opt TFloat
+             , TaxKindId Integer --, TaxKindId_opt Integer
+             , TaxKindValue TFloat --, TaxKindValue_opt TFloat
                --
              , EKPrice TFloat, EKPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
 
-             , SalePrice_opt TFloat, SalePriceWVAT_opt TFloat
+           --, SalePrice_opt TFloat, SalePriceWVAT_opt TFloat
               )
 AS
 $BODY$
@@ -111,6 +115,8 @@ BEGIN
                                        , ObjectLink_Object.ChildObjectId                   AS GoodsId
                                          -- нашли Элемент Boat Structure
                                        , COALESCE (ObjectLink_ProdColorPattern.ChildObjectId, 0) AS ProdColorPatternId
+                                         -- Категория Опций
+                                       , ObjectLink_MaterialOptions.ChildObjectId          AS MaterialOptionsId
                                          -- значение ProdModelChild
                                        , tmpReceiptProdModelChild.Value                    AS Value_parent
                                          -- умножили
@@ -141,6 +147,10 @@ BEGIN
                                        LEFT JOIN ObjectLink AS ObjectLink_Object
                                                             ON ObjectLink_Object.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                                            AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                       -- Категория Опций
+                                       LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                            ON ObjectLink_MaterialOptions.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                           AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
                                        -- значение в сборке
                                        LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                              ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
@@ -164,6 +174,8 @@ BEGIN
                                              --
                                            , 0 AS ReceiptGoodsChildId
                                            , 0 AS ProdColorPatternId
+                                           , 0 AS MaterialOptionsId
+
                                       FROM tmpReceiptProdModelChild
                                            LEFT JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptProdModelChildId = tmpReceiptProdModelChild.ReceiptProdModelChildId
                                       WHERE tmpReceiptGoodsChild.ReceiptProdModelChildId IS NULL
@@ -183,6 +195,7 @@ BEGIN
                                              --
                                            , tmpReceiptGoodsChild.ReceiptGoodsChildId
                                            , tmpReceiptGoodsChild.ProdColorPatternId
+                                           , tmpReceiptGoodsChild.MaterialOptionsId
 
                                       FROM tmpReceiptGoodsChild
                                      )
@@ -212,9 +225,14 @@ BEGIN
               -- если у Boat Structure нет товара, тогда значение Farbe берем = Comment
             , CASE WHEN ObjectLink_ProdColorPattern_Goods.ChildObjectId IS NULL AND tmpRes.ProdColorPatternId > 0 THEN ObjectString_ProdColorPattern_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
 
-            , Object_ProdOptions.Id         AS ProdOptionsId
-            , Object_ProdOptions.ObjectCode AS ProdOptionsCode
-            , Object_ProdOptions.ValueData  AS ProdOptionsName
+          --, Object_ProdOptions.Id         AS ProdOptionsId
+          --, Object_ProdOptions.ObjectCode AS ProdOptionsCode
+          --, Object_ProdOptions.ValueData  AS ProdOptionsName
+
+            , Object_MaterialOptions.Id         AS MaterialOptionsId
+            , Object_MaterialOptions.ObjectCode AS MaterialOptionsCode
+            , Object_MaterialOptions.ValueData  AS MaterialOptionsName
+          
 
              -- Тип НДС - !!!ReceiptProdModelChild!!!
             , COALESCE (ObjectLink_Goods_TaxKind_parent.ChildObjectId, ObjectLink_ReceiptService_TaxKind_parent.ChildObjectId) AS TaxKindId_parent
@@ -244,10 +262,10 @@ BEGIN
 
              -- Тип НДС - !!!ReceiptGooldsChild!!!
             , COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, ObjectLink_ReceiptService_TaxKind.ChildObjectId) AS TaxKindId
-            , ObjectLink_ProdOptions_TaxKind_opt.ChildObjectId                                                   AS TaxKindId_opt
+          --, ObjectLink_ProdOptions_TaxKind_opt.ChildObjectId                                                   AS TaxKindId_opt
              -- % НДС
             , ObjectFloat_TaxKind_Value.ValueData     AS TaxKindValue
-            , ObjectFloat_TaxKind_Value_opt.ValueData AS TaxKindValue_opt
+          --, ObjectFloat_TaxKind_Value_opt.ValueData AS TaxKindValue_opt
 
              -- Цена вх. без НДС
             , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
@@ -270,16 +288,16 @@ BEGIN
              END ::TFloat  AS BasisPriceWVAT
 
              -- Цена продажи без ндс - ОПЦИЯ
-           , CASE WHEN vbPriceWithVAT_pl = FALSE
-                   THEN ObjectFloat_SalePrice_opt.ValueData
-                   ELSE zfCalc_Summ_NoVAT (ObjectFloat_SalePrice_opt.ValueData, vbTaxKindValue_basis)
-             END ::TFloat  AS SalePrice_opt
+         --, CASE WHEN vbPriceWithVAT_pl = FALSE
+         --        THEN ObjectFloat_SalePrice_opt.ValueData
+         --        ELSE zfCalc_Summ_NoVAT (ObjectFloat_SalePrice_opt.ValueData, vbTaxKindValue_basis)
+         --  END ::TFloat  AS SalePrice_opt
 
              -- Цена продажи с ндс - ОПЦИЯ
-           , CASE WHEN vbPriceWithVAT_pl = FALSE
-                   THEN zfCalc_SummWVAT (ObjectFloat_SalePrice_opt.ValueData, vbTaxKindValue_basis)
-                   ELSE ObjectFloat_SalePrice_opt.ValueData
-             END ::TFloat  AS SalePriceWVAT_opt
+         --, CASE WHEN vbPriceWithVAT_pl = FALSE
+         --        THEN zfCalc_SummWVAT (ObjectFloat_SalePrice_opt.ValueData, vbTaxKindValue_basis)
+         --        ELSE ObjectFloat_SalePrice_opt.ValueData
+         --  END ::TFloat  AS SalePriceWVAT_opt
 
        FROM tmpRes
             -- Boat Structure
@@ -307,10 +325,13 @@ BEGIN
             LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = COALESCE (ObjectLink_Goods_ProdColor.ChildObjectId, ObjectLink_Goods_ProdColor_parent.ChildObjectId)
 
             -- Boat Structure -> ProdOptions
-            LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
-                                 ON ObjectLink_ProdOptions.ObjectId = tmpRes.ProdColorPatternId
-                                AND ObjectLink_ProdOptions.DescId   = zc_ObjectLink_ProdColorPattern_ProdOptions()
-            LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
+          --LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
+          --                     ON ObjectLink_ProdOptions.ObjectId = tmpRes.ProdColorPatternId
+          --                    AND ObjectLink_ProdOptions.DescId   = zc_ObjectLink_ProdColorPattern_ProdOptions()
+          --LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
+
+            --
+            LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = tmpRes.MaterialOptionsId
 
             --
             LEFT JOIN Object AS Object_Model ON Object_Model.Id = tmpRes.ModelId
@@ -323,15 +344,15 @@ BEGIN
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
 
             -- Options
-            LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice_opt
-                                  ON ObjectFloat_SalePrice_opt.ObjectId = Object_ProdOptions.Id
-                                 AND ObjectFloat_SalePrice_opt.DescId   = zc_ObjectFloat_ProdOptions_SalePrice()
-            LEFT JOIN ObjectLink AS ObjectLink_ProdOptions_TaxKind_opt
-                                 ON ObjectLink_ProdOptions_TaxKind_opt.ObjectId = Object_ProdOptions.Id
-                                AND ObjectLink_ProdOptions_TaxKind_opt.DescId   = zc_ObjectLink_ProdOptions_TaxKind()
-            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value_opt
-                                  ON ObjectFloat_TaxKind_Value_opt.ObjectId = ObjectLink_ProdOptions_TaxKind_opt.ChildObjectId
-                                 AND ObjectFloat_TaxKind_Value_opt.DescId   = zc_ObjectFloat_TaxKind_Value()
+          --LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice_opt
+          --                      ON ObjectFloat_SalePrice_opt.ObjectId = Object_ProdOptions.Id
+          --                     AND ObjectFloat_SalePrice_opt.DescId   = zc_ObjectFloat_ProdOptions_SalePrice()
+          --LEFT JOIN ObjectLink AS ObjectLink_ProdOptions_TaxKind_opt
+          --                     ON ObjectLink_ProdOptions_TaxKind_opt.ObjectId = Object_ProdOptions.Id
+          --                    AND ObjectLink_ProdOptions_TaxKind_opt.DescId   = zc_ObjectLink_ProdOptions_TaxKind()
+          --LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value_opt
+          --                      ON ObjectFloat_TaxKind_Value_opt.ObjectId = ObjectLink_ProdOptions_TaxKind_opt.ChildObjectId
+          --                     AND ObjectFloat_TaxKind_Value_opt.DescId   = zc_ObjectFloat_TaxKind_Value()
 
             -- цены для Работы/Услуги вход. без ндс
             LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice_parent
