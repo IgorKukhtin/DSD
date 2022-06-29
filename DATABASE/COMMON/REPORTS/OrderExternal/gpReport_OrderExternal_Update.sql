@@ -194,7 +194,7 @@ BEGIN
            , tmpMovement.Amount         :: TFloat  AS Amount 
            , tmpMovement.AmountSh       :: TFloat  AS AmountSh
            , tmpMovement.AmountWeight   :: TFloat  AS AmountWeight
-           , (zfConvert_IntToString (tmpMovement.CountPartner) || ' / '  || zfConvert_IntToString (tmpMovement.CountDoc))  :: TFloat  AS CountPartner
+           , (tmpMovement.CountPartner :: TVarChar || ' / '  || tmpMovement.CountDoc :: TVarChar) :: TVarChar  AS CountPartner
            , CASE WHEN tmpMovement.OperDate_CarInfo < tmpMovement.OperDatePartner
                        THEN -1 * EXTRACT (DAY FROM tmpMovement.OperDatePartner - DATE_TRUNC ('DAY', tmpMovement.OperDate_CarInfo))
                   WHEN tmpMovement.OperDatePartner < tmpMovement.OperDate_CarInfo
