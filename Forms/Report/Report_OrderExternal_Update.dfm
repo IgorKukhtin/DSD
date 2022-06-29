@@ -4,6 +4,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
   ClientWidth = 928
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -53
   ExplicitWidth = 944
   ExplicitHeight = 629
   PixelsPerInch = 96
@@ -15,99 +16,23 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 928
-    ExplicitHeight = 424
+    ExplicitHeight = 317
     ClientRectBottom = 317
     ClientRectRight = 928
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 928
-      ExplicitHeight = 424
+      ExplicitHeight = 317
       inherited cxGrid: TcxGrid
         Width = 928
         Height = 317
         ExplicitWidth = 928
-        ExplicitHeight = 424
+        ExplicitHeight = 317
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.###'
               Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
               Column = AmountSh
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -123,83 +48,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountSh
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -489,8 +338,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = grChart
-    ExplicitTop = 269
-    ExplicitWidth = 8
   end
   object grChart: TcxGrid [5]
     Left = 0
@@ -499,8 +346,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     Height = 206
     Align = alBottom
     TabOrder = 9
-    ExplicitTop = 277
-    ExplicitWidth = 894
     object grChartDBChartView1: TcxGridDBChartView
       DataController.DataSource = MasterDS
       DiagramArea.Values.LineWidth = 2
@@ -516,14 +361,17 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         DataBinding.FieldName = 'DayOfWeekName_CarInfo'
         DisplayText = #1044#1077#1085#1100' '#1086#1090#1075#1088#1091#1079#1082#1080
       end
-      object serCountPartner: TcxGridDBChartSeries
-        DataBinding.FieldName = 'CountPartner'
-        DisplayText = #1048#1090#1086#1075#1086' '#1058#1058'/'#1044#1086#1082'.'
+      object serCount_Partner: TcxGridDBChartSeries
+        DataBinding.FieldName = 'Count_Partner'
+        DisplayText = #1048#1090#1086#1075#1086' '#1058#1058
+      end
+      object serCount_Doc: TcxGridDBChartSeries
+        DataBinding.FieldName = 'Count_Doc'
+        DisplayText = #1048#1090#1086#1075#1086' '#1044#1086#1082'.'
       end
       object serAmountWeight: TcxGridDBChartSeries
         DataBinding.FieldName = 'AmountWeight'
         DisplayText = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086', '#1074#1077#1089
-        Visible = False
       end
     end
     object grChartLevel1: TcxGridLevel

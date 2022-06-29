@@ -819,7 +819,7 @@ BEGIN
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount_Weight ELSE 0 END  ::TFloat  AS AmountOrder_Weight
            --отгрузка сегодня
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount1 ELSE 0 END         ::TFloat  AS AmountOrder1
-           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount1_Sh ELSE 0 END      ::TFloat  AS AmountOrder1_Sh
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount1_Sh ELSE 0 END      ::TFloat  AS AmountOrder1_Sh          
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount1_Weight ELSE 0 END  ::TFloat  AS AmountOrder1_Weight
            --отгрузка завтра
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount2 ELSE 0 END         ::TFloat  AS AmountOrder2

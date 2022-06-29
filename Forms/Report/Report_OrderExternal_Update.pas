@@ -78,7 +78,7 @@ type
     grChart: TcxGrid;
     grChartDBChartView1: TcxGridDBChartView;
     dgOperDate_CarInfo: TcxGridDBChartDataGroup;
-    serCountPartner: TcxGridDBChartSeries;
+    serCount_Partner: TcxGridDBChartSeries;
     serAmountWeight: TcxGridDBChartSeries;
     grChartLevel1: TcxGridLevel;
     grDayOfWeekName_CarInfo: TcxGridDBChartDataGroup;
