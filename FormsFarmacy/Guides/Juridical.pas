@@ -43,6 +43,8 @@ type
     isPriorityReprice: TcxGridDBColumn;
     ExpirationDateMonth: TcxGridDBColumn;
     isChangeExpirationDate: TcxGridDBColumn;
+    actShowErased: TBooleanStoredProcAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

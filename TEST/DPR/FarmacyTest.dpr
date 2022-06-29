@@ -1221,7 +1221,8 @@ uses
   MedicForSaleEdit in '..\..\FormsFarmacy\Guides\MedicForSaleEdit.pas' {MedicForSaleEditForm: TParentForm},
   BuyerForSaleEdit in '..\..\FormsFarmacy\Guides\BuyerForSaleEdit.pas' {BuyerForSaleEditForm: TParentForm},
   Report_Check_SiteDelayDialog in '..\..\FormsFarmacy\Report\Report_Check_SiteDelayDialog.pas' {Report_Check_SiteDelayDialogForm: TParentForm},
-  Report_Check_SiteDelay in '..\..\FormsFarmacy\Report\Report_Check_SiteDelay.pas' {Report_Check_SiteDelayForm: TParentForm};
+  Report_Check_SiteDelay in '..\..\FormsFarmacy\Report\Report_Check_SiteDelay.pas' {Report_Check_SiteDelayForm: TParentForm},
+  ChoiceGoodsSPSearch_1303 in '..\..\FormsFarmacy\System\ChoiceGoodsSPSearch_1303.pas' {ChoiceGoodsSPSearch_1303Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

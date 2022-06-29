@@ -6433,6 +6433,19 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = True
     end
+    object actChoiceGoodsSPSearch_1303: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1080#1089#1082' '#1074' "'#1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072' 1303"'
+      Hint = #1055#1086#1080#1089#1082' '#1074' "'#1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072' 1303"'
+      ImageIndex = 26
+      FormName = 'TChoiceGoodsSPSearch_1303Form'
+      FormNameParam.Value = 'TChoiceGoodsSPSearch_1303Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6673,6 +6686,9 @@ inherited MainCashForm2: TMainCashForm2
       end
       object actListGoodsKeyword1: TMenuItem
         Action = actListGoodsKeyword
+      end
+      object N13032: TMenuItem
+        Action = actChoiceGoodsSPSearch_1303
       end
     end
     object N47: TMenuItem
@@ -7086,6 +7102,18 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'HelsiProgramName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HelsiPartialPrescription'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HelsiSkipDispenseSign'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item

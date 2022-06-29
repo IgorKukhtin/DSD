@@ -1,12 +1,14 @@
 -- Function: lpInsertUpdate_MovementItem_GoodsSPSearch_1303()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSPSearch_1303 (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSPSearch_1303 (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                                         , TVarChar, TVarChar, TDateTime, TFloat, Integer, TFloat, Integer, TDateTime
                                                                         , Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSPSearch_1303(
  INOUT ioId                     Integer   ,    -- Ключ объекта <Элемент документа>
     IN inMovementId             Integer   ,    -- Идентификатор документа
+
+    IN inCol                    Integer   ,    -- Номер по порядку
 
     IN inIntenalSP_1303Id       Integer   ,    -- Міжнародна непатентована або загальноприйнята назва лікарського засобу (1)
     IN inBrandSPId              Integer   ,    -- Торговельна назва лікарського засобу (2)
@@ -38,7 +40,7 @@ BEGIN
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), 0, inMovementId, 0, NULL);
+    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), 0, inMovementId, inCol, NULL);
     
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ValiditySP(), ioId, inValiditySP);

@@ -67,6 +67,9 @@ type
     FDispense_valid_from : TDateTime;   // Действителен с
     FDispense_valid_to : TDateTime;     // по
 
+    FMulti_Medication_Dispense_Allowed : boolean; // Частичного погашения рецепта.
+    FSkip_Medication_Dispense_Sign : boolean; // Возможность погашения рецепта без применения КЭП
+
     //
 
     FSell_Medication_ID : string;
@@ -110,11 +113,12 @@ type
   end;
 
 function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
-  var AQty : currency; var ADate : TDateTime; var AProgramId, AProgramName : String) : boolean;
+  var AQty : currency; var ADate : TDateTime; var AProgramId, AProgramName : String;
+  var APartialPrescription, ASkipDispenseSign : Boolean) : boolean;
 
 function GetHelsiReceiptState(const AReceipt : String; var AState, AProgramMedicationId  : string; var AIniError : boolean) : boolean;
 
-function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
+function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount, ASum : currency;
   ACode : string) : boolean;  overload;
 function CreateNewDispense : boolean; overload;
 
@@ -167,11 +171,6 @@ const arError : array [0..19, 0..1] of string =
   ('Certificate verificaton failed', 'Не удалось подтвердить сертификат. Повторите попытку погашения чека.'));
 
 
-function DelDoubleQuote(AStr : string) : string;
-begin
-  Result := StringReplace(AStr, '"', '', [rfReplaceAll]);
-end;
-
 function CheckRequest_Number(ANumber : string) : boolean;
   var Res: TArray<string>; I, J : Integer;
 begin
@@ -203,7 +202,7 @@ function StrToDateSite(ADateStr : string; var ADate : TDateTime) : Boolean;
 begin
   Result := False;
   try
-    Res := TRegEx.Split(DelDoubleQuote(ADateStr), '-');
+    Res := TRegEx.Split(ADateStr, '-');
     if High(Res) <> 2 then exit;
     try
       ADate := EncodeDate(StrToInt(Res[0]), StrToInt(Res[1]), StrToInt(Copy(Res[2], 1, 2)));
@@ -219,7 +218,6 @@ end;
 constructor THelsiApi.Create;
 begin
   FRESTClient := TRESTClient.Create('');
-  FRESTClient.HandleRedirects := False;
   FRESTResponse := TRESTResponse.Create(Nil);
   FRESTRequest := TRESTRequest.Create(Nil);
   FRESTRequest.Client := FRESTClient;
@@ -253,12 +251,12 @@ begin
 
     if j.FindValue('message') <> Nil then
     begin
-      cMessage := DelDoubleQuote(j.FindValue('message').ToString);
+      cMessage := j.FindValue('message').Value;
     end else cMessage := '';
 
     if j.FindValue('type') <> Nil then
     begin
-      cType := DelDoubleQuote(j.FindValue('type').ToString);
+      cType := j.FindValue('type').Value;
     end else cType := '';
 
     if j.FindValue('invalid') <> Nil then
@@ -267,7 +265,7 @@ begin
       JSONA := JSONA.Items[0].GetValue<TJSONArray>('rules');
       if JSONA.Items[0].FindValue('description') <> Nil then
       begin
-        cDescription := DelDoubleQuote(JSONA.Items[0].FindValue('description').ToString);
+        cDescription := JSONA.Items[0].FindValue('description').Value;
       end;
     end;
     if cDescription = '' then cDescription := cMessage;
@@ -349,8 +347,8 @@ begin
     jValue := FRESTResponse.JSONValue ;
     if jValue.FindValue('access_token') <> Nil then
     begin
-      FAccess_Token := DelDoubleQuote(jValue.FindValue('access_token').ToString);
-      FRefresh_Token := DelDoubleQuote(jValue.FindValue('refresh_token').ToString);
+      FAccess_Token := jValue.FindValue('access_token').Value;
+      FRefresh_Token := jValue.FindValue('refresh_token').Value;
       Result := FAccess_Token <> '';
     end;
   end;
@@ -384,8 +382,8 @@ begin
     jValue := FRESTResponse.JSONValue ;
     if jValue.FindValue('access_token') <> Nil then
     begin
-      FAccess_Token := DelDoubleQuote(jValue.FindValue('access_token').ToString);
-      FRefresh_Token := DelDoubleQuote(jValue.FindValue('refresh_token').ToString);
+      FAccess_Token := jValue.FindValue('access_token').Value;
+      FRefresh_Token := jValue.FindValue('refresh_token').Value;
       Result := FAccess_Token <> '';
     end;
   end;
@@ -417,15 +415,15 @@ begin
       jValue := FRESTResponse.JSONValue ;
       FUser_FullName := '';
       if jValue.FindValue('lastName') <> Nil then
-        FUser_FullName := FUser_FullName + DelDoubleQuote(jValue.FindValue('lastName').ToString) +  ' ';
+        FUser_FullName := FUser_FullName + jValue.FindValue('lastName').Value +  ' ';
       if jValue.FindValue('firstName') <> Nil then
-        FUser_FullName := FUser_FullName + DelDoubleQuote(jValue.FindValue('firstName').ToString) +  ' ';
+        FUser_FullName := FUser_FullName + jValue.FindValue('firstName').Value +  ' ';
       if jValue.FindValue('middleName') <> Nil then
-        FUser_FullName := FUser_FullName + DelDoubleQuote(jValue.FindValue('middleName').ToString);
+        FUser_FullName := FUser_FullName + jValue.FindValue('middleName').Value;
       FUser_FullName := Trim(FUser_FullName);
 
       if jValue.FindValue('taxId') <> Nil then
-        FUser_taxId := DelDoubleQuote(jValue.FindValue('taxId').ToString);
+        FUser_taxId := jValue.FindValue('taxId').Value;
       if jValue.FindValue('blocked') <> Nil then
         FUser_blocked := jValue.FindValue('blocked').ClassNameIs('TJSONTrue');
       Result := True;
@@ -448,6 +446,8 @@ begin
   FMedication_request_id := '';
   FMedication_ID_List := '';
   HelsiApi.FReject_Reason_Code := '';
+  FMulti_Medication_Dispense_Allowed := False;
+  FSkip_Medication_Dispense_Sign := False;
 
   FRESTClient.BaseURL := FHelsi_be;
   FRESTClient.ContentType := 'application/x-www-form-urlencoded';
@@ -464,10 +464,8 @@ begin
   except
   end;
 
-  ShowMessage(FHelsi_be + '/receipts/' + FNumber);
-
-  ShowMessage(IntToStr(FRESTResponse.StatusCode) + ' ' + FRESTResponse.StatusText + #13#10 + FRESTResponse.Content);
-
+//  ShowMessage(FHelsi_be + '/receipts/' + FNumber);
+//  ShowMessage(IntToStr(FRESTResponse.StatusCode) + ' ' + FRESTResponse.StatusText + #13#10 + FRESTResponse.Content);
 
 //  if FRESTResponse.JSONValue <> Nil then InputBox('11', s, FHelsi_be + #13#10 + IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText + #13#10 + FRESTResponse.JSONValue.ToString)
 //  else InputBox('11', s, FHelsi_be + #13#10 + IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText + #13#10 + FRESTResponse.Content);
@@ -483,31 +481,40 @@ begin
         if jValue.FindValue('medical_program') <> Nil then
         begin
           j := jValue.FindValue('medical_program');
-          FMedical_program_id := DelDoubleQuote(j.FindValue('id').ToString);
-          FMedical_program_Name := DelDoubleQuote(j.FindValue('name').ToString);
+          FMedical_program_id := j.FindValue('id').Value;
+          FMedical_program_Name := j.FindValue('name').Value;
+
+          if j.FindValue('medical_program_settings') <> Nil then
+          begin
+            j := j.FindValue('medical_program_settings');
+            if j.FindValue('multi_medication_dispense_allowed') <> Nil then
+              FMulti_Medication_Dispense_Allowed := TJSONBool(j.FindValue('multi_medication_dispense_allowed')).AsBoolean;
+            if j.FindValue('skip_medication_dispense_sign') <> Nil then
+              FSkip_Medication_Dispense_Sign := TJSONBool(j.FindValue('skip_medication_dispense_sign')).AsBoolean;
+          end;
         end else FMedical_program_id := '';
 
         if jValue.FindValue('reject_reason_code') <> Nil then
         begin
-          FReject_Reason := jValue.FindValue('reject_reason').ToString;
-          FReject_Reason_Code := jValue.FindValue('reject_reason_code').ToString;
+          FReject_Reason := jValue.FindValue('reject_reason').Value;
+          FReject_Reason_Code := jValue.FindValue('reject_reason_code').Value;
           Exit;
         end;
 
         if jValue.FindValue('medication_info') <> Nil then
         begin
           j := jValue.FindValue('medication_info');
-          FMedication_ID := DelDoubleQuote(j.FindValue('medication_id').ToString);
-          FMedication_Name := DelDoubleQuote(j.FindValue('medication_name').ToString);
-          FMedication_Qty := StrToCurr(StringReplace(StringReplace(j.FindValue('medication_qty').ToString,
-                            ',', FormatSettings.DecimalSeparator, [rfReplaceAll]),
-                            '.', FormatSettings.DecimalSeparator, [rfReplaceAll]));
+          FMedication_ID := j.FindValue('medication_id').Value;
+          FMedication_Name := j.FindValue('medication_name').Value;
+          FMedication_Qty := TJSONNumber(j.FindValue('medication_qty')).AsDouble;
+          if j.FindValue('medication_remaining_qty') <> Nil then
+            FMedication_Qty := TJSONNumber(j.FindValue('medication_remaining_qty')).AsDouble;
 
-          FMedication_request_id := DelDoubleQuote(jValue.FindValue('id').ToString);
-          FStatus := DelDoubleQuote(jValue.FindValue('status').ToString);
-          if not StrToDateSite(jValue.FindValue('created_at').ToString, FCreated_at) then Exit;
-          if not StrToDateSite(jValue.FindValue('dispense_valid_from').ToString, FDispense_valid_from) then Exit;
-          if not StrToDateSite(jValue.FindValue('dispense_valid_to').ToString, FDispense_valid_to) then Exit;
+          FMedication_request_id := jValue.FindValue('id').Value;
+          FStatus := jValue.FindValue('status').Value;
+          if not StrToDateSite(jValue.FindValue('created_at').Value, FCreated_at) then Exit;
+          if not StrToDateSite(jValue.FindValue('dispense_valid_from').Value, FDispense_valid_from) then Exit;
+          if not StrToDateSite(jValue.FindValue('dispense_valid_to').Value, FDispense_valid_to) then Exit;
 
           if jValue.FindValue('qualify') <> Nil then
           begin
@@ -517,8 +524,8 @@ begin
 
               if (FMedical_program_id = '') and (JSONA.Items[0].FindValue('program_id') <> Nil) then
               begin
-                FMedical_program_id := DelDoubleQuote(JSONA.Items[0].FindValue('program_id').ToString);
-                FMedical_program_Name := DelDoubleQuote(JSONA.Items[0].FindValue('program_name').ToString);
+                FMedical_program_id := JSONA.Items[0].FindValue('program_id').Value;
+                FMedical_program_Name := JSONA.Items[0].FindValue('program_name').Value;
               end;
 
               if JSONA.Items[0].FindValue('participants') <> Nil then
@@ -526,14 +533,14 @@ begin
                 JSONA := JSONA.Items[0].GetValue<TJSONArray>('participants');
                 for I := 0 to JSONA.Count - 1 do if JSONA.Items[I].FindValue('medication_id') <> Nil then
                 begin
-                  if FMedication_ID_List = '' then FMedication_ID_List := DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString)
-                  else FMedication_ID_List := FMedication_ID_List + FormatSettings.ListSeparator + DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString);
+                  if FMedication_ID_List = '' then FMedication_ID_List := JSONA.Items[I].FindValue('medication_id').Value
+                  else FMedication_ID_List := FMedication_ID_List + FormatSettings.ListSeparator + JSONA.Items[I].FindValue('medication_id').Value;
                 end;
               end;
             end;
           end;
 
-          FRequest_number := DelDoubleQuote(jValue.FindValue('request_number').ToString);
+          FRequest_number := jValue.FindValue('request_number').Value;
 
           Result := True;
         end;
@@ -578,6 +585,8 @@ begin
     jsonTemp.AddPair('dispensed_at', FormatDateTime('YYYY-MM-DD', Date));
     jsonTemp.AddPair('dispensed_by', FUser_FullName);
     jsonTemp.AddPair('medical_program_id', FMedical_program_id);
+    if FSkip_Medication_Dispense_Sign then
+      jsonTemp.AddPair('payment_amount', TJSONNumber.Create(FPayment_amount));
     jsonTemp.AddPair('dispense_details', JSONA);
 
     jsonBody.AddPair('medication_dispense', jsonTemp);
@@ -612,7 +621,7 @@ begin
               jValue := jValue.FindValue('data');
               if jValue.FindValue('id') <> Nil then
               begin
-                FDispense_ID := DelDoubleQuote(jValue.FindValue('id').ToString);
+                FDispense_ID := jValue.FindValue('id').Value;
                 Result := True;
               end;
             end;
@@ -667,7 +676,7 @@ begin
               jValue := jValue.FindValue('data');
               if jValue.FindValue('signId') <> Nil then
               begin
-                FDispense_sign_ID := DelDoubleQuote(jValue.FindValue('signId').ToString);
+                FDispense_sign_ID := jValue.FindValue('signId').Value;
                 Result := True;
               end;
             end;
@@ -761,9 +770,9 @@ begin
                jValue := JSONA.Items[0];
                if jValue.FindValue('drfo') <> Nil then
                begin
-                 FKey_taxId := DelDoubleQuote(jValue.FindValue('drfo').ToString);
-                 if not StrToDateSite(jValue.FindValue('startDate').ToString, FKey_startDate) then Exit;
-                 if not StrToDateSite(jValue.FindValue('expireDate').ToString, FKey_expireDate) then Exit;
+                 FKey_taxId := jValue.FindValue('drfo').Value;
+                 if not StrToDateSite(jValue.FindValue('startDate').Value, FKey_startDate) then Exit;
+                 if not StrToDateSite(jValue.FindValue('expireDate').Value, FKey_expireDate) then Exit;
                  Result := True;
                end;
             end;
@@ -773,7 +782,7 @@ begin
       jValue := FRESTResponse.JSONValue ;
       if jValue.FindValue('Message') <> Nil then
       begin
-        cError := DelDoubleQuote(jValue.FindValue('Message').ToString);
+        cError := jValue.FindValue('Message').Value;
       end else cError := IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText;
       ShowMessage('Ошибка подписи оплаты рецепта:'#13#10 + cError);
   end;
@@ -827,8 +836,8 @@ begin
                jValue := JSONA.Items[0];
                if jValue.FindValue('drfo') <> Nil then
                begin
-                 FKey_taxId := DelDoubleQuote(jValue.FindValue('drfo').ToString);
-                 if not StrToDateSite(jValue.FindValue('expireDate').ToString, AKey_expireDate) then Exit;
+                 FKey_taxId := jValue.FindValue('drfo').Value;
+                 if not StrToDateSite(jValue.FindValue('expireDate').Value, AKey_expireDate) then Exit;
                  Result := True;
                end;
             end;
@@ -886,7 +895,7 @@ begin
         jValue := FRESTResponse.JSONValue ;
         if jValue.FindValue('Message') <> Nil then
         begin
-          cError := DelDoubleQuote(jValue.FindValue('Message').ToString);
+          cError := jValue.FindValue('Message').Value;
         end else cError := IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText;
       end else cError := IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText;
       ShowMessage('Ошибка подписи оплаты рецепта:'#13#10 + cError);
@@ -1008,9 +1017,25 @@ begin
       begin
         jValue := jValue.FindValue('data');
 
-        if jValue.FindValue('medication_info') <> Nil then
+        if jValue.FindValue('medical_program') <> Nil then
         begin
-          Result := DelDoubleQuote(jValue.FindValue('status').ToString) = 'COMPLETED';;
+          j := jValue.FindValue('medical_program');
+
+          if j.FindValue('medical_program_settings') <> Nil then
+          begin
+            j := j.FindValue('medical_program_settings');
+            if j.FindValue('multi_medication_dispense_allowed') <> Nil then
+              FMulti_Medication_Dispense_Allowed := TJSONBool(j.FindValue('multi_medication_dispense_allowed')).AsBoolean;
+            if j.FindValue('skip_medication_dispense_sign') <> Nil then
+              FSkip_Medication_Dispense_Sign := TJSONBool(j.FindValue('skip_medication_dispense_sign')).AsBoolean;
+          end;
+        end else FMedical_program_id := '';
+
+        if FSkip_Medication_Dispense_Sign = True then
+          Result := True
+        else if jValue.FindValue('medication_info') <> Nil then
+        begin
+          Result := jValue.FindValue('status').Value = 'COMPLETED';
         end;
       end;
     except
@@ -1199,7 +1224,8 @@ end;
 
 
 function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
-  var AQty : currency; var ADate : TDateTime; var AProgramId, AProgramName : String) : boolean;
+  var AQty : currency; var ADate : TDateTime; var AProgramId, AProgramName : String;
+  var APartialPrescription, ASkipDispenseSign : Boolean) : boolean;
   var I : integer;
 begin
   Result := False;
@@ -1271,6 +1297,8 @@ begin
     ADate := HelsiApi.FCreated_at;
     AprogramId := HelsiApi.FMedical_program_id;
     AprogramName := HelsiApi.FMedical_program_Name;
+    APartialPrescription := HelsiApi.FMulti_Medication_Dispense_Allowed;
+    ASkipDispenseSign := HelsiApi.FSkip_Medication_Dispense_Sign;
     Result := True;
   end else if HelsiApi.FStatus = 'EXPIRED' then
   begin
@@ -1330,7 +1358,11 @@ begin
 
   if AReceipt <> HelsiApi.FRequest_number then Exit;
 
-  if HelsiApi.FDispense_valid_to < Date then
+  if HelsiApi.FSkip_Medication_Dispense_Sign = True then
+  begin
+    AState := 'COMPLETED';
+    Result := True;
+  end else if HelsiApi.FDispense_valid_to < Date then
   begin
     AState := 'EXPIRED';
     Exit;
@@ -1342,7 +1374,7 @@ begin
 end;
 
 
-function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
+function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount, ASum : currency;
   ACode : string) : boolean;
 begin
 
@@ -1359,7 +1391,9 @@ begin
   HelsiApi.FSell_qty := AQty;
   HelsiApi.FSell_price := APrice;
   HelsiApi.FSell_amount := ASell_amount;
-  HelsiApi.FDiscount_amount := ADiscount_amount;
+  HelsiApi.FPayment_amount := ASum;
+  if HelsiApi.FSkip_Medication_Dispense_Sign then HelsiApi.FDiscount_amount := 0
+  else HelsiApi.FDiscount_amount := ADiscount_amount;
   HelsiApi.FDispensed_Code := ACode;
 
   Result := HelsiApi.CreateNewDispense;
@@ -1382,6 +1416,12 @@ function SetPayment(AID : string; ASum : currency) : boolean;
 begin
   Result := False;
 
+  if HelsiApi.FSkip_Medication_Dispense_Sign then
+  begin
+    Result := True;
+    Exit;
+  end;
+
   if not Assigned(HelsiApi) or (HelsiApi.FRequest_number = '') then
   begin
     ShowMessage('Ошибка не получена информация о рецепте с сайта Хелси...');
@@ -1403,6 +1443,12 @@ end;
 function SetPayment : boolean; overload;
 begin
   Result := False;
+
+  if HelsiApi.FSkip_Medication_Dispense_Sign then
+  begin
+    Result := True;
+    Exit;
+  end;
 
   if not Assigned(HelsiApi) or (HelsiApi.FRequest_number = '') then
   begin
@@ -1442,6 +1488,12 @@ begin
 
 //  HelsiApi.IntegrationClientKeyInfo;
 
+  if HelsiApi.FSkip_Medication_Dispense_Sign then
+  begin
+    Result := True;
+    Exit;
+  end;
+
   if not Assigned(HelsiApi) or (HelsiApi.FRequest_number = '') then
   begin
     ShowMessage('Ошибка не получена информация о рецепте с сайта Хелси...');
@@ -1460,6 +1512,12 @@ end;
 function ProcessSignedDispense : boolean;
 begin
   Result := False;
+
+  if HelsiApi.FSkip_Medication_Dispense_Sign then
+  begin
+    Result := True;
+    Exit;
+  end;
 
   if not Assigned(HelsiApi) or (HelsiApi.FRequest_number = '') then
   begin

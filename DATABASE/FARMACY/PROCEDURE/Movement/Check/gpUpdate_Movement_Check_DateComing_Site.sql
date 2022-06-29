@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Check_DateComing_Site(
     IN inDateComing        TDateTime , -- Дата прихода в аптеку
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS Integer
+RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -17,7 +17,7 @@ BEGIN
     vbUserId := lpGetUserBySession (inSession);
 
     -- Дата прихода в аптеку
-    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Coming(), inId, inDateComing);
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Coming(), inId, date_trunc('day',inDateComing));
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (inId, vbUserId, False);
@@ -25,7 +25,7 @@ BEGIN
     -- !!!ВРЕМЕННО для ТЕСТА!!!
     IF inSession = zfCalc_UserAdmin()
     THEN
-        RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inSession, inDateComing;
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inSession, inDateComing, date_trunc('day',inDateComing);
     END IF;
 
 END;
@@ -39,4 +39,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Movement_Check_DateComing_Site (28372118 , CURRENT_DATE::tdatetime, '3'); 
+-- 
+SELECT * FROM gpUpdate_Movement_Check_DateComing_Site (28372118 , CURRENT_TIMESTAMP::tdatetime, '3'); 

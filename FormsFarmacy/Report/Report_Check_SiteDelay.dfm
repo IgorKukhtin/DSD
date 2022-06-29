@@ -427,6 +427,8 @@ inherited Report_Check_SiteDelayForm: TReport_Check_SiteDelayForm
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.BandHeaderHeight = 34
           Styles.Content = dmMain.cxContentStyle
           Styles.Inactive = dmMain.cxSelection
           Styles.Selection = dmMain.cxSelection
@@ -449,17 +451,17 @@ inherited Report_Check_SiteDelayForm: TReport_Check_SiteDelayForm
               Position.ColIndex = 0
             end
             item
-              Caption = #1059#1076#1072#1083#1077#1085#1085#1099#1077
+              Caption = #1059#1076#1072#1083#1077#1085#1085#1099#1077'  ('#1089' '#1087#1088#1080#1095#1080#1085#1086#1081' '#1083#1080#1073#1086' '#1085#1077' '#1073#1099#1083#1086' '#1074' '#1085#1072#1083#1080#1095#1080#1080')'
               Position.BandIndex = 1
               Position.ColIndex = 1
             end
             item
-              Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077
+              Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077'  ('#1074#1086#1089#1089#1090#1072#1085#1086#1074#1083#1077#1085#1099' '#1080#1079' '#1087#1088#1086#1089#1088#1086#1095#1082#1080')'
               Position.BandIndex = 2
               Position.ColIndex = 0
             end
             item
-              Caption = #1059#1076#1072#1083#1077#1085#1085#1099#1077
+              Caption = #1059#1076#1072#1083#1077#1085#1085#1099#1077' ('#1073#1077#1079#1074#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
               Position.BandIndex = 2
               Position.ColIndex = 1
             end>
