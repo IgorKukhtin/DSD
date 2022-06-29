@@ -6,7 +6,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 910
-  ExplicitHeight = 580
+  ExplicitHeight = 581
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -146,9 +146,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPivot: TcxGrid
         Left = 0
         Top = 0
@@ -465,9 +462,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     object tsDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -2104,14 +2098,14 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       Params = <
         item
           Name = 'StartDate'
-          Value = '0'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -2518,6 +2512,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ValueColumn = chColorRecord
@@ -2527,6 +2522,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 680
     Top = 232
   end
@@ -2534,13 +2531,13 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 688
-    Top = 336
+    Left = 832
+    Top = 200
   end
   object DSDetail: TDataSource
     DataSet = DetailCDS
-    Left = 632
-    Top = 352
+    Left = 776
+    Top = 200
   end
   object DetaildsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2549,6 +2546,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ValueColumn = cdColorRecord
@@ -2558,7 +2556,9 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 553
-    Top = 352
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 809
+    Top = 192
   end
 end

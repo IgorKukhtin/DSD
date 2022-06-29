@@ -2592,7 +2592,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementDialogForm');
-  exit;
+  //exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDifForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementDifForm');

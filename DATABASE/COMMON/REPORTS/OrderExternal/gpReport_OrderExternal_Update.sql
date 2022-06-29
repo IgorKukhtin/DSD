@@ -21,6 +21,8 @@ RETURNS TABLE (OperDate        TDateTime
              , Amount TFloat
              , AmountSh TFloat
              , AmountWeight TFloat
+             , Count_Partner TFloat
+             , Count_Doc TFloat
              , CountPartner TVarChar
              , Days Integer, Times TVarChar
 
@@ -190,11 +192,15 @@ BEGIN
            , Object_To.Id                      AS ToId
            , Object_To.ObjectCode              AS ToCode
            , Object_To.ValueData               AS ToName
-          --
+             --
            , tmpMovement.Amount         :: TFloat  AS Amount 
            , tmpMovement.AmountSh       :: TFloat  AS AmountSh
            , tmpMovement.AmountWeight   :: TFloat  AS AmountWeight
+           , tmpMovement.CountPartner   :: TFloat  AS Count_Partner
+           , tmpMovement.CountDoc       :: TFloat  AS Count_Doc
+         --, (zfConvert_IntToString (tmpMovement.CountPartner::integer) || ' / '  || zfConvert_IntToString (tmpMovement.CountDoc::integer))  :: TVarChar  AS CountPartner
            , (tmpMovement.CountPartner :: TVarChar || ' / '  || tmpMovement.CountDoc :: TVarChar) :: TVarChar  AS CountPartner
+
            , CASE WHEN tmpMovement.OperDate_CarInfo < tmpMovement.OperDatePartner
                        THEN -1 * EXTRACT (DAY FROM tmpMovement.OperDatePartner - DATE_TRUNC ('DAY', tmpMovement.OperDate_CarInfo))
                   WHEN tmpMovement.OperDatePartner < tmpMovement.OperDate_CarInfo
@@ -231,4 +237,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal_Update (inStartDate:= '15.06.2022', inEndDate:= '15.06.2022', inIsDate_CarInfo:= FALSE, inToId := 346093 ,  inSession := '9457');
+--SELECT * FROM gpReport_OrderExternal_Update (inStartDate:= '15.06.2022', inEndDate:= '15.06.2022', inIsDate_CarInfo:= FALSE, inToId := 346093 ,  inSession := '9457');
+ 

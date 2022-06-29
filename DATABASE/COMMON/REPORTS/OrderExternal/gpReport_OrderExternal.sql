@@ -74,13 +74,25 @@ RETURNS TABLE (MovementId             Integer
 
              , AmountRemains            TFloat
              , AmountRemains_Sh         TFloat
-             , AmountRemains_Weight     TFloat
+             , AmountRemains_Weight     TFloat 
+             , AmountRemains1_Weight     TFloat
+             , AmountRemains2_Weight     TFloat
+             , AmountRemains3_Weight     TFloat
              , AmountOrder              TFloat
              , AmountOrder_Sh           TFloat
-             , AmountOrder_Weight       TFloat
+             , AmountOrder_Weight       TFloat 
+             , AmountOrder1        TFloat
+             , AmountOrder1_Sh     TFloat
+             , AmountOrder1_Weight TFloat
+             , AmountOrder2        TFloat
+             , AmountOrder2_Sh     TFloat
+             , AmountOrder2_Weight TFloat
              --, AmountRemains_diff       TFloat
              , AmountRemainsSH_diff     TFloat
-             , AmountRemainsWeight_diff TFloat
+             , AmountRemainsWeight_diff TFloat 
+             , AmountRemains1_Weight_diff  TFloat
+             , AmountRemains2_Weight_diff  TFloat
+             , AmountRemains3_Weight_diff  TFloat
 
              , AmountSend        TFloat
              , AmountSend_Sh     TFloat
@@ -201,7 +213,15 @@ BEGIN
               
                          , SUM ( COALESCE (MovementItem.Amount,0)+ COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
                          , SUM ((COALESCE (MovementItem.Amount,0)+ COALESCE (MIFloat_AmountSecond.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_Weight 
-                         , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MovementItem.Amount,0)+ COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_Sh
+                         , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MovementItem.Amount,0)+ COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_Sh  
+                         
+                         , SUM (CASE WHEN MovementDate_OperDatePartner.ValueData = inStartDate THEN COALESCE (MovementItem.Amount,0)+ COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount1
+                         , SUM (CASE WHEN MovementDate_OperDatePartner.ValueData = inStartDate THEN (COALESCE (MovementItem.Amount,0)+ COALESCE (MIFloat_AmountSecond.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ELSE 0 END) AS Amount1_Weight
+                         , SUM (CASE WHEN MovementDate_OperDatePartner.ValueData = inStartDate THEN CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MovementItem.Amount,0)+ COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END ELSE 0 END) AS Amount1_Sh 
+                         --далее
+                         , SUM (CASE WHEN MovementDate_OperDatePartner.ValueData > inStartDate THEN COALESCE (MovementItem.Amount,0)+ COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount2
+                         , SUM (CASE WHEN MovementDate_OperDatePartner.ValueData > inStartDate THEN (COALESCE (MovementItem.Amount,0)+ COALESCE (MIFloat_AmountSecond.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ELSE 0 END) AS Amount2_Weight
+                         , SUM (CASE WHEN MovementDate_OperDatePartner.ValueData > inStartDate THEN CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MovementItem.Amount,0)+ COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END ELSE 0 END) AS Amount2_Sh
                     FROM MovementDate AS MovementDate_OperDatePartner 
                         INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                            AND Movement.OperDate < inStartDate
@@ -258,7 +278,7 @@ BEGIN
     
                     WHERE inIsRemains = TRUE
                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                      AND MovementDate_OperDatePartner.ValueData = inStartDate
+                      AND MovementDate_OperDatePartner.ValueData >= inStartDate
                       AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)
                       AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)
                       AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
@@ -779,16 +799,60 @@ BEGIN
              --остатки
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpRemains.Amount ELSE 0 END         ::TFloat  AS AmountRemains
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpRemains.Amount_Sh ELSE 0 END      ::TFloat  AS AmountRemains_Sh
-           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpRemains.Amount_Weight ELSE 0 END  ::TFloat  AS AmountRemains_Weight
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpRemains.Amount_Weight ELSE 0 END  ::TFloat  AS AmountRemains_Weight 
+           -- остаток - отгрузка сегодня
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN COALESCE (tmpRemains.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc,0) -COALESCE (tmpOrder.Amount1_Weight,0)  ELSE 0 END  ::TFloat  AS AmountRemains1_Weight 
+           -- остаток - отгрузка завтра
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN COALESCE (tmpRemains.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc,0) -COALESCE (tmpOrder.Amount1_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc1,0)  ELSE 0 END  ::TFloat  AS AmountRemains2_Weight
+           -- остаток - отгрузка далее
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 AND COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0) > 0 
+                 THEN CASE WHEN COALESCE (tmpRemains.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc,0) -COALESCE (tmpOrder.Amount1_Weight,0) > 0
+                           THEN  COALESCE (tmpOrder.Amount2_Weight,0) + COALESCE (tmpMovement.AmountWeight_calc1,0) + COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0) -  COALESCE (tmpRemains.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc,0) -COALESCE (tmpOrder.Amount1_Weight,0)
+                           ELSE COALESCE (tmpOrder.Amount2_Weight,0) + COALESCE (tmpMovement.AmountWeight_calc1,0) + COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0)
+                      END
+                 ELSE 0 
+             END  ::TFloat  AS AmountRemains3_Weight
             
             --заказ дата пок = выбр дате, а дата заявки < выбр даты   , те. заказы прошлого дня
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount ELSE 0 END         ::TFloat  AS AmountOrder
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount_Sh ELSE 0 END      ::TFloat  AS AmountOrder_Sh
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount_Weight ELSE 0 END  ::TFloat  AS AmountOrder_Weight
-           
+           --отгрузка сегодня
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount1 ELSE 0 END         ::TFloat  AS AmountOrder1
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount1_Sh ELSE 0 END      ::TFloat  AS AmountOrder1_Sh          
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount1_Weight ELSE 0 END  ::TFloat  AS AmountOrder1_Weight
+           --отгрузка завтра
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount2 ELSE 0 END         ::TFloat  AS AmountOrder2
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount2_Sh ELSE 0 END      ::TFloat  AS AmountOrder2_Sh
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpOrder.Amount2_Weight ELSE 0 END  ::TFloat  AS AmountOrder2_Weight
+
            --разница остаток и заказ 
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN CASE WHEN COALESCE (tmpMovement.Amount_Sh,0)+COALESCE (tmpOrder.Amount_Sh,0) > COALESCE (tmpRemains.Amount_Sh,0) THEN COALESCE (tmpMovement.Amount_Sh,0)+COALESCE (tmpOrder.Amount_Sh,0) - COALESCE (tmpRemains.Amount_Sh,0) ELSE 0 END ELSE 0 END ::TFloat  AS AmountRemainsSH_diff
-           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN CASE WHEN COALESCE (tmpMovement.Amount_Weight,0)+COALESCE (tmpOrder.Amount_Weight,0) > COALESCE (tmpRemains.Amount_Weight,0) THEN COALESCE (tmpMovement.Amount_Weight,0)+COALESCE (tmpOrder.Amount_Weight,0) - COALESCE (tmpRemains.Amount_Weight,0) ELSE 0 END ELSE 0 END ::TFloat  AS AmountRemainsWeight_diff
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN CASE WHEN COALESCE (tmpMovement.Amount_Weight,0)+COALESCE (tmpOrder.Amount_Weight,0) > COALESCE (tmpRemains.Amount_Weight,0) THEN COALESCE (tmpMovement.Amount_Weight,0)+COALESCE (tmpOrder.Amount_Weight,0) - COALESCE (tmpRemains.Amount_Weight,0) ELSE 0 END ELSE 0 END ::TFloat  AS AmountRemainsWeight_diff 
+           
+           --не хватает сегодня
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 AND COALESCE (tmpRemains.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc,0) - COALESCE (tmpOrder.Amount1_Weight,0) < 0 
+		          THEN COALESCE (tmpMovement.AmountWeight_calc,0) + COALESCE (tmpOrder.Amount1_Weight,0) - COALESCE (tmpRemains.Amount_Weight,0)
+				  ELSE 0 
+			 END  ::TFloat  AS AmountRemains1_Weight_diff
+           --не хватает завтра
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 AND COALESCE (tmpMovement.AmountWeight_calc1,0) > 0
+                   THEN CASE WHEN COALESCE (tmpRemains.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc,0)-COALESCE (tmpOrder.Amount1_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc1,0) < 0 
+                        THEN  COALESCE (tmpMovement.AmountWeight_calc1,0) - (COALESCE (tmpRemains.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc,0)-COALESCE (tmpOrder.Amount1_Weight,0))  --COALESCE (tmpMovement.AmountWeight_calc1,0) -- COALESCE (tmpRemains.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc,0) - COALESCE (tmpOrder.Amount1_Weight,0)
+                        ELSE  COALESCE (tmpMovement.AmountWeight_calc1,0)
+                        END
+                    ELSE 0
+             END
+                      ::TFloat  AS AmountRemains2_Weight_diff
+           -- не хватает далее
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 AND COALESCE (tmpMovement.AmountWeight_calc2,0)+ COALESCE (tmpMovement.AmountWeight_calc3,0) > 0
+                   THEN CASE WHEN COALESCE (tmpRemains.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc,0)-COALESCE (tmpOrder.Amount1_Weight,0)-COALESCE (tmpMovement.AmountWeight_calc1,0) >0 
+                        THEN  COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0) - (COALESCE (tmpRemains.Amount_Weight,0)-COALESCE (tmpOrder.Amount1_Weight,0) -COALESCE (tmpMovement.Amount_Weight,0)-COALESCE (tmpMovement.AmountWeight_calc1,0))
+                        ELSE COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0)
+                        END
+                    ELSE 0
+             END
+  ::TFloat  AS AmountRemains3_Weight_diff
              ------ перемещение
            , tmpSendIn.Amount        ::TFloat AS AmountSend
            , tmpSendIn.Amount_Sh     ::TFloat AS AmountSend_Sh
