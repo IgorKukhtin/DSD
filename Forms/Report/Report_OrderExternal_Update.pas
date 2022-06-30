@@ -82,6 +82,11 @@ type
     serAmountWeight: TcxGridDBChartSeries;
     grChartLevel1: TcxGridLevel;
     grDayOfWeekName_CarInfo: TcxGridDBChartDataGroup;
+    StartWeighing: TcxGridDBColumn;
+    EndWeighing: TcxGridDBColumn;
+    DayOfWeekName_StartW: TcxGridDBColumn;
+    DayOfWeekName_EndW: TcxGridDBColumn;
+    Hours_EndW: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -30,7 +30,12 @@ RETURNS TABLE (OperDate        TDateTime
              , DayOfWeekName_Partner  TVarChar
              , DayOfWeekName_CarInfo  TVarChar
 
-             )  
+             , StartWeighing        TDateTime
+             , EndWeighing          TDateTime
+             , DayOfWeekName_StartW TVarChar
+             , DayOfWeekName_EndW   TVarChar
+             , Hours_EndW           TFloat
+              )  
 
 AS
 $BODY$
@@ -50,7 +55,7 @@ BEGIN
                                 WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                                   AND Movement.DescId = zc_Movement_OrderExternal()
-                                  AND inIsDate_CarInfo = False
+                                  AND inIsDate_CarInfo = FALSE
                                UNION
                                 SELECT Movement.*
                                 FROM MovementDate AS MovementDate_CarInfo
@@ -61,7 +66,7 @@ BEGIN
                                   AND MovementDate_CarInfo.ValueData >= inStartDate
                                 --AND MovementDate_CarInfo.ValueData <= inEndDate
                                   AND inStartDate = inEndDate
-                                  AND inStartDate >= CURRENT_DATE - INTERVAL '5 DAY'
+                                --AND inStartDate >= CURRENT_DATE - INTERVAL '5 DAY'
                                   AND inIsDate_CarInfo = TRUE
                                 ) AS Movement
                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -69,6 +74,23 @@ BEGIN
                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                          AND (COALESCE (MovementLinkObject_To.ObjectId,0) = inToId OR inToId = 0)
                            )
+
+     , tmpWeighing AS (SELECT tmpMovementAll.Id, MIN (MovementDate_StartWeighing.ValueData) AS StartWeighing, MAX (COALESCE (MovementDate_EndWeighing.ValueData, CURRENT_TIMESTAMP)) AS EndWeighing
+                       FROM tmpMovementAll
+                            INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                            ON MovementLinkMovement_Order.MovementChildId = tmpMovementAll.Id
+                                                           AND MovementLinkMovement_Order.DescId          = zc_MovementLinkMovement_Order()
+                            INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
+                                               AND Movement.DescId = zc_Movement_WeighingPartner()
+                                               AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                            LEFT JOIN MovementDate AS MovementDate_StartWeighing
+                                                   ON MovementDate_StartWeighing.MovementId = Movement.Id
+                                                  AND MovementDate_StartWeighing.DescId     = zc_MovementDate_StartWeighing()
+                            LEFT JOIN MovementDate AS MovementDate_EndWeighing
+                                                   ON MovementDate_EndWeighing.MovementId = Movement.Id
+                                                  AND MovementDate_EndWeighing.DescId     = zc_MovementDate_EndWeighing()
+                       GROUP BY tmpMovementAll.Id
+                      )
 
      , tmpMovement AS (SELECT Movement.OperDate
                             , MovementDate_OperDatePartner.ValueData                   AS OperDatePartner
@@ -104,8 +126,12 @@ BEGIN
                                    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight
                             , COUNT (DISTINCT Object_From.Id) AS CountPartner
                             , COUNT (DISTINCT Movement.Id) AS CountDoc
+                            
+                            , MIN (tmpWeighing.StartWeighing) AS StartWeighing, MAX (tmpWeighing.EndWeighing) AS EndWeighing
 
                        FROM tmpMovementAll AS Movement
+                            LEFT JOIN tmpWeighing ON tmpWeighing.Id = Movement.Id
+
                             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                    ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -219,6 +245,13 @@ BEGIN
            , tmpWeekDay.DayOfWeekName         ::TVarChar AS DayOfWeekName
            , tmpWeekDay_Partner.DayOfWeekName ::TVarChar AS DayOfWeekName_Partner
            , tmpWeekDay_CarInfo.DayOfWeekName ::TVarChar AS DayOfWeekName_CarInfo
+           
+           , tmpMovement.StartWeighing :: TDateTime AS StartWeighing
+           , tmpMovement.EndWeighing   :: TDateTime AS EndWeighing
+           , tmpWeekDay_StartW.DayOfWeekName ::TVarChar AS DayOfWeekName_StartW
+           , tmpWeekDay_EndW.DayOfWeekName   ::TVarChar AS DayOfWeekName_EndW
+
+           , (EXTRACT (MINUTES FROM tmpMovement.EndWeighing - tmpMovement.StartWeighing) / 60) ::TFloat AS Hours_EndW
 
       FROM tmpMovement
           LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
@@ -228,6 +261,8 @@ BEGIN
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate) AS tmpWeekDay ON 1=1
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner) AS tmpWeekDay_Partner ON 1=1
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo) AS tmpWeekDay_CarInfo ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.StartWeighing) AS tmpWeekDay_StartW ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.EndWeighing) AS tmpWeekDay_EndW ON 1=1
          ;
 
 END;
@@ -242,4 +277,3 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpReport_OrderExternal_Update (inStartDate:= '15.06.2022', inEndDate:= '15.06.2022', inIsDate_CarInfo:= FALSE, inToId := 346093 ,  inSession := '9457');
- 

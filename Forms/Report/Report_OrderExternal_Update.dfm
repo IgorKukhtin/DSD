@@ -4,7 +4,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
   ClientWidth = 928
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -53
   ExplicitWidth = 944
   ExplicitHeight = 629
   PixelsPerInch = 96
@@ -269,6 +268,55 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object StartWeighing: TcxGridDBColumn
+            Caption = #1057#1090#1072#1088#1090
+            DataBinding.FieldName = 'StartWeighing'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm hh:mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1088#1090' '#1089#1073#1086#1088#1082#1072' '#1079#1072#1082#1072#1079#1086#1074
+            Options.Editing = False
+            Width = 70
+          end
+          object EndWeighing: TcxGridDBColumn
+            Caption = #1060#1080#1085#1080#1096
+            DataBinding.FieldName = 'EndWeighing'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm hh:mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1080#1085#1080#1096' '#1089#1073#1086#1088#1082#1072' '#1079#1072#1082#1072#1079#1086#1074
+            Options.Editing = False
+            Width = 70
+          end
+          object DayOfWeekName_StartW: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1089#1090#1072#1088#1090
+            DataBinding.FieldName = 'DayOfWeekName_StartW'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1089#1090#1072#1088#1090' '#1089#1073#1086#1088#1082#1072' '#1079#1072#1082#1072#1079#1086#1074
+            Options.Editing = False
+            Width = 70
+          end
+          object DayOfWeekName_EndW: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1092#1080#1085#1080#1096
+            DataBinding.FieldName = 'DayOfWeekName_EndW'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1092#1080#1085#1080#1096' '#1089#1073#1086#1088#1082#1072' '#1079#1072#1082#1072#1079#1086#1074
+            Options.Editing = False
+            Width = 70
+          end
+          object Hours_EndW: TcxGridDBColumn
+            Caption = #1063#1072#1089#1086#1074
+            DataBinding.FieldName = 'Hours_EndW'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' '#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1079#1072#1082#1072#1079#1086#1074
+            Options.Editing = False
+            Width = 70
           end
         end
       end
