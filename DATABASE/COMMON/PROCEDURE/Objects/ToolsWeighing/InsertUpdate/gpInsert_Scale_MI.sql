@@ -120,9 +120,9 @@ BEGIN
      -- определили
      SELECT Movement.OperDate, MovementFloat.ValueData :: Integer, COALESCE (MLM_Order.MovementChildId, 0)
           , ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
-          , MovementLinkObject_To.ObjectId            AS ToId
           , MovementLinkObject_From.ObjectId          AS UnitId
-            INTO vbOperDate, vbMovementDescId, vbMovementId_order, vbRetailId, vbToId, vbUnitId
+          , MovementLinkObject_To.ObjectId            AS ToId
+            INTO vbOperDate, vbMovementDescId, vbMovementId_order, vbRetailId, vbUnitId, vbToId
      FROM Movement
           LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
                                  AND MovementFloat.DescId = zc_MovementFloat_MovementDesc()
@@ -152,6 +152,15 @@ BEGIN
         AND COALESCE (inReasonId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Причина возврат>.';
+     END IF;
+
+
+     -- проверка
+     IF vbUnitId = 8451 -- ЦЕХ упаковки
+        AND vbToId = 8459 -- Розподільчий комплекс
+        AND inGoodsKindId = zc_GoodsKind_Basis()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав для перемещения вида <Причина возврат>.', lfGet_Object_ValueData_sh (inGoodsKindId);
      END IF;
 
 

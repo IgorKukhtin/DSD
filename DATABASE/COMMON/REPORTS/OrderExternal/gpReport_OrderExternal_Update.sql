@@ -80,12 +80,14 @@ BEGIN
                                    WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
                                      OR Object_Route.ValueData ILIKE 'Самов%'
                                      OR Object_Route.ValueData ILIKE '%-колбаса'
+                                     OR Object_Route.ValueData ILIKE '%Кривой Рог%'
                                            THEN 0
                                    ELSE ObjectLink_Juridical_Retail.ChildObjectId
                               END AS RetailId
                             , STRING_AGG (DISTINCT CASE WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
                                                           OR Object_Route.ValueData ILIKE 'Самов%'
                                                           OR Object_Route.ValueData ILIKE '%-колбаса' 
+                                                          OR Object_Route.ValueData ILIKE '%Кривой Рог%'
                                                         THEN Object_Retail.ValueData
                                                         ELSE ''
                                                    END, '; ') ::TVarChar AS Retail_list
@@ -167,6 +169,7 @@ BEGIN
                                       WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
                                         OR Object_Route.ValueData ILIKE 'Самов%'
                                         OR Object_Route.ValueData ILIKE '%-колбаса'
+                                        OR Object_Route.ValueData ILIKE '%Кривой Рог%'
                                            THEN 0
                                       ELSE ObjectLink_Juridical_Retail.ChildObjectId
                                  END

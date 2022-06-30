@@ -534,6 +534,79 @@ select GoodsPropertyId, GoodsId, GoodsKindId
 from gpSelect_Object_GoodsPropertyValue(inGoodsPropertyId := 0 , inShowAll := 'False' ,  inSession := '5') as a
 group by GoodsPropertyId, GoodsId, GoodsKindId
 having Count(*)  > 1
+
+
+-- update - zc_ObjectLink_GoodsPropertyValue_GoodsBox
+with t1 as (
+SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                                             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                             , Object_GoodsPropertyValue.ValueData  AS Name
+                                             , ObjectString_BarCode.ValueData       AS BarCode
+                                             , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
+                                             , ObjectString_Article.ValueData       AS Article
+                                             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId, 0)  AS GoodsBoxId
+                                             , COALESCE (ObjectFloat_Weight.ValueData, 0)                          AS GoodsBox_Weight
+, Object_1.ValueData AS A11
+, Object_2.ValueData AS A22
+
+FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+
+                                             LEFT JOIN ObjectString AS ObjectString_BarCode
+                                                                    ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                                             LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
+                                                                    ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+                                             LEFT JOIN ObjectString AS ObjectString_Article
+                                                                    ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+                                             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                                  ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                                  ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                 AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+
+
+                                             LEFT JOIN Object AS Object_GoodsPropertyValue on Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId
+
+LEFT JOIN Object AS Object_1 on Object_1.Id = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId 
+LEFT JOIN Object AS Object_2 on Object_2.Id = ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId
+                                            
+
+                                             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                                                                  ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = Object_GoodsPropertyValue.Id
+                                                                 AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+                                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                                   ON ObjectFloat_Weight.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
+                                                                  AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+
+where ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+-- and Object_2.ValueData ilike '%нар%'
+--   and ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId > 0 
+   and ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId is null
+
+)
+, t2 as (select Object_GoodsByGoodsKind_View.* from Object_GoodsByGoodsKind_View
+            JOIN ObjectBoolean AS ObjectBoolean_Order
+                                    ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                   AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+AND ObjectBoolean_Order.valueData = true)
+
+select t1.* 
+ ,    lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_GoodsBox(), t1.ObjectId, CASE WHEN A22 ilike '%нар%' THEN 1918750 ELSE 6186668 end)
+
+from t1 
+left join t2 on t2.GoodsId = t1.GoodsId
+            and t2.GoodsKindId = t1.GoodsKindId
+-- and 1=0
+where t2.GoodsId > 0
+order by 1
+
+-- select *  from object where ObjectCode = 978005 and DescId = zc_Object_Goods()
+-- select *  from object where ObjectCode = 97958380 and DescId = zc_Object_Goods()
+-- select *  from object where valueData ilike '%Гофротара 380х220х110%' and DescId = zc_Object_Goods()
 */
 
 -- тест

@@ -175,9 +175,11 @@ BEGIN
                              INNER JOIN ObjectString AS ObjectString_Article
                                                      ON ObjectString_Article.ObjectId = Object_Goods.Id
                                                     AND ObjectString_Article.DescId = zc_ObjectString_Article()
-                                                    AND ObjectString_Article.ValueData ILIKE 'AGL000%'
+                                                    AND (ObjectString_Article.ValueData ILIKE 'AGL%'
+                                                      OR ObjectString_Article.ValueData ILIKE 'BEL%'
+                                                        )
                         WHERE Object_Goods.DescId = zc_Object_Goods()
-                          AND inIsLimit_100 = TRUE
+                        --AND inIsLimit_100 = TRUE
                        )
 
        -- Результат

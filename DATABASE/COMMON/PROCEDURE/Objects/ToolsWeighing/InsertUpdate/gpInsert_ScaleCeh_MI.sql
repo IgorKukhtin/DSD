@@ -41,6 +41,8 @@ $BODY$
 
    DECLARE vbId Integer;
    DECLARE vbDocumentKindId Integer;
+   DECLARE vbToId      Integer;
+   DECLARE vbUnitId    Integer;
 
    DECLARE vbWeight_goods              TFloat;
    DECLARE vbWeightTare_goods          TFloat;
@@ -62,6 +64,29 @@ BEGIN
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
+
+
+     -- определили
+     SELECT MovementLinkObject_From.ObjectId          AS UnitId
+          , MovementLinkObject_To.ObjectId            AS ToId
+            INTO vbUnitId, vbToId
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId      = zc_MovementLinkObject_To()
+     WHERE Movement.Id = inMovementId;
+
+
+     -- проверка
+     IF vbUnitId = 8451 -- ЦЕХ упаковки
+        AND vbToId = 8459 -- Розподільчий комплекс
+        AND inGoodsKindId = zc_GoodsKind_Basis()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав для перемещения вида <Причина возврат>.', lfGet_Object_ValueData_sh (inGoodsKindId);
+     END IF;
 
 
      -- !!!замена, приходит вес - из него получаем м. или шт.
