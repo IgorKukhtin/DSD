@@ -275,7 +275,7 @@ BEGIN
     -- Дата прихода в аптеку
     IF inDateComing IS NOT NULL
     THEN
-      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Coming(), ioId, inDateComing);
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Coming(), ioId, date_trunc('day',inDateComing));
     END IF;
 
     -- сохранили протокол

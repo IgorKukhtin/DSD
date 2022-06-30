@@ -1092,7 +1092,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = -2
     end
   end
   object cxSplitter1: TcxSplitter
@@ -1905,8 +1904,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceFormMaterialOptions_2'
-      FormName = 'TMaterialOptionsForm'
-      FormNameParam.Value = 'TMaterialOptionsForm'
+      FormName = 'TMaterialOptionsChoiceForm'
+      FormNameParam.Value = 'TMaterialOptionsChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1923,6 +1922,23 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Component = Child2CDS
           ComponentItem = 'MaterialOptionsName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorPatternId'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ProdColorPatternId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorPatternName'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ProdColorPatternName'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -3020,8 +3036,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 744
-    Top = 384
+    Left = 608
+    Top = 432
   end
   object spUnErasedProdColorPattern: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ReceiptGoodsChild'

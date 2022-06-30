@@ -15,7 +15,7 @@ RETURNS TABLE (OperDate        TDateTime
              , RouteId Integer, RouteName TVarChar
              , RetailId Integer, RetailName TVarChar
              , PartnerTagName TVarChar
-             , OperDate_CarInfo TDateTime
+             , OperDate_CarInfo TDateTime, OperDate_CarInfo_str TVarChar
              , CarInfoId Integer, CarInfoName TVarChar, CarComment TVarChar 
              , ToId Integer, ToCode Integer, ToName TVarChar
              , Amount TFloat
@@ -189,6 +189,7 @@ BEGIN
            , CASE WHEN Object_Retail.Id > 0 THEN Object_Retail.ValueData ELSE tmpMovement.Retail_list END :: TVarChar AS RetailName
            , tmpMovement.PartnerTagName        AS PartnerTagName
            , tmpMovement.OperDate_CarInfo      ::TDateTime
+           , (zfConvert_DateShortToString (tmpMovement.OperDate_CarInfo) || ' ' ||zfConvert_TimeShortToString (tmpMovement.OperDate_CarInfo)) ::TVarChar AS OperDate_CarInfo_str
            , Object_CarInfo.Id                 AS CarInfoId
            , Object_CarInfo.ValueData          AS CarInfoName
            , tmpMovement.CarComment ::TVarChar AS CarComment

@@ -779,6 +779,14 @@ begin
 
                end
                else
+               if TImportSettingsItems(Items[i]).ItemName = '%RECNO%' then
+               Begin
+                  if bJSON then
+                    AddParamToJSON(cParamName, AExternalLoad.FDataSet.RecNo, TImportSettingsItems(Items[i]).Param.DataType)
+                  else
+                    StoredProc.Params.Items[i].Value := AExternalLoad.FDataSet.RecNo;;
+               end
+               else
                begin
                  cParamName := LowerCase(TImportSettingsItems(Items[i]).Param.Name);
                  if TImportSettingsItems(Items[i]).ItemName <> '' then begin

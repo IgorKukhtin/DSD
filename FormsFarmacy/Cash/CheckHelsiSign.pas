@@ -150,12 +150,12 @@ end;
 procedure TCheckHelsiSignForm.actSignExecute(Sender: TObject);
   var HelsiError : boolean; OperDateSP : TDateTime;
       HelsiID, HelsiIDList, HelsiName, ConfirmationCode, ProgramId, ProgramName :
-      string; HelsiQty : currency;
+      string; HelsiQty : currency; PartialPrescription, SkipDispenseSign : Boolean;
 begin
   HelsiError := True;
   try
 
-    if not GetHelsiReceipt(ClientDataSet.FieldByName('InvNumberSP').AsString, HelsiID, HelsiIDList, HelsiName, HelsiQty, OperDateSP, ProgramId, ProgramName) then
+    if not GetHelsiReceipt(ClientDataSet.FieldByName('InvNumberSP').AsString, HelsiID, HelsiIDList, HelsiName, HelsiQty, OperDateSP, ProgramId, ProgramName, PartialPrescription, SkipDispenseSign) then
     begin
       Exit;
     end;
@@ -172,7 +172,7 @@ begin
                              RoundTo(ClientDataSet.FieldByName('Amount').asCurrency * ClientDataSet.FieldByName('PriceSale').asCurrency, -2),
                              RoundTo(ClientDataSet.FieldByName('Amount').asCurrency * ClientDataSet.FieldByName('PriceRetSP').asCurrency, -2) -
                                RoundTo(ClientDataSet.FieldByName('Amount').asCurrency * ClientDataSet.FieldByName('PaymentSP').asCurrency, -2),
-                             ConfirmationCode) then
+                             ClientDataSet.FieldByName('TotalSumm').asCurrency, ConfirmationCode) then
     begin
       Exit;
     end;

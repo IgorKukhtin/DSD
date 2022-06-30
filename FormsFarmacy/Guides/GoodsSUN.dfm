@@ -1722,6 +1722,36 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end>
       isShowModal = True
     end
+    object ProtocolOpenMainForm: TdsdOpenForm
+      Category = #1055#1088#1086#1090#1086#1082#1086#1083
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1075#1083#1072#1074#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1075#1083#1072#1074#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsMainId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1850,11 +1880,15 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton23'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -2293,6 +2327,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
     end
     object bbGoodsUnitSupplementSUN1: TdxBarButton
       Action = actGoodsUnitSupplementSUN1
+      Category = 0
+    end
+    object dxBarButton23: TdxBarButton
+      Action = ProtocolOpenMainForm
       Category = 0
     end
   end

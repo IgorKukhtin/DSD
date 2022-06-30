@@ -1,11 +1,9 @@
- -- Function: gpSelect_MovementItem_GoodsSPSearch_1303()
+ -- Function: gpSelect_GoodsSPSearch_1303()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_GoodsSPSearch_1303 (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsSPSearch_1303 (TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_GoodsSPSearch_1303(
-    IN inMovementId  Integer      , -- ключ Документа
-    IN inShowAll     Boolean      , --
-    IN inIsErased    Boolean      , --
+CREATE OR REPLACE FUNCTION gpSelect_GoodsSPSearch_1303(
+    IN inText        TVarChar     , -- Название
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id            Integer
@@ -43,11 +41,40 @@ RETURNS TABLE (Id            Integer
 AS
 $BODY$
     DECLARE vbUserId Integer;
+    DECLARE vbMovementId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_GoodsSPSearch_1303());
     vbUserId:= lpGetUserBySession (inSession);
 
+    SELECT Movement.Id                           AS Id
+    INTO vbMovementId
+    FROM Movement 
+
+         LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                ON MovementDate_OperDateStart.MovementId = Movement.Id
+                               AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+
+         LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                               AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+
+    WHERE Movement.DescId = zc_Movement_GoodsSPSearch_1303()
+      AND Movement.StatusId = zc_Enum_Status_Complete()
+      AND MovementDate_OperDateStart.ValueData <= CURRENT_DATE
+      AND MovementDate_OperDateEnd.ValueData >= CURRENT_DATE 
+    ORDER BY Movement.OperDate DESC
+    LIMIT 1;
+    
+    IF COALESCE (vbMovementId, 0) = 0
+    THEN
+      RAISE EXCEPTION 'Нет активного "Реестр товаров Соц. проекта 1303 для поиска"';
+    END IF;
+    
+    IF COALESCE(inText, '') = '' 
+    THEN
+      RETURN;
+    END IF;
     
     RETURN QUERY
     WITH 
@@ -62,7 +89,11 @@ BEGIN
                                   , MIDate_OrderDateSP.ValueData                          AS OrderDateSP
                                   , MIDate_ValiditySP.ValueData                           AS ValiditySP
 
-                                  , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MIDate_OrderDateSP.ValueData DESC) AS Ord
+                                  , COALESCE (Object_IntenalSP_1303.Id ,0)          ::Integer  AS IntenalSP_1303Id
+                                  , COALESCE (Object_IntenalSP_1303.ValueData,'')   ::TVarChar AS IntenalSP_1303Name
+                                  , COALESCE (Object_BrandSP.Id ,0)            ::Integer  AS BrandSPId
+                                  , COALESCE (Object_BrandSP.ValueData,'')     ::TVarChar AS BrandSPName
+
                                   , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
                               FROM MovementItem
                        
@@ -83,9 +114,21 @@ BEGIN
                                                               ON MIDate_ValiditySP.MovementItemId = MovementItem.Id
                                                              AND MIDate_ValiditySP.DescId = zc_MIDate_ValiditySP()
 
+                                   LEFT JOIN MovementItemLinkObject AS MI_IntenalSP_1303
+                                                                    ON MI_IntenalSP_1303.MovementItemId = MovementItem.Id
+                                                                   AND MI_IntenalSP_1303.DescId = zc_MILinkObject_IntenalSP_1303()
+                                   LEFT JOIN Object AS Object_IntenalSP_1303 ON Object_IntenalSP_1303.Id = MI_IntenalSP_1303.ObjectId 
+
+                                   LEFT JOIN MovementItemLinkObject AS MI_BrandSP
+                                                                    ON MI_BrandSP.MovementItemId = MovementItem.Id
+                                                                   AND MI_BrandSP.DescId = zc_MILinkObject_BrandSP()
+                                   LEFT JOIN Object AS Object_BrandSP ON Object_BrandSP.Id = MI_BrandSP.ObjectId 
+
                                WHERE MovementItem.DescId = zc_MI_Master()
-                                 AND MovementItem.MovementId = inMovementId
-                                 AND (MovementItem.isErased = FALSE  OR inIsErased = TRUE))
+                                 AND MovementItem.MovementId = vbMovementId
+                                 AND MovementItem.isErased = FALSE
+                                 AND (COALESCE (Object_IntenalSP_1303.ValueData,'') ILIKE '%'||inText||'%'
+                                   OR COALESCE (Object_BrandSP.ValueData,'') ILIKE '%'||inText||'%'))
       , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject
                               WHERE MovementItemId IN (SELECT DISTINCT tmpMovementItem.Id FROM tmpMovementItem))
 
@@ -103,10 +146,10 @@ BEGIN
              , MovementItem.ValiditySP                               AS ValiditySP
              , MovementItem.OrderDateSP                              AS OrderDateSP
 
-             , COALESCE (Object_IntenalSP_1303.Id ,0)          ::Integer  AS IntenalSP_1303Id
-             , COALESCE (Object_IntenalSP_1303.ValueData,'')   ::TVarChar AS IntenalSP_1303Name
-             , COALESCE (Object_BrandSP.Id ,0)            ::Integer  AS BrandSPId
-             , COALESCE (Object_BrandSP.ValueData,'')     ::TVarChar AS BrandSPName
+             , MovementItem.IntenalSP_1303Id                         AS IntenalSP_1303Id
+             , MovementItem.IntenalSP_1303Name                       AS IntenalSP_1303Name
+             , MovementItem.BrandSPId                                AS BrandSPId
+             , MovementItem.BrandSPName                              AS BrandSPName
              , COALESCE (Object_KindOutSP_1303.Id ,0)          ::Integer  AS KindOutSP_1303Id
              , COALESCE (Object_KindOutSP_1303.ValueData,'')   ::TVarChar AS KindOutSP_1303Name
              , COALESCE (Object_Dosage_1303.Id ,0)          ::Integer  AS Dosage_1303Id
@@ -134,17 +177,6 @@ BEGIN
                                           ON MIString_ReestrSP.MovementItemId = MovementItem.Id
                                          AND MIString_ReestrSP.DescId = zc_MIString_ReestrSP()
 
-
-             LEFT JOIN tmpMILinkObject AS MI_IntenalSP_1303
-                                              ON MI_IntenalSP_1303.MovementItemId = MovementItem.Id
-                                             AND MI_IntenalSP_1303.DescId = zc_MILinkObject_IntenalSP_1303()
-             LEFT JOIN Object AS Object_IntenalSP_1303 ON Object_IntenalSP_1303.Id = MI_IntenalSP_1303.ObjectId 
-
-             LEFT JOIN tmpMILinkObject AS MI_BrandSP
-                                              ON MI_BrandSP.MovementItemId = MovementItem.Id
-                                             AND MI_BrandSP.DescId = zc_MILinkObject_BrandSP()
-             LEFT JOIN Object AS Object_BrandSP ON Object_BrandSP.Id = MI_BrandSP.ObjectId 
-
              LEFT JOIN MovementItemLinkObject AS MI_KindOutSP_1303
                                               ON MI_KindOutSP_1303.MovementItemId = MovementItem.Id
                                              AND MI_KindOutSP_1303.DescId = zc_MILinkObject_KindOutSP_1303()
@@ -169,6 +201,7 @@ BEGIN
                                               ON MI_Currency.MovementItemId = MovementItem.Id
                                              AND MI_Currency.DescId = zc_MILinkObject_Currency()
              LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MI_Currency.ObjectId 
+
         ORDER BY MovementItem.Col
 
          ;
@@ -180,9 +213,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 16.05.22                                                       *
+ 29.06.22                                                       *
 */
 
 --ТЕСТ
 -- 
-SELECT * FROM gpSelect_MovementItem_GoodsSPSearch_1303 (inMovementId:= 28341113 , inShowAll:= False, inIsErased:= FALSE, inSession:= '3')
+SELECT * FROM gpSelect_GoodsSPSearch_1303 (inText:= 'Анал', inSession:= '3')

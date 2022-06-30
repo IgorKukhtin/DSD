@@ -21,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSPSearch_1303_From_Excel(
     IN inExchangeRate             TVarChar  ,    -- Офіційний курс та вид іноземної валюти (11)
 
     IN inOrderDateNumberSP        TVarChar  ,    -- Дата та номер наказу МОЗ про декларування змін оптово-відпускної ціни на лікарські засоби (12)
+    IN inCol                      Integer   ,    -- Номер по порядку
 
     IN inSession                  TVarChar       -- текущий пользователь
 )
@@ -254,6 +255,7 @@ BEGIN
     -- сохранить запись
     PERFORM lpInsertUpdate_MovementItem_GoodsSPSearch_1303 (ioId                      := COALESCE(vbId, 0)
                                                           , inMovementId              := inMovementId
+                                                          , inCol                     := inCol
                                                           , inIntenalSP_1303Id        := vbIntenalSP_1303Id
                                                           , inBrandSPId               := vbBrandSPId
                                                           , inKindOutSP_1303Id        := vbKindOutSP_1303Id

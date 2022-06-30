@@ -1244,10 +1244,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_ShowPlanEmployeeUser() RETURNS 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_ShowPlanEmployeeUser', 'Показывать итог по выполнению плана продаж' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ShowPlanEmployeeUser');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_SupplementMarkSUN1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_SupplementMarkSUN1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_SupplementMarkSUN1', 'Дополнение СУН1 маркетинг' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_SupplementMarkSUN1');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 29.06.22                                                                                                          * zc_ObjectBoolean_Goods_SupplementMarkSUN1
  22.06.22                                                                                                          * zc_ObjectBoolean_Unit_ShowPlanEmployeeUser
  07.06.22                                                                                                          * zc_ObjectBoolean_Unit_ExpressVIPConfirm
  18.05.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_SupplementAdd30Cash

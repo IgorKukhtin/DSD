@@ -1,3 +1,4 @@
+
 unit MainCash2;
 
 interface
@@ -617,6 +618,8 @@ type
     RemainsUnitOneCDS: TClientDataSet;
     spRemainsUnitOne: TdsdStoredProc;
     actExpressVIPConfirm: TdsdOpenForm;
+    actChoiceGoodsSPSearch_1303: TdsdOpenForm;
+    N13032: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1715,6 +1718,8 @@ begin
   FormParams.ParamByName('HelsiProgramId').Value := '';
   FormParams.ParamByName('HelsiProgramName').Value := '';
   FormParams.ParamByName('ConfirmationCodeSP').Value := '';
+  FormParams.ParamByName('HelsiPartialPrescription').Value := False;
+  FormParams.ParamByName('HelsiSkipDispenseSign').Value := False;
   // **13.05.19
   FormParams.ParamByName('PartionDateKindId').Value := 0;
   // **07.11.19
@@ -3418,7 +3423,24 @@ begin
       exit;
     end;
 
-    if RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
+    if (FormParams.ParamByName('HelsiPartialPrescription').Value = True) then
+    begin
+      if RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
+        ('Amount').asCurrency, -2) > FormParams.ParamByName('HelsiQty').Value then
+      begin
+        ShowMessage('Ошибка.'#13#10'В рецепте выписано: ' + FormatCurr('0.####',
+          FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
+          FormatCurr('0.####', RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+          CheckCDS.FieldByName('Amount').asCurrency, -2)) +
+          ' единиц'#13#10'Проверьте количество товара, опущенного в чек.');
+        exit;
+      end else if MessageDlg('В рецепте выписано: ' + FormatCurr('0.####',
+          FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
+          FormatCurr('0.####', RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+          CheckCDS.FieldByName('Amount').asCurrency, -2)) +
+          ' единиц'#13#10'Производит отпуск ментшего количества чем выписано ?...',
+          mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
+    end else if RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
       ('Amount').asCurrency, -2) <> FormParams.ParamByName('HelsiQty').Value then
     begin
       ShowMessage('Ошибка.'#13#10'В рецепте выписано: ' + FormatCurr('0.####',
@@ -3865,7 +3887,8 @@ begin
         RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
         CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
         RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-        CheckCDS.FieldByName('PaymentSP').asCurrency, -2), ConfirmationCode) then
+        CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
+        CheckCDS.FieldByName('Summ').asCurrency, ConfirmationCode) then
       begin
         if Self.ActiveControl <> edAmount then
           Self.ActiveControl := MainGrid;
@@ -4016,8 +4039,9 @@ begin
         if (FormParams.ParamByName('HelsiID').Value <> '') then
         begin
 
-          if (gc_User.Session = '3') then HelsiError := True
-          else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+//          if (gc_User.Session = '3') then HelsiError := True
+//          else
+          if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
           begin
             HelsiError := not SetPayment(CheckNumber,
               CheckCDS.FieldByName('Summ').asCurrency);
@@ -4041,6 +4065,7 @@ begin
                 CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
                 RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
                 CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
+                CheckCDS.FieldByName('Summ').asCurrency,
                 ConfirmationCode) then
               begin
                 HelsiError := not SetPayment(CheckNumber,
@@ -4881,7 +4906,8 @@ begin
           FormParams.ParamByName('RoundingDown').Value);
       end
       else if (RemainsCDS.FieldByName('isSP').AsBoolean = True) and
-        (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+        (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
+        (FormParams.ParamByName('HelsiSkipDispenseSign').Value = False) then
       begin
         // на всяк случай - УСТАНОВИМ скидку еще разок
         CheckCDS.FieldByName('PriceSale').asCurrency :=
@@ -6451,6 +6477,8 @@ var
   SPTax: Currency;
   HelsiID, HelsiIDList, HelsiName, HelsiProgramId, HelsiProgramName: string;
   HelsiQty: Currency;
+  HelsiPartialPrescription : Boolean;
+  HelsiSkipDispenseSign : Boolean;
   isPaperRecipeSP : Boolean;
   Res : TArray<string>;
 begin
@@ -6535,7 +6563,8 @@ begin
       if not DiscountDialogExecute(PartnerMedicalId, SPKindId,
         PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName,
         OperDateSP, SPTax, MemberSPID, MemberSP, HelsiID, HelsiIDList,
-        HelsiName, HelsiQty, HelsiProgramId, HelsiProgramName, isPaperRecipeSP) then
+        HelsiName, HelsiQty, HelsiProgramId, HelsiProgramName, HelsiPartialPrescription,
+        HelsiSkipDispenseSign, isPaperRecipeSP) then
         exit;
     finally
       Free;
@@ -6591,6 +6620,8 @@ begin
   FormParams.ParamByName('HelsiQty').Value := HelsiQty;
   FormParams.ParamByName('HelsiProgramId').Value := HelsiProgramId;
   FormParams.ParamByName('HelsiProgramName').Value := HelsiProgramName;
+  FormParams.ParamByName('HelsiPartialPrescription').Value := HelsiPartialPrescription;
+  FormParams.ParamByName('HelsiSkipDispenseSign').Value := HelsiSkipDispenseSign;
   FormParams.ParamByName('isPaperRecipeSP').Value := isPaperRecipeSP;
 
   //
@@ -6650,38 +6681,42 @@ begin
 
         if isPaperRecipeSP = False then
         begin
-           RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
-             ' or CountSP = CountSPMin';
 
-           RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP = ' +
-            CurrToStr(FormParams.ParamByName('HelsiQty').Value) + ' or CountSP = '
-            + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
-            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-            / 3) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-            .Value / 4) + ' or CountSP = ' +
-            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
-            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-            / 6) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-            .Value / 7) + ' or CountSP = ' +
-            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
-            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-            / 9) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-            .Value / 10) + ' or CountSP = ' +
-            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 11) +
-            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-            / 12) + ' or CountSP = ' +
-            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 13) +
-            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-            / 14) + ' or CountSP = ' +
-            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 15) +
-            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-            / 16) + ' or CountSP = ' +
-            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 17) +
-            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-            / 18) + ' or CountSP = ' +
-            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
-            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-            / 20) + '))';
+           if not HelsiPartialPrescription then
+           begin
+             RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
+               ' or CountSP = CountSPMin';
+             RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP = ' +
+              CurrToStr(FormParams.ParamByName('HelsiQty').Value) + ' or CountSP = '
+              + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
+              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+              / 3) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
+              .Value / 4) + ' or CountSP = ' +
+              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
+              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+              / 6) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
+              .Value / 7) + ' or CountSP = ' +
+              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
+              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+              / 9) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
+              .Value / 10) + ' or CountSP = ' +
+              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 11) +
+              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+              / 12) + ' or CountSP = ' +
+              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 13) +
+              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+              / 14) + ' or CountSP = ' +
+              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 15) +
+              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+              / 16) + ' or CountSP = ' +
+              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 17) +
+              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+              / 18) + ' or CountSP = ' +
+              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
+              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+              / 20) + '))';
+           end else  RemainsCDS.Filter := RemainsCDS.Filter + ' and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value);
+
         end;
         RemainsCDS.Filtered := True;
       except
@@ -6718,7 +6753,7 @@ var
   InvNumberSP: String;
   OperDateSP: TDateTime;
   HelsiID, HelsiIDList, HelsiName, ProgramId, ProgramName: string;
-  HelsiQty: Currency;
+  HelsiQty: Currency; PartialPrescription, HelsiSkipDispenseSign : Boolean;
   Res: TArray<string>;
   I, UserId: Integer;
   Key_expireDate : TDateTime;
@@ -6772,51 +6807,12 @@ begin
   if not InputEnterRecipeNumber(InvNumberSP) then
     exit;
 
-  WaitForSingleObject(MutexDBF, INFINITE);
-  try
-    FLocalDataBaseHead.Open;
-    FLocalDataBaseHead.First;
-    while not FLocalDataBaseHead.Eof do
-    begin
-      if Trim(FLocalDataBaseHead.FieldByName('INVNUMSP').AsString) = InvNumberSP
-      then
-      begin
-        ShowMessage
-          ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
-        exit;
-      end;
-      FLocalDataBaseHead.Next;
-    end;
-  finally
-    FLocalDataBaseHead.Close;
-    ReleaseMutex(MutexDBF);
-  end;
-
-  if not gc_User.Local then
-  begin
-    spGet_Movement_InvNumberSP.ParamByName('inSPKindId').Value :=
-      UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger;
-    spGet_Movement_InvNumberSP.ParamByName('inInvNumberSP').Value :=
-      InvNumberSP;
-    if spGet_Movement_InvNumberSP.Execute = '' then
-    begin
-      if spGet_Movement_InvNumberSP.ParamByName('outIsExists').Value then
-      begin
-        ShowMessage
-          ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
-        exit;
-      end;
-    end
-    else
-      exit;
-  end;
-
   try
 
     if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
     begin
       if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
-        OperDateSP, ProgramId, ProgramName) then
+        OperDateSP, ProgramId, ProgramName, PartialPrescription, HelsiSkipDispenseSign) then
       begin
         NewCheck(false);
         exit;
@@ -6869,6 +6865,8 @@ begin
   FormParams.ParamByName('HelsiQty').Value := HelsiQty;
   FormParams.ParamByName('HelsiProgramId').Value := ProgramId;
   FormParams.ParamByName('HelsiProgramName').Value := ProgramName;
+  FormParams.ParamByName('HelsiPartialPrescription').Value := PartialPrescription;
+  FormParams.ParamByName('HelsiSkipDispenseSign').Value := HelsiSkipDispenseSign;
 
   //
   if FormParams.ParamByName('SPTax').Value <> 0 then
@@ -6911,38 +6909,42 @@ begin
             '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and DosageIdSP = '
             + QuotedStr(HelsiID);
 
-        RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
-           ' or CountSP = CountSPMin';
+        if not PartialPrescription then
+        begin
 
-        RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value) + ' or CountSP = '
-          + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 3) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-          .Value / 4) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 6) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-          .Value / 7) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 9) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-          .Value / 10) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 11) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 12) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 13) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 14) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 15) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 16) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 17) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 18) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 20) + '))';
+          RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
+             ' or CountSP = CountSPMin';
+          RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP = ' +
+                    CurrToStr(FormParams.ParamByName('HelsiQty').Value) + ' or CountSP = '
+                    + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
+                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+                    / 3) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
+                    .Value / 4) + ' or CountSP = ' +
+                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
+                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+                    / 6) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
+                    .Value / 7) + ' or CountSP = ' +
+                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
+                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+                    / 9) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
+                    .Value / 10) + ' or CountSP = ' +
+                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 11) +
+                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+                    / 12) + ' or CountSP = ' +
+                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 13) +
+                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+                    / 14) + ' or CountSP = ' +
+                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 15) +
+                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+                    / 16) + ' or CountSP = ' +
+                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 17) +
+                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+                    / 18) + ' or CountSP = ' +
+                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
+                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+                    / 20) + '))';
+        end else RemainsCDS.Filter := RemainsCDS.Filter + ' and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value);
+
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter :=
@@ -8881,7 +8883,8 @@ begin
           (1 - Self.FormParams.ParamByName('SPTax').Value / 100);
       end
       else if (SourceClientDataSet.FieldByName('isSP').AsBoolean = True) and
-        (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+        (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
+        (FormParams.ParamByName('HelsiSkipDispenseSign').Value = False) then
       begin
         if (FormParams.ParamByName('MedicalProgramSPId').Value = SourceClientDataSet.FieldByName('MedicalProgramSPId').AsInteger) then
         begin
@@ -10596,6 +10599,8 @@ begin
   FormParams.ParamByName('HelsiProgramId').Value := '';
   FormParams.ParamByName('HelsiProgramName').Value := '';
   FormParams.ParamByName('ConfirmationCodeSP').Value := '';
+  FormParams.ParamByName('HelsiPartialPrescription').Value := False;
+  FormParams.ParamByName('HelsiSkipDispenseSign').Value := False;
   // **13.05.19
   FormParams.ParamByName('PartionDateKindId').Value := 0;
   // **07.11.19
@@ -11543,7 +11548,8 @@ begin
             FormParams.ParamByName('RoundingDown').Value);
         end
         else if (RemainsCDS.FieldByName('isSP').AsBoolean = True) and
-          (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+          (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
+          (FormParams.ParamByName('HelsiSkipDispenseSign').Value = False) then
         begin
 
           if FormParams.ParamByName('MedicalProgramSPId').Value = RemainsCDS.FieldByName('MedicalProgramSPId').AsInteger  then

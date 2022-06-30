@@ -353,8 +353,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       DiagramLine.Values.LineWidth = 2
       ToolBox.CustomizeButton = True
       ToolBox.DiagramSelector = True
-      object dgOperDate_CarInfo: TcxGridDBChartDataGroup
-        DataBinding.FieldName = 'OperDate_CarInfo'
+      object dgOperDate_CarInfo_str: TcxGridDBChartDataGroup
+        DataBinding.FieldName = 'OperDate_CarInfo_str'
         DisplayText = #1044#1072#1090#1072'/'#1074#1088' '#1086#1090#1075#1088#1091#1079#1082#1080
       end
       object grDayOfWeekName_CarInfo: TcxGridDBChartDataGroup

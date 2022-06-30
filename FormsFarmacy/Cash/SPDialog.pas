@@ -72,10 +72,12 @@ type
     FHelsiDate : TDateTime;
     FProgramId : string;
     FProgramName : string;
+    FPartialPrescription : Boolean;
+    FSkipDispenseSign : Boolean;
   public
      function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
        var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
-       var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String;
+       var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String; AHelsiPartialPrescription, AHelsiSkipDispenseSign : Boolean;
        var AisPaperRecipeSP : Boolean): boolean;
      function CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   end;
@@ -159,7 +161,7 @@ begin
 
     if MainCash2.MainCashForm.UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
     begin
-      Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate, FProgramId, FProgramName);
+      Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate, FProgramId, FProgramName, FPartialPrescription, FSkipDispenseSign);
     end else if MainCash2.MainCashForm.UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
     begin
       Result := GetLikiDniproeHealthReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate);
@@ -323,10 +325,10 @@ end;
 
 function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
   var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
-  var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String;
+  var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String; AHelsiPartialPrescription, AHelsiSkipDispenseSign : Boolean;
   var AisPaperRecipeSP : Boolean): boolean;
 Begin
-      FHelsiID := ''; FHelsiIDList := ''; FHelsiName := '';  AHelsiProgramId := ''; AHelsiProgramName := ''; AisPaperRecipeSP := False;
+      FHelsiID := ''; FHelsiIDList := ''; FHelsiName := '';  AHelsiProgramId := ''; AHelsiProgramName := ''; AHelsiPartialPrescription := False; AisPaperRecipeSP := False;
       edAmbulance.Text:= AAmbulance;
       edMedicSP.Text:= AMedicSP;
       edInvNumberSP.Text:= AInvNumberSP;
@@ -414,6 +416,8 @@ Begin
           AHelsiQty           := FHelsiQty;
           AHelsiProgramId     := FProgramId;
           AHelsiProgramName   := FProgramName;
+          AHelsiPartialPrescription := FPartialPrescription;
+          AHelsiSkipDispenseSign := FSkipDispenseSign;
           AisPaperRecipeSP    := Length(AInvNumberSP) <= 15;
         end else
         begin
@@ -422,7 +426,9 @@ Begin
           AHelsiQty           := 0;
           AHelsiProgramId     := '';
           AHelsiProgramName   := '';
+          AHelsiPartialPrescription := False;
           AisPaperRecipeSP    := False;
+          AHelsiSkipDispenseSign := False;
          end;
 
       end
@@ -442,7 +448,9 @@ Begin
               AHelsiQty           := 0;
               AHelsiProgramId     := '';
               AHelsiProgramName   := '';
+              AHelsiPartialPrescription := False;
               AisPaperRecipeSP    := False;
+              AHelsiSkipDispenseSign := False;
            end;
 end;
 

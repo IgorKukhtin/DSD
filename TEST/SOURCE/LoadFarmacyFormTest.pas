@@ -2707,6 +2707,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPSearch_1303Form'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPSearch_1303Form');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsSPSearch_1303Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsSPSearch_1303Form');
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPRegistry_1303JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPRegistry_1303JournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPRegistry_1303Form'));

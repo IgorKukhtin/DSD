@@ -73,6 +73,9 @@ type
     spClearGoods: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     Color_Count: TcxGridDBColumn;
+    Col: TcxGridDBColumn;
+    actChoiceGoodsSPSearch_1303: TdsdOpenForm;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

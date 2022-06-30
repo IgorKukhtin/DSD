@@ -221,6 +221,8 @@ type
     dxBarButton22: TdxBarButton;
     actGoodsUnitSupplementSUN1: TdsdOpenForm;
     bbGoodsUnitSupplementSUN1: TdxBarButton;
+    ProtocolOpenMainForm: TdsdOpenForm;
+    dxBarButton23: TdxBarButton;
   private
     { Private declarations }
   public

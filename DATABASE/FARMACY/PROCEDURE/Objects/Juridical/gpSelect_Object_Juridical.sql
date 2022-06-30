@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_Juridical()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Juridical(TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_Juridical(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Juridical(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inisShowErased  Boolean ,     -- 
+    IN inSession       TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, --OKPO TVarChar,
                RetailId Integer, RetailName TVarChar,
@@ -207,7 +209,8 @@ BEGIN
 
            LEFT JOIN tmpJuridicalDetails ON tmpJuridicalDetails.JuridicalId = Object_Juridical.Id
 
-       WHERE Object_Juridical.DescId = zc_Object_Juridical();
+       WHERE Object_Juridical.DescId = zc_Object_Juridical()
+         AND (Object_Juridical.isErased = FALSE OR inisShowErased = TRUE);
   
 END;
 $BODY$
@@ -230,4 +233,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical('2')
+-- 
+SELECT * FROM gpSelect_Object_Juridical(False, '2')
