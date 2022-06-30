@@ -17,7 +17,9 @@ BEGIN
      vbUserId := inSession;
 
      -- все Товары для схемы SUN Supplement
-     CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer, UnitOut2Id Integer, isSmudge Boolean, SupplementMin Integer, SupplementMinPP Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, isSupplementMarkSUN1 Boolean, isSmudge Boolean, SupplementMin Integer, SupplementMinPP Integer) ON COMMIT DROP;
+     -- все подразделения отдающие товар SUN Supplement
+     CREATE TEMP TABLE _tmpGoodsUnit_SUN_Supplement   (GoodsId Integer, UnitOutId Integer) ON COMMIT DROP;
 
      -- все Подразделения для схемы SUN Supplement
      CREATE TEMP TABLE _tmpUnit_SUN_Supplement   (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean, isSUN_Supplement_Priority Boolean, SalesRatio TFloat) ON COMMIT DROP;
@@ -120,9 +122,9 @@ BEGIN
                              
        WHERE Movement.DescId = zc_Movement_Promo();
        
-       PERFORM gpUpdate_Goods_inSupplementSUN1(inGoodsMainId       := Object_Goods_Main.Id 
-                                             , inisSupplementSUN1  := False
-                                             , inSession           := inSession)
+       PERFORM gpUpdate_Goods_inSupplementSUN1_Revert(inGoodsMainId       := Object_Goods_Main.Id 
+                                                    , inisSupplementSUN1  := True
+                                                    , inSession           := inSession)
              , gpUpdate_Goods_inSupplementSUN1Smudge(inGoodsMainId         := Object_Goods_Main.Id 
                                                    , inisSupplementSmudge  := True
                                                    , inSession             := inSession)
@@ -161,3 +163,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+

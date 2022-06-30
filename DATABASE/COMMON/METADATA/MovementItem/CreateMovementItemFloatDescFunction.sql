@@ -1561,9 +1561,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_ApplicationAward() RETURNS Integer AS $BOD
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_ApplicationAward', 'Премия за приложение' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ApplicationAward');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaOrderConfirmation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaOrderConfirmation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_SummaOrderConfirmation', 'Штраф за несовременное подтверждения заказов' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaOrderConfirmation');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 30.05.22                                                                                                     * zc_MIFloat_SummaOrderConfirmation
  20.05.22                                                                                                     * zc_MIFloat_ApplicationAward
  14.05.22                                                                                                     * zc_MIFloat_ExchangeRate
  30.03.22         * zc_MIFloat_PriceTare

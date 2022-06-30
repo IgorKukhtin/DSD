@@ -416,10 +416,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_RefusalConfirmed() RETURNS integer
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_RefusalConfirmed', 'Подтвержден отказ покупателя'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_RefusalConfirmed');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_AccruedFine() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_AccruedFine'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_AccruedFine', 'Начислить штраф'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_AccruedFine');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 30.06.22                                                                                   * zc_MovementBoolean_AccruedFine
  20.06.22                                                                                   * zc_MovementBoolean_RefusalConfirmed
  16.06.22                                                                                   * zc_MovementBoolean_ConfirmByPhone, zc_MovementBoolean_ConfirmedByPhoneCall
  27.05.22                                                                                   * zc_MovementBoolean_NotMoveRemainder6

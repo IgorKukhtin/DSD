@@ -16,6 +16,8 @@ BEGIN
 
    -- сохранили свойство <Дополнение СУН1>
    PERFORM gpUpdate_Goods_inSupplementSUN1 (inGoodsMainId, not inisSupplementSUN1, inSession);
+   -- сохранили свойство <Дополнение СУН1 маркетинг>
+   PERFORM gpUpdate_Goods_inSupplementMarkSUN1_Revert (inGoodsMainId, not inisSupplementSUN1, inSession);
    
 
 END;

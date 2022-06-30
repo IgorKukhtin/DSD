@@ -13,7 +13,8 @@ uses
   cxGridTableView, cxGridDBTableView, cxGrid, cxPC, cxContainer, cxTextEdit,
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
   dxBarBuiltInMenu, cxNavigator, Vcl.StdCtrls, cxButtons, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox,
+  Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit, cxCalendar;
 
 type
   TChoiceGoodsSPSearch_1303Form = class(TAncestorEnumForm)
@@ -39,6 +40,15 @@ type
     colDosage_1303Name: TcxGridDBColumn;
     colCountSP_1303Name: TcxGridDBColumn;
     colMakerCountrySP_1303Name: TcxGridDBColumn;
+    edOperDateEnd: TcxDateEdit;
+    cxLabel4: TcxLabel;
+    edOperDateStart: TcxDateEdit;
+    cxLabel1: TcxLabel;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    dxBarControlContainerItem3: TdxBarControlContainerItem;
+    dxBarControlContainerItem4: TdxBarControlContainerItem;
+    spGet: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -13034,20 +13034,25 @@ begin
       FIsTabletki := spGet_BlinkVIP.ParamByName('outIsTabletki').Value;
       FIsLiki24 := spGet_BlinkVIP.ParamByName('outIsLiki24').Value;
 
+      if spGet_BlinkVIP.ParamByName('outIsOrderTabletki').Value and Self.Showing then
+      begin
+        ShowPUSHMessageCash('Обработайте заказ!'#13#10#13#10'На аптеку через  5 мин будет наложен штраф в размере 200 грн!', AResult, False,
+                            'TCheckSiteForm', 'Просмотр чеков с сайта "Таблетки"');
+        spGet_BlinkVIP.Execute;
+      end;
+
       if UnitConfigCDS.Active and UnitConfigCDS.FindField('isExpressVIPConfirm').AsBoolean and Self.Showing and
          (spGet_BlinkVIP.ParamByName('outExpressVIPConfirm').Value > 0) and
          (spGet_BlinkVIP.ParamByName('outExpressVIPConfirm').Value <= UnitConfigCDS.FindField('ExpressVIPConfirm').AsInteger) then
       begin
         actExpressVIPConfirm.Execute;
         spGet_BlinkVIP.Execute;
+        lMovementId_BlinkVIP := spGet_BlinkVIP.ParamByName('outMovementId_list').Value;
         FIsVIP := spGet_BlinkVIP.ParamByName('outIsVIP').Value;
         FIsTabletki := spGet_BlinkVIP.ParamByName('outIsTabletki').Value;
         FIsLiki24 := spGet_BlinkVIP.ParamByName('outIsLiki24').Value;
-      end else if spGet_BlinkVIP.ParamByName('outIsOrderTabletki').Value and Self.Showing then
-      begin
-        ShowPUSHMessageCash('Обработайте заказ! Аптека будет в блоке через 5 минут!', AResult, False,
-                            'TCheckSiteForm', 'Просмотр чеков с сайта "Таблетки"');
       end;
+
 
       // в этом случае кнопка будет мигать
       fBlinkVIP := lMovementId_BlinkVIP <> '';

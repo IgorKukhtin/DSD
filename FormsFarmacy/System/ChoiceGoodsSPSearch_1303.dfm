@@ -1,26 +1,30 @@
 inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
   ActiveControl = edCodeSearch
   Caption = #1055#1086#1080#1089#1082' '#1074' "'#1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072' 1303"'
+  ClientHeight = 462
   ClientWidth = 885
   ShowHint = True
   ExplicitWidth = 901
-  ExplicitHeight = 347
+  ExplicitHeight = 501
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 885
+    Height = 436
     ExplicitWidth = 885
+    ExplicitHeight = 436
+    ClientRectBottom = 436
     ClientRectRight = 885
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 885
-      ExplicitHeight = 282
+      ExplicitHeight = 436
       inherited cxGrid: TcxGrid
         Top = 27
         Width = 885
-        Height = 255
+        Height = 409
         ExplicitTop = 27
         ExplicitWidth = 885
-        ExplicitHeight = 255
+        ExplicitHeight = 409
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -156,35 +160,79 @@ inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
         BevelOuter = bvNone
         TabOrder = 1
         object edCodeSearch: TcxTextEdit
-          Left = 123
-          Top = 3
+          Left = 235
+          Top = 4
           Hint = #1053#1072#1078#1084#1080#1090#1077' Enter '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072
           TabOrder = 0
           Width = 276
         end
         object cxLabel3: TcxLabel
-          Left = 405
-          Top = 4
+          Left = 517
+          Top = 5
           Caption = 'Enter'
           Style.TextColor = 6118749
         end
         object btnClearFilter: TcxButton
-          Left = 441
-          Top = 0
+          Left = 553
+          Top = 1
           Width = 153
           Height = 25
           Action = actClearFilter
           TabOrder = 2
         end
       end
+      object edOperDateEnd: TcxDateEdit
+        Left = 424
+        Top = 135
+        EditValue = 43326d
+        Enabled = False
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        StyleDisabled.Color = clWindow
+        StyleDisabled.TextColor = clWindowText
+        TabOrder = 2
+        Width = 103
+      end
+      object cxLabel4: TcxLabel
+        Left = 424
+        Top = 117
+        Caption = #1087#1086
+      end
+      object edOperDateStart: TcxDateEdit
+        Left = 317
+        Top = 135
+        EditValue = 43326d
+        Enabled = False
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        StyleDisabled.Color = clWindow
+        StyleDisabled.TextColor = clWindowText
+        TabOrder = 4
+        Width = 93
+      end
+      object cxLabel1: TcxLabel
+        Left = 317
+        Top = 117
+        Caption = #1055#1077#1088#1080#1086#1076' '#1076#1077#1081#1089#1090#1074#1080#1103'  '#1089
+      end
     end
   end
   object cxLabel2: TcxLabel [1]
     Left = 12
     Top = 30
-    Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1102
+    Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1052#1053#1053'/'#1058#1086#1088#1075#1085#1072#1079#1074#1072#1085#1080#1102' '#1083#1077#1082#1089#1088#1077#1076#1089#1090#1074#1072
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end>
+    end
     object DataSetPost: TDataSetPost
       Category = 'Delete'
       Caption = 'P&ost'
@@ -348,7 +396,31 @@ inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem4'
         end>
     end
     object bbDeleteGoodsLink: TdxBarButton
@@ -375,6 +447,34 @@ inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1087#1091#1089#1082#1085#1091#1102' '#1094#1077#1085#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
       Visible = ivAlways
       ImageIndex = 75
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel1
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edOperDateStart
+    end
+    object dxBarControlContainerItem3: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel4
+    end
+    object dxBarControlContainerItem4: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edOperDateEnd
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -408,5 +508,28 @@ inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
       end>
     Left = 192
     Top = 200
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_GoodsSPSearch_1303'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'OperDateStart'
+        Value = Null
+        Component = edOperDateStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateEnd'
+        Value = Null
+        Component = edOperDateEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 208
   end
 end
