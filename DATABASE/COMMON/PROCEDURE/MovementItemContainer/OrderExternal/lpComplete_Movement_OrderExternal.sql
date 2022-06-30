@@ -14,24 +14,29 @@ $BODY$
   DECLARE vbOperSumm_Partner_byItem TFloat;
   DECLARE vbOperSumm_Partner TFloat;
 
+  DECLARE vbOperDate            TDateTime;
   DECLARE vbOperDatePartner     TDateTime;
   DECLARE vbPriceWithVAT        Boolean;
   DECLARE vbVATPercent          TFloat;
   DECLARE vbDiscountPercent     TFloat;
   DECLARE vbExtraChargesPercent TFloat;
 
-  DECLARE vbPartnerId        Integer;
-  DECLARE vbJuridicalId      Integer;
-  DECLARE vbUnitId_From      Integer;
-  DECLARE vbArticleLoss_From Integer;
-  DECLARE vbContractId       Integer;
+  DECLARE vbPartnerId           Integer;
+  DECLARE vbJuridicalId         Integer;
+  DECLARE vbUnitId_From         Integer;
+  DECLARE vbArticleLoss_From    Integer;
+  DECLARE vbContractId          Integer;
+  DECLARE vbRouteId             Integer;
+  DECLARE vbRetailId            Integer;
+  DECLARE vbUnitId_to           Integer;
 
-  DECLARE vbCriticalWeight   TFloat;
-  DECLARE vbSummOrderMin     TFloat;
-  DECLARE vbIsLessWeigth     Boolean;
+  DECLARE vbCriticalWeight      TFloat;
+  DECLARE vbSummOrderMin        TFloat;
+  DECLARE vbIsLessWeigth        Boolean;
+  DECLARE vbMovementId_CarInfo  Integer;
 BEGIN
      outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := lfGet_User_Session (inUserId));
-     
+
      --
      vbCriticalWeight:= (SELECT tmpGet.CriticalWeight FROM gpGetMobile_Object_Const (inSession:= zfCalc_UserAdmin()) AS tmpGet);
 
@@ -43,7 +48,8 @@ BEGIN
 
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту или Сотуднику и для формирования Аналитик в проводках
-     SELECT MovementDate_OperDatePartner.ValueData AS OperDatePartner
+     SELECT Movement.OperDate
+          , MovementDate_OperDatePartner.ValueData AS OperDatePartner
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
@@ -52,9 +58,25 @@ BEGIN
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN Object_From.Id ELSE 0 END, 0) AS PartnerId
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE 0 END, 0) AS UnitId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_ArticleLoss() THEN Object_From.Id ELSE 0 END, 0) AS ArticleLoss_From
+
+          , MovementLinkObject_Route.ObjectId AS RouteId
+
+          , CASE WHEN Object_From.DescId = zc_Object_Unit()
+                      THEN 0
+                 -- временно
+                 WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
+                   OR Object_Route.ValueData ILIKE 'Самов%'
+                   OR Object_Route.ValueData ILIKE '%-колбаса'
+                   OR Object_Route.ValueData ILIKE '%Кривой Рог%'
+                      THEN 0
+                 ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0)
+            END AS RetailId
+
+          , MovementLinkObject_To.ObjectId AS UnitId_to
+
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
           , COALESCE (OL_Juridical.ChildObjectId, 0)           AS JuridicalId
-          
+
           , CASE WHEN COALESCE (Object_Route.ValueData, '')    ILIKE '%самовывоз%'
                    OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмен%'
                    OR COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) = TRUE
@@ -64,10 +86,13 @@ BEGIN
                  ELSE FALSE
             END AS isLessWeigth
 
+
           , ObjectFloat_SummOrderMin.ValueData AS SummOrderMin
 
-            INTO vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-               , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbContractId, vbJuridicalId, vbIsLessWeigth, vbSummOrderMin
+            INTO vbOperDate, vbOperDatePartner
+               , vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
+               , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbRouteId, vbRetailId, vbUnitId_to
+               , vbContractId, vbJuridicalId, vbIsLessWeigth, vbSummOrderMin
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -87,6 +112,10 @@ BEGIN
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -99,7 +128,7 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
                                   ON ObjectBoolean_isOrderMin.ObjectId = OL_Juridical.ChildObjectId
                                  AND ObjectBoolean_isOrderMin.DescId   = zc_ObjectBoolean_Juridical_isOrderMin()
-          -- Разрешен Минимальный заказ с суммой >= 
+          -- Разрешен Минимальный заказ с суммой >=
           LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderMin
                                 ON ObjectFloat_SummOrderMin.ObjectId = OL_Juridical.ChildObjectId
                                AND ObjectFloat_SummOrderMin.DescId   = zc_ObjectFloat_Juridical_SummOrderMin()
@@ -108,6 +137,13 @@ BEGIN
                                        ON MovementLinkObject_Route.MovementId = Movement.Id
                                       AND MovementLinkObject_Route.DescId     = zc_MovementLinkObject_Route()
           LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
 
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_OrderExternal()
@@ -156,9 +192,83 @@ select Object_Juridical_contract .ValueData, Object_Juridical_partner.ValueData,
        AND Movement.StatusId = zc_Enum_Status_Complete() -- IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
        -- AND Movement.OperDate between '01.05.2020' and '01.12.2020'
        AND Movement.OperDate between '01.01.2021' and '01.12.2021'
---       AND Movement.Id = 17522252 
+--       AND Movement.Id = 17522252
  and ObjectLink_PartnerFrom_Juridical.ChildObjectId <> ObjectLink_ContractFrom_Juridical.ChildObjectId
 order by Movement.OperDate*/
+     END IF;
+
+
+     -- заполняем
+     IF EXISTS (SELECT 1 FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_CarInfo() AND DATE_TRUNC ('DAY', MovementDate.ValueData) = MovementDate.ValueData)
+        AND vbUnitId_to = 8459 -- Розподільчий комплекс
+        AND inUserId = 5
+     THEN
+         -- Нашли
+         vbMovementId_CarInfo:= (SELECT MAX (Movement.Id)
+                                 FROM Movement
+                                      -- Склад такой же
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                   AND MovementLinkObject_To.ObjectId   = vbUnitId_to
+                                      -- Маршрут такой же
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_Route
+                                                                    ON MovementLinkObject_Route.MovementId = Movement.Id
+                                                                   AND MovementLinkObject_Route.DescId     = zc_MovementLinkObject_Route()
+                                                                   AND MovementLinkObject_Route.ObjectId   = vbRouteId
+                                      -- установлена дата
+                                      INNER JOIN MovementDate AS MovementDate_CarInfo
+                                                              ON MovementDate_CarInfo.MovementId = Movement.Id
+                                                             AND MovementDate_CarInfo.DescId     = zc_MovementDate_CarInfo()
+                                                             AND MovementDate_CarInfo.ValueData <> DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
+                                      -- Дата такая же
+                                      INNER JOIN MovementDate AS MovementDate_OperDatePartner
+                                                              ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                                             AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                                                             AND MovementDate_OperDatePartner.ValueData  = vbOperDatePartner
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                           ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                           ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
+                                 WHERE Movement.OperDate = vbOperDate
+                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                   AND Movement.DescId   = zc_Movement_OrderExternal()
+                                   AND (ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId    OR COALESCE (vbRetailId, 0)    = 0)
+                                   AND (MovementLinkObject_From.ObjectId          = vbUnitId_From OR COALESCE (vbUnitId_From, 0) = 0)
+                                );
+
+         -- RAISE EXCEPTION 'Ошибка.%', vbMovementId_CarInfo;
+
+         -- Если нашли
+         IF vbMovementId_CarInfo > 0
+         THEN
+             -- заполняем
+             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), inMovementId, tmp.OperDate_CarInfo)        -- Дата/время отгрузки
+                   , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CarInfo(), inMovementId, tmp.CarInfoId)   -- Информация по отгрузке
+                   , lpInsertUpdate_MovementString (zc_MovementString_CarComment(), inMovementId, tmp.CarComment)       -- примечание к отгрузке
+             FROM (SELECT MovementDate_CarInfo.ValueData      AS OperDate_CarInfo
+                        , MovementLinkObject_CarInfo.ObjectId AS CarInfoId
+                        , MovementString_CarComment.ValueData AS CarComment
+                   FROM MovementDate AS MovementDate_CarInfo
+
+                        LEFT JOIN MovementLinkObject AS MovementLinkObject_CarInfo
+                                                     ON MovementLinkObject_CarInfo.MovementId = MovementDate_CarInfo.MovementId
+                                                    AND MovementLinkObject_CarInfo.DescId     = zc_MovementLinkObject_CarInfo()
+                        LEFT JOIN MovementString AS MovementString_CarComment
+                                                 ON MovementString_CarComment.MovementId = MovementDate_CarInfo.MovementId
+                                                AND MovementString_CarComment.DescId     = zc_MovementString_CarComment()
+
+                   WHERE MovementDate_CarInfo.MovementId = vbMovementId_CarInfo
+                     AND MovementDate_CarInfo.DescId     = zc_MovementDate_CarInfo()
+                  ) AS tmp;
+
+         END IF;
      END IF;
 
 
@@ -279,7 +389,7 @@ order by Movement.OperDate*/
                    LEFT JOIN ObjectLink AS ObjectLink_Measure
                                         ON ObjectLink_Measure.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Measure.DescId   = zc_ObjectLink_Goods_Measure()
-                   LEFT JOIN ObjectFloat AS ObjectFloat_Weight 
+                   LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                          ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                         AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
               WHERE Movement.Id = inMovementId
@@ -343,7 +453,7 @@ order by Movement.OperDate*/
           ) AS _tmpItem
      ;
 
-     -- проверка - если не разрешен Минимальный заказ с суммой < 
+     -- проверка - если не разрешен Минимальный заказ с суммой <
      IF vbSummOrderMin > 0 AND vbSummOrderMin > vbOperSumm_Partner
      THEN
          outMessageText:= 'Сообщение.Разрешены заявки с суммой >= ' || zfConvert_FloatToString (vbSummOrderMin) || ' грн.'
