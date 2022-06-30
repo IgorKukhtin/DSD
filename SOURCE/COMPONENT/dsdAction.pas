@@ -1608,6 +1608,69 @@ type
     property InfoAfterExecute;
   end;
 
+  TdsdLoadAgilis = class(TdsdCustomAction)
+  private
+
+    FURL: TdsdParam;
+    FOrder: TdsdParam;
+
+    FDataSet: TClientDataSet;
+
+    FFieldCount: TdsdParam;
+    FTitleName: TdsdParam;
+    FValueName: TdsdParam;
+
+    FCreateFileTitle : TdsdParam;
+
+    FIdHTTP: TIdHTTP;
+    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+
+  protected
+    function GetURL : String;
+    function GetOrder : String;
+    function GetCreateFileTitle : Boolean;
+    function GetFieldCount : Integer;
+    function GetFieldTitle : String;
+    function GetFieldValue : String;
+
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // URL
+    property URL: String read GetURL;
+    property URLParam: TdsdParam read FURL write FURL;
+    // Order - заказа
+    property Order: String read GetOrder;
+    property OrderParam: TdsdParam read FOrder write FOrder;
+    // DataSet - для полученных данных
+    property DataSet: TClientDataSet read FDataSet write FDataSet;
+
+    // Создавать столбцы с названием обекта
+    property CreateFileTitle: Boolean read GetCreateFileTitle;
+    property CreateFileTitleParam : TdsdParam read FCreateFileTitle write FCreateFileTitle;
+
+    // Количество полей без учета ключа
+    property FieldCount: Integer read GetFieldCount;
+    property FieldCountParam: TdsdParam read FFieldCount write FFieldCount;
+    // Название ключа при его формировании
+    property FieldTitle: String read GetFieldTitle;
+    property FieldTitleParam: TdsdParam read FTitleName write FTitleName;
+    // Значение
+    property FieldValue: String read GetFieldValue;
+    property FieldValueParam: TdsdParam read FValueName write FValueName;
+
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property QuestionBeforeExecute;
+    property ShortCut;
+    property SecondaryShortCuts;
+    property InfoAfterExecute;
+  end;
+
 procedure Register;
 
 implementation
@@ -1678,6 +1741,7 @@ begin
   RegisterActions('DSDLib', [TdsdForeignData], TdsdRunAction);
   RegisterActions('DSDLib', [TdsdMyIPAction], TdsdMyIPAction);
   RegisterActions('DSDLib', [TdsdVATNumberValidation], TdsdVATNumberValidation);
+  RegisterActions('DSDLib', [TdsdLoadAgilis], TdsdLoadAgilis);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -7599,6 +7663,210 @@ begin
 
 end;
 
+{TdsdLoadAgilis}
+
+constructor TdsdLoadAgilis.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FIdHTTP := TIdHTTP.Create;
+  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
+  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
+
+  FURL := TdsdParam.Create(nil);
+  FURL.DataType := ftString;
+  FURL.Value := '';
+
+  FOrder := TdsdParam.Create(nil);
+  FOrder.DataType := ftString;
+  FOrder.Value := '';
+
+  FFieldCount := TdsdParam.Create(nil);
+  FFieldCount.DataType := ftInteger;
+  FFieldCount.Value := 0;
+
+  FTitleName := TdsdParam.Create(nil);
+  FTitleName.DataType := ftString;
+  FTitleName.Value := 'Title';
+
+  FValueName := TdsdParam.Create(nil);
+  FValueName.DataType := ftString;
+  FValueName.Value := 'Value';
+
+  FCreateFileTitle := TdsdParam.Create(nil);
+  FCreateFileTitle.DataType := ftBoolean;
+  FCreateFileTitle.Value := False;
+
+end;
+
+destructor TdsdLoadAgilis.Destroy;
+begin
+  FreeAndNil(FCreateFileTitle);
+  FreeAndNil(FValueName);
+  FreeAndNil(FTitleName);
+  FreeAndNil(FFieldCount);
+  FreeAndNil(FOrder);
+  FreeAndNil(FURL);
+
+  FreeAndNil(FIdHTTP);
+  inherited;
+end;
+
+procedure TdsdLoadAgilis.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDestroying in ComponentState then
+    exit;
+  if (Operation = opRemove) and Assigned(FDataSet) then
+  begin
+    if AComponent is TDataSet then
+      if AComponent = FDataSet then
+        DataSet := Nil;
+  end;
+end;
+
+function TdsdLoadAgilis.GetURL : String;
+begin
+  Result := FURL.Value;
+end;
+
+function TdsdLoadAgilis.GetOrder : String;
+begin
+  Result := FOrder.Value;
+end;
+
+function TdsdLoadAgilis.GetCreateFileTitle : Boolean;
+var Val : Boolean;
+begin
+  if not TryStrToBool(FCreateFileTitle.Value, Val) then Val := False;
+  Result := Val;
+end;
+
+function TdsdLoadAgilis.GetFieldCount : Integer;
+var Val : Integer;
+begin
+  if not TryStrToInt(FFieldCount.Value, Val) then Val := 0;
+  Result := Val;
+end;
+
+function TdsdLoadAgilis.GetFieldTitle : String;
+begin
+  Result := FTitleName.Value;
+end;
+
+function TdsdLoadAgilis.GetFieldValue : String;
+begin
+  Result := FValueName.Value;
+end;
+
+
+function TdsdLoadAgilis.LocalExecute: Boolean;
+var jsonObject, jsonItem : TJSONObject; jsonArray : TJSONArray;
+    S, KeyName : String;
+    nCount : Integer; I, J, L : Integer;
+begin
+  Result := False;
+
+  FIdHTTP.Request.ContentType := 'application/json';
+  FIdHTTP.Request.CustomHeaders.Clear;
+  FIdHTTP.Request.CustomHeaders.FoldLines := False;
+
+  try
+    S := FIdHTTP.Get(TIdURI.URLEncode(FURL.Value + FOrder.Value));
+    if FIdHTTP.ResponseCode = 200 then
+    begin
+
+      FDataSet.Close;
+      FDataSet.FieldDefs.Clear;
+
+      nCount := FieldCount;
+
+      jsonObject := TJSONObject.ParseJSONValue(s) as TJSONObject;
+      try
+
+        if nCount <= 0 then
+        begin
+           nCount := 1;
+           for I := 0 to jsonObject.Size - 1 do
+           begin
+             if jsonObject.Get(I).JsonValue.ClassNameIs('TJSONArray') then
+             begin
+               if TJSONArray(jsonObject.Get(I).JsonValue).Size > 0 then
+                 if nCount < TJSONObject(TJSONArray(jsonObject.Get(I).JsonValue).Get(0)).Size then
+                   nCount := TJSONObject(TJSONArray(jsonObject.Get(I).JsonValue).Get(0)).Size;
+             end else if jsonObject.Get(I).JsonValue.ClassNameIs('TJSONObject') then
+             begin
+               if nCount < TJSONObject(jsonObject.Get(I).JsonValue).Size then
+                 nCount := TJSONObject(jsonObject.Get(I).JsonValue).Size;
+             end;
+           end;
+        end;
+
+        FDataSet.FieldDefs.Add(FTitleName.Value, ftString, 255);
+
+        for I := 1 to nCount do
+        begin
+          if CreateFileTitle then
+            FDataSet.FieldDefs.Add(FTitleName.Value + IntToStr(I), ftString, 255);
+          FDataSet.FieldDefs.Add(FValueName.Value + IntToStr(I), ftString, 255);
+        end;
+
+        FDataSet.CreateDataSet;
+
+        for I := 0 to jsonObject.Size - 1 do
+        begin
+          KeyName := jsonObject.Get(I).JsonString.Value;
+          FDataSet.Last;
+          FDataSet.Append;
+          FDataSet.FieldByName(FTitleName.Value).AsString := KeyName;
+
+          if jsonObject.Get(I).JsonValue.ClassNameIs('TJSONArray') then
+          begin
+            jsonArray := TJSONArray(jsonObject.Get(I).JsonValue);
+            for L := 0 to jsonArray.Size - 1 do
+            begin
+              jsonItem := TJSONObject(jsonArray.Get(L));
+              for J := 0 to Min(jsonItem.Size, nCount) - 1 do
+              begin
+                if CreateFileTitle then
+                  FDataSet.FieldByName(FTitleName.Value + IntToStr(J + 1)).AsString := jsonItem.Get(J).JsonString.Value;
+                FDataSet.FieldByName(FValueName.Value + IntToStr(J + 1)).AsString := jsonItem.Get(J).JsonValue.Value;
+              end;
+
+              if L < (jsonArray.Size - 1) then
+              begin
+                FDataSet.Post;
+                FDataSet.Last;
+                FDataSet.Append;
+                FDataSet.FieldByName(FTitleName.Value).AsString := KeyName;
+              end;
+            end;
+          end else if jsonObject.Get(I).JsonValue.ClassNameIs('TJSONObject') then
+          begin
+            jsonItem := TJSONObject(jsonObject.Get(I).JsonValue);
+            for J := 0 to Min(jsonItem.Size, nCount) - 1 do
+            begin
+              if CreateFileTitle then
+                FDataSet.FieldByName(FTitleName.Value + IntToStr(J + 1)).AsString := jsonItem.Get(J).JsonString.Value;
+              FDataSet.FieldByName(FValueName.Value + IntToStr(J + 1)).AsString := jsonItem.Get(J).JsonValue.Value;
+            end;
+          end else FDataSet.FieldByName(FValueName.Value + '1').AsString := jsonObject.Get(I).JsonValue.Value;
+
+          FDataSet.Post;
+        end;
+        Result := True;
+      finally
+        jsonObject.Free;
+      end;
+    end;
+  except  on E: Exception do
+     ShowMessage('Ошибка получения информации о заказе: ' + E.Message);
+  end;
+
+end;
 
 initialization
 

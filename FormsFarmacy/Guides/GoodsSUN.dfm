@@ -413,6 +413,14 @@ inherited GoodsSUNForm: TGoodsSUNForm
             Options.Editing = False
             Width = 79
           end
+          object isSupplementMarkSUN1: TcxGridDBColumn
+            Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1 '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+            DataBinding.FieldName = 'isSupplementMarkSUN1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
           object UnitSupplementSUN1OutName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' 1 '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1'
             DataBinding.FieldName = 'UnitSupplementSUN1OutName'
@@ -1752,6 +1760,32 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end>
       isShowModal = False
     end
+    object mactUpdate_isSupplementMarkSUN2: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = execUpdate_isSupplementMarkSUN2
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1 '#1084#1072#1088#1082#1077#1090#1080#1085#1075'"? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1 '#1084#1072#1088#1082#1077#1090#1080#1085#1075'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1 '#1084#1072#1088#1082#1077#1090#1080#1085#1075'"'
+      ImageIndex = 79
+    end
+    object execUpdate_isSupplementMarkSUN2: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_inSupplementMarkSUN1_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_inSupplementMarkSUN1_Revert
+        end>
+      Caption = 'execUpdate_isSupplementMarkSUN2'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -2073,6 +2107,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton24'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton16'
         end
         item
@@ -2331,6 +2369,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
     end
     object dxBarButton23: TdxBarButton
       Action = ProtocolOpenMainForm
+      Category = 0
+    end
+    object dxBarButton24: TdxBarButton
+      Action = mactUpdate_isSupplementMarkSUN2
       Category = 0
     end
   end
@@ -3376,5 +3418,31 @@ inherited GoodsSUNForm: TGoodsSUNForm
     PackSize = 1
     Left = 328
     Top = 48
+  end
+  object spUpdate_inSupplementMarkSUN1_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inSupplementMarkSUN1_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSupplementMarkSUN1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSupplementMarkSUN1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 512
+    Top = 248
   end
 end

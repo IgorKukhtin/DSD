@@ -816,6 +816,7 @@ initialization
   RegisterClass (TdsdForeignData);
   RegisterClass (TdsdMyIPAction);
   RegisterClass (TdsdVATNumberValidation);
+  RegisterClass (TdsdLoadAgilis);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

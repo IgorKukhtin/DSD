@@ -223,6 +223,11 @@ type
     bbGoodsUnitSupplementSUN1: TdxBarButton;
     ProtocolOpenMainForm: TdsdOpenForm;
     dxBarButton23: TdxBarButton;
+    isSupplementMarkSUN1: TcxGridDBColumn;
+    spUpdate_inSupplementMarkSUN1_Revert: TdsdStoredProc;
+    mactUpdate_isSupplementMarkSUN2: TMultiAction;
+    execUpdate_isSupplementMarkSUN2: TdsdExecStoredProc;
+    dxBarButton24: TdxBarButton;
   private
     { Private declarations }
   public
