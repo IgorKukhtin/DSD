@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_Contract()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Contract(TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_Contract(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Contract(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
+    IN inisShowErased  Boolean ,     -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
@@ -139,13 +141,15 @@ BEGIN
                                 ON ObjectLink_BankAccount_Bank.ObjectId = Object_Contract_View.BankAccountId
                                AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+           
+       WHERE (Object_Contract_View.isErased = FALSE OR inisShowErased = TRUE)
 ;
   
 END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Contract(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Contract(Boolean, TVarChar) OWNER TO postgres;
 
 -------------------------------------------------------------------------------
 /*
@@ -166,4 +170,4 @@ ALTER FUNCTION gpSelect_Object_Contract(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Contract ('2')
+-- SELECT * FROM gpSelect_Object_Contract (False, '2')

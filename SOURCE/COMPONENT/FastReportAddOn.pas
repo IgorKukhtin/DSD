@@ -88,22 +88,30 @@ const
   rfSecond = 2;  // Вторая форма: "три слона" или "четыре кошки"
   rfThird  = 3;  // Третья форма: "шесть слонов" или "восемь кошек"
 
+//---------------------------
+function G_ModDiv10(var V: LongWord): Integer;
+const
+Base10: Integer = 10;
+asm
+{$IFDEF CPUX64 }
+      MOV     EAX,[RCX].LongWord
+      XOR     EDX,EDX
+      DIV     Base10
+      MOV     [RCX].LongWord,EAX
+      MOV     EAX,EDX
+{$ELSE }
+      MOV     ECX,EAX
+      MOV     EAX,[EAX]
+      XOR     EDX,EDX
+      DIV     Base10
+      MOV     [ECX],EAX
+      MOV     EAX,EDX
+{$ENDIF }
+end;
+//----------------------------
 
 
 function G_NumToStr(N: Int64; var S: string; FormatFlags: LongInt): Integer;
-//---------------------------
-    function G_ModDiv10(var V: LongWord): Integer;
-    const
-    Base10: Integer = 10;
-    asm
-          MOV     ECX,EAX
-          MOV     EAX,[EAX]
-          XOR     EDX,EDX
-          DIV     Base10
-          MOV     [ECX],EAX
-          MOV     EAX,EDX
-    end;
-//----------------------------
 
 const
 

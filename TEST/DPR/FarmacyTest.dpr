@@ -1222,7 +1222,9 @@ uses
   BuyerForSaleEdit in '..\..\FormsFarmacy\Guides\BuyerForSaleEdit.pas' {BuyerForSaleEditForm: TParentForm},
   Report_Check_SiteDelayDialog in '..\..\FormsFarmacy\Report\Report_Check_SiteDelayDialog.pas' {Report_Check_SiteDelayDialogForm: TParentForm},
   Report_Check_SiteDelay in '..\..\FormsFarmacy\Report\Report_Check_SiteDelay.pas' {Report_Check_SiteDelayForm: TParentForm},
-  ChoiceGoodsSPSearch_1303 in '..\..\FormsFarmacy\System\ChoiceGoodsSPSearch_1303.pas' {ChoiceGoodsSPSearch_1303Form: TParentForm};
+  ChoiceGoodsSPSearch_1303 in '..\..\FormsFarmacy\System\ChoiceGoodsSPSearch_1303.pas' {ChoiceGoodsSPSearch_1303Form: TParentForm},
+  Report_Check_OrderFineDialog in '..\..\FormsFarmacy\Report\Report_Check_OrderFineDialog.pas' {Report_Check_OrderFineDialogForm: TParentForm},
+  Report_Check_OrderFine in '..\..\FormsFarmacy\Report\Report_Check_OrderFine.pas' {Report_Check_OrderFineForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -68,18 +68,25 @@ BEGIN
                                                               AND MovementLinkObject_ConfirmedKind.ObjectId   = zc_Enum_ConfirmedKind_UnComplete()
                           -- ORDER BY Movement.Id DESC
                          )
-             , tmpMI_all AS (SELECT tmpMov.Id AS MovementId, tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
+             , tmpMI_Full AS (SELECT tmpMov.Id AS MovementId, tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, MovementItem.Amount AS Amount
                              FROM tmpMov
                                   INNER JOIN MovementItem
                                           ON MovementItem.MovementId = tmpMov.Id
                                          AND MovementItem.DescId     = zc_MI_Master()
                                          AND MovementItem.isErased   = FALSE
-                             GROUP BY tmpMov.Id, tmpMov.UnitId, MovementItem.ObjectId
+                             )
+             , tmpMI_all AS (SELECT tmpMI_Full.MovementId, tmpMI_Full.UnitId, tmpMI_Full.GoodsId, SUM (tmpMI_Full.Amount) AS Amount
+                             FROM tmpMI_Full
+                             GROUP BY tmpMI_Full.MovementId, tmpMI_Full.UnitId, tmpMI_Full.GoodsId
                              )
              , tmpMI AS (SELECT tmpMI_all.MovementId, tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
                          FROM tmpMI_all
                          GROUP BY tmpMI_all.MovementId, tmpMI_all.UnitId, tmpMI_all.GoodsId
                         )
+             , tmpMICount AS (SELECT tmpMI_Full.MovementId, COUNT(*) AS CountMI
+                              FROM tmpMI_Full
+                              GROUP BY tmpMI_Full.MovementId
+                              )
              , tmpMov_Complete AS (SELECT Movement.Id
                                         , Movement.InvNumber
                                         , Movement.OperDate
@@ -148,10 +155,13 @@ BEGIN
          , SUM(CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN 1 ELSE 0 END) > 0 
          , SUM(CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24() THEN 1 ELSE 0 END) > 0 
          , COALESCE (max(tmpMovTabletki.Id), 0) > 0
-         , COUNT(*)::Integer
+         , Min(tmpMICount.CountMI)::Integer
+         , Min(gpUpdate_Movement_Check_DateMessage (Movement.Id, MovementLinkObject_CheckSourceKind.ObjectId, inSession))
     INTO outMovementId_list, outIsVIP, outIsSite, outIsTabletki, outIsLiki24, outIsOrderTabletki, outExpressVIPConfirm
     FROM tmpMov AS Movement
          LEFT JOIN tmpErr ON tmpErr.MovementId = Movement.Id
+         
+         LEFT JOIN tmpMICount ON tmpMICount.MovementId = Movement.Id
 
          LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_CheckSourceKind
                                          ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id

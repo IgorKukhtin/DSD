@@ -5188,6 +5188,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Check_OrderFine: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1064#1090#1088#1072#1092#1099' '#1079#1072' '#1079#1072#1076#1077#1088#1078#1082#1091' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1086#1074' '#1089' '#1089#1072#1090#1072' '#1058#1072#1073#1083#1077#1090#1086#1082
+      FormName = 'TReport_Check_OrderFineForm'
+      FormNameParam.Value = 'TReport_Check_OrderFineForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6017,6 +6028,10 @@
       end
       object N356: TMenuItem
         Action = actReport_Check_SiteDelay
+      end
+      object N357: TMenuItem
+        Action = actReport_Check_OrderFine
+        Caption = #1064#1090#1088#1072#1092#1099' '#1079#1072' '#1079#1072#1076#1077#1088#1078#1082#1091' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1086#1074' '#1089' '#1089#1072#1081#1090#1072' '#1058#1072#1073#1083#1077#1090#1086#1082
       end
     end
     object N36: TMenuItem [5]

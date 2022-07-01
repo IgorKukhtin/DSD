@@ -58,6 +58,8 @@ type
     bbUpdate_isBarCodeLoad: TdxBarButton;
     Code: TcxGridDBColumn;
     isDefermentContract: TcxGridDBColumn;
+    actShowErased: TBooleanStoredProcAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
