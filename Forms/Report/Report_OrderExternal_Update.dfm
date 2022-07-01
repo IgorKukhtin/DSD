@@ -318,6 +318,15 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             Options.Editing = False
             Width = 70
           end
+          object Hours_real: TcxGridDBColumn
+            Caption = '***'#1063#1072#1089#1086#1074
+            DataBinding.FieldName = 'Hours_real'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' '#1087#1086#1079#1078#1077' '#1095#1077#1084' '#1055#1083#1072#1085
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end

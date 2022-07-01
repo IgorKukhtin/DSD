@@ -35,6 +35,7 @@ RETURNS TABLE (OperDate        TDateTime
              , DayOfWeekName_StartW TVarChar
              , DayOfWeekName_EndW   TVarChar
              , Hours_EndW           TFloat
+             , Hours_real           TFloat
               )  
 
 AS
@@ -251,7 +252,8 @@ BEGIN
            , tmpWeekDay_StartW.DayOfWeekName ::TVarChar AS DayOfWeekName_StartW
            , tmpWeekDay_EndW.DayOfWeekName   ::TVarChar AS DayOfWeekName_EndW
 
-           , (EXTRACT (MINUTES FROM tmpMovement.EndWeighing - tmpMovement.StartWeighing) / 60) ::TFloat AS Hours_EndW
+           , (EXTRACT (HOUR FROM tmpMovement.EndWeighing - tmpMovement.StartWeighing) )    ::TFloat AS Hours_EndW
+           , (EXTRACT (HOUR FROM tmpMovement.EndWeighing - tmpMovement.OperDate_CarInfo) ) ::TFloat AS Hours_real
 
       FROM tmpMovement
           LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId

@@ -87,6 +87,7 @@ type
     DayOfWeekName_StartW: TcxGridDBColumn;
     DayOfWeekName_EndW: TcxGridDBColumn;
     Hours_EndW: TcxGridDBColumn;
+    Hours_real: TcxGridDBColumn;
   private
     { Private declarations }
   public
