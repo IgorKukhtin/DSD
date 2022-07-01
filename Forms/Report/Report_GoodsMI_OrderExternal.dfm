@@ -693,6 +693,33 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
+          object GoodsSubSendCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087'. '#1087'/'#1088')'
+            DataBinding.FieldName = 'GoodsSubSendCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1077#1088#1077#1084#1077#1097'.'#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'-'#1088#1072#1089#1093#1086#1076')'
+            Options.Editing = False
+            Width = 61
+          end
+          object GoodsSubSendName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1087#1077#1088#1077#1084'. '#1087#1077#1088#1077#1089#1086#1088#1090'. - '#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsSubSendName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1086#1074#1072#1088' ('#1087#1077#1088#1077#1084#1077#1097'.'#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'-'#1088#1072#1089#1093#1086#1076')'
+            Options.Editing = False
+            Width = 155
+          end
+          object GoodsKindSubSendName: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1087#1077#1088#1077#1084'. '#1087#1077#1088#1077#1089#1086#1088#1090'. - '#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsKindSubSendName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1077#1088#1077#1084#1077#1097'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'-'#1088#1072#1089#1093#1086#1076')'
+            Options.Editing = False
+            Width = 70
+          end
           object WeightTotal: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
             DataBinding.FieldName = 'WeightTotal'

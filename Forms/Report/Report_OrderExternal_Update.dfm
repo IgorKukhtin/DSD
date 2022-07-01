@@ -1101,6 +1101,58 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object actOrderExternal_byReport: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      FormName = 'TOrderExternalJournal_byReportForm'
+      FormNameParam.Value = 'TOrderExternalJournal_byReportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDatePartner'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDatePartner'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRouteId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRetailId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RetailId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -1192,6 +1244,18 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         end
         item
           Visible = True
+          ItemName = 'bbOrderExternal_byReport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_CarInfo'
         end
         item
@@ -1219,6 +1283,11 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     object bbUpdate_CarInfo: TdxBarButton
       Action = macUpdate_CarInfo
       Category = 0
+    end
+    object bbOrderExternal_byReport: TdxBarButton
+      Action = actOrderExternal_byReport
+      Category = 0
+      ImageIndex = 26
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

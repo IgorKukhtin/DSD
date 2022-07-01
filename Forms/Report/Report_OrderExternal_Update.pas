@@ -88,6 +88,8 @@ type
     DayOfWeekName_EndW: TcxGridDBColumn;
     Hours_EndW: TcxGridDBColumn;
     Hours_real: TcxGridDBColumn;
+    actOrderExternal_byReport: TdsdOpenForm;
+    bbOrderExternal_byReport: TdxBarButton;
   private
     { Private declarations }
   public

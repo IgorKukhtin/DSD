@@ -1369,7 +1369,8 @@ uses
   CarInfo in '..\..\Forms\Guides\CarInfo.pas' {CarInfoForm: TParentForm},
   Report_OrderExternal_Update in '..\..\Forms\Report\Report_OrderExternal_Update.pas' {Report_OrderExternal_UpdateForm: TParentForm},
   Report_OrderExternal_UpdateDialog in '..\..\Forms\Report\Report_OrderExternal_UpdateDialog.pas' {Report_OrderExternal_UpdateDialogForm: TParentForm},
-  OrderExternal in '..\..\Forms\Document\OrderExternal.pas' {OrderExternalForm: TParentForm};
+  OrderExternal in '..\..\Forms\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
+  OrderExternalJournal_byReport in '..\..\Forms\Document\OrderExternalJournal_byReport.pas' {OrderExternalJournal_byReportForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

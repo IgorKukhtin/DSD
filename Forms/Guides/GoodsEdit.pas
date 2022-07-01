@@ -85,6 +85,8 @@ type
     edName_BUH: TcxTextEdit;
     cxLabel18: TcxLabel;
     edDate_BUH: TcxDateEdit;
+    cxLabel19: TcxLabel;
+    edShortName: TcxTextEdit;
   private
     { Private declarations }
   public

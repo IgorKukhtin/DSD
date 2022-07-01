@@ -142,6 +142,14 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 206
       end
+      object ShortName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1089#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077
+        DataBinding.FieldName = 'ShortName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 144
+      end
       object Name_RUS: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' ('#1088#1091#1089#1089'.)'
         DataBinding.FieldName = 'Name_RUS'
