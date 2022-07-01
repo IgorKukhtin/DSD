@@ -1694,7 +1694,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         item
           DataSet = ItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'ToName;GoodsGroupName;GoodsName;GoodsKindName'
+          IndexFieldNames = 'ToName;GoodsGroupName;GoodsName_SubSend;GoodsKindName'
         end>
       Params = <
         item

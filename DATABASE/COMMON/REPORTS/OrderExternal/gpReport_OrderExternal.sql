@@ -115,7 +115,8 @@ RETURNS TABLE (MovementId             Integer
              , GoodsSubSendCode     Integer
              , GoodsSubSendName     TVarChar
              , GoodsKindSubSendId   Integer
-             , GoodsKindSubSendName TVarChar
+             , GoodsKindSubSendName TVarChar  
+             , GoodsName_SubSend TVarChar    --для печати по остаткам
               )
 AS
 $BODY$
@@ -1035,6 +1036,7 @@ BEGIN
            , tmpGoodsByGoodsKindParam.GoodsSubSendName     ::TVarChar
            , tmpGoodsByGoodsKindParam.GoodsKindSubSendId   ::Integer
            , tmpGoodsByGoodsKindParam.GoodsKindSubSendName ::TVarChar
+           , COALESCE (tmpGoodsByGoodsKindParam.GoodsSubSendName, Object_Goods.ValueData) ::TVarChar AS GoodsName_SubSend
        FROM tmpData AS tmpMovement
           LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
           LEFT JOIN MovementString AS MovementString_InvNumberPartner
