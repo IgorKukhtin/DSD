@@ -59,7 +59,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 77
   end
   object cxLabel3: TcxLabel
     Left = 40
@@ -329,6 +329,17 @@
     TabOrder = 39
     Width = 91
   end
+  object cxLabel19: TcxLabel
+    Left = 123
+    Top = 4
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1089#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077
+  end
+  object edShortName: TcxTextEdit
+    Left = 123
+    Top = 21
+    TabOrder = 41
+    Width = 190
+  end
   object ActionList: TActionList
     Left = 304
     Top = 120
@@ -390,6 +401,14 @@
         Name = 'inName'
         Value = ''
         Component = edName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShortName'
+        Value = Null
+        Component = edShortName
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -512,14 +531,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName_BUH'
-        Value = Null
-        Component = edName_BUH
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inDate_BUH'
         Value = Null
         Component = edDate_BUH
@@ -539,7 +550,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 240
+    Left = 160
+    Top = 56
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Goods'
@@ -764,6 +776,13 @@
         Value = 0.000000000000000000
         Component = cePrice
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShortName'
+        Value = Null
+        Component = edShortName
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

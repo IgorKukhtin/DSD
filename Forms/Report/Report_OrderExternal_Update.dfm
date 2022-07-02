@@ -1101,6 +1101,102 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object actOrderExternal_byReport: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      FormName = 'TOrderExternalJournal_byReportForm'
+      FormNameParam.Value = 'TOrderExternalJournal_byReportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDatePartner'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDatePartner'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRouteId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRetailId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RetailId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077'>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077'>'
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = HeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = ItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'OperDate_CarInfo;RouteName;RetailName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44562d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')'
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -1192,7 +1288,31 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         end
         item
           Visible = True
+          ItemName = 'bbOrderExternal_byReport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_CarInfo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -1218,6 +1338,15 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     end
     object bbUpdate_CarInfo: TdxBarButton
       Action = macUpdate_CarInfo
+      Category = 0
+    end
+    object bbOrderExternal_byReport: TdxBarButton
+      Action = actOrderExternal_byReport
+      Category = 0
+      ImageIndex = 26
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -1521,5 +1650,53 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     PackSize = 1
     Left = 624
     Top = 232
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderExternal_UpdatePrint'
+    DataSet = HeaderCDS
+    DataSets = <
+      item
+        DataSet = HeaderCDS
+      end
+      item
+        DataSet = ItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 43101d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 43101d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDate_CarInfo'
+        Value = ''
+        Component = edIsDate_CarInfo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 184
   end
 end

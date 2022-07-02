@@ -4426,6 +4426,14 @@
 				<Form>ChoiceGoodsSPSearch_1303Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_OrderFineDialog.pas">
+				<Form>Report_Check_OrderFineDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_OrderFine.pas">
+				<Form>Report_Check_OrderFineForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
     IN inId          Integer,       -- Товар 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar , ShortName TVarChar
              , Name_BUH TVarChar, Date_BUH TDateTime
              , Weight TFloat
              , WeightTare TFloat
@@ -44,7 +44,8 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_Goods()) AS Code
-           , CAST ('' as TVarChar)  AS Name
+           , CAST ('' as TVarChar)  AS Name 
+           , ''         :: TVarChar AS ShortName
            , CAST ('' as TVarChar)  AS Name_BUH
            , CAST (Null as TDateTime) AS Date_BUH
            , CAST (0 as TFloat)     AS Weight
@@ -90,6 +91,7 @@ BEGIN
              Object_Goods.Id              AS Id
            , Object_Goods.ObjectCode      AS Code
            , Object_Goods.ValueData       AS Name
+           , ObjectString_Goods_ShortName.ValueData :: TVarChar AS ShortName
            , COALESCE (zfCalc_Text_replace (ObjectString_Goods_BUH.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_BUH
            , COALESCE (ObjectDate_BUH.ValueData,Null)   :: TDateTime AS Date_BUH
            
@@ -173,6 +175,10 @@ BEGIN
           LEFT JOIN ObjectDate AS ObjectDate_BUH
                                ON ObjectDate_BUH.ObjectId = Object_Goods.Id
                               AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
+
+          LEFT JOIN ObjectString AS ObjectString_Goods_ShortName
+                                 ON ObjectString_Goods_ShortName.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_ShortName.DescId = zc_ObjectString_Goods_ShortName()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 

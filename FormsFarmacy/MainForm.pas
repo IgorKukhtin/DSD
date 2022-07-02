@@ -960,6 +960,8 @@ type
     N13034: TMenuItem;
     actReport_Check_SiteDelay: TdsdOpenForm;
     N356: TMenuItem;
+    actReport_Check_OrderFine: TdsdOpenForm;
+    N357: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
