@@ -21,7 +21,7 @@ BEGIN
         <> EXTRACT (DAY FROM CURRENT_DATE) / 2 - FLOOR (EXTRACT (DAY FROM CURRENT_DATE) / 2)
       --OR EXTRACT (DAY FROM inStartDate) < 14
           )
-      AND 1=0
+      AND 1=1
    THEN
        RETURN;
    END IF;

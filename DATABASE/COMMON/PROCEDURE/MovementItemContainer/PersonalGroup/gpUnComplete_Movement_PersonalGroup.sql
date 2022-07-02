@@ -30,7 +30,7 @@ BEGIN
      END IF;
 
      --
-     IF vbUserId = 5 AND 1=1 THEN
+     IF vbUserId = 5 AND 1=0 THEN
         RAISE EXCEPTION 'Admin = OK'
        ;
      END IF;

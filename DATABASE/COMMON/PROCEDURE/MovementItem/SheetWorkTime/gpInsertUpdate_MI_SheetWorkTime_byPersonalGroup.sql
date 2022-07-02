@@ -10,12 +10,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SheetWorkTime_byPersonalGroup(
 RETURNS VOID
 AS 
 $BODY$
+   DECLARE vbUserId Integer;
    DECLARE vbOperDate  TDateTime;
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDAte   TDateTime;
    DECLARE vbMemberId   Integer;
    DECLARE vbWorkTimeKindId Integer;
 BEGIN
+     vbUserId := lpGetUserBySession (inSession);
 
      -- автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
      -- vbWorkTimeKindId := (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId_mh AND MovementLinkObject.DescId = zc_MovementLinkObject_WorkTimeKind());
@@ -126,7 +128,7 @@ BEGIN
               , tmpMI.UnitId
               ---, CASE WHEN inIsDel = FALSE THEN tmpMI.WorkTimeKindId ELSE 0 END ::Integer AS WorkTimeKindId
               , tmpMI.WorkTimeKindId ::Integer AS WorkTimeKindId
-              , zfCalc_ViewWorkHour (tmpMI.Amount, ObjectString_ShortName.ValueData) ::TVarChar AS Value
+              , CASE WHEN inIsDel = TRUE THEN '-' ELSE zfCalc_ViewWorkHour (tmpMI.Amount, ObjectString_ShortName.ValueData) ::TVarChar END AS Value
          FROM tmpMI
              INNER JOIN ObjectString AS ObjectString_ShortName
                                      ON ObjectString_ShortName.ObjectId = tmpMI.WorkTimeKindId

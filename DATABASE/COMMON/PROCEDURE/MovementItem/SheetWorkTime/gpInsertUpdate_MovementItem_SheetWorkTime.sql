@@ -279,6 +279,18 @@ BEGIN
     ELSE
 
         -- RAISE EXCEPTION '"%"  %  ', vbValue, POSITION ('0' IN zfGet_ViewWorkHour ('0', ioTypeId));
+        
+        IF ioValue = '-' AND inIsPersonalGroup = TRUE
+        THEN
+            IF ioTypeId IN (zc_Enum_WorkTimeKind_WorkN(), zc_Enum_WorkTimeKind_WorkD(), 8302788, 8302790)
+            THEN
+                ioValue:= (SELECT zfCalc_ViewWorkHour (0, OS.ValueData) FROM ObjectString AS OS WHERE OS.ObjectId = ioTypeId AND OS.DescId = zc_objectString_WorkTimeKind_ShortName());
+            ELSE ioValue:= 0;
+                 ioTypeId:= 0;
+                 vbValue:= 0;
+            END IF;
+        END IF;
+
 
         IF EXISTS (SELECT 1
                    FROM ObjectString AS ObjectString_WorkTimeKind_ShortName
@@ -383,23 +395,26 @@ BEGIN
                      AND (inIsPersonalGroup = FALSE OR (inIsPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = ioWorkTimeKindId_key))
                   LIMIT CASE WHEN inIsPersonalGroup = TRUE THEN 1 ELSE 100 END
                  ) AS tmp)
-        OR vbUserId = 5
+--        OR (vbUserId = 5 and ioWorkTimeKindId_key = 12917 and inMemberId in (8278565) and ioValue <> '0')
+--        OR (vbUserId = 5 and inMemberId in (8262719))
     THEN
         RAISE EXCEPTION 'Ошибка.Найдено несколько элементов в Табеле%<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%>'
                        , CHR (13)
-                       , lfGet_Object_ValueData_sh (inMemberId)
+                       , lfGet_Object_ValueData_sh (inMemberId) || '('|| inMemberId :: TVarChar || ')'
                        , CHR (13)
-                       , lfGet_Object_ValueData_sh (inPositionId)
+                       , lfGet_Object_ValueData_sh (inPositionId) || '('|| COALESCE (inPositionId, 0) :: TVarChar || ')'
                        , CHR (13)
-                       , lfGet_Object_ValueData_sh (inPositionLevelId)
+                       , lfGet_Object_ValueData_sh (inPositionLevelId) || '('|| COALESCE (inPositionLevelId, 0) :: TVarChar || ')'
                        , CHR (13)
-                       , lfGet_Object_ValueData_sh (inPersonalGroupId)
+                       , lfGet_Object_ValueData_sh (inPersonalGroupId) || '('|| COALESCE (inPersonalGroupId, 0) :: TVarChar || ')'
                        , CHR (13)
-                       , lfGet_Object_ValueData_sh (inStorageLineId)
+                       , lfGet_Object_ValueData_sh (inStorageLineId) || '('|| COALESCE (inStorageLineId, 0) :: TVarChar || ')'
                        , CHR (13)
                        , lfGet_Object_ValueData_sh (ioWorkTimeKindId_key)
                        , CHR (13)
                        , inIsPersonalGroup
+                       , CHR (13)
+                       , ioValue
                         ;
     END IF;
 
@@ -513,6 +528,32 @@ BEGIN
         PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
     END IF;
 
+    if 0 = COALESCE ((SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId), 0)
+       -- AND vbUserId <> 5
+    then
+        RAISE EXCEPTION 'Ошибка.Данные протокола не сохранены (%)%<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%>'
+                       , vbMovementItemId
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inMemberId) || '('|| inMemberId :: TVarChar || ')'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inPositionId) || '('|| COALESCE (inPositionId, 0) :: TVarChar || ')'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inPositionLevelId) || '('|| COALESCE (inPositionLevelId, 0) :: TVarChar || ')'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inPersonalGroupId) || '('|| COALESCE (inPersonalGroupId, 0) :: TVarChar || ')'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inStorageLineId) || '('|| COALESCE (inStorageLineId, 0) :: TVarChar || ')'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (ioWorkTimeKindId_key)
+                       , CHR (13)
+                       , inIsPersonalGroup
+                       , CHR (13)
+                       , ioValue
+                      ;
+
+    end if;
+
+    -- для Admin
     if vbUserId = 5 AND 1=0
     then
         RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>  -  <%>  <%>'
@@ -527,12 +568,6 @@ BEGIN
                            
     end if;
 
-    if 0 = COALESCE ((SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId), 0)
-       -- AND vbUserId <> 5
-    then
-        RAISE EXCEPTION 'Ошибка.Данные протокола не сохранены (%)', vbMovementItemId;
-
-    end if;
 
 END;
 $BODY$
@@ -553,3 +588,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_SheetWorkTime (, inSession:= '2')
+-- SELECT * FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = 233879947

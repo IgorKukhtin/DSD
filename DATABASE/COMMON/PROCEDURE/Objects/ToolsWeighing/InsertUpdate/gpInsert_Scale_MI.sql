@@ -160,7 +160,7 @@ BEGIN
         AND vbToId = 8459 -- Розподільчий комплекс
         AND inGoodsKindId = zc_GoodsKind_Basis()
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав для перемещения вида <Причина возврат>.', lfGet_Object_ValueData_sh (inGoodsKindId);
+         RAISE EXCEPTION 'Ошибка.Нет прав для перемещения вида <%>.', lfGet_Object_ValueData_sh (inGoodsKindId);
      END IF;
 
 
