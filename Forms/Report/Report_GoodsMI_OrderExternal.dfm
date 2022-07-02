@@ -2345,6 +2345,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbPrint_byCross'
         end
