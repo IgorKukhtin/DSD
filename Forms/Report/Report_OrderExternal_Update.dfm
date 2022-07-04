@@ -1168,11 +1168,12 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         item
           DataSet = HeaderCDS
           UserName = 'frxDBDHeader'
+          IndexFieldNames = 'GroupPrint'
         end
         item
           DataSet = ItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'OperDate_CarInfo;RouteName;RetailName'
+          IndexFieldNames = 'GroupPrint;OperDate_CarInfo;RouteName;RetailName'
         end>
       Params = <
         item
