@@ -32,26 +32,16 @@ type
     AmountSh: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
     CarInfoName: TcxGridDBColumn;
-    actPrint_byByer: TdsdPrintAction;
     RouteName: TcxGridDBColumn;
     edTo: TcxButtonEdit;
     cxLabel8: TcxLabel;
     GuidesTo: TdsdGuides;
-    actPrint_byPack: TdsdPrintAction;
-    actPrint_byProduction: TdsdPrintAction;
-    actPrint_byType: TdsdPrintAction;
-    actPrint_byRoute: TdsdPrintAction;
-    actPrint_byRouteItog: TdsdPrintAction;
-    actPrint_byCross: TdsdPrintAction;
     HeaderCDS: TClientDataSet;
     ItemsCDS: TClientDataSet;
     Amount: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    actPrint_byProductionDozakaz: TdsdPrintAction;
-    actPrint_byType_Group: TdsdPrintAction;
     AmountWeight: TcxGridDBColumn;
-    actPrint_byRouteGroup: TdsdPrintAction;
     mactOpenDocument: TMultiAction;
     actMovementCheck: TdsdExecStoredProc;
     actOpenForm: TdsdOpenForm;
@@ -95,6 +85,9 @@ type
     bbPrint: TdxBarButton;
     cbisGoods: TcxCheckBox;
     actRefresh_Goods: TdsdDataSetRefresh;
+    spSelectPrintGoods: TdsdStoredProc;
+    actPrintGoods: TdsdPrintAction;
+    bbPrintGoods: TdxBarButton;
   private
     { Private declarations }
   public

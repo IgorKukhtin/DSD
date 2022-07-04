@@ -37,6 +37,7 @@ type
     deEnd: TcxDateEdit;
     edIsDate_CarInfo: TcxCheckBox;
     PeriodChoice: TPeriodChoice;
+    cbisGoods: TcxCheckBox;
   private
     { Private declarations }
   public

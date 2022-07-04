@@ -140,7 +140,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('Печать Заявки (Информация по отгрузке)', ReportPath + '\Товарный Учет\Печать Заявки (Информация по отгрузке).fr3');
+ // LoadReportFromFile('Печать Заявки (Информация по отгрузке)', ReportPath + '\Товарный Учет\Печать Заявки (Информация по отгрузке).fr3');
+
+  LoadReportFromFile('Печать Товаров Заявки (Информация по отгрузке)', ReportPath + '\Товарный Учет\Печать Товаров Заявки (Информация по отгрузке).fr3');
   exit;
    {
   LoadReportFromFile('PrintMovement_OrderReturnTare', ReportPath + '\Товарный Учет\PrintMovement_OrderReturnTare.fr3');
