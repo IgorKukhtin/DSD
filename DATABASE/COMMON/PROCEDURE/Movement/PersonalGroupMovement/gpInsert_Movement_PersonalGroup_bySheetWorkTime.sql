@@ -26,7 +26,8 @@ BEGIN
      PERFORM lpInsert_Movement_PersonalGroup_bySheetWorkTime (inOperDate        := tmp.OperDate
                                                             , inUnitId          := inUnitId
                                                             , inPersonalGroupId := COALESCE (tmp.PersonalGroupId,0)
-                                                            , inPairDayId       := CASE WHEN tmp.WorkTimeKindId = zc_Enum_WorkTimeKind_WorkN() THEN 7438171  -- ночь  vbPairDayId
+                                                            , inPairDayId       := CASE WHEN tmp.WorkTimeKindId IN (zc_Enum_WorkTimeKind_WorkD(), 8302788) THEN 7438170  -- день  vbPairDayId
+                                                                                        WHEN tmp.WorkTimeKindId IN (zc_Enum_WorkTimeKind_WorkN(), 8302790) THEN 7438171  -- ночь  vbPairDayId
                                                                                         ELSE 7438170  --день
                                                                                    END
                                                             , inPersonalId      := tmp.PersonalId

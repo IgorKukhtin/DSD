@@ -48,7 +48,8 @@ BEGIN
                                                       , inPersonalId      := tmp.PersonalId
                                                       , inPositionId      := tmp.PositionId
                                                       , inPositionLevelId := tmp.PositionLevelId
-                                                      , inWorkTimeKindId  := CASE WHEN vbPairDayId = 7438171 THEN zc_Enum_WorkTimeKind_WorkN() -- ночь
+                                                      , inWorkTimeKindId  := CASE WHEN vbPairDayId = 7438170 THEN zc_Enum_WorkTimeKind_WorkD() -- день
+                                                                                  WHEN vbPairDayId = 7438171 THEN zc_Enum_WorkTimeKind_WorkN() -- ночь
                                                                                   ELSE zc_Enum_WorkTimeKind_WorkD()--день
                                                                              END
                                                       , inAmount          := tmp.HoursDay
