@@ -2289,10 +2289,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_MinPriceSale() RETURNS In
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_MinPriceSale', 'Минимальная цена товара при отпуске' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_MinPriceSale');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_DeviationsPrice1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DeviationsPrice1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_DeviationsPrice1303', 'Процент отклонение от отпускной цены при отпуске по 1303' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DeviationsPrice1303');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.07.22                                                                                      * zc_ObjectFloat_CashSettings_DeviationsPrice1303
  20.06.22                                                                                      * zc_ObjectFloat_CashSettings_MinPriceSale
  15.06.22                                                                                      * zc_ObjectFloat_CashSettings_PriceFormSendVIP
  07.06.22                                                                                      * zc_ObjectFloat_CashSettings_ExpressVIPConfirm

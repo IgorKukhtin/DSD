@@ -87,9 +87,11 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbId, inUserId, vbIsInsert);
 
-
---    RAISE EXCEPTION 'Прошло. % % %', inOparDate, inUnitID, inSumma;
-
+/*    IF inUserId = 3
+    THEN
+      RAISE EXCEPTION 'Прошло. % % % % %', inOparDate, inUnitID, inSumma, vbMovementId, vbId;
+    END IF;*/
+    
  END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -105,4 +107,5 @@ LANGUAGE PLPGSQL VOLATILE;
 -- select * from gpSelect_Calculation_MoneyBoxSun(183292, '3');
 -- select * from gpSelect_Calculation_MoneyBoxSun(0, '3');
 
--- SELECT * FROM lpInsertUpdate_MovementItem_WagesMoneyBoxSun (inOparDate := '01.03.2020', inUnitID := 183292 , inSumma := 1886.92 , inUserId := 3)
+-- 
+SELECT * FROM lpInsertUpdate_MovementItem_WagesMoneyBoxSun (inOparDate := '01.07.2022', inUnitID := 8156016 , inSumma := 0, inUserId := 3)

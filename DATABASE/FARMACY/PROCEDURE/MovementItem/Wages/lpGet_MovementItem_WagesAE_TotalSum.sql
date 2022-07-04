@@ -136,8 +136,12 @@ BEGIN
                             WHERE MIFloat_SummaSUN1.MovementItemId = inMovementItemId
                               AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaTechnicalRediscount(), zc_MIFloat_SummaFullChargeFact())), 0);      
                               
-      IF vbSumma2 > 0 THEN vbSumma2 := 0; END IF;
+      IF vbOperDate = '01.07.2022' AND vbUnitID = 8156016
+      THEN
+        vbSumma2 = vbSumma2 + 433;
+      END IF;
 
+      IF vbSumma2 > 0 THEN vbSumma2 := 0; END IF;
 
       IF vbSumma2 < 0 AND vbSummaMoneyBox  > 0
       THEN
