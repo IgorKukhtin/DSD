@@ -281,7 +281,7 @@ BEGIN
                                          , lpSelect.EKPrice
                                            --
                                          , lpSelect.ProdColorPatternId
-                                         , lpSelect.ProdOptionsId
+                                       --, lpSelect.ProdOptionsId
 
                                     FROM lpSelect_Object_ReceiptProdModelChild_detail (vbUserId) AS lpSelect
                                          JOIN tmpProduct ON tmpProduct.ReceiptProdModelId = lpSelect.ReceiptProdModelId

@@ -15,16 +15,17 @@ RETURNS TABLE (Id Integer, ReceiptGoodsId Integer
              , isErased Boolean
              , NPP Integer
 
-             , ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar
+               -- Boat Structure 
+             , ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar, ProdColorPatternName_all TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
-               -- Цвет /либо Comment из Boat Structure
-             , ColorPatternId Integer, ColorPatternName TVarChar 
+               -- Категория Опций
              , MaterialOptionsId Integer, MaterialOptionsName TVarChar
                --
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
              , Article TVarChar
+               -- Цвет /либо Comment из Boat Structure
              , ProdColorName TVarChar
              , MeasureName TVarChar
 
@@ -90,6 +91,7 @@ BEGIN
                                                  ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
                                                 AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object() 
 
+                            -- Категория Опций
                             LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
                                                  ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
                                                 AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
@@ -130,11 +132,10 @@ BEGIN
           , Object_ProdColorPattern.Id              AS ProdColorPatternId
           , Object_ProdColorPattern.ObjectCode      AS ProdColorPatternCode
           , Object_ProdColorPattern.ValueData       AS ProdColorPatternName
+          , (Object_ProdColorGroup.ValueData || CASE WHEN Object_ProdColorPattern.ValueData <> '1' THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END) :: TVarChar AS ProdColorPatternName_all
 
           , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
           , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
-          , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
-          , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
 
           , Object_MaterialOptions.Id          ::Integer  AS MaterialOptionsId
           , Object_MaterialOptions.ValueData   ::TVarChar AS MaterialOptionsName
@@ -179,10 +180,6 @@ BEGIN
                                ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
                               AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
           LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
-          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
-                               ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
-                              AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ProdColorPattern_ColorPattern()
-          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods
                                ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
@@ -233,4 +230,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPattern (TRUE, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPattern (FALSE, FALSE, zfCalc_UserAdmin())

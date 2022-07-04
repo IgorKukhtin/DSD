@@ -84,7 +84,9 @@ BEGIN
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             INNER JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
                                                   -- !!!временно!!!
-                                                  AND Object_GoodsGroup.ValueData ILIKE '%hypalon%'
+                                                  AND (Object_GoodsGroup.ValueData ILIKE '%hypalon%'
+                                                    OR Object_GoodsGroup.ValueData ILIKE 'Fabric%'
+                                                      )
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                  ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id

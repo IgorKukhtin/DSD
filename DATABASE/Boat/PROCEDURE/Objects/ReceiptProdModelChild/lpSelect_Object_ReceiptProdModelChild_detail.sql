@@ -25,9 +25,9 @@ RETURNS TABLE (ModelId Integer, ModelName TVarChar
                -- Цвет /либо Comment из Boat Structure
              , ProdColorId Integer, ProdColorName TVarChar
                -- если это Boat Structure и этот элемент может идти как опция
-          --, ProdOptionsId Integer, ProdOptionsCode Integer, ProdOptionsName TVarChar
+           --, ProdOptionsId Integer, ProdOptionsCode Integer, ProdOptionsName TVarChar
 
-               --
+               -- Категория Опций
              , MaterialOptionsId Integer, MaterialOptionsCode Integer, MaterialOptionsName TVarChar
  
                --
@@ -111,6 +111,8 @@ BEGIN
                                        , tmpReceiptProdModelChild.ReceiptProdModelChildId  AS ReceiptProdModelChildId
                                        , tmpReceiptProdModelChild.ObjectId                 AS ObjectId_parent
                                        , Object_ReceiptGoodsChild.Id                       AS ReceiptGoodsChildId
+                                         -- всегда Цвет - у ReceiptGoodsChild
+                                       , Object_ReceiptGoodsChild.ValueData                AS Comment
                                          -- разложили или если меняли "Комплектующее", не тот что в Boat Structure
                                        , ObjectLink_Object.ChildObjectId                   AS GoodsId
                                          -- нашли Элемент Boat Structure
@@ -168,6 +170,8 @@ BEGIN
                                            , tmpReceiptProdModelChild.ObjectId AS ObjectId_parent
                                              -- элемент ReceiptProdModelChild
                                            , tmpReceiptProdModelChild.ObjectId
+                                             --
+                                           , '' AS Comment_Receipt
                                              -- значение
                                            , tmpReceiptProdModelChild.Value AS Value_parent
                                            , tmpReceiptProdModelChild.Value
@@ -189,6 +193,8 @@ BEGIN
                                            , tmpReceiptGoodsChild.ObjectId_parent
                                              -- на что раскладываем
                                            , tmpReceiptGoodsChild.GoodsId AS ObjectId
+                                             --
+                                           , tmpReceiptGoodsChild.Comment AS Comment_Receipt
                                              -- значение
                                            , tmpReceiptGoodsChild.Value_parent
                                            , tmpReceiptGoodsChild.Value
@@ -222,8 +228,19 @@ BEGIN
 
               -- значение Farbe
             , Object_ProdColor.Id           AS ProdColorId
-              -- если у Boat Structure нет товара, тогда значение Farbe берем = Comment
-            , CASE WHEN ObjectLink_ProdColorPattern_Goods.ChildObjectId IS NULL AND tmpRes.ProdColorPatternId > 0 THEN ObjectString_ProdColorPattern_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
+              -- если у Boat Structure нет товара, тогда значение Farbe
+            , CASE WHEN ObjectLink_ProdColorPattern_Goods.ChildObjectId IS NULL AND tmpRes.ProdColorPatternId > 0 AND tmpRes.Comment_Receipt <> ''
+                        -- всегда Цвет - у ReceiptGoodsChild
+                        THEN tmpRes.Comment_Receipt
+
+                   WHEN ObjectLink_ProdColorPattern_Goods.ChildObjectId IS NULL AND tmpRes.ProdColorPatternId > 0
+                        -- у Boat Structure  (когда нет GoodsId)
+                        THEN ObjectString_ProdColorPattern_Comment.ValueData
+
+                   -- иначе Цвет у Товара
+                   ELSE Object_ProdColor.ValueData
+
+              END :: TVarChar AS ProdColorName
 
           --, Object_ProdOptions.Id         AS ProdOptionsId
           --, Object_ProdOptions.ObjectCode AS ProdOptionsCode

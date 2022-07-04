@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColorPattern(
     IN inIsShowAll        Boolean,
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , NPP Integer
              , Comment TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
@@ -131,6 +131,8 @@ BEGIN
                            LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
                                                 ON ObjectLink_ProdOptions.ObjectId = Object_ProdColorPattern.Id
                                                AND ObjectLink_ProdOptions.DescId   = zc_ObjectLink_ProdColorPattern_ProdOptions()
+                                               -- НЕ понадобится
+                                               AND 1=0
                            LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
 
                            LEFT JOIN ObjectLink AS ObjectLink_ProdOptions_TaxKind
@@ -238,6 +240,7 @@ BEGIN
            tmpData.Id
          , tmpData.Code
          , tmpData.Name
+         , (tmpData.ProdColorGroupName || ' ' || tmpData.Name) :: TVarChar AS Name_all
          , ROW_NUMBER() OVER (PARTITION BY tmpData.ColorPatternId ORDER BY tmpData.Code ASC) :: Integer AS NPP
 
          , tmpData.Comment
@@ -302,6 +305,7 @@ BEGIN
            tmpData.Id
          , tmpData.Code
          , tmpData.Name
+         , (tmpData.ProdColorGroupName || ' ' || tmpData.Name) :: TVarChar AS Name_all
          , ROW_NUMBER() OVER (PARTITION BY Object_ColorPattern.Id ORDER BY tmpData.Code ASC) :: Integer AS NPP
 
          , tmpData.Comment

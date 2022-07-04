@@ -27,10 +27,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
-             , MaterialOptionsName TVarChar
+             , MaterialOptionsId Integer, MaterialOptionsName TVarChar
              , Id_Site TVarChar
              , CodeVergl Integer
-             , NPP Integer
+             , NPP Integer, NPP_pcp Integer
               )
 AS
 $BODY$
@@ -104,11 +104,13 @@ BEGIN
          , tmpSelect.ProdColorName
          , tmpSelect.MeasureName
 
-         , ''  :: TVarChar AS MaterialOptionsName
+         , MAX (CASE WHEN tmpSelect.NPP_pcp = 1 THEN tmpSelect.MaterialOptionsId   ELSE 0  END) :: Integer  AS MaterialOptionsId
+         , MAX (CASE WHEN tmpSelect.NPP_pcp = 1 THEN tmpSelect.MaterialOptionsName ELSE '' END) :: TVarChar AS MaterialOptionsName
          , ''  :: TVarChar AS Id_Site
          , tmpSelect.CodeVergl
 
          , MIN (tmpSelect.NPP) :: Integer AS NPP
+         , MAX (CASE WHEN tmpSelect.NPP_pcp = 1 THEN tmpSelect.NPP_pcp ELSE 0 END) :: Integer AS NPP_pcp
 
      FROM tmpSelect
 

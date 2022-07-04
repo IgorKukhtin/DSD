@@ -4,11 +4,12 @@ DROP FUNCTION IF EXISTS gpSelect_Object_MaterialOptionsChoice (Integer,Boolean, 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MaterialOptionsChoice(
     IN inProdColorPatternId Integer,
-    IN inIsShowAll          Boolean,            -- признак показать удаленные да / нет 
+    IN inIsShowAll          Boolean,            -- признак показать удаленные да / нет
     IN inSession            TVarChar            -- сессия пользователя
-   
+
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased Boolean)
@@ -24,14 +25,18 @@ BEGIN
    -- результат
    RETURN QUERY
        -- результат
-       SELECT
-             Object_MaterialOptions.Id              AS Id
-           , Object_MaterialOptions.ObjectCode      AS Code
-           , Object_MaterialOptions.ValueData       AS Name
+       SELECT DISTINCT
+              Object_MaterialOptions.Id              AS Id
+            , Object_MaterialOptions.ObjectCode      AS Code
+            , Object_MaterialOptions.ValueData       AS Name
 
-           , Object_Insert.ValueData                AS InsertName
-           , ObjectDate_Insert.ValueData            AS InsertDate
-           , Object_MaterialOptions.isErased        AS isErased
+            , Object_ProdColorPattern.Id             AS ProdColorPatternId
+            , Object_ProdColorPattern.ObjectCode     AS ProdColorPatternCode
+            , Object_ProdColorPattern.ValueData      AS ProdColorPatternName
+
+            , Object_Insert.ValueData                AS InsertName
+            , ObjectDate_Insert.ValueData            AS InsertDate
+            , Object_MaterialOptions.isErased        AS isErased
        FROM Object AS Object_MaterialOptions
 
           LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
@@ -41,11 +46,12 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
                                ON ObjectLink_ProdColorPattern.ObjectId = ObjectLink_MaterialOptions.ObjectId
                               AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern()
+          LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId AND 1=0
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_MaterialOptions.Id
                               AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
+          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
 
           LEFT JOIN ObjectDate AS ObjectDate_Insert
                                ON ObjectDate_Insert.ObjectId = Object_MaterialOptions.Id

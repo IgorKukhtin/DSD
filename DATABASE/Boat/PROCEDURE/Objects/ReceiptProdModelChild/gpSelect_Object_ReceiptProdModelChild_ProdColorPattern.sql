@@ -71,6 +71,7 @@ BEGIN
           -- раскладываем ReceiptProdModelChild
         , tmpProdColorPattern AS (SELECT tmpReceiptProdModelChild.ReceiptProdModelId     AS ReceiptProdModelId
                                        , Object_ReceiptGoodsChild.Id                     AS ReceiptGoodsChildId
+                                       , Object_ReceiptGoodsChild.ValueData              AS Comment
                                        , Object_ReceiptGoodsChild.isErased               AS isErased
                                          -- если меняли на другой товар, не тот что в Boat Structure
                                        , ObjectLink_Object.ChildObjectId                 AS ObjectId
@@ -143,7 +144,12 @@ BEGIN
           , Object_GoodsGroup.ValueData                AS GoodsGroupName
           , ObjectString_Article.ValueData             AS Article
             -- значение Farbe
-          , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL THEN ObjectString_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
+          , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL AND tmpProdColorPattern.Comment <> ''
+                      THEN tmpProdColorPattern.Comment
+                 WHEN ObjectLink_Goods.ChildObjectId IS NULL
+                      THEN ObjectString_Comment.ValueData
+                 ELSE Object_ProdColor.ValueData
+            END :: TVarChar AS ProdColorName
           , Object_Measure.ValueData                   AS MeasureName
 
             -- Цена вх. без НДС

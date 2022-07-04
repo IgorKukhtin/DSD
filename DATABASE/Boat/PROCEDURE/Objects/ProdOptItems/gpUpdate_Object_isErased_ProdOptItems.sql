@@ -72,7 +72,7 @@ BEGIN
            FROM gpSelect_Object_ProdColorItems (0,FALSE,FALSE,FALSE, inSession) as tmp
            -- Лодка
            WHERE tmp.MovementId_OrderClient = (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = inObjectId AND OFl.DescId   = zc_ObjectFloat_ProdOptItems_OrderClient()) :: Integer
-             AND tmp.ProductId = (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId   = zc_ObjectLink_ProdOptItems_Product())
+             AND tmp.ProductId = (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_ProdOptItems_Product())
              AND tmp.ProdColorPatternId = vbProdColorPatternId
           ;
 
@@ -82,6 +82,27 @@ BEGIN
    
    -- изменили
    PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inIsErased:=inIsErased, inUserId:= vbUserId);
+
+   -- Проверка - нельзя дублировать опции
+   IF EXISTS (SELECT 1
+              FROM ObjectLink AS OL
+                   -- Не удален
+                   JOIN Object AS Object_ProdOptItems ON Object_ProdOptItems.Id       = OL.ObjectId
+                                                     AND Object_ProdOptItems.isErased = FALSE
+                   -- Опция
+                   JOIN ObjectLink AS OL_ProdOptions
+                                   ON OL_ProdOptions.ObjectId      = OL.ObjectId
+                                  AND OL_ProdOptions.DescId        = zc_ObjectLink_ProdOptItems_ProdOptions()
+                                  AND OL_ProdOptions.ChildObjectId = (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_ProdOptItems_ProdOptions())
+              WHERE OL.ChildObjectId = (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId   = zc_ObjectLink_ProdOptItems_Product())
+                AND OL.DescId = zc_ObjectLink_ProdOptItems_Product()
+                AND OL.ObjectId <> COALESCE (inObjectId, 0)
+             )
+   THEN
+       RAISE EXCEPTION 'Ошибка.Дублирование опции <%> запрещено.'
+                      , lfGet_Object_ValueData_sh (ioProdOptionsId)
+                       ;
+   END IF;
 
 END;
 $BODY$

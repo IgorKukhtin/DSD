@@ -27,10 +27,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
-             , MaterialOptionsName TVarChar
+             , MaterialOptionsId Integer, MaterialOptionsName TVarChar
              , Id_Site TVarChar
              , CodeVergl Integer
-             , NPP Integer
+             , NPP Integer, NPP_pcp Integer
               )
 AS
 $BODY$
@@ -221,6 +221,7 @@ BEGIN
          , COALESCE (tmpProdColorPattern.ProdColorName, Object_ProdColor.ValueData)                 ::TVarChar  AS ProdColorName
          , COALESCE (tmpProdColorPattern.MeasureName, Object_Measure.ValueData)                     ::TVarChar  AS MeasureName
 
+         , Object_MaterialOptions.Id                              AS MaterialOptionsId
          , Object_MaterialOptions.ValueData                       AS MaterialOptionsName
          , ObjectString_Id_Site.ValueData                         AS Id_Site
          , ObjectFloat_ProdOptions_CodeVergl.ValueData :: Integer AS CodeVergl
@@ -231,6 +232,11 @@ BEGIN
                                      , COALESCE (ObjectFloat_ProdOptions_CodeVergl.ValueData, 0) ASC
                                      , Object_ProdOptions.ObjectCode ASC
                              ) :: Integer AS NPP
+
+         , ROW_NUMBER() OVER (PARTITION BY Object_Model.Id, Object_ProdColorPattern.Id
+                              ORDER BY CASE WHEN Object_MaterialOptions.ValueData ILIKE 'LISSE/MATT' THEN 0 ELSE 1 END
+                                     , Object_ProdOptions.ObjectCode ASC
+                             ) :: Integer AS NPP_pcp
 
      FROM Object AS Object_ProdOptions
           LEFT JOIN ObjectString AS ObjectString_Comment

@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ModelId Integer, ModelName TVarChar
              , BrandId Integer, BrandName TVarChar
              , EngineId Integer, EngineName TVarChar
+             , MaterialOptionsName TVarChar, ProdColorName_pcp TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -109,6 +110,18 @@ BEGIN
           -- раскладываем ReceiptProdModelChild
         , tmpReceiptGoodsChild AS
                      (SELECT tmpReceiptProdModelChild.ReceiptProdModelChildId
+                             -- 
+                           , Object_ProdColorPattern.ObjectCode AS ProdColorPatternCode
+                             -- Категория Опций
+                           , Object_MaterialOptions.Id          AS MaterialOptionsId
+                           , Object_MaterialOptions.ValueData   AS MaterialOptionsName
+                             -- значение Farbe
+                           , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL AND Object_ReceiptGoodsChild.ValueData <> ''
+                                       THEN Object_ReceiptGoodsChild.ValueData
+                                  WHEN ObjectLink_Goods.ChildObjectId IS NULL
+                                       THEN ObjectString_Comment.ValueData
+                                  ELSE Object_ProdColor.ValueData
+                             END :: TVarChar AS ProdColorName
                              -- Сумма вх. без НДС
                            , zfCalc_SummIn (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0), COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0),1) :: TFloat AS EKPrice_summ
                              -- Сумма вх. с НДС
@@ -139,6 +152,22 @@ BEGIN
                            LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
                                                 ON ObjectLink_ProdColorPattern.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                                AND ObjectLink_ProdColorPattern.DescId   = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
+                           -- Goods - для этой структуры
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                ON ObjectLink_Goods.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
+                                               AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdColorPattern_Goods()
+                           -- Farbe - для этой структуры
+                           LEFT JOIN ObjectString AS ObjectString_Comment
+                                                  ON ObjectString_Comment.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
+                                                 AND ObjectString_Comment.DescId   = zc_ObjectString_ProdColorPattern_Comment()
+                           -- Farbe - для этой структуры + здесь уже фактический Goods
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
+                                                ON ObjectLink_Goods_ProdColor.ObjectId = ObjectLink_Object.ChildObjectId
+                                               AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
+                                               -- !!!с этой структурой!!!
+                                               AND ObjectLink_ProdColorPattern.ChildObjectId > 0
+                           LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
                            -- значение в сборке
                            LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                  ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
@@ -146,6 +175,12 @@ BEGIN
 
                            -- !!!с этой структурой!!!
                            INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Object.ChildObjectId
+
+                            -- Категория Опций
+                           LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                ON ObjectLink_MaterialOptions.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                               AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+                           LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
 
                            LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                                  ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
@@ -203,6 +238,9 @@ BEGIN
          , Object_Brand.ValueData               AS BrandName
          , Object_ProdEngine.Id                 AS EngineId
          , Object_ProdEngine.ValueData          AS EngineName
+
+         , tmpMaterialOptions.MaterialOptionsName :: TVarChar AS MaterialOptionsName
+         , tmpProdColorPattern.ProdColorName      :: TVarChar AS ProdColorName_pcp
 
          , Object_Insert.ValueData            AS InsertName
          , Object_Update.ValueData            AS UpdateName
@@ -267,6 +305,32 @@ BEGIN
           LEFT JOIN tmpChild ON tmpChild.ReceiptProdModelId = Object_ReceiptProdModel.Id
           
           LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_ReceiptProdModel.Id
+
+          LEFT JOIN (SELECT tmpChild.ReceiptProdModelId
+                          , STRING_AGG (tmpChild.MaterialOptionsName, ';') AS MaterialOptionsName
+                     FROM (SELECT tmpReceiptProdModelChild.ReceiptProdModelId, tmpReceiptGoodsChild.MaterialOptionsName
+                                , MIN (tmpReceiptGoodsChild.ProdColorPatternCode)
+                           FROM tmpReceiptProdModelChild
+                                INNER JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptProdModelChildId = tmpReceiptProdModelChild.ReceiptProdModelChildId
+                           WHERE tmpReceiptGoodsChild.MaterialOptionsName <> ''
+                           GROUP BY tmpReceiptProdModelChild.ReceiptProdModelId, tmpReceiptGoodsChild.MaterialOptionsName
+                           ORDER BY 1, 3
+                          ) AS tmpChild
+                     GROUP BY tmpChild.ReceiptProdModelId
+                    ) AS tmpMaterialOptions
+                      ON tmpMaterialOptions.ReceiptProdModelId = Object_ReceiptProdModel.Id
+
+          LEFT JOIN (SELECT tmpChild.ReceiptProdModelId
+                          , STRING_AGG (tmpChild.ProdColorName, ';') AS ProdColorName
+                     FROM (SELECT tmpReceiptProdModelChild.ReceiptProdModelId, tmpReceiptGoodsChild.ProdColorName
+                           FROM tmpReceiptProdModelChild
+                                INNER JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptProdModelChildId = tmpReceiptProdModelChild.ReceiptProdModelChildId
+                           WHERE tmpReceiptGoodsChild.ProdColorName <> ''
+                           ORDER BY tmpReceiptProdModelChild.ReceiptProdModelId, tmpReceiptGoodsChild.ProdColorPatternCode
+                          ) AS tmpChild
+                     GROUP BY tmpChild.ReceiptProdModelId
+                    ) AS tmpProdColorPattern
+                      ON tmpProdColorPattern.ReceiptProdModelId = Object_ReceiptProdModel.Id
 
      WHERE Object_ReceiptProdModel.DescId = zc_Object_ReceiptProdModel()
       AND (Object_ReceiptProdModel.isErased = FALSE OR inIsErased = TRUE)

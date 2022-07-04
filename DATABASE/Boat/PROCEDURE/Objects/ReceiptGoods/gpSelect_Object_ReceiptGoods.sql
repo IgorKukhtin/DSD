@@ -85,6 +85,7 @@ BEGIN
                                                          , gpSelect.EKPriceWVAT_summ
 
                                                     FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPattern (inIsShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
+                                                    ORDER BY gpSelect.ReceiptGoodsId, gpSelect.NPP
                                                    )
           -- ВСЕ Элементы сборки Узлов
         , tmpReceiptGoodsChild_all AS (-- Элементы сборки Узлов - Товар
@@ -250,7 +251,8 @@ BEGIN
 
           LEFT JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptGoodsId = Object_ReceiptGoods.Id
           
-          LEFT JOIN (SELECT tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId, MAX (tmpReceiptGoodsChild_ProdColorPattern.MaterialOptionsName) AS MaterialOptionsName
+          LEFT JOIN (SELECT tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
+                          , STRING_AGG (DISTINCT tmpReceiptGoodsChild_ProdColorPattern.MaterialOptionsName, ';') AS MaterialOptionsName
                      FROM tmpReceiptGoodsChild_ProdColorPattern
                      WHERE tmpReceiptGoodsChild_ProdColorPattern.MaterialOptionsName <> ''
                      GROUP BY tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
  INOUT ioId                     Integer   , -- Ключ
     IN inCode                   Integer   , -- Код
     IN inProductId              Integer   ,
-    IN inProdOptionsId          Integer   ,
+ INOUT ioProdOptionsId          Integer   ,
     IN inProdOptPatternId       Integer   ,
     IN inProdColorPatternId     Integer   ,
     IN inMaterialOptionsId      Integer   ,
@@ -28,6 +28,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
+   DECLARE vbProdOptionsId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbMI_Id Integer;
 BEGIN
@@ -37,9 +38,17 @@ BEGIN
 
 
    -- Проверка
+   IF COALESCE (ioProdOptionsId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение <Опция> не установлено.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+   -- Проверка
    IF COALESCE (inProductId, 0) = 0
    THEN
-       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.ProductId не установлен.'
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение <Лодка> не установлен.'
                                              , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
                                              , inUserId        := vbUserId
                                               );
@@ -63,6 +72,99 @@ BEGIN
                                              , inUserId        := vbUserId
                                               );
    END IF;
+
+   -- Проверка - нельзя дублировать опции
+   IF EXISTS (SELECT 1
+              FROM ObjectLink AS OL
+                   -- Не удален
+                   JOIN Object AS Object_ProdOptItems ON Object_ProdOptItems.Id       = OL.ObjectId
+                                                     AND Object_ProdOptItems.isErased = FALSE
+                   -- Опция
+                   JOIN ObjectLink AS OL_ProdOptions
+                                   ON OL_ProdOptions.ObjectId = OL.ObjectId
+                                  AND OL_ProdOptions.DescId   = zc_ObjectLink_ProdOptItems_ProdOptions()
+                   LEFT JOIN ObjectLink AS OL_ProdColorPattern
+                                        ON OL_ProdColorPattern.ObjectId = OL_ProdOptions.ChildObjectId
+                                       AND OL_ProdColorPattern.DescId   = zc_ObjectLink_ProdOptions_ProdColorPattern()
+                                       -- с таким Boat Structure
+                                       AND OL_ProdColorPattern.ChildObjectId = (SELECT OL_find.ChildObjectId FROM ObjectLink AS OL_find WHERE OL_find.ObjectId = ioProdOptionsId AND OL_find.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern())
+                   LEFT JOIN ObjectFLoat AS OF_CodeVergl
+                                         ON OF_CodeVergl.ObjectId = OL_ProdOptions.ChildObjectId
+                                        AND OF_CodeVergl.DescId   = zc_ObjectFloat_ProdOptions_CodeVergl()
+                                        -- с таким CodeVergl
+                                        AND OF_CodeVergl.ValueData = (SELECT OF_find.ValueData FROM ObjectFLoat AS OF_find WHERE OF_find.ObjectId = ioProdOptionsId AND OF_find.DescId = zc_ObjectFloat_ProdOptions_CodeVergl())
+              WHERE OL.ChildObjectId = inProductId AND OL.DescId = zc_ObjectLink_ProdOptItems_Product()
+                AND OL.ObjectId <> COALESCE (ioId, 0)
+                AND (OL_ProdColorPattern.ChildObjectId > 0 OR OF_CodeVergl.ValueData > 0)
+             )
+   THEN
+       RAISE EXCEPTION 'Ошибка.Дублирование опции <%> запрещено.'
+                      , lfGet_Object_ValueData_sh (ioProdOptionsId)
+                       ;
+   END IF;
+
+   -- Проверка MaterialOptions
+   IF COALESCE (inMaterialOptionsId, 0) = 0 AND EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = ioProdOptionsId AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions() AND OL.ChildObjectId > 0)
+   THEN
+       RAISE EXCEPTION 'Ошибка.Для опции <%> необходимо выбрать Категорию.'
+                      , lfGet_Object_ValueData_sh (ioProdOptionsId)
+                       ;
+   END IF;
+   -- Проверка MaterialOptions
+   IF inMaterialOptionsId > 0 AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = ioProdOptionsId AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions() AND OL.ChildObjectId > 0)
+   THEN
+       RAISE EXCEPTION 'Ошибка.Для опции <%> не предусмотрен выбор Категории <%>.'
+                      , lfGet_Object_ValueData_sh (ioProdOptionsId)
+                      , lfGet_Object_ValueData_sh (inMaterialOptionsId)
+                       ;
+   END IF;
+
+   -- Замена, т.к. подменили MaterialOptions
+   IF inMaterialOptionsId > 0 AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = ioProdOptionsId AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions() AND OL.ChildObjectId = inMaterialOptionsId)
+   THEN
+       -- Проверка
+       IF 1 < (SELECT COUNT(*)
+               FROM ObjectLink AS OL
+                    JOIN ObjectLink AS OL_ProdColorPattern
+                                    ON OL_ProdColorPattern.ObjectId = OL.ObjectId
+                                   AND OL_ProdColorPattern.DescId   = zc_ObjectLink_ProdOptions_ProdColorPattern()
+                                   -- с таким Boat Structure
+                                   AND OL_ProdColorPattern.ChildObjectId = (SELECT OL_find.ChildObjectId FROM ObjectLink AS OL_find WHERE OL_find.ObjectId = ioProdOptionsId AND OL_find.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern())
+               WHERE OL.ChildObjectId = inMaterialOptionsId AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+              )
+       THEN
+           RAISE EXCEPTION 'Ошибка.Найдено несколько опций <%> с Категорией <%>.'
+                          , lfGet_Object_ValueData_sh (ioProdOptionsId)
+                          , lfGet_Object_ValueData_sh (inMaterialOptionsId)
+                           ;
+       END IF;
+
+       -- Нашли
+       vbProdOptionsId:= COALESCE ((SELECT OL.ObjectId
+                                    FROM ObjectLink AS OL
+                                         JOIN ObjectLink AS OL_ProdColorPattern
+                                                         ON OL_ProdColorPattern.ObjectId      = OL.ObjectId
+                                                        AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdOptions_ProdColorPattern()
+                                                        -- с таким Boat Structure
+                                                        AND OL_ProdColorPattern.ChildObjectId = (SELECT OL_find.ChildObjectId FROM ObjectLink AS OL_find WHERE OL_find.ObjectId = ioProdOptionsId AND OL_find.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern())
+                                    WHERE OL.ChildObjectId = inMaterialOptionsId AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
+                                   ), 0);
+       -- Проверка
+       IF COALESCE (vbProdOptionsId, 0) = 0
+       THEN
+           RAISE EXCEPTION 'Ошибка.Для опции <%> не существует Категории <%>.'
+                          , lfGet_Object_ValueData_sh (ioProdOptionsId)
+                          , lfGet_Object_ValueData_sh (inMaterialOptionsId)
+                           ;
+       ELSE 
+           -- !!!Замена
+           ioProdOptionsId:= vbProdOptionsId;
+
+       END IF;
+
+   END IF;
+
+
 
    -- Проверка/Поиск
    IF COALESCE (inProdOptPatternId, 0) = 0
@@ -92,7 +194,8 @@ BEGIN
 
 
    -- если эта опция из Boat Structure или есть inProdColorPatternId
-   IF EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions() AND ObjectLink.ChildObjectId = inProdOptionsId)
+ --IF EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions() AND ObjectLink.ChildObjectId = ioProdOptionsId)
+   IF EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern() AND ObjectLink.ObjectId = ioProdOptionsId)
       OR inProdColorPatternId > 0
    THEN
         -- Проверка inProdColorPatternId - заполнен
@@ -103,10 +206,10 @@ BEGIN
                                                   , inUserId        := vbUserId
                                                    );
         END IF;
-        -- Проверка inProdOptionsId - из Boat Structure
-        IF NOT EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions() AND ObjectLink.ChildObjectId = inProdOptionsId)
+        -- Проверка ioProdOptionsId - из Boat Structure
+        IF NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern() AND OL.ObjectId = ioProdOptionsId AND OL.ChildObjectId = inProdColorPatternId)
         THEN
-            RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не найден inProdOptionsId.'
+            RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не найден ioProdOptionsId + inProdColorPatternId.'
                                                   , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
                                                   , inUserId        := vbUserId
                                                    );
@@ -180,7 +283,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_Product(), ioId, inProductId);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_ProdOptions(), ioId, inProdOptionsId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_ProdOptions(), ioId, ioProdOptionsId);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_ProdOptPattern(), ioId, inProdOptPatternId);
@@ -228,6 +331,27 @@ BEGIN
                                                           , inUserId        := vbUserId
                                                            ) AS tmp
              );
+
+
+   -- Проверка - нельзя дублировать опции
+   IF EXISTS (SELECT 1
+              FROM ObjectLink AS OL
+                   -- Не удален
+                   JOIN Object AS Object_ProdOptItems ON Object_ProdOptItems.Id       = OL.ObjectId
+                                                     AND Object_ProdOptItems.isErased = FALSE
+                   -- Опция
+                   JOIN ObjectLink AS OL_ProdOptions
+                                   ON OL_ProdOptions.ObjectId      = OL.ObjectId
+                                  AND OL_ProdOptions.DescId        = zc_ObjectLink_ProdOptItems_ProdOptions()
+                                  AND OL_ProdOptions.ChildObjectId = ioProdOptionsId
+              WHERE OL.ChildObjectId = inProductId AND OL.DescId = zc_ObjectLink_ProdOptItems_Product()
+                AND OL.ObjectId <> COALESCE (ioId, 0)
+             )
+   THEN
+       RAISE EXCEPTION 'Ошибка.Дублирование опции <%> запрещено.'
+                      , lfGet_Object_ValueData_sh (ioProdOptionsId)
+                       ;
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (vbMI_Id, vbUserId, FALSE);
