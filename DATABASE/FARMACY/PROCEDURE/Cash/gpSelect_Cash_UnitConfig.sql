@@ -32,7 +32,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer,
                LikiDneproeHealthURL TVarChar, LikiDneproeLocation TVarChar, LikiDneproeHealthToken TVarChar,
                isRemovingPrograms Boolean, ExpressVIPConfirm Integer, isErrorRROToVIP Boolean, LayoutFileCount Integer, LayoutFileID Integer, 
-               isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, MinPriceSale TFloat
+               isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, MinPriceSale TFloat, DeviationsPrice1303 TFloat
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -187,6 +187,7 @@ BEGIN
                                   , COALESCE(ObjectBoolean_CashSettings_RemovingPrograms.ValueData, FALSE)       AS isRemovingPrograms
                                   , COALESCE(ObjectFloat_CashSettings_ExpressVIPConfirm.ValueData, 0)::Integer   AS ExpressVIPConfirm
                                   , COALESCE(ObjectFloat_CashSettings_MinPriceSale.ValueData, 0)::TFLoat         AS MinPriceSale
+                                  , COALESCE(ObjectFloat_CashSettings_DeviationsPrice1303.ValueData, 1)::TFLoat  AS DeviationsPrice1303
                              FROM Object AS Object_CashSettings
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                                          ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id
@@ -212,6 +213,9 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_MinPriceSale
                                                         ON ObjectFloat_CashSettings_MinPriceSale.ObjectId = Object_CashSettings.Id 
                                                        AND ObjectFloat_CashSettings_MinPriceSale.DescId = zc_ObjectFloat_CashSettings_MinPriceSale()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DeviationsPrice1303
+                                                        ON ObjectFloat_CashSettings_DeviationsPrice1303.ObjectId = Object_CashSettings.Id 
+                                                       AND ObjectFloat_CashSettings_DeviationsPrice1303.DescId = zc_ObjectFloat_CashSettings_DeviationsPrice1303()
                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                              LIMIT 1)
        , tmpPromoCodeDoctor AS (SELECT PromoUnit.ID
@@ -373,6 +377,7 @@ BEGIN
        , COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE):: Boolean         AS isShowPlanEmployeeUser
        
        , tmpCashSettings.MinPriceSale
+       , tmpCashSettings.DeviationsPrice1303
 
    FROM Object AS Object_Unit
 

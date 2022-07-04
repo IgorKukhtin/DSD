@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, 
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
                                                            Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, Integer, 
-                                                           Integer, Integer, TFloat, TFloat, TVarChar);
+                                                           Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -42,6 +42,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inExpressVIPConfirm          Integer   ,     -- Чеков для экспресс подтверждение ВИП
     IN inPriceFormSendVIP           TFloat    ,     -- Цена от которой показан товар при формировании перемещений VIP
     IN inMinPriceSale               TFloat    ,     -- Минимальная цена товара при отпуске
+    IN inDeviationsPrice1303        TFloat    ,     -- Процент отклонение от отпускной цены при отпуске по 1303
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -153,6 +154,9 @@ BEGIN
    
      -- Минимальная цена товара при отпуске
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_MinPriceSale(), vbID, inMinPriceSale);
+   
+     -- Процент отклонение от отпускной цены при отпуске по 1303
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_DeviationsPrice1303(), vbID, inDeviationsPrice1303);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

@@ -21,6 +21,7 @@ $BODY$
 
    DECLARE vbPriceCalc TFloat;
    DECLARE vbPriceSale TFloat;
+   DECLARE vbDeviationsPrice1303 TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -35,7 +36,16 @@ BEGIN
     outError2 := '';
     outSentence := '';
     outPrice := 0;
-    
+
+    SELECT COALESCE(ObjectFloat_CashSettings_DeviationsPrice1303.ValueData, 1)    AS DeviationsPrice1303
+    INTO vbDeviationsPrice1303
+    FROM Object AS Object_CashSettings
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DeviationsPrice1303
+                               ON ObjectFloat_CashSettings_DeviationsPrice1303.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_DeviationsPrice1303.DescId = zc_ObjectFloat_CashSettings_DeviationsPrice1303()
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;
+         
     -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
     IF inSPKindId = zc_Enum_SPKind_1303()
     THEN 
@@ -88,7 +98,7 @@ BEGIN
               outError2 :=  Chr(13)||Chr(10)||'% расхождения '||zfConvert_FloatToString(CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END/vbPriceSale*100 - 100)||
                            Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram   в группу ПКМУ1303  (инфо для Пелиной Любови)';
                            
-              IF (CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END / vbPriceSale * 100 - 100) <= 1.0
+              IF (CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END / vbPriceSale * 100 - 100) <= COALESCE(vbDeviationsPrice1303, 1.0)
               THEN
                 outPrice := vbPriceSale;
                 outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');

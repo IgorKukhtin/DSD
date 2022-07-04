@@ -1358,16 +1358,6 @@ begin
 
   if AReceipt <> HelsiApi.FRequest_number then Exit;
 
-  if HelsiApi.FSkip_Medication_Dispense_Sign = True then
-  begin
-    AState := 'COMPLETED';
-    Result := True;
-  end else if HelsiApi.FDispense_valid_to < Date then
-  begin
-    AState := 'EXPIRED';
-    Exit;
-  end;
-
   AState := HelsiApi.FStatus;
   AProgramMedicationId := HelsiApi.FMedical_program_id;
   Result := True;

@@ -161,6 +161,11 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaPercentIC
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaOrderConfirmation
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
@@ -170,6 +175,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             item
             end
             item
+              Width = 695
             end
             item
               Caption = #1056#1072#1089#1095#1077#1090' '#1058#1055','#1055#1057' '#1080' '#1082#1086#1087#1080#1083#1082#1080
@@ -287,6 +293,20 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Width = 76
             Position.BandIndex = 1
             Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object SummaOrderConfirmation: TcxGridDBBandedColumn
+            Caption = #1064#1090#1088#1072#1092' '#1079#1072' '#1085#1077#1089#1086#1074#1088'. '#1087#1086#1076#1090#1074#1077#1088'. '#1079#1072#1082#1072#1079#1086#1074
+            DataBinding.FieldName = 'SummaOrderConfirmation'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1064#1090#1088#1072#1092' '#1079#1072' '#1085#1077#1089#1086#1074#1088#1077#1084#1077#1085#1085#1086#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1086#1074
+            Options.Editing = False
+            Width = 76
+            Position.BandIndex = 1
+            Position.ColIndex = 8
             Position.RowIndex = 0
           end
           object SummaTechnicalRediscount: TcxGridDBBandedColumn
