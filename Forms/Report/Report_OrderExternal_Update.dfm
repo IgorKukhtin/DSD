@@ -337,42 +337,49 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     ExplicitWidth = 928
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 117
+      Left = 94
       EditValue = 44562d
       Properties.SaveTime = False
-      ExplicitLeft = 117
+      ExplicitLeft = 94
       ExplicitWidth = 82
       Width = 82
     end
     inherited deEnd: TcxDateEdit
-      Left = 313
+      Left = 290
       EditValue = 44562d
       Properties.SaveTime = False
       Visible = False
-      ExplicitLeft = 313
+      ExplicitLeft = 290
       ExplicitWidth = 81
       Width = 81
     end
     inherited cxLabel1: TcxLabel
-      Left = 25
-      ExplicitLeft = 25
+      Left = 2
+      ExplicitLeft = 2
     end
     inherited cxLabel2: TcxLabel
-      Left = 205
+      Left = 182
       Visible = False
-      ExplicitLeft = 205
+      ExplicitLeft = 182
     end
     object edIsDate_CarInfo: TcxCheckBox
-      Left = 400
+      Left = 375
       Top = 5
       Action = actRefresh_Car
       TabOrder = 4
       Visible = False
-      Width = 117
+      Width = 115
+    end
+    object cbisGoods: TcxCheckBox
+      Left = 493
+      Top = 5
+      Action = actRefresh_Goods
+      TabOrder = 5
+      Width = 82
     end
   end
   object edTo: TcxButtonEdit [2]
-    Left = 580
+    Left = 633
     Top = 5
     Properties.Buttons = <
       item
@@ -380,10 +387,10 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         Kind = bkEllipsis
       end>
     TabOrder = 6
-    Width = 310
+    Width = 275
   end
   object cxLabel8: TcxLabel [3]
-    Left = 539
+    Left = 590
     Top = 6
     Caption = #1057#1082#1083#1072#1076':'
   end
@@ -462,7 +469,22 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
   inherited ActionList: TActionList
     Left = 519
     Top = 231
-    object actRefresh_Car: TdsdDataSetRefresh [0]
+    object actRefresh_Goods: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086' '#1090#1086#1074#1072#1088#1072#1084
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefresh_Car: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1243,6 +1265,14 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisGoods'
+        Value = Null
+        Component = cbisGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inToId'
         Value = ''
         Component = GuidesTo
@@ -1430,8 +1460,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 591
-    Top = 4
+    Left = 671
+    Top = 12
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1508,6 +1538,14 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'RetailId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1610,6 +1648,14 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'RetailId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

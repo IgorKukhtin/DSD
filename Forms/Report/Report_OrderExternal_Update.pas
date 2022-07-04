@@ -93,6 +93,8 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    cbisGoods: TcxCheckBox;
+    actRefresh_Goods: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

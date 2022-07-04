@@ -2,11 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpReport_OrderExternal_Update (TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_OrderExternal_Update (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal_Update (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderExternal_Update(
     IN inStartDate         TDateTime , -- 
     IN inEndDate           TDateTime , -- 
-    IN inIsDate_CarInfo    Boolean   , -- по  дате  Дата/время отгрузки
+    IN inIsDate_CarInfo    Boolean   , -- по дате  Дата/время отгрузки  
+    IN inisGoods           Boolean   , -- по товарам - блок предактирования
     IN inToId              Integer   , -- Кому (в документе)
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -17,7 +19,10 @@ RETURNS TABLE (OperDate        TDateTime
              , PartnerTagName TVarChar
              , OperDate_CarInfo TDateTime, OperDate_CarInfo_str TVarChar
              , CarInfoId Integer, CarInfoName TVarChar, CarComment TVarChar 
-             , ToId Integer, ToCode Integer, ToName TVarChar
+             , ToId Integer, ToCode Integer, ToName TVarChar  
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsKindName  TVarChar
+             , GoodsGroupNameFull TVarChar
              , Amount TFloat
              , AmountSh TFloat
              , AmountWeight TFloat
@@ -93,6 +98,22 @@ BEGIN
                        GROUP BY tmpMovementAll.Id
                       )
 
+     , tmpMI AS (SELECT MovementItem.*
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementAll.Id FROM tmpMovementAll)               
+                   AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.isErased   = FALSE
+                )
+     , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
+                                FROM MovementItemFloat
+                                WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                  AND MovementItemFloat.DescId = zc_MIFloat_AmountSecond()
+                               )
+     , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
+                                     FROM MovementItemLinkObject
+                                     WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                       AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                     )
      , tmpMovement AS (SELECT Movement.OperDate
                             , MovementDate_OperDatePartner.ValueData                   AS OperDatePartner
                             , Movement.ToId                                            AS ToId
@@ -117,7 +138,10 @@ BEGIN
                             , STRING_AGG (DISTINCT Object_PartnerTag.ValueData, '; ') ::TVarChar AS PartnerTagName
                             , MovementLinkObject_CarInfo.ObjectId                      AS CarInfoId
                             , MovementDate_CarInfo.ValueData               ::TDateTime AS OperDate_CarInfo 
-                            , MovementString_CarComment.ValueData          ::TVarChar  AS CarComment
+                            , MovementString_CarComment.ValueData          ::TVarChar  AS CarComment 
+                            
+                            , CASE WHEN inisGoods = TRUE THEN MovementItem.ObjectId ELSE 0 END AS GoodsId
+                            , CASE WHEN inisGoods = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) ELSE 0 END AS GoodsKindId
                             
                             --, SUM (COALESCE (MovementItem.Amount,0))                   AS Amount
                             --, SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0) )      AS AmountSecond
@@ -171,13 +195,15 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
   
-                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                   AND MovementItem.DescId     = zc_MI_Master()
-                                                   AND MovementItem.isErased   = FALSE
+                            INNER JOIN tmpMI AS MovementItem  ON MovementItem.MovementId = Movement.Id
                  
-                            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                        ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond() 
+                            LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountSecond
+                                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond() 
+
+                            LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
                             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -203,6 +229,10 @@ BEGIN
                                , MovementLinkObject_CarInfo.ObjectId
                                , MovementDate_CarInfo.ValueData
                                , MovementString_CarComment.ValueData
+
+                               , CASE WHEN inisGoods = TRUE THEN MovementItem.ObjectId ELSE 0 END
+                               , CASE WHEN inisGoods = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) ELSE 0 END
+
                           )
 
  
@@ -222,7 +252,13 @@ BEGIN
            , tmpMovement.CarComment ::TVarChar AS CarComment
            , Object_To.Id                      AS ToId
            , Object_To.ObjectCode              AS ToCode
-           , Object_To.ValueData               AS ToName
+           , Object_To.ValueData               AS ToName   
+
+           , Object_Goods.Id                            AS GoodsId
+           , Object_Goods.ObjectCode                    AS GoodsCode
+           , Object_Goods.ValueData                     AS GoodsName
+           , Object_GoodsKind.ValueData                 AS GoodsKindName
+           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
              --
            , tmpMovement.Amount         :: TFloat  AS Amount 
            , tmpMovement.AmountSh       :: TFloat  AS AmountSh
@@ -264,7 +300,15 @@ BEGIN
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner) AS tmpWeekDay_Partner ON 1=1
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo) AS tmpWeekDay_CarInfo ON 1=1
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.StartWeighing) AS tmpWeekDay_StartW ON 1=1
-          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.EndWeighing) AS tmpWeekDay_EndW ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.EndWeighing) AS tmpWeekDay_EndW ON 1=1  
+          
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovement.GoodsId
+          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMovement.GoodsKindId
+
+          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                 ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
          ;
 
 END;

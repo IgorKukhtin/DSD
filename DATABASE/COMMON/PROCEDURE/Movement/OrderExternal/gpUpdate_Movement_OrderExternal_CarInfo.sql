@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDat
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat,  TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_CarInfo (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderExternal_CarInfo(
     IN inOperDate                TDateTime , -- Дата документа
@@ -14,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderExternal_CarInfo(
    OUT outDayName                TVarChar  , --
     IN inToId                    Integer   , -- Кому (в документе)
     IN inRouteId                 Integer   , -- Маршрут
-    IN inRetailId                Integer   , -- торг. сеть
+    IN inRetailId                Integer   , -- торг. сеть 
+    IN inGoodsId                 Integer   , -- если развернуто по товаарм тогда запрет редактирования
     IN inDays                    Integer   , --  +/- кол-во дней
  INOUT ioTimes                   TVarChar  , --  время
     IN inCarInfoName             TVarChar  , --  информация
@@ -31,6 +33,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal()); 
      
+     IF COALESCE (inGoodsId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.В режиме детализации по товарам изменения не возможны.';
+     END IF;
+
      -- Замена
      IF TRIM (ioTimes) = '' THEN ioTimes:= '0'; END IF;
 
