@@ -159,6 +159,7 @@ BEGIN
                               FROM Object AS Object_Goods
                               WHERE Object_Goods.DescId = zc_Object_Goods()
                               --AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
+                            --ORDER BY Object_Goods.Id ASC
                               ORDER BY Object_Goods.Id DESC
                               LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=0 THEN 25000 ELSE 350000 END
                              )
@@ -179,7 +180,7 @@ BEGIN
                                                       OR ObjectString_Article.ValueData ILIKE 'BEL%'
                                                         )
                         WHERE Object_Goods.DescId = zc_Object_Goods()
-                        --AND inIsLimit_100 = TRUE
+                          AND inIsLimit_100 = TRUE
                        )
 
        -- Результат
