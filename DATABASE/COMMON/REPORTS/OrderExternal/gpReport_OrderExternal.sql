@@ -825,17 +825,23 @@ BEGIN
                               ELSE 0
                          END  ::TFloat  AS Remains1_Weight_diff
                        -- не хватает далее
-                       , CASE WHEN COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0) + COALESCE (tmpOrder.Amount_Weight_calc2,0) > 0
-                               AND COALESCE (tmpRemains.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc,0) - COALESCE (tmpOrder.Amount_Weight_calc,0) 
-                                 - (COALESCE (tmpMovement.AmountWeight_calc1,0) + COALESCE (tmpOrder.Amount_Weight_calc1,0)) 
-                                 - (COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0) + COALESCE (tmpOrder.Amount_Weight_calc2,0) ) < 0
-                              THEN CASE WHEN COALESCE (tmpRemains.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_calc,0) - COALESCE (tmpOrder.Amount_Weight_calc,0) - (COALESCE (tmpMovement.AmountWeight_calc1,0) + COALESCE (tmpOrder.Amount_Weight_calc1,0)) >0 
-                                        THEN COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0) + COALESCE (tmpOrder.Amount_Weight_calc2,0) 
-                                            - (COALESCE (tmpRemains.Amount_Weight,0) - (COALESCE (tmpOrder.Amount_Weight_calc,0) + COALESCE (tmpMovement.Amount_Weight,0)) - (COALESCE (tmpMovement.AmountWeight_calc1,0) + COALESCE (tmpOrder.Amount_Weight_calc1,0)))
+                       ,  CASE WHEN COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0) + COALESCE (tmpOrder.Amount_Weight_calc2,0) > 0
+                               AND COALESCE (tmpRemains.Amount_Weight,0) 
+                                 - (COALESCE (tmpMovement.AmountWeight_calc,0) + COALESCE (tmpOrder.Amount_Weight_calc,0))        --отгрузка сегодня 
+                                 - (COALESCE (tmpMovement.AmountWeight_calc1,0) + COALESCE (tmpOrder.Amount_Weight_calc1,0))      --отгрузка завтра
+                                 - (COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0) + COALESCE (tmpOrder.Amount_Weight_calc2,0) ) < 0   --отгрузка далее
+                              THEN  CASE WHEN COALESCE (tmpRemains.Amount_Weight,0)
+                                          - (COALESCE (tmpMovement.AmountWeight_calc,0) + COALESCE (tmpOrder.Amount_Weight_calc,0))
+                                          - (COALESCE (tmpMovement.AmountWeight_calc1,0) + COALESCE (tmpOrder.Amount_Weight_calc1,0)) > 0 
+                                        THEN  COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0) + COALESCE (tmpOrder.Amount_Weight_calc2,0)
+				                               - (COALESCE (tmpRemains.Amount_Weight,0)
+									              - (COALESCE (tmpMovement.AmountWeight_calc,0) + COALESCE (tmpOrder.Amount_Weight_calc,0))
+									              - (COALESCE (tmpMovement.AmountWeight_calc1,0) + COALESCE (tmpOrder.Amount_Weight_calc1,0) )
+									             ) 
                                         ELSE COALESCE (tmpMovement.AmountWeight_calc2,0) + COALESCE (tmpMovement.AmountWeight_calc3,0) + COALESCE (tmpOrder.Amount_Weight_calc2,0)
                                         END
                               ELSE 0
-                         END  ::TFloat  AS Remains2_Weight_diff
+                         END   ::TFloat  AS Remains2_Weight_diff
             
                          ------ перемещение
                        , tmpSendIn.Amount        ::TFloat AS AmountSend
