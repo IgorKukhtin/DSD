@@ -33,7 +33,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal()); 
      
-     IF COALESCE (inGoodsId, 0) = 0
+     IF COALESCE (inGoodsId, 0) <> 0
      THEN
          RAISE EXCEPTION 'Ошибка.В режиме детализации по товарам изменения не возможны.';
      END IF;
