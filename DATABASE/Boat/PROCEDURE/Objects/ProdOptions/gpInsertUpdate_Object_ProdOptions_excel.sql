@@ -116,15 +116,15 @@ BEGIN
                                                    THEN gpSelect.Id
                                               WHEN inOptName ILIKE 'Hypalon Secondary' AND gpSelect.ProdColorGroupName ILIKE 'Hypalon' AND  gpSelect.Name ILIKE 'secondary'
                                                    THEN gpSelect.Id
-                                              WHEN inOptName ILIKE 'Upholstery' AND gpSelect.ProdColorGroupName ILIKE 'Upholstery' AND  gpSelect.Name ILIKE 'primary'
+                                              WHEN inOptName ILIKE 'Upholstery' AND gpSelect.ProdColorGroupName ILIKE 'Upholstery' AND  gpSelect.Name ILIKE '%primary%'
                                                    THEN gpSelect.Id
-                                              WHEN inOptName ILIKE 'Teak' AND gpSelect.ProdColorGroupName ILIKE 'Teak color'
+                                              WHEN inOptName ILIKE 'Teak' AND gpSelect.ProdColorGroupName ILIKE 'Teak'
                                                    THEN gpSelect.Id
                                               WHEN inOptName ILIKE 'Hull' AND gpSelect.ProdColorGroupName ILIKE 'Fiberglass - Hull'
                                                    THEN gpSelect.Id
                                               WHEN inOptName ILIKE 'Deck' AND gpSelect.ProdColorGroupName ILIKE 'Fiberglass - Deck'
                                                    THEN gpSelect.Id
-                                              WHEN inOptName ILIKE 'Steering Console' AND gpSelect.ProdColorGroupName ILIKE 'Fiberglass SteeringConsole'
+                                              WHEN inOptName ILIKE 'Steering Console' AND gpSelect.ProdColorGroupName ILIKE 'Fiberglass Steering Console'
                                                    THEN gpSelect.Id
                                               ELSE 0
                                          END)

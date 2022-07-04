@@ -54,6 +54,9 @@ BEGIN
           -- Опции, которые определены как Boat Structure
         , tmpProdColorPattern AS (SELECT Object_ProdColorPattern.Id                    AS ProdColorPatternId
 
+                                       , Object_Model.Id                    ::Integer  AS ModelId
+                                       , Object_Model.ValueData             ::TVarChar AS ModelName
+
                                        , Object_Goods.Id                    ::Integer  AS GoodsId
                                        , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
                                        , Object_Goods.ValueData             ::TVarChar AS GoodsName
@@ -90,6 +93,14 @@ BEGIN
                                        LEFT JOIN ObjectString AS ObjectString_Comment
                                                               ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
                                                              AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorPattern_Comment()
+                                       -- Модель
+                                       LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                                                            ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                                                           AND ObjectLink_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
+                                       LEFT JOIN ObjectLink AS ObjectLink_Model
+                                                            ON ObjectLink_Model.ObjectId = ObjectLink_ColorPattern.ChildObjectId
+                                                           AND ObjectLink_Model.DescId   = zc_ObjectLink_ColorPattern_Model()
+                                       LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
                                        -- Комплектующие
                                        LEFT JOIN ObjectLink AS ObjectLink_Goods
                                                             ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
@@ -155,7 +166,7 @@ BEGIN
 
          
          , Object_ProdColorPattern.Id        :: Integer   AS ProdColorPatternId
-         , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END) :: TVarChar  AS ProdColorPatternName
+         , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END || ' (' || tmpProdColorPattern.ModelName || ')') :: TVarChar  AS ProdColorPatternName
 
          , Object_Goods.Id                                                   :: Integer  AS GoodsId
          , COALESCE (tmpProdColorPattern.GoodsId, Object_Goods.Id)           :: Integer  AS GoodsId_choice
