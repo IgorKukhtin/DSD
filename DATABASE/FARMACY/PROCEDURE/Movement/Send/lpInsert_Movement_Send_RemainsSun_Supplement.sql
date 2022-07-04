@@ -125,7 +125,7 @@ BEGIN
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_TP_exception_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpGoods_TP_exception_Supplement   (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoods_TP_exception_Supplement   (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      END IF;
 
      -- Уже использовано в текущем СУН
@@ -315,8 +315,8 @@ BEGIN
                             , MovementItem.ObjectId
                      )
 
-     INSERT INTO _tmpGoods_TP_exception_Supplement   (UnitId, GoodsId)
-     SELECT tmpGoods.UnitId, tmpGoods.GoodsId
+     INSERT INTO _tmpGoods_TP_exception_Supplement   (UnitId, GoodsId, Amount)
+     SELECT tmpGoods.UnitId, tmpGoods.GoodsId, tmpGoods.Amount
      FROM tmpGoods;
 
      -- Уже использовано в текущем СУН
@@ -668,8 +668,6 @@ BEGIN
                                 -- !!!только для таких Аптек!!!
                                 INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Container.ObjectId
                                 INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = Container.WhereObjectId
-                                LEFT JOIN _tmpGoods_TP_exception_Supplement ON _tmpGoods_TP_exception_Supplement.GoodsId = Container.ObjectId
-                                                                AND _tmpGoods_TP_exception_Supplement.UnitId = Container.WhereObjectId
 
                                 LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                               ON CLO_PartionGoods.ContainerId = Container.Id
@@ -679,7 +677,6 @@ BEGIN
                                                     AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                            WHERE Container.DescId = zc_Container_CountPartionDate()
                              AND Container.Amount <> 0
-                             AND COALESCE (_tmpGoods_TP_exception_Supplement.GoodsId, 0) = 0
                           )
         , tmpRemains AS (SELECT Container.WhereObjectId AS UnitId
                               , Container.ObjectId      AS GoodsId
@@ -697,8 +694,6 @@ BEGIN
                               -- !!!только для таких Аптек!!!
                               INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Container.ObjectId
                               INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = Container.WhereObjectId
-                              LEFT JOIN _tmpGoods_TP_exception_Supplement ON _tmpGoods_TP_exception_Supplement.GoodsId = Container.ObjectId
-                                                              AND _tmpGoods_TP_exception_Supplement.UnitId = Container.WhereObjectId
                                                               
                               LEFT JOIN tmpRemainsPD ON tmpRemainsPD.ParentId = Container.Id
  
@@ -721,7 +716,6 @@ BEGIN
 
                          WHERE Container.DescId = zc_Container_Count()
                            AND Container.Amount <> 0
-                           AND COALESCE (_tmpGoods_TP_exception_Supplement.GoodsId, 0) = 0
                            --AND COALESCE (tmpRemainsPD.ExpirationDate, zc_DateEnd()) > CURRENT_DATE + INTERVAL '30 DAY'
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
@@ -863,8 +857,8 @@ BEGIN
                     ELSE 0  END  AS Layout*/
 
                -- остаток
-             , CASE WHEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0), 0) > 0
-                    THEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0), 0) ELSE 0 END AS AmountRemains
+             , CASE WHEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0) + COALESCE (_tmpGoods_TP_exception_Supplement.Amount, 0), 0) > 0
+                    THEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0) + COALESCE (_tmpGoods_TP_exception_Supplement.Amount, 0), 0) ELSE 0 END AS AmountRemains
              , COALESCE (tmpRemains.AmountNotSend, 0)                                                                         AS AmountNotSend
                -- реализация
              , COALESCE (tmpSalesDay.AmountSalesDay, 0)      AS AmountSalesDay
@@ -896,6 +890,9 @@ BEGIN
 
              LEFT JOIN _tmpGoodsLayout_SUN_Supplement ON _tmpGoodsLayout_SUN_Supplement.GoodsID = COALESCE(tmpRemains.GoodsId, tmpSalesDay.GoodsId)
                                                      AND _tmpGoodsLayout_SUN_Supplement.UnitId = COALESCE(tmpRemains.UnitId, tmpSalesDay.UnitId)
+                                                     
+             LEFT JOIN _tmpGoods_TP_exception_Supplement ON _tmpGoods_TP_exception_Supplement.GoodsId = COALESCE(tmpRemains.GoodsId, tmpSalesDay.GoodsId)
+                                                        AND _tmpGoods_TP_exception_Supplement.UnitId = COALESCE(tmpRemains.UnitId, tmpSalesDay.UnitId)
        ;
                                      
      IF EXISTS (SELECT 1

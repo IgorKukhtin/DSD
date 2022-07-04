@@ -24,6 +24,7 @@ BEGIN
             WHEN zc_Movement_OrderInternal() THEN  zc_FormClass_OrderInternal()
             WHEN zc_Movement_Over() THEN  zc_FormClass_Over()
             WHEN zc_Movement_OrderExternal() THEN  zc_FormClass_OrderExternal()
+            WHEN zc_Movement_Layout() THEN  zc_FormClass_Layout()
         END
     INTO
         outFormClass
@@ -44,3 +45,6 @@ ALTER FUNCTION gpGet_MovementFormClass (Integer,TVarChar) OWNER TO postgres;
 -- тест
 -- select * from gpGet_MovementFormClass(inMovementId := 1591983  ,  inSession := '3');
 
+
+
+select * from gpGet_MovementFormClass(inMovementId := 20462223 ,  inSession := '3');

@@ -123,7 +123,7 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
     end
     object cxLabel3: TcxLabel
       Left = 289
-      Top = 32
+      Top = 29
       Caption = #1058#1086#1074#1072#1088
     end
     object edGoods: TcxButtonEdit
@@ -141,6 +141,14 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end
       item
         Component = deEnd
         Properties.Strings = (
@@ -272,6 +280,19 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -451,14 +472,14 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
     Params = <
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
