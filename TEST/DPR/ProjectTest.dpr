@@ -1370,7 +1370,9 @@ uses
   Report_OrderExternal_Update in '..\..\Forms\Report\Report_OrderExternal_Update.pas' {Report_OrderExternal_UpdateForm: TParentForm},
   Report_OrderExternal_UpdateDialog in '..\..\Forms\Report\Report_OrderExternal_UpdateDialog.pas' {Report_OrderExternal_UpdateDialogForm: TParentForm},
   OrderExternal in '..\..\Forms\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
-  OrderExternalJournal_byReport in '..\..\Forms\Document\OrderExternalJournal_byReport.pas' {OrderExternalJournal_byReportForm: TParentForm};
+  OrderExternalJournal_byReport in '..\..\Forms\Document\OrderExternalJournal_byReport.pas' {OrderExternalJournal_byReportForm: TParentForm},
+  Report_SheetWorkTime_UpdateDialog in '..\..\Forms\Report\Report_SheetWorkTime_UpdateDialog.pas' {Report_SheetWorkTime_UpdateDialogForm: TParentForm},
+  Report_SheetWorkTime_Update in '..\..\Forms\Report\Report_SheetWorkTime_Update.pas' {Report_SheetWorkTime_UpdateForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -4758,6 +4758,14 @@
 				<Form>OrderExternalJournal_byReportForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SheetWorkTime_UpdateDialog.pas">
+				<Form>Report_SheetWorkTime_UpdateDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SheetWorkTime_Update.pas">
+				<Form>Report_SheetWorkTime_UpdateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
