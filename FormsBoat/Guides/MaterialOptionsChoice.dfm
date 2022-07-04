@@ -13,7 +13,6 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -472,14 +471,14 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -621,12 +620,27 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ModelName_full'
+        Name = 'TextValue'
         Value = ''
         Component = GuidesProdColorPattern
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 344
@@ -647,6 +661,19 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
         Component = GuidesProdColorPattern
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     Left = 192

@@ -643,7 +643,7 @@
     object actProduct: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1051#1086#1076#1082#1080
+      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' '#1051#1086#1076#1082#1080
       FormName = 'TProductForm'
       FormNameParam.Value = 'TProductForm'
       FormNameParam.DataType = ftString

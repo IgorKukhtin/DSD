@@ -1096,6 +1096,14 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentVert = vaCenter
                 Width = 100
               end
+              object MaterialOptionsName_ch2: TcxGridDBColumn
+                Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
+                DataBinding.FieldName = 'MaterialOptionsName'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 70
+              end
               object GoodsGroupNameFull_ch2: TcxGridDBColumn
                 Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
                 DataBinding.FieldName = 'GoodsGroupNameFull'

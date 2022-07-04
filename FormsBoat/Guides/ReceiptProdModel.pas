@@ -194,6 +194,8 @@ type
     actGridGoodsToExcel: TdsdGridToExcel;
     bbGridGoodsToExcel: TdxBarButton;
     MaterialOptionsName_ch2: TcxGridDBColumn;
+    MaterialOptionsName: TcxGridDBColumn;
+    ProdColorName_pcp: TcxGridDBColumn;
   private
     { Private declarations }
   public

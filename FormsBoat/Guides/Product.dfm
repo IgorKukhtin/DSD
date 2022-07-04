@@ -1,7 +1,7 @@
 object ProductForm: TProductForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Boat>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' '#1051#1086#1076#1082#1080'>'
   ClientHeight = 435
   ClientWidth = 1188
   Color = clBtnFace
@@ -240,10 +240,11 @@ object ProductForm: TProductForm
           Width = 80
         end
         object ProdColorName: TcxGridDBColumn
-          Caption = '~Color'
+          Caption = '~Farbe'
           DataBinding.FieldName = 'ProdColorName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = 'Farbe Boat Structure'
           Options.Editing = False
           Width = 100
         end
@@ -810,7 +811,7 @@ object ProductForm: TProductForm
           Width = 100
         end
         object MaterialOptionsName_ch2: TcxGridDBColumn
-          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
           DataBinding.FieldName = 'MaterialOptionsName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -2229,6 +2230,21 @@ object ProductForm: TProductForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternId'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ColorPatternId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternName'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ColorPatternName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2324,6 +2340,21 @@ object ProductForm: TProductForm
           Component = ProdOptItemsCDS
           ComponentItem = 'SalePriceWVAT'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaterialOptionsId'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'MaterialOptionsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaterialOptionsName'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'MaterialOptionsName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
@@ -3403,11 +3434,11 @@ object ProductForm: TProductForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inProdOptionsId'
+        Name = 'ioProdOptionsId'
         Value = Null
         Component = ProdOptItemsCDS
         ComponentItem = 'ProdOptionsId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

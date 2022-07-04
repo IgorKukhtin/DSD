@@ -385,6 +385,7 @@ type
     spSelectPrintStructureGoods: TdsdStoredProc;
     actPrintStructureGoods: TdsdPrintAction;
     bb: TdxBarButton;
+    MaterialOptionsName_ch2: TcxGridDBColumn;
   private
   public
   end;

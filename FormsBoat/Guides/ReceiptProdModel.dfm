@@ -13,7 +13,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -161,6 +160,23 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1052#1086#1090#1086#1088
+          Options.Editing = False
+          Width = 80
+        end
+        object MaterialOptionsName: TcxGridDBColumn
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
+          DataBinding.FieldName = 'MaterialOptionsName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
+        end
+        object ProdColorName_pcp: TcxGridDBColumn
+          Caption = '~Farbe'
+          DataBinding.FieldName = 'ProdColorName_pcp'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = 'Farbe Boat Structure'
           Options.Editing = False
           Width = 80
         end

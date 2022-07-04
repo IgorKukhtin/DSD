@@ -114,7 +114,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         OptionsCustomize.ColumnsQuickCustomization = True
         OptionsData.Deleting = False
         OptionsData.DeletingConfirmation = False
-        OptionsData.Editing = False
         OptionsData.Inserting = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
@@ -173,11 +172,19 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           DataBinding.FieldName = 'MaterialOptionsName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 70
         end
         object ProdColorName_pcp: TcxGridDBColumn
-          Caption = 'Farbe'
+          Caption = '~Farbe'
           DataBinding.FieldName = 'ProdColorName_pcp'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = 'Farbe Boat Structure'
@@ -201,37 +208,61 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         object GoodsGroupNameFull: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
           DataBinding.FieldName = 'GoodsGroupNameFull'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
           Width = 150
         end
         object GoodsGroupName: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072
           DataBinding.FieldName = 'GoodsGroupName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
           Width = 172
         end
         object GoodsCode: TcxGridDBColumn
           Caption = 'Interne Nr'
           DataBinding.FieldName = 'GoodsCode'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
-          Options.Editing = False
           Width = 60
         end
         object GoodsName: TcxGridDBColumn
           Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
           DataBinding.FieldName = 'GoodsName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
           Width = 164
         end
         object MeasureName: TcxGridDBColumn
@@ -1066,6 +1097,15 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentVert = vaCenter
           HeaderGlyphAlignmentHorz = taCenter
           Width = 100
+        end
+        object ColorPatternName_ch2: TcxGridDBColumn
+          Caption = #1064#1072#1073#1083#1086#1085' Boat Structure:'
+          DataBinding.FieldName = 'ColorPatternName'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
         end
         object isErased_ch2: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
@@ -1936,9 +1976,24 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Name = 'ProdColorPatternName'
           Value = Null
           Component = Child2CDS
-          ComponentItem = 'ProdColorPatternName'
+          ComponentItem = 'ProdColorPatternName_all'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

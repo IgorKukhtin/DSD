@@ -134,13 +134,12 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
         Width = 55
       end
       object MaterialOptionsName: TcxGridDBColumn
-        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
         DataBinding.FieldName = 'MaterialOptionsName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 100
       end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -394,6 +393,16 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object NPP_pcp: TcxGridDBColumn
+        Caption = '***'#8470' '#1087'/'#1087
+        DataBinding.FieldName = 'NPP_pcp'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1087'/'#1087' - '#1087#1088#1080#1086#1088#1080#1090#1077#1090' '#1076#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1054#1087#1094#1080#1081
+        Options.Editing = False
+        Width = 55
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -856,6 +865,21 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ProdColorName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaterialOptionsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MaterialOptionsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaterialOptionsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MaterialOptionsName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
