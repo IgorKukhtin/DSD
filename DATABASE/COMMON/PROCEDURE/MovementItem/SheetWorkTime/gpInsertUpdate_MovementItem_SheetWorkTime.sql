@@ -169,7 +169,7 @@ BEGIN
                                AND Object_Personal_View.MemberId   = inMemberId
                                AND Object_Personal_View.PositionId = inPositionId
                             )
-               AND vbUserId <> 5
+             --AND vbUserId <> 5
             THEN
                 RAISE EXCEPTION 'Ошибка. Сотрудник <%> <%>  <%> уволен с <%>.Ввод в табеле закрыт.'
                               , lfGet_Object_ValueData_sh (inMemberId)
@@ -282,7 +282,7 @@ BEGIN
         
         IF ioValue = '-' AND inIsPersonalGroup = TRUE
         THEN
-            IF ioTypeId IN (zc_Enum_WorkTimeKind_WorkN(), zc_Enum_WorkTimeKind_WorkD(), 8302788, 8302790)
+            IF ioTypeId IN (zc_Enum_WorkTimeKind_WorkD(), zc_Enum_WorkTimeKind_WorkN(), 8302788, 8302790)
             THEN
                 ioValue:= (SELECT zfCalc_ViewWorkHour (0, OS.ValueData) FROM ObjectString AS OS WHERE OS.ObjectId = ioTypeId AND OS.DescId = zc_objectString_WorkTimeKind_ShortName());
             ELSE ioValue:= 0;
@@ -410,11 +410,13 @@ BEGIN
                        , CHR (13)
                        , lfGet_Object_ValueData_sh (inStorageLineId) || '('|| COALESCE (inStorageLineId, 0) :: TVarChar || ')'
                        , CHR (13)
-                       , lfGet_Object_ValueData_sh (ioWorkTimeKindId_key)
+                       , lfGet_Object_ValueData_sh (ioWorkTimeKindId_key) || '('|| COALESCE (ioWorkTimeKindId_key, 0) :: TVarChar || ')'
                        , CHR (13)
                        , inIsPersonalGroup
                        , CHR (13)
                        , ioValue
+                       , CHR (13)
+                       , vbValue
                         ;
     END IF;
 
@@ -451,6 +453,7 @@ BEGIN
                          LIMIT CASE WHEN inIsPersonalGroup = TRUE THEN 1 ELSE 100 END
                          );
                          
+
      -- замена 
      IF inIsPersonalGroup = TRUE
      THEN
@@ -531,7 +534,7 @@ BEGIN
     if 0 = COALESCE ((SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId), 0)
        -- AND vbUserId <> 5
     then
-        RAISE EXCEPTION 'Ошибка.Данные протокола не сохранены (%)%<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%>'
+        RAISE EXCEPTION 'Ошибка.Данные протокола не сохранены (%)%<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%>'
                        , vbMovementItemId
                        , CHR (13)
                        , lfGet_Object_ValueData_sh (inMemberId) || '('|| inMemberId :: TVarChar || ')'
@@ -544,29 +547,44 @@ BEGIN
                        , CHR (13)
                        , lfGet_Object_ValueData_sh (inStorageLineId) || '('|| COALESCE (inStorageLineId, 0) :: TVarChar || ')'
                        , CHR (13)
-                       , lfGet_Object_ValueData_sh (ioWorkTimeKindId_key)
+                       , lfGet_Object_ValueData_sh (ioWorkTimeKindId_key) || '('|| COALESCE (ioWorkTimeKindId_key, 0) :: TVarChar || ')'
                        , CHR (13)
                        , inIsPersonalGroup
                        , CHR (13)
                        , ioValue
+                       , CHR (13)
+                       , vbValue
                       ;
 
     end if;
 
     -- для Admin
-    if vbUserId = 5 AND 1=0
-    then
-        RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>  -  <%>  <%>'
-                          , zfConvert_DateToString (inOperDate)
-                          , inUnitId
-                          , lfGet_Object_ValueData_sh (inPositionId)
-                          , lfGet_Object_ValueData_sh (ioTypeId)
-                          , zfConvert_DateToString (vbEndDate)
-                          , (SELECT lfGet_Object_ValueData_sh (MILO.ObjectId) FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId AND MILO.DescId = zc_MILinkObject_WorkTimeKind())
-                          , vbMovementItemId
-                           ;
-                           
-    end if;
+if 1=1 and vbUserId = 5 AND ioWorkTimeKindId_key = 8302790
+then 
+        RAISE EXCEPTION 'Ошибка.Данные (%)%<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%>'
+                       , vbMovementItemId
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inMemberId) || '('|| inMemberId :: TVarChar || ')'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inPositionId) || '('|| COALESCE (inPositionId, 0) :: TVarChar || ')'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inPositionLevelId) || '('|| COALESCE (inPositionLevelId, 0) :: TVarChar || ')'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inPersonalGroupId) || '('|| COALESCE (inPersonalGroupId, 0) :: TVarChar || ')'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inStorageLineId) || '('|| COALESCE (inStorageLineId, 0) :: TVarChar || ')'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (ioWorkTimeKindId_key) || '('|| COALESCE (ioWorkTimeKindId_key, 0) :: TVarChar || ')'
+                       , CHR (13)
+                       , inIsPersonalGroup
+                       , CHR (13)
+                       , ioValue
+                       , CHR (13)
+                       , vbValue
+                       , CHR (13)
+                       , (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbMovementItemId)
+                      ;
+end if;
 
 
 END;

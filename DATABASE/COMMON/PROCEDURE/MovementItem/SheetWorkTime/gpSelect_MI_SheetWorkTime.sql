@@ -195,6 +195,13 @@ BEGIN
 
                                  LEFT JOIN gpSelect_Object_Calendar (vbStartDate, vbEndDate, inSession) AS tmpCalendar ON tmpCalendar.Value = tmpOperDate.OperDate
                             WHERE MovementLinkObject_Unit.ObjectId = inUnitId
+                              AND (MI_SheetWorkTime.Amount <> 0
+                                OR MIObject_WorkTimeKind.ObjectId NOT IN (zc_Enum_WorkTimeKind_Work()
+                                                                        , zc_Enum_WorkTimeKind_WorkD(), 8302788
+                                                                        , zc_Enum_WorkTimeKind_WorkN(), 8302790
+                                                                         )
+                                  )
+
                            )
           , tmpMovement AS (SELECT tmpMovement_all.OperDate
                                --, CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN 0 ELSE MI_SheetWorkTime.Amount END AS Amount
@@ -215,7 +222,7 @@ BEGIN
                                              THEN 2237042 -- день 12ч
 
                                         -- если за мес€ц есть день + в этом дне Ќ≈“ день
-                                        WHEN tmpMovement_all_d_all.WorkTimeKindId_key IS NOT NULL
+                                      /*WHEN tmpMovement_all_d_all.WorkTimeKindId_key IS NOT NULL
                                          AND tmpMovement_all_d.WorkTimeKindId_key IS NULL
                                              THEN 2237042 -- день 12ч
 
@@ -223,7 +230,7 @@ BEGIN
                                         WHEN tmpMovement_all_n_all.WorkTimeKindId_key IS NOT NULL
                                          AND tmpMovement_all_n.WorkTimeKindId_key IS NULL
                                              THEN 2237043 -- ночь 12ч
-
+*/
                                         ELSE tmpMovement_all.WorkTimeKindId_key
 
                                    END AS WorkTimeKindId_key

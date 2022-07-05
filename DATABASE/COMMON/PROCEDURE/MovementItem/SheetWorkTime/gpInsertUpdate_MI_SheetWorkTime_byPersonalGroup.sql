@@ -72,9 +72,9 @@ BEGIN
                                END AS WorkTimeKindId
                              */
                           , CASE WHEN MovementItem.isErased = TRUE AND MovementLinkObject_PairDay.ObjectId = 7438171
-                                      THEN  zc_Enum_WorkTimeKind_WorkN() -- ночь
+                                      THEN zc_Enum_WorkTimeKind_WorkN() -- ночь
                                  WHEN MovementItem.isErased = TRUE AND MovementLinkObject_PairDay.ObjectId = 7438170 
-                                      THEN   zc_Enum_WorkTimeKind_WorkD()-- день
+                                      THEN zc_Enum_WorkTimeKind_WorkD()-- день
                                  ELSE MILinkObject_WorkTimeKind.ObjectId
                             END AS WorkTimeKindId
                           , CASE WHEN inIsDel = FALSE THEN MovementItem.Amount ELSE 0 END AS Amount
