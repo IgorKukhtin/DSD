@@ -22,15 +22,22 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsIrna   Boolean;
 
    DECLARE vbIsConstraint Boolean;
    DECLARE vbObjectId_Constraint Integer;
    DECLARE vbObjectId_Branch_Constraint Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Juridical_Basis());
-   --vbUserId:= lpGetUserBySession (inSession);
+   IF inSession <> '80373'
+   THEN
+       vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Juridical_Basis());
+   ELSE
+       vbUserId:= lpGetUserBySession (inSession);
+   END IF;
 
+   -- !!!Ирна!!!
+   vbIsIrna:= zfCalc_User_isIrna (vbUserId);
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId);
@@ -101,8 +108,14 @@ BEGIN
    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
           OR vbIsConstraint = FALSE
          )
-     AND (ObjectBoolean_isCorporate.ValueData = TRUE
-          OR Object_Juridical.Id = 15505 -- ДУКО ТОВ 
+     AND (((ObjectBoolean_isCorporate.ValueData = TRUE
+         OR Object_Juridical.Id = 15505 -- ДУКО ТОВ 
+           )
+            AND COALESCE (vbIsIrna, FALSE)  = FALSE
+          )
+       OR (Object_Juridical.Id = 15512 -- Ірна-1 Фірма ТОВ
+           AND COALESCE (vbIsIrna, TRUE)  = TRUE
+          )
          )
    ;
   

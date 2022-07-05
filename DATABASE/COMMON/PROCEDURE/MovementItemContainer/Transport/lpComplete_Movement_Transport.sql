@@ -161,9 +161,9 @@ BEGIN
 
 
      -- !!!Проверка!!!
-     IF vbJuridicalId_Basis = 0
+     IF COALESCE (vbJuridicalId_Basis, 0) = 0
      THEN
-        RAISE EXCEPTION 'Ошибка. Место отправки не определено.';
+        RAISE EXCEPTION 'Ошибка. Не определено <Главное Юр.лицо> для <%>.', lfGet_Object_ValueData_sh (vbUnitId_Forwarding);
      END IF;
 
 

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_SheetWorkTime_Period(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inJuridicalBasisId  Integer   , -- гл. юр.лицо
-    IN inIsDetail          Boolean   , -- 
+    IN inIsDetail          Boolean   , --
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime
@@ -113,26 +113,24 @@ BEGIN
                         WHERE (Object_Personal_View.MemberId = vbMemberId OR vbMemberId = 0)
                        )*/
 
-          , tmpMovement AS (SELECT DISTINCT MovementLinkObject_Unit.ObjectId AS UnitId, DATE_TRUNC ('MONTH', Movement.OperDate) AS OperDate
-                                          , CASE WHEN inIsDetail = TRUE THEN Movement.InvNumber  ELSE ''   END :: TVarChar  AS InvNumber_detail
-                                          , CASE WHEN inIsDetail = TRUE THEN Movement.OperDate   ELSE NULL END :: TDateTime AS OperDate_detail
-                                          , (Object_Insert.ValueData)             AS InsertName
-                                          , (MovementDate_Insert.ValueData)       AS InsertDate
-                                          , (Object_Update.ValueData)             AS UpdateName
-                                          , (MovementDate_Update.ValueData)       AS UpdateDate
-                                        --, CASE WHEN vbUserId = zfCalc_UserAdmin() :: Integer THEN Movement.Id ELSE 0 END AS MovementId
-                                        --, 0 AS MovementId
-                                          , CASE WHEN inIsDetail = TRUE THEN Movement.Id ELSE 0 END AS MovementId
+          , tmpMovement AS (SELECT MovementLinkObject_Unit.ObjectId AS UnitId, DATE_TRUNC ('MONTH', Movement.OperDate) AS OperDate
+                                 , CASE WHEN inIsDetail = TRUE THEN Movement.InvNumber  ELSE ''   END :: TVarChar  AS InvNumber_detail
+                                 , CASE WHEN inIsDetail = TRUE THEN Movement.OperDate   ELSE NULL END :: TDateTime AS OperDate_detail
+                                 , (Object_Insert.ValueData)             AS InsertName
+                                 , (MovementDate_Insert.ValueData)       AS InsertDate
+                                 , (Object_Update.ValueData)             AS UpdateName
+                                 , (MovementDate_Update.ValueData)       AS UpdateDate
+                                 , CASE WHEN inIsDetail = TRUE THEN Movement.Id ELSE 0 END AS MovementId
 
-                                          , Object_CheckedHead.Id                     AS CheckedHeadId
-                                          , Object_CheckedHead.ValueData              AS CheckedHeadName
-                                          , Object_CheckedPersonal.Id                 AS CheckedPersonalId
-                                          , Object_CheckedPersonal.ValueData          AS CheckedPersonalName
+                                 , MAX (Object_CheckedHead.Id)                     AS CheckedHeadId
+                                 , MAX (Object_CheckedHead.ValueData)              AS CheckedHeadName
+                                 , MAX (Object_CheckedPersonal.Id)                 AS CheckedPersonalId
+                                 , MAX (Object_CheckedPersonal.ValueData)          AS CheckedPersonalName
 
-                                          , MovementDate_CheckedHead.ValueData        :: TDateTime AS CheckedHead_date
-                                          , MovementDate_CheckedPersonal.ValueData    :: TDateTime AS CheckedPersonal_date
-                                          , COALESCE (MovementBoolean_CheckedHead.ValueData, False)     :: Boolean   AS isCheckedHead
-                                          , COALESCE (MovementBoolean_CheckedPersonal.ValueData, False) :: Boolean   AS isCheckedPersonal
+                                 , MAX (MovementDate_CheckedHead.ValueData)        :: TDateTime AS CheckedHead_date
+                                 , MAX (MovementDate_CheckedPersonal.ValueData)    :: TDateTime AS CheckedPersonal_date
+                                 , MAX (CASE WHEN COALESCE (MovementBoolean_CheckedHead.ValueData, FALSE)     = TRUE THEN 1 ELSE 0 END)  AS isCheckedHead
+                                 , MAX (CASE WHEN COALESCE (MovementBoolean_CheckedPersonal.ValueData, FALSE) = TRUE THEN 1 ELSE 0 END)  AS isCheckedPersonal
 
 
                             FROM Movement
@@ -189,6 +187,26 @@ BEGIN
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.StatusId <> zc_Enum_Status_Erased()
                               AND (tmpList.UnitId > 0 OR vbMemberId = 0)
+
+                            GROUP BY MovementLinkObject_Unit.ObjectId
+                                   , DATE_TRUNC ('MONTH', Movement.OperDate)
+                                   , CASE WHEN inIsDetail = TRUE THEN Movement.InvNumber  ELSE ''   END :: TVarChar
+                                   , CASE WHEN inIsDetail = TRUE THEN Movement.OperDate   ELSE NULL END :: TDateTime
+                                   , (Object_Insert.ValueData)
+                                   , (MovementDate_Insert.ValueData)
+                                   , (Object_Update.ValueData)
+                                   , (MovementDate_Update.ValueData)
+                                   , CASE WHEN inIsDetail = TRUE THEN Movement.Id ELSE 0 END
+
+                                   ,  (Object_CheckedHead.Id)
+                                   ,  (Object_CheckedHead.ValueData)
+                                   ,  (Object_CheckedPersonal.Id)
+                                   ,  (Object_CheckedPersonal.ValueData)
+
+                                   ,  (MovementDate_CheckedHead.ValueData)        :: TDateTime
+                                   ,  (MovementDate_CheckedPersonal.ValueData)    :: TDateTime
+                                   ,  (CASE WHEN COALESCE (MovementBoolean_CheckedHead.ValueData, FALSE)     = TRUE THEN 1 ELSE 0 END)
+                                   ,  (CASE WHEN COALESCE (MovementBoolean_CheckedPersonal.ValueData, FALSE) = TRUE THEN 1 ELSE 0 END)
                            )
           , tmpPeriod AS (SELECT tmp.OperDate, tmpList.UnitId
                           FROM (SELECT generate_series (vbStartDate, vbEndDate, '1 MONTH' :: INTERVAL) AS OperDate) AS tmp
@@ -203,15 +221,15 @@ BEGIN
            , CASE WHEN tmpMovement.UnitId IS NOT NULL THEN TRUE ELSE FALSE END :: Boolean AS isComplete
            , tmpMovement.MovementId
 
-           , tmpMovement.CheckedHeadId
-           , tmpMovement.CheckedHeadName
-           , tmpMovement.CheckedPersonalId
-           , tmpMovement.CheckedPersonalName
+           , tmpMovement.CheckedHeadId        :: Integer
+           , tmpMovement.CheckedHeadName      :: TVarChar
+           , tmpMovement.CheckedPersonalId    :: Integer
+           , tmpMovement.CheckedPersonalName  :: TVarChar
 
-           , tmpMovement.CheckedHead_date :: TDateTime
+           , tmpMovement.CheckedHead_date     :: TDateTime
            , tmpMovement.CheckedPersonal_date :: TDateTime
-           , COALESCE (tmpMovement.isCheckedHead,FALSE)     :: Boolean AS isCheckedHead
-           , COALESCE (tmpMovement.isCheckedPersonal,FALSE) :: Boolean AS isCheckedPersonal
+           , CASE WHEN tmpMovement.isCheckedHead     = 1 THEN TRUE ELSE FALSE END :: Boolean AS isCheckedHead
+           , CASE WHEN tmpMovement.isCheckedPersonal = 1 THEN TRUE ELSE FALSE END :: Boolean AS isCheckedPersonal
 
            , tmpMovement.InsertName
            , tmpMovement.InsertDate

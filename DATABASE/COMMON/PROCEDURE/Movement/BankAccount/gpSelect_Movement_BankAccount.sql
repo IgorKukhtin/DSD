@@ -42,6 +42,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSI
 AS
 $BODY$
    DECLARE vbUserId   Integer;
+   DECLARE vbIsIrna   Boolean;
    DECLARE vbMemberId Integer;
    DECLARE vbIsExists Boolean;
    DECLARE vbCount    Integer;
@@ -49,6 +50,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_BankAccount());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Ирна!!!
+     vbIsIrna:= zfCalc_User_isIrna (vbUserId);
 
      -- проверка доступа
      vbMemberId := (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
@@ -158,7 +162,7 @@ BEGIN
                                      WHERE CASE WHEN inJuridicalBasisId = zc_Juridical_Irna()  THEN COALESCE (Object_BankAccount_View.isIrna, FALSE) = TRUE 
                                                 ELSE  COALESCE (Object_BankAccount_View.isIrna, FALSE) = FALSE  --inJuridicalBasisId = zc_Juridical_Basis() THEN
                                            END
-                                     )
+                                    )
 
 
        SELECT
@@ -275,8 +279,8 @@ BEGIN
                                     AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
             --
             LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-            --показываем только нужные расчетные счета, или Алан или Ирна
-            INNER JOIN tmpObject_BankAccount ON Object_BankAccount_View ON Object_BankAccount_View.Id = MovementItem.ObjectId
+            -- показываем только нужные расчетные счета, или Алан или Ирна
+            INNER JOIN tmpObject_BankAccount AS Object_BankAccount_View ON Object_BankAccount_View.Id = MovementItem.ObjectId
             
             LEFT JOIN ObjectHistory_JuridicalDetails_View AS View_JuridicalDetails_BankAccount ON View_JuridicalDetails_BankAccount.JuridicalId = Object_BankAccount_View.JuridicalId
 

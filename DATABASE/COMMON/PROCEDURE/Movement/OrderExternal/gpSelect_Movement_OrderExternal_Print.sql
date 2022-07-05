@@ -380,6 +380,7 @@ BEGIN
              , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
              , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
              , ObjectString_CodeSticker.ValueData   AS CodeSticker
+             , ObjectString_Goods_ShortName.ValueData AS GoodsBoxName_short
         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
              ) AS tmpGoodsProperty
              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -417,17 +418,27 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
-        WHERE Object_GoodsPropertyValue.ValueData  <> ''
-           OR ObjectString_BarCode.ValueData       <> ''
-           OR ObjectString_Article.ValueData       <> ''
-           OR ObjectString_BarCodeGLN.ValueData    <> ''
-           OR ObjectString_ArticleGLN.ValueData    <> ''
-           OR ObjectString_CodeSticker.ValueData   <> ''
+
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                                  ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                 AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+             LEFT JOIN ObjectString AS ObjectString_Goods_ShortName
+                                    ON ObjectString_Goods_ShortName.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
+                                   AND ObjectString_Goods_ShortName.DescId   = zc_ObjectString_Goods_ShortName()
+
+        WHERE Object_GoodsPropertyValue.ValueData    <> ''
+           OR ObjectString_BarCode.ValueData         <> ''
+           OR ObjectString_Article.ValueData         <> ''
+           OR ObjectString_BarCodeGLN.ValueData      <> ''
+           OR ObjectString_ArticleGLN.ValueData      <> ''
+           OR ObjectString_CodeSticker.ValueData     <> ''
+           OR ObjectString_Goods_ShortName.ValueData <> ''
        )
      , tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.Article
              , tmpObject_GoodsPropertyValue.BoxCount
+             , tmpObject_GoodsPropertyValue.GoodsBoxName_short
         FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
@@ -540,6 +551,7 @@ BEGIN
            , Object_Goods.ValueData                     AS GoodsName
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, '') :: TVarChar  AS CodeSticker
+           , COALESCE (tmpObject_GoodsPropertyValue.GoodsBoxName_short, tmpObject_GoodsPropertyValueGroup.GoodsBoxName_short) AS GoodsBoxName_short
            
            , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) > 0
                        THEN CAST ((tmpMI.Amount + tmpMI.AmountSecond) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) AS NUMERIC (16, 4))

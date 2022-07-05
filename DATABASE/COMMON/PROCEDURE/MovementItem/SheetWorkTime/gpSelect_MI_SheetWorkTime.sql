@@ -196,6 +196,7 @@ BEGIN
                                  LEFT JOIN gpSelect_Object_Calendar (vbStartDate, vbEndDate, inSession) AS tmpCalendar ON tmpCalendar.Value = tmpOperDate.OperDate
                             WHERE MovementLinkObject_Unit.ObjectId = inUnitId
                               AND (MI_SheetWorkTime.Amount <> 0
+                                OR inUnitId <> 8451
                                 OR MIObject_WorkTimeKind.ObjectId NOT IN (zc_Enum_WorkTimeKind_Work()
                                                                         , zc_Enum_WorkTimeKind_WorkD(), 8302788
                                                                         , zc_Enum_WorkTimeKind_WorkN(), 8302790
