@@ -21,7 +21,8 @@ CREATE OR REPLACE FUNCTION gpReport_SheetWorkTime_Update(
                , PositionLevelId Integer
                , PositionLevelName   TVarChar
                , PersonalGroupId Integer
-               , PersonalGroupName   TVarChar
+               , PersonalGroupName   TVarChar 
+               , StorageLineId Integer, StorageLineName TVarChar
                , WorkTimeKindId Integer
                , WorkTimeKindName   TVarChar
                , ShortName TVarChar
@@ -115,8 +116,8 @@ BEGIN
          , Object_PositionLevel.ValueData  AS PositionLevelName
          , Object_PersonalGroup.Id         AS PersonalGroupId
          , Object_PersonalGroup.ValueData  AS PersonalGroupName
-         , Object_StorageLine.Id               AS StorageLineId
-         , Object_StorageLine.ValueData        AS StorageLineName
+         , Object_StorageLine.Id           AS StorageLineId
+         , Object_StorageLine.ValueData    AS StorageLineName
          , Object_WorkTimeKind.Id          AS WorkTimeKindId
          , Object_WorkTimeKind.ValueData   AS WorkTimeKindName 
          , tmpMI.ShortName
