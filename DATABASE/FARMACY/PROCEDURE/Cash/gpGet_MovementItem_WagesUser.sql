@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TDateTime
              , Result TFloat, Attempts Integer, Status TVarChar, DateTimeTest TDateTime
-             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaIntentionalPeresort TFloat, SummaSUN1 TFloat, SummaFine TFloat 
+             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaIntentionalPeresort TFloat, SummaSUN1 TFloat, SummaOrderConfirmation TFloat, SummaFine TFloat 
              , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat, SummaMoneyBoxUsed TFloat
              , SummaTotal TFloat
              , PasswordEHels TVarChar
@@ -158,13 +158,14 @@ BEGIN
                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                     AND COALESCE (MovementBoolean_Deferred.ValueData, False) = True
                                   GROUP BY MovementLinkObject_Unit.ObjectId)
-              , tmpAdditionalExpenses AS (SELECT MIFloat_SummaCleaning.ValueData     AS SummaCleaning
-                                               , MIFloat_SummaSP.ValueData           AS SummaSP
-                                               , MIFloat_SummaOther.ValueData        AS SummaOther
-                                               , MIFloat_ValidationResults.ValueData AS SummaValidationResults
-                                               , MIFloat_IntentionalPeresort.ValueData AS SummaIntentionalPeresort
-                                               , MIFloat_SummaSUN1.ValueData         AS SummaSUN1 
-                                               , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
+              , tmpAdditionalExpenses AS (SELECT MIFloat_SummaCleaning.ValueData           AS SummaCleaning
+                                               , MIFloat_SummaSP.ValueData                 AS SummaSP
+                                               , MIFloat_SummaOther.ValueData              AS SummaOther
+                                               , MIFloat_ValidationResults.ValueData       AS SummaValidationResults
+                                               , MIFloat_IntentionalPeresort.ValueData     AS SummaIntentionalPeresort
+                                               , MIFloat_SummaSUN1.ValueData               AS SummaSUN1 
+                                               , MIFloat_SummaOrderConfirmation.ValueData  AS SummaOrderConfirmation
+                                               , tmpTechnicalRediscount.SummWages          AS SummaTechnicalRediscount
                               --                 , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
                                                , CASE WHEN COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) > 0 THEN 
                                                  COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) END::TFloat AS SummaMoneyBox
@@ -196,6 +197,10 @@ BEGIN
                                                 LEFT JOIN MovementItemFloat AS MIFloat_SummaSUN1
                                                                             ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
                                                                            AND MIFloat_SummaSUN1.DescId = zc_MIFloat_SummaSUN1()
+
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaOrderConfirmation
+                                                                            ON MIFloat_SummaOrderConfirmation.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaOrderConfirmation.DescId = zc_MIFloat_SummaOrderConfirmation()
 
                                                 LEFT JOIN MovementItemFloat AS MIFloat_SummaTechnicalRediscount
                                                                             ON MIFloat_SummaTechnicalRediscount.MovementItemId = MovementItem.Id
@@ -294,6 +299,7 @@ BEGIN
                  , tmpAdditionalExpenses.SummaValidationResults AS SummaValidationResults
                  , tmpAdditionalExpenses.SummaIntentionalPeresort AS SummaIntentionalPeresort
                  , tmpAdditionalExpenses.SummaSUN1              AS SummaSUN1
+                 , tmpAdditionalExpenses.SummaOrderConfirmation AS SummaOrderConfirmation
                  , FoundPositionsSUN.SummaFine                  AS SummaFine
                  , tmpAdditionalExpenses.SummaTechnicalRediscount AS SummaTechnicalRediscount
                  , tmpAdditionalExpenses.SummaMoneyBox          AS SummaMoneyBox

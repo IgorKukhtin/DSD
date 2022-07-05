@@ -43,6 +43,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DeySupplInSUN2 Integer
              , ExpressVIPConfirm Integer
              , MinPriceSale TFloat
+             , DeviationsPrice1303 TFloat
              ) AS
 $BODY$
 BEGIN
@@ -91,6 +92,7 @@ BEGIN
         , ObjectFloat_CashSettings_DeySupplInSUN2.ValueData::Integer               AS DeySupplInSUN2
         , ObjectFloat_CashSettings_ExpressVIPConfirm.ValueData::Integer            AS ExpressVIPConfirm
         , ObjectFloat_CashSettings_MinPriceSale.ValueData                          AS MinPriceSale
+        , ObjectFloat_CashSettings_DeviationsPrice1303.ValueData                   AS DeviationsPrice1303
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -210,6 +212,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_MinPriceSale
                               ON ObjectFloat_CashSettings_MinPriceSale.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_MinPriceSale.DescId = zc_ObjectFloat_CashSettings_MinPriceSale()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DeviationsPrice1303
+                              ON ObjectFloat_CashSettings_DeviationsPrice1303.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_DeviationsPrice1303.DescId = zc_ObjectFloat_CashSettings_DeviationsPrice1303()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;

@@ -74,6 +74,7 @@ type
     dxBarButton14: TdxBarButton;
     SummaIntentionalPeresort: TcxGridDBBandedColumn;
     SummaPercentIC: TcxGridDBBandedColumn;
+    SummaOrderConfirmation: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

@@ -100,6 +100,8 @@ type
     cxLabel31: TcxLabel;
     ceApplicationAward: TcxCurrencyEdit;
     cxLabel32: TcxLabel;
+    ceSummaOrderConfirmation: TcxCurrencyEdit;
+    cxLabel33: TcxLabel;
   private
     { Private declarations }
   public

@@ -162,7 +162,7 @@ begin
     FStyle.TextColor := clRed;
   if (ARecord.Values[colPriceOOC1303.Index] <> Null) and
     (ARecord.Values[colPriceOOC1303.Index] < ARecord.Values[colJuridicalPrice.Index]) and
-    ((ARecord.Values[colJuridicalPrice.Index]/ARecord.Values[colPriceOOC1303.Index] * 100.0 - 100) > 1.0)
+    ((ARecord.Values[colJuridicalPrice.Index]/ARecord.Values[colPriceOOC1303.Index] * 100.0 - 100) > MainCashForm.UnitConfigCDS.FindField('DeviationsPrice1303').AsCurrency)
      then FStyle.Color := TColor($0083D3FA);
   AStyle := FStyle;
 end;

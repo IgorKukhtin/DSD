@@ -93,6 +93,8 @@ type
     cxLabel29: TcxLabel;
     ceMinPriceSale: TcxCurrencyEdit;
     cxLabel30: TcxLabel;
+    ceDeviationsPrice1303: TcxCurrencyEdit;
+    cxLabel31: TcxLabel;
   private
     { Private declarations }
   public
