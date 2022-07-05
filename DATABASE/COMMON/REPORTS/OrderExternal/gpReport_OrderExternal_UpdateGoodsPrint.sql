@@ -279,12 +279,23 @@ BEGIN
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGroup.GoodsKindId
 		  LEFT JOIN tmpColumn ON tmpColumn.GroupPrint = tmpGroup.GroupPrint
 
-where   Object_Goods.ObjectCode = 101
+--where   Object_Goods.ObjectCode = 101
 	   ORDER BY tmpGroup.GroupPrint
 			  , Object_Goods.ValueData
               , Object_GoodsKind.ValueData
       ;
-     RETURN NEXT Cursor1;
+     RETURN NEXT Cursor1;    
+         
+     
+     OPEN Cursor2 FOR         -- как-то мне не нравится, лучше пусть в назв. колонок будет
+     
+     SELECT _Result.GroupPrint
+          , _Result.OperDate_inf
+     FROM  _Result
+     ORDER BY _Result.GroupPrint
+            , _Result.OperDate_inf
+     ;
+     RETURN NEXT Cursor2; 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

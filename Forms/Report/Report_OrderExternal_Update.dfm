@@ -823,6 +823,11 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
           DataSet = ItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupPrint;GoodsName;GoodsKindName'
+        end
+        item
+          DataSet = HeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'GroupPrint;OperDate_CarInfo'
         end>
       Params = <
         item
@@ -1436,6 +1441,9 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     DataSets = <
       item
         DataSet = ItemsCDS
+      end
+      item
+        DataSet = HeaderCDS
       end>
     OutputType = otMultiDataSet
     Params = <
