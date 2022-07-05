@@ -48,7 +48,7 @@ BEGIN
     
   ELSEIF (SELECT MovementDate.ValueData FROM MovementDate 
           WHERE MovementDate.DescId = zc_MovementDate_Message()
-            AND MovementDate.MovementId = inMovementId) < CURRENT_TIMESTAMP - INTERVAL '26 MINUTE'
+            AND MovementDate.MovementId = inMovementId) < CURRENT_TIMESTAMP - INTERVAL '31 MINUTE'
   THEN 
     --Меняем признак Начислить штраф
     PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_AccruedFine(), inMovementId, TRUE);

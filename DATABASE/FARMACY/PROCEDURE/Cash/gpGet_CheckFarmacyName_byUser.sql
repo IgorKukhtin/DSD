@@ -70,7 +70,13 @@ BEGIN
    END IF;
     
    -- получили "текущее" значение из дефолтов
-   vbUnitKey := COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), '');
+   
+   BEGIN
+     vbUnitKey := COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), '');
+   EXCEPTION
+     WHEN others THEN vbUnitKey := '';
+   END;
+     
    IF vbUnitKey = '' THEN vbUnitKey := '0'; END IF;
    vbUnitId := vbUnitKey :: Integer;
 

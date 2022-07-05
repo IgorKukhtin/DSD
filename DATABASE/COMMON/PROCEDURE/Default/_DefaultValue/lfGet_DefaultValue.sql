@@ -65,6 +65,12 @@ BEGIN
     AND REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit') = 'zc_Object_Unit'
 
   THEN
+  
+  IF EXISTS(SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = inUserId AND RoleId = zc_Enum_Role_CashierPharmacy()) 
+  THEN
+    RAISE EXCEPTION 'Привяжите себя к аптеке. Зайдите в Farmacy cash!';
+  END IF;
+  
   RETURN COALESCE ((WITH tmpRetail AS (SELECT zfConvert_StringToFloat (lpGet_DefaultValue ('zc_Object_Retail', inUserId)) :: Integer AS RetailId)
                     SELECT MIN (OL_Unit_Juridical.ObjectId)
                     FROM tmpRetail

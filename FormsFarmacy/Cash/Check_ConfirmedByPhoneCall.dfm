@@ -18,16 +18,14 @@ object Check_ConfirmedByPhoneCallForm: TCheck_ConfirmedByPhoneCallForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 187
+    Top = 207
     Width = 470
-    Height = 167
+    Height = 147
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 167
-    ExplicitHeight = 187
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -108,19 +106,19 @@ object Check_ConfirmedByPhoneCallForm: TCheck_ConfirmedByPhoneCallForm
     Left = 0
     Top = 0
     Width = 470
-    Height = 161
+    Height = 181
     Align = alTop
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
     object cxLabel1: TcxLabel
       Left = 7
-      Top = 63
+      Top = 101
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edInvNumber: TcxTextEdit
       Left = 7
-      Top = 78
+      Top = 116
       Properties.ReadOnly = True
       TabOrder = 1
       Text = 'edInvNumber'
@@ -128,12 +126,12 @@ object Check_ConfirmedByPhoneCallForm: TCheck_ConfirmedByPhoneCallForm
     end
     object cxLabel2: TcxLabel
       Left = 155
-      Top = 63
+      Top = 101
       Caption = #1044#1072#1090#1072
     end
     object edOperDate: TcxDateEdit
       Left = 155
-      Top = 78
+      Top = 116
       EditValue = 42261d
       Properties.ReadOnly = True
       TabOrder = 3
@@ -141,26 +139,26 @@ object Check_ConfirmedByPhoneCallForm: TCheck_ConfirmedByPhoneCallForm
     end
     object edBayer: TcxTextEdit
       Left = 8
-      Top = 116
+      Top = 154
       Properties.ReadOnly = True
       TabOrder = 4
       Width = 237
     end
     object lblBayer: TcxLabel
       Left = 8
-      Top = 97
+      Top = 135
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edBayerPhone: TcxTextEdit
       Left = 251
-      Top = 116
+      Top = 154
       Properties.ReadOnly = True
       TabOrder = 6
       Width = 212
     end
     object cxLabel10: TcxLabel
       Left = 251
-      Top = 99
+      Top = 137
       Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085' ('#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
     end
     object cxLabel3: TcxLabel
@@ -199,6 +197,25 @@ object Check_ConfirmedByPhoneCallForm: TCheck_ConfirmedByPhoneCallForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
     end
+    object cxLabel6: TcxLabel
+      Left = 8
+      Top = 62
+      AutoSize = False
+      Caption = 
+        #1045#1089#1083#1080' '#1082#1083#1080#1077#1085#1090' '#1086#1087#1086#1074#1077#1097#1077#1085' '#1085#1077' '#1073#1091#1076#1077#1090', '#1087#1088#1086#1075#1088#1072#1084#1084#1072' '#1087#1077#1088#1089#1086#1085#1072#1083#1100#1085#1086' '#1074#1099#1089#1090#1072#1074#1080#1090' '#1096#1090 +
+        #1088#1072#1092' '#1074' '#1047#1055'.'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.TextColor = clMaroon
+      Style.IsFontAssigned = True
+      Properties.WordWrap = True
+      Height = 42
+      Width = 455
+    end
   end
   object Panel2: TPanel
     Left = 0
@@ -228,12 +245,12 @@ object Check_ConfirmedByPhoneCallForm: TCheck_ConfirmedByPhoneCallForm
   end
   object cxLabel9: TcxLabel
     Left = 259
-    Top = 63
+    Top = 101
     Caption = #8470' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
   end
   object edInvNumberOrder: TcxTextEdit
     Left = 259
-    Top = 78
+    Top = 116
     Properties.ReadOnly = True
     TabOrder = 8
     Text = 'edInvNumberOrder'
@@ -241,8 +258,8 @@ object Check_ConfirmedByPhoneCallForm: TCheck_ConfirmedByPhoneCallForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 32
-    Top = 88
+    Left = 40
+    Top = 104
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -282,8 +299,8 @@ object Check_ConfirmedByPhoneCallForm: TCheck_ConfirmedByPhoneCallForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 160
+    Top = 104
     DockControlHeights = (
       0
       0

@@ -85,6 +85,7 @@ type
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public
