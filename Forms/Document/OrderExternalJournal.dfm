@@ -1904,8 +1904,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 832
-    Top = 176
+    Left = 752
+    Top = 168
   end
   object spSelectPrintBill: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderExternal_PrintBill'
@@ -1945,8 +1945,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 930
-    Top = 232
+    Left = 890
+    Top = 208
   end
   object spUpdateMIChild_Amount: TdsdStoredProc
     StoredProcName = 'gpUpdateMIChild_OrderExternal_Amount'
@@ -1962,7 +1962,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 922
-    Top = 176
+    Left = 866
+    Top = 160
   end
 end

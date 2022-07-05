@@ -88,6 +88,26 @@ type
     spSelectPrintGoods: TdsdStoredProc;
     actPrintGoods: TdsdPrintAction;
     bbPrintGoods: TdxBarButton;
+    actUpdateMIChild_Amount: TdsdExecStoredProc;
+    macUpdateMIChild_Amount_list: TMultiAction;
+    macUpdateMIChild_Amount: TMultiAction;
+    actUpdateMIChild_AmountSecond: TdsdExecStoredProc;
+    macUpdateMIChild_AmountSecond_list: TMultiAction;
+    macUpdateMIChild_AmountSecond: TMultiAction;
+    spUpdateMIChild_Amount_report: TdsdStoredProc;
+    spUpdateMIChild_AmountSecond_report: TdsdStoredProc;
+    spUpdateMIChild_AmountNull_report: TdsdStoredProc;
+    spUpdateMIChild_AmountSecondNull_report: TdsdStoredProc;
+    actUpdateMIChild_AmountNull: TdsdExecStoredProc;
+    macUpdateMIChild_AmountNull_list: TMultiAction;
+    macUpdateMIChild_AmountNull: TMultiAction;
+    actUpdateMIChild_AmountSecondNull: TdsdExecStoredProc;
+    macUpdateMIChild_AmountSecondNull_list: TMultiAction;
+    macUpdateMIChild_AmountSecondNull: TMultiAction;
+    bbUpdateMIChild_Amount: TdxBarButton;
+    bbUpdateMIChild_AmountSecond: TdxBarButton;
+    bbUpdateMIChild_AmountNull: TdxBarButton;
+    bbUpdateMIChild_AmountSecondNull: TdxBarButton;
   private
     { Private declarations }
   public
