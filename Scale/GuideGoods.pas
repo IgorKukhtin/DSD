@@ -281,7 +281,7 @@ begin
                   and (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income);
      if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310) then EditWeightValue.Properties.DecimalPlaces:= 4;
      //
-     gbPriceIncome.Visible:= gbPrice.Visible;
+     gbPriceIncome.Visible:= false; //gbPrice.Visible;
      EditPriceIncome.Text:='0';
 
      CancelCxFilter;
@@ -879,7 +879,8 @@ begin
               and (CDS.FieldByName('Price_Income').AsFloat <> ParamsMI.ParamByName('BoxCount').AsFloat)
             then begin
                      Result:= false;
-                     ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
+                     //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
+                     ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
                      exit;
             end;
        end;

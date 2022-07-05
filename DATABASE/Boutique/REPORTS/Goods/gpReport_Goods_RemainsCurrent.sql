@@ -36,7 +36,6 @@ RETURNS TABLE (PartionId            Integer
              , PeriodYear           Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsNameFull TVarChar
              , GoodsGroupNameFull TVarChar, NameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
-
              , JuridicalName        TVarChar
              , CompositionGroupName TVarChar
              , CompositionName      TVarChar
@@ -48,50 +47,33 @@ RETURNS TABLE (PartionId            Integer
              , GoodsSizeName_real   TVarChar
              , CurrencyName         TVarChar
 
-             , CurrencyValue           TFloat -- Курс    !!!НА!!! CURRENT_DATE
-             , ParValue                TFloat -- Номинал !!!НА!!! CURRENT_DATE
-             , CurrencyValue_doc       TFloat -- Курс    !!!ДОКУМЕНТА
-             , ParValue_doc            TFloat -- Номинал !!!ДОКУМЕНТА
+             , CurrencyValue        TFloat -- Курс    !!!НА!!! CURRENT_DATE
+             , ParValue             TFloat -- Номинал !!!НА!!! CURRENT_DATE
 
-             , Amount_in               TFloat -- Итого кол-во Приход от поставщика
-             , OperPrice               TFloat -- Цена вх. в валюте
-             , CountForPrice           TFloat -- Кол. в цене вх. в валюте
-             , OperPrice_grn           TFloat -- *Цена вх. в ГРН по курсу на тек дату
-             , OperPrice_grn_doc       TFloat -- *Цена вх. в ГРН по курсу документа
+             , Amount_in            TFloat -- Итого кол-во Приход от поставщика
+             , OperPrice            TFloat -- Цена вх.
+             , CountForPrice        TFloat -- Кол. в цене
+             , OperPriceList        TFloat -- Цена по прайсу
+             , PriceJur             TFloat -- Цена вх. без ск.
 
-             , OperPriceList           TFloat -- Цена по прайсу в ГРН по курсу на тек дату
-             , OperPriceList_doc       TFloat -- Цена по прайсу в ГРН по курсу документа  
-             , OperPriceList_curr      TFloat -- *Цена по прайсу в валюте по курсу на тек дату
-             , OperPriceList_curr_doc  TFloat -- *Цена по прайсу в валюте по курсу документа  
-             , PriceJur                TFloat -- Цена вх. без ск. в валюте (информативно)
-             
-             , OperPriceList_disc           TFloat -- Цена по прайсу в ГРН по курсу на тек дату c учетом Сезонной скидки
-             , OperPriceList_doc_disc       TFloat -- Цена по прайсу в ГРН по курсу документа c учетом Сезонной скидки
-             , OperPriceList_curr_disc      TFloat -- *Цена по прайсу в валюте по курсу на тек дату c учетом Сезонной скидки
-             , OperPriceList_curr_doc_disc  TFloat -- *Цена по прайсу в валюте по курсу документа c учетом Сезонной скидки
+             , Remains              TFloat -- Кол-во - остаток в магазине
+             , RemainsDebt          TFloat -- Кол-во - долги по магазину
+             , RemainsAll           TFloat -- Итого остаток кол-во с учетом долга
+             , SummDebt             TFloat -- Сумма ГРН - долги по магазину
+             , SummDebt_profit      TFloat -- Сумма ГРН - Прибыль будущих периодов в долгах по магазину
 
-             , Remains                 TFloat -- Кол-во - остаток в магазине
-             , RemainsDebt             TFloat -- Кол-во - долги по магазину
-             , RemainsAll              TFloat -- Итого остаток кол-во с учетом долга
-             , SummDebt                TFloat -- Сумма ГРН - долги по магазину
-             , SummDebt_profit         TFloat -- Сумма ГРН - Прибыль будущих периодов в долгах по магазину
-
-             , TotalSumm               TFloat -- Сумма по входным ценам в валюте - остаток итого с учетом долга
-             , TotalSummBalance        TFloat -- Сумма по входным ценам в ГРН - остаток итого с учетом долга по курсу на тек дату
-             , TotalSummBalance_doc    TFloat -- Сумма по входным ценам в ГРН - остаток итого с учетом долга по курсу документа  
-             , TotalSummPriceList      TFloat -- Сумма по прайсу в ГРН - остаток итого с учетом долга
-             , TotalSummPriceList_curr TFloat -- *Сумма по прайсу в валюте - остаток итого с учетом долга по курсу на тек дату
-             , TotalSummPriceList_curr_doc TFloat -- *Сумма по прайсу в валюте - остаток итого с учетом долга по курсу документа  
-             , TotalSummPriceJur       TFloat -- Сумма вх. без скидки в валюте (информативно)
-             , PriceTax                TFloat -- % наценки по курсу на тек дату
-             , PriceTax_doc            TFloat -- % наценки по курсу документа  
-             , DiscountTax             TFloat -- % Сезонной скидки !!!НА!!! zc_DateEnd
-             , Amount_GoodsPrint       TFloat -- Кол-во для печати ценников
+             , TotalSumm            TFloat -- Сумма по входным ценам в валюте - остаток итого с учетом долга
+             , TotalSummBalance     TFloat -- Сумма по входным ценам в ГРН - остаток итого с учетом долга
+             , TotalSummPriceList   TFloat -- Сумма по прайсу - остаток итого с учетом долга
+             , TotalSummPriceJur    TFloat -- Сумма вх. без скидки
+             , PriceTax             TFloat -- % наценки
+             , DiscountTax          TFloat -- % Сезонной скидки !!!НА!!! zc_DateEnd
+             , Amount_GoodsPrint    TFloat -- Кол-во для печати ценников
 
              , PriceListId_Basis    Integer  --
              , PriceListName_Basis  TVarChar --
              , UpdateDate_Price     TDateTime
-             , isOlap               Boolean
+             , isOlap Boolean
              , Comment_in           TVarChar
              , ChangePercent_in     TFloat
               )
@@ -111,7 +93,7 @@ BEGIN
     THEN
         PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
     END IF;
-
+    
 
     -- Получили - показывать ЛИ цену ВХ.
     vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId) OR vbUserId = 1078646;
@@ -131,37 +113,18 @@ BEGIN
        inEndYear:= 1000000;
     END IF;
 
-    -- список подразделений
-    CREATE TEMP TABLE _tmpUnit (UnitId Integer, PriceListId Integer, CurrencyId_pl Integer) ON COMMIT DROP;
+    -- таблица подразделений
+    CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
     IF COALESCE (inUnitId, 0) <> 0
     THEN
         --
-        INSERT INTO _tmpUnit (UnitId, PriceListId, CurrencyId_pl)
-          SELECT lfSelect.UnitId
-               , COALESCE (ObjectLink_Unit_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
-               , COALESCE (ObjectLink_PriceList_Currency.ChildObjectId, zc_Currency_Basis()) AS CurrencyId_pl
-          FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect
-               LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList
-                                    ON ObjectLink_Unit_PriceList.ObjectId = lfSelect.UnitId
-                                   AND ObjectLink_Unit_PriceList.DescId   = zc_ObjectLink_Unit_PriceList()
-               LEFT JOIN ObjectLink AS ObjectLink_PriceList_Currency
-                                    ON ObjectLink_PriceList_Currency.ObjectId = ObjectLink_Unit_PriceList.ChildObjectId
-                                   AND ObjectLink_PriceList_Currency.DescId   = zc_ObjectLink_PriceList_Currency()
+        INSERT INTO _tmpUnit (UnitId)
+          SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect
          ;
     ELSE
         --
-        INSERT INTO _tmpUnit (UnitId, PriceListId, CurrencyId_pl)
-          SELECT Object_Unit.Id
-               , COALESCE (ObjectLink_Unit_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
-               , COALESCE (ObjectLink_PriceList_Currency.ChildObjectId, zc_Currency_Basis()) AS CurrencyId_pl
-          FROM Object AS Object_Unit
-               LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList
-                                    ON ObjectLink_Unit_PriceList.ObjectId = Object_Unit.Id
-                                   AND ObjectLink_Unit_PriceList.DescId   = zc_ObjectLink_Unit_PriceList()
-               LEFT JOIN ObjectLink AS ObjectLink_PriceList_Currency
-                                    ON ObjectLink_PriceList_Currency.ObjectId = ObjectLink_Unit_PriceList.ChildObjectId
-                                   AND ObjectLink_PriceList_Currency.DescId   = zc_ObjectLink_PriceList_Currency()
-          WHERE Object_Unit.DescId = zc_Object_Unit()
+        INSERT INTO _tmpUnit (UnitId)
+          SELECT Object_Unit.Id FROM Object AS Object_Unit WHERE Object_Unit.DescId = zc_Object_Unit()
          ;
     END IF;
 
@@ -175,46 +138,19 @@ BEGIN
                                                   ON ObjectLink_User.ObjectId      = Object.Id
                                                  AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
                                                  AND ObjectLink_User.ChildObjectId = vbUserId
-
+          
                             INNER JOIN ObjectLink AS ObjectLink_Object
                                                   ON ObjectLink_Object.ObjectId = Object.Id
                                                  AND ObjectLink_Object.DescId   = zc_ObjectLink_ReportOLAP_Object()
-
+                                                 
                             -- привязываем по партии и товару, для партии определяем какой товар, для товара определяем партии
                             INNER JOIN Object_PartionGoods ON ObjectLink_Object.ChildObjectId = CASE WHEN Object.ObjectCode = 3 THEN Object_PartionGoods.MovementItemId ELSE Object_PartionGoods.GoodsId END
-
+                                               
                        WHERE Object.DescId = zc_Object_ReportOLAP()
                          AND Object.ObjectCode IN (2, 3)
                          AND Object.isErased = FALSE
                        )
-     -- Последняя цена из Прайс-листа
-   , tmpPriceList AS (SELECT _tmpUnit.UnitId                                  AS UnitId
-                           , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
-                           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS OperPriceList
-                           , COALESCE (ObjectHistoryLink_Currency.ObjectId, _tmpUnit.CurrencyId_pl) AS CurrencyId_pl
-                      FROM _tmpUnit
-                           INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
-                                                 ON ObjectLink_PriceListItem_PriceList.ChildObjectId = _tmpUnit.PriceListId
-                                                AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
-                           INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
-                                                 ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                                AND ObjectLink_PriceListItem_Goods.DescId   = zc_ObjectLink_PriceListItem_Goods()
 
-                           LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
-                                                   ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                                  AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
-                                                  -- Последняя цена
-                                                  AND ObjectHistory_PriceListItem.EndDate  = zc_DateEnd()
-                           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
-                                                        ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
-                                                       AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-
-                           LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
-                                                       ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
-                                                      AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
-                      WHERE zc_Enum_GlobalConst_isTerry() = FALSE
-                     )
-     -- Остатки + Партии
    , tmpContainer AS (SELECT Container.WhereObjectId                                   AS UnitId
                            , Container.PartionId                                       AS PartionId
                            , Container.ObjectId                                        AS GoodsId
@@ -244,10 +180,7 @@ BEGIN
                              -- Если есть права видеть Цену вх.
                            , CASE WHEN vbIsOperPrice = TRUE THEN Object_PartionGoods.OperPrice ELSE 0 END AS OperPrice
                            , Object_PartionGoods.CountForPrice
-
-                           , COALESCE (tmpPriceList.OperPriceList, Object_PartionGoods.OperPriceList) AS OperPriceList
-                           , COALESCE (tmpPriceList.CurrencyId_pl, zc_Currency_Basis())               AS CurrencyId_pl
-                           
+                           , Object_PartionGoods.OperPriceList
                            -- , CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN Object_PartionGoods.Amount ELSE 0 END AS Amount_in
                            , Object_PartionGoods.Amount     AS Amount_in
                            , Object_PartionGoods.UnitId     AS UnitId_in
@@ -258,9 +191,6 @@ BEGIN
                            INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
                            INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
                                                          AND Object_PartionGoods.GoodsId        = Container.ObjectId
-                                                         AND (Object_PartionGoods.isErased      = FALSE
-                                                           OR Object_PartionGoods.Amount        > 0
-                                                             )
                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
                                                 ON ObjectLink_Partner_Period.ObjectId = Object_PartionGoods.PartnerId
                                                AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
@@ -279,11 +209,6 @@ BEGIN
                                               AND Container_SummDebt_profit.ObjectId = zc_Enum_Account_20102()
                                               AND Container_SummDebt_profit.DescId   = zc_Container_Summ()
                                               -- AND 1=0
-
-                           -- цена из Прайс-листа
-                           LEFT JOIN tmpPriceList ON tmpPriceList.UnitId  = Container.WhereObjectId
-                                                 AND tmpPriceList.GoodsId = Container.ObjectId
-
                       WHERE Container.DescId = zc_Container_Count()
                         -- AND Container.WhereObjectId = inUnitId
                         AND (Container.Amount <> 0 OR Container_SummDebt.Amount <> 0 OR Container_SummDebt_profit.Amount <> 0
@@ -307,12 +232,12 @@ BEGIN
                               , CASE WHEN inisPartner = TRUE THEN tmpContainer.PartnerId        ELSE 0  END AS PartnerId
                               --, CASE WHEN inisSize    = TRUE THEN tmpContainer.GoodsSizeId      ELSE 0  END AS GoodsSizeId
                               , tmpContainer.GoodsSizeId
-
+    
                               , tmpContainer.BrandId
                               , tmpContainer.PeriodId
                               , tmpContainer.PeriodYear
                               , ObjectLink_Partner_Fabrika.ChildObjectId AS FabrikaId
-
+    
                               , tmpContainer.MeasureId
                               , tmpContainer.GoodsGroupId
                               , tmpContainer.CompositionId
@@ -322,32 +247,28 @@ BEGIN
                               , tmpContainer.LabelId
                               , tmpContainer.JuridicalId
                               , tmpContainer.CurrencyId
-                              , tmpContainer.CurrencyId_pl
                               , tmpContainer.OperPriceList
                               , tmpContainer.UnitId_in
-
+    
                                 --  только для Ord = 1
                               , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
                               , SUM (CASE WHEN tmpContainer.Ord = 1 THEN zfCalc_SummIn (tmpContainer.Amount_in, tmpContainer.OperPrice, tmpContainer.CountForPrice) ELSE 0 END) AS TotalSummPrice_in
                               , SUM (CASE WHEN tmpContainer.Ord = 1 THEN zfCalc_SummIn (tmpContainer.Amount_in, COALESCE (MIFloat_PriceJur.ValueData, 0), tmpContainer.CountForPrice) ELSE 0 END) AS TotalSummPriceJur
-
+    
                               , SUM (tmpContainer.Remains)         AS Remains
                               , SUM (tmpContainer.RemainsDebt)     AS RemainsDebt
                               , SUM (tmpContainer.RemainsAll)      AS RemainsAll
                               , SUM (tmpContainer.SummDebt)        AS SummDebt
                               , SUM (tmpContainer.SummDebt_profit) AS SummDebt_profit
-
-
+    
+    
                               , SUM (zfCalc_SummIn        (tmpContainer.RemainsAll, tmpContainer.OperPrice, tmpContainer.CountForPrice)) AS TotalSummPrice
                               , SUM (zfCalc_SummPriceList (tmpContainer.RemainsAll, tmpContainer.OperPriceList))                         AS TotalSummPriceList
-
+                              
                               , SUM (CASE WHEN COALESCE (tmpReportOLAP.PartionId, 0) <> 0 THEN 1 ELSE 0 END) AS byOlap
 
                               , MS_Comment.ValueData                        AS Comment_in
                               , COALESCE (MF_ChangePercent.ValueData, 0)    AS ChangePercent_in
-                              , COALESCE (MF_CurrencyValue.ValueData, 0)    AS CurrencyValue
-                              , COALESCE (MF_ParValue.ValueData, 0)         AS ParValue
-
                          FROM tmpContainer
                               LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpContainer.MovementId
                               LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
@@ -361,24 +282,16 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_PriceJur
                                                           ON MIFloat_PriceJur.MovementItemId = tmpContainer.PartionId
                                                          AND MIFloat_PriceJur.DescId         = zc_MIFloat_PriceJur()
-                                                         --AND inisPartion = TRUE
+                                                         --AND inisPartion = TRUE 
                                                          AND vbIsOperPrice = TRUE
-                              LEFT JOIN MovementString AS MS_Comment
+                              LEFT JOIN MovementString AS MS_Comment 
                                                        ON MS_Comment.MovementId = tmpContainer.MovementId
                                                       AND MS_Comment.DescId = zc_MovementString_Comment()
                                                       AND inisPartion = TRUE
                               LEFT JOIN MovementFloat AS MF_ChangePercent
                                                       ON MF_ChangePercent.MovementId = tmpContainer.MovementId
-                                                     AND MF_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
-                                                     AND inisPartion                 = TRUE
-                              LEFT JOIN MovementFloat AS MF_ParValue
-                                                      ON MF_ParValue.MovementId = tmpContainer.MovementId
-                                                     AND MF_ParValue.DescId     = zc_MovementFloat_ParValue()
-                                                     AND inisPartion            = TRUE
-                              LEFT JOIN MovementFloat AS MF_CurrencyValue
-                                                      ON MF_CurrencyValue.MovementId = tmpContainer.MovementId
-                                                     AND MF_CurrencyValue.DescId     = zc_MovementFloat_CurrencyValue()
-                                                     AND inisPartion                 = TRUE
+                                                     AND MF_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                                     AND inisPartion = TRUE
 
                               -- LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
                          GROUP BY tmpContainer.UnitId
@@ -390,12 +303,12 @@ BEGIN
                                 , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END
                                 , CASE WHEN inisPartner = TRUE THEN tmpContainer.PartnerId        ELSE 0  END
                                 , tmpContainer.GoodsSizeId
-
+    
                                 , tmpContainer.BrandId
                                 , tmpContainer.PeriodId
                                 , tmpContainer.PeriodYear
                                 , ObjectLink_Partner_Fabrika.ChildObjectId
-
+    
                                 , tmpContainer.MeasureId
                                 , tmpContainer.GoodsGroupId
                                 , tmpContainer.CompositionId
@@ -405,26 +318,12 @@ BEGIN
                                 , tmpContainer.LabelId
                                 , tmpContainer.JuridicalId
                                 , tmpContainer.CurrencyId
-                                , tmpContainer.CurrencyId_pl
                                 , tmpContainer.PeriodYear
                                 , tmpContainer.OperPriceList
                                 , tmpContainer.UnitId_in
                                 , MS_Comment.ValueData
                                 , MF_ChangePercent.ValueData
-                                , MF_CurrencyValue.ValueData
-                                , MF_ParValue.ValueData
                   )
-       , tmpCurrency AS (SELECT lfSelect.*
-                         FROM Object
-                              CROSS JOIN lfSelect_Movement_Currency_byDate (inOperDate      := CURRENT_DATE
-                                                                          , inCurrencyFromId:= zc_Currency_Basis()
-                                                                          , inCurrencyToId  := Object.Id
-                                                                           ) AS lfSelect
-                         WHERE Object.DescId = zc_Object_Currency()
-                           AND Object.Id     <> zc_Currency_Basis()
-                           AND vbIsOperPrice = TRUE
-                        )
-
        , tmpData AS (SELECT tmpData_All.UnitId
                           , tmpData_All.GoodsId
                           , tmpData_All.PartionId
@@ -433,8 +332,8 @@ BEGIN
                           , tmpData_All.InvNumber_Partion
                           , tmpData_All.OperDate_Partion
                           , tmpData_All.PartnerId
-                          , CASE WHEN inIsSize = TRUE THEN Object_GoodsSize.Id ELSE 0 END         AS GoodsSizeId
-                          , CASE WHEN inIsSize = TRUE THEN Object_GoodsSize.ValueData ELSE '' END AS GoodsSizeName_real
+                          , CASE WHEN inIsSize = TRUE THEN Object_GoodsSize.Id ELSE 0 END          AS GoodsSizeId
+                          , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END AS GoodsSizeName_real
                           , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY CASE WHEN LENGTH (Object_GoodsSize.ValueData) = 1 THEN '0' ELSE '' END || Object_GoodsSize.ValueData) AS GoodsSizeName
 
                           , tmpData_All.BrandId
@@ -450,25 +349,11 @@ BEGIN
                           , tmpData_All.LabelId
                           , tmpData_All.JuridicalId
                           , tmpData_All.CurrencyId
-                          
-                            -- Цена прайс - переводим в ГРН, по курск "сегодня"
-                          , tmpData_All.OperPriceList * (CASE WHEN tmpData_All.CurrencyId_pl = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.Amount   <> 0 THEN tmpCurrency.Amount   ELSE 1 END
-                                                       / CASE WHEN tmpData_All.CurrencyId_pl = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END
-                                                        ) AS OperPriceList
-
-                            -- Цена прайс - переводим в ГРН, по курск док. Приход
-                          , tmpData_All.OperPriceList * (CASE WHEN tmpData_All.CurrencyId_pl = zc_Currency_Basis() THEN 1 WHEN tmpData_All.CurrencyValue <> 0 THEN tmpData_All.CurrencyValue ELSE 1 END
-                                                       / CASE WHEN tmpData_All.CurrencyId_pl = zc_Currency_Basis() THEN 1 WHEN tmpData_All.ParValue <> 0 THEN tmpData_All.ParValue ELSE 1 END
-                                                        ) AS OperPriceList_doc
+                          , tmpData_All.OperPriceList
                           , tmpData_All.UnitId_in
 
                           , tmpData_All.Comment_in
                           , tmpData_All.ChangePercent_in
-
-                          , tmpCurrency.Amount           :: TFloat  AS CurrencyValue
-                          , tmpCurrency.ParValue         :: TFloat  AS ParValue
-                          , tmpData_All.CurrencyValue    :: TFloat  AS CurrencyValue_doc
-                          , tmpData_All.ParValue         :: TFloat  AS ParValue_doc
 
                           , SUM (tmpData_All.Amount_in)         AS Amount_in
                           , SUM (tmpData_All.TotalSummPrice_in) AS TotalSummPrice_in
@@ -480,49 +365,44 @@ BEGIN
                           , SUM (tmpData_All.SummDebt)        AS SummDebt
                           , SUM (tmpData_All.SummDebt_profit) AS SummDebt_profit
 
+
                           , SUM (tmpData_All.TotalSummPrice)     AS TotalSummPrice
                           , SUM (tmpData_All.TotalSummPriceList) AS TotalSummPriceList
 
                           , SUM (tmpData_All.byOlap) AS byOlap
 
                      FROM tmpData_All
-                          LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = tmpData_All.CurrencyId
                           LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpData_All.GoodsSizeId
                      GROUP BY tmpData_All.UnitId
-                            , tmpData_All.GoodsId
-                            , tmpData_All.PartionId
-                            , tmpData_All.MovementId_Partion
-                            , tmpData_All.DescName_Partion
-                            , tmpData_All.InvNumber_Partion
-                            , tmpData_All.OperDate_Partion
-                            , tmpData_All.PartnerId
-                            , CASE WHEN inIsSize = TRUE THEN Object_GoodsSize.Id ELSE 0 END
-                            , CASE WHEN inIsSize = TRUE THEN Object_GoodsSize.ValueData ELSE '' END
-                            , tmpData_All.BrandId
-                            , tmpData_All.PeriodId
-                            , tmpData_All.PeriodYear
-                            , tmpData_All.FabrikaId
-                            , tmpData_All.MeasureId
-                            , tmpData_All.GoodsGroupId
-                            , tmpData_All.CompositionId
-                            , tmpData_All.CompositionGroupId
-                            , tmpData_All.GoodsInfoId
-                            , tmpData_All.LineFabricaId
-                            , tmpData_All.LabelId
-                            , tmpData_All.JuridicalId
-                            , tmpData_All.CurrencyId
-                            , tmpData_All.CurrencyId_pl
-                            , tmpData_All.OperPriceList
-                            , tmpData_All.UnitId_in
-                            , tmpData_All.Comment_in
-                            , tmpData_All.ChangePercent_in
-                            , tmpCurrency.Amount
-                            , tmpCurrency.ParValue
-                            , tmpData_All.CurrencyValue
-                            , tmpData_All.ParValue
+                          , tmpData_All.GoodsId
+                          , tmpData_All.PartionId
+                          , tmpData_All.MovementId_Partion
+                          , tmpData_All.DescName_Partion
+                          , tmpData_All.InvNumber_Partion
+                          , tmpData_All.OperDate_Partion
+                          , tmpData_All.PartnerId
+                          , CASE WHEN inIsSize = TRUE THEN Object_GoodsSize.Id ELSE 0 END
+                          , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END
+                          , tmpData_All.BrandId
+                          , tmpData_All.PeriodId
+                          , tmpData_All.PeriodYear
+                          , tmpData_All.FabrikaId
+                          , tmpData_All.MeasureId
+                          , tmpData_All.GoodsGroupId
+                          , tmpData_All.CompositionId
+                          , tmpData_All.CompositionGroupId
+                          , tmpData_All.GoodsInfoId
+                          , tmpData_All.LineFabricaId
+                          , tmpData_All.LabelId
+                          , tmpData_All.JuridicalId
+                          , tmpData_All.CurrencyId
+                          , tmpData_All.OperPriceList
+                          , tmpData_All.UnitId_in
+                          , tmpData_All.Comment_in
+                          , tmpData_All.ChangePercent_in
               )
 
-
+ 
  , tmpDiscountList AS (SELECT DISTINCT tmpData.UnitId, tmpData.GoodsId FROM tmpData)
 
           , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpData.GoodsId FROM tmpData)
@@ -574,6 +454,16 @@ BEGIN
                             , CASE WHEN inisPartion = TRUE THEN Object_GoodsPrint.PartionId ELSE 0 END
                             , Object_PartionGoods.GoodsId
                     )
+       , tmpCurrency AS (SELECT lfSelect.*
+                         FROM Object
+                              CROSS JOIN lfSelect_Movement_Currency_byDate (inOperDate      := CURRENT_DATE
+                                                                          , inCurrencyFromId:= zc_Currency_Basis()
+                                                                          , inCurrencyToId  := Object.Id
+                                                                           ) AS lfSelect
+                         WHERE Object.DescId = zc_Object_Currency()
+                           AND Object.Id     <> zc_Currency_Basis()
+                           AND vbIsOperPrice = TRUE
+                        )
 
        , tmpPriceInfo AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
                                , MAX (ObjectDate_Protocol_Update.ValueData )      AS UpdateDate
@@ -588,7 +478,7 @@ BEGIN
                             AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis() --  inPriceListId
                           GROUP BY ObjectLink_PriceListItem_Goods.ChildObjectId
                          )
-
+                  
         -- Результат
         SELECT
              tmpData.PartionId                      AS PartionId
@@ -616,172 +506,63 @@ BEGIN
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.ValueData       AS MeasureName
            , Object_Juridical.ValueData     AS JuridicalName
-
-           , CASE WHEN inSession = zfCalc_UserAdmin()
-                       THEN CASE WHEN ObjectString_GoodsGroupFull.ValueData ILIKE '% муж %'
-                                   OR ObjectString_GoodsGroupFull.ValueData ILIKE '% муж'
-                                   OR ObjectString_GoodsGroupFull.ValueData ILIKE '% мальч %'
-                                   OR ObjectString_GoodsGroupFull.ValueData ILIKE '% мальч'
-                                      THEN 'М'
-                                 WHEN ObjectString_GoodsGroupFull.ValueData ILIKE '% жен %'
-                                   OR ObjectString_GoodsGroupFull.ValueData ILIKE '% жен'
-                                   OR ObjectString_GoodsGroupFull.ValueData ILIKE '% дев%'
-                                   OR ObjectString_GoodsGroupFull.ValueData ILIKE '% дев'
-                                      THEN 'Ж'
-                                 ELSE ''
-                            END
-                  ELSE Object_CompositionGroup.ValueData
-             END :: TVarChar                AS CompositionGroupName
-
+           , Object_CompositionGroup.ValueData AS CompositionGroupName
            , Object_Composition.ValueData   AS CompositionName
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
-           , CASE WHEN inSession = zfCalc_UserAdmin()
-                       THEN zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.ObjectCode :: Integer)
-                         || zfCalc_SummBarCode (zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.ObjectCode)) :: TVarChar
-                  ELSE Object_LineFabrica.ValueData
-             END :: TVarChar                AS LineFabricaName
-
+           , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
-
            , tmpData.GoodsSizeId            AS GoodsSizeId
            , tmpData.GoodsSizeName      ::TVarChar AS GoodsSizeName
            , tmpData.GoodsSizeName_real ::TVarChar AS GoodsSizeName_real
            , CASE WHEN vbIsOperPrice = TRUE THEN Object_Currency.ValueData ELSE '' END :: TVarChar AS CurrencyName
 
-           , tmpData.CurrencyValue     :: TFloat AS CurrencyValue
-           , tmpData.ParValue          :: TFloat AS ParValue
-           , tmpData.CurrencyValue_doc :: TFloat AS CurrencyValue_doc
-           , tmpData.ParValue_doc      :: TFloat AS ParValue_doc
+           , tmpCurrency.Amount   ::TFloat  AS CurrencyValue
+           , tmpCurrency.ParValue ::TFloat  AS ParValue
 
-             -- Итого кол-во Приход от поставщика
            , tmpData.Amount_in    :: TFloat AS Amount_in
-             -- Цена вх. в валюте
            , CASE WHEN tmpData.RemainsAll <> 0 THEN tmpData.TotalSummPrice    / tmpData.RemainsAll
                   WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummPrice_in / tmpData.Amount_in
                   ELSE 0
              END :: TFloat AS OperPrice
-           , 1   :: TFloat AS CountForPrice
-
-             -- *Цена вх. в ГРН на тек.дату
-           , CASE WHEN tmpData.RemainsAll <> 0 THEN tmpData.TotalSummPrice    / tmpData.RemainsAll
-                                                  * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue <> 0 THEN tmpData.CurrencyValue ELSE 1 END
-                                                  / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0      THEN tmpData.ParValue      ELSE 1 END
-                  WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummPrice_in / tmpData.Amount_in
-                                                  * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue <> 0 THEN tmpData.CurrencyValue ELSE 0 END
-                                                  / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0      THEN tmpData.ParValue      ELSE 1 END
-                  ELSE 0
-             END :: TFloat AS OperPrice_grn
-
-             -- *Цена вх. в ГРН по курсу документа
-           , CASE WHEN tmpData.RemainsAll <> 0 THEN tmpData.TotalSummPrice    / tmpData.RemainsAll
-                                                  * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue_doc <> 0 THEN tmpData.CurrencyValue_doc ELSE 1 END
-                                                  / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0      THEN tmpData.ParValue_doc      ELSE 1 END
-                  WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummPrice_in / tmpData.Amount_in
-                                                  * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue_doc <> 0 THEN tmpData.CurrencyValue_doc ELSE 0 END
-                                                  / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0      THEN tmpData.ParValue_doc      ELSE 1 END
-                  ELSE 0
-             END :: TFloat AS OperPrice_grn_doc
-
-             -- Цена по прайсу в ГРН  тек.курс
-           , tmpData.OperPriceList :: TFloat
-             -- Цена по прайсу в ГРН курс.документа
-           , tmpData.OperPriceList_doc :: TFloat
+           , 1                    :: TFloat AS CountForPrice
+           , tmpData.OperPriceList
            
-             -- *Цена по прайсу в валюте по курсу на тек.дату
-           , CAST (tmpData.OperPriceList / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue <> 0 THEN tmpData.CurrencyValue ELSE 1 END
-                                         * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0      THEN tmpData.ParValue      ELSE 1 END
-                   AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_curr
-             -- *Цена по прайсу в валюте по курсу документа
-           , CAST (tmpData.OperPriceList_doc / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue_doc <> 0 THEN tmpData.CurrencyValue_doc ELSE 1 END
-                                         * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0      THEN tmpData.ParValue_doc      ELSE 1 END
-                   AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_curr_doc
-
-             -- Цена вх. без ск. в валюте (информативно)
            , CASE WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummPriceJur / tmpData.Amount_in
                   ELSE 0
              END :: TFloat AS PriceJur
 
-             --c учетом сезонной скидки
-             -- Цена по прайсу в ГРН  тек.курс
-           , CAST (tmpData.OperPriceList * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100) AS NUMERIC (16, 2))     :: TFloat AS OperPriceList_disc
-             -- Цена по прайсу в ГРН курс.документа
-           , CAST (tmpData.OperPriceList_doc * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100) AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_doc_disc
-           
-             -- *Цена по прайсу в валюте по курсу на тек.дату
-           , CAST (tmpData.OperPriceList / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue <> 0 THEN tmpData.CurrencyValue ELSE 1 END
-                                         * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0      THEN tmpData.ParValue      ELSE 1 END
-                          * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100)    
-                   AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_curr_disc
-             -- *Цена по прайсу в валюте по курсу документа
-           , CAST (tmpData.OperPriceList_doc / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue_doc <> 0 THEN tmpData.CurrencyValue_doc ELSE 1 END
-                                             * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0      THEN tmpData.ParValue_doc      ELSE 1 END
-                          * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100)
-                   AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_curr_doc_disc
-           /***********************/
-
-             -- Кол-во - остаток в магазине
            , tmpData.Remains                 :: TFloat AS Remains
-             -- Кол-во - долги по магазину
            , tmpData.RemainsDebt             :: TFloat AS RemainsDebt
-             -- Итого остаток кол-во с учетом долга
            , tmpData.RemainsAll              :: TFloat AS RemainsAll
 
-             -- Сумма ГРН - долги по магазину
            , tmpData.SummDebt                :: TFloat AS SummDebt
-             -- Сумма ГРН - Прибыль будущих периодов в долгах по магазину
            , tmpData.SummDebt_profit         :: TFloat AS SummDebt_profit
 
              -- Сумма по входным ценам в валюте - остаток итого с учетом долга
            , tmpData.TotalSummPrice          :: TFloat AS TotalSumm
-
-             -- Сумма по входным ценам в ГРН - остаток итого с учетом долга  по курсу на тек.дату
-           , CAST (tmpData.TotalSummPrice * tmpData.CurrencyValue / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END AS NUMERIC (16, 2)) :: TFloat AS TotalSummBalance
-             -- Сумма по входным ценам в ГРН - остаток итого с учетом долга по курсу документа
-           , CAST (tmpData.TotalSummPrice * tmpData.CurrencyValue_doc / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0 THEN tmpData.ParValue_doc ELSE 1 END AS NUMERIC (16, 2)) :: TFloat AS TotalSummBalance_doc
-
+             -- Сумма по входным ценам в ГРН - остаток итого с учетом долга
+           , CAST (tmpData.TotalSummPrice * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END AS NUMERIC (16, 2)) :: TFloat AS TotalSummBalance
              -- Сумма по прайсу - остаток итого с учетом долга
            , tmpData.TotalSummPriceList      :: TFloat AS TotalSummPriceList
-
-             -- *Сумма по прайсу в валюте - остаток итого с учетом долга по курсу на тек.дату
-           , CAST (tmpData.TotalSummPriceList / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue <> 0 THEN tmpData.CurrencyValue ELSE 1 END
-                                              * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0      THEN tmpData.ParValue      ELSE 1 END
-                   AS NUMERIC (16, 2)) :: TFloat AS TotalSummPriceList_curr
-
-             -- *Сумма по прайсу в валюте - остаток итого с учетом долга по курсу документа
-           , CAST (tmpData.TotalSummPriceList / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue_doc <> 0 THEN tmpData.CurrencyValue_doc ELSE 1 END
-                                              * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0      THEN tmpData.ParValue_doc      ELSE 1 END
-                   AS NUMERIC (16, 2)) :: TFloat AS TotalSummPriceList_curr_doc
-
-             -- Сумма вх. без скидки в валюте (информативно)
            , tmpData.TotalSummPriceJur       :: TFloat AS TotalSummPriceJur
-
-             -- % наценки по курсу на тек.дату
-           , CAST (CASE WHEN (tmpData.TotalSummPrice_in * tmpData.CurrencyValue / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END)
+             -- % наценки
+           , CAST (CASE WHEN (tmpData.TotalSummPrice_in * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
                               <> 0
                         THEN (100 * tmpData.Amount_in * tmpData.OperPriceList
-                            / (tmpData.TotalSummPrice_in * tmpData.CurrencyValue / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END)
+                            / (tmpData.TotalSummPrice_in * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
                               - 100)
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
-
-             -- % наценки по курсу документа
-           , CAST (CASE WHEN (tmpData.TotalSummPrice_in * tmpData.CurrencyValue_doc / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0 THEN tmpData.ParValue_doc ELSE 1 END)
-                              <> 0
-                        THEN (100 * tmpData.Amount_in * tmpData.OperPriceList_doc
-                            / (tmpData.TotalSummPrice_in * tmpData.CurrencyValue_doc / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0 THEN tmpData.ParValue_doc ELSE 1 END)
-                              - 100)
-                        ELSE 0
-                   END AS NUMERIC (16, 0)) :: TFloat AS PriceTax_doc
 
              -- % Сезонной скидки !!!НА!!! zc_DateEnd
            , tmpDiscount.DiscountTax         :: TFloat AS DiscountTax
              -- Кол-во для печати ценников
            , tmpGoodsPrint.Amount            :: TFloat AS Amount_GoodsPrint
-
+           
            , zc_PriceList_Basis()  AS PriceListId_Basis
            , vbPriceListName_Basis AS PriceListName_Basis
            , COALESCE (tmpPriceInfo.UpdateDate, NULL) :: TDateTime AS UpdateDate_Price
-
+           
            , CASE WHEN COALESCE (tmpData.byOlap, 0) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isOlap
 
            , tmpData.Comment_in       :: TVarChar
@@ -812,6 +593,8 @@ BEGIN
                                    ON ObjectString_GoodsGroupFull.ObjectId = tmpData.GoodsId
                                   AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
+            LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = tmpData.CurrencyId
+
             LEFT JOIN tmpDiscount ON tmpDiscount.UnitId  = tmpData.UnitId
                                  AND tmpDiscount.GoodsId = tmpData.GoodsId
 
@@ -822,7 +605,7 @@ BEGIN
             LEFT JOIN tmpPriceInfo ON tmpPriceInfo.GoodsId = tmpData.GoodsId
            ;
 
-
+           
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -830,7 +613,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
- 03.03.20         *
  03.07.18         *
  15.03.18         * add RemainsAll
  19.02.18         *
@@ -856,4 +638,3 @@ CREATE UNIQUE INDEX idx_objecthistory_objectid_enddate_descid
 
 -- тест
 -- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inStartYear:= 0, inEndYear:= 0, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= TRUE, inIsYear:= FALSE, inIsRemains:= FALSE, inSession:= zfCalc_UserAdmin())
--- select * from gpReport_Goods_RemainsCurrent(inUnitId := 0 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 0 , inUserId := 2 , inGoodsPrintId := 0 , inIsPartion := 'True' , inIsPartner := 'False' , inIsSize := 'False' , inIsYear := 'False' , inIsRemains := 'False' ,  inSession := '2');

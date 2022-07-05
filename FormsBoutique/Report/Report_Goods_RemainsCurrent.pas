@@ -24,8 +24,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel,
-  dsdInternetAction;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel;
 
 type
   TReport_Goods_RemainsCurrentForm = class(TAncestorReportForm)
@@ -131,38 +130,6 @@ type
     bbPart_isOlapNo_list: TdxBarButton;
     actDelete_PartionGoods_ReportOLAP: TdsdExecStoredProc;
     bbDelete_PartionGoods_ReportOLAP: TdxBarButton;
-    OperPrice_grn: TcxGridDBColumn;
-    OperPriceList_curr: TcxGridDBColumn;
-    TotalSummPriceList_curr: TcxGridDBColumn;
-    ExportCDS: TClientDataSet;
-    ExportDS: TDataSource;
-    ExportXmlGrid: TcxGrid;
-    ExportXmlGridDBTableView: TcxGridDBTableView;
-    RowData: TcxGridDBColumn;
-    ExportXmlGridLevel: TcxGridLevel;
-    spGet_Export_FileName: TdsdStoredProc;
-    spSelect_Export: TdsdStoredProc;
-    actGet_Export_FileName: TdsdExecStoredProc;
-    actSelect_Export: TdsdExecStoredProc;
-    actExport_Grid: TExportGrid;
-    actSMTPFile: TdsdSMTPFileAction;
-    actExport: TMultiAction;
-    OperPriceList_orig: TcxGridDBColumn;
-    CurrencyName_pl: TcxGridDBColumn;
-    bbExport: TdxBarButton;
-    actPrintSticker_fp: TdsdPrintAction;
-    macPrintSticker_fp: TMultiAction;
-    bbPrintSticker_fp: TdxBarButton;
-    mactGoodsPrintList_Print_fp: TMultiAction;
-    bbGoodsPrintList_Print_fp: TdxBarButton;
-    spGet_Export_FileName2: TdsdStoredProc;
-    actPrint_Curr: TdsdPrintAction;
-    bbPrint_Curr: TdxBarButton;
-    ExportEmailCDS: TClientDataSet;
-    ExportEmailDS: TDataSource;
-    spGet_Export_Email: TdsdStoredProc;
-    actGet_Export_Email: TdsdExecStoredProc;
-    StartDate_Price: TcxGridDBColumn;
   private
     { Private declarations }
   public

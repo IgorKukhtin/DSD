@@ -1,15 +1,13 @@
 inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   Caption = #1054#1090#1095#1077#1090' <'#1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 563
+  ClientHeight = 433
   ClientWidth = 1131
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -453
-  ExplicitTop = -141
   ExplicitWidth = 1147
-  ExplicitHeight = 598
+  ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -235,21 +233,21 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   inherited PageControl: TcxPageControl [1]
     Top = 81
     Width = 1131
-    Height = 452
+    Height = 322
     TabOrder = 3
     ExplicitTop = 81
     ExplicitWidth = 1131
-    ExplicitHeight = 452
-    ClientRectBottom = 452
+    ExplicitHeight = 322
+    ClientRectBottom = 322
     ClientRectRight = 1131
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1131
-      ExplicitHeight = 452
+      ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Width = 1131
-        Height = 376
+        Height = 322
         ExplicitWidth = 1131
-        ExplicitHeight = 376
+        ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -306,11 +304,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPriceJur
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummPriceList_curr
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -372,11 +365,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPriceJur
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummPriceList_curr
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -390,7 +378,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           object isOLAP: TcxGridDBColumn
             Caption = #1057#1087#1080#1089#1086#1082' '#1076#1083#1103' '#1054#1051#1040#1055
             DataBinding.FieldName = 'isOLAP'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1083#1103' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103' '#1074' '#1054#1090#1095#1077#1090#1077' - '#1058#1054#1051#1068#1050#1054' '#1076#1083#1103' '#1057#1055#1048#1057#1050#1040' '#1055#1072#1088#1090#1080#1081'/'#1058#1086#1074#1072#1088#1086#1074
@@ -400,7 +387,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           object OperDate_Partion: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'OperDate_Partion'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -432,7 +418,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 95
           end
           object PeriodName: TcxGridDBColumn
             Caption = #1057#1077#1079#1086#1085
@@ -440,7 +426,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object PeriodYear: TcxGridDBColumn
             Caption = #1043#1086#1076
@@ -448,7 +434,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 55
           end
           object PartnerName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
@@ -467,6 +453,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 100
           end
+          object LabelName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'LabelName'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -478,21 +474,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           object GoodsName: TcxGridDBColumn
             Caption = #1040#1088#1090#1080#1082#1091#1083
             DataBinding.FieldName = 'GoodsName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
-          end
-          object LabelName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'LabelName'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
           end
           object GoodsSizeName: TcxGridDBColumn
             Caption = #1056#1072#1079#1084#1077#1088
@@ -502,21 +487,51 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 55
           end
-          object CompositionName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1072#1074
-            DataBinding.FieldName = 'CompositionName'
+          object OperPriceList: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1043#1056#1053
+            DataBinding.FieldName = 'OperPriceList'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
             Options.Editing = False
             Width = 70
           end
-          object GoodsInfoName: TcxGridDBColumn
-            Caption = #1054#1087#1080#1089#1072#1085#1080#1077
-            DataBinding.FieldName = 'GoodsInfoName'
+          object UpdateDate_Price: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/ '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.) '#1094#1077#1085#1099
+            DataBinding.FieldName = 'UpdateDate_Price'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/ '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.) '#1094#1077#1085#1099
             Options.Editing = False
-            Width = 70
+            Width = 107
+          end
+          object PriceJur: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082'.'
+            DataBinding.FieldName = 'PriceJur'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 75
+          end
+          object DiscountTax: TcxGridDBColumn
+            Caption = '% '#1089#1082'.'
+            DataBinding.FieldName = 'DiscountTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 40
           end
           object PriceTax: TcxGridDBColumn
             Caption = '% '#1085#1072#1094'.'
@@ -524,37 +539,11 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1082#1091#1088#1089#1091
-            Options.Editing = False
-            Width = 45
-          end
-          object PriceTax_doc: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094'. ('#1082#1091#1088#1089'. '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'PriceTax_doc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1082#1091#1088#1089#1091' '#1087#1088#1080#1093#1086#1076#1072
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
             Options.Editing = False
             Width = 56
-          end
-          object Amount_GoodsPrint: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080
-            DataBinding.FieldName = 'Amount_GoodsPrint'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
-            Width = 70
           end
           object Amount_in: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
@@ -562,12 +551,22 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 55
+          end
+          object Amount_GoodsPrint: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080
+            DataBinding.FieldName = 'Amount_GoodsPrint'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
+            Width = 70
           end
           object RemainsAll: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1048#1090#1086#1075#1086
@@ -580,7 +579,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1082#1086#1083'-'#1074#1086' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
             Options.Editing = False
-            Width = 55
+            Width = 70
           end
           object Remains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -606,424 +605,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 55
           end
-          object DiscountTax: TcxGridDBColumn
-            Caption = '% '#1089#1082'.'
-            DataBinding.FieldName = 'DiscountTax'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
-            Options.Editing = False
-            Width = 40
-          end
-          object Persent_diff: TcxGridDBColumn
-            Caption = '% '#1087#1077#1088#1077#1086#1094'.'
-            DataBinding.FieldName = 'Persent_diff'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080' '#1090#1077#1082#1091#1097#1077#1081' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072' '#1086#1090' '#1087#1077#1088#1074#1086#1081' '#1094#1077#1085#1099
-            Options.Editing = False
-            Width = 55
-          end
-          object isDiff: TcxGridDBColumn
-            Caption = #1044#1074#1072' '#1080#1079#1084'. '#1094#1077#1085#1099
-            DataBinding.FieldName = 'isDiff'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1096#1080#1073#1082#1072' - '#1044#1074#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085#1099': 1)% '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' + 2)'#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
-            Options.Editing = False
-            Width = 55
-          end
-          object StartDate_Price: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1094#1077#1085#1072' '#1055#1088#1072#1081#1089
-            DataBinding.FieldName = 'StartDate_Price'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1089' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1090#1077#1082#1091#1097#1072#1103' '#1094#1077#1085#1072' '#1087#1086' '#1055#1088#1072#1081#1089#1091
-            Options.Editing = False
-            Width = 70
-          end
-          object UpdateDate_Price: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/ '#1074#1088#1077#1084#1103' '#1074#1074#1086#1076' '#1062#1077#1085#1099
-            DataBinding.FieldName = 'UpdateDate_Price'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1090#1077#1082#1091#1097#1077#1081' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
-            Options.Editing = False
-            Width = 107
-          end
-          object OperPriceList_curr_disc: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1074#1072#1083'. (% '#1089#1082'.)'
-            DataBinding.FieldName = 'OperPriceList_curr_disc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1074#1072#1083#1102#1090#1077' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1082#1091 +
-              #1088#1089#1091')'
-            Options.Editing = False
-            Width = 85
-          end
-          object OperPriceList_disc: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1043#1056#1053' (% '#1089#1082'.)'
-            DataBinding.FieldName = 'OperPriceList_disc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1043#1056#1053' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1082#1091#1088#1089#1091 +
-              ')'
-            Options.Editing = False
-            Width = 80
-          end
-          object OperPriceList_orig: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089
-            DataBinding.FieldName = 'OperPriceList_orig'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1058#1077#1082#1091#1097#1072#1103' '#1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1074' '#1074#1072#1083#1102#1090#1077' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072')'
-            Options.Editing = False
-            Width = 70
-          end
-          object OperPriceList_first: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' ('#1055#1077#1088#1074#1072#1103')'
-            DataBinding.FieldName = 'OperPriceList_first'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1077#1088#1074#1072#1103' '#1094#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086', '#1074' '#1074#1072#1083#1102#1090#1077' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072')'
-            Options.Editing = False
-            Width = 70
-          end
-          object CurrencyName_pl: TcxGridDBColumn
-            Caption = #1042#1072#1083'. '#1094#1077#1085#1099
-            DataBinding.FieldName = 'CurrencyName_pl'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1072#1083#1102#1090#1072' '#1094#1077#1085#1099' '#1087#1086' '#1087#1088#1072#1081#1089#1091
-            Options.Editing = False
-            Width = 45
-          end
-          object OperPriceList_curr: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1074#1072#1083'.'
-            DataBinding.FieldName = 'OperPriceList_curr'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1058#1077#1082#1091#1097#1072#1103' '#1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1074#1072#1083#1102#1090#1077' ('#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1082#1091#1088#1089#1091')'
-            Options.Editing = False
-            Width = 70
-          end
-          object OperPriceList: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1043#1056#1053
-            DataBinding.FieldName = 'OperPriceList'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1058#1077#1082#1091#1097#1072#1103' '#1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1043#1056#1053' ('#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1082#1091#1088#1089#1091')'
-            Options.Editing = False
-            Width = 70
-          end
-          object OperPriceList_curr_doc_disc: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1074#1072#1083'. (% '#1089#1082'.+'#1082#1091#1088#1089' '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'OperPriceList_curr_doc_disc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1058#1077#1082#1091#1097#1072#1103' '#1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1074#1072#1083#1102#1090#1077' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1087#1086' '#1082#1091#1088 +
-              #1089#1091' '#1087#1088#1080#1093#1086#1076#1072')'
-            Options.Editing = False
-            Width = 130
-          end
-          object OperPriceList_doc_disc: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1043#1056#1053' (% '#1089#1082'.+'#1082#1091#1088#1089' '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'OperPriceList_doc_disc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1058#1077#1082#1091#1097#1072#1103' '#1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1043#1056#1053' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1087#1086' '#1082#1091#1088#1089#1091' ' +
-              #1087#1088#1080#1093#1086#1076#1072')'
-            Options.Editing = False
-            Width = 110
-          end
-          object OperPriceList_curr_doc: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1074#1072#1083'. ('#1082#1091#1088#1089' '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'OperPriceList_curr_doc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1058#1077#1082#1091#1097#1072#1103' '#1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1074#1072#1083#1102#1090#1077' ('#1087#1086' '#1082#1091#1088#1089#1091' '#1087#1088#1080#1093#1086#1076#1072')'
-            Options.Editing = False
-            Width = 83
-          end
-          object OperPriceList_doc: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1043#1056#1053' ('#1082#1091#1088#1089' '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'OperPriceList_doc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1058#1077#1082#1091#1097#1072#1103' '#1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1043#1056#1053' ('#1087#1086' '#1082#1091#1088#1089#1091' '#1087#1088#1080#1093#1086#1076#1072')'
-            Options.Editing = False
-            Width = 77
-          end
-          object TotalSummPriceList_curr: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' '#1074#1072#1083'.'
-            DataBinding.FieldName = 'TotalSummPriceList_curr'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1074#1072#1083#1102#1090#1077' ('#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1082#1091#1088#1089#1091') - '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086' '#1089' '#1091 +
-              #1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
-            Options.Editing = False
-            Width = 80
-          end
           object TotalSummPriceList: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1043#1056#1053
+            Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053
             DataBinding.FieldName = 'TotalSummPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1043#1056#1053' ('#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1082#1091#1088#1089#1091') - '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086' '#1089' '#1091#1095#1077#1090 +
-              #1086#1084' '#1076#1086#1083#1075#1072
-            Options.Editing = False
-            Width = 80
-          end
-          object TotalSummPriceList_curr_doc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089#1091' '#1074#1072#1083'. ('#1082#1091#1088#1089'. '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'TotalSummPriceList_curr_doc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1074#1072#1083#1102#1090#1077' ('#1087#1086' '#1082#1091#1088#1089#1091' '#1087#1088#1080#1093#1086#1076#1072') - '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086' '#1089' '#1091#1095 +
-              #1077#1090#1086#1084' '#1076#1086#1083#1075#1072
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' - '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
             Options.Editing = False
             Width = 100
-          end
-          object OperPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1074#1093'. '#1074' '#1074#1072#1083'.'
-            DataBinding.FieldName = 'OperPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1074' '#1074#1072#1083'. '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
-            Options.Editing = False
-            Width = 70
-          end
-          object CurrencyName: TcxGridDBColumn
-            Caption = #1042#1072#1083'. '#1074#1093'.'
-            DataBinding.FieldName = 'CurrencyName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object PriceJur: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1074#1093'. '#1074' '#1074#1072#1083'. '#1073#1077#1079' '#1089#1082'.'
-            DataBinding.FieldName = 'PriceJur'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
-            Options.Editing = False
-            Width = 75
-          end
-          object CountForPrice: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
-            DataBinding.FieldName = 'CountForPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object OperPrice_grn: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1074#1093'. '#1074' '#1043#1056#1053
-            DataBinding.FieldName = 'OperPrice_grn'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1074' '#1043#1056#1053' ('#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1082#1091#1088#1089#1091')'
-            Options.Editing = False
-            Width = 70
-          end
-          object OperPrice_grn_doc: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1074#1093'. '#1074' '#1043#1056#1053' ('#1082#1091#1088#1089' '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'OperPrice_grn_doc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1074' '#1043#1056#1053' ('#1087#1086' '#1082#1091#1088#1089#1091' '#1087#1088#1080#1093#1086#1076#1072')'
-            Options.Editing = False
-            Width = 70
-          end
-          object TotalSummPriceJur: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1074' '#1074#1072#1083'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
-            DataBinding.FieldName = 'TotalSummPriceJur'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1057#1091#1084#1084#1072' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' - '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086' '#1089' '#1091#1095#1077 +
-              #1090#1086#1084' '#1076#1086#1083#1075#1072
-            Width = 80
-          end
-          object TotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1074' '#1074#1072#1083'.'
-            DataBinding.FieldName = 'TotalSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1057#1091#1084#1084#1072' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' - '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086' ' +
-              #1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
-            Options.Editing = False
-            Width = 80
-          end
-          object TotalSummBalance: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1043#1056#1053
-            DataBinding.FieldName = 'TotalSummBalance'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1057#1091#1084#1084#1072' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' '#1074' '#1043#1056#1053' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1082#1091#1088#1089#1091' - '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086' '#1089 +
-              ' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
-            Options.Editing = False
-            Width = 100
-          end
-          object TotalSummBalance_doc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1043#1056#1053' ('#1082#1091#1088#1089'. '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'TotalSummBalance_doc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1057#1091#1084#1084#1072' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' '#1074' '#1043#1056#1053'  '#1087#1086' '#1082#1091#1088#1089#1091' '#1087#1088#1080#1093#1086#1076#1072' - '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086' '#1089 +
-              ' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
-            Options.Editing = False
-            Width = 100
-          end
-          object CurrencyValue: TcxGridDBColumn
-            Caption = #1050#1091#1088#1089
-            DataBinding.FieldName = 'CurrencyValue'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1058#1077#1082#1091#1097#1080#1081' '#1082#1091#1088#1089
-            Options.Editing = False
-            Width = 45
-          end
-          object ParValue: TcxGridDBColumn
-            Caption = #1053#1086#1084#1080#1085#1072#1083
-            DataBinding.FieldName = 'ParValue'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1086#1084#1080#1085#1072#1083' '#1090#1077#1082#1091#1097#1080#1081' '#1082#1091#1088#1089
-            Options.Editing = False
-            Width = 45
-          end
-          object CurrencyValue_doc: TcxGridDBColumn
-            Caption = #1050#1091#1088#1089' ('#1080#1079' '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'CurrencyValue_doc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1091#1088#1089' '#1087#1088#1080#1093#1086#1076#1072
-            Options.Editing = False
-            Width = 45
-          end
-          object ParValue_doc: TcxGridDBColumn
-            Caption = #1053#1086#1084#1080#1085#1072#1083' ('#1080#1079' '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'ParValue_doc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1086#1084#1080#1085#1072#1083' '#1082#1091#1088#1089' '#1087#1088#1080#1093#1086#1076#1072
-            Options.Editing = False
-            Width = 45
           end
           object SummDebt: TcxGridDBColumn
             Caption = #1044#1086#1083#1075' '#1043#1056#1053
@@ -1050,6 +642,96 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 80
           end
+          object TotalSummPriceJur: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'TotalSummPriceJur'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083'. '#1074#1093'.'
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object OperPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1093'.'
+            DataBinding.FieldName = 'OperPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CountForPrice: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'CountForPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077' - '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalSummBalance: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. ('#1043#1056#1053')'
+            DataBinding.FieldName = 'TotalSummBalance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' '#1074' '#1043#1056#1053' - '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
+            Options.Editing = False
+            Width = 100
+          end
+          object CurrencyValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089
+            DataBinding.FieldName = 'CurrencyValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object ParValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'ParValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074'.)'
             DataBinding.FieldName = 'GoodsGroupName'
@@ -1059,19 +741,26 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 80
           end
-          object MeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
           object CompositionGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
             DataBinding.FieldName = 'CompositionGroupName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CompositionName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1072#1074
+            DataBinding.FieldName = 'CompositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GoodsInfoName: TcxGridDBColumn
+            Caption = #1054#1087#1080#1089#1072#1085#1080#1077
+            DataBinding.FieldName = 'GoodsInfoName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1104,6 +793,15 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 95
           end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
           object DescName_Partion: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'DescName_Partion'
@@ -1117,7 +815,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           object UnitName_in: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'UnitName_in'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -1129,63 +826,32 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             DataBinding.FieldName = 'ChangePercent_in'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '+,0.###;-,0.###; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'. '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1088#1080#1093#1086#1076#1072
             Options.Editing = False
             Width = 70
           end
           object Comment_in: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'Comment_in'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 120
           end
-        end
-      end
-      object ExportXmlGrid: TcxGrid
-        Left = 0
-        Top = 376
-        Width = 1131
-        Height = 76
-        Align = alBottom
-        TabOrder = 1
-        Visible = False
-        object ExportXmlGridDBTableView: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = ExportDS
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          OptionsBehavior.IncSearch = True
-          OptionsData.CancelOnExit = False
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Inserting = False
-          OptionsView.CellAutoHeight = True
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.GroupByBox = False
-          OptionsView.Header = False
-          object RowData: TcxGridDBColumn
-            DataBinding.FieldName = 'RowData'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
+          object GoodsSizeName_real: TcxGridDBColumn
+            DataBinding.FieldName = 'GoodsSizeName_real'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
           end
-        end
-        object ExportXmlGridLevel: TcxGridLevel
-          GridView = ExportXmlGridDBTableView
         end
       end
     end
   end
   object PanelNameFull: TPanel [2]
     Left = 0
-    Top = 533
+    Top = 403
     Width = 1131
     Height = 30
     Align = alBottom
@@ -1292,52 +958,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end>
   end
   inherited ActionList: TActionList
-    Left = 63
     Top = 319
-    object macPrintSticker_fp: TMultiAction [1]
-      Category = 'PrintSticker'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_PrinterByUser
-        end
-        item
-          Action = actPrintSticker_fp
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
-      ImageIndex = 18
-    end
-    object actPrintSticker_fp: TdsdPrintAction [2]
-      Category = 'PrintSticker'
-      MoveParams = <>
-      StoredProc = spSelectPrintSticker
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintSticker
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
-      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
-      ImageIndex = 18
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDItems'
-        end>
-      Params = <>
-      ReportName = 'PrintMovement_IncomeStickerPODIUM_fp'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ReportNameParam.Value = 'PrintMovement_IncomeStickerPODIUM_fp'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = Null
-      PrinterNameParam.Component = FormParams
-      PrinterNameParam.ComponentItem = 'PrinterName'
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object macPrintSticker: TMultiAction [3]
+    object macPrintSticker: TMultiAction [1]
       Category = 'PrintSticker'
       MoveParams = <>
       ActionList = <
@@ -1350,26 +972,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
       Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
       ImageIndex = 18
-    end
-    object mactGoodsPrintList_Print_fp: TMultiAction [4]
-      Category = 'PrintSticker'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_GoodsPrint_Null
-        end
-        item
-          Action = macAddGoodsPrintList_Rem
-        end
-        item
-          Action = actGet_PrinterByUser
-        end
-        item
-          Action = actPrintSticker_fp
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
-      ImageIndex = 17
     end
     object actDelete_PartionGoods_ReportOLAP: TdsdExecStoredProc
       Category = 'Olap'
@@ -1645,74 +1247,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' '#1076#1083#1103' OLAP - '#1044#1040
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' '#1076#1083#1103' OLAP - '#1044#1040
       ImageIndex = 76
-    end
-    object actPrint_Curr: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1094#1077#1085#1077' '#1087#1088#1072#1081#1089#1072' '#1074' '#1074#1072#1083#1102#1090#1077
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1094#1077#1085#1077' '#1087#1088#1072#1081#1089#1072' '#1074' '#1074#1072#1083#1102#1090#1077
-      ImageIndex = 20
-      DataSets = <
-        item
-          UserName = 'frxDBDItems'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'UnitName'
-          Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerName'
-          Value = ''
-          Component = GuidesPartner
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BrandName'
-          Value = ''
-          Component = GuidesBrand
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PeriodName'
-          Value = ''
-          Component = GuidesPeriod
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StartYear'
-          Value = '0'
-          Component = GuidesStartYear
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndYear'
-          Value = '0'
-          Component = GuidesEndYear
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintReport_Goods_RemainsCurrent_curr'
-      ReportNameParam.Value = 'PrintReport_Goods_RemainsCurrent_curr'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
     end
     object spUpdate_Part_isOlapYes: TdsdExecStoredProc
       Category = 'Olap'
@@ -2307,117 +1841,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' OLAP - '#1044#1040
       ImageIndex = 76
     end
-    object actGet_Export_FileName: TdsdExecStoredProc
-      Category = 'Export_file'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_FileName
-      StoredProcList = <
-        item
-          StoredProc = spGet_Export_FileName
-        end>
-      Caption = 'actGet_Export_FileName'
-    end
-    object actSelect_Export: TdsdExecStoredProc
-      Category = 'Export_file'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSelect_Export
-      StoredProcList = <
-        item
-          StoredProc = spSelect_Export
-        end>
-      Caption = 'actSelect_Export'
-    end
-    object actExport_Grid: TExportGrid
-      Category = 'Export_file'
-      MoveParams = <>
-      ExportType = cxegExportToTextUTF8
-      Grid = ExportXmlGrid
-      Caption = 'actExport_Grid'
-      OpenAfterCreate = False
-      DefaultFileName = 'Report_'
-      DefaultFileExt = 'XML'
-    end
-    object actExport: TMultiAction
-      Category = 'Export_file'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_Export_FileName
-        end
-        item
-          Action = actGet_Export_Email
-        end
-        item
-          Action = actSelect_Export
-        end
-        item
-          Action = actExport_Grid
-        end
-        item
-          Action = actSMTPFile
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1074'  '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
-      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
-      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1074' '#1092#1072#1081#1083
-      Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
-      ImageIndex = 53
-    end
-    object actGet_Export_Email: TdsdExecStoredProc
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_Email
-      StoredProcList = <
-        item
-          StoredProc = spGet_Export_Email
-        end>
-      Caption = 'actGet_Export_Email'
-    end
-    object actSMTPFile: TdsdSMTPFileAction
-      Category = 'Export_Email'
-      MoveParams = <>
-      Host.Value = Null
-      Host.Component = ExportEmailCDS
-      Host.ComponentItem = 'Host'
-      Host.DataType = ftString
-      Host.MultiSelectSeparator = ','
-      Port.Value = 25
-      Port.Component = ExportEmailCDS
-      Port.ComponentItem = 'Port'
-      Port.DataType = ftString
-      Port.MultiSelectSeparator = ','
-      UserName.Value = Null
-      UserName.Component = ExportEmailCDS
-      UserName.ComponentItem = 'UserName'
-      UserName.DataType = ftString
-      UserName.MultiSelectSeparator = ','
-      Password.Value = Null
-      Password.Component = ExportEmailCDS
-      Password.ComponentItem = 'Password'
-      Password.DataType = ftString
-      Password.MultiSelectSeparator = ','
-      Body.Value = Null
-      Body.ComponentItem = 'Body'
-      Body.DataType = ftString
-      Body.MultiSelectSeparator = ','
-      Subject.Value = Null
-      Subject.Component = ExportEmailCDS
-      Subject.ComponentItem = 'Subject'
-      Subject.DataType = ftString
-      Subject.MultiSelectSeparator = ','
-      FromAddress.Value = Null
-      FromAddress.Component = ExportEmailCDS
-      FromAddress.ComponentItem = 'AddressFrom'
-      FromAddress.DataType = ftString
-      FromAddress.MultiSelectSeparator = ','
-      ToAddress.Value = Null
-      ToAddress.Component = ExportEmailCDS
-      ToAddress.ComponentItem = 'AddressTo'
-      ToAddress.DataType = ftString
-      ToAddress.MultiSelectSeparator = ','
-    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2538,8 +1961,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Top = 224
   end
   inherited BarManager: TdxBarManager
-    Left = 112
-    Top = 200
+    Left = 120
+    Top = 160
     DockControlHeights = (
       0
       0
@@ -2633,19 +2056,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Visible = True
-          ItemName = 'bbExport'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrintSticker'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSticker_fp'
         end
         item
           Visible = True
@@ -2657,19 +2068,11 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Visible = True
-          ItemName = 'bbGoodsPrintList_Print_fp'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Curr'
         end
         item
           Visible = True
@@ -2733,7 +2136,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object bbPriceListGoods: TdxBarButton
       Action = actPriceListGoods
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080' '#1094#1077#1085
       Category = 0
     end
     object bbGoods_isOlapNo_list: TdxBarButton
@@ -2754,23 +2156,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object bbDelete_PartionGoods_ReportOLAP: TdxBarButton
       Action = actDelete_PartionGoods_ReportOLAP
-      Category = 0
-    end
-    object bbExport: TdxBarButton
-      Action = actExport
-      Category = 0
-    end
-    object bbPrintSticker_fp: TdxBarButton
-      Action = macPrintSticker_fp
-      Category = 0
-      ImageIndex = 19
-    end
-    object bbGoodsPrintList_Print_fp: TdxBarButton
-      Action = mactGoodsPrintList_Print_fp
-      Category = 0
-    end
-    object bbPrint_Curr: TdxBarButton
-      Action = actPrint_Curr
       Category = 0
     end
   end
@@ -2831,7 +2216,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 264
+    Left = 272
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -2892,8 +2277,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 462
-    Top = 154
+    Left = 510
+    Top = 74
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -3102,7 +2487,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Name = 'inValue'
         Value = 0.000000000000000000
         Component = MasterCDS
-        ComponentItem = 'Remains'
+        ComponentItem = 'RemainsAll'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3483,138 +2868,5 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     PackSize = 1
     Left = 840
     Top = 288
-  end
-  object ExportCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 40
-    Top = 464
-  end
-  object ExportDS: TDataSource
-    DataSet = ExportCDS
-    Left = 96
-    Top = 464
-  end
-  object spGet_Export_FileName: TdsdStoredProc
-    StoredProcName = 'gpGet_GoodsRemains_FileName'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'outFileName'
-        Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'DefaultFileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outDefaultFileExt'
-        Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'DefaultFileExt'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outEncodingANSI'
-        Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'EncodingANSI'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileName'
-        Value = Null
-        Component = actSMTPFile
-        ComponentItem = 'FileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 200
-    Top = 464
-  end
-  object spSelect_Export: TdsdStoredProc
-    StoredProcName = 'gpSelect_GoodsRemains_File'
-    DataSet = ExportCDS
-    DataSets = <
-      item
-        DataSet = ExportCDS
-      end>
-    Params = <
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 296
-    Top = 472
-  end
-  object spGet_Export_FileName2: TdsdStoredProc
-    StoredProcName = 'gpGet_GoodsRemains_FileName'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'outFileName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outDefaultFileExt'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outEncodingANSI'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 352
-    Top = 408
-  end
-  object ExportEmailCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 248
-    Top = 424
-  end
-  object ExportEmailDS: TDataSource
-    DataSet = ExportEmailCDS
-    Left = 288
-    Top = 425
-  end
-  object spGet_Export_Email: TdsdStoredProc
-    StoredProcName = 'gpGet_GoodsRemains_Email'
-    DataSet = ExportEmailCDS
-    DataSets = <
-      item
-        DataSet = ExportEmailCDS
-      end>
-    Params = <
-      item
-        Name = 'inFileName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inFileName'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 384
-    Top = 434
   end
 end
