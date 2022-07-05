@@ -262,7 +262,7 @@ BEGIN
                           WHERE MI_Income.Id  IN (SELECT tmpMIC_Info.MIIncomeId FROM tmpMIC_Info))
 
     , tmpMI_CheckSum AS (SELECT Movement_Check.InvoiceId                                                                        AS InvoiceId 
-                              , MI_Income.NDSKindId 
+                              , COALESCE(MI_Income.NDSKindId, zc_Enum_NDSKind_Medical())                                        AS NDSKindId  
                               , ROUND(SUM (CASE WHEN Movement_Check.DescId = zc_Movement_Check() AND Movement_Check.Id = 25920626
                                                 THEN COALESCE (MIFloat_SummChangePercent.ValueData, 0)
                                                 ELSE COALESCE(tmpMIC_Info.Amount, MI_Check.Amount) * COALESCE (MIFloat_PriceSale.ValueData, 0) -
@@ -503,7 +503,7 @@ BEGIN
         
         LEFT JOIN tmpMI_CheckSum AS MI_CheckSumMedical
                                  ON MI_CheckSumMedical.InvoiceId = Movement.Id 
-                                AND MI_CheckSumAll.SummChangePercent = COALESCE (MovementFloat_TotalSumm.ValueData,0)
+                               -- AND MI_CheckSumAll.SummChangePercent = COALESCE (MovementFloat_TotalSumm.ValueData,0)
                                 AND MI_CheckSumMedical.NDSKindId = zc_Enum_NDSKind_Medical()
 
         LEFT JOIN tmpOF_NDSKind_NDS AS OF_NDSKind_NDS_Medical
@@ -511,7 +511,7 @@ BEGIN
                                             
         LEFT JOIN tmpMI_CheckSum AS MI_CheckSumSpecial_0
                                  ON MI_CheckSumSpecial_0.InvoiceId = Movement.Id 
-                                AND MI_CheckSumAll.SummChangePercent = COALESCE (MovementFloat_TotalSumm.ValueData,0)
+                                --AND MI_CheckSumAll.SummChangePercent = COALESCE (MovementFloat_TotalSumm.ValueData,0)
                                 AND MI_CheckSumSpecial_0.NDSKindId = zc_Enum_NDSKind_Special_0()
 
         LEFT JOIN tmpOF_NDSKind_NDS AS OF_NDSKind_NDS_Special_0
@@ -545,4 +545,4 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 --select * from gpSelect_Movement_Invoice(inStartDate := ('07.06.2021')::TDateTime , inEndDate := ('20.04.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3')
 -- where TotalSummAll <> TotalSumm
 
-select * from gpSelect_Movement_Invoice(inStartDate := ('07.02.2022')::TDateTime , inEndDate := ('13.04.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_Movement_Invoice(inStartDate := ('01.06.2022')::TDateTime , inEndDate := ('15.06.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');

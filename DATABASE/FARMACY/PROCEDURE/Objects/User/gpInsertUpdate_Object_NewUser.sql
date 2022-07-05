@@ -117,11 +117,23 @@ BEGIN
                                         , inUserId   := ioId
                                         , inRoleId   := zc_Enum_Role_CashierPharmacy()
                                         , inSession  := inSession);
-   
+
+   -- Заменили пользователю - АПТЕКУ
+   PERFORM gpInsertUpdate_DefaultValue (ioId           := DefaultValue.Id
+                                      , inDefaultKeyId := DefaultKeys.Id
+                                      , inUserKey      := ioId
+                                      , inDefaultValue := inUnitId :: TVarChar
+                                      , inSession      := zfCalc_UserAdmin()
+                                       )
+   FROM DefaultKeys
+        LEFT JOIN DefaultValue ON DefaultValue.DefaultKeyId = DefaultKeys.Id
+                              AND DefaultValue.UserKeyId    = ioId
+   WHERE LOWER (DefaultKeys.Key) = LOWER ('zc_Object_Unit');
+        
    -- !!!ВРЕМЕННО для ТЕСТА!!!
    IF inSession = zfCalc_UserAdmin()
    THEN
-       RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', ioId, vbMember, inSession;
+       RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%>', ioId, vbMember, inSession, lpGet_DefaultValue('zc_Object_Unit', ioId);
    END IF;
    
 END;$BODY$
@@ -136,5 +148,4 @@ ALTER FUNCTION gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, Integ
 */
 
 -- тест
--- 
-select * from gpInsertUpdate_Object_NewUser(ioId := 0 , inName := 'Иванов Иван Иванович' , inPhone := '067 553-20-77' , inPositionId := 1672498 , inUnitId := 183289 , inLogin := 'Иванов Иван' , inPassword := '123456' ,  inSession := '3');
+-- select * from gpInsertUpdate_Object_NewUser(ioId := 0 , inName := 'Иванов Иван Иванович' , inPhone := '067 553-20-77' , inPositionId := 1672498 , inUnitId := 183289 , inLogin := 'Иванов Иван' , inPassword := '123456' ,  inSession := zfCalc_UserAdmin());

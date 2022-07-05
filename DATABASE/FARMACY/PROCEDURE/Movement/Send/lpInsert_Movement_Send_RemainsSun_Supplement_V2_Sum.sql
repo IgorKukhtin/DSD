@@ -507,37 +507,18 @@ BEGIN
                            GROUP BY COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId))
 
       INSERT INTO _tmpGoods_PromoUnit_Supplement_V2
-      SELECT OL_UnitCategory.Objectid                AS UnitId
-           , MI_Goods.Objectid                       AS GoodsId
-           , COALESCE(NULLIF(MIFloat_AmountPlanMax.ValueData, 0), MI_Goods.Amount) * tmpUserUnit.CountUser AS Amount
+      SELECT MI_Goods.UnitId                         AS UnitId
+           , MI_Goods.GoodsId                        AS GoodsId
+           , MI_Goods.Amount * tmpUserUnit.CountUser AS Amount
 
-      FROM Movement
+      FROM gpSelect_PromoUnit_UnitGoods (inOperDate := inOperDate, inSession := inUserId::TVarChar) AS MI_Goods
 
-           INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
-                                         ON MovementLinkObject_UnitCategory.MovementId = Movement.Id
-                                        AND MovementLinkObject_UnitCategory.DescId = zc_MovementLinkObject_UnitCategory()
-           INNER JOIN ObjectLink AS OL_UnitCategory
-                                 ON OL_UnitCategory.DescId = zc_ObjectLink_Unit_Category()
-                                AND OL_UnitCategory.ChildObjectId = MovementLinkObject_UnitCategory.ObjectId
-                                
-           INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId = OL_UnitCategory.Objectid
-
-           INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
-                                              AND MI_Goods.DescId = zc_MI_Master()
-                                              AND MI_Goods.isErased = FALSE
-                                            
-           LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
-                                       ON MIFloat_AmountPlanMax.MovementItemId = MI_Goods.Id
-                                      AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+           INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId = MI_Goods.UnitId
                                                           
-           INNER JOIN _tmpGoods_SUN_Supplement_V2 ON _tmpGoods_SUN_Supplement_V2.GoodsId = MI_Goods.Objectid 
-                                                          
-           INNER JOIN tmpUserUnit ON tmpUserUnit.UnitId = OL_UnitCategory.Objectid
-
-      WHERE Movement.StatusId = zc_Enum_Status_Complete()
-        AND Movement.DescId = zc_Movement_PromoUnit()
-        AND Movement.OperDate = DATE_TRUNC ('MONTH', inOperDate)
-        AND COALESCE(NULLIF(MIFloat_AmountPlanMax.ValueData, 0), MI_Goods.Amount) > 0;
+           INNER JOIN _tmpGoods_SUN_Supplement_V2 ON _tmpGoods_SUN_Supplement_V2.GoodsId = MI_Goods.GoodsId
+           
+           INNER JOIN tmpUserUnit ON tmpUserUnit.UnitId = MI_Goods.UnitId           
+      ;
       
  --raise notice 'Value 05: %', (select Count(*) from _tmpGoods_PromoUnit_Supplement_V2);      
 
