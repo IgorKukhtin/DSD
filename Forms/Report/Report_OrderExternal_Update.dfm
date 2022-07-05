@@ -444,6 +444,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     Height = 206
     Align = alBottom
     TabOrder = 9
+    ExplicitTop = 376
     object grChartDBChartView1: TcxGridDBChartView
       DataController.DataSource = MasterDS
       DiagramArea.Values.LineWidth = 2
@@ -821,7 +822,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         item
           DataSet = ItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupPrint;OperDate_CarInfo;GoodsName;GoodsKindName'
+          IndexFieldNames = 'GroupPrint;GoodsName;GoodsKindName'
         end>
       Params = <
         item

@@ -49,7 +49,8 @@ BEGIN
                     , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
                     , COALESCE(MIObject_PersonalGroup.ObjectId, 0)  AS PersonalGroupId
                     , MIObject_WorkTimeKind.ObjectId                AS WorkTimeKindId
-                    , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
+                    , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName 
+                    , COALESCE(MIObject_StorageLine.ObjectId, 0)    AS StorageLineId
                     , MovementLinkObject_Unit.ObjectId              AS UnitId
                     , COALESCE (ObjectBoolean_NoSheetCalc.ValueData, FALSE) ::Boolean AS isNoSheetCalc
                     , CASE WHEN inUnitId = 8451
@@ -81,7 +82,10 @@ BEGIN
                                                     AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
                     LEFT JOIN ObjectBoolean AS ObjectBoolean_NoSheetCalc
                                             ON ObjectBoolean_NoSheetCalc.ObjectId = COALESCE(MIObject_PositionLevel.ObjectId, 0)
-                                           AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
+                                           AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc() 
+                    LEFT JOIN MovementItemLinkObject AS MIObject_StorageLine
+                                                     ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id
+                                                    AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                  AND Movement.DescId = zc_Movement_SheetWorkTime()
                  AND COALESCE (MIObject_WorkTimeKind.ObjectId,0)<> 0
@@ -111,6 +115,8 @@ BEGIN
          , Object_PositionLevel.ValueData  AS PositionLevelName
          , Object_PersonalGroup.Id         AS PersonalGroupId
          , Object_PersonalGroup.ValueData  AS PersonalGroupName
+         , Object_StorageLine.Id               AS StorageLineId
+         , Object_StorageLine.ValueData        AS StorageLineName
          , Object_WorkTimeKind.Id          AS WorkTimeKindId
          , Object_WorkTimeKind.ValueData   AS WorkTimeKindName 
          , tmpMI.ShortName
@@ -127,6 +133,7 @@ BEGIN
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = tmpMI.PersonalGroupId
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI.UnitId
          LEFT JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = tmpMI.WorkTimeKindId
+         LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = tmpMI.StorageLineId
 
          LEFT JOIN tmpPersonal ON tmpPersonal.MemberId        = tmpMI.MemberId
                               AND tmpPersonal.PositionId      = tmpMI.PositionId
