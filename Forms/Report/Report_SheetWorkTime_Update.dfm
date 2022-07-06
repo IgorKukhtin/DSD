@@ -4,6 +4,7 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
   ClientWidth = 928
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -34
   ExplicitWidth = 944
   ExplicitHeight = 553
   PixelsPerInch = 96
@@ -182,6 +183,12 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
             Options.Editing = False
             Width = 95
           end
+          object ShortName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1089#1084'.('#1089#1086#1082#1088'.)'
+            DataBinding.FieldName = 'ShortName'
+            Options.Editing = False
+            Width = 80
+          end
           object Amount: TcxGridDBColumn
             Caption = #1063#1072#1089#1099
             DataBinding.FieldName = 'Amount'
@@ -195,6 +202,24 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
             Options.Moving = False
             Width = 48
           end
+          object OperDate_mi: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1101#1083#1077#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'OperDate_mi'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' ('#1101#1083#1077#1084#1077#1085#1090')'
+            Options.Editing = False
+            Width = 100
+          end
+          object UserName_mi: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1101#1083#1077#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'UserName_mi'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' ('#1101#1083#1077#1084#1077#1085#1090')'
+            Options.Editing = False
+            Width = 100
+          end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -204,13 +229,23 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
             Options.Editing = False
             Width = 70
           end
-          object ShortName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1089#1084'.('#1089#1086#1082#1088'.)'
-            DataBinding.FieldName = 'ShortName'
-            Visible = False
+          object OperDate_mov: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'OperDate_mov'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
             Options.Editing = False
-            VisibleForCustomization = False
-            Width = 80
+            Width = 100
+          end
+          object UserName_mov: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'UserName_mov'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+            Options.Editing = False
+            Width = 100
           end
         end
       end

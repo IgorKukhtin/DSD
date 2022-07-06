@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_SheetWorkTime_Update(
     IN inSession     TVarChar    -- сессия пользователя
 )
   RETURNS TABLE (MovementId Integer, MovementItemId Integer
-	           , UnitId Integer
+               , UnitId Integer
                , UnitName  TVarChar
                , MemberId Integer
                , MemberCode Integer
@@ -31,6 +31,8 @@ CREATE OR REPLACE FUNCTION gpReport_SheetWorkTime_Update(
                , OperDate   TDateTime
                , DateIn     TDateTime
                , DateOut    TDateTime
+               , OperDate_mi  TDateTime, UserName_mi  TVarChar 
+               , OperDate_mov TDateTime, UserName_mov TVarChar 
                , isErased Boolean
                  )
 AS
@@ -91,6 +93,21 @@ BEGIN
                  AND Movement.DescId = zc_Movement_SheetWorkTime()
                  AND COALESCE (MIObject_WorkTimeKind.ObjectId,0)<> 0
                )
+     --
+   , tmpMIProtocol AS (SELECT MovementItemProtocol.*
+                              -- № п/п
+                            , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.OperDate DESC) AS Ord
+                       FROM MovementItemProtocol
+                       WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
+                      )
+     --
+   , tmpMovProtocol AS (SELECT *
+                               -- № п/п
+                             , ROW_NUMBER() OVER (PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate DESC) AS Ord
+                        FROM MovementProtocol
+                        WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
+                       )
+     --
    , tmpPersonal AS (SELECT Object_Personal_View.MemberId
                           , Object_Personal_View.PersonalId
                           , Object_Personal_View.PositionId
@@ -104,8 +121,8 @@ BEGIN
                      )
 
     SELECT tmpMI.MovementId
-	     , tmpMI.MovementItemId
-	     , Object_Unit.Id                  AS UnitId
+         , tmpMI.MovementItemId
+         , Object_Unit.Id                  AS UnitId
          , Object_Unit.ValueData           AS UnitName
          , Object_Member.Id                AS MemberId
          , Object_Member.ObjectCode        AS MemberCode
@@ -126,8 +143,23 @@ BEGIN
          , tmpMI.OperDate
          , tmpPersonal.DateIn
          , tmpPersonal.DateOut
+
+         , tmpMIProtocol.OperDate    AS OperDate_mi
+         , Object_User_mi.ValueData  AS UserName_mi
+
+         , tmpMovProtocol.OperDate   AS OperDate_mov
+         , Object_User_mov.ValueData AS UserName_mov
+
          , tmpMI.isErased ::Boolean
+
     FROM tmpMI
+         LEFT JOIN tmpMIProtocol   ON tmpMIProtocol.MovementItemId = tmpMI.MovementItemId
+                                  AND tmpMIProtocol.Ord            = 1
+         LEFT JOIN Object AS Object_User_mi ON Object_User_mi.Id = tmpMIProtocol.UserId
+         LEFT JOIN tmpMovProtocol ON tmpMovProtocol.MovementId = tmpMI.MovementId
+                                 AND tmpMovProtocol.Ord        = 1
+         LEFT JOIN Object AS Object_User_mov ON Object_User_mov.Id = tmpMovProtocol.UserId
+         --
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMI.MemberId
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpMI.PositionId
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpMI.PositionLevelId

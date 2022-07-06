@@ -54,6 +54,10 @@ type
     bbMISetUnErased: TdxBarButton;
     bbMovementItemProtocol: TdxBarButton;
     ShortName: TcxGridDBColumn;
+    OperDate_mi: TcxGridDBColumn;
+    UserName_mi: TcxGridDBColumn;
+    OperDate_mov: TcxGridDBColumn;
+    UserName_mov: TcxGridDBColumn;
   private
     { Private declarations }
   public
