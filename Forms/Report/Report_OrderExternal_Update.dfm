@@ -42,6 +42,26 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeightDiff_child
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -63,6 +83,26 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = RouteName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeightDiff_child
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -301,6 +341,54 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             Options.Editing = False
             Width = 60
           end
+          object Amount_child: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074
+            DataBinding.FieldName = 'Amount_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072
+            Options.Editing = False
+            Width = 87
+          end
+          object AmountDiff_child: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089' ('#1079#1072#1082#1072#1079' + '#1076#1086#1079#1072#1082#1072#1079')'
+            DataBinding.FieldName = 'AmountDiff_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089' ('#1079#1072#1082#1072#1079' + '#1076#1086#1079#1072#1082#1072#1079')'
+            Options.Editing = False
+            Width = 87
+          end
+          object AmountWeight_child: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074', '#1074#1077#1089
+            DataBinding.FieldName = 'AmountWeight_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072', '#1074#1077#1089
+            Options.Editing = False
+            Width = 87
+          end
+          object AmountWeightDiff_child: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089' ('#1079#1072#1082#1072#1079' + '#1076#1086#1079#1072#1082#1072#1079'), '#1074#1077#1089
+            DataBinding.FieldName = 'AmountWeightDiff_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089' ('#1079#1072#1082#1072#1079' + '#1076#1086#1079#1072#1082#1072#1079') , '#1074#1077#1089
+            Options.Editing = False
+            Width = 96
+          end
           object StartWeighing: TcxGridDBColumn
             Caption = #1057#1090#1072#1088#1090
             DataBinding.FieldName = 'StartWeighing'
@@ -444,8 +532,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     Height = 206
     Align = alBottom
     TabOrder = 9
-    ExplicitLeft = 72
-    ExplicitTop = 390
     object grChartDBChartView1: TcxGridDBChartView
       DataController.DataSource = MasterDS
       DiagramArea.Values.LineWidth = 2

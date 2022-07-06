@@ -5199,6 +5199,18 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actChoiceGoodsSPSearch_1303: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' "'#1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303"'
+      Hint = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' "'#1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303"'
+      FormName = 'TChoiceGoodsSPSearch_1303Form'
+      FormNameParam.Value = 'TChoiceGoodsSPSearch_1303Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5872,6 +5884,9 @@
       end
       object actSearchRemainsVIP1: TMenuItem
         Action = actSearchRemainsVIP
+      end
+      object N13035: TMenuItem
+        Action = actChoiceGoodsSPSearch_1303
       end
       object N39: TMenuItem
         Caption = '-'

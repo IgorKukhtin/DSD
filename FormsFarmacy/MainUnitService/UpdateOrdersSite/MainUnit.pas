@@ -20,26 +20,67 @@ uses
   cxImageComboBox, cxNavigator, System.JSON,
   cxDataControllerConditionalFormattingRulesManagerDialog, ZStoredProcedure,
   dxDateRanges, REST.Types, REST.Client, Data.Bind.Components,
-  Data.Bind.ObjectScope, dsdAction, System.Actions, dsdDB;
+  Data.Bind.ObjectScope, dsdAction, System.Actions, dsdDB, cxDateUtils,
+  Datasnap.DBClient, DataModul;
 
 type
   TMainForm = class(TForm)
     Timer1: TTimer;
     Panel2: TPanel;
     btnAll: TButton;
-    btnDownloadPublished: TButton;
+    btnSelect_UpdateOrdersSite: TButton;
     Panel3: TPanel;
     spSite_Param: TdsdStoredProc;
-    spUpdate_PublishedSite: TdsdStoredProc;
-    ActionList1: TActionList;
+    ActionList: TActionList;
     actSite_Param: TdsdExecStoredProc;
-    actUpdate_PublishedSite: TdsdExecStoredProc;
-    actFD_DownloadPublishedSite: TdsdForeignData;
     FormParams: TdsdFormParams;
+    deStartDate: TcxDateEdit;
+    spSelect_UpdateOrdersSite: TdsdStoredProc;
+    actSelect_UpdateOrdersSite: TdsdExecStoredProc;
+    cxGridUpdateOrdersSiteDBTableView1: TcxGridDBTableView;
+    cxGridUpdateOrdersSiteLevel1: TcxGridLevel;
+    cxGridUpdateOrdersSite: TcxGrid;
+    UpdateOrdersSiteCDS: TClientDataSet;
+    UpdateOrdersSiteDS: TDataSource;
+    cxGridUpdateOrdersSite_Id: TcxGridDBColumn;
+    cxGridUpdateOrdersSite_InvNumber: TcxGridDBColumn;
+    cxGridUpdateOrdersSite_OperDate: TcxGridDBColumn;
+    cxGridUpdateOrdersSite_InvNumberOrder: TcxGridDBColumn;
+    cxGridUpdateOrdersSite_UnitId: TcxGridDBColumn;
+    cxGridUpdateOrdersSite_UnitName: TcxGridDBColumn;
+    maDo: TMultiAction;
+    btnDo: TButton;
+    actDo: TAction;
+    PharmOrdersDS: TDataSource;
+    PharmOrdersCDS: TClientDataSet;
+    actDoone: TAction;
+    btnDoone: TButton;
+    actPharmOrders: TdsdForeignData;
+    cxGridPharmOrders: TcxGrid;
+    cxGridPharmOrdersDBTableView1: TcxGridDBTableView;
+    cxGridPharmOrdersLevel1: TcxGridLevel;
+    cxGridPharmOrders_id: TcxGridDBColumn;
+    cxGridPharmOrders_pharmacy_order_id: TcxGridDBColumn;
+    cxGridPharmOrders_name: TcxGridDBColumn;
+    cxGridPharmOrders_phone: TcxGridDBColumn;
+    cxGridPharmOrders_inDateComing: TcxGridDBColumn;
+    PharmOrderProductsDS: TDataSource;
+    PharmOrderProductsCDS: TClientDataSet;
+    cxGridPharmOrderProducts: TcxGrid;
+    cxGridPharmOrderProductsDBTableView1: TcxGridDBTableView;
+    cxGridPharmOrderProductsLevel1: TcxGridLevel;
+    cxGridPharmOrderProducts_id: TcxGridDBColumn;
+    cxGridPharmOrderProducts_drug_id: TcxGridDBColumn;
+    cxGridPharmOrderProducts_drug_name: TcxGridDBColumn;
+    cxGridPharmOrderProducts_type_order: TcxGridDBColumn;
+    cxGridPharmOrderProducts_price: TcxGridDBColumn;
+    cxGridPharmOrderProducts_quantity: TcxGridDBColumn;
+    actPharmOrderProductsCDS: TdsdForeignData;
     procedure btnAllClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-    procedure btnDownloadPublishedClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure actDoExecute(Sender: TObject);
+    procedure actDooneExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -57,6 +98,18 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TMainForm.actDooneExecute(Sender: TObject);
+begin
+  try
+    if actSite_Param.Execute then actDo.Execute;
+  except
+    on E:Exception do
+    begin
+        Add_Log('Ошибка: ' + E.Message);
+    end;
+  end;
+end;
 
 procedure TMainForm.Add_Log(AMessage: String);
 var
@@ -82,33 +135,34 @@ end;
 procedure TMainForm.btnAllClick(Sender: TObject);
 begin
   Add_Log('-----------------');
-  Add_Log('Запуск процессов загрузки.'#13#10);
+  Add_Log('Запуск обработки заазов.'#13#10);
 
-  btnDownloadPublishedClick(Sender);
+  if actSelect_UpdateOrdersSite.Execute then  maDo.Execute;
 
   Add_Log('Выполнено.');
 end;
 
-procedure TMainForm.btnDownloadPublishedClick(Sender: TObject);
-begin
-  try
-    actFD_DownloadPublishedSite.ShowGaugeForm := Application.ShowMainForm;
-    actFD_DownloadPublishedSite.Execute;
-  except
-    on E:Exception do
-    begin
-        Add_Log('Ошибка: ' + E.Message);
-    end;
-  end;
-end;
-
 procedure TMainForm.FormCreate(Sender: TObject);
+var ini: TIniFile;
 begin
+
+  ini := TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
+  try
+
+    deStartDate.Date := ini.ReadDateTime('Data', 'DataUpdate', Date);
+    ini.WriteDateTime('Data','DataUpdate',deStartDate.Date);
+
+  finally
+    ini.free;
+  end;
+
   if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
   begin
     Application.ShowMainForm := False;
     btnAll.Enabled := false;
-    btnDownloadPublished.Enabled := false;
+    btnSelect_UpdateOrdersSite.Enabled := false;
+    btnDo.Enabled := false;
+    btnDoone.Enabled := false;
     Timer1.Enabled := true;
   end;
 end;
@@ -122,5 +176,25 @@ begin
     Close;
   end;
 end;
+
+procedure TMainForm.actDoExecute(Sender: TObject);
+begin
+  try
+
+    // Заказ с сайта
+    if not actPharmOrders.Execute then Exit;
+
+    // Содержимое заказа с сайта
+    if not actPharmOrderProductsCDS.Execute then Exit;
+
+  except
+    on E:Exception do
+    begin
+        Add_Log('Ошибка: ' + E.Message);
+    end;
+  end;
+end;
+
+
 
 end.

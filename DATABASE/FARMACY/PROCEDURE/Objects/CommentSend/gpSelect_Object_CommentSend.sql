@@ -27,6 +27,10 @@ BEGIN
   
   
    RETURN QUERY 
+   WITH tmpBanCommentSend AS (SELECT CommentSendId
+                              FROM gpSelect_Object_BanCommentSend(inShowAll := 'False' ,  inSession := inSession) AS BanCommentSend
+                              WHERE BanCommentSend.UnitId = inUnitId)
+   
    SELECT Object_CommentSend.Id                             AS Id 
         , Object_CommentSend.ObjectCode                     AS Code
         , Object_CommentSend.ValueData                      AS Name
@@ -40,12 +44,12 @@ BEGIN
                              ON ObjectLink_CommentSend_CommentTR.ObjectId = Object_CommentSend.Id
                             AND ObjectLink_CommentSend_CommentTR.DescId = zc_ObjectLink_CommentSend_CommentTR()
         LEFT JOIN Object AS Object_CommentTR ON Object_CommentTR.Id = ObjectLink_CommentSend_CommentTR.ChildObjectId
+        
+        LEFT JOIN tmpBanCommentSend ON tmpBanCommentSend.CommentSendId = Object_CommentSend.Id
 
    WHERE Object_CommentSend.DescId = zc_Object_CommentSend()
      AND (Object_CommentSend.isErased = False OR inisShowAll = True)
-     AND (COALESCE(inUnitId, 0) <> 377594 OR Object_CommentSend.Id NOT IN (15180138, 14883297, 14883331))
-     AND (COALESCE(inUnitId, 0) <> 377574 OR Object_CommentSend.Id NOT IN (14883331, 14883297, 14894408, 14911561, 14957072, 15180138))
-     AND (COALESCE(inUnitId, 0) <> 183289 OR Object_CommentSend.Id NOT IN (14882860, 14882862, 14894449, 14887488, 14894408));
+     AND COALESCE(tmpBanCommentSend.CommentSendId, 0) = 0;
   
   
 END;$BODY$
@@ -65,4 +69,4 @@ ALTER FUNCTION gpSelect_Object_CommentSend(boolean, TVarChar) OWNER TO postgres;
 -- тест
 -- 
 
-select * from gpSelect_Object_CommentSend(inisShowAll := 'True' , inUnitId := 183289 , inSession := '3');
+select * from gpSelect_Object_CommentSend(inisShowAll := 'False' , inUnitId := 377594 , inSession := '3');

@@ -40,7 +40,12 @@ RETURNS TABLE (OperDate        TDateTime
              , DayOfWeekName_StartW TVarChar
              , DayOfWeekName_EndW   TVarChar
              , Hours_EndW           TFloat
-             , Hours_real           TFloat
+             , Hours_real           TFloat  
+
+             , Amount_child       TFloat
+             , AmountDiff_child   TFloat
+             , AmountWeight_child      TFloat
+             , AmountWeightDiff_child  TFloat
               )  
 
 AS
@@ -103,17 +108,44 @@ BEGIN
                  WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementAll.Id FROM tmpMovementAll)               
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
-                )
+                ) 
+
+     , tmpMIChild AS (SELECT MovementItem.*
+                      FROM MovementItem
+                      WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementAll.Id FROM tmpMovementAll)               
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.isErased   = FALSE
+                     )
+
      , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
                                 FROM MovementItemFloat
                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                   AND MovementItemFloat.DescId = zc_MIFloat_AmountSecond()
-                               )
+                               )  
+
+     , tmpMIFloat_Child AS (SELECT MovementItemFloat.*
+                            FROM MovementItemFloat
+                            WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIChild.Id FROM tmpMIChild)
+                              AND MovementItemFloat.DescId = zc_MIFloat_AmountSecond()
+                           )
+
      , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
                                      FROM MovementItemLinkObject
                                      WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                        AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
-                                     )
+                                     ) 
+
+     , tmpChild AS (SELECT MovementItem.ParentId
+                         , SUM (COALESCE (MovementItem.Amount,0))            AS Amount
+                         , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
+                         , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_all
+                    FROM tmpMIChild AS MovementItem
+                         LEFT JOIN tmpMIFloat_Child AS MIFloat_AmountSecond
+                                                    ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                    GROUP BY MovementItem.ParentId
+                    )
+                    
      , tmpMovement AS (SELECT Movement.OperDate
                             , MovementDate_OperDatePartner.ValueData                   AS OperDatePartner
                             , Movement.ToId                                            AS ToId
@@ -153,6 +185,14 @@ BEGIN
                             , COUNT (DISTINCT Movement.Id) AS CountDoc
                             
                             , MIN (tmpWeighing.StartWeighing) AS StartWeighing, MAX (tmpWeighing.EndWeighing) AS EndWeighing
+
+                            , SUM (tmpMI_Child.Amount_all)       ::TFloat AS Amount_child
+                            , SUM ((tmpMI_Child.Amount_all)
+                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)       ::TFloat AS AmountWeight_child
+                            , SUM (COALESCE (tmpMI_Child.Amount_all,0) - (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) )  ::TFloat AS AmountDiff_child
+
+                            , SUM ((COALESCE (tmpMI_Child.Amount_all,0) - (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) )
+                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ) ::TFloat AS AmountWeightDiff_child
 
                        FROM tmpMovementAll AS Movement
                             LEFT JOIN tmpWeighing ON tmpWeighing.Id = Movement.Id
@@ -211,6 +251,8 @@ BEGIN
                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                   ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+                            LEFT JOIN tmpChild AS tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
 
                         GROUP BY Movement.OperDate
                                , MovementDate_OperDatePartner.ValueData
@@ -291,6 +333,10 @@ BEGIN
            , (EXTRACT (HOUR FROM tmpMovement.EndWeighing - tmpMovement.StartWeighing) )    ::TFloat AS Hours_EndW
            , (EXTRACT (HOUR FROM tmpMovement.EndWeighing - tmpMovement.OperDate_CarInfo) ) ::TFloat AS Hours_real
 
+           , tmpMovement.Amount_child             ::TFloat AS Amount_child
+           , tmpMovement.AmountDiff_child         ::TFloat AS AmountDiff_child
+           , tmpMovement.AmountWeight_child       ::TFloat AS AmountWeight_child
+           , tmpMovement.AmountWeightDiff_child   ::TFloat AS AmountWeightDiff_child
       FROM tmpMovement
           LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
           LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMovement.RouteId
