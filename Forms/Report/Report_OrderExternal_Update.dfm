@@ -444,7 +444,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     Height = 206
     Align = alBottom
     TabOrder = 9
-    ExplicitTop = 376
+    ExplicitLeft = 72
+    ExplicitTop = 390
     object grChartDBChartView1: TcxGridDBChartView
       DataController.DataSource = MasterDS
       DiagramArea.Values.LineWidth = 2
@@ -504,7 +505,42 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
   inherited ActionList: TActionList
     Left = 519
     Top = 231
-    object actRefresh_Goods: TdsdDataSetRefresh [0]
+    object actUpdateMIChild_AmountSecondNull: TdsdExecStoredProc [0]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_AmountSecondNull_report
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_AmountSecondNull_report
+        end>
+      Caption = 'actUpdateMIChild_Amount'
+      ImageIndex = 71
+    end
+    object actUpdateMIChild_AmountNull: TdsdExecStoredProc [1]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_AmountNull_report
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_AmountNull_report
+        end>
+      Caption = 'actUpdateMIChild_Amount'
+      ImageIndex = 70
+    end
+    object macUpdateMIChild_AmountSecondNull_list: TMultiAction [2]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_AmountSecondNull
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateMIChild_Amount_list'
+      ImageIndex = 71
+    end
+    object actRefresh_Goods: TdsdDataSetRefresh [3]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -519,7 +555,31 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefresh_Car: TdsdDataSetRefresh [1]
+    object macUpdateMIChild_AmountSecondNull: TMultiAction [4]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMIChild_AmountSecondNull_list
+        end>
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1089#1090#1088#1086#1082'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1086#1073#1085#1091#1083#1077#1085#1099
+      Caption = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 71
+    end
+    object macUpdateMIChild_AmountNull_list: TMultiAction [5]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_AmountNull
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateMIChild_Amount_list'
+      ImageIndex = 70
+    end
+    object actRefresh_Car: TdsdDataSetRefresh [6]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -533,6 +593,21 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object macUpdateMIChild_AmountNull: TMultiAction [7]
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMIChild_AmountNull_list
+        end>
+      QuestionBeforeExecute = 
+        #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082' '#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1089#1090#1088 +
+        #1086#1082'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082' '#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1086#1073#1085#1091#1083#1077#1085#1099
+      Caption = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082' '#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082' '#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 70
     end
     inherited actRefresh: TdsdDataSetRefresh
       TabSheet = tsMain
@@ -897,6 +972,78 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdateMIChild_Amount: TdsdExecStoredProc
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_Amount_report
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_Amount_report
+        end>
+      Caption = 'actUpdateMIChild_Amount'
+      ImageIndex = 68
+    end
+    object macUpdateMIChild_Amount_list: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_Amount
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateMIChild_Amount_list'
+      ImageIndex = 68
+    end
+    object macUpdateMIChild_Amount: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMIChild_Amount_list
+        end>
+      QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082') '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1089#1090#1088#1086#1082'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082') '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
+      ImageIndex = 68
+    end
+    object actUpdateMIChild_AmountSecond: TdsdExecStoredProc
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_AmountSecond_report
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_AmountSecond_report
+        end>
+      Caption = 'actUpdateMIChild_Amount'
+      ImageIndex = 69
+    end
+    object macUpdateMIChild_AmountSecond_list: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_AmountSecond
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateMIChild_AmountSecond_list'
+      ImageIndex = 69
+    end
+    object macUpdateMIChild_AmountSecond: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMIChild_AmountSecond_list
+        end>
+      QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1089#1090#1088#1086#1082'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 69
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -1020,6 +1167,34 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMIChild_Amount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_AmountSecond'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_AmountNull'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_AmountSecondNull'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1067,6 +1242,22 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     end
     object bbPrintGoods: TdxBarButton
       Action = actPrintGoods
+      Category = 0
+    end
+    object bbUpdateMIChild_Amount: TdxBarButton
+      Action = macUpdateMIChild_Amount
+      Category = 0
+    end
+    object bbUpdateMIChild_AmountSecond: TdxBarButton
+      Action = macUpdateMIChild_AmountSecond
+      Category = 0
+    end
+    object bbUpdateMIChild_AmountNull: TdxBarButton
+      Action = macUpdateMIChild_AmountNull
+      Category = 0
+    end
+    object bbUpdateMIChild_AmountSecondNull: TdxBarButton
+      Action = macUpdateMIChild_AmountSecondNull
       Category = 0
     end
   end
@@ -1482,5 +1673,241 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     PackSize = 1
     Left = 832
     Top = 240
+  end
+  object spUpdateMIChild_Amount_report: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_Amount_report'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RouteId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RetailId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 416
+  end
+  object spUpdateMIChild_AmountSecond_report: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecond_report'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RouteId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RetailId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 472
+  end
+  object spUpdateMIChild_AmountNull_report: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountNull_report'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RouteId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RetailId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 576
+    Top = 408
+  end
+  object spUpdateMIChild_AmountSecondNull_report: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecondNull_report'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RouteId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RetailId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 464
   end
 end
