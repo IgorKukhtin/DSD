@@ -6,7 +6,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1495
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -4472,6 +4472,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Sale'
     Params = <
       item
         Name = 'inMovementId'

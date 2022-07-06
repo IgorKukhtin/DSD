@@ -123,6 +123,16 @@ END IF;*/
 
 
 
+     -- расчет "кол-во склад"!!! - кроме Админа
+     IF 1=1 -- inUserId = zfCalc_UserAdmin() :: Integer -- OR 1=1
+     THEN
+         -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
+         PERFORM lpComplete_Movement_Sale_Recalc_pack (inMovementId := inMovementId
+                                                     , inUserId     := inUserId
+                                                      );
+     END IF;
+
+
      -- !!!временно!!!
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inMovementId);
 

@@ -259,7 +259,7 @@ BEGIN
                           )
             THEN
                 -- Админу только отладка
-                if inUserId = 5 then RAISE EXCEPTION 'OK - Проверка - что б ничего не делать'; end if;
+                --if inUserId = 5 then RAISE EXCEPTION 'OK - Проверка - что б ничего не делать'; end if;
                 -- !!!Выход!!!
                 RETURN;
             END IF;

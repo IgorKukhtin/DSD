@@ -36,7 +36,7 @@ ELSE
                                       );
 END IF;
 
-if vbUserId = 5 AND 1=1
+if vbUserId = 5 AND 1=0
 then
     RAISE EXCEPTION 'Ошибка.Test - ok';
 end if;

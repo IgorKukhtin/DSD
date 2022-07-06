@@ -6,7 +6,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1181
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -15,17 +15,17 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Height = 374
     TabOrder = 3
     ExplicitTop = 76
-    ExplicitWidth = 1108
+    ExplicitWidth = 1165
     ExplicitHeight = 374
     ClientRectBottom = 374
     ClientRectRight = 1165
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1108
+      ExplicitWidth = 1165
       ExplicitHeight = 374
       inherited cxGrid: TcxGrid
         Width = 1165
         Height = 374
-        ExplicitWidth = 1108
+        ExplicitWidth = 1165
         ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -769,7 +769,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   inherited Panel: TPanel
     Width = 1165
     Height = 50
-    ExplicitWidth = 1108
+    ExplicitWidth = 1165
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       Left = 96
@@ -839,7 +839,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitWidth = 1108
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -3586,6 +3585,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Sale'
     Params = <
       item
         Name = 'inMovementId'

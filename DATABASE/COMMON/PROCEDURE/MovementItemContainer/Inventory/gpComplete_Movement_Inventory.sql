@@ -83,7 +83,7 @@ BEGIN
 
           , COALESCE (ObjectLink_CarFrom_Unit.ChildObjectId, 0)             AS UnitId_Car
 
-          , CASE WHEN COALESCE (ObjectLink_ObjectFrom_Branch.ChildObjectId, zc_Branch_Basis()) <> zc_Branch_Basis()
+          , CASE WHEN COALESCE (ObjectLink_ObjectFrom_Branch.ChildObjectId, zc_Branch_Basis()) NOT IN (zc_Branch_Basis(), 8109544) -- Ирна
                   AND Object_From.DescId = zc_Object_Unit()
                       THEN COALESCE (MovementLinkObject_PriceList.ObjectId, zc_PriceList_Basis())
                  ELSE 0
@@ -1273,7 +1273,7 @@ BEGIN
                                  )
                      AND vbOperDate > '31.12.2015'
                     )
-                 OR (vbBranchId NOT IN (zc_Branch_Basis(), 0)
+                 OR (vbBranchId NOT IN (zc_Branch_Basis(), 0, 8109544) -- Ирна
                      AND vbOperDate > '31.12.2017'
                     )
                    )*/
@@ -1657,7 +1657,7 @@ end if;
                        , 428365 -- Склад возвратов ф.Киев
                         )
         )
-     OR (vbBranchId NOT IN (zc_Branch_Basis(), 0)
+     OR (vbBranchId NOT IN (zc_Branch_Basis(), 0, 8109544) -- Ирна
          AND vbOperDate > '31.12.2017'
         )
         )
