@@ -22,7 +22,7 @@ BEGIN
     outShowMessage := True;
     outPUSHType := zc_TypePUSH_Information();
     
-    SELECT 'Информация для нового сотрудника:'||CHR(13)||CHR(13)||
+    SELECT 'Информация для нового сотрудника (сначала зайдите в Farmacy Cash, и только потом в Farmacy):'||CHR(13)||CHR(13)||
            'Логин  - '||Object_User.ValueData||CHR(13)||CHR(13)||
            'Пароль - '||ObjectString_UserPassword.ValueData
     INTO outText
