@@ -374,6 +374,23 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdModelId'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdModelName'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 376
     Top = 73
@@ -388,6 +405,14 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdModelId'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
