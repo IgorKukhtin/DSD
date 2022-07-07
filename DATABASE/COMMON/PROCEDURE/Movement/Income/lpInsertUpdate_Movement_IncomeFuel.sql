@@ -34,6 +34,7 @@ BEGIN
 
      -- проверка
      IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+        AND NOT EXISTS (SELECT * FROM Object WHERE Object.Id = inFromId AND Object.DescId = zc_Object_Unit())
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;
