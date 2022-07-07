@@ -673,6 +673,22 @@ object ProdOptionsForm: TProdOptionsForm
           Name = 'Id'
           Value = '0'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdModelId'
+          Value = Null
+          Component = GuidesProdModel
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdModelName'
+          Value = Null
+          Component = GuidesProdModel
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource

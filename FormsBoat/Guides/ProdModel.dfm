@@ -202,6 +202,11 @@ object ProdModelForm: TProdModelForm
         Options.Editing = False
         Width = 78
       end
+      object ColorPatternName: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorPatternName'
+        Visible = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -547,6 +552,21 @@ object ProdModelForm: TProdModelForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ReceiptProdModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

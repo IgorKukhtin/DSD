@@ -426,8 +426,8 @@ object ProdColorPatternForm: TProdColorPatternForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 96
-    Top = 64
+    Left = 104
+    Top = 104
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -446,8 +446,8 @@ object ProdColorPatternForm: TProdColorPatternForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 48
-    Top = 64
+    Left = 40
+    Top = 112
     DockControlHeights = (
       0
       0
@@ -778,6 +778,21 @@ object ProdColorPatternForm: TProdColorPatternForm
           Component = MasterCDS
           ComponentItem = 'ModelName_full'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -1095,8 +1110,8 @@ object ProdColorPatternForm: TProdColorPatternForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 80
+    Left = 496
+    Top = 104
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -1155,7 +1170,7 @@ object ProdColorPatternForm: TProdColorPatternForm
       end>
     PackSize = 1
     Left = 432
-    Top = 128
+    Top = 112
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ProdColorPattern'
@@ -1267,8 +1282,8 @@ object ProdColorPatternForm: TProdColorPatternForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 568
-    Top = 64
+    Left = 576
+    Top = 128
   end
   object FormParams: TdsdFormParams
     Params = <

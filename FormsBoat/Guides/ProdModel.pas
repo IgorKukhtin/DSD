@@ -73,6 +73,7 @@ type
     Seating: TcxGridDBColumn;
     BrandName: TcxGridDBColumn;
     PatternCIN: TcxGridDBColumn;
+    ColorPatternName: TcxGridDBColumn;
   private
     { Private declarations }
   public

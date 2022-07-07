@@ -1,6 +1,7 @@
 -- Function: gpGet_Object_ProdOptions()
 
 DROP FUNCTION IF EXISTS gpGet_Object_ProdOptions(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_ProdOptions(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ProdOptions(
     IN inId          Integer,       -- Названия Опций
@@ -15,14 +16,16 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , SalePrice TFloat
              , Comment TVarChar 
-             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar 
+             , ColorPatternId Integer, ColorPatternName TVarChar
              , MaterialOptionsId    Integer 
              , MaterialOptionsName  TVarChar
              , Id_Site              TVarChar
              , CodeVergl            Integer  
 
              ) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_ProdOptions());
@@ -51,7 +54,9 @@ $BODY$BEGIN
            , CAST ('' AS TVarChar)    AS Comment
 
            , 0  :: Integer            AS ProdColorPatternId
-           , '' :: TVarChar           AS ProdColorPatternName
+           , '' :: TVarChar           AS ProdColorPatternName   
+           , Object_ColorPattern.Id        :: Integer   AS ColorPatternId
+           , Object_ColorPattern.ValueData :: TVarChar  AS ColorPatternName
            , 0  :: Integer            AS MaterialOptionsId
            , '' :: TVarChar           AS MaterialOptionsName
            , '' :: TVarChar           AS Id_Site
@@ -67,7 +72,13 @@ $BODY$BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_ProdEngine
                                ON ObjectLink_ProdEngine.ObjectId = Object_Model.Id
                               AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
-          LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
+          LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId  
+
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                               ON ObjectLink_ColorPattern.ChildObjectId = Object_Model.Id
+                              AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ColorPattern_Model()
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ObjectId
+
        WHERE Object_TaxKind.Id = zc_Enum_TaxKind_Basis()
       ;
    ELSE
@@ -96,6 +107,9 @@ $BODY$BEGIN
 
          , Object_ProdColorPattern.Id        :: Integer   AS ProdColorPatternId
          , Object_ProdColorPattern.ValueData :: TVarChar  AS ProdColorPatternName
+
+         , Object_ColorPattern.Id        :: Integer   AS ColorPatternId
+         , Object_ColorPattern.ValueData :: TVarChar  AS ColorPatternName
 
          , Object_MaterialOptions.Id        :: Integer   AS MaterialOptionsId
          , Object_MaterialOptions.ValueData :: TVarChar  AS MaterialOptionsName
@@ -155,7 +169,10 @@ $BODY$BEGIN
                               AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern()
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
 
-
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                               ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
        WHERE Object_ProdOptions.Id = inId;
    END IF;
    
