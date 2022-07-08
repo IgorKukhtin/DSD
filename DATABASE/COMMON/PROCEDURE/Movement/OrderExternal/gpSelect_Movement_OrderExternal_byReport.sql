@@ -11,13 +11,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal_byReport(
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , OperDatePartner TDateTime, OperDatePartner_Sale TDateTime, OperDateMark TDateTime
+             , OperDatePartner TDateTime, OperDatePartner_Sale TDateTime, OperDateMark TDateTime, OperDate_CarInfo TDateTime
              , InvNumberPartner TVarChar, InvNumber_calc TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
+             , RetailId Integer, RetailName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagId Integer, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
@@ -28,6 +29,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , JuridicalId Integer, JuridicalName TVarChar
              , isEDI Boolean
              , Comment TVarChar
+             , DayOfWeekName          TVarChar
+             , DayOfWeekName_Partner  TVarChar
+             , DayOfWeekName_CarInfo  TVarChar
               )
 AS
 $BODY$
@@ -39,10 +43,11 @@ BEGIN
 
      RETURN QUERY
      WITH tmpMovement AS (SELECT Movement.*
-                               , MovementLinkObject_To.ObjectId    AS ToId
-                               , MovementLinkObject_From.ObjectId  AS FromId
-                               , MovementLinkObject_Route.ObjectId AS RouteId
-                               , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                               , MovementLinkObject_To.ObjectId             AS ToId
+                               , MovementLinkObject_From.ObjectId           AS FromId
+                               , MovementLinkObject_Route.ObjectId          AS RouteId
+                               , ObjectLink_Juridical_Retail.ChildObjectId  AS RetailId
+                               , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
                           FROM Movement
                               INNER JOIN MovementDate AS MovementDate_OperDatePartner
                                                       ON MovementDate_OperDatePartner.MovementId = Movement.Id
@@ -74,7 +79,7 @@ BEGIN
                             AND Movement.StatusId = zc_Enum_Status_Complete()
                             AND Movement.DescId = zc_Movement_OrderExternal()
                             AND (inRetailId = CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0) END
-                             -- OR COALESCE (inRetailId, 0) = 0
+                              OR COALESCE (inRetailId, 0) = 0
                                 )
                             AND COALESCE (MovementLinkObject_Route.ObjectId, 0) = inRouteId
                          )
@@ -106,6 +111,7 @@ BEGIN
                               WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                 AND MovementDate.DescId IN (/*zc_MovementDate_OperDatePartner()
                                                           , */zc_MovementDate_OperDateMark()
+                                                          , zc_MovementDate_CarInfo()
                                                             )
                             )
 
@@ -156,8 +162,10 @@ BEGIN
            --, (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
            , (Movement.OperDatePartner + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
+           , MovementDate_CarInfo.ValueData                 AS OperDate_CarInfo
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
            , CASE WHEN MovementString_InvNumberPartner.ValueData <> '' THEN MovementString_InvNumberPartner.ValueData ELSE '***' || Movement.InvNumber END :: TVarChar AS InvNumber_calc
+
            , Object_From.Id                                 AS FromId
            , Object_From.ValueData                          AS FromName
            , Object_To.Id                                   AS ToId
@@ -168,6 +176,8 @@ BEGIN
            , Object_Route.ValueData                         AS RouteName
            , Object_RouteSorting.Id                         AS RouteSortingId
            , Object_RouteSorting.ValueData                  AS RouteSortingName
+           , Object_Retail.Id                               AS RetailId
+           , Object_Retail.ValueData                        AS RetailName
            , Object_PaidKind.Id                             AS PaidKindId
            , Object_PaidKind.ValueData                      AS PaidKindName
            , View_Contract_InvNumber.ContractId             AS ContractId
@@ -198,6 +208,11 @@ BEGIN
 
            , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
            , MovementString_Comment.ValueData       AS Comment
+
+           , tmpWeekDay.DayOfWeekName         ::TVarChar AS DayOfWeekName
+           , tmpWeekDay_Partner.DayOfWeekName ::TVarChar AS DayOfWeekName_Partner
+           , tmpWeekDay_CarInfo.DayOfWeekName ::TVarChar AS DayOfWeekName_CarInfo
+
        FROM tmpMovement AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -211,6 +226,9 @@ BEGIN
             LEFT JOIN tmpMovementDate AS MovementDate_OperDateMark
                                       ON MovementDate_OperDateMark.MovementId =  Movement.Id
                                      AND MovementDate_OperDateMark.DescId = zc_MovementDate_OperDateMark()
+            LEFT JOIN tmpMovementDate AS MovementDate_CarInfo
+                                      ON MovementDate_CarInfo.MovementId =  Movement.Id
+                                     AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
 
             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCount
                                        ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -220,7 +238,7 @@ BEGIN
                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                        AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN tmpMovementString AS MovementString_Comment 
+            LEFT JOIN tmpMovementString AS MovementString_Comment
                                         ON MovementString_Comment.MovementId = Movement.Id
                                        AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -243,6 +261,8 @@ BEGIN
                                            AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
             */
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = Movement.RouteId-- MovementLinkObject_Route.ObjectId
+
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Movement.RetailId-- MovementLinkObject_Route.ObjectId
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_RouteSorting
                                             ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
@@ -302,14 +322,18 @@ BEGIN
                                        ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                       AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
             LEFT JOIN tmpMovementLinkMovement AS MovementLinkMovement_Order
-                                              ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                              ON MovementLinkMovement_Order.MovementId = Movement.Id
                                              AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
 
-         LEFT JOIN ObjectLink AS ObjectLink_From_Juridical
-                              ON ObjectLink_From_Juridical.ObjectId = Object_From.Id 
-                             AND ObjectLink_From_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_From_Juridical
+                                 ON ObjectLink_From_Juridical.ObjectId = Object_From.Id
+                                AND ObjectLink_From_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
-         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_From_Juridical.ChildObjectId
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_From_Juridical.ChildObjectId
+
+            LEFT JOIN zfCalc_DayOfWeekName (Movement.OperDate) AS tmpWeekDay ON 1=1
+            LEFT JOIN zfCalc_DayOfWeekName (Movement.OperDatePartner) AS tmpWeekDay_Partner ON 1=1
+            LEFT JOIN zfCalc_DayOfWeekName (MovementDate_CarInfo.ValueData) AS tmpWeekDay_CarInfo ON 1=1
       ;
 
 END;
@@ -323,4 +347,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal_byReport 
+-- SELECT * FROM gpSelect_Movement_OrderExternal_byReport(inOperDate := ('29.06.2022')::TDateTime , inOperDatePartner := ('08.07.2022')::TDateTime , inToId := 8459 , inRouteId := 419580 , inRetailId := 0 ,  inSession := '5');

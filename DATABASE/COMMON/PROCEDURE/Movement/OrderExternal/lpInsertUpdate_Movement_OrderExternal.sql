@@ -81,7 +81,7 @@ BEGIN
      -- сохранили свойство <Дата отгрузки контрагенту>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
      -- !!!временно!!!
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), ioId, inOperDatePartner);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), ioId, CASE WHEN inOperDate = inOperDatePartner THEN inOperDate + INTERVAL '1 DAY' + INTERVAL '0 MIN' ELSE inOperDatePartner + INTERVAL '5 MIN' END);
 
      -- сохранили свойство <Номер заявки у контрагента>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);

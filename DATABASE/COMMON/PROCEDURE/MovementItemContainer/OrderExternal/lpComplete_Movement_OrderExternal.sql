@@ -34,6 +34,7 @@ $BODY$
   DECLARE vbSummOrderMin        TFloat;
   DECLARE vbIsLessWeigth        Boolean;
   DECLARE vbMovementId_CarInfo  Integer;
+  DECLARE vbIsSamoV             Boolean;
 BEGIN
      outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := lfGet_User_Session (inUserId));
 
@@ -71,6 +72,12 @@ BEGIN
                       THEN 0
                  ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0)
             END AS RetailId
+            
+          , CASE -- временно
+                 WHEN Object_Route.ValueData ILIKE 'Самов%'
+                      THEN TRUE
+                 ELSE FALSE
+            END AS IsSamoV
 
           , MovementLinkObject_To.ObjectId AS UnitId_to
 
@@ -91,7 +98,7 @@ BEGIN
 
             INTO vbOperDate, vbOperDatePartner
                , vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-               , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbRouteId, vbRetailId, vbUnitId_to
+               , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbRouteId, vbRetailId, vbIsSamoV, vbUnitId_to
                , vbContractId, vbJuridicalId, vbIsLessWeigth, vbSummOrderMin
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -201,7 +208,7 @@ order by Movement.OperDate*/
      -- заполняем
      IF EXISTS (SELECT 1 FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_CarInfo() AND DATE_TRUNC ('DAY', MovementDate.ValueData) = MovementDate.ValueData)
         AND vbUnitId_to = 8459 -- Розподільчий комплекс
-        AND inUserId = 5
+      --AND inUserId = 5
      THEN
          -- Нашли
          vbMovementId_CarInfo:= (SELECT MAX (Movement.Id)
@@ -269,6 +276,21 @@ order by Movement.OperDate*/
                   ) AS tmp;
 
          END IF;
+     END IF;
+
+     -- заполняем
+     IF vbUnitId_to = 8459 -- Розподільчий комплекс
+    --AND vbIsSamoV = TRUE
+      AND vbOperDate = (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_CarInfo())
+     THEN
+         IF vbIsSamoV = TRUE
+         THEN
+             -- Дата/время отгрузки
+             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), inMovementId, vbOperDate + INTERVAL '1 DAY' + INTERVAL '5 MIN');
+         ELSE
+             -- Дата/время отгрузки
+             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), inMovementId, vbOperDate + INTERVAL '1 DAY' + INTERVAL '0 MIN');
+          END IF;
      END IF;
 
 

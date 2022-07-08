@@ -44,6 +44,7 @@ BEGIN
     SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementDateDesc.ItemName)
         || '" FieldValue = "' || COALESCE (CASE WHEN MovementDate.DescId IN (zc_MovementDate_Insert()
                                                                            , zc_MovementDate_Update()
+                                                                           , zc_MovementDate_CarInfo()
                                                                             )
                                                      THEN zfConvert_DateTimeShortToString (MovementDate.ValueData)
                                                 ELSE zfConvert_DateToString (MovementDate.ValueData)

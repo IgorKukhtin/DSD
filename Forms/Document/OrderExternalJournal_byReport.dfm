@@ -194,6 +194,7 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            Visible = False
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
@@ -205,6 +206,7 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
           object InvNumberPartner: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -214,11 +216,46 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
+          object DayOfWeekName: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'DayOfWeekName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
+            Width = 70
+          end
+          object OperDate_CarInfo: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'OperDate_CarInfo'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm hh:mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object DayOfWeekName_CarInfo: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'DayOfWeekName_CarInfo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1092#1072#1082#1090
+            Width = 70
+          end
           object OperDatePartner: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
+            Caption = '***'#1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1088#1072#1089#1095#1077#1090
+            Width = 70
+          end
+          object DayOfWeekName_Partner: TcxGridDBColumn
+            Caption = '***'#1044#1077#1085#1100' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'DayOfWeekName_Partner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1088#1072#1089#1095#1077#1090
             Width = 70
           end
           object OperDateMark: TcxGridDBColumn
@@ -239,9 +276,17 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075'.'#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -253,6 +298,7 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
           object RouteSortingName: TcxGridDBColumn
             Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteSortingName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
@@ -260,6 +306,7 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -275,6 +322,7 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
           object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -282,6 +330,7 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
           object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -290,26 +339,20 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
           object PriceListName: TcxGridDBColumn
             Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
             DataBinding.FieldName = 'PriceListName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object PersonalName: TcxGridDBColumn
-            Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
-            DataBinding.FieldName = 'PersonalName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object TotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'TotalCount'
+          object TotalCountKg: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089
+            DataBinding.FieldName = 'TotalCountKg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 50
           end
           object TotalCountSecond: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1076#1086#1079#1072#1082#1072#1079')'
@@ -331,15 +374,23 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object TotalCountKg: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089
-            DataBinding.FieldName = 'TotalCountKg'
+          object TotalCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 60
+          end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
@@ -347,6 +398,7 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -357,6 +409,7 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -364,6 +417,7 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
           object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -374,6 +428,7 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
@@ -503,9 +558,10 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
       FormNameParam.Value = 'actInsertMask'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      Enabled = False
-      FormName = 'actUpdate'
-      FormNameParam.Value = 'actUpdate'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      FormName = 'TOrderExternalForm'
+      FormNameParam.Value = 'TOrderExternalForm'
     end
     inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
@@ -813,6 +869,14 @@ inherited OrderExternalJournal_byReportForm: TOrderExternalJournal_byReportForm
         item
           Visible = True
           ItemName = 'bbSelect'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
         end
         item
           Visible = True

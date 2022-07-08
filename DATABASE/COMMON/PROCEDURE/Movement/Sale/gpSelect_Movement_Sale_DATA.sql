@@ -177,11 +177,12 @@ end if;
              LEFT JOIN tmpJuridicalTo ON tmpJuridicalTo.ToId = tmpMovementLinkObject_To.ObjectId
              LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = tmpJuridicalTo.Id
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
-                                  ON ObjectLink_Unit_Business.ObjectId = tmpMovementLinkObject_To.ObjectId
+                                  ON ObjectLink_Unit_Business.ObjectId = tmpMovementLinkObject_From.ObjectId
                                  AND ObjectLink_Unit_Business.DescId   = zc_ObjectLink_Unit_Business()
         WHERE (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0
                -- Склад ГП ф.Запорожье
             OR (vbIsZp = TRUE AND tmpMovementLinkObject_From.ObjectId = 301309)
+            OR vbIsIrna = TRUE
               )
           AND (vbIsIrna IS NULL
             OR (vbIsIrna = FALSE AND COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) <> zc_Business_Irna())

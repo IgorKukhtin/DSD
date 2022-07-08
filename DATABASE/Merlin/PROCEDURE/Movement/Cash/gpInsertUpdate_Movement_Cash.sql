@@ -191,7 +191,7 @@ BEGIN
                                           );
      END IF;
 
-IF vbUserId = zfCalc_UserAdmin() :: Integer
+IF vbUserId = zfCalc_UserAdmin() :: Integer AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.test summa = <%>', inAmount;
 END IF;

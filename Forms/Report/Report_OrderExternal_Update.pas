@@ -108,6 +108,10 @@ type
     bbUpdateMIChild_AmountSecond: TdxBarButton;
     bbUpdateMIChild_AmountNull: TdxBarButton;
     bbUpdateMIChild_AmountSecondNull: TdxBarButton;
+    OperDate_CarInfo_str: TcxGridDBColumn;
+    OperDate_CarInfo_date: TcxGridDBColumn;
+    DayOfWeekName_CarInfo_date: TcxGridDBColumn;
+    Ord: TcxGridDBColumn;
   private
     { Private declarations }
   public
