@@ -240,7 +240,8 @@ BEGIN
            tmpData.Id
          , tmpData.Code
          , tmpData.Name
-         , (tmpData.ProdColorGroupName || ' ' || tmpData.Name) :: TVarChar AS Name_all
+         --, (tmpData.ProdColorGroupName || ' ' || tmpData.Name) :: TVarChar AS Name_all
+         , (tmpData.ProdColorGroupName || CASE WHEN LENGTH (tmpData.Name) > 1 THEN ' ' || tmpData.Name ELSE '' END || ' (' || tmpData.ModelName || ')') :: TVarChar  AS Name_all
          , ROW_NUMBER() OVER (PARTITION BY tmpData.ColorPatternId ORDER BY tmpData.Code ASC) :: Integer AS NPP
 
          , tmpData.Comment
@@ -305,7 +306,8 @@ BEGIN
            tmpData.Id
          , tmpData.Code
          , tmpData.Name
-         , (tmpData.ProdColorGroupName || ' ' || tmpData.Name) :: TVarChar AS Name_all
+         --, (tmpData.ProdColorGroupName || ' ' || tmpData.Name) :: TVarChar AS Name_all
+         , (tmpData.ProdColorGroupName || CASE WHEN LENGTH (tmpData.Name) > 1 THEN ' ' || tmpData.Name ELSE '' END || ' (' || Object_Model.ValueData || ')') :: TVarChar  AS Name_all
          , ROW_NUMBER() OVER (PARTITION BY Object_ColorPattern.Id ORDER BY tmpData.Code ASC) :: Integer AS NPP
 
          , tmpData.Comment

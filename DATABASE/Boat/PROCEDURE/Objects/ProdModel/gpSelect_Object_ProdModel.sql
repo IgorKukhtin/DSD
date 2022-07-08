@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_full TVarChar
              , BrandId Integer, BrandName TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
+             , ColorPatternId Integer, ColorPatternName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased boolean
@@ -66,6 +67,9 @@ BEGIN
 
          , tmpReceiptProdModel.ReceiptProdModelId
          , tmpReceiptProdModel.ReceiptProdModelName
+
+         , Object_ColorPattern.Id        :: Integer   AS ColorPatternId
+         , Object_ColorPattern.ValueData :: TVarChar  AS ColorPatternName
 
          , Object_Insert.ValueData         AS InsertName
          , ObjectDate_Insert.ValueData     AS InsertDate
@@ -129,6 +133,11 @@ BEGIN
                                ON ObjectDate_Insert.ObjectId = Object_ProdModel.Id
                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                               ON ObjectLink_ColorPattern.ChildObjectId = Object_ProdModel.Id
+                              AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ColorPattern_Model()
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ObjectId
+
      WHERE Object_ProdModel.DescId = zc_Object_ProdModel()
       AND (Object_ProdModel.isErased = FALSE OR inIsShowAll = TRUE);  
 
@@ -139,6 +148,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.07.22         * ColorPattern
  11.01.21         * PatternCIN
  24.11.20         * add Brand
  08.10.20         *

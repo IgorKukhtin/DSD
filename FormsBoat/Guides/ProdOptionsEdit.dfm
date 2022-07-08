@@ -374,6 +374,23 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdModelId'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdModelName'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 376
     Top = 73
@@ -388,6 +405,14 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdModelId'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -521,6 +546,21 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 136
@@ -542,8 +582,8 @@ object ProdOptionsEditForm: TProdOptionsEditForm
     Top = 309
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 320
-    Top = 234
+    Left = 408
+    Top = 130
   end
   object GuidesModel: TdsdGuides
     KeyField = 'Id'
@@ -604,6 +644,22 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 103
     Top = 209
@@ -635,8 +691,8 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 223
-    Top = 209
+    Left = 207
+    Top = 185
   end
   object GuidesProdEngine: TdsdGuides
     KeyField = 'Id'
@@ -665,8 +721,8 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 335
-    Top = 192
+    Left = 383
+    Top = 216
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
@@ -791,16 +847,16 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 230
-    Top = 153
+    Left = 270
+    Top = 145
   end
   object GuidesMaterialOptions: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMaterialOptions
-    FormNameParam.Value = 'TMaterialOptionsForm'
+    FormNameParam.Value = 'TMaterialOptionsChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMaterialOptionsForm'
+    FormName = 'TMaterialOptionsChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -819,9 +875,43 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdColorPatternId'
+        Value = Null
+        Component = GuidesProdColorPattern
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdColorPatternName'
+        Value = Null
+        Component = GuidesProdColorPattern
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 87
-    Top = 233
+    Left = 111
+    Top = 265
   end
   object GuidesProdColorPattern: TdsdGuides
     KeyField = 'Id'
@@ -848,8 +938,25 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternName'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
-    Left = 319
-    Top = 265
+    Left = 303
+    Top = 257
   end
 end

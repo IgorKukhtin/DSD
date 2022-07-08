@@ -3147,7 +3147,7 @@ object ProductForm: TProductForm
   object ProdOptItemsDS: TDataSource
     DataSet = ProdOptItemsCDS
     Left = 672
-    Top = 296
+    Top = 360
   end
   object dsdDBViewAddOnProdOptItems: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

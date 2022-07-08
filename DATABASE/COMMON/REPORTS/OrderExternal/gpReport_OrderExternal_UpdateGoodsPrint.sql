@@ -26,9 +26,9 @@ BEGIN
      vbStartDate := (inStartDate::Date ||' 8:00') :: TDateTime;
      vbEndDate := ((inStartDate+ INTERVAL '1 Day' )::Date||' 7:59') :: TDateTime; 
      
- CREATE TEMP TABLE _Result (GoodsId Integer, GoodsKindId Integer, RouteName Text, AmountWeight TFloat, Count_Partner TFloat, OperDate_CarInfo TDateTime, GroupPrint Integer, Ord Integer,OperDate_inf Text
+ CREATE TEMP TABLE _Result (GoodsId Integer, GoodsKindId Integer, RouteName Text, AmountWeight TFloat, AmountWeight_child TFloat, AmountWeightDiff_child TFloat, Count_Partner TFloat, OperDate_CarInfo TDateTime, GroupPrint Integer, Ord Integer,OperDate_inf Text
                            ) ON COMMIT DROP;
- INSERT INTO _Result(GoodsId, GoodsKindId, RouteName, AmountWeight, Count_Partner, OperDate_CarInfo, GroupPrint, Ord, OperDate_inf) 
+ INSERT INTO _Result(GoodsId, GoodsKindId, RouteName, AmountWeight, AmountWeight_child, AmountWeightDiff_child, Count_Partner, OperDate_CarInfo, GroupPrint, Ord, OperDate_inf) 
      WITH 
        tmpMovementAll AS (SELECT Movement.*
                                , MovementLinkObject_To.ObjectId AS ToId 
@@ -76,17 +76,48 @@ BEGIN
                                        AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
                                      )
 
+     , tmpMIChild AS (SELECT MovementItem.*
+                      FROM MovementItem
+                      WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementAll.Id FROM tmpMovementAll)               
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.isErased   = FALSE
+                     )
+
+     , tmpMIFloat_Child AS (SELECT MovementItemFloat.*
+                            FROM MovementItemFloat
+                            WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIChild.Id FROM tmpMIChild)
+                              AND MovementItemFloat.DescId = zc_MIFloat_AmountSecond()
+                           )
+
+     , tmpChild AS (SELECT MovementItem.ParentId
+                         , SUM (COALESCE (MovementItem.Amount,0))            AS Amount
+                         , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
+                         , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_all
+                    FROM tmpMIChild AS MovementItem
+                         LEFT JOIN tmpMIFloat_Child AS MIFloat_AmountSecond
+                                                    ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                    GROUP BY MovementItem.ParentId
+                    )
+
+
      , tmpMovement AS (SELECT MovementItem.ObjectId AS GoodsId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                            -- , STRING_AGG ( Object_Route.ValueData, '; ' ) AS RouteName
                             , Object_Route.ValueData AS RouteName
                             ,  ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
                                    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight
+
+                            ,  ((tmpMI_Child.Amount_all)
+                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)       ::TFloat AS AmountWeight_child
+                            ,  ((COALESCE (tmpMI_Child.Amount_all,0) - (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) )
+                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )      ::TFloat AS AmountWeightDiff_child
                             --, COUNT (DISTINCT Object_From.Id) AS Count_Partner  
                             , Object_From.Id AS FromId
                             , MovementDate_CarInfo.ValueData               ::TDateTime AS OperDate_CarInfo
                             , Movement.GroupPrint
-                             
+
+
                        FROM tmpMovementAll AS Movement
                             LEFT JOIN MovementDate AS MovementDate_CarInfo
                                                    ON MovementDate_CarInfo.MovementId = Movement.Id
@@ -117,7 +148,9 @@ BEGIN
                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                   ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                
+
+                            LEFT JOIN tmpChild AS tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
+
                        /*GROUP BY MovementDate_CarInfo.ValueData
                               , Movement.GroupPrint
                               , MovementItem.ObjectId
@@ -155,7 +188,9 @@ BEGIN
      , tmpMov AS (SELECT tmpMovement.GoodsId
                        , tmpMovement.GoodsKindId
                        , STRING_AGG ( tmpMovement.RouteName, '; ' ) AS RouteName
-                       , SUM (tmpMovement.AmountWeight) AS AmountWeight
+                       , SUM (tmpMovement.AmountWeight) AS AmountWeight 
+                       , SUM (tmpMovement.AmountWeight_child) AS AmountWeight_child
+                       , SUM (tmpMovement.AmountWeightDiff_child) AS AmountWeightDiff_child
                        , COUNT (DISTINCT tmpMovement.FromId) AS Count_Partner
                        , tmpMovement.OperDate_CarInfo
                        , tmpMovement.GroupPrint
@@ -211,7 +246,7 @@ BEGIN
 					   
      , tmpGroup AS (SELECT tmp.GoodsId
                          , tmp.GoodsKindId                                                    
-                         , tmp.GroupPrint
+                         , tmp.GroupPrint  
                          --, STRING_AGG (DISTINCT tmp.RouteName, '; ' )     :: Text AS RouteName
                          , SUM (tmp.Count_Partner)   :: TFloat   AS Count_Partner
                          , SUM (tmp.AmountWeight1)  AS AmountWeight1
@@ -227,6 +262,10 @@ BEGIN
                          , SUM (tmp.AmountWeight11)  AS AmountWeight11
                          , SUM (tmp.AmountWeight12)  AS AmountWeight12
                          , SUM (tmp.AmountWeight)    AS AmountWeight
+
+                         , SUM (tmp.AmountWeight_child)      AS AmountWeight_child
+                         , SUM (tmp.AmountWeightDiff_child)  AS AmountWeightDiff_child
+
                     FROM (SELECT _Result.GoodsId
                          , _Result.GoodsKindId                                                    
                          , _Result.GroupPrint
@@ -245,6 +284,9 @@ BEGIN
                          , CASE WHEN _Result.Ord = 10 THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight10
                          , CASE WHEN _Result.Ord = 11 THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight11
                          , CASE WHEN _Result.Ord = 12 THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight12
+                         , _Result.AmountWeight_child
+                         , _Result.AmountWeightDiff_child
+
                     FROM  _Result
                     ) AS tmp
                     GROUP BY tmp.GoodsId
@@ -257,7 +299,7 @@ BEGIN
             , Object_Goods.ValueData                  AS GoodsName
             , Object_GoodsKind.Id                     AS GoodsKindId
             , Object_GoodsKind.ValueData  :: TVarChar AS GoodsKindName
-          --  , tmpGroup.RouteName           :: Text
+          --  , tmpGroup.RouteName           :: Text  
             , tmpGroup.Count_Partner    :: TFloat   AS Count_Partner
             , tmpColumn.*
             , tmpGroup.AmountWeight
@@ -273,6 +315,8 @@ BEGIN
             , tmpGroup.AmountWeight10 :: TFloat
             , tmpGroup.AmountWeight11 :: TFloat
             , tmpGroup.AmountWeight12 :: TFloat
+            , tmpGroup.AmountWeight_child     :: TFloat
+            , tmpGroup.AmountWeightDiff_child :: TFloat
 
        FROM tmpGroup
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGroup.GoodsId
@@ -287,7 +331,7 @@ BEGIN
      RETURN NEXT Cursor1;    
          
      
-     OPEN Cursor2 FOR         -- как-то мне не нравится, лучше пусть в назв. колонок будет
+    /* OPEN Cursor2 FOR         -- как-то мне не нравится, лучше пусть в назв. колонок будет
      
      SELECT _Result.GroupPrint
           , _Result.OperDate_inf
@@ -295,7 +339,7 @@ BEGIN
      ORDER BY _Result.GroupPrint
             , _Result.OperDate_inf
      ;
-     RETURN NEXT Cursor2; 
+     RETURN NEXT Cursor2;  */
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

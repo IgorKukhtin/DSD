@@ -1,9 +1,11 @@
 -- Function: gpGet_Object_ProdOptions()
 
 DROP FUNCTION IF EXISTS gpGet_Object_ProdOptions(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_ProdOptions(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ProdOptions(
     IN inId          Integer,       -- Названия Опций
+    IN inProModelId  Integer,       -- модель
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -14,14 +16,16 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , SalePrice TFloat
              , Comment TVarChar 
-             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar 
+             , ColorPatternId Integer, ColorPatternName TVarChar
              , MaterialOptionsId    Integer 
              , MaterialOptionsName  TVarChar
              , Id_Site              TVarChar
              , CodeVergl            Integer  
 
              ) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_ProdOptions());
@@ -34,12 +38,12 @@ $BODY$BEGIN
            , lfGet_ObjectCode (0, zc_Object_ProdOptions()) AS Code
            , CAST ('' as TVarChar)    AS NAME
 
-           , 0  :: Integer            AS ModelId
-           , '' :: TVarChar           AS ModelName
-           , CAST (0  AS Integer)     AS BrandId
-           , CAST ('' AS TVarChar)    AS BrandName
-           , CAST (0  AS Integer)     AS ProdEngineId
-           , CAST ('' AS TVarChar)    AS ProdEngineName
+           , Object_Model.Id         ::Integer  AS ModelId
+           , Object_Model.ValueData  ::TVarChar AS ModelName
+           , Object_Brand.Id                    AS BrandId
+           , Object_Brand.ValueData             AS BrandName
+           , Object_ProdEngine.Id               AS ProdEngineId
+           , Object_ProdEngine.ValueData        AS ProdEngineName
            , 0  :: Integer            AS GoodsId
            , '' :: TVarChar           AS GoodsName
 
@@ -50,12 +54,31 @@ $BODY$BEGIN
            , CAST ('' AS TVarChar)    AS Comment
 
            , 0  :: Integer            AS ProdColorPatternId
-           , '' :: TVarChar           AS ProdColorPatternName
+           , '' :: TVarChar           AS ProdColorPatternName   
+           , Object_ColorPattern.Id        :: Integer   AS ColorPatternId
+           , Object_ColorPattern.ValueData :: TVarChar  AS ColorPatternName
            , 0  :: Integer            AS MaterialOptionsId
            , '' :: TVarChar           AS MaterialOptionsName
            , '' :: TVarChar           AS Id_Site
            , CAST (0 AS Integer)   AS CodeVergl
-       FROM Object AS Object_TaxKind
+       FROM Object AS Object_TaxKind 
+           LEFT JOIN Object AS Object_Model ON Object_Model.Id = inProModelId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Brand
+                               ON ObjectLink_Brand.ObjectId = Object_Model.Id
+                              AND ObjectLink_Brand.DescId = zc_ObjectLink_ProdModel_Brand()
+          LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdEngine
+                               ON ObjectLink_ProdEngine.ObjectId = Object_Model.Id
+                              AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
+          LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId  
+
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                               ON ObjectLink_ColorPattern.ChildObjectId = Object_Model.Id
+                              AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ColorPattern_Model()
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ObjectId
+
        WHERE Object_TaxKind.Id = zc_Enum_TaxKind_Basis()
       ;
    ELSE
@@ -84,6 +107,9 @@ $BODY$BEGIN
 
          , Object_ProdColorPattern.Id        :: Integer   AS ProdColorPatternId
          , Object_ProdColorPattern.ValueData :: TVarChar  AS ProdColorPatternName
+
+         , Object_ColorPattern.Id        :: Integer   AS ColorPatternId
+         , Object_ColorPattern.ValueData :: TVarChar  AS ColorPatternName
 
          , Object_MaterialOptions.Id        :: Integer   AS MaterialOptionsId
          , Object_MaterialOptions.ValueData :: TVarChar  AS MaterialOptionsName
@@ -143,7 +169,10 @@ $BODY$BEGIN
                               AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern()
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
 
-
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                               ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
        WHERE Object_ProdOptions.Id = inId;
    END IF;
    
@@ -154,6 +183,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.07.22         *
  22.06.22         *
  25.12.20         *
  08.10.20         *
