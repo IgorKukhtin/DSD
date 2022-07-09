@@ -4,7 +4,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
   ClientWidth = 928
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -34
   ExplicitWidth = 944
   ExplicitHeight = 629
   PixelsPerInch = 96
@@ -1028,7 +1027,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         item
           DataSet = ItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupPrint;GoodsName;GoodsKindName'
+          IndexFieldNames = 'GroupPrint;Ord;GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
       Params = <
         item
