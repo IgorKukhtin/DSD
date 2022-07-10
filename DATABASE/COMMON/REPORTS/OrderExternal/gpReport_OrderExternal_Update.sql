@@ -20,12 +20,13 @@ RETURNS TABLE (OperDate        TDateTime
              , OperDate_CarInfo TDateTime, OperDate_CarInfo_date TDateTime, OperDate_CarInfo_str TVarChar
              , CarInfoId Integer, CarInfoName TVarChar, CarComment TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindName  TVarChar
-             , GoodsGroupNameFull TVarChar
-             , Amount TFloat
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName  TVarChar, GoodsGroupNameFull TVarChar, MeasureName TVarChar
+             , GoodsId_sub Integer, GoodsCode_sub Integer, GoodsName_sub TVarChar, GoodsKindName_sub  TVarChar, MeasureName_sub TVarChar
+
+               -- Заказы
              , AmountSh TFloat
              , AmountWeight TFloat
+               --
              , Count_Partner TFloat
              , Count_Doc TFloat
              , CountPartner TVarChar
@@ -43,10 +44,12 @@ RETURNS TABLE (OperDate        TDateTime
              , Hours_EndW           TFloat
              , Hours_real           TFloat
 
-             , Amount_child       TFloat
-             , AmountDiff_child   TFloat
-             , AmountWeight_child      TFloat
-             , AmountWeightDiff_child  TFloat
+               -- Резервы, вес
+             , AmountWeight_child_one TFloat
+             , AmountWeight_child_sec TFloat
+             , AmountWeight_child     TFloat
+               -- Итого не хватает для резерва, вес
+             , AmountWeight_diff      TFloat
              
              , Ord Integer
               )
@@ -125,49 +128,57 @@ BEGIN
                                                   AND MovementDate_EndWeighing.DescId     = zc_MovementDate_EndWeighing()
                        GROUP BY tmpMovementAll.Id
                       )
-
+       -- Заказы
      , tmpMI AS (SELECT MovementItem.*
                  FROM MovementItem
                  WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementAll.Id FROM tmpMovementAll)
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
                 )
-
+     , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
+                                FROM MovementItemFloat
+                                WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                  AND MovementItemFloat.DescId = zc_MIFloat_AmountSecond()
+                               )
+     , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
+                                     FROM MovementItemLinkObject
+                                     WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                       AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                    )
+       -- Резервы
      , tmpMIChild AS (SELECT MovementItem.*
                       FROM MovementItem
                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementAll.Id FROM tmpMovementAll)
                         AND MovementItem.DescId     = zc_MI_Child()
                         AND MovementItem.isErased   = FALSE
                      )
-
-     , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
-                                FROM MovementItemFloat
-                                WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                                  AND MovementItemFloat.DescId = zc_MIFloat_AmountSecond()
-                               )
-
      , tmpMIFloat_Child AS (SELECT MovementItemFloat.*
                             FROM MovementItemFloat
                             WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIChild.Id FROM tmpMIChild)
-                              AND MovementItemFloat.DescId = zc_MIFloat_AmountSecond()
+                              AND MovementItemFloat.DescId = zc_MIFloat_MovementId()
                            )
 
-     , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
-                                     FROM MovementItemLinkObject
-                                     WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                                       AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
-                                     )
-
      , tmpChild AS (SELECT MovementItem.ParentId
-                         , SUM (COALESCE (MovementItem.Amount,0))            AS Amount
-                         , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
-                         , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_all
+                       --, SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount
+                       --, SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount ELSE 0 END) AS AmountSecond
+                       --, SUM (MovementItem.Amount) AS Amount_all
+                           --
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ELSE 0 END) AS Amount_Weight
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ELSE 0 END) AS AmountSecond_Weight
+                         , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_all_Weight
+
                     FROM tmpMIChild AS MovementItem
-                         LEFT JOIN tmpMIFloat_Child AS MIFloat_AmountSecond
-                                                    ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                         LEFT JOIN tmpMIFloat_Child AS MIFloat_MovementId
+                                                    ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                              ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                         LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                               ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                              AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
                     GROUP BY MovementItem.ParentId
-                    )
+                   )
 
               -- Сортировка № п/п
             , tmpNPP AS (SELECT -- Дата/время отгрузки
@@ -211,24 +222,26 @@ BEGIN
                             , CASE WHEN inIsGoods = TRUE THEN MovementItem.ObjectId ELSE 0 END AS GoodsId
                             , CASE WHEN inIsGoods = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) ELSE 0 END AS GoodsKindId
 
-                            --, SUM (COALESCE (MovementItem.Amount,0))                   AS Amount
-                            --, SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0) )      AS AmountSecond
-                            , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
-                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSh
-                            , SUM ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
-                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight
                             , COUNT (DISTINCT Object_From.Id) AS CountPartner
                             , COUNT (DISTINCT Movement.Id) AS CountDoc
 
                             , MIN (tmpWeighing.StartWeighing) AS StartWeighing, MAX (tmpWeighing.EndWeighing) AS EndWeighing
 
-                            , SUM (tmpMI_Child.Amount_all)       ::TFloat AS Amount_child
-                            , SUM ((tmpMI_Child.Amount_all)
-                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)       ::TFloat AS AmountWeight_child
-                            , SUM (COALESCE (tmpMI_Child.Amount_all,0) - (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) )  ::TFloat AS AmountDiff_child
+                              -- Заказы
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSh
+                            , SUM ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight
 
-                            , SUM ((COALESCE (tmpMI_Child.Amount_all,0) - (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) )
-                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ) ::TFloat AS AmountWeightDiff_child
+                              -- Резервы
+                            , SUM (tmpMI_Child.Amount_Weight)       AS AmountWeight_child_one -- с Остатка
+                            , SUM (tmpMI_Child.AmountSecond_Weight) AS AmountWeight_child_sec -- с Прихода
+                            , SUM (tmpMI_Child.Amount_all_Weight)   AS AmountWeight_child     -- Итого
+
+                              -- Итого не хватает для резерва, вес
+                            , SUM ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                 - COALESCE (tmpMI_Child.Amount_Weight, 0)
+                                  ) AS AmountWeight_diff
 
                        FROM tmpMovementAll AS Movement
                             LEFT JOIN tmpWeighing ON tmpWeighing.Id = Movement.Id
@@ -269,8 +282,8 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
+                            -- Заказы
                             INNER JOIN tmpMI AS MovementItem  ON MovementItem.MovementId = Movement.Id
-
                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountSecond
                                                            ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                           AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
@@ -278,14 +291,13 @@ BEGIN
                             LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_GoodsKind
                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
                             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                   ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
-                                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-
+                                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                            -- Резервы
                             LEFT JOIN tmpChild AS tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
 
                         GROUP BY Movement.OperDate
@@ -312,7 +324,22 @@ BEGIN
                                , CASE WHEN inIsGoods = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) ELSE 0 END
 
                           )
+         , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                        , Object_GoodsByGoodsKind_View.GoodsKindId
+                                        , ObjectLink_GoodsByGoodsKind_GoodsSubSend.ChildObjectId      AS GoodsId_sub
+                                        , ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ChildObjectId  AS GoodsKindId_sub
+                                   FROM Object_GoodsByGoodsKind_View
+                                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSubSend
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsSubSend.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsSubSend.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSubSend()
+                                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSubSend
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSubSend()
+                                   WHERE ObjectLink_GoodsByGoodsKind_GoodsSubSend.ChildObjectId     > 0
+                                     AND ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ChildObjectId > 0
+                                     AND Object_GoodsByGoodsKind_View.GoodsId IN (SELECT DISTINCT tmpMovement.GoodsId FROM tmpMovement)
 
+                                  )
 
        -- Результат
        SELECT
@@ -338,10 +365,18 @@ BEGIN
            , Object_Goods.ValueData                     AS GoodsName
            , Object_GoodsKind.ValueData                 AS GoodsKindName
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData                   AS MeasureName
              --
-           , tmpMovement.Amount         :: TFloat  AS Amount
+           , Object_Goods_sub.Id                        AS GoodsId_sub
+           , Object_Goods_sub.ObjectCode                AS GoodsCode_sub
+           , Object_Goods_sub.ValueData                 AS GoodsName_sub
+           , Object_GoodsKind_sub.ValueData             AS GoodsKindName_sub
+           , Object_Measure_sub.ValueData               AS MeasureName_sub
+
+             -- Заказы
            , tmpMovement.AmountSh       :: TFloat  AS AmountSh
            , tmpMovement.AmountWeight   :: TFloat  AS AmountWeight
+
            , tmpMovement.CountPartner   :: TFloat  AS Count_Partner
            , tmpMovement.CountDoc       :: TFloat  AS Count_Doc
          --, (zfConvert_IntToString (tmpMovement.CountPartner::integer) || ' / '  || zfConvert_IntToString (tmpMovement.CountDoc::integer))  :: TVarChar  AS CountPartner
@@ -371,10 +406,12 @@ BEGIN
            , (EXTRACT (HOUR FROM tmpMovement.EndWeighing - tmpMovement.StartWeighing) )    ::TFloat AS Hours_EndW
            , (EXTRACT (HOUR FROM tmpMovement.EndWeighing - tmpMovement.OperDate_CarInfo) ) ::TFloat AS Hours_real
 
-           , tmpMovement.Amount_child             ::TFloat AS Amount_child
-           , tmpMovement.AmountDiff_child         ::TFloat AS AmountDiff_child
+             -- Резервы, вес
+           , tmpMovement.AmountWeight_child_one   ::TFloat AS AmountWeight_child_one
+           , tmpMovement.AmountWeight_child_sec   ::TFloat AS AmountWeight_child_sec
            , tmpMovement.AmountWeight_child       ::TFloat AS AmountWeight_child
-           , tmpMovement.AmountWeightDiff_child   ::TFloat AS AmountWeightDiff_child
+             -- Итого не хватает для резерва, вес
+           , tmpMovement.AmountWeight_diff        ::TFloat AS AmountWeight_diff
 
            , tmpMovement.Ord                      :: Integer AS Ord
       FROM tmpMovement
@@ -396,7 +433,26 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-         ;
+          LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = tmpMovement.GoodsId
+                                       AND tmpGoodsByGoodsKind.GoodsKindId = tmpMovement.GoodsKindId
+
+          LEFT JOIN Object AS Object_Goods_sub     ON Object_Goods_sub.Id     = tmpGoodsByGoodsKind.GoodsId_sub
+          LEFT JOIN Object AS Object_GoodsKind_sub ON Object_GoodsKind_sub.Id = tmpGoodsByGoodsKind.GoodsKindId_sub
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_sub
+                               ON ObjectLink_Goods_Measure_sub.ObjectId = Object_Goods_sub.Id
+                              AND ObjectLink_Goods_Measure_sub.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure_sub ON Object_Measure_sub.Id = ObjectLink_Goods_Measure_sub.ChildObjectId
+
+      -- !!!если есть заказ!!!
+      WHERE tmpMovement.AmountSh     <> 0
+         OR tmpMovement.AmountWeight <> 0
+     ;
 
 END;
 $BODY$

@@ -36,9 +36,7 @@ type
     edTo: TcxButtonEdit;
     cxLabel8: TcxLabel;
     GuidesTo: TdsdGuides;
-    HeaderCDS: TClientDataSet;
     ItemsCDS: TClientDataSet;
-    Amount: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     AmountWeight: TcxGridDBColumn;
@@ -112,6 +110,14 @@ type
     OperDate_CarInfo_date: TcxGridDBColumn;
     DayOfWeekName_CarInfo_date: TcxGridDBColumn;
     Ord: TcxGridDBColumn;
+    HeaderCDS: TClientDataSet;
+    MeasureName: TcxGridDBColumn;
+    MeasureName_sub: TcxGridDBColumn;
+    GoodsCode_sub: TcxGridDBColumn;
+    GoodsName_sub: TcxGridDBColumn;
+    GoodsKindName_sub: TcxGridDBColumn;
+    AmountWeight_child_one: TcxGridDBColumn;
+    AmountWeight_child_sec: TcxGridDBColumn;
   private
     { Private declarations }
   public

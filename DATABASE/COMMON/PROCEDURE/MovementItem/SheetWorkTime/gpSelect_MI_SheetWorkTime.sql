@@ -116,7 +116,7 @@ BEGIN
      -- все данные за мес€ц
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
             WITH
-       tmpMovement_all AS (SELECT tmpOperDate.OperDate
+    tmpMovement_all_all AS (SELECT tmpOperDate.OperDate
                                --, CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN 0 ELSE MI_SheetWorkTime.Amount END AS Amount
                                  , MI_SheetWorkTime.Amount
                                  , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
@@ -204,9 +204,42 @@ BEGIN
                                   )
 
                            )
+
+     , tmpMovement_all AS (SELECT tmpMovement_all_all.OperDate
+                                 , SUM (tmpMovement_all_all.Amount)              AS Amount
+                                 , COUNT(*)                                      AS Count_sm
+                               --, 1                                             AS Count_sm
+                                 , tmpMovement_all_all.MemberId
+                                 , tmpMovement_all_all.PositionId
+                                 , tmpMovement_all_all.PositionLevelId
+                                 , tmpMovement_all_all.isNoSheetCalc
+                                 , tmpMovement_all_all.PersonalGroupId
+                                 , tmpMovement_all_all.StorageLineId
+                                 , tmpMovement_all_all.WorkTimeKindId_key
+
+                                 , tmpMovement_all_all.ObjectId
+                                 , tmpMovement_all_all.ShortName
+                                 , tmpMovement_all_all.isErased
+                                 , tmpMovement_all_all.Color_Calc
+                           FROM tmpMovement_all_all
+                           GROUP BY tmpMovement_all_all.OperDate
+                                 , tmpMovement_all_all.MemberId
+                                 , tmpMovement_all_all.PositionId
+                                 , tmpMovement_all_all.PositionLevelId
+                                 , tmpMovement_all_all.isNoSheetCalc
+                                 , tmpMovement_all_all.PersonalGroupId
+                                 , tmpMovement_all_all.StorageLineId
+                                 , tmpMovement_all_all.WorkTimeKindId_key
+
+                                 , tmpMovement_all_all.ObjectId
+                                 , tmpMovement_all_all.ShortName
+                                 , tmpMovement_all_all.isErased
+                                 , tmpMovement_all_all.Color_Calc
+                          )
           , tmpMovement AS (SELECT tmpMovement_all.OperDate
                                --, CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN 0 ELSE MI_SheetWorkTime.Amount END AS Amount
                                  , tmpMovement_all.Amount
+                                 , tmpMovement_all.Count_sm
                                  , tmpMovement_all.MemberId
                                  , tmpMovement_all.PositionId
                                  , tmpMovement_all.PositionLevelId
@@ -327,6 +360,7 @@ BEGIN
             -- рабочий график
             SELECT tmp.OperDate
                  , tmp.Amount :: TFloat
+                 , tmp.Count_sm :: TFloat
                --, CASE WHEN COALESCE (tmpDateOut.WorkTimeKindId, tmp.ObjectId) = zc_Enum_WorkTimeKind_Quit() THEN 0 ELSE tmp.Amount END :: TFloat AS Amount
                  , tmp.MemberId
                  , tmp.PositionId
@@ -350,6 +384,7 @@ BEGIN
             -- дни увольнени€ (не рабочие)
             SELECT tmp.OperDate
                  , 0 :: TFloat AS Amount
+                 , 0 :: TFloat AS Count_sm
                  , tmp.MemberId
                  , tmp.PositionId
                  , tmp.PositionLevelId
@@ -441,7 +476,7 @@ BEGIN
            , tmpMI.PersonalGroupId
            , tmpMI.StorageLineId
            , tmpMI.WorkTimeKindId_key
-           , SUM (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) AS Amount
+           , SUM (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN tmpMI.Count_sm ELSE 0 END) AS Amount
            , 2  AS ObjectId
       FROM tmpOperDate
           JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
@@ -731,7 +766,7 @@ BEGIN
          LEFT JOIN Object AS Object_WorkTimeKind_key ON Object_WorkTimeKind_key.Id = D.Key[6]
          LEFT JOIN (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId, tmpMI.WorkTimeKindId_key, tmpMI.isErased
                          , Sum (tmpMI.Amount) AS Amount
-                         , Sum (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) AS CountDay 
+                         , Sum (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN tmpMI.Count_sm ELSE 0 END) AS CountDay 
                     FROM tmpMI
                     WHERE tmpMI.isErased = 1 OR ' || inIsErased :: TVarChar || ' = TRUE
                     GROUP BY tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased, tmpMI.StorageLineId, tmpMI.WorkTimeKindId_key

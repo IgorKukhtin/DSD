@@ -268,7 +268,7 @@ BEGIN
                                , CHR (13)
                                 ;
     END IF;
-
+`	
     -- при вызове процедуры для док. Список бригады нужен для определения строки Тип. раб. времени 
     vbTypeId := ioTypeId;
     
@@ -451,8 +451,22 @@ BEGIN
                             --
                             AND (inIsPersonalGroup = FALSE OR (inIsPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = ioWorkTimeKindId_key))
                          LIMIT CASE WHEN inIsPersonalGroup = TRUE THEN 1 ELSE 100 END
-                         );
+                        );
                          
+     -- Проверка через УНИКАЛЬНОСТЬ
+     IF COALESCE (vbMovementItemId, 0) = 0
+     THEN
+         PERFORM lpInsert_LockUnique (inKeyData:= 'SheetWorkTime'
+                                        || ';' || zc_Movement_SheetWorkTime() :: TVarChar
+                                        || ';' || vbMovementId :: TVarChar
+                                        || ';' || COALESCE (inMemberId, 0) :: TVarChar
+                                        || ';' || COALESCE (inPositionId, 0) :: TVarChar
+                                        || '_' || COALESCE (inPositionLevelId, 0) :: TVarChar
+                                        || '_' || COALESCE (inPersonalGroupId, 0) :: TVarChar
+                                        || '_' || COALESCE (inStorageLineId, 0) :: TVarChar
+                                        || '_' || (CASE WHEN inIsPersonalGroup = FALSE THEN '0' ELSE COALESCE (ioWorkTimeKindId_key, 0) :: TVarChar END) :: TVarChar
+                                    , inUserId:= vbUserId);
+     END IF;
 
      -- замена 
      IF inIsPersonalGroup = TRUE

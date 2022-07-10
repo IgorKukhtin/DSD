@@ -34,6 +34,7 @@ BEGIN
                                ) ON COMMIT DROP;
      --
      WITH 
+       -- Заказы
        tmpMovementAll AS (SELECT Movement.*
                                , MovementLinkObject_To.ObjectId AS ToId 
 
@@ -125,7 +126,8 @@ BEGIN
                                            THEN 0
                                    ELSE ObjectLink_Juridical_Retail.ChildObjectId
                               END AS RetailId
-                              -- 
+
+                              -- Заказ
                             , SUM ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
                                    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight
                               -- 
@@ -168,6 +170,7 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
                 
+                            -- Заказы
                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                    AND MovementItem.isErased   = FALSE
@@ -214,7 +217,8 @@ BEGIN
               , tmpMovement.OperDate_CarInfo_date
                 --
               , tmpMovement.GroupPrint, tmpMovement.Ord
-                -- 
+
+                -- !!!Информация в названии колонки!!!
               , (CASE WHEN EXTRACT (DAY   FROM tmpMovement.OperDate_CarInfo) < 10 THEN '0' ELSE '' END || EXTRACT (DAY   FROM tmpMovement.OperDate_CarInfo) :: TVarChar
        || '.' || CASE WHEN EXTRACT (MONTH FROM tmpMovement.OperDate_CarInfo) < 10 THEN '0' ELSE '' END || EXTRACT (MONTH FROM tmpMovement.OperDate_CarInfo) :: TVarChar
               || CASE WHEN tmpMovement.EndWeighing IS NOT NULL
@@ -320,8 +324,22 @@ BEGIN
            , tmpWeekDay.DayOfWeekName_Full ::TVarChar  AS DayOfWeekName_CarInfo
            , _Result.AmountWeight          :: TFloat   AS AmountWeight
            , _Result.Count_Partner         :: TFloat   AS Count_Partner
-           , _Result.Ord
-           , tmpColumn.*
+
+           , _Result.Ord                   :: Integer
+           , tmpColumn.GroupPrint          :: Integer
+
+           , tmpColumn.OperDate_CarInfo1   ::TVarChar
+           , tmpColumn.OperDate_CarInfo2   ::TVarChar
+           , tmpColumn.OperDate_CarInfo3   ::TVarChar
+           , tmpColumn.OperDate_CarInfo4   ::TVarChar
+           , tmpColumn.OperDate_CarInfo5   ::TVarChar
+           , tmpColumn.OperDate_CarInfo6   ::TVarChar
+           , tmpColumn.OperDate_CarInfo7   ::TVarChar
+           , tmpColumn.OperDate_CarInfo8   ::TVarChar
+           , tmpColumn.OperDate_CarInfo9   ::TVarChar
+           , tmpColumn.OperDate_CarInfo10  ::TVarChar
+           , tmpColumn.OperDate_CarInfo11  ::TVarChar
+           , tmpColumn.OperDate_CarInfo12  ::TVarChar
        FROM _Result
           LEFT JOIN Object AS Object_Route ON Object_Route.Id = _Result.RouteId
           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = _Result.RetailId

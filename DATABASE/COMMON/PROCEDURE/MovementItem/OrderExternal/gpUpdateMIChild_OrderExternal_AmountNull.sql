@@ -12,13 +12,13 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
---return;
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternalUnit());
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
+
+   --RAISE EXCEPTION '<%>', inMovementId;
 
     -- сохранили
-   PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Child(), MovementItem.ObjectId, inMovementId, Null, MovementItem.ParentId);
-         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), MovementItem.Id, Null)  -- сохранили свойство <Количество дозаказ>
+   PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Child(), MovementItem.ObjectId, inMovementId, 0, MovementItem.ParentId)
    FROM MovementItem
    WHERE MovementItem.MovementId = inMovementId
      AND MovementItem.DescId = zc_MI_Child()

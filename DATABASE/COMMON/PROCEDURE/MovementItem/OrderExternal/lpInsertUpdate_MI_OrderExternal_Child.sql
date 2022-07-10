@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderExternal_Child(
     IN inParentId            Integer   , -- Ключ объекта
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inAmountSecond        TFloat    , -- Количество дозаказ
+    IN inAmount              TFloat    , -- Количество резерв с остатка или с прихода 
+    IN inAmountRemains       TFloat    , -- Количество остаток расч. 
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inMovementId_Send     Integer   , -- № документа приход
     IN inUserId              Integer     -- пользователь
@@ -24,11 +24,11 @@ $BODY$
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId);
 
-     -- сохранили свойство <MovementId->
+     -- сохранили свойство <MovementId>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, COALESCE (inMovementId_Send, 0));
 
-     -- сохранили свойство <Количество дозаказ>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), ioId, inAmountSecond);
+     -- сохранили свойство <Количество остаток расч.>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), ioId, inAmountRemains);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);

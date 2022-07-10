@@ -26,9 +26,9 @@ BEGIN
      END IF;
 
      --
-     IF COALESCE (inRouteId, 0) = 0
+     IF COALESCE (inRouteId, 0) = 0 AND COALESCE (inRetailId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Маршрут не установлен';
+         RAISE EXCEPTION 'Ошибка.Маршрут и Торговая сеть не установлены.';
      END IF;
 
      --RAISE EXCEPTION '<%>', outOperDate_CarInfo;
@@ -44,8 +44,8 @@ BEGIN
  
                INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement.Id
-                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                            AND COALESCE (MovementLinkObject_To.ObjectId,0) = inToId
+                                            AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                            AND MovementLinkObject_To.ObjectId   = inToId
  
                LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                             ON MovementLinkObject_Route.MovementId = Movement.Id
