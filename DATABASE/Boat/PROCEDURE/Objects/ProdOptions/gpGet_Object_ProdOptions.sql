@@ -106,7 +106,8 @@ BEGIN
          , ObjectString_Comment.ValueData     AS Comment
 
          , Object_ProdColorPattern.Id        :: Integer   AS ProdColorPatternId
-         , Object_ProdColorPattern.ValueData :: TVarChar  AS ProdColorPatternName
+         --, Object_ProdColorPattern.ValueData :: TVarChar  AS ProdColorPatternName
+         , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END || ' (' || Object_Model.ValueData || ')') :: TVarChar  AS  ProdColorPatternName
 
          , Object_ColorPattern.Id        :: Integer   AS ColorPatternId
          , Object_ColorPattern.ValueData :: TVarChar  AS ColorPatternName

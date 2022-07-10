@@ -572,7 +572,8 @@ BEGIN
 
            -- Boat Structure
          , tmpRes.ProdColorPatternId          :: Integer  AS ProdColorPatternId
-         , (Object_ProdColorGroup.ValueData || CASE WHEN Object_ProdColorPattern.ValueData <> '1' THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END) :: TVarChar AS ProdColorPatternName
+         --, (Object_ProdColorGroup.ValueData || CASE WHEN Object_ProdColorPattern.ValueData <> '1' THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END) :: TVarChar AS ProdColorPatternName 
+         , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END || ' (' || Object_Model_pcp.ValueData || ')') :: TVarChar  AS  ProdColorPatternName
            -- Шаблон Boat Structure
          , Object_ColorPattern.Id             ::Integer   AS ColorPatternId
          , Object_ColorPattern.ValueData      ::TVarChar  AS ColorPatternName
@@ -649,6 +650,11 @@ BEGIN
                                ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
                               AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ProdColorPattern_ColorPattern()
           LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
+
+               LEFT JOIN ObjectLink AS ObjectLink_ColorPattern_Model
+                                    ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ColorPattern.ChildObjectId
+                                   AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
+               LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
 
           LEFT JOIN ObjectFloat AS ObjectFloat_ProdOptions_CodeVergl
                                 ON ObjectFloat_ProdOptions_CodeVergl.ObjectId = Object_ProdOptions.Id
