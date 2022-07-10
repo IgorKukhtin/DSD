@@ -3,7 +3,7 @@ inherited Report_MIProtocolDialogForm: TReport_MIProtocolDialogForm
   ClientHeight = 281
   ClientWidth = 398
   ExplicitWidth = 404
-  ExplicitHeight = 309
+  ExplicitHeight = 310
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -168,7 +168,7 @@ inherited Report_MIProtocolDialogForm: TReport_MIProtocolDialogForm
     Params = <
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -176,7 +176,7 @@ inherited Report_MIProtocolDialogForm: TReport_MIProtocolDialogForm
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

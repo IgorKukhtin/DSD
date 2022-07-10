@@ -1374,7 +1374,8 @@ uses
   Report_SheetWorkTime_UpdateDialog in '..\..\Forms\Report\Report_SheetWorkTime_UpdateDialog.pas' {Report_SheetWorkTime_UpdateDialogForm: TParentForm},
   Report_SheetWorkTime_Update in '..\..\Forms\Report\Report_SheetWorkTime_Update.pas' {Report_SheetWorkTime_UpdateForm: TParentForm},
   Report_SaleTare_Gofro in '..\..\Forms\Report\Report_SaleTare_Gofro.pas' {Report_SaleTare_GofroForm: TParentForm},
-  Report_SaleTare_GofroDialog in '..\..\Forms\Report\Report_SaleTare_GofroDialog.pas' {Report_SaleTare_GofroDialogForm: TParentForm};
+  Report_SaleTare_GofroDialog in '..\..\Forms\Report\Report_SaleTare_GofroDialog.pas' {Report_SaleTare_GofroDialogForm: TParentForm},
+  Report_MIProtocolUpdate in '..\..\Forms\Report\Report_MIProtocolUpdate.pas' {Report_MIProtocolUpdateForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -73,8 +73,8 @@ BEGIN
               UNION
                SELECT MovementItem.MovementId
                     , MovementItem.Id
-                    , MovementItem.ObjectId AS GoodsId
-                    --, MILinkObject_Box.ObjectId  AS GoodsId
+                    --, MovementItem.ObjectId AS GoodsId
+                    , MILinkObject_Box.ObjectId  AS GoodsId
                     , 0        AS Amount
                     , COALESCE (MIFloat_BoxCount.ValueData,0) AS BoxCount
                FROM tmpMI_All AS MovementItem

@@ -1392,6 +1392,8 @@ type
     miReport_SheetWorkTime_Update: TMenuItem;
     actReport_SaleTare_Gofro: TdsdOpenForm;
     miReport_SaleTare_Gofro: TMenuItem;
+    actReport_MIProtocolUpdate: TdsdOpenForm;
+    miReport_MIProtocolUpdate: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

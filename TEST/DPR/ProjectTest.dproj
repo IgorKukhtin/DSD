@@ -4774,6 +4774,10 @@
 				<Form>Report_SaleTare_GofroDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_MIProtocolUpdate.pas">
+				<Form>Report_MIProtocolUpdateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

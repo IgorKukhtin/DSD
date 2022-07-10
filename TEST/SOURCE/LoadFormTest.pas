@@ -3024,6 +3024,11 @@ end;
 
 procedure TLoadFormTest.LoadReportSystemFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MIProtocolUpdateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MIProtocolUpdateForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementProtocolGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementProtocolGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementProtocolGroupDialogForm'));
