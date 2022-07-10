@@ -480,7 +480,6 @@ object Report_AccountForm: TReport_AccountForm
     Height = 111
     Align = alTop
     TabOrder = 1
-    ExplicitTop = -14
     object deStart: TcxDateEdit
       Left = 10
       Top = 29
@@ -910,18 +909,21 @@ object Report_AccountForm: TReport_AccountForm
       FormNameParam.Component = FormParams
       FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deStart
           ComponentItem = 'OperDate'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Id'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -943,10 +945,12 @@ object Report_AccountForm: TReport_AccountForm
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       Enabled = False
       StoredProc = spSelectPrint
@@ -970,17 +974,23 @@ object Report_AccountForm: TReport_AccountForm
           Value = Null
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = Null
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -991,6 +1001,7 @@ object Report_AccountForm: TReport_AccountForm
       FormName = 'TReport_AccountDialogForm'
       FormNameParam.Value = 'TReport_AccountDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -998,6 +1009,7 @@ object Report_AccountForm: TReport_AccountForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1005,6 +1017,7 @@ object Report_AccountForm: TReport_AccountForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
@@ -1012,6 +1025,7 @@ object Report_AccountForm: TReport_AccountForm
           Component = AccountGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -1020,6 +1034,7 @@ object Report_AccountForm: TReport_AccountForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossGroupId'
@@ -1027,6 +1042,7 @@ object Report_AccountForm: TReport_AccountForm
           Component = ProfitLossGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossGroupName'
@@ -1035,6 +1051,7 @@ object Report_AccountForm: TReport_AccountForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionId'
@@ -1042,6 +1059,7 @@ object Report_AccountForm: TReport_AccountForm
           Component = AccountDirectionGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionName'
@@ -1049,6 +1067,7 @@ object Report_AccountForm: TReport_AccountForm
           Component = AccountDirectionGuides
           ComponentItem = 'TextValue'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossDirectionId'
@@ -1056,6 +1075,7 @@ object Report_AccountForm: TReport_AccountForm
           Component = ProfitLossDirectionGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossDirectionName'
@@ -1064,6 +1084,7 @@ object Report_AccountForm: TReport_AccountForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
@@ -1072,6 +1093,7 @@ object Report_AccountForm: TReport_AccountForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1080,6 +1102,7 @@ object Report_AccountForm: TReport_AccountForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossId'
@@ -1087,6 +1110,7 @@ object Report_AccountForm: TReport_AccountForm
           Component = ProfitLossGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossName'
@@ -1095,6 +1119,7 @@ object Report_AccountForm: TReport_AccountForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
@@ -1102,6 +1127,7 @@ object Report_AccountForm: TReport_AccountForm
           Component = InfoMoneyGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1110,6 +1136,7 @@ object Report_AccountForm: TReport_AccountForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -1117,6 +1144,7 @@ object Report_AccountForm: TReport_AccountForm
           Component = BranchGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -1125,6 +1153,7 @@ object Report_AccountForm: TReport_AccountForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BusinessId'
@@ -1132,6 +1161,7 @@ object Report_AccountForm: TReport_AccountForm
           Component = BusinessGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BusinessName'
@@ -1140,6 +1170,7 @@ object Report_AccountForm: TReport_AccountForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1160,6 +1191,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1167,6 +1199,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountGroupId'
@@ -1174,6 +1207,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountDirectionId'
@@ -1181,6 +1215,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -1188,6 +1223,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -1195,6 +1231,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBusinessId'
@@ -1202,6 +1239,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = BusinessGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inProfitLossGroupId'
@@ -1209,6 +1247,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inProfitLossDirectionId'
@@ -1216,6 +1255,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inProfitLossId'
@@ -1223,6 +1263,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -1230,6 +1271,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -1249,10 +1291,13 @@ object Report_AccountForm: TReport_AccountForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 312
     Top = 264
   end
@@ -1268,6 +1313,7 @@ object Report_AccountForm: TReport_AccountForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1305,6 +1351,7 @@ object Report_AccountForm: TReport_AccountForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1314,6 +1361,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1322,6 +1370,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
@@ -1329,6 +1378,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
@@ -1337,6 +1387,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionId'
@@ -1344,6 +1395,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionName'
@@ -1352,6 +1404,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 624
     Top = 24
@@ -1367,6 +1420,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ClientDataSet
         ComponentItem = 'MovementId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FormName'
@@ -1374,6 +1428,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = FormParams
         ComponentItem = 'FormName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -1385,24 +1440,28 @@ object Report_AccountForm: TReport_AccountForm
         Name = 'FormName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartDate'
         Value = 41640d
         Component = deStart
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
         Value = ''
         Component = AccountGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -1410,12 +1469,14 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
         Value = ''
         Component = AccountGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
@@ -1423,12 +1484,14 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionId'
         Value = ''
         Component = AccountDirectionGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionName'
@@ -1436,12 +1499,14 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountDirectionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -1449,12 +1514,14 @@ object Report_AccountForm: TReport_AccountForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessId'
         Value = ''
         Component = BusinessGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessName'
@@ -1462,12 +1529,14 @@ object Report_AccountForm: TReport_AccountForm
         Component = BusinessGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossGroupId'
         Value = ''
         Component = ProfitLossGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossGroupName'
@@ -1475,12 +1544,14 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionId'
         Value = ''
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionName'
@@ -1488,12 +1559,14 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossDirectionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossId'
         Value = ''
         Component = ProfitLossGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossName'
@@ -1501,12 +1574,14 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
         Value = ''
         Component = BranchGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
@@ -1514,6 +1589,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = BranchGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 328
@@ -1523,6 +1599,7 @@ object Report_AccountForm: TReport_AccountForm
     LookupControl = ceAccountGroup
     FormNameParam.Value = 'TAccountGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccountGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1532,6 +1609,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1540,6 +1618,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionId'
@@ -1547,6 +1626,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionName'
@@ -1555,6 +1635,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
@@ -1562,6 +1643,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -1570,6 +1652,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 37
@@ -1579,6 +1662,7 @@ object Report_AccountForm: TReport_AccountForm
     LookupControl = ceAccountDirection
     FormNameParam.Value = 'TAccountDirection_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccountDirection_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1588,6 +1672,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1596,6 +1681,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
@@ -1603,6 +1689,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
@@ -1611,6 +1698,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
@@ -1618,6 +1706,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -1626,6 +1715,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 408
     Top = 29
@@ -1635,6 +1725,7 @@ object Report_AccountForm: TReport_AccountForm
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1644,6 +1735,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1652,6 +1744,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 840
     Top = 37
@@ -1661,6 +1754,7 @@ object Report_AccountForm: TReport_AccountForm
     LookupControl = ceBusiness
     FormNameParam.Value = 'TBusiness_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBusiness_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
@@ -1671,6 +1765,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = BusinessGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1679,6 +1774,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 984
     Top = 96
@@ -1688,6 +1784,7 @@ object Report_AccountForm: TReport_AccountForm
     LookupControl = ceProfitLossGroup
     FormNameParam.Value = 'TProfitLossGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TProfitLossGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1697,6 +1794,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1705,6 +1803,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionId'
@@ -1712,6 +1811,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionName'
@@ -1720,6 +1820,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossId'
@@ -1727,6 +1828,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossName'
@@ -1735,6 +1837,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 85
@@ -1744,6 +1847,7 @@ object Report_AccountForm: TReport_AccountForm
     LookupControl = ceProfitLossDirection
     FormNameParam.Value = 'TProfitLossDirection_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TProfitLossDirection_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1753,6 +1857,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1761,6 +1866,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossGroupId'
@@ -1768,6 +1874,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossGroupName'
@@ -1776,6 +1883,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossId'
@@ -1783,6 +1891,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossName'
@@ -1791,6 +1900,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 408
     Top = 85
@@ -1800,6 +1910,7 @@ object Report_AccountForm: TReport_AccountForm
     LookupControl = ceBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1809,6 +1920,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1817,6 +1929,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 816
     Top = 88
@@ -1826,6 +1939,7 @@ object Report_AccountForm: TReport_AccountForm
     LookupControl = ceProfitLoss
     FormNameParam.Value = 'TProfitLoss_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TProfitLoss_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1835,6 +1949,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1843,6 +1958,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossGroupId'
@@ -1850,6 +1966,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossGroupName'
@@ -1858,6 +1975,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionId'
@@ -1865,6 +1983,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionName'
@@ -1873,6 +1992,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 600
     Top = 77
@@ -1891,6 +2011,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1898,6 +2019,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -1905,22 +2027,26 @@ object Report_AccountForm: TReport_AccountForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccountId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDetail'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 767

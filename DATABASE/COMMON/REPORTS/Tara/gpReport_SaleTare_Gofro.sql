@@ -22,16 +22,15 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
+    
 
     -- Результат
     RETURN QUERY
     --данные продаж по товарам       
     WITH 
       -- товары из группы Гофротара
-      tmpGoods AS (SELECT ObjectLink_Goods_GoodsGroup.ObjectId AS GoodsId
-                   FROM ObjectLink AS ObjectLink_Goods_GoodsGroup
-                   WHERE ChildObjectId = inGoodsGroupId
-                     AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+      tmpGoods AS (SELECT lfSelect.GoodsId AS GoodsId
+                   FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
                    )
     , tmpMovement AS (SELECT Movement.*
                       FROM Movement
@@ -67,21 +66,23 @@ BEGIN
    , tmpMI AS (SELECT MovementItem.MovementId
                     , MovementItem.Id
                     , MovementItem.ObjectId AS GoodsId
-                    , MovementItem.Amount   AS Amount
+                    , COALESCE (MovementItem.Amount,0) AS Amount
                     , 0                     AS BoxCount
                FROM tmpMI_All AS MovementItem  
                     INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
               UNION
                SELECT MovementItem.MovementId
                     , MovementItem.Id
-                    , MILinkObject_Box.ObjectId  AS GoodsId
+                    , MovementItem.ObjectId AS GoodsId
+                    --, MILinkObject_Box.ObjectId  AS GoodsId
                     , 0        AS Amount
-                    , MIFloat_BoxCount.ValueData AS BoxCount
+                    , COALESCE (MIFloat_BoxCount.ValueData,0) AS BoxCount
                FROM tmpMI_All AS MovementItem
-                    INNER JOIN tmpMILO_Box AS MILinkObject_Box
-                                           ON MILinkObject_Box.MovementItemId = MovementItem.Id
-                    LEFT JOIN tmpMIF_Box AS MIFloat_BoxCount
-                                         ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                    INNER JOIN tmpMIF_Box AS MIFloat_BoxCount
+                                          ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                    LEFT JOIN tmpMILO_Box AS MILinkObject_Box
+                                          ON MILinkObject_Box.MovementItemId = MovementItem.Id
+
                )
    , tmpMovementDate AS (SELECT MovementDate.*
                          FROM MovementDate
@@ -110,8 +111,8 @@ BEGIN
                 , Object_Goods.ValueData              AS GoodsName
                 , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-                , SUM (tmpMI.Amount)     :: TFloat    AS Amount
-                , SUM (tmpMI.BoxCount)   :: TFloat    AS BoxCount
+                , SUM (COALESCE (tmpMI.Amount,0))     :: TFloat    AS Amount
+                , SUM (COALESCE (tmpMI.BoxCount,0))   :: TFloat    AS BoxCount
            FROM tmpMI
                 LEFT JOIN tmpMovement AS Movement ON Movement.Id = tmpMI.MovementId
 

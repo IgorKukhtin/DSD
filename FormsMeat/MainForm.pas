@@ -1390,6 +1390,8 @@ type
     miOrderInternalBasisPackIrna: TMenuItem;
     actReport_SheetWorkTime_Update: TdsdOpenForm;
     miReport_SheetWorkTime_Update: TMenuItem;
+    actReport_SaleTare_Gofro: TdsdOpenForm;
+    miReport_SaleTare_Gofro: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

@@ -45,11 +45,9 @@ type
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     BoxCount: TcxGridDBColumn;
-    mactOpenDocument: TMultiAction;
-    actOpenForm: TdsdOpenForm;
-    actMovementForm: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
