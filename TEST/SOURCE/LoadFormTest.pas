@@ -2868,6 +2868,12 @@ end;
 
 procedure TLoadFormTest.LoadReportTaraFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleTare_GofroDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleTare_GofroDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleTare_GofroForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleTare_GofroForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderReturnTareDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderReturnTareDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderReturnTareForm'));
@@ -3018,6 +3024,11 @@ end;
 
 procedure TLoadFormTest.LoadReportSystemFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MIProtocolUpdateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MIProtocolUpdateForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementProtocolGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementProtocolGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementProtocolGroupDialogForm'));

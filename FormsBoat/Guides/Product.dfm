@@ -3141,8 +3141,8 @@ object ProductForm: TProductForm
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 624
-    Top = 288
+    Left = 616
+    Top = 336
   end
   object ProdOptItemsDS: TDataSource
     DataSet = ProdOptItemsCDS

@@ -32,7 +32,8 @@ BEGIN
 
             , Object_ProdColorPattern.Id             AS ProdColorPatternId
             , Object_ProdColorPattern.ObjectCode     AS ProdColorPatternCode
-            , Object_ProdColorPattern.ValueData      AS ProdColorPatternName
+            --, Object_ProdColorPattern.ValueData      AS ProdColorPatternName
+            , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END || ' (' || Object_Model_pcp.ValueData || ')') :: TVarChar  AS  ProdColorPatternName
 
             , Object_Insert.ValueData                AS InsertName
             , ObjectDate_Insert.ValueData            AS InsertDate
@@ -47,6 +48,20 @@ BEGIN
                                ON ObjectLink_ProdColorPattern.ObjectId = ObjectLink_MaterialOptions.ObjectId
                               AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern()
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId AND 1=0
+
+               LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_ProdColorGroup
+                                    ON ObjectLink_ProdColorPattern_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                   AND ObjectLink_ProdColorPattern_ProdColorGroup.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+               LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorPattern_ProdColorGroup.ChildObjectId
+
+               LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_ColorPattern
+                                    ON ObjectLink_ProdColorPattern_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                                   AND ObjectLink_ProdColorPattern_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
+
+               LEFT JOIN ObjectLink AS ObjectLink_ColorPattern_Model
+                                    ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ProdColorPattern_ColorPattern.ChildObjectId
+                                   AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
+               LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_MaterialOptions.Id

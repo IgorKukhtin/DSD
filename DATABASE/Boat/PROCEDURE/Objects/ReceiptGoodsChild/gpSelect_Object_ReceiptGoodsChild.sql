@@ -69,7 +69,8 @@ vbIsShowAll:= TRUE;
          , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
 
          , Object_ProdColorPattern.Id         ::Integer  AS ProdColorPatternId
-         , Object_ProdColorPattern.ValueData  ::TVarChar AS ProdColorPatternName
+         --, Object_ProdColorPattern.ValueData  ::TVarChar AS ProdColorPatternName
+         , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END || ' (' || Object_Model_pcp.ValueData || ')') :: TVarChar  AS  ProdColorPatternName
 
          , Object_Object.Id               ::Integer  AS ObjectId
          , Object_Object.ObjectCode       ::Integer  AS ObjectCode
@@ -147,6 +148,15 @@ vbIsShowAll:= TRUE;
                               AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
           LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
 
+               LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_ColorPattern
+                                    ON ObjectLink_ProdColorPattern_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                                   AND ObjectLink_ProdColorPattern_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
+
+               LEFT JOIN ObjectLink AS ObjectLink_ColorPattern_Model
+                                    ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ProdColorPattern_ColorPattern.ChildObjectId
+                                   AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
+               LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
+               
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
                                ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
                               AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()

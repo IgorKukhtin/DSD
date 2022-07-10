@@ -2,7 +2,7 @@ object ProdColorItemsEditForm: TProdColorItemsEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' Boat Structure>'
-  ClientHeight = 287
+  ClientHeight = 289
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -102,8 +102,8 @@ object ProdColorItemsEditForm: TProdColorItemsEditForm
     Width = 273
   end
   object edProdColorPattern: TcxButtonEdit
-    Left = 10
-    Top = 72
+    Left = 8
+    Top = 71
     Properties.Buttons = <
       item
         Default = True
@@ -282,6 +282,21 @@ object ProdColorItemsEditForm: TProdColorItemsEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -389,8 +404,25 @@ object ProdColorItemsEditForm: TProdColorItemsEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ColorPatternName'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
-    Left = 205
-    Top = 59
+    Left = 213
+    Top = 99
   end
 end
