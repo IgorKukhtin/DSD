@@ -514,13 +514,19 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
       RefreshOnTabSetChanges = True
     end
     inherited actMISetErased: TdsdUpdateErased
-      StoredProc = nil
-      StoredProcList = <>
+      StoredProc = spGetTotalSumm
+      StoredProcList = <
+        item
+          StoredProc = spGetTotalSumm
+        end>
       ShortCut = 0
     end
     inherited actMISetUnErased: TdsdUpdateErased
-      StoredProc = nil
-      StoredProcList = <>
+      StoredProc = spGetTotalSumm
+      StoredProcList = <
+        item
+          StoredProc = spGetTotalSumm
+        end>
       ShortCut = 0
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
@@ -528,8 +534,11 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
       StoredProcList = <>
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
-      StoredProc = nil
-      StoredProcList = <>
+      StoredProc = spGetTotalSumm
+      StoredProcList = <
+        item
+          StoredProc = spGetTotalSumm
+        end>
       DataSource = nil
     end
     inherited actPrint: TdsdPrintAction
@@ -688,130 +697,6 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
       ImageIndex = 13
       Status = mtDelete
     end
-    object actUpdateOperDatePartner: TdsdDataSetRefresh
-      Category = 'OperDatePartner'
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 67
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
-    end
-    object ExecuteDialogUpdateOperDatePartner: TExecuteDialog
-      Category = 'OperDatePartner'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1090#1075#1088#1091#1079#1082#1080
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1090#1075#1088#1091#1079#1082#1080
-      ImageIndex = 67
-      FormName = 'TOrderExternal_DatePartnerDialogForm'
-      FormNameParam.Value = 'TOrderExternal_DatePartnerDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inOperDatePartner'
-          Value = 43282d
-          Component = edOperDatePartner
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inIsAuto'
-          Value = Null
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inIsAuto'
-          Value = False
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object macUpdateOperDatePartner: TMultiAction
-      Category = 'OperDatePartner'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = ExecuteDialogUpdateOperDatePartner
-        end
-        item
-          Action = actUpdateOperDatePartner
-        end
-        item
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1095#1077#1082#1072
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1090#1075#1088#1091#1079#1082#1080
-      ImageIndex = 67
-    end
-    object actPrint_Account_ReportName: TdsdExecStoredProc
-      Category = 'Print_Account'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actPrint_Account_ReportName'
-    end
-    object actPrint_Account: TdsdPrintAction
-      Category = 'Print_Account'
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1057#1095#1077#1090
-      ReportNameParam.Value = ''
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameOrderExternalBill'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object mactPrint_Account: TMultiAction
-      Category = 'Print_Account'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actPrint_Account_ReportName
-        end
-        item
-          Action = actPrint_Account
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      ImageIndex = 21
-    end
     object actUpdateMIChild_Amount: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -960,6 +845,41 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
         end>
       isShowModal = False
     end
+    object actOpenFormSend: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      ImageIndex = 28
+      FormName = 'TSendForm'
+      FormNameParam.Value = 'TSendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'MovementId_send'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1031,6 +951,14 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormSend'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_Goods'
         end
         item
@@ -1076,9 +1004,11 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
       ImageIndex = 16
     end
     object bbUpdateOperDatePartner: TdxBarButton
-      Action = macUpdateOperDatePartner
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1090#1075#1088#1091#1079#1082#1080
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1090#1075#1088#1091#1079#1082#1080
+      Visible = ivAlways
+      ImageIndex = 67
     end
     object bbPrintOrder: TdxBarButton
       Caption = #1055#1077#1095#1072#1090#1100' ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1074#1080#1076#1091' '#1091#1087#1072#1082#1086#1074#1082#1080')'
@@ -1088,8 +1018,11 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
       ImageIndex = 17
     end
     object bbPrint_Account: TdxBarButton
-      Action = mactPrint_Account
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      Visible = ivAlways
+      ImageIndex = 21
     end
     object bbUpdateMIChild_Amount: TdxBarButton
       Action = macUpdateMIChild_Amount
@@ -1101,6 +1034,10 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
     end
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
+      Category = 0
+    end
+    object bbOpenFormSend: TdxBarButton
+      Action = actOpenFormSend
       Category = 0
     end
   end
@@ -2053,18 +1990,6 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
     PackSize = 1
     Left = 312
     Top = 312
-  end
-  object ChildDS: TDataSource
-    DataSet = ChildCDS
-    Left = 280
-    Top = 352
-  end
-  object ChildCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 328
-    Top = 352
   end
   object GuidesCarInfo: TdsdGuides
     KeyField = 'Id'

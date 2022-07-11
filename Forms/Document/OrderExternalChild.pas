@@ -59,17 +59,11 @@ type
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
     bbPrintTotal: TdxBarButton;
-    actUpdateOperDatePartner: TdsdDataSetRefresh;
-    ExecuteDialogUpdateOperDatePartner: TExecuteDialog;
-    macUpdateOperDatePartner: TMultiAction;
     bbUpdateOperDatePartner: TdxBarButton;
     bbPrintOrder: TdxBarButton;
     ChangeGuidesStatuswms1: TChangeGuidesStatus;
     ChangeGuidesStatuswms2: TChangeGuidesStatus;
     ChangeGuidesStatuswms3: TChangeGuidesStatus;
-    actPrint_Account_ReportName: TdsdExecStoredProc;
-    actPrint_Account: TdsdPrintAction;
-    mactPrint_Account: TMultiAction;
     bbPrint_Account: TdxBarButton;
     cxLabel22: TcxLabel;
     cxLabel23: TcxLabel;
@@ -78,8 +72,6 @@ type
     AmountSecond_ch: TcxGridDBColumn;
     InvNumber_send_ch: TcxGridDBColumn;
     OperDate_send_ch: TcxGridDBColumn;
-    ChildDS: TDataSource;
-    ChildCDS: TClientDataSet;
     actUpdateMIChild_Amount: TdsdExecStoredProc;
     macUpdateMIChild_Amount: TMultiAction;
     actUpdateMIChild_AmountSecond: TdsdExecStoredProc;
@@ -97,6 +89,8 @@ type
     isPeresort_ch: TcxGridDBColumn;
     Amount_diff_ch: TcxGridDBColumn;
     GuidesCarInfo: TdsdGuides;
+    actOpenFormSend: TdsdOpenForm;
+    bbOpenFormSend: TdxBarButton;
   private
     { Private declarations }
   public
