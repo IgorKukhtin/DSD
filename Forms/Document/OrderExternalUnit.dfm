@@ -462,201 +462,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end
       end
     end
-    object cxTabSheet1: TcxTabSheet
-      Caption = #1056#1077#1079#1077#1088#1074
-      ImageIndex = 1
-      object cxGrid1: TcxGrid
-        Left = 0
-        Top = 0
-        Width = 1024
-        Height = 209
-        Align = alClient
-        PopupMenu = PopupMenu
-        TabOrder = 0
-        object cxGridDBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = ChildDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_ch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountSecond_ch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_ch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountSecond_ch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.Footer = True
-          OptionsView.GroupByBox = False
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object LineNum_ch: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087
-            DataBinding.FieldName = 'LineNum'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object GoodsGroupNameFull_ch: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
-            DataBinding.FieldName = 'GoodsGroupNameFull'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 126
-          end
-          object GoodsCode_ch: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object GoodsName_ch: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 242
-          end
-          object GoodsKindName_ch: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsKindChoice
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object MeasureName_ch: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object Amount_ch: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090'.'
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072
-            Options.Editing = False
-            Width = 87
-          end
-          object AmountSecond_ch: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072
-            DataBinding.FieldName = 'AmountSecond'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072
-            Options.Editing = False
-            Width = 104
-          end
-          object InvNumber_income_ch: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'InvNumber_income'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 210
-          end
-          object OperDate_income_ch: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'OperDate_income'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 135
-          end
-          object isErased_ch: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isErased'
-            Visible = False
-            Options.Editing = False
-            Width = 50
-          end
-        end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
-        end
-      end
-    end
   end
   inherited DataPanel: TPanel
     Width = 1024
@@ -1082,7 +887,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelectChild
         end>
       RefreshOnTabSetChanges = True
     end
@@ -1352,10 +1156,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     object actRefreshMIChild: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectChild
       StoredProcList = <
         item
-          StoredProc = spSelectChild
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1568,6 +1370,50 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end>
       isShowModal = False
     end
+    object actOpenFormOrderExternalChild: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1088#1077#1079#1077#1088#1074' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1088#1077#1079#1077#1088#1074' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+      ImageIndex = 24
+      FormName = 'TOrderExternalChildForm'
+      FormNameParam.Value = 'TOrderExternalChildForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1664,7 +1510,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdateFromOrder'
         end
         item
           Visible = True
@@ -1721,6 +1567,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         item
           Visible = True
           ItemName = 'bbUpdateMIChild_AmountSecond'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormOrderExternalChild'
         end
         item
           Visible = True
@@ -1785,7 +1639,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Action = actUpdateAmountAll
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdateFromOrder: TdxBarButton
       Action = mactUpdateFromOrder
       Category = 0
     end
@@ -1799,6 +1653,11 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
+      Category = 0
+    end
+    object bbOpenFormOrderExternalChild: TdxBarButton
+      Action = actOpenFormOrderExternalChild
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1088#1077#1079#1077#1088#1074#1072' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
       Category = 0
     end
   end
@@ -3369,86 +3228,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Params = <>
     Left = 320
     Top = 88
-  end
-  object ChildDS: TDataSource
-    DataSet = ChildCDS
-    Left = 848
-    Top = 248
-  end
-  object ChildCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 896
-    Top = 248
-  end
-  object dsdDBViewAddOnChild: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = True
-    ChartList = <>
-    ColorRuleList = <>
-    ColumnAddOnList = <
-      item
-        Column = GoodsCode
-        FindByFullValue = True
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end>
-    ColumnEnterList = <
-      item
-        Column = GoodsCode
-      end
-      item
-        Column = GoodsName
-      end
-      item
-        Column = Amount
-      end>
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
-      end>
-    ShowFieldImageList = <>
-    PropertiesCellList = <>
-    Left = 950
-    Top = 249
-  end
-  object spSelectChild: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_OrderExternalChild'
-    DataSet = ChildCDS
-    DataSets = <
-      item
-        DataSet = ChildCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 808
-    Top = 248
   end
   object spUpdateMIChild_Amount: TdsdStoredProc
     StoredProcName = 'gpUpdateMIChild_OrderExternal_Amount'

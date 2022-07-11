@@ -119,7 +119,7 @@ type
     ceComment: TcxTextEdit;
     cxLabel21: TcxLabel;
     cxLabel22: TcxLabel;
-    bb: TdxBarButton;
+    bbUpdateFromOrder: TdxBarButton;
     mactUpdateFromOrder: TMultiAction;
     actInsertFromOrder: TdsdExecStoredProc;
     spInsertFromOrder: TdsdStoredProc;
@@ -131,25 +131,6 @@ type
     ChangeGuidesStatuswms2: TChangeGuidesStatus;
     ChangeGuidesStatuswms3: TChangeGuidesStatus;
     GuidesStatus_wms: TdsdGuides;
-    cxTabSheet1: TcxTabSheet;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    LineNum_ch: TcxGridDBColumn;
-    GoodsGroupNameFull_ch: TcxGridDBColumn;
-    GoodsCode_ch: TcxGridDBColumn;
-    GoodsName_ch: TcxGridDBColumn;
-    GoodsKindName_ch: TcxGridDBColumn;
-    MeasureName_ch: TcxGridDBColumn;
-    Amount_ch: TcxGridDBColumn;
-    AmountSecond_ch: TcxGridDBColumn;
-    InvNumber_income_ch: TcxGridDBColumn;
-    OperDate_income_ch: TcxGridDBColumn;
-    isErased_ch: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    ChildDS: TDataSource;
-    ChildCDS: TClientDataSet;
-    dsdDBViewAddOnChild: TdsdDBViewAddOn;
-    spSelectChild: TdsdStoredProc;
     spUpdateMIChild_Amount: TdsdStoredProc;
     spUpdateMIChild_AmountSecond: TdsdStoredProc;
     actUpdateMIChild_Amount: TdsdExecStoredProc;
@@ -161,6 +142,8 @@ type
     bbUpdateMIChild_AmountSecond: TdxBarButton;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    actOpenFormOrderExternalChild: TdsdInsertUpdateAction;
+    bbOpenFormOrderExternalChild: TdxBarButton;
   private
     { Private declarations }
   public
