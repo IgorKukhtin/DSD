@@ -53,8 +53,8 @@ type
     actDo: TAction;
     PharmOrdersDS: TDataSource;
     PharmOrdersCDS: TClientDataSet;
-    actDoone: TAction;
-    btnDoone: TButton;
+    actOpenGrid: TAction;
+    btnOpen: TButton;
     actPharmOrders: TdsdForeignData;
     cxGridPharmOrders: TcxGrid;
     cxGridPharmOrdersDBTableView1: TcxGridDBTableView;
@@ -70,17 +70,34 @@ type
     cxGridPharmOrderProductsDBTableView1: TcxGridDBTableView;
     cxGridPharmOrderProductsLevel1: TcxGridLevel;
     cxGridPharmOrderProducts_id: TcxGridDBColumn;
-    cxGridPharmOrderProducts_drug_id: TcxGridDBColumn;
+    cxGridPharmOrderProducts_postgres_drug_id: TcxGridDBColumn;
     cxGridPharmOrderProducts_drug_name: TcxGridDBColumn;
     cxGridPharmOrderProducts_type_order: TcxGridDBColumn;
     cxGridPharmOrderProducts_price: TcxGridDBColumn;
     cxGridPharmOrderProducts_quantity: TcxGridDBColumn;
-    actPharmOrderProductsCDS: TdsdForeignData;
+    actPharmOrderProducts: TdsdForeignData;
+    cxGridUpdateOrdersSite_isMobileApplication: TcxGridDBColumn;
+    cxGridUpdateOrdersSite_DateComing: TcxGridDBColumn;
+    UpdateOrdersSiteMIDS: TDataSource;
+    UpdateOrdersSiteMICDS: TClientDataSet;
+    spSelect_MI_UpdateOrdersSite: TdsdStoredProc;
+    actSelect_MI_UpdateOrdersSite: TdsdExecStoredProc;
+    cxGridUpdateOrdersSiteMI: TcxGrid;
+    cxGridUpdateOrdersSiteMIDBTableView1: TcxGridDBTableView;
+    cxGridUpdateOrdersSiteMI_Id: TcxGridDBColumn;
+    cxGridUpdateOrdersSiteMI_GoodsId: TcxGridDBColumn;
+    cxGridUpdateOrdersSiteMI_GoodsName: TcxGridDBColumn;
+    cxGridUpdateOrdersSiteMI_AmountOrder: TcxGridDBColumn;
+    cxGridUpdateOrdersSiteMI_Price: TcxGridDBColumn;
+    cxGridUpdateOrdersSiteMI_Amount: TcxGridDBColumn;
+    cxGridUpdateOrdersSiteMILevel1: TcxGridLevel;
+    btnDoone: TButton;
+    actUpdatePharmOrderProducts: TdsdForeignData;
     procedure btnAllClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure actDoExecute(Sender: TObject);
-    procedure actDooneExecute(Sender: TObject);
+    procedure actOpenGridExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -99,10 +116,22 @@ implementation
 
 {$R *.dfm}
 
-procedure TMainForm.actDooneExecute(Sender: TObject);
+procedure TMainForm.actOpenGridExecute(Sender: TObject);
 begin
   try
-    if actSite_Param.Execute then actDo.Execute;
+    if actSite_Param.Execute then
+    begin
+
+      // Заказ с сайта
+      if not actPharmOrders.Execute then Exit;
+
+      // Содержимое заказа с сайта
+      if not actPharmOrderProducts.Execute then Exit;
+
+      // Содержимое заказа с фармаси
+      if not actSelect_MI_UpdateOrdersSite.Execute then Exit;
+
+    end;
   except
     on E:Exception do
     begin
@@ -133,13 +162,26 @@ begin
 end;
 
 procedure TMainForm.btnAllClick(Sender: TObject);
+var ini: TIniFile; DateStart : TDateTime;
 begin
   Add_Log('-----------------');
   Add_Log('Запуск обработки заазов.'#13#10);
 
+  DateStart := Now;
+
   if actSelect_UpdateOrdersSite.Execute then  maDo.Execute;
 
   Add_Log('Выполнено.');
+
+  ini := TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
+  try
+
+    ini.WriteDateTime('Data','DataUpdate', DateStart);
+    deStartDate.Date := ini.ReadDateTime('Data', 'DataUpdate', DateStart);
+
+  finally
+    ini.free;
+  end;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -163,6 +205,7 @@ begin
     btnSelect_UpdateOrdersSite.Enabled := false;
     btnDo.Enabled := false;
     btnDoone.Enabled := false;
+    btnOpen.Enabled := false;
     Timer1.Enabled := true;
   end;
 end;
@@ -178,14 +221,56 @@ begin
 end;
 
 procedure TMainForm.actDoExecute(Sender: TObject);
+  var bGo : boolean; S : string; FormatSettings: TFormatSettings;
 begin
   try
 
-    // Заказ с сайта
-    if not actPharmOrders.Execute then Exit;
+    if not UpdateOrdersSiteCDS.FieldByName('DateComing').IsNull then Exit;
 
     // Содержимое заказа с сайта
-    if not actPharmOrderProductsCDS.Execute then Exit;
+    if not actPharmOrderProducts.Execute then Exit;
+
+    bGo := False;
+    PharmOrderProductsCDS.First;
+    while not PharmOrderProductsCDS.Eof do
+    begin
+      if PharmOrderProductsCDS.FieldByName('type_order').AsString = 'at_provider' then
+      begin
+        bGo := True;
+        Break;
+      end;
+      PharmOrderProductsCDS.Next;
+    end;
+    if not bGo then Exit;
+    // Содержимое заказа с фармаси
+    if not actSelect_MI_UpdateOrdersSite.Execute then Exit;
+
+    FormatSettings.DecimalSeparator := '.';
+
+    PharmOrderProductsCDS.First;
+    while not PharmOrderProductsCDS.Eof do
+    begin
+      UpdateOrdersSiteMICDS.Locate('GoodsId', PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger, []);
+      if (PharmOrderProductsCDS.FieldByName('type_order').AsString = 'at_provider') or
+        (PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger = UpdateOrdersSiteMICDS.FieldByName('GoodsId').AsInteger) and
+        (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency > UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
+      begin
+        S := 'update pharm_order_products set type_order = ''in_site''';
+
+        if (PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger = UpdateOrdersSiteMICDS.FieldByName('GoodsId').AsInteger) and
+          (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency > UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
+        begin
+          S := S + ', quantity = ' + CurrToStr(UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency, FormatSettings) +
+                   ', amount = ' + CurrToStr(RoundTo(UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency * PharmOrderProductsCDS.FieldByName('price').AsCurrency, -2), FormatSettings);
+        end;
+
+        S := S + ' where id = ' + PharmOrderProductsCDS.FieldByName('id').AsString;
+        Add_Log('SQL ' + S);
+        actUpdatePharmOrderProducts.SQLParam.Value := S;
+        actUpdatePharmOrderProducts.Execute;
+      end;
+      PharmOrderProductsCDS.Next;
+    end;
 
   except
     on E:Exception do

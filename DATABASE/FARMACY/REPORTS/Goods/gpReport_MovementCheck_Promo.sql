@@ -125,15 +125,23 @@ BEGIN
                       ) 
     ,   tmpGoods AS (SELECT DISTINCT tmpGoods_All.GoodsId FROM tmpGoods_All)
 
-    ,   tmpListGodsMarket AS (SELECT DISTINCT tmpGoods_All.GoodsId
+    ,   tmpListGodsMarket AS (SELECT tmpGoods_All.GoodsId
                                    , tmpGoods_All.StartDate_Promo 
                                    , tmpGoods_All.EndDate_Promo
                                    , tmpGoods_All.PriceSIP 
                                    , tmpGoods_All.isChecked
                                    , tmpGoods_All.isReport
+                                   , Min(tmpGoods_All.StartDate_Promo)  AS StartDate
+                                   , Max(tmpGoods_All.EndDate_Promo)    AS EndDate
                               FROM tmpGoods_All
                               WHERE tmpGoods_All.StartDate_Promo <= inEndDate
                                 AND tmpGoods_All.EndDate_Promo >= inStartDate
+                              GROUP BY tmpGoods_All.GoodsId
+                                     , tmpGoods_All.StartDate_Promo 
+                                     , tmpGoods_All.EndDate_Promo
+                                     , tmpGoods_All.PriceSIP 
+                                     , tmpGoods_All.isChecked
+                                     , tmpGoods_All.isReport
                               )
 
      -- выбираем все чеки с товарами маркетингового контракта
@@ -144,6 +152,7 @@ BEGIN
                               , tmpListGodsMarket.PriceSIP 
                               , tmpListGodsMarket.isChecked
                               , tmpListGodsMarket.isReport
+                              , MIContainer.MovementDescId
 
                               , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
                               
@@ -172,6 +181,67 @@ BEGIN
                                 , tmpListGodsMarket.PriceSIP
                                 , tmpListGodsMarket.isChecked
                                 , tmpListGodsMarket.isReport
+                                , MIContainer.MovementDescId
+                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+                         UNION ALL
+                         SELECT MIContainer.MovementId  AS MovementId_Check
+                              , COALESCE (MI_Income_find.Id, MI_Income.Id) AS MovementItemId_Income
+                              , COALESCE (MovementLinkObject_Unit.ObjectId,0) AS UnitId
+                              , MovementItem.ObjectId           AS GoodsId
+                              , tmpListGodsMarket.PriceSIP 
+                              , tmpListGodsMarket.isChecked
+                              , tmpListGodsMarket.isReport
+                              , MIContainer.MovementDescId
+                              
+                              , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIFloat_Price.ValueData,0)) AS SummaSale
+                              
+                              , SUM (CASE WHEN tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount
+                              , SUM (CASE WHEN NOT (tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate) AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount2
+                              , SUM (CASE WHEN tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate AND COALESCE (tmpListGodsMarket.GoodsId,0)  = 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount3
+                              , SUM (CASE WHEN NOT (tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate) AND COALESCE (tmpListGodsMarket.GoodsId,0)  = 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount4
+                              
+                              , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS TotalAmount
+                         FROM MovementItemContainer AS MIContainer
+                            --INNER JOIN tmpMIPromo ON tmpMIPromo.MI_Id = MIContainer.ObjectIntId_analyzer
+                             INNER JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                           ON MovementLinkObject_Unit.MovementId = MIContainer.MovementId
+                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                             LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+                             LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MovementItem.ObjectId
+                                                        AND tmpListGodsMarket.StartDate_Promo <= MIContainer.OperDate
+                                                        AND tmpListGodsMarket.EndDate_Promo >= MIContainer.OperDate
+                                                        
+                             LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                           ON ContainerLinkObject_MovementItem.Containerid = MIContainer.ContainerId
+                                                          AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                             LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                             -- элемент прихода
+                             LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                             -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                         ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                             -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                             LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                        
+                         WHERE MIContainer.DescId = zc_MIContainer_Count()
+                           AND MIContainer.MovementDescId = zc_Movement_Sale()
+                           AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
+                          -- AND MIContainer.OperDate >= '03.10.2016' AND MIContainer.OperDate < '01.12.2016'
+                          -- AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 
+                           AND COALESCE (inMakerId, 0) <> 0
+                         GROUP BY MIContainer.MovementId
+                                , COALESCE (MI_Income_find.Id, MI_Income.Id)
+                                , COALESCE (MovementLinkObject_Unit.ObjectId,0)
+                                , MovementItem.ObjectId
+                                , tmpListGodsMarket.PriceSIP
+                                , tmpListGodsMarket.isChecked
+                                , tmpListGodsMarket.isReport
+                                , MIContainer.MovementDescId
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                          )
   
@@ -190,6 +260,7 @@ BEGIN
                               , tmp.TotalAmount
                               , tmp.SummaSale
                               , MovementLinkObject_From_Income.ObjectId :: Integer AS JuridicalId_Income
+                              , tmp.MovementDescId
                          FROM tmpMIContainer AS tmp
                               INNER JOIN MovementItem AS MI_Income ON MI_Income.Id = tmp.MovementItemId_Income
                               INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = MI_Income.MovementId
@@ -224,6 +295,7 @@ BEGIN
                           , tmpData_all.isReport
                           , MIString_PartionGoods.ValueData          AS PartionGoods
                           , MIDate_ExpirationDate.ValueData          AS ExpirationDate
+                          , tmpData_all.MovementDescId
                           , SUM (tmpData_all.TotalAmount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
                           , SUM (tmpData_all.TotalAmount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT
                           , SUM (tmpData_all.Amount)      AS Amount
@@ -259,6 +331,7 @@ BEGIN
                             , tmpData_all.PriceSIP
                             , tmpData_all.isChecked
                             , tmpData_all.isReport
+                            , tmpData_all.MovementDescId
                     )
 
       
@@ -330,7 +403,9 @@ BEGIN
 
       -- Результат
       SELECT Movement.Id                              AS MovementId
-            , 'Продажи касс'               :: TVarChar AS ItemName
+            , CASE WHEN tmpData.MovementDescId =  zc_Movement_Check()
+                   THEN 'Продажи касс' 
+                   ELSE 'Продажи безнал' END::TVarChar AS ItemName
             , tmpData.Amount               :: TFloat   AS Amount
             , tmpData.Amount2              :: TFloat   AS Amount2
             , tmpData.Amount3              :: TFloat   AS Amount3
@@ -437,6 +512,4 @@ $BODY$
 --select * from gpReport_MovementCheck_Promo(inMakerId := 2336655 , inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('30.11.2016')::TDateTime ,  inSession := '3');
 -- select * from gpReport_MovementCheck_Promo(2336605 , '01.01.2019', '31.01.2019', '3') 
 
-
-select * from gpReport_MovementCheck_Promo(inMakerId := 8341223 , inStartDate := ('01.01.2021')::TDateTime , inEndDate := ('31.01.2021')::TDateTime ,  inSession := '3');
-
+select * from gpReport_MovementCheck_Promo(inMakerId := 15451717 , inStartDate := ('01.06.2022')::TDateTime , inEndDate := ('01.06.2022')::TDateTime ,  inSession := '3');

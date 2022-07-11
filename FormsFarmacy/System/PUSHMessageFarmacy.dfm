@@ -14,9 +14,9 @@ object PUSHMessageFarmacyForm: TPUSHMessageFarmacyForm
   TextHeight = 13
   object pn1: TPanel
     Left = 0
-    Top = 0
+    Top = 26
     Width = 566
-    Height = 296
+    Height = 270
     Align = alClient
     Caption = 'pn1'
     ShowCaption = False
@@ -40,8 +40,38 @@ object PUSHMessageFarmacyForm: TPUSHMessageFarmacyForm
       Style.IsFontAssigned = True
       TabOrder = 0
       OnKeyDown = MemoKeyDown
-      Height = 294
+      Height = 61
       Width = 564
+    end
+    object cxGrid: TcxGrid
+      Left = 1
+      Top = 62
+      Width = 564
+      Height = 207
+      Align = alBottom
+      TabOrder = 1
+      object cxGridDBTableView1: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = PUSHDS
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsData.CancelOnExit = False
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.GroupByBox = False
+        Styles.Content = dmMain.cxContentStyle
+        Styles.Inactive = dmMain.cxSelection
+        Styles.Selection = dmMain.cxSelection
+        Styles.Footer = dmMain.cxFooterStyle
+        Styles.Header = dmMain.cxHeaderStyle
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      end
+      object cxGridLevel1: TcxGridLevel
+        GridView = cxGridDBTableView1
+      end
     end
   end
   object pn2: TPanel
@@ -154,5 +184,160 @@ object PUSHMessageFarmacyForm: TPUSHMessageFarmacyForm
     Active = False
     Left = 72
     Top = 16
+  end
+  object PUSHCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 376
+    Top = 104
+  end
+  object PUSHDS: TDataSource
+    DataSet = PUSHCDS
+    Left = 472
+    Top = 104
+  end
+  object dxBarManager: TdxBarManager
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    Categories.Strings = (
+      'Default')
+    Categories.ItemsVisibles = (
+      2)
+    Categories.Visibles = (
+      True)
+    ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
+    PopupMenuLinks = <>
+    ShowShortCutInHint = True
+    UseSystemFont = True
+    Left = 472
+    Top = 160
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+    object dxBarManagerBar1: TdxBar
+      Caption = 'Custom'
+      CaptionButtons = <>
+      DockedDockingStyle = dsTop
+      DockedLeft = 0
+      DockedTop = 0
+      DockingStyle = dsTop
+      FloatLeft = 671
+      FloatTop = 8
+      FloatClientWidth = 0
+      FloatClientHeight = 0
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object bbRefresh: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbStaticText: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbExecuteDialog: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bb: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+    end
+    object dxBarButton3: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object dxBarButton4: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton1: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actExportExel
+      Category = 0
+    end
+  end
+  object ActionList: TActionList
+    Images = dmMain.ImageList
+    Left = 376
+    Top = 160
+    object actExportExel: TdsdGridToExcel
+      MoveParams = <>
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
 end

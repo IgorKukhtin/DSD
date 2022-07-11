@@ -122,24 +122,7 @@ BEGIN
                              
        WHERE Movement.DescId = zc_Movement_Promo();
        
-       PERFORM gpUpdate_Goods_inSupplementSUN1_Revert(inGoodsMainId       := Object_Goods_Main.Id 
-                                                    , inisSupplementSUN1  := True
-                                                    , inSession           := inSession)
-             , gpUpdate_Goods_inSupplementSUN1Smudge(inGoodsMainId         := Object_Goods_Main.Id 
-                                                   , inisSupplementSmudge  := True
-                                                   , inSession             := inSession)
-             , gpUpdate_Goods_UnitSupplementSUN1Out(inGoodsMainId           := Object_Goods_Main.Id  
-                                                  , inUnitSupplementSUN1OutId := 0 
-                                                  , inSession := inSession)
-             , gpUpdate_Goods_UnitSupplementSUN2Out(inGoodsMainId           := Object_Goods_Main.Id  
-                                                  , inUnitSupplementSUN2OutId := 0 
-                                                  , inSession               := inSession)
-             , gpUpdate_Goods_SupplementMin(inGoodsMainId     := Object_Goods_Main.Id  
-                                          , inSupplementMin   := 0 
-                                          , inSession         := inSession)
-             , gpUpdate_Goods_SupplementMinPP(inGoodsMainId     := Object_Goods_Main.Id  
-                                            , inSupplementMinPP := 0 
-                                            , inSession         := inSession)
+       PERFORM gpUpdate_Goods_ClearSupplementSUN1(inGoodsMainId := Object_Goods_Main.Id  , inSession := inSession)
        FROM Object_Goods_Main 
        WHERE Object_Goods_Main.isSupplementSUN1 = True;
        
@@ -149,7 +132,7 @@ BEGIN
         
         
      --raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement WHERE _tmpResult_Supplement.MovementId > 0);      
-     --RAISE EXCEPTION '<ok>';
+     -- RAISE EXCEPTION '<ok>';
 
 END;
 $BODY$

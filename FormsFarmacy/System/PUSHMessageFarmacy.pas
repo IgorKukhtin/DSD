@@ -4,10 +4,14 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxLookAndFeels,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxLookAndFeels, DataModul,
   cxLookAndFeelPainters, Vcl.Menus, dxSkinsCore, dxSkinsDefaultPainters,
   Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxControls, cxContainer, cxEdit,
-  cxTextEdit, cxMemo, dsdAddOn, cxPropertiesStore;
+  cxTextEdit, cxMemo, dsdAddOn, cxPropertiesStore, cxStyles, dxSkinscxPCPainter,
+  cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB, cxDBData, cxGridLevel,
+  cxClasses, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxGrid, Datasnap.DBClient, Math, cxCurrencyEdit,
+  dxSkinsdxBarPainter, Vcl.ActnList, dsdAction, dxBarExtItems, dxBar;
 
 type
   TPUSHMessageFarmacyForm = class(TForm)
@@ -26,6 +30,23 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     pmFontDialog: TMenuItem;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridLevel1: TcxGridLevel;
+    cxGrid: TcxGrid;
+    PUSHCDS: TClientDataSet;
+    PUSHDS: TDataSource;
+    dxBarManager: TdxBarManager;
+    dxBarManagerBar1: TdxBar;
+    bbRefresh: TdxBarButton;
+    bbStaticText: TdxBarButton;
+    bbExecuteDialog: TdxBarButton;
+    bb: TdxBarControlContainerItem;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    dxBarButton1: TdxBarButton;
+    ActionList: TActionList;
+    actExportExel: TdsdGridToExcel;
+    dxBarButton2: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure MemoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btOpenFormClick(Sender: TObject);
@@ -55,13 +76,14 @@ type
                                   ASpecialLighting : Boolean = False;
                                   ATextColor : Integer = clWindowText;
                                   AColor : Integer = clCream;
-                                  ABold : Boolean = False) : boolean;
+                                  ABold : Boolean = False;
+                                  AGridData : string = '') : boolean;
 
 implementation
 
 {$R *.dfm}
 
-uses DB, dsdAction, RegularExpressions, TypInfo, dsdPlaySound;
+uses RegularExpressions, TypInfo, dsdPlaySound;
 
 procedure OpenForm(AFormName, AParams, ATypeParams, AValueParams : string);
   var actOF: TdsdOpenForm; I : Integer; Value : Variant;
@@ -158,8 +180,11 @@ function ShowPUSHMessageFarmacy(AMessage : string;
                              ASpecialLighting : Boolean = False;
                              ATextColor : Integer = clWindowText;
                              AColor : Integer = clCream;
-                             ABold : Boolean = False) : boolean;
+                             ABold : Boolean = False;
+                             AGridData : string = '') : boolean;
   var PUSHMessageFarmacyForm : TPUSHMessageFarmacyForm;
+      Res, Types : TArray<string>;
+      I, W, J, FieldsCount : Integer;
 begin
 
   if ABeep = 1 then PlaySoundFile('Bell0001.wav');
@@ -180,6 +205,79 @@ begin
     PUSHMessageFarmacyForm.FValueParams := AValueParams;
     PUSHMessageFarmacyForm.FSpecialLighting := ASpecialLighting;
 
+    if AGridData <> '' then
+    begin
+      Res := TRegEx.Split(AGridData, #13);
+      if High(Res) > 3 then
+      begin
+        Types := TRegEx.Split(Res[0], ',');
+        FieldsCount := High(Types) + 1;
+
+        for I := 0 to High(Types) do
+        begin
+          if Types[I] = 'ftFloat' then
+            PUSHMessageFarmacyForm.PUSHCDS.FieldDefs.Add('Field' + IntToStr(I + 1), ftCurrency)
+          else if Types[I] = 'ftInteger' then
+            PUSHMessageFarmacyForm.PUSHCDS.FieldDefs.Add('Field' + IntToStr(I + 1), ftInteger)
+          else if Types[I] = 'ftBoolean' then
+            PUSHMessageFarmacyForm.PUSHCDS.FieldDefs.Add('Field' + IntToStr(I + 1), ftBoolean)
+          else PUSHMessageFarmacyForm.PUSHCDS.FieldDefs.Add('Field' + IntToStr(I + 1), ftString, 255);
+        end;
+
+        PUSHMessageFarmacyForm.PUSHCDS.CreateDataSet;
+
+        J := 0;
+        for I := 1 + FieldsCount to High(Res) do
+        begin
+          if J = 0 then
+          begin
+            PUSHMessageFarmacyForm.PUSHCDS.Append;
+          end;
+          try
+            if PUSHMessageFarmacyForm.PUSHCDS.Fields.Fields[J].DataType = ftCurrency then
+              PUSHMessageFarmacyForm.PUSHCDS.Fields.Fields[J].Value := StringReplace(Res[I], '.', FormatSettings.DecimalSeparator, [rfReplaceAll])
+            else PUSHMessageFarmacyForm.PUSHCDS.Fields.Fields[J].Value := Res[I];
+          except
+          end;
+          inc(J);
+          if J = FieldsCount then
+          begin
+            PUSHMessageFarmacyForm.PUSHCDS.Post;
+            J := 0;
+          end;
+        end;
+
+        if PUSHMessageFarmacyForm.PUSHCDS.State in dsEditModes then
+           PUSHMessageFarmacyForm.PUSHCDS.Post;
+
+        for I := 0 to FieldsCount - 1 do
+        begin
+          with PUSHMessageFarmacyForm.cxGridDBTableView1.CreateColumn do
+          begin
+            HeaderAlignmentHorz := TAlignment.taCenter;
+            Options.Editing := False;
+            DataBinding.FieldName := 'Field' + IntToStr(I + 1);
+            if High(Res) >= (I + 1) then Caption := Res[I + 1];
+            if PUSHMessageFarmacyForm.PUSHCDS.Fields.Fields[I].DataType in [ftCurrency] then
+            begin
+              PropertiesClass := TcxCurrencyEditProperties;
+              TcxCurrencyEditProperties(Properties).DisplayFormat := ',0.####;-,0.####; ;';
+            end;
+            W := 10;
+            for J := 0 to PUSHMessageFarmacyForm.cxGridDBTableView1.DataController.RecordCount - 1 do
+            begin
+              W := Max(W, LengTh(PUSHMessageFarmacyForm.cxGridDBTableView1.DataController.Values[J, Index]));
+              if W > 100 then Break;
+            end;
+            Width := PUSHMessageFarmacyForm.cxGrid.Canvas.TextWidth('Þ') * Min(W, 100) + 2;
+          end;
+        end;
+
+      end else PUSHMessageFarmacyForm.cxGrid.Visible := False;
+    end else PUSHMessageFarmacyForm.cxGrid.Visible := False;
+    PUSHMessageFarmacyForm.dxBarManagerBar1.Visible := PUSHMessageFarmacyForm.cxGrid.Visible;
+    PUSHMessageFarmacyForm.actExportExel.Enabled := PUSHMessageFarmacyForm.cxGrid.Visible;
+
     if AButton <> '' then
     begin
       PUSHMessageFarmacyForm.btOpenForm.Width := PUSHMessageFarmacyForm.btOpenForm.Width -
@@ -197,6 +295,7 @@ begin
     end;
 
     Result := PUSHMessageFarmacyForm.ShowModal = mrOk;
+    PUSHMessageFarmacyForm.cxGridDBTableView1.ClearItems;
   finally
     PUSHMessageFarmacyForm.Free;
   end;

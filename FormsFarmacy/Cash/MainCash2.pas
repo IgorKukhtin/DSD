@@ -8796,7 +8796,8 @@ begin
         (SourceClientDataSet.FieldByName('MorionCode').AsInteger = 0) and
         Assigned(LikiDniproReceiptApi) and (LikiDniproReceiptApi.Recipe.FRecipe_Type = 2) then
       begin
-        ShowPUSHMessageCash('Рецепт погасить невозможно, на товар отсутствует в нашей базе код Мориона - обратитесь к Ирине Колеуш', cResult);
+        ShowPUSHMessageCash('БЛОК ОТПУСКА !'#13'Рецепт погасить невозможно, на товар отсутствует в нашей базе код Мориона.'#13 +
+          'Сделать PrintScreen экрана с ошибкой и отправить на Telegram   в группу ПКМУ1303  (инфо для Пелиной Любови)', cResult);
         exit;
       end;
 
@@ -13039,7 +13040,7 @@ begin
 
       if spGet_BlinkVIP.ParamByName('outIsOrderTabletki').Value and Self.Showing then
       begin
-        ShowPUSHMessageCash('Обработайте заказ!'#13#10#13#10'На аптеку через  5 мин будет наложен штраф в размере 200 грн!', AResult, False,
+        ShowPUSHMessageCash('Обработайте заказ!'#13#10#13#10'На аптеку через  5 мин будет наложен штраф в размере 200 грн'#13#10'(пока в режиме тестирование, после анонса в группе штрафы будут реальными)', AResult, False,
                             'TCheckSiteForm', 'Просмотр чеков с сайта "Таблетки"');
         spGet_BlinkVIP.Execute;
       end;
