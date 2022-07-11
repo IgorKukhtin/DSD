@@ -43,8 +43,8 @@ BEGIN
  
                INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement.Id
-                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                            AND COALESCE (MovementLinkObject_To.ObjectId,0) = inToId
+                                            AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                            AND MovementLinkObject_To.ObjectId   = inToId
  
                LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                             ON MovementLinkObject_Route.MovementId = Movement.Id

@@ -31,7 +31,6 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Маршрут и Торговая сеть не установлены.';
      END IF;
 
-     --RAISE EXCEPTION '<%>', outOperDate_CarInfo;
       
      ---
      PERFORM gpUpdateMIChild_OrderExternal_AmountNull (tmp.Id, inSession)

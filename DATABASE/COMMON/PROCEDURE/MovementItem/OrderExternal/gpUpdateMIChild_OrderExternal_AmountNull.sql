@@ -12,18 +12,16 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
 
-   --RAISE EXCEPTION '<%>', inMovementId;
-
-    -- сохранили
-   PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Child(), MovementItem.ObjectId, inMovementId, 0, MovementItem.ParentId)
-   FROM MovementItem
-   WHERE MovementItem.MovementId = inMovementId
-     AND MovementItem.DescId = zc_MI_Child()
-     AND MovementItem.isErased = FALSE 
-    ;
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Child(), MovementItem.ObjectId, inMovementId, 0, MovementItem.ParentId)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Child()
+       AND MovementItem.isErased   = FALSE 
+      ;
 
 END;
 $BODY$

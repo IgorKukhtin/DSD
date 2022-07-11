@@ -219,7 +219,7 @@ BEGIN
                                   , MIF_MovementId.ValueData
                            )
         -- приход перемещение на склад
-      , tmpSendIn_all AS (SELECT Movement.Id                                   AS MovementId
+      , tmpSendIn_all AS (SELECT Movement.Id                                   AS MovementId_Send
                                , MovementItem.ObjectId                         AS GoodsId_sub
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_sub
                                , SUM (MovementItem.Amount)                     AS Amount
@@ -249,26 +249,27 @@ BEGIN
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                          )
             -- Сколько еще можно резервировать с перемещений на склад
-          , tmpSendIn AS (SELECT tmpSendIn_all.MovementId
+          , tmpSendIn AS (SELECT tmpSendIn_all.MovementId_Send
                                , tmpSendIn_all.GoodsId_sub
                                , tmpSendIn_all.GoodsKindId_sub
                                  -- осталось для резервирования
-                               , tmpSendIn_all.Amount - COALESCE (tmpMIChild_All.Amount) AS Amount
+                               , tmpSendIn_all.Amount - COALESCE (tmpMIChild_All.Amount, 0) AS Amount
                                  -- накопительно
-                               , SUM (tmpSendIn_all.Amount - COALESCE (tmpMIChild_All.Amount))
-                                 OVER (PARTITION BY tmpSendIn_all.GoodsId_sub, tmpSendIn_all.GoodsKindId_sub ORDER BY tmpSendIn_all.MovementId ASC                                      )
+                               , SUM (tmpSendIn_all.Amount - COALESCE (tmpMIChild_All.Amount, 0))
+                                 OVER (PARTITION BY tmpSendIn_all.GoodsId_sub, tmpSendIn_all.GoodsKindId_sub ORDER BY tmpSendIn_all.MovementId_Send ASC                                      )
                                  AS Amount_SUM
                           FROM tmpSendIn_all
+                               -- вычитаем перемещения которые в резерве
                                LEFT JOIN tmpMIChild_All ON tmpMIChild_All.GoodsId_sub     = tmpSendIn_all.GoodsId_sub
                                                        AND tmpMIChild_All.GoodsKindId_sub = tmpSendIn_all.GoodsKindId_sub
-                                                       AND tmpMIChild_All.MovementId_Send = tmpSendIn_all.MovementId
+                                                       AND tmpMIChild_All.MovementId_Send = tmpSendIn_all.MovementId_Send
                           -- Если с перемещения осталось что резервировать
                           WHERE tmpSendIn_all.Amount - COALESCE (tmpMIChild_All.Amount, 0) > 0
                          )
 
             -- Распределили
           , tmpMI_res AS (SELECT tmpMI.GoodsId_sub, tmpMI.GoodsKindId_sub
-                               , tmpSendIn.MovementId
+                               , tmpSendIn.MovementId_Send
                                , CASE WHEN tmpMI.Amount > tmpSendIn.Amount_SUM
                                            THEN tmpSendIn.Amount
                                       ELSE tmpMI.Amount - tmpSendIn.Amount_SUM + tmpSendIn.Amount
@@ -289,7 +290,7 @@ BEGIN
                  , tmpMI.GoodsId_sub
                  , tmpMI.GoodsKindId_sub
 
-                 , tmpMI_res.MovementId AS MovementId_send
+                 , tmpMI_res.MovementId_send
 
                    -- Заявка - в ед.изм. MeasureId_sub
                  , tmpMI.Amount

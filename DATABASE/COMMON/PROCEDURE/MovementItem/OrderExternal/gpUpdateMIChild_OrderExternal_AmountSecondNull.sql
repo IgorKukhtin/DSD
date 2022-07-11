@@ -12,17 +12,20 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
---return;
      -- проверка прав пользовател€ на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternalUnit());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
     
-    -- сохранили
-   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), MovementItem.Id, Null)  -- сохранили свойство < оличество дозаказ>
-   FROM MovementItem
-   WHERE MovementItem.MovementId = inMovementId
-     AND MovementItem.DescId = zc_MI_Child()
-     AND MovementItem.isErased = FALSE 
-    ;
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Child(), MovementItem.ObjectId, inMovementId, 0, MovementItem.ParentId)
+     FROM MovementItem
+          INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                       ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                      AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                      AND MIFloat_MovementId.ValueData      > 0
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Child()
+       AND MovementItem.isErased   = FALSE 
+      ;
 
 END;
 $BODY$
