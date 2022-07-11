@@ -178,7 +178,6 @@ BEGIN
                                      WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                        AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
                                      )
-
        -- Резервы
      , tmpMIChild AS (SELECT MovementItem.*
                       FROM MovementItem
@@ -186,7 +185,6 @@ BEGIN
                         AND MovementItem.DescId     = zc_MI_Child()
                         AND MovementItem.isErased   = FALSE
                      )
-
        -- Резервы - св-ва
      , tmpMIFloat_Child AS (SELECT MovementItemFloat.*
                             FROM MovementItemFloat
@@ -225,7 +223,6 @@ BEGIN
                                                ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                     GROUP BY MovementItem.ParentId
-                           , MovementItem.ObjectId
                    )
        -- Заказы + Резервы
      , tmpMovement AS (SELECT MovementItem.ObjectId AS GoodsId
@@ -234,7 +231,8 @@ BEGIN
                             , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END AS Amount_sh
                               -- Заказы
                             , ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
-                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)    AS AmountWeight
+                             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                              ) AS AmountWeight
                               -- Резервы
                             ,  (tmpMI_Child.Amount_Weight)       AS AmountWeight_child_one -- с Остатка
                             ,  (tmpMI_Child.AmountSecond_Weight) AS AmountWeight_child_sec -- с Прихода

@@ -10,20 +10,12 @@ CREATE OR REPLACE FUNCTION gpUpdateMIChild_OrderExternal_Amount(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId   Integer;
    DECLARE vbOperDate TDateTime;
-   DECLARE vbUnitId Integer;
+   DECLARE vbUnitId   Integer;
 BEGIN
---return;
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternalUnit());
-
-
-      -- Проверка - что б не копировали два раза
-      /*IF EXISTS (SELECT Id FROM MovementItem WHERE isErased = FALSE AND DescId = zc_MI_Master() AND MovementId = inMovementId AND Amount <> 0)
-         THEN RAISE EXCEPTION 'Ошибка.В документе уже есть данные.';
-      END IF;
-      */
+      -- проверка прав пользователя на вызов процедуры
+      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
 
       -- данные из документа
       SELECT CASE WHEN EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) < 8
@@ -56,17 +48,17 @@ BEGIN
       WITH 
            tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
                                         , Object_GoodsByGoodsKind_View.GoodsKindId
-                                        , ObjectLink_GoodsByGoodsKind_GoodsSubSend.ChildObjectId      AS GoodsId_sub
-                                        , ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ChildObjectId  AS GoodsKindId_sub
+                                        , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId      AS GoodsId_sub
+                                        , ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId  AS GoodsKindId_sub
                                    FROM Object_GoodsByGoodsKind_View
-                                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSubSend
-                                                             ON ObjectLink_GoodsByGoodsKind_GoodsSubSend.ObjectId = Object_GoodsByGoodsKind_View.Id
-                                                            AND ObjectLink_GoodsByGoodsKind_GoodsSubSend.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSubSend()
-                                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSubSend
-                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ObjectId = Object_GoodsByGoodsKind_View.Id
-                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSubSend()
-                                   WHERE ObjectLink_GoodsByGoodsKind_GoodsSubSend.ChildObjectId     > 0
-                                     AND ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ChildObjectId > 0
+                                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+                                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+                                   WHERE ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     > 0
+                                     AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
                                   )
             -- Заявка
           , tmpMI AS (SELECT MovementItem.Id
@@ -85,9 +77,28 @@ BEGIN
                            , (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
                            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
                              AS Amount_Weight
+
+                             -- Заявка - переводим в ед.изм. - MeasureId_sub
+                           , CASE -- ничего не делать
+                                  WHEN ObjectLink_Goods_Measure.ChildObjectId = ObjectLink_Goods_Measure_sub.ChildObjectId
+                                       THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                  -- Переводим в Вес
+                                  WHEN ObjectLink_Goods_Measure.ChildObjectId  = zc_Measure_Sh() AND ObjectLink_Goods_Measure_sub.ChildObjectId <> zc_Measure_Sh()
+                                       THEN (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) * COALESCE (ObjectFloat_Weight.ValueData, 0)
+                                  -- Переводим в ШТ
+                                  WHEN ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh() AND ObjectLink_Goods_Measure_sub.ChildObjectId   = zc_Measure_Sh()
+                                       THEN CASE WHEN ObjectFloat_Weight.ValueData > 0
+                                                      THEN (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) / ObjectFloat_Weight.ValueData
+                                                 ELSE 0
+                                            END
+                                  -- ???ничего не делать
+                                  ELSE MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                             END AS Amount
+
                              --
                            , COALESCE (tmpGoodsByGoodsKind.GoodsId_sub, MovementItem.ObjectId)                  AS GoodsId_sub
                            , COALESCE (tmpGoodsByGoodsKind.GoodsKindId_sub, MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_sub
+
                       FROM MovementItem
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -126,7 +137,7 @@ BEGIN
                       GROUP BY tmpMI.GoodsId_sub
                              , tmpMI.GoodsKindId_sub
                      )
-        -- ВСЕ заявки, в которых есть Резерв за эту "смену" или позже
+        -- ВСЕ заявки, в которых есть Резерв !!!для остатка!!! за эту "смену" или позже
       , tmpMIChild_All AS (SELECT MovementItem.Id                               AS MovementItemId
                                 , MovementItem.ObjectId                         AS GoodsId_sub
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_sub
@@ -137,10 +148,11 @@ BEGIN
                                                        AND MovementDate_CarInfo.DescId     = zc_MovementDate_CarInfo()
                                                        -- за эту "смену" или позже
                                                        AND MovementDate_CarInfo.ValueData  >= vbOperDate + INTERVAL '8 HOUR'
+                                -- на этот склад
                                 INNER JOIN MovementLinkObject AS MLO_To
                                                               ON MLO_To.MovementId = Movement.Id
-                                                             AND MLO_To.DescId = zc_MovementLinkObject_To()
-                                                             AND MLO_To.ObjectId = vbUnitId
+                                                             AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                                             AND MLO_To.ObjectId   = vbUnitId
                                 -- Элемент Резерв
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Child()
@@ -165,7 +177,7 @@ BEGIN
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                              AND Movement.Id      <> inMovementId
                           )
-        , tmpMI_Float AS (SELECT MIF.*
+        , tmpMI_Float AS (SELECT MIF.MovementItemId, MIF.DescId, MIF.ValueData :: Integer AS MovementId
                           FROM MovementItemFloat AS MIF
                           WHERE MIF.MovementItemId IN (SELECT DISTINCT tmpMIChild_All.MovementItemId FROM tmpMIChild_All)
                             AND MIF.DescId         = zc_MIFloat_MovementId()
@@ -179,8 +191,10 @@ BEGIN
                                 LEFT JOIN tmpMI_Float AS MIFloat_Movement
                                                       ON MIFloat_Movement.MovementItemId = tmpMIChild_All.MovementItemId
                                                      AND MIFloat_Movement.DescId         = zc_MIFloat_MovementId()
-                           -- если это резерев НЕ с внутреннего перемещения
-                           WHERE MIFloat_Movement.ValueData IS NULL
+                                LEFT JOIN Movement ON Movement.Id = MIFloat_Movement.MovementId
+                                                  AND Movement.OperDate < vbOperDate
+                           -- если это резерев НЕ с внутреннего перемещения !!!за сегодня!!!, прошлые перемещения - можно
+                           WHERE Movement.Id IS NULL
                            GROUP BY tmpMIChild_All.GoodsId_sub
                                   , tmpMIChild_All.GoodsKindId_sub
                           )
@@ -246,13 +260,8 @@ BEGIN
                  , tmpMI.GoodsId_sub
                  , tmpMI.GoodsKindId_sub
 
-                   -- Заявка - переводим в ед.изм. - MeasureId_sub
-                 , CASE WHEN tmpMI.MeasureId     = tmpMI.MeasureId_sub AND tmpMI.MeasureId  = zc_Measure_Sh() THEN tmpMI.Amount_sh
-                        WHEN tmpMI.MeasureId     = tmpMI.MeasureId_sub AND tmpMI.MeasureId <> zc_Measure_Sh() THEN tmpMI.Amount_Weight
-                        WHEN tmpMI.MeasureId     = zc_Measure_Sh()     THEN tmpMI.Amount_sh * tmpMI.Weight
-                        WHEN tmpMI.MeasureId_sub = zc_Measure_Sh()     THEN tmpMI.Amount_sh / tmpMI.Weight
-                        ELSE 0
-                   END AS Amount
+                   -- Заявка - в ед.изм. MeasureId_sub
+                 , tmpMI.Amount
 
                    -- Остаток начальный - пропорционально
                  , COALESCE (tmpRemains.Amount, 0) * CASE WHEN tmpMI_group.Amount_Weight > tmpMI.Amount_Weight THEN tmpMI.Amount_Weight / tmpMI_group.Amount_Weight ELSE 1 END
