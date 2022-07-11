@@ -26,13 +26,12 @@ BEGIN
      END IF;
 
      --
-     IF COALESCE (inRouteId, 0) = 0
+     IF COALESCE (inRouteId, 0) = 0 AND COALESCE (inRetailId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Маршрут не установлен';
+         RAISE EXCEPTION 'Ошибка.Маршрут и Торговая сеть не установлены.';
      END IF;
 
-     --RAISE EXCEPTION '<%>', outOperDate_CarInfo;
-      
+     
      ---
      PERFORM gpUpdateMIChild_OrderExternal_AmountSecondNull (tmp.Id, inSession)
      FROM (SELECT Movement.Id

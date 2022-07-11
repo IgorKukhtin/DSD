@@ -128,8 +128,7 @@ BEGIN
                         AND COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) > 0
                      )
       -- Заявка - сгруппировали
-    , tmpMI_group AS (SELECT SUM (tmpMI.Amount_Weight) AS Amount_Weight
-                           , SUM (tmpMI.Amount_sh)     AS Amount_sh
+    , tmpMI_group AS (SELECT SUM (tmpMI.Amount) AS Amount
                              --
                            , tmpMI.GoodsId_sub
                            , tmpMI.GoodsKindId_sub
@@ -264,11 +263,11 @@ BEGIN
                  , tmpMI.Amount
 
                    -- Остаток начальный - пропорционально
-                 , COALESCE (tmpRemains.Amount, 0) * CASE WHEN tmpMI_group.Amount_Weight > tmpMI.Amount_Weight THEN tmpMI.Amount_Weight / tmpMI_group.Amount_Weight ELSE 1 END
+                 , COALESCE (tmpRemains.Amount, 0) * CASE WHEN tmpMI_group.Amount > tmpMI.Amount THEN tmpMI.Amount / tmpMI_group.Amount ELSE 1 END
                    AS Remains
                    -- "свободный" Остаток для Резерв - пропорционально
                  , (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMIChild.Amount, 0)) 
-                 * CASE WHEN tmpMI_group.Amount_Weight > tmpMI.Amount_Weight THEN tmpMI.Amount_Weight / tmpMI_group.Amount_Weight ELSE 1 END
+                 * CASE WHEN tmpMI_group.Amount > tmpMI.Amount THEN tmpMI.Amount / tmpMI_group.Amount ELSE 1 END
                    AS Amount_diff
 
             FROM tmpMI
@@ -283,24 +282,24 @@ BEGIN
            ;
 
 
-   -- сохранили
-   PERFORM lpInsertUpdate_MI_OrderExternal_Child (ioId                 := tmpMI.MovementItemId
-                                                , inParentId           := tmpMI.ParentId
-                                                , inMovementId         := inMovementId
-                                                , inGoodsId            := tmpMI.GoodsId_sub
-                                                , inAmount             := CASE -- если "свободного" остатка хватает, тогда резерв весь остаток
-                                                                               WHEN COALESCE (tmpMI.Amount_diff, 0) >= COALESCE (tmpMI.Amount,0)
-                                                                                    THEN COALESCE (tmpMI.Amount,0)
-                                                                               -- здесь только "свободный" остаток
-                                                                               WHEN tmpMI.Amount_diff > 0 THEN tmpMI.Amount_diff
-                                                                               -- иначе 0
-                                                                               ELSE 0
-                                                                          END
-                                                , inAmountRemains      := tmpMI.Remains
-                                                , inGoodsKindId        := tmpMI.GoodsKindId_sub
-                                                , inMovementId_Send    := NULL
-                                                , inUserId             := vbUserId
-                                                 )
+     -- сохранили
+     PERFORM lpInsertUpdate_MI_OrderExternal_Child (ioId                 := tmpMI.MovementItemId
+                                                  , inParentId           := tmpMI.ParentId
+                                                  , inMovementId         := inMovementId
+                                                  , inGoodsId            := tmpMI.GoodsId_sub
+                                                  , inAmount             := CASE -- если "свободного" остатка хватает, тогда резерв весь остаток
+                                                                                 WHEN COALESCE (tmpMI.Amount_diff, 0) >= COALESCE (tmpMI.Amount,0)
+                                                                                      THEN COALESCE (tmpMI.Amount,0)
+                                                                                 -- здесь только "свободный" остаток
+                                                                                 WHEN tmpMI.Amount_diff > 0 THEN tmpMI.Amount_diff
+                                                                                 -- иначе 0
+                                                                                 ELSE 0
+                                                                            END
+                                                  , inAmountRemains      := tmpMI.Remains
+                                                  , inGoodsKindId        := tmpMI.GoodsKindId_sub
+                                                  , inMovementId_Send    := NULL
+                                                  , inUserId             := vbUserId
+                                                   )
      FROM (WITH -- нашли элементы - резерев
                 tmpMI_all AS (SELECT MovementItem.Id
                                    , MovementItem.ParentId
@@ -311,7 +310,7 @@ BEGIN
                               FROM MovementItem
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                                   AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                               WHERE MovementItem.MovementId = inMovementId
                                 AND MovementItem.DescId     = zc_MI_Child()
                                 AND MovementItem.isErased   = FALSE
