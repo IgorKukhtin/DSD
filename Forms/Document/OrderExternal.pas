@@ -154,9 +154,9 @@ type
     MeasureName_ch: TcxGridDBColumn;
     Amount_ch: TcxGridDBColumn;
     AmountSecond_ch: TcxGridDBColumn;
-    InvNumber_income_ch: TcxGridDBColumn;
+    InvNumber_send_ch: TcxGridDBColumn;
     isErased_ch: TcxGridDBColumn;
-    OperDate_income_ch: TcxGridDBColumn;
+    OperDate_send_ch: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     ChildDS: TDataSource;
     ChildCDS: TClientDataSet;
@@ -174,12 +174,13 @@ type
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     Amount_remains_ch: TcxGridDBColumn;
-    Amount_order: TcxGridDBColumn;
+    Amount_order_ch: TcxGridDBColumn;
     GoodsCode_master_ch: TcxGridDBColumn;
     GoodsName_master_ch: TcxGridDBColumn;
     GoodsKindName_master_ch: TcxGridDBColumn;
     MeasureName_master_ch: TcxGridDBColumn;
     isPeresort_ch: TcxGridDBColumn;
+    Amount_diff_ch: TcxGridDBColumn;
   private
     { Private declarations }
   public
