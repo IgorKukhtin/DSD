@@ -66,7 +66,7 @@ BEGIN
                                  , tmpMI_Child_all.Amount
                                  , tmpMI_Child_all.isErased
                             FROM tmpMI_Child_all
-                            WHERE tmpMI_Child_all.Amount <> 0
+                          --WHERE tmpMI_Child_all.Amount <> 0
                            )
           , tmpMI_LO AS (SELECT MovementItemLinkObject.*
                          FROM MovementItemLinkObject
@@ -167,13 +167,13 @@ BEGIN
                                       AND tmpPeresort.GoodsKindId = tmpMI.GoodsKindId
 
             LEFT JOIN Object AS Object_Goods_master     ON Object_Goods_master.Id     = tmpMI_Master.GoodsId
-                                                       AND (tmpMI_Master.GoodsId     <> tmpMI.GoodsId
-                                                         OR tmpMI_Master.GoodsKindId <> tmpMI.GoodsKindId
-                                                           )
+                                                     --AND (tmpMI_Master.GoodsId     <> tmpMI.GoodsId
+                                                     --  OR tmpMI_Master.GoodsKindId <> tmpMI.GoodsKindId
+                                                     --    )
             LEFT JOIN Object AS Object_GoodsKind_master ON Object_GoodsKind_master.Id = tmpMI_Master.GoodsKindId
-                                                       AND (tmpMI_Master.GoodsId     <> tmpMI.GoodsId
-                                                         OR tmpMI_Master.GoodsKindId <> tmpMI.GoodsKindId
-                                                           )
+                                                     --AND (tmpMI_Master.GoodsId     <> tmpMI.GoodsId
+                                                     --  OR tmpMI_Master.GoodsKindId <> tmpMI.GoodsKindId
+                                                     --    )
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_master
                                  ON ObjectLink_Goods_Measure_master.ObjectId = tmpMI_Master.GoodsId
                                 AND ObjectLink_Goods_Measure_master.DescId = zc_ObjectLink_Goods_Measure()
