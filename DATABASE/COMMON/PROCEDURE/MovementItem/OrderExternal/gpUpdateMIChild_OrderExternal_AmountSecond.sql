@@ -121,7 +121,7 @@ BEGIN
                         AND MovementItem.isErased   = FALSE
                         AND COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) > 0
                      )
-       -- Резервы - текущая заявка
+       -- Резервы остатка - текущая заявка
      , tmpChild AS (SELECT MovementItem.ParentId
                            --
                          , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount
@@ -132,7 +132,6 @@ BEGIN
                     WHERE MovementItem.MovementId      = inMovementId
                       AND MovementItem.DescId          = zc_MI_Child()
                       AND MovementItem.isErased        = FALSE
-                      AND MIFloat_MovementId.ValueData > 0
                     GROUP BY MovementItem.ParentId
                    )
             -- Заявка - сколько осталось зарезервировать
@@ -314,7 +313,7 @@ BEGIN
                                                   , inParentId           := tmpMI.ParentId
                                                   , inMovementId         := inMovementId
                                                   , inGoodsId            := tmpMI.GoodsId_sub
-                                                  , inAmount             := tmpMI.Amount_res
+                                                  , inAmount             := COALESCE (tmpMI.Amount_res, 0)
                                                   , inAmountRemains      := 0
                                                   , inGoodsKindId        := tmpMI.GoodsKindId_sub
                                                   , inMovementId_Send    := tmpMI.MovementId_Send
