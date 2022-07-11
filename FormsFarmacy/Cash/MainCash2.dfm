@@ -6446,6 +6446,10 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object actDownloadFarmacy: TAction
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' Farmacy.exe'
+      OnExecute = actDownloadFarmacyExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6835,6 +6839,9 @@ inherited MainCashForm2: TMainCashForm2
     object pmUser_expireDate: TMenuItem
       Action = actUser_expireDate
       Visible = False
+    end
+    object Farmacyexe1: TMenuItem
+      Action = actDownloadFarmacy
     end
   end
   object FormParams: TdsdFormParams

@@ -16,6 +16,8 @@ type
      class procedure AutomaticCheckConnect;
      class procedure AutomaticUpdateProgram;
      class procedure AutomaticUpdateProgramStart;
+     class procedure AutomaticUpdateRecoveryFarmacy;
+     class procedure AutomaticDownloadFarmacy;
      class function AutomaticUpdateProgramTestStart : boolean;
   end;
 
@@ -26,8 +28,57 @@ implementation
 
 uses UnilWin, VCL.Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms,
      MessagesUnit, dsdDB, DB, Storage, UtilConst, Classes, ShellApi, Windows,
-     StrUtils, CommonData, LocalWorkUnit;
+     StrUtils, CommonData, LocalWorkUnit, ShlObj, ActiveX, ComObj, Registry;
 
+function GetSpecialFolderPath(CSIDLFolder: Integer): string;
+var
+  FilePath: array [0..MAX_PATH] of char;
+begin
+  SHGetFolderPath(0, CSIDLFolder, 0, 0, FilePath);
+  Result := FilePath;
+end;
+
+procedure CreateShortCut(ShortCutName, Parameters, FileName: string);
+var ShellObject: IUnknown;
+    ShellLink: IShellLink;
+    ShellLinkDataList: IShellLinkDataList;
+    PersistFile: IPersistFile;
+    FName: WideString;
+    pdfFlags: Cardinal;
+begin
+  ShellObject := CreateComObject(CLSID_ShellLink);
+  ShellLink := ShellObject as IShellLink;
+  PersistFile := ShellObject as IPersistFile;
+  with ShellLink do
+  begin
+     SetArguments(PChar(Parameters));
+     SetPath(PChar(FileName));
+     SetWorkingDirectory(PChar(ExtractFilePath(FileName)));
+
+     if QueryInterface(StringToGUID(SID_IShellLinkDataList), ShellLinkDataList) = S_OK then
+       if ShellLinkDataList.GetFlags(pdfFlags) = S_OK then
+       begin
+         pdfFlags := pdfFlags or SLDF_RUNAS_USER;
+         ShellLinkDataList.SetFlags(pdfFlags);
+       end;
+
+     FName := ShortCutName;
+     PersistFile.Save(PWChar(FName), False);
+   end;
+end;
+
+procedure Autorun(NameParam, Path:String);
+var Reg:TRegistry;
+begin
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    Reg.OpenKey('\SOFTWARE\Microsoft\Windows\CurrentVersion\Run', false);
+    Reg.WriteString(NameParam, Path);
+  finally
+    Reg.Free;
+  end;
+end;
 { TUpdater }
 
 class procedure TUpdater.AutomaticCheckConnect;
@@ -621,6 +672,54 @@ begin
 
   ShowMessage('Программа успешно обновлена. Нажмите кнопку для перезапуска');
   Result := True;
+end;
+
+class procedure TUpdater.AutomaticUpdateRecoveryFarmacy;
+var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
+begin
+
+  if FileExists(ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe') then
+  begin
+      BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('RecoveryFarmacy.exe', GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe', ''));
+      LocalVersionInfo := UnilWin.GetFileVersion(ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe');
+      if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+         ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
+        FileWriteString(ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('RecoveryFarmacy.exe'),
+          GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe', '')));
+  end else FileWriteString(ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('RecoveryFarmacy.exe'),
+        GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe', '')));
+
+  // Востановление Farmacy.exe
+  if not FileExists(GetSpecialFolderPath(CSIDL_DESKTOP) + '\Востановление Farmacy.exe.lnk') then
+  begin
+    CreateShortCut(GetSpecialFolderPath(CSIDL_DESKTOP) + '\Востановление Farmacy.exe.lnk', '', ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe');
+  end;
+
+  if not FileExists(ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe.lnk') then
+  begin
+    CreateShortCut(ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe.lnk', '', ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe');
+    Autorun('RecoveryFarmacy', ExtractFilePath(ParamStr(0)) + 'RecoveryFarmacy.exe.lnk');
+  end;
+
+end;
+
+class procedure TUpdater.AutomaticDownloadFarmacy;
+var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
+begin
+
+  if not FileExists(ExtractFilePath(ParamStr(0)) + 'Farmacy.exe') then
+  begin
+    FileWriteString(ExtractFilePath(ParamStr(0)) + 'Farmacy.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('Farmacy.exe'),
+      GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'Farmacy.exe', '')));
+    ShowMessage('Файл Farmacy.exe загружен.');
+  end;
+
+  // Востановление ярлыка Farmacy.exe
+  if not FileExists(GetSpecialFolderPath(CSIDL_DESKTOP) + '\Farmacy.exe.lnk') then
+  begin
+    CreateShortCut(GetSpecialFolderPath(CSIDL_DESKTOP) + '\Farmacy.exe.lnk', '', ExtractFilePath(ParamStr(0)) + 'Farmacy.exe');
+  end;
+
 end;
 
 end.

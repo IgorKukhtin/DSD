@@ -19,6 +19,7 @@ type
     procedure UpdateFarmacyCash;
     procedure UpdateFarmacyCashServise;
     procedure UpdateMobile;
+   // procedure UpdateRecoveryFarmacy;
   end;
 
 implementation
@@ -120,6 +121,10 @@ begin
   SaveFile(ExtractFileDir(ParamStr(0)) + '\ScaleCeh.exe');
 end;
 
+//procedure TUpdaterTest.UpdateRecoveryFarmacy;
+//begin
+//  SaveFile(ExtractFileDir(ParamStr(0)) + '\RecoveryFarmacy.exe');
+//end;
 
 initialization
   TestFramework.RegisterTest('Сохранение программы', TUpdaterTest.Suite);

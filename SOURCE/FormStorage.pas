@@ -26,6 +26,7 @@ type
   public
     function LoadFile(FileName: string; Suffics : String): AnsiString;
     function LoadFileVersion(FileName: string; Suffics : String): TVersionInfo;
+    function LoadFileNoConnect(FileName: string; Suffics : String): AnsiString;
     procedure Save(Form: TComponent);
     function Load(FormName: String): TParentForm;
     procedure SaveReport(Stream: TStream; ReportName: string);
@@ -48,7 +49,7 @@ type
 
 implementation
 
-uses UtilConvert, DB, SysUtils, ZLibEx, Dialogs, dsdAddOn, CommonData;
+uses UtilConvert, DB, SysUtils, ZLibEx, Dialogs, dsdAddOn, CommonData, Storage;
 
 // Процедура по символьно переводит строку в набор цифр
 function ConvertConvert(S: String): String;
@@ -241,6 +242,26 @@ begin
   LoadProgramVersionProc.Execute;
   result.VerHigh := StrToInt(LoadProgramVersionProc.ParamByName('outMajorVersion').asString);
   result.VerLow := StrToInt(LoadProgramVersionProc.ParamByName('outMinorVersion').asString);
+end;
+
+function TdsdFormStorage.LoadFileNoConnect(FileName: string; Suffics : String): AnsiString;
+var pXML, S : String;
+begin
+  result := '';
+  {создаем XML вызова процедуры на сервере}
+  pXML :=
+    '<xml Session = "" >' +
+      '<gpGet_Object_Program OutputType="otBlob">' +
+      '<inProgramName    DataType="ftString" Value="' + gc_ProgramName + '" />' +
+      '</gpGet_Object_Program>' +
+    '</xml>';
+
+  S := TStorageFactory.GetStorage.ExecuteProc(pXML, False, 4, False);
+  //
+  if S <> '' then
+  begin
+    result := ReConvertConvert(S);
+  end;
 end;
 
 function TdsdFormStorage.LoadReport(ReportName: String): TStream;

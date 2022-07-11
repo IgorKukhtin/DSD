@@ -136,6 +136,7 @@ begin
       //≈сли все хорошо создаем главную форму Application.CreateForm();
       if ShowModal = mrOk then
       begin
+        // TUpdater.AutomaticUpdateRecoveryFarmacy;
         TUpdater.AutomaticUpdateProgram;
         if not FindCmdLineSwitch('skipcheckconnect') then
            TUpdater.AutomaticCheckConnect;

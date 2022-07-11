@@ -620,6 +620,8 @@ type
     actExpressVIPConfirm: TdsdOpenForm;
     actChoiceGoodsSPSearch_1303: TdsdOpenForm;
     N13032: TMenuItem;
+    actDownloadFarmacy: TAction;
+    Farmacyexe1: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -782,6 +784,7 @@ type
     procedure MainGridDBTableViewStylesGetContentStyle(
       Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
+    procedure actDownloadFarmacyExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -7219,6 +7222,11 @@ begin
       ShowMessage(E.Message);
     end;
   end;
+end;
+
+procedure TMainCashForm2.actDownloadFarmacyExecute(Sender: TObject);
+begin
+  TUpdater.AutomaticDownloadFarmacy;
 end;
 
 procedure TMainCashForm2.actUpdateProgramExecute(Sender: TObject);

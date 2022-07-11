@@ -242,8 +242,6 @@ end;
 
 // Функция возвращает суффикс к 64 разрядным EXE файлам
 function GetBinaryPlatfotmSuffics(aFileName, aSuffics: string): string;
-var
-  bt: Cardinal;
 begin
   Result := '';
   // Если не 64 то нет смысла выполнять
