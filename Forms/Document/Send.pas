@@ -156,6 +156,8 @@ type
     mactUpdateMaskReturnOut: TMultiAction;
     bbUpdateMaskIncome: TdxBarButton;
     bbUpdateMaskReturnOut: TdxBarButton;
+    actOpenFormOrderExternalChildSend: TdsdInsertUpdateAction;
+    bbOpenFormOrderExtChildSend: TdxBarButton;
   private
     { Private declarations }
   public

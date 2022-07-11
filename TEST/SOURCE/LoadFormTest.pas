@@ -1104,6 +1104,8 @@ end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalChild_BySendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalChild_BySendForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalChildForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalChildForm');

@@ -376,9 +376,6 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -1817,6 +1814,50 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
+    object actOpenFormOrderExternalChildSend: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1088#1077#1079#1077#1088#1074#1072' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1088#1077#1079#1077#1088#1074#1072' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      ImageIndex = 24
+      FormName = 'TOrderExternalChild_BySendForm'
+      FormNameParam.Value = 'TOrderExternalChild_BySendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1973,6 +2014,14 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormOrderExtChildSend'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2090,6 +2139,10 @@ inherited SendForm: TSendForm
     end
     object bbUpdateMaskReturnOut: TdxBarButton
       Action = mactUpdateMaskReturnOut
+      Category = 0
+    end
+    object bbOpenFormOrderExtChildSend: TdxBarButton
+      Action = actOpenFormOrderExternalChildSend
       Category = 0
     end
   end
@@ -2873,7 +2926,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 688
+    Left = 728
+    Top = 16
   end
   object spSelectPrintNoGroup: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send_Print'
@@ -2935,8 +2989,8 @@ inherited SendForm: TSendForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 692
-    Top = 96
+    Left = 764
+    Top = 48
   end
   object GuidesInvNumberOrder: TdsdGuides
     KeyField = 'Id'
@@ -3050,8 +3104,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 720
-    Top = 72
+    Left = 672
+    Top = 40
   end
   object spSelectPrint_SaleOrder: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Order_Print'

@@ -1376,7 +1376,8 @@ uses
   Report_SaleTare_Gofro in '..\..\Forms\Report\Report_SaleTare_Gofro.pas' {Report_SaleTare_GofroForm: TParentForm},
   Report_SaleTare_GofroDialog in '..\..\Forms\Report\Report_SaleTare_GofroDialog.pas' {Report_SaleTare_GofroDialogForm: TParentForm},
   Report_MIProtocolUpdate in '..\..\Forms\Report\Report_MIProtocolUpdate.pas' {Report_MIProtocolUpdateForm: TParentForm},
-  OrderExternalChild in '..\..\Forms\Document\OrderExternalChild.pas' {OrderExternalChildForm: TParentForm};
+  OrderExternalChild in '..\..\Forms\Document\OrderExternalChild.pas' {OrderExternalChildForm: TParentForm},
+  OrderExternalChild_BySend in '..\..\Forms\Document\OrderExternalChild_BySend.pas' {OrderExternalChild_BySendForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
