@@ -145,41 +145,41 @@ BEGIN
              -- Заявка - переводим в ед.изм. - MeasureId_child
            , CASE WHEN tmpMI.Ord = 1
                        THEN CASE -- ничего не делать
-                                 WHEN ObjectLink_Goods_Measure.ChildObjectId = ObjectLink_Goods_Measure_master.ChildObjectId
+                                 WHEN ObjectLink_Goods_Measure_master.ChildObjectId = ObjectLink_Goods_Measure.ChildObjectId
                                       THEN tmpMI_Master.Amount
                                  -- Переводим в Вес
-                                 WHEN ObjectLink_Goods_Measure.ChildObjectId  = zc_Measure_Sh() AND ObjectLink_Goods_Measure_master.ChildObjectId <> zc_Measure_Sh()
-                                      THEN tmpMI_Master.Amount * COALESCE (ObjectFloat_Weight.ValueData, 0)
+                                 WHEN ObjectLink_Goods_Measure_master.ChildObjectId  = zc_Measure_Sh() AND ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh()
+                                      THEN tmpMI_Master.Amount * COALESCE (ObjectFloat_Weight_master.ValueData, 0)
                                  -- Переводим в ШТ
-                                 WHEN ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh() AND ObjectLink_Goods_Measure_master.ChildObjectId   = zc_Measure_Sh()
-                                      THEN CASE WHEN ObjectFloat_Weight.ValueData > 0
-                                                     THEN tmpMI_Master.Amount / ObjectFloat_Weight.ValueData
+                                 WHEN ObjectLink_Goods_Measure_master.ChildObjectId <> zc_Measure_Sh() AND ObjectLink_Goods_Measure.ChildObjectId   = zc_Measure_Sh()
+                                      THEN CASE WHEN ObjectFloat_Weight_master.ValueData > 0
+                                                     THEN tmpMI_Master.Amount / ObjectFloat_Weight_master.ValueData
                                                 ELSE 0
                                            END
                                  -- ???ничего не делать
                                  ELSE tmpMI_Master.Amount
-                            END AS Amount
+                            END
                   ELSE 0
              END :: TFloat AS Amount_order
 
-           , (CASE WHEN tmpMI.Ord = 1
-                        THEN CASE -- ничего не делать
-                                  WHEN ObjectLink_Goods_Measure.ChildObjectId = ObjectLink_Goods_Measure_master.ChildObjectId
-                                       THEN tmpMI_Master.Amount
-                                  -- Переводим в Вес
-                                  WHEN ObjectLink_Goods_Measure.ChildObjectId  = zc_Measure_Sh() AND ObjectLink_Goods_Measure_master.ChildObjectId <> zc_Measure_Sh()
-                                       THEN tmpMI_Master.Amount * COALESCE (ObjectFloat_Weight.ValueData, 0)
-                                  -- Переводим в ШТ
-                                  WHEN ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh() AND ObjectLink_Goods_Measure_master.ChildObjectId   = zc_Measure_Sh()
-                                       THEN CASE WHEN ObjectFloat_Weight.ValueData > 0
-                                                      THEN tmpMI_Master.Amount / ObjectFloat_Weight.ValueData
-                                                 ELSE 0
-                                            END
-                                  -- ???ничего не делать
-                                  ELSE tmpMI_Master.Amount
-                             END AS Amount
-                   ELSE 0
-              END
+           , (COALESCE (CASE WHEN tmpMI.Ord = 1
+                                  THEN CASE -- ничего не делать
+                                            WHEN ObjectLink_Goods_Measure_master.ChildObjectId = ObjectLink_Goods_Measure.ChildObjectId
+                                                 THEN tmpMI_Master.Amount
+                                            -- Переводим в Вес
+                                            WHEN ObjectLink_Goods_Measure_master.ChildObjectId  = zc_Measure_Sh() AND ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh()
+                                                 THEN tmpMI_Master.Amount * COALESCE (ObjectFloat_Weight_master.ValueData, 0)
+                                            -- Переводим в ШТ
+                                            WHEN ObjectLink_Goods_Measure_master.ChildObjectId <> zc_Measure_Sh() AND ObjectLink_Goods_Measure.ChildObjectId   = zc_Measure_Sh()
+                                                 THEN CASE WHEN ObjectFloat_Weight_master.ValueData > 0
+                                                                THEN tmpMI_Master.Amount / ObjectFloat_Weight_master.ValueData
+                                                           ELSE 0
+                                                      END
+                                            -- ???ничего не делать
+                                            ELSE tmpMI_Master.Amount
+                                       END
+                             ELSE 0
+                        END, 0)
             - (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0))
              ) :: TFloat AS Amount_diff
 
@@ -199,9 +199,6 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
-                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN tmpMI_Master ON tmpMI_Master.MovementItemId = tmpMI.ParentId
 
@@ -225,6 +222,9 @@ BEGIN
                                  ON ObjectLink_Goods_Measure_master.ObjectId = tmpMI_Master.GoodsId
                                 AND ObjectLink_Goods_Measure_master.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure_master ON Object_Measure_master.Id = ObjectLink_Goods_Measure_master.ChildObjectId
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight_master
+                                  ON ObjectFloat_Weight_master.ObjectId = tmpMI_Master.GoodsId
+                                 AND ObjectFloat_Weight_master.DescId   = zc_ObjectFloat_Goods_Weight()
 
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
@@ -245,4 +245,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_OrderExternalChild (inMovementId:= 25173, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MI_OrderExternalChild (inMovementId:= 22952094, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
