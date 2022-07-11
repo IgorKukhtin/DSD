@@ -834,7 +834,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
-    Left = 96
+    Left = 112
     Top = 48
   end
   object RefreshDispatcher: TRefreshDispatcher

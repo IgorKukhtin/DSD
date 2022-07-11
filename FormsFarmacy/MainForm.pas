@@ -977,6 +977,7 @@ type
     { Private declarations }
     FLoadPUSH: Integer;
     FNumberPUSH: Integer;
+    FPUSHThread: TThread;
   public
     { Public declarations }
   end;
@@ -992,7 +993,47 @@ uses
   UploadUnloadData, Dialogs, Forms, SysUtils, CommonData, IdGlobal, RepriceUnit,  RepriceUnit_test,
   RepriceChangeRetail, ExportSalesForSupp, Report_Analysis_Remains_Selling, SearchByCaption,
   Report_ImplementationPlanEmployee, Report_IncomeConsumptionBalance, PUSHMessageFarmacy,
-  RepricePromoUnit;
+  RepricePromoUnit, Storage;
+
+type
+  TPUSHThread = class(TThread)
+  private
+  { Private declarations }
+  protected
+    procedure Execute; override;
+  end;
+
+{ TPUSHThread }
+
+procedure TPUSHThread.Execute;
+  var pXML, Data : String;
+      StringStream: TStringStream;
+begin
+  {создаем XML вызова процедуры на сервере}
+  pXML :=
+    '<xml Session = "%s" >' +
+      '<gpGet_PUSH_Farmacy OutputType="otDataSet">' +
+      '<inNumberPUSH    DataType="ftInteger" Value="%s" />' +
+      '</gpGet_PUSH_Farmacy>' +
+    '</xml>';
+
+  try
+    Data := TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [gc_User.Session, IntToStr(MainFormInstance.FNumberPUSH)]), False, 4, False);
+    //
+    if Data <> '' then
+    begin
+      try
+        StringStream := GetStringStream(String(Data));
+        MainFormInstance.PUSHDS.LoadFromStream(StringStream);
+      finally
+        FreeAndNil(StringStream);
+      end;
+    end;
+  except
+  end;
+  MainFormInstance.FPUSHThread := Nil;
+  MainFormInstance.FLoadPUSH := 0;
+end;
 
 
 procedure TMainForm.actReport_ImplementationPlanEmployeeExecute(
@@ -1092,16 +1133,19 @@ procedure TMainForm.TimerPUSHTimer(Sender: TObject);
 
   procedure Load_PUSH;
   begin
-    if FLoadPUSH > 15 then
+    if (FLoadPUSH > 15) and not Assigned(FPUSHThread) and not PUSHDS.Active then
     begin
-      FLoadPUSH := 0;
 
       if not gc_User.Local then
       try
         Inc(FNumberPUSH);
-        spGet_PUSH_Farmacy.ParamByName('inNumberPUSH').Value := FNumberPUSH;
-        spGet_PUSH_Farmacy.Execute;
-        TimerPUSH.Interval := 1000;
+        FPUSHThread:=TPUSHThread.Create(true);
+        FPUSHThread.FreeOnTerminate:=true;
+        FPUSHThread.Resume;
+
+//        spGet_PUSH_Farmacy.ParamByName('inNumberPUSH').Value := FNumberPUSH;
+//        spGet_PUSH_Farmacy.Execute;
+        TimerPUSH.Interval := 10000;
       except
       end;
     end else Inc(FLoadPUSH);
@@ -1109,7 +1153,9 @@ procedure TMainForm.TimerPUSHTimer(Sender: TObject);
 
 begin
   TimerPUSH.Enabled := False;
-  TimerPUSH.Interval := 60 * 1000;
+
+  if FLoadPUSH >= 15 then TimerPUSH.Interval := 10000
+  else TimerPUSH.Interval := 60 * 1000;
 
   try
     Load_PUSH;
@@ -1131,7 +1177,8 @@ begin
                                  PUSHDS.FieldByName('SpecialLighting').AsBoolean,
                                  PUSHDS.FieldByName('TextColor').AsInteger,
                                  PUSHDS.FieldByName('Color').AsInteger,
-                                 PUSHDS.FieldByName('Bold').AsBoolean);
+                                 PUSHDS.FieldByName('Bold').AsBoolean,
+                                 PUSHDS.FieldByName('GridData').AsString);
         end;
       finally
          PUSHDS.Delete;
@@ -1139,7 +1186,7 @@ begin
     end;
   finally
     TimerPUSH.Enabled := True;
-    if PUSHDS.IsEmpty then PUSHDS.Close;
+    if PUSHDS.IsEmpty and PUSHDS.Active then PUSHDS.Close;
   end;
 end;
 

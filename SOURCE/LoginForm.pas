@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus, cxLabel, Vcl.StdCtrls,
   cxButtons, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxPropertiesStore,
-  dxSkinsCore, dxSkinsDefaultPainters, cxClasses;
+  dxSkinsCore, dxSkinsDefaultPainters, cxClasses, UtilConst;
 
 type
   TcxComboBoxUser = Class(TcxComboBox)
@@ -60,7 +60,21 @@ begin
 end;
 
 procedure TcxComboBoxUser.SetUsers(const Value: string);
+  var ItemList : String;
 begin
+  if dsdProject = prFarmacy then
+  begin
+    try
+      ItemList := TAuthentication.GetLoginList(TStorageFactory.GetStorage);
+      if ItemList <> '' then
+      begin
+        Properties.Items.Text := ItemList;
+        Exit;
+      end;
+    except
+    end;
+  end;
+
   if Value <> '' then Properties.Items.Text := Value
 end;
 
@@ -133,6 +147,7 @@ end;
 
 procedure TLoginForm.FormCreate(Sender: TObject);
 begin
+  if dsdProject = prFarmacy then edUserName.Properties.Sorted := True;
   with cxPropertiesStore.Components.Add do begin
     Component := edUserName;
     Properties.Add('Users');

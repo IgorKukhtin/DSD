@@ -21,7 +21,6 @@ object MainForm: TMainForm
     Height = 33
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 881
     DesignSize = (
       1040
       33)
@@ -49,24 +48,31 @@ object MainForm: TMainForm
       EditValue = 44747d
       Properties.Kind = ckDateTime
       TabOrder = 2
-      ExplicitLeft = 904
       Width = 145
     end
     object btnDo: TButton
       Left = 239
       Top = 3
-      Width = 75
+      Width = 107
       Height = 25
       Action = maDo
       TabOrder = 3
     end
-    object btnDoone: TButton
-      Left = 320
+    object btnOpen: TButton
+      Left = 520
       Top = 2
-      Width = 161
+      Width = 201
       Height = 25
-      Action = actDoone
+      Action = actOpenGrid
       TabOrder = 4
+    end
+    object btnDoone: TButton
+      Left = 352
+      Top = 2
+      Width = 121
+      Height = 25
+      Action = actDo
+      TabOrder = 5
     end
   end
   object Panel3: TPanel
@@ -78,7 +84,6 @@ object MainForm: TMainForm
     Caption = 'Panel3'
     ShowCaption = False
     TabOrder = 1
-    ExplicitWidth = 881
     object cxGridPharmOrders: TcxGrid
       Left = 1
       Top = 1
@@ -86,7 +91,6 @@ object MainForm: TMainForm
       Height = 48
       Align = alTop
       TabOrder = 0
-      ExplicitWidth = 879
       object cxGridPharmOrdersDBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = PharmOrdersDS
@@ -173,33 +177,38 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 56
         end
-        object cxGridPharmOrderProducts_drug_id: TcxGridDBColumn
-          DataBinding.FieldName = 'drug_id'
+        object cxGridPharmOrderProducts_postgres_drug_id: TcxGridDBColumn
+          Caption = 'Id - '#1090#1086#1074'.'
+          DataBinding.FieldName = 'postgres_drug_id'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 55
         end
         object cxGridPharmOrderProducts_drug_name: TcxGridDBColumn
+          Caption = #1058#1086#1074#1072#1088
           DataBinding.FieldName = 'drug_name'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 192
         end
         object cxGridPharmOrderProducts_type_order: TcxGridDBColumn
+          Caption = #1058#1080#1087' '#1079#1072#1082#1072#1079#1072
           DataBinding.FieldName = 'type_order'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 74
         end
         object cxGridPharmOrderProducts_price: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072
           DataBinding.FieldName = 'price'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
-          Width = 80
+          Width = 63
         end
         object cxGridPharmOrderProducts_quantity: TcxGridDBColumn
+          Caption = #1050#1086#1083'-'#1074#1086
           DataBinding.FieldName = 'quantity'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 3
@@ -213,6 +222,94 @@ object MainForm: TMainForm
         GridView = cxGridPharmOrderProductsDBTableView1
       end
     end
+    object cxGridUpdateOrdersSiteMI: TcxGrid
+      Left = 537
+      Top = 49
+      Width = 502
+      Height = 169
+      Align = alClient
+      TabOrder = 2
+      object cxGridUpdateOrdersSiteMIDBTableView1: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = UpdateOrdersSiteMIDS
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = ',0.####;-,0.####; ;'
+            Kind = skSum
+            Column = cxGridUpdateOrdersSiteMI_Amount
+          end
+          item
+            Format = ',0.####;-,0.####; ;'
+            Kind = skSum
+            Column = cxGridUpdateOrdersSiteMI_AmountOrder
+          end>
+        DataController.Summary.SummaryGroups = <>
+        OptionsData.CancelOnExit = False
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.Footer = True
+        OptionsView.GroupByBox = False
+        Styles.Content = dmMain.cxContentStyle
+        Styles.Footer = dmMain.cxFooterStyle
+        Styles.Header = dmMain.cxHeaderL1Style
+        Styles.Selection = dmMain.cxSelection
+        object cxGridUpdateOrdersSiteMI_Id: TcxGridDBColumn
+          DataBinding.FieldName = 'Id'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 64
+        end
+        object cxGridUpdateOrdersSiteMI_GoodsId: TcxGridDBColumn
+          Caption = 'Id - '#1090#1086#1074'.'
+          DataBinding.FieldName = 'GoodsId'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object cxGridUpdateOrdersSiteMI_GoodsName: TcxGridDBColumn
+          Caption = #1058#1086#1074#1072#1088
+          DataBinding.FieldName = 'GoodsName'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 170
+        end
+        object cxGridUpdateOrdersSiteMI_Price: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072
+          DataBinding.FieldName = 'Price'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 67
+        end
+        object cxGridUpdateOrdersSiteMI_Amount: TcxGridDBColumn
+          Caption = #1050#1086#1083'-'#1074#1086
+          DataBinding.FieldName = 'Amount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 3
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 56
+        end
+        object cxGridUpdateOrdersSiteMI_AmountOrder: TcxGridDBColumn
+          Caption = #1047#1072#1082#1072#1079#1072#1085#1086
+          DataBinding.FieldName = 'AmountOrder'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 3
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 67
+        end
+      end
+      object cxGridUpdateOrdersSiteMILevel1: TcxGridLevel
+        GridView = cxGridUpdateOrdersSiteMIDBTableView1
+      end
+    end
   end
   object cxGridUpdateOrdersSite: TcxGrid
     Left = 0
@@ -221,7 +318,6 @@ object MainForm: TMainForm
     Height = 311
     Align = alClient
     TabOrder = 2
-    ExplicitWidth = 881
     object cxGridUpdateOrdersSiteDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = UpdateOrdersSiteDS
@@ -279,6 +375,18 @@ object MainForm: TMainForm
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         Width = 383
+      end
+      object cxGridUpdateOrdersSite_isMobileApplication: TcxGridDBColumn
+        Caption = #1052#1086#1073'.'#1087#1088#1080#1083
+        DataBinding.FieldName = 'isMobileApplication'
+        HeaderAlignmentHorz = taCenter
+        Width = 79
+      end
+      object cxGridUpdateOrdersSite_DateComing: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1074' '#1072#1087#1090#1077#1082#1077
+        DataBinding.FieldName = 'DateComing'
+        HeaderAlignmentHorz = taCenter
+        Width = 102
       end
     end
     object cxGridUpdateOrdersSiteLevel1: TcxGridLevel
@@ -356,6 +464,7 @@ object MainForm: TMainForm
     object actSelect_UpdateOrdersSite: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actSite_Param
       PostDataSetBeforeExecute = False
       StoredProc = spSelect_UpdateOrdersSite
       StoredProcList = <
@@ -374,18 +483,18 @@ object MainForm: TMainForm
           Action = actDo
         end>
       View = cxGridUpdateOrdersSiteDBTableView1
-      Caption = #1054#1073#1088#1072#1073#1086#1090#1072#1090#1100
-      Hint = #1054#1073#1088#1072#1073#1086#1090#1072#1090#1100
+      Caption = #1054#1073#1088#1072#1073#1086#1090#1072#1090#1100' '#1074#1089#1077
+      Hint = #1054#1073#1088#1072#1073#1086#1090#1072#1090#1100' '#1074#1089#1077
     end
     object actDo: TAction
       Category = 'DSDLib'
       Caption = #1054#1073#1088#1072#1073#1086#1090#1082#1072' '#1079#1072#1082#1072#1079#1072
       OnExecute = actDoExecute
     end
-    object actDoone: TAction
+    object actOpenGrid: TAction
       Category = 'DSDLib'
-      Caption = #1054#1073#1088#1072#1073#1086#1090#1072#1090#1100' '#1090#1077#1082#1091#1097#1080#1081' '#1079#1072#1082#1072#1079
-      OnExecute = actDooneExecute
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1075#1088#1080#1076#1099' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1079#1072#1082#1072#1079#1072
+      OnExecute = actOpenGridExecute
     end
     object actPharmOrders: TdsdForeignData
       Category = 'DSDLib'
@@ -447,9 +556,10 @@ object MainForm: TMainForm
       PairParams = <
         item
         end>
+      ShowGaugeForm = False
       Caption = 'actPharmOrders'
     end
-    object actPharmOrderProductsCDS: TdsdForeignData
+    object actPharmOrderProducts: TdsdForeignData
       Category = 'DSDLib'
       MoveParams = <>
       ZConnection.ControlsCodePage = cCP_UTF16
@@ -488,8 +598,10 @@ object MainForm: TMainForm
       DataBase.DataType = ftString
       DataBase.MultiSelectSeparator = ','
       SQLParam.Value = 
-        'select id, drug_id, drug_name, type_order, price, quantity from ' +
-        'pharm_order_products where order_id = :Id'
+        'select pop.id, pd.postgres_drug_id, pop.drug_name, pop.type_orde' +
+        'r, pop.price, pop.quantity from pharm_order_products pop inner j' +
+        'oin pharm_drugs pd on pd.id = pop.drug_id where pop.order_id = :' +
+        'Id'
       SQLParam.DataType = ftString
       SQLParam.MultiSelectSeparator = ','
       DataSet = PharmOrderProductsCDS
@@ -509,6 +621,71 @@ object MainForm: TMainForm
       PairParams = <
         item
         end>
+      ShowGaugeForm = False
+      Caption = 'actPharmOrders'
+    end
+    object actSelect_MI_UpdateOrdersSite: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_MI_UpdateOrdersSite
+      StoredProcList = <
+        item
+          StoredProc = spSelect_MI_UpdateOrdersSite
+        end>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1079#1072#1082#1072#1079#1099
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1079#1072#1082#1072#1079#1099
+    end
+    object actUpdatePharmOrderProducts: TdsdForeignData
+      Category = 'DSDLib'
+      MoveParams = <>
+      ZConnection.ControlsCodePage = cCP_UTF16
+      ZConnection.ClientCodepage = 'utf8'
+      ZConnection.Catalog = ''
+      ZConnection.Properties.Strings = (
+        'codepage=utf8')
+      ZConnection.HostName = ''
+      ZConnection.Port = 0
+      ZConnection.Database = ''
+      ZConnection.User = ''
+      ZConnection.Password = ''
+      ZConnection.Protocol = 'mysql-5'
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'MySQL_Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'MySQL_Port'
+      PortParam.MultiSelectSeparator = ','
+      UserNameParam.Value = Null
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'MySQL_Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'MySQL_Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DataBase.Value = Null
+      DataBase.Component = FormParams
+      DataBase.ComponentItem = 'MySQL_DataBase'
+      DataBase.DataType = ftString
+      DataBase.MultiSelectSeparator = ','
+      SQLParam.DataType = ftString
+      SQLParam.MultiSelectSeparator = ','
+      TypeTransaction = ttExecSQL
+      Params = <>
+      UpdateFields = <>
+      JsonParam.Value = ''
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+        end>
+      ShowGaugeForm = False
       Caption = 'actPharmOrders'
     end
   end
@@ -563,40 +740,73 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 496
-    Top = 81
+    Left = 464
+    Top = 69
   end
   object UpdateOrdersSiteCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 624
-    Top = 80
+    Top = 68
   end
   object UpdateOrdersSiteDS: TDataSource
     DataSet = UpdateOrdersSiteCDS
     Left = 752
-    Top = 80
+    Top = 68
   end
   object PharmOrdersDS: TDataSource
     DataSet = PharmOrdersCDS
     Left = 752
-    Top = 136
+    Top = 117
   end
   object PharmOrdersCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 624
-    Top = 136
+    Top = 117
   end
   object PharmOrderProductsDS: TDataSource
     DataSet = PharmOrderProductsCDS
     Left = 752
-    Top = 192
+    Top = 167
   end
   object PharmOrderProductsCDS: TClientDataSet
     Aggregates = <>
+    IndexFieldNames = 'postgres_drug_id'
     Params = <>
     Left = 624
-    Top = 192
+    Top = 167
+  end
+  object UpdateOrdersSiteMIDS: TDataSource
+    DataSet = UpdateOrdersSiteMICDS
+    Left = 752
+    Top = 212
+  end
+  object UpdateOrdersSiteMICDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'GoodsId'
+    Params = <>
+    Left = 624
+    Top = 212
+  end
+  object spSelect_MI_UpdateOrdersSite: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_Check_UpdateOrdersSite'
+    DataSet = UpdateOrdersSiteMICDS
+    DataSets = <
+      item
+        DataSet = UpdateOrdersSiteMICDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = 44747d
+        Component = UpdateOrdersSiteCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 213
   end
 end

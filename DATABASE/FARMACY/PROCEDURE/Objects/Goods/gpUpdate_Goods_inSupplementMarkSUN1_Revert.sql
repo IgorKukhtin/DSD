@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Goods_inSupplementMarkSUN1_Revert(Integer, Bool
 
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_inSupplementMarkSUN1_Revert(
     IN inGoodsMainId             Integer   ,   -- ключ объекта <Товар>
-    IN inisSupplementMarkSUN1        Boolean  ,    -- Дополнение СУН1
+    IN inisSupplementMarkSUN1    Boolean  ,    -- Дополнение СУН1
     IN inSession                 TVarChar      -- текущий пользователь
 )
 RETURNS VOID AS

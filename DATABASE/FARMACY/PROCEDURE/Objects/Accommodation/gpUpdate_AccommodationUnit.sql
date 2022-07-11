@@ -37,7 +37,7 @@ BEGIN
                                               AND ObjectLink_Accommodation_Unit.DescId = zc_Object_Accommodation_Unit()
 
                      WHERE Object_Accommodation.DescId = zc_Object_Accommodation()
-                       AND upper(Object_Accommodation.ValueData) = upper(TRIM(inAccommodationName))) 
+                       AND upper(TRIM(Object_Accommodation.ValueData)) = upper(TRIM(inAccommodationName))) 
       THEN
           RAISE EXCEPTION 'Код размещения товара не найден или принаждежит другой аптеке';
       END IF;
@@ -52,7 +52,7 @@ BEGIN
                                 AND ObjectLink_Accommodation_Unit.DescId = zc_Object_Accommodation_Unit()
 
       WHERE Object_Accommodation.DescId = zc_Object_Accommodation()
-        AND upper(Object_Accommodation.ValueData) = upper(TRIM(inAccommodationName));
+        AND upper(TRIM(Object_Accommodation.ValueData)) = upper(TRIM(inAccommodationName));
                   
       IF NOT EXISTS (SELECT * FROM AccommodationLincGoods WHERE UnitId = inUnitId
                                                             AND GoodsId = inGoodsId

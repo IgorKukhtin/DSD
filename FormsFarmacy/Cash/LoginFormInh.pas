@@ -9,7 +9,7 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   cxPropertiesStore, Vcl.StdCtrls, cxButtons, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxLabel, dsdDB, dxSkinsCore, dxSkinsDefaultPainters, cxClasses,
-  System.Actions, Vcl.ActnList, dsdAction;
+  System.Actions, Vcl.ActnList, dsdAction, UtilConst;
 
 type
   TcxComboBoxUser = Class(TcxComboBox)
@@ -62,7 +62,21 @@ begin
 end;
 
 procedure TcxComboBoxUser.SetUsers(const Value: string);
+  var ItemList : String;
 begin
+  if dsdProject = prFarmacy then
+  begin
+    try
+      ItemList := TAuthentication.GetLoginList(TStorageFactory.GetStorage);
+      if ItemList <> '' then
+      begin
+        Properties.Items.Text := ItemList;
+        Exit;
+      end;
+    except
+    end;
+  end;
+
   if Value <> '' then Properties.Items.Text := Value
 end;
 

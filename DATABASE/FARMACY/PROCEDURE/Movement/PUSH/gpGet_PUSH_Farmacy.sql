@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_PUSH_Farmacy(
 )
 RETURNS TABLE (Id Integer, Text TBlob,
                FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar, Beep Integer,
-               SpecialLighting Boolean, TextColor Integer, Color Integer, Bold Boolean)
+               SpecialLighting Boolean, TextColor Integer, Color Integer, Bold Boolean, GridData TBlob)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -55,7 +55,8 @@ BEGIN
                            , SpecialLighting Boolean Not Null Default False
                            , TextColor Integer
                            , Color Integer
-                           , Bold Boolean Not Null Default False) ON COMMIT DROP;
+                           , Bold Boolean Not Null Default False
+                           , GridData TBlob) ON COMMIT DROP;
 
     SELECT ObjectLink_Member_Position.ChildObjectId
     INTO vbPositionID
@@ -516,6 +517,24 @@ BEGIN
                    CURRENT_DATE::TVarChar);
      END IF;
    END IF;
+
+/*   IF vbUserId = 3
+   THEN
+
+     SELECT string_agg(T1.JuridicalName||CHR(13)||T1.FromName||CHR(13)||T1.Summa::Text, CHR(13))
+     INTO vbText
+     FROM gpSelect_Calculation_PartialSale (CURRENT_DATE, inSession) AS T1;
+
+     IF COALESCE (vbText, '') <> ''
+     THEN
+       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, GridData)
+       VALUES (13, 'По состоянию на '||zfConvert_DateToString (CURRENT_DATE)||' возможна оплата частями:',
+                   'TCalculationPartialSaleForm', 'Формирование измения долга', 'OperDate', 'ftDateTime',
+                   CURRENT_DATE::TVarChar, 'ftString,ftString,ftFloat'||CHR(13)||
+                   'Юр. лицо'||CHR(13)||'Поставщик'||CHR(13)||'Сумма'||
+                   CHR(13)||vbText);
+     END IF;
+   END IF;*/
 
 /*   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PharmacyManager()))
       AND DATE_PART('DOW', CURRENT_DATE)::Integer in (2, 5)
@@ -1078,6 +1097,7 @@ BEGIN
           , _PUSH.TextColor              AS Color
           , _PUSH.Color                  AS Color
           , _PUSH.Bold                   AS Bold
+          , _PUSH.GridData               AS GridData
      FROM _PUSH;
 
 END;

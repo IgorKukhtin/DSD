@@ -43,6 +43,8 @@ type
     class function CheckLogin(pStorage: IStorage;
       const pUserName, pPassword: string; var pUser: TUser;
       ANeedShowException: Boolean = True): boolean;
+    // Получить список логинов с сервера
+    class function GetLoginList(pStorage: IStorage): string;
     class function spCheckPhoneAuthentSMS (pStorage: IStorage;const pSession, pPhoneAuthent: string; ANeedShowException: Boolean = True): boolean;
   end;
 
@@ -296,6 +298,30 @@ begin
   if result = FALSE then pUser:= nil;
   //
   result := (pUser <> nil);
+end;
+
+{------------------------------------------------------------------------------}
+class function TAuthentication.GetLoginList(pStorage: IStorage): string;
+var N: IXMLNode;
+    pXML : String;
+begin
+
+  Result := '';
+
+  {создаем XML вызова процедуры на сервере}
+  pXML :=
+    '<xml Session = "" >' +
+      '<gpSelect_Object_UserLogin OutputType="otResult">' +
+      '</gpSelect_Object_UserLogin>' +
+    '</xml>';
+
+
+  N := LoadXMLData(pStorage.ExecuteProc(pXML, False, 4, False)).DocumentElement;
+  //
+  if Assigned(N) then
+  begin
+     Result := N.GetAttribute(AnsiLowerCase('outLogin'));
+  end;
 end;
 
 function TUser.GetLocal: Boolean;
