@@ -14,8 +14,8 @@ RETURNS TABLE (Id Integer, ParentId Integer, LineNum Integer
              , GoodsId_master Integer, GoodsCode_master Integer, GoodsName_master TVarChar
              , GoodsKindId_master Integer, GoodsKindName_master TVarChar
              , MeasureName TVarChar, MeasureName_master TVarChar
-             , Amount TFloat, AmountSecond TFloat, Amount_remains TFloat, Amount_order TFloat
-             , MovementId_income Integer, InvNumber_income TVarChar, OperDate_income TDateTime
+             , Amount TFloat, AmountSecond TFloat, Amount_remains TFloat, Amount_order TFloat, Amount_diff TFloat
+             , MovementId_send Integer, InvNumber_send TVarChar, OperDate_send TDateTime
              , isPeresort Boolean, isErased Boolean
 
               )
@@ -55,16 +55,21 @@ BEGIN
                                  , MovementItem.ObjectId   AS GoodsId
                                  , MovementItem.Amount     AS Amount
                                  , MovementItem.isErased
+                                 , MIFloat_Movement.ValueData :: Integer AS MovementId_send
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Child()
                                                         AND MovementItem.isErased   = tmpIsErased.isErased
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Movement
+                                                             ON MIFloat_Movement.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Movement.DescId = zc_MIFloat_MovementId()
                            )
           , tmpMI_Child AS (SELECT tmpMI_Child_all.Id
                                  , tmpMI_Child_all.ParentId
                                  , tmpMI_Child_all.GoodsId
                                  , tmpMI_Child_all.Amount
                                  , tmpMI_Child_all.isErased
+                                 , tmpMI_Child_all.MovementId_send
                             FROM tmpMI_Child_all
                           --WHERE tmpMI_Child_all.Amount <> 0
                            )
@@ -78,18 +83,17 @@ BEGIN
                             FROM MovementItemFloat
                             WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
                               AND MovementItemFloat.DescId IN (zc_MIFloat_Remains()
-                                                             , zc_MIFloat_MovementId()
+                                                           --, zc_MIFloat_MovementId()
                                                               )
                            )
-
           , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                            , MovementItem.ParentId
                            , MovementItem.GoodsId                          AS GoodsId
-                           , CASE WHEN COALESCE (MIFloat_Movement.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END AS Amount
-                           , CASE WHEN COALESCE (MIFloat_Movement.ValueData, 0) > 0 THEN MovementItem.Amount ELSE 0 END AS AmountSecond
+                           , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) = 0 THEN MovementItem.Amount ELSE 0 END AS Amount
+                           , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) > 0 THEN MovementItem.Amount ELSE 0 END AS AmountSecond
                            , COALESCE (MIFloat_Remains.ValueData, 0)       AS Amount_remains
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                           , MIFloat_Movement.ValueData                    AS MovementId_income
+                           , MovementItem.MovementId_send                  AS MovementId_send
                            , MovementItem.isErased
                              -- № п/п
                            , ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId ORDER BY MovementItem.Id DESC) AS Ord
@@ -100,9 +104,9 @@ BEGIN
                            LEFT JOIN tmpMI_Float AS MIFloat_Remains
                                                  ON MIFloat_Remains.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
-                           LEFT JOIN tmpMI_Float AS MIFloat_Movement
-                                                 ON MIFloat_Movement.MovementItemId = MovementItem.Id
-                                                AND MIFloat_Movement.DescId = zc_MIFloat_MovementId()
+                         --LEFT JOIN tmpMI_Float AS MIFloat_Movement
+                         --                      ON MIFloat_Movement.MovementItemId = MovementItem.Id
+                         --                     AND MIFloat_Movement.DescId = zc_MIFloat_MovementId()
                      )
     , tmpPeresort AS (SELECT DISTINCT
                              tmpMI_Master.GoodsId, tmpMI_Master.GoodsKindId
@@ -137,11 +141,51 @@ BEGIN
            , tmpMI.Amount           :: TFloat   AS Amount
            , tmpMI.AmountSecond     :: TFloat   AS AmountSecond
            , tmpMI.Amount_remains   :: TFloat   AS Amount_remains
-           , CASE WHEN tmpMI.Ord = 1 THEN tmpMI_Master.Amount ELSE 0 END :: TFloat AS Amount_order
 
-           , Movement_Income.Id                 AS MovementId_income
-           , Movement_Income.InvNumber          AS InvNumber_income
-           , Movement_Income.OperDate           AS OperDate_income
+             -- Заявка - переводим в ед.изм. - MeasureId_child
+           , CASE WHEN tmpMI.Ord = 1
+                       THEN CASE -- ничего не делать
+                                 WHEN ObjectLink_Goods_Measure.ChildObjectId = ObjectLink_Goods_Measure_master.ChildObjectId
+                                      THEN tmpMI_Master.Amount
+                                 -- Переводим в Вес
+                                 WHEN ObjectLink_Goods_Measure.ChildObjectId  = zc_Measure_Sh() AND ObjectLink_Goods_Measure_master.ChildObjectId <> zc_Measure_Sh()
+                                      THEN tmpMI_Master.Amount * COALESCE (ObjectFloat_Weight.ValueData, 0)
+                                 -- Переводим в ШТ
+                                 WHEN ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh() AND ObjectLink_Goods_Measure_master.ChildObjectId   = zc_Measure_Sh()
+                                      THEN CASE WHEN ObjectFloat_Weight.ValueData > 0
+                                                     THEN tmpMI_Master.Amount / ObjectFloat_Weight.ValueData
+                                                ELSE 0
+                                           END
+                                 -- ???ничего не делать
+                                 ELSE tmpMI_Master.Amount
+                            END AS Amount
+                  ELSE 0
+             END :: TFloat AS Amount_order
+
+           , (CASE WHEN tmpMI.Ord = 1
+                        THEN CASE -- ничего не делать
+                                  WHEN ObjectLink_Goods_Measure.ChildObjectId = ObjectLink_Goods_Measure_master.ChildObjectId
+                                       THEN tmpMI_Master.Amount
+                                  -- Переводим в Вес
+                                  WHEN ObjectLink_Goods_Measure.ChildObjectId  = zc_Measure_Sh() AND ObjectLink_Goods_Measure_master.ChildObjectId <> zc_Measure_Sh()
+                                       THEN tmpMI_Master.Amount * COALESCE (ObjectFloat_Weight.ValueData, 0)
+                                  -- Переводим в ШТ
+                                  WHEN ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh() AND ObjectLink_Goods_Measure_master.ChildObjectId   = zc_Measure_Sh()
+                                       THEN CASE WHEN ObjectFloat_Weight.ValueData > 0
+                                                      THEN tmpMI_Master.Amount / ObjectFloat_Weight.ValueData
+                                                 ELSE 0
+                                            END
+                                  -- ???ничего не делать
+                                  ELSE tmpMI_Master.Amount
+                             END AS Amount
+                   ELSE 0
+              END
+            - (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0))
+             ) :: TFloat AS Amount_diff
+
+           , Movement_Send.Id                   AS MovementId_send
+           , Movement_Send.InvNumber            AS InvNumber_send
+           , Movement_Send.OperDate             AS OperDate_send
            
            , CASE WHEN tmpPeresort.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPeresort
        
@@ -155,6 +199,9 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
+                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN tmpMI_Master ON tmpMI_Master.MovementItemId = tmpMI.ParentId
 
@@ -184,7 +231,7 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
                                   
-            LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = tmpMI.MovementId_income
+            LEFT JOIN Movement AS Movement_Send ON Movement_Send.Id = tmpMI.MovementId_send
        ;
 
 END;
