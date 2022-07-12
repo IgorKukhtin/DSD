@@ -21,18 +21,22 @@ BEGIN
      -- Удаление того что вчера
      DELETE FROM LockUnique WHERE OperDate < CURRENT_DATE; -- - INTERVAL '1 DAY';
 
-
-     -- Если запись вставится - значит Уникальность соблюдается
-     INSERT INTO LockUnique (KeyData, UserId, OperDate)
-                     VALUES (inKeyData, inUserId, CURRENT_TIMESTAMP);
+     IF 1=0 --AND inUserId = 5 AND EXISTS (SELECT 1 FROM LockUnique WHERE KeyData ILIKE inKeyData)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Попытка сформировать повторные данные.<%> <%>', inKeyData, inUserId;
+     ELSE
+         -- Если запись вставится - значит Уникальность соблюдается
+         INSERT INTO LockUnique (KeyData, UserId, OperDate)
+                         VALUES (inKeyData, inUserId, CURRENT_TIMESTAMP);
    
+     END IF;
+
      EXCEPTION
               WHEN OTHERS THEN RAISE EXCEPTION 'Ошибка.Попытка сформировать повторные данные.Повторите действие через 1 мин.';
-
+              
 END;           
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsert_LockUnique (TVarChar, Integer) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

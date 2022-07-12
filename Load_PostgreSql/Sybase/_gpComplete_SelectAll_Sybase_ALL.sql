@@ -192,6 +192,24 @@ END IF;
        AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
 
     UNION
+     -- 1.0. zc_Movement_Income
+     SELECT Movement.Id AS MovementId
+          , Movement.OperDate
+          , Movement.InvNumber
+          , MovementDesc.Code
+          , MovementDesc.ItemName AS ItemName
+     FROM Movement
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+          INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
+                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
+          INNER JOIN Object AS Object_From ON Object_From.Id     = MLO_From.ObjectId
+                                          AND Object_From.DescId = zc_Object_Unit()
+     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+       AND Movement.DescId IN (zc_Movement_Income())
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+
+    UNION
      -- 1.1. From: Sale + !!!NOT SendOnPrice!!!
      SELECT Movement.Id AS MovementId
           , Movement.OperDate

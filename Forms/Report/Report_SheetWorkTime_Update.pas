@@ -58,6 +58,8 @@ type
     UserName_mi: TcxGridDBColumn;
     OperDate_mov: TcxGridDBColumn;
     UserName_mov: TcxGridDBColumn;
+    MovementItemId: TcxGridDBColumn;
+    MovementId: TcxGridDBColumn;
   private
     { Private declarations }
   public

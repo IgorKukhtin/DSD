@@ -263,7 +263,7 @@ BEGIN
 
 
      -- !!!14. - Income!!!
-     IF vbMovementDescId = zc_Movement_Income() AND 1=0
+     IF vbMovementDescId = zc_Movement_Income() AND 1=1
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              PERFORM lpComplete_Movement_Income_CreateTemp();

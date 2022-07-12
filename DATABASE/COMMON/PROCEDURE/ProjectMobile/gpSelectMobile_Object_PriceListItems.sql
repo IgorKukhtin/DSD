@@ -112,19 +112,19 @@ BEGIN
                                   )
                 , tmpGoods AS (SELECT DISTINCT tmp.GoodsId FROM gpSelectMobile_Object_GoodsByGoodsKind (inSyncDateIn, inSession) AS tmp)
 
-             SELECT Object_PriceListItem.Id
-                  , ObjectLink_PriceListItem_Goods.ChildObjectId            AS GoodsId
-                  , ObjectLink_PriceListItem_PriceList.ChildObjectId        AS PriceListId
-                  , ObjectHistory_PriceListItem_Order.StartDate             AS OrderStartDate
-                  , ObjectHistory_PriceListItem_Order.EndDate               AS OrderEndDate
-                  , ObjectHistoryFloat_PriceListItem_Value_Order.ValueData  AS OrderPrice
-                  , ObjectHistory_PriceListItem_Sale.StartDate              AS SaleStartDate
-                  , ObjectHistory_PriceListItem_Sale.EndDate                AS SaleEndDate
-                  , ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData   AS SalePrice
-                  , ObjectHistory_PriceListItem_Return.StartDate            AS ReturnStartDate
-                  , ObjectHistory_PriceListItem_Return.EndDate              AS ReturnEndDate
-                  , ObjectHistoryFloat_PriceListItem_Value_Return.ValueData AS ReturnPrice
-                  , TRUE :: Boolean                                         AS isSync
+             SELECT MAX (Object_PriceListItem.Id)                                 :: Integer   AS Id
+                  , ObjectLink_PriceListItem_Goods.ChildObjectId                  :: Integer   AS GoodsId
+                  , ObjectLink_PriceListItem_PriceList.ChildObjectId              :: Integer   AS PriceListId
+                  , MAX (ObjectHistory_PriceListItem_Order.StartDate)             :: TDateTime AS OrderStartDate
+                  , MAX (ObjectHistory_PriceListItem_Order.EndDate)               :: TDateTime AS OrderEndDate
+                  , MAX (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData)  :: TFloat    AS OrderPrice
+                  , MAX (ObjectHistory_PriceListItem_Sale.StartDate)              :: TDateTime AS SaleStartDate
+                  , MAX (ObjectHistory_PriceListItem_Sale.EndDate)                :: TDateTime AS SaleEndDate
+                  , MAX (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData)   :: TFloat    AS SalePrice
+                  , MAX (ObjectHistory_PriceListItem_Return.StartDate)            :: TDateTime AS ReturnStartDate
+                  , MAX (ObjectHistory_PriceListItem_Return.EndDate)              :: TDateTime AS ReturnEndDate
+                  , MAX (ObjectHistoryFloat_PriceListItem_Value_Return.ValueData) :: TFloat    AS ReturnPrice
+                  , TRUE                                                          :: Boolean   AS isSync
              FROM Object AS Object_PriceListItem
                   JOIN ObjectLink AS ObjectLink_PriceListItem_Goods 
                                   ON ObjectLink_PriceListItem_Goods.ObjectId = Object_PriceListItem.Id
@@ -167,11 +167,13 @@ BEGIN
              WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem()
                AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0)) 
                    + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))) <> 0.0)
-               AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL
+             --AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL
 
+             GROUP BY ObjectLink_PriceListItem_Goods.ChildObjectId
+                    , ObjectLink_PriceListItem_PriceList.ChildObjectId
              ORDER BY ObjectLink_PriceListItem_PriceList.ChildObjectId
                     , ObjectLink_PriceListItem_Goods.ChildObjectId
-                    , ObjectHistory_PriceListItem_Return.StartDate DESC
+                  --, ObjectHistory_PriceListItem_Return.StartDate DESC
              LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
             ;
                    

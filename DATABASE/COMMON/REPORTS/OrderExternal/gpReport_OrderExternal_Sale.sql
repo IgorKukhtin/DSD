@@ -14,6 +14,11 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal_Sale(
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
+               -- Дата/время отгрузки
+             , OperDate_CarInfo TDateTime
+               -- Дата смены
+             , OperDate_CarInfo_date TDateTime
+               --
              , OperDate_Sale TDateTime, OperDatePartner_Sale TDateTime 
              , InvNumber TVarChar, InvNumberOrderPartner TVarChar, InvNumber_Order TVarChar
              , FromDescName TVarChar, FromId Integer, FromCode Integer, FromName TVarChar
@@ -26,7 +31,7 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , AmountSumm1 TFloat, AmountSumm2 TFloat, AmountSummTotal TFloat, AmountSumm_Dozakaz TFloat
              , Amount_Weight1 TFloat, Amount_Sh1 TFloat
              , Amount_Weight2 TFloat, Amount_Sh2 TFloat
-             , Amount_Weight_Itog TFloat, Amount_Sh_Itog TFloat
+             , Amount_Weight_Itog TFloat, Amount_Sh_Itog TFloat, TotalAmount_Weight TFloat
              , Amount_Weight_Dozakaz TFloat, Amount_Sh_Dozakaz TFloat
              , Amount_Order TFloat, Amount_Dozakaz TFloat
              , Amount_WeightSK TFloat
@@ -165,6 +170,13 @@ BEGIN
                                , MovementLinkObject_Route.ObjectId          AS RouteId
                                , MovementLinkObject_PaidKind.ObjectId       AS PaidKindId
                                
+                                 -- Дата/время отгрузки
+                               , MovementDate_CarInfo.ValueData AS OperDate_CarInfo
+                                 -- Дата смены
+                               , CASE WHEN EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) < 8 THEN DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData) - INTERVAL '1 DAY'
+                                      ELSE DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
+                                 END  AS OperDate_CarInfo_date
+
                            FROM Movement
 
                                LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -193,6 +205,9 @@ BEGIN
                                LEFT JOIN MovementDate AS MovementDate_OperDatePartner_order
                                                       ON MovementDate_OperDatePartner_order.MovementId = Movement_Order.Id
                                                      AND MovementDate_OperDatePartner_order.DescId = zc_MovementDate_OperDatePartner()
+                                LEFT JOIN MovementDate AS MovementDate_CarInfo
+                                                       ON MovementDate_CarInfo.MovementId = Movement_Order.Id
+                                                      AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
 
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                                             ON MovementLinkObject_Route.MovementId = Movement_Order.Id
@@ -221,6 +236,12 @@ BEGIN
                                 , MovementLinkObject_From.ObjectId                    AS FromId
                                 , MovementLinkObject_Route.ObjectId                   AS RouteId
                                 , MovementLinkObject_PaidKind.ObjectId                AS PaidKindId
+                                  -- Дата/время отгрузки
+                                , MovementDate_CarInfo.ValueData AS OperDate_CarInfo
+                                  -- Дата смены
+                                , CASE WHEN EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) < 8 THEN DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData) - INTERVAL '1 DAY'
+                                       ELSE DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
+                                  END  AS OperDate_CarInfo_date
         
                             FROM Movement
                                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
@@ -242,12 +263,16 @@ BEGIN
                                 LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                        ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                LEFT JOIN MovementDate AS MovementDate_CarInfo
+                                                       ON MovementDate_CarInfo.MovementId = Movement.Id
+                                                      AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
                      
                                 LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                          ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                                         AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
         
                             WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                          --WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_OrderExternal()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                               AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)
@@ -266,6 +291,11 @@ BEGIN
                                     , tmp.MovementId_Order
                                     , tmp.OperDate_Order
                                     , tmp.OperDatePartner_Order
+                                      -- Дата/время отгрузки
+                                    , tmp.OperDate_CarInfo
+                                      -- Дата смены
+                                    , tmp.OperDate_CarInfo_date
+                                      --
                                     , tmp.InvNumber_Order
                                     , tmp.InvNumberPartner_Order
       
@@ -282,6 +312,11 @@ BEGIN
                                     , tmp.MovementId_Order
                                     , tmp.OperDate_Order
                                     , tmp.OperDatePartner_Order
+                                      -- Дата/время отгрузки
+                                    , tmp.OperDate_CarInfo
+                                       -- Дата смены
+                                    , tmp.OperDate_CarInfo_date
+                                      --
                                     , tmp.InvNumber_Order
                                     , tmp.InvNumberPartner_Order
        
@@ -301,6 +336,11 @@ BEGIN
                               , tmpSale.MovementId_Order
                               , tmpSale.OperDate_Order
                               , tmpSale.OperDatePartner_Order
+                                -- Дата/время отгрузки
+                              , tmpSale.OperDate_CarInfo
+                                -- Дата смены
+                              , tmpSale.OperDate_CarInfo_date
+
                               , tmpSale.InvNumber_Order
                               , tmpSale.InvNumberPartner_Order
 
@@ -352,6 +392,10 @@ BEGIN
                              , tmpSale.MovementId_Order
                              , tmpSale.OperDate_Order
                              , tmpSale.OperDatePartner_Order
+                               -- Дата/время отгрузки
+                             , tmpSale.OperDate_CarInfo
+                               -- Дата смены
+                             , tmpSale.OperDate_CarInfo_date
                              , tmpSale.InvNumber_Order
                              , tmpSale.InvNumberPartner_Order
 
@@ -372,6 +416,11 @@ BEGIN
                            , tmpMovement2.MovementId_Order
                            , tmpMovement2.OperDate_Order
                            , tmpMovement2.OperDatePartner_Order
+                             -- Дата/время отгрузки
+                           , tmpMovement2.OperDate_CarInfo
+                             -- Дата смены
+                           , tmpMovement2.OperDate_CarInfo_date
+                             --
                            , tmpMovement2.InvNumber_Order
                            , tmpMovement2.InvNumberPartner_Order
 
@@ -410,6 +459,11 @@ BEGIN
                                  , tmpOrder.MovementId_Order
                                  , tmpOrder.OperDate_Order
                                  , tmpOrder.OperDatePartner_Order
+                                   -- Дата/время отгрузки
+                                 , tmpOrder.OperDate_CarInfo
+                                   -- Дата смены
+                                 , tmpOrder.OperDate_CarInfo_date
+                                   --
                                  , tmpOrder.InvNumber_Order
                                  , tmpOrder.InvNumberPartner_Order
    
@@ -473,6 +527,11 @@ BEGIN
                                  , tmpOrder.MovementId_Order
                                  , tmpOrder.OperDate_Order
                                  , tmpOrder.OperDatePartner_Order
+                                   -- Дата/время отгрузки
+                                 , tmpOrder.OperDate_CarInfo
+                                   -- Дата смены
+                                 , tmpOrder.OperDate_CarInfo_date
+                                   --
                                  , tmpOrder.InvNumber_Order
                                  , tmpOrder.InvNumberPartner_Order
    
@@ -495,6 +554,11 @@ BEGIN
                               , tmpMovement2.MovementId_Order
                               , tmpMovement2.OperDate_Order
                               , tmpMovement2.OperDatePartner_Order
+                                -- Дата/время отгрузки
+                              , tmpMovement2.OperDate_CarInfo
+                                -- Дата смены
+                              , tmpMovement2.OperDate_CarInfo_date
+                                 --
                               , tmpMovement2.InvNumber_Order
                               , tmpMovement2.InvNumberPartner_Order
 
@@ -517,6 +581,11 @@ BEGIN
                             , tmpMovementOrder.MovementId_Order
                             , tmpMovementOrder.OperDate_Order
                             , tmpMovementOrder.OperDatePartner_Order
+                              -- Дата/время отгрузки
+                            , tmpMovementOrder.OperDate_CarInfo
+                              -- Дата смены
+                            , tmpMovementOrder.OperDate_CarInfo_date
+                              --
                             , tmpMovementOrder.InvNumber_Order
                             , tmpMovementOrder.InvNumberPartner_Order
 
@@ -558,6 +627,11 @@ BEGIN
                             , tmpMovementSale.MovementId_Order
                             , tmpMovementSale.OperDate_Order
                             , tmpMovementSale.OperDatePartner_Order
+                              -- Дата/время отгрузки
+                            , tmpMovementSale.OperDate_CarInfo
+                              -- Дата смены
+                            , tmpMovementSale.OperDate_CarInfo_date
+                              --
                             , tmpMovementSale.InvNumber_Order
                             , tmpMovementSale.InvNumberPartner_Order
     
@@ -600,6 +674,11 @@ BEGIN
                        , tmpDataUnion.MovementId_Order
                        , tmpDataUnion.OperDate_Order
                        , tmpDataUnion.OperDatePartner_Order
+                         -- Дата/время отгрузки
+                       , tmpDataUnion.OperDate_CarInfo
+                         -- Дата смены
+                       , tmpDataUnion.OperDate_CarInfo_date
+                         --
                        , tmpDataUnion.InvNumber_Order
                        , tmpDataUnion.InvNumberPartner_Order
 
@@ -643,6 +722,11 @@ BEGIN
                          , tmpDataUnion.MovementId_Order
                          , tmpDataUnion.OperDate_Order
                          , tmpDataUnion.OperDatePartner_Order
+                           -- Дата/время отгрузки
+                         , tmpDataUnion.OperDate_CarInfo
+                           -- Дата смены
+                         , tmpDataUnion.OperDate_CarInfo_date
+                           --
                          , tmpDataUnion.InvNumber_Order
                          , tmpDataUnion.InvNumberPartner_Order
                          , tmpDataUnion.FromId
@@ -660,6 +744,11 @@ BEGIN
                        , tmpDataUnion.MovementId_Order
                        , tmpDataUnion.OperDate_Order
                        , tmpDataUnion.OperDatePartner_Order
+                         -- Дата/время отгрузки
+                       , tmpDataUnion.OperDate_CarInfo
+                         -- Дата смены
+                       , tmpDataUnion.OperDate_CarInfo_date
+                         --
                        , tmpDataUnion.InvNumber_Order
                        , tmpDataUnion.InvNumberPartner_Order
 
@@ -701,8 +790,13 @@ BEGIN
                   FROM tmpData1 AS tmpDataUnion
                   )
 
-    , tmpData_All_1 AS (SELECT tmp.OperDate_Order
+  , tmpData_All_1 AS (SELECT tmp.OperDate_Order
                            , tmp.OperDatePartner_Order
+                             -- Дата/время отгрузки
+                           , tmp.OperDate_CarInfo
+                             -- Дата смены
+                           , tmp.OperDate_CarInfo_date
+                             --
                            , tmp.OperDate_Sale
                            , tmp.OperDatePartner_Sale
                            , tmp.InvNumber_Sale
@@ -722,6 +816,7 @@ BEGIN
                            , tmp.Amount_Weight2
                            , tmp.Amount_Sh2
                            , tmp.Amount_Weight_Itog
+                           , tmp.TotalAmount_Weight
                            , tmp.Amount_Sh_Itog
                            , tmp.Amount_Weight_Dozakaz
                            , tmp.Amount_Sh_Dozakaz
@@ -801,6 +896,11 @@ BEGIN
        SELECT
              tmpMovement.OperDate_Order        ::TDateTime    AS OperDate
            , tmpMovement.OperDatePartner_Order ::TDateTime    AS OperDatePartner
+             -- Дата/время отгрузки
+           , tmpMovement.OperDate_CarInfo      ::TDateTime    AS OperDate_CarInfo
+             -- Дата смены
+           , tmpMovement.OperDate_CarInfo_date ::TDateTime    AS OperDate_CarInfo_date
+             --
            , tmpMovement.OperDate_Sale         ::TDateTime 
            , tmpMovement.OperDatePartner_Sale  ::TDateTime 
            , tmpMovement.InvNumber_Sale         ::TVarChar     AS InvNumber
@@ -836,6 +936,7 @@ BEGIN
            , tmpMovement.Amount_Sh2              ::TFloat       AS Amount_Sh2
            , tmpMovement.Amount_Weight_Itog      ::TFloat       AS Amount_Weight_Itog
            , tmpMovement.Amount_Sh_Itog          ::TFloat       AS Amount_Sh_Itog
+           , tmpMovement.TotalAmount_Weight      ::TFloat       AS TotalAmount_Weight
 
            , tmpMovement.Amount_Weight_Dozakaz   ::TFloat       AS Amount_Weight_Dozakaz
            , tmpMovement.Amount_Sh_Dozakaz       ::TFloat       AS Amount_Sh_Dozakaz
@@ -947,4 +1048,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '06.08.2018', inEndDate:= '06.08.2018', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := True, inSession:= '2')
+-- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '06.08.2022', inEndDate:= '06.08.2022', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := True, inSession:= '2')

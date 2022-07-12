@@ -4,7 +4,6 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
   ClientWidth = 928
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -34
   ExplicitWidth = 944
   ExplicitHeight = 553
   PixelsPerInch = 96
@@ -246,6 +245,34 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
             HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
             Options.Editing = False
             Width = 100
+          end
+          object MovementItemId: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementItemId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object MovementId: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
         end
       end

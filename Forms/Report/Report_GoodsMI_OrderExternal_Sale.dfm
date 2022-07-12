@@ -4,6 +4,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   ClientWidth = 1092
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -198
   ExplicitWidth = 1108
   ExplicitHeight = 426
   PixelsPerInch = 96
@@ -182,6 +183,11 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Weight_Dozakaz_M
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = TotalAmount_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -343,6 +349,11 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Weight_Dozakaz_M
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalAmount_Weight
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -363,6 +374,20 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+          end
+          object OperDate_CarInfo: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'OperDate_CarInfo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object OperDate_CarInfo_date: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1089#1084#1077#1085#1072')'
+            DataBinding.FieldName = 'OperDate_CarInfo_date'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object InvNumberOrderPartner: TcxGridDBColumn
             Caption = #8470' '#1079#1072#1082#1072#1079#1072' ('#1087#1086#1082'.'#1089#1077#1090#1080')'
@@ -517,6 +542,16 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object TotalAmount_Weight: TcxGridDBColumn
+            Caption = #1047#1072#1082#1072#1079' + '#1044#1086#1079#1072#1082#1072#1079' '#1080#1090#1086#1075', '#1082#1075
+            DataBinding.FieldName = 'TotalAmount_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
           end
           object AmountSale_Weight: TcxGridDBColumn
             Caption = #1054#1090#1075#1088#1091#1079#1082#1072', '#1074#1077#1089' ('#1089#1082#1083#1072#1076')'

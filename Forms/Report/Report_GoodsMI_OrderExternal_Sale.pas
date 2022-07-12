@@ -116,6 +116,9 @@ type
     AmountSale_Weight_M: TcxGridDBColumn;
     Amount_Weight_M: TcxGridDBColumn;
     Amount_Weight_Dozakaz_M: TcxGridDBColumn;
+    OperDate_CarInfo: TcxGridDBColumn;
+    OperDate_CarInfo_date: TcxGridDBColumn;
+    TotalAmount_Weight: TcxGridDBColumn;
   private
     { Private declarations }
   public
