@@ -841,6 +841,15 @@ BEGIN
                , _tmpRemainsSumm.InfoMoneyDestinationId
                 ;
 
+     -- Проверка
+     IF vbUserId = 5 AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Admin  =  <%> <%> ', vbIsGoodsGroup
+                        , (select _tmpRemainsCount.OperCount from _tmpRemainsCount  where _tmpRemainsCount.GoodsId = 2318)
+                         ;
+     END IF;
+
+
      -- формируем новые элементы документа (MovementItem) для тех товаров, по которым есть расчетный остаток но они не введены в документ (ContainerId_Goods=0, значит по переучету остаток = 0 и они не вводились)
      UPDATE _tmpRemainsCount SET MovementItemId = lpInsertUpdate_MovementItem (ioId         := 0
                                                                              , inDescId     := zc_MI_Master()
