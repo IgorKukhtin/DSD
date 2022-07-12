@@ -1983,6 +1983,15 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_UserByGroupList_UserByGroup', 'Группировка пользователя', zc_Object_UserByGroupList(), zc_Object_UserByGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UserByGroupList_UserByGroup');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderCarInfo_Route() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderCarInfo_Route'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderCarInfo_Route', 'Маршрут', zc_Object_OrderCarInfo(), zc_Object_Route() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderCarInfo_Route');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderCarInfo_Retail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderCarInfo_Retail'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderCarInfo_Retail', 'Торговая сеть', zc_Object_OrderCarInfo(), zc_Object_Retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderCarInfo_Retail');
+
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_NDSKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_NDSKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -2806,6 +2815,8 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 12.07.22         * zc_ObjectLink_OrderCarInfo_Route 
+                    zc_ObjectLink_OrderCarInfo_Retail
  07.06.22         * zc_ObjectLink_GoodsByGoodsKind_GoodsSub_Br
                     zc_ObjectLink_GoodsByGoodsKind_GoodsKindSubSend_Br
  20.05.22                                                                                      * zc_ObjectLink_DiffKindPrice_DiffKind, zc_ObjectLink_MCRequestItem_MCRequest
