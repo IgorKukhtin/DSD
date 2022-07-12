@@ -240,7 +240,7 @@ BEGIN
                               -- Итого не хватает для резерва, вес
                             , SUM ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
                                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
-                                 - COALESCE (tmpMI_Child.Amount_Weight, 0)
+                                 - COALESCE (tmpMI_Child.Amount_all_Weight, 0)
                                   ) AS AmountWeight_diff
 
                        FROM tmpMovementAll AS Movement
