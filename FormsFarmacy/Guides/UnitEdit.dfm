@@ -161,7 +161,7 @@
     Width = 489
     Height = 409
     TabOrder = 18
-    Properties.ActivePage = cxTabSheet1
+    Properties.ActivePage = cxTabSheet3
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 409
     ClientRectRight = 489

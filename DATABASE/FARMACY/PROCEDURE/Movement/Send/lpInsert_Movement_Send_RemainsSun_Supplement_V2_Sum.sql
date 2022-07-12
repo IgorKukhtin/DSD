@@ -404,6 +404,7 @@ BEGIN
         FROM Object_Goods_Retail
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                          AND Object_Goods_Main.isSupplementSUN2 = TRUE
+                                         AND Object_Goods_Main.isNOT_SUN_v2 = False
              LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
                                      ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
                                     AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()

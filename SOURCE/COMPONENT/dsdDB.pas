@@ -1161,7 +1161,13 @@ begin
            if VarIsNull(FValue) then
               FValue := '';
            (Component as TCustomGuides).TextValue := FValue;
-        end else
+        end else if LowerCase(ComponentItem) = 'disableguidesopen' then
+        begin
+           if VarIsNull(FValue) then
+              FValue := False;
+           (Component as TCustomGuides).DisableGuidesOpen := FValue
+        end
+        else
           if LowerCase(ComponentItem) = 'parentid' then
              (Component as TCustomGuides).ParentId := FValue
           else begin

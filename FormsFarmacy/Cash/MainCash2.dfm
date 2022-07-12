@@ -6450,6 +6450,17 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' Farmacy.exe'
       OnExecute = actDownloadFarmacyExecute
     end
+    object actChoiceGoodsFromRemains_1303: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303 '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084'-'#1091#1095#1072#1089#1090#1085#1080#1082#1072#1084
+      FormName = 'TChoiceGoodsFromRemains_1303Form'
+      FormNameParam.Value = 'TChoiceGoodsFromRemains_1303Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6693,6 +6704,9 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N13032: TMenuItem
         Action = actChoiceGoodsSPSearch_1303
+      end
+      object N13033: TMenuItem
+        Action = actChoiceGoodsFromRemains_1303
       end
     end
     object N47: TMenuItem

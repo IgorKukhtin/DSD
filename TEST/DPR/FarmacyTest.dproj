@@ -4434,6 +4434,10 @@
 				<Form>Report_Check_OrderFineForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\System\ChoiceGoodsFromRemains_1303.pas">
+				<Form>ChoiceGoodsFromRemains_1303Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
