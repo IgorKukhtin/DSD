@@ -169,7 +169,9 @@ BEGIN
      , tmpMovement AS (SELECT MIN (Movement.OperDate)             AS OperDate
                             , MovementLinkObject_Route.ObjectId   AS RouteId
                               --
-                            , CASE WHEN Object_From.DescId = zc_Object_Unit()
+                            , CASE WHEN Object_Route.Id IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
+                                        THEN Object_From.Id
+                                   WHEN Object_From.DescId = zc_Object_Unit()
                                         THEN Object_From.Id
                                    -- временно
                                    WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
@@ -246,7 +248,9 @@ BEGIN
                             LEFT JOIN tmpChild AS tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
 
                        GROUP BY MovementLinkObject_Route.ObjectId
-                              , CASE WHEN Object_From.DescId = zc_Object_Unit()
+                              , CASE WHEN Object_Route.Id IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
+                                          THEN Object_From.Id
+                                     WHEN Object_From.DescId = zc_Object_Unit()
                                           THEN Object_From.Id
                                      -- временно
                                      WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
@@ -286,7 +290,7 @@ BEGIN
               || CASE WHEN tmpMovement.EndWeighing IS NOT NULL
                        AND EXTRACT (DAY FROM tmpMovement.OperDate_CarInfo) <> EXTRACT (DAY FROM tmpMovement.EndWeighing)
                        AND (tmpMovement.OperDate_CarInfo < tmpMovement.EndWeighing
-                         OR 12 < EXTRACT (HOUR FROM tmpMovement.EndWeighing - tmpMovement.OperDate_CarInfo)
+                         OR 12 < EXTRACT (EPOCH FROM tmpMovement.EndWeighing - tmpMovement.OperDate_CarInfo) / 60 / 60
                            )
                       THEN '/'
                         || CASE WHEN EXTRACT (DAY   FROM tmpMovement.EndWeighing) < 10 THEN '0' ELSE '' END || EXTRACT (DAY   FROM tmpMovement.EndWeighing) :: TVarChar

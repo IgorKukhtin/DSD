@@ -132,7 +132,7 @@ BEGIN
                               , STRING_AGG (tmp.RouteName, CHR (13)) AS RouteName
                          FROM (SELECT DISTINCT
                                       tmpMovementAll.OperDate_CarInfo
-                                    , COALESCE (Object_Route.ValueData, Object_Retail.ValueData) AS RouteName
+                                    , COALESCE (Object_Route.ValueData, Object_Retail.ValueData, Object_Juridical.ValueData) AS RouteName
                                FROM tmpMovementAll
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                  ON MovementLinkObject_From.MovementId = tmpMovementAll.Id
@@ -140,6 +140,7 @@ BEGIN
                                     LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                          ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                                         AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                    LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
                                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                          ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                                         AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()

@@ -41,8 +41,8 @@ RETURNS TABLE (OperDate        TDateTime
              , EndWeighing          TDateTime
              , DayOfWeekName_StartW TVarChar
              , DayOfWeekName_EndW   TVarChar
-             , Hours_EndW           TFloat
-             , Hours_real           TFloat
+             , Hours_EndW           Integer
+             , Hours_real           Integer
 
                -- Резервы, вес
              , AmountWeight_child_one TFloat
@@ -194,7 +194,10 @@ BEGIN
                             , MovementDate_OperDatePartner.ValueData                   AS OperDatePartner
                             , Movement.ToId                                            AS ToId
                             , MovementLinkObject_Route.ObjectId                        AS RouteId
-                            , CASE WHEN Object_From.DescId = zc_Object_Unit()
+                            , CASE --
+                                   WHEN Object_Route.Id IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
+                                        THEN Object_From.Id
+                                   WHEN Object_From.DescId = zc_Object_Unit()
                                         THEN Object_From.Id
                                    -- временно
                                    WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
@@ -304,7 +307,9 @@ BEGIN
                                , MovementDate_OperDatePartner.ValueData
                                , Movement.ToId
                                , MovementLinkObject_Route.ObjectId
-                               , CASE WHEN Object_From.DescId = zc_Object_Unit()
+                               , CASE WHEN Object_Route.Id IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
+                                           THEN Object_From.Id
+                                      WHEN Object_From.DescId = zc_Object_Unit()
                                            THEN Object_From.Id
                                       -- временно
                                       WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
@@ -402,8 +407,8 @@ BEGIN
            , tmpWeekDay_StartW.DayOfWeekName ::TVarChar AS DayOfWeekName_StartW
            , tmpWeekDay_EndW.DayOfWeekName   ::TVarChar AS DayOfWeekName_EndW
            
-           , (EXTRACT (HOUR FROM tmpMovement.EndWeighing - tmpMovement.StartWeighing) )    ::TFloat AS Hours_EndW
-           , (EXTRACT (HOUR FROM tmpMovement.EndWeighing - tmpMovement.OperDate_CarInfo) ) ::TFloat AS Hours_real
+           , ((EXTRACT (EPOCH FROM tmpMovement.EndWeighing - tmpMovement.StartWeighing) )    / 60 / 60) ::Integer AS Hours_EndW
+           , ((EXTRACT (EPOCH FROM tmpMovement.EndWeighing - tmpMovement.OperDate_CarInfo) ) / 60 / 60) ::Integer AS Hours_real
 
              -- Резервы, вес
            , tmpMovement.AmountWeight_child_one   ::TFloat AS AmountWeight_child_one
