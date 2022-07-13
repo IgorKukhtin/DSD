@@ -4,7 +4,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   ClientWidth = 1092
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -198
   ExplicitWidth = 1108
   ExplicitHeight = 426
   PixelsPerInch = 96
@@ -369,11 +368,43 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderAlignmentVert = vaCenter
             Width = 57
           end
+          object DayOfWeekName: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'DayOfWeekName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Alignment.Horz = taCenter
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
+            Options.Editing = False
+            Width = 70
+          end
           object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1079#1072#1103#1074#1082#1072')'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+          end
+          object DayOfWeekName_Partner: TcxGridDBColumn
+            Caption = '***'#1044#1077#1085#1100' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'DayOfWeekName_Partner'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Alignment.Horz = taCenter
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1079#1072#1103#1074#1082#1072')'
+            Options.Editing = False
+            Width = 70
           end
           object OperDate_CarInfo: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088' '#1086#1090#1075#1088#1091#1079#1082#1080
@@ -382,11 +413,37 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object DayOfWeekName_CarInfo: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'DayOfWeekName_CarInfo'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Alignment.Horz = taCenter
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1092#1072#1082#1090
+            Options.Editing = False
+            Width = 70
+          end
           object OperDate_CarInfo_date: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1089#1084#1077#1085#1072')'
             DataBinding.FieldName = 'OperDate_CarInfo_date'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DayOfWeekName_CarInfo_date: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1089#1084#1077#1085#1072')'
+            DataBinding.FieldName = 'DayOfWeekName_CarInfo_date'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1092#1072#1082#1090' '#1076#1083#1103' '#1088#1072#1073#1086#1095#1072#1103' '#1089#1084#1077#1085#1072
+            Options.Editing = False
             Width = 80
           end
           object InvNumberOrderPartner: TcxGridDBColumn
