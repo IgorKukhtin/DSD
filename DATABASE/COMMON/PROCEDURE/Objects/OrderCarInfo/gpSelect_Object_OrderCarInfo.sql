@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_OrderCarInfo(
 RETURNS TABLE (Id Integer 
              , RouteId Integer, RouteCode Integer, RouteName TVarChar
              , RetailId Integer, RetailCode Integer, RetailName TVarChar
-             , OperDate TFloat, OperDatePartner TFloat, Days TFloat
+             , OperDate TVarChar, OperDatePartner TVarChar
+             , Days TFloat
              , Hour TFloat, Min TFloat
              , isErased boolean
              ) AS
@@ -34,8 +35,24 @@ BEGIN
            , Object_Retail.ObjectCode  AS RetailCode
            , Object_Retail.ValueData   AS RetailName 
 
-           , COALESCE (ObjectFloat_OperDate.ValueData,0)        :: TFloat  AS OperDate_num
-           , COALESCE (ObjectFloat_OperDatePartner.ValueData,0) :: TFloat  AS OperDatePartner_num 
+           , CASE WHEN COALESCE (ObjectFloat_OperDate.ValueData,0) = 1 THEN 'Ïí' 
+                  WHEN COALESCE (ObjectFloat_OperDate.ValueData,0) = 2 THEN 'Âò'
+                  WHEN COALESCE (ObjectFloat_OperDate.ValueData,0) = 3 THEN 'Ñð'
+                  WHEN COALESCE (ObjectFloat_OperDate.ValueData,0) = 4 THEN '×ò'
+                  WHEN COALESCE (ObjectFloat_OperDate.ValueData,0) = 5 THEN 'Ïò'
+                  WHEN COALESCE (ObjectFloat_OperDate.ValueData,0) = 6 THEN 'Ñá'
+                  WHEN COALESCE (ObjectFloat_OperDate.ValueData,0) = 7 THEN 'Âñ'
+                  ELSE '???' 
+             END    :: TVarChar AS OperDate
+           , CASE WHEN COALESCE (ObjectFloat_OperDatePartner.ValueData,0) = 1 THEN 'Ïí' 
+                  WHEN COALESCE (ObjectFloat_OperDatePartner.ValueData,0) = 2 THEN 'Âò'
+                  WHEN COALESCE (ObjectFloat_OperDatePartner.ValueData,0) = 3 THEN 'Ñð'
+                  WHEN COALESCE (ObjectFloat_OperDatePartner.ValueData,0) = 4 THEN '×ò'
+                  WHEN COALESCE (ObjectFloat_OperDatePartner.ValueData,0) = 5 THEN 'Ïò'
+                  WHEN COALESCE (ObjectFloat_OperDatePartner.ValueData,0) = 6 THEN 'Ñá'
+                  WHEN COALESCE (ObjectFloat_OperDatePartner.ValueData,0) = 7 THEN 'Âñ'
+                  ELSE '???' 
+             END    :: TVarChar AS OperDatePartner 
            , COALESCE (ObjectFloat_Days.ValueData,0)            :: TFloat  AS Days
            , COALESCE (ObjectFloat_Hour.ValueData,0)            :: TFloat  AS Hour
            , COALESCE (ObjectFloat_Min.ValueData,0)             :: TFloat  AS Min

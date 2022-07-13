@@ -202,10 +202,6 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSend_Weight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -382,10 +378,6 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSend_Weight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True

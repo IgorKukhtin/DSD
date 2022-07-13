@@ -24,13 +24,24 @@ BEGIN
                    INNER JOIN ObjectLink AS ObjectLink_Retail 
                                          ON ObjectLink_Retail.ObjectId = ObjectLink_Route.ObjectId
                                         AND ObjectLink_Retail.DescId = zc_ObjectLink_OrderCarInfo_Retail()
-                                        AND ObjectLink_Retail.ChildObjectId = inRetailId
+                                        AND ObjectLink_Retail.ChildObjectId = inRetailId 
+                   INNER JOIN ObjectFloat AS ObjectFloat_OperDate
+                                          ON ObjectFloat_OperDate.ObjectId = ObjectLink_Route.ObjectId
+                                         AND ObjectFloat_OperDate.DescId = zc_ObjectFloat_OrderCarInfo_OperDate()
+                                         AND COALESCE (ObjectFloat_OperDate.ValueData,0) = inOperDate
+                   INNER JOIN ObjectFloat AS ObjectFloat_OperDatePartner
+                                          ON ObjectFloat_OperDatePartner.ObjectId = ObjectLink_Route.ObjectId
+                                         AND ObjectFloat_OperDatePartner.DescId = zc_ObjectFloat_OrderCarInfo_OperDatePartner()
+                                         AND COALESCE (ObjectFloat_OperDatePartner.ValueData,0) = inOperDatePartner
               WHERE ObjectLink_Route.DescId = zc_ObjectLink_OrderCarInfo_Route()
                 AND ObjectLink_Route.ObjectId <> ioId
                 AND ObjectLink_Route.ChildObjectId = inRouteId
               )
    THEN
-        RAISE EXCEPTION 'Ошибка. Соотношение Маршрут <%> - Торг.сеть <%> уже существует.' , lfGet_Object_ValueData(inRouteId), lfGet_Object_ValueData(inRetailId);
+        RAISE EXCEPTION 'Ошибка. Соотношение Маршрут <%> - Торг.сеть <%>  День заказа <%> День тгрузки <%> уже существует.' , lfGet_Object_ValueData(inRouteId)
+                                                                                                                  , lfGet_Object_ValueData(inRetailId)
+                                                                                                                  , lfGet_Object_ValueData(inOperDate)
+                                                                                                                  , lfGet_Object_ValueData(inOperDatePartner);
    END IF;
 
 

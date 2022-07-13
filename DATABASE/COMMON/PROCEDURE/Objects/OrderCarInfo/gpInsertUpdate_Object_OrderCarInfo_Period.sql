@@ -110,11 +110,13 @@ BEGIN
     ;
    
    -- Сохраненные данные
-   CREATE TEMP TABLE _tmpOrderCarInfo (Id Integer, RouteId Integer, RetailId Integer) ON COMMIT DROP; 
-   INSERT INTO _tmpOrderCarInfo (Id, RouteId, RetailId)
+   CREATE TEMP TABLE _tmpOrderCarInfo (Id Integer, RouteId Integer, RetailId Integer, OperDate TFloat, OperDatePartner TFloat) ON COMMIT DROP; 
+   INSERT INTO _tmpOrderCarInfo (Id, RouteId, RetailId, OperDate, OperDatePartner)
     SELECT Object_OrderCarInfo.Id
          , OrderCarInfo_Route.ChildObjectId             AS RouteId
          , ObjectLink_OrderCarInfo_Retail.ChildObjectId AS RetailId
+         , COALESCE (ObjectFloat_OperDate.ValueData,0)        :: TFloat  AS OperDate
+         , COALESCE (ObjectFloat_OperDatePartner.ValueData,0) :: TFloat  AS OperDatePartner
     FROM Object AS Object_OrderCarInfo
         LEFT JOIN ObjectLink AS OrderCarInfo_Route
                              ON OrderCarInfo_Route.ObjectId = Object_OrderCarInfo.Id
@@ -123,6 +125,13 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_OrderCarInfo_Retail 
                              ON ObjectLink_OrderCarInfo_Retail.ObjectId = Object_OrderCarInfo.Id
                             AND ObjectLink_OrderCarInfo_Retail.DescId = zc_ObjectLink_OrderCarInfo_Retail()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_OperDate
+                              ON ObjectFloat_OperDate.ObjectId = Object_OrderCarInfo.Id
+                             AND ObjectFloat_OperDate.DescId = zc_ObjectFloat_OrderCarInfo_OperDate()
+        LEFT JOIN ObjectFloat AS ObjectFloat_OperDatePartner
+                              ON ObjectFloat_OperDatePartner.ObjectId = Object_OrderCarInfo.Id
+                             AND ObjectFloat_OperDatePartner.DescId = zc_ObjectFloat_OrderCarInfo_OperDatePartner()
 
     WHERE Object_OrderCarInfo.DescId = zc_Object_OrderCarInfo()
       AND Object_OrderCarInfo.isErased = FALSE
@@ -142,6 +151,8 @@ BEGIN
    FROM _tmpData 
        LEFT JOIN _tmpOrderCarInfo ON _tmpOrderCarInfo.RouteId = _tmpData.RouteId
                                  AND _tmpOrderCarInfo.RetailId = _tmpData.RetailId
+                                 AND _tmpOrderCarInfo.OperDate = _tmpData.OperDate
+                                 AND _tmpOrderCarInfo.OperDatePartner = _tmpData.OperDatePartner
   ;
   
 END;
