@@ -40,8 +40,8 @@ BEGIN
    THEN
         RAISE EXCEPTION 'Ошибка. Соотношение Маршрут <%> - Торг.сеть <%>  День заказа <%> День тгрузки <%> уже существует.' , lfGet_Object_ValueData(inRouteId)
                                                                                                                   , lfGet_Object_ValueData(inRetailId)
-                                                                                                                  , lfGet_Object_ValueData(inOperDate)
-                                                                                                                  , lfGet_Object_ValueData(inOperDatePartner);
+                                                                                                                  , (inOperDate)
+                                                                                                                  , (inOperDatePartner);
    END IF;
 
 
