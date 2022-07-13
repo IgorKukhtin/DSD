@@ -78,7 +78,7 @@ BEGIN
                           WHERE Movement.OperDate = inOperDate
                             AND Movement.StatusId = zc_Enum_Status_Complete()
                             AND Movement.DescId = zc_Movement_OrderExternal()
-                            AND (inRetailId = CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0) END
+                            AND (inRetailId = CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, Object_From.Id) END
                               OR COALESCE (inRetailId, 0) = 0
                                 )
                             AND COALESCE (MovementLinkObject_Route.ObjectId, 0) = inRouteId
