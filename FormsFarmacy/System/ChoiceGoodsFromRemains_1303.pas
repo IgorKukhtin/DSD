@@ -40,19 +40,11 @@ type
     cxLabel2: TcxLabel;
     edGoodsSearch: TcxTextEdit;
     cxLabel4: TcxLabel;
-    AreaName: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     FormParams: TdsdFormParams;
-    colDailyCheck: TcxGridDBColumn;
-    colDailySale: TcxGridDBColumn;
     colColor_calc: TcxGridDBColumn;
-    colDeferredSend: TcxGridDBColumn;
-    colDeferredSendIn: TcxGridDBColumn;
-    RetailName: TcxGridDBColumn;
-    colPriceSite: TcxGridDBColumn;
     bbUpdate_PriceSale: TdxBarButton;
     DateChange: TcxGridDBColumn;
-    DateChangeSite: TcxGridDBColumn;
     edPartnerMedical: TcxButtonEdit;
     cxLabel19: TcxLabel;
     GuidesPartnerMedical: TdsdGuides;
@@ -63,6 +55,8 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     colPrice_min: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    colPriceSaleIncome: TcxGridDBColumn;
+    colPrice_min_NDS: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -296,7 +296,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Position.RowIndex = 0
           end
           object SummaOrderConfirmation: TcxGridDBBandedColumn
-            Caption = #1064#1090#1088#1072#1092' '#1079#1072' '#1085#1077#1089#1086#1074#1088'. '#1087#1086#1076#1090#1074#1077#1088'. '#1079#1072#1082#1072#1079#1086#1074
+            Caption = #1064#1090#1088#1072#1092' '#1079#1072' '#1085#1077#1089#1086#1074#1088'. '#1087#1086#1076#1090#1074#1077#1088'. '#1079#1072#1082#1072#1079#1086#1074' ('#1086#1079#1085#1072#1082#1086#1084'.)'
             DataBinding.FieldName = 'SummaOrderConfirmation'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
