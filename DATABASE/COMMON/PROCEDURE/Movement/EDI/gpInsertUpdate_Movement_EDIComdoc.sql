@@ -11,13 +11,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inOperDateTax         TDateTime , -- Дата налоговой накладной у контрагента (привязка возврата)
     IN inInvNumberSaleLink   TVarChar  , -- Номер накладной продажи контрагенту (привязка возврата) + добавлен для продажи т.к. могут быть две заявки с одинаковым номером
     IN inOperDateSaleLink    TDateTime , -- Дата накладной продажи контрагенту (привязка возврата)
-    IN inOKPO                TVarChar  , -- 
+    IN inOKPO                TVarChar  , --
     IN inJurIdicalName       TVarChar  , --
     IN inDesc                TVarChar  , -- тип документа
     IN inGLNPlace            TVarChar  , -- Код GLN - место доставки
     IN inComDocDate          TDateTime , -- Дата заявки контрагента
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS TABLE (MovementId Integer, GoodsPropertyId Integer) -- Классификатор товаров
 AS
 $BODY$
@@ -31,6 +31,37 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDIComdoc());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     IF vbUserId = 5 AND 1=0
+     THEN
+         RAISE EXCEPTION 'test параметр.<%> inOrderInvNumber      = <%>
+                                        <%> inOrderOperDate       = <%>
+                                        <%> inPartnerInvNumber    = <%>
+                                        <%> inPartnerOperDate     = <%>
+                                        <%> inInvNumberTax        = <%>
+                                        <%> inOperDateTax         = <%>
+                                        <%> inInvNumberSaleLink   = <%>
+                                        <%> inOperDateSaleLink    = <%>
+                                        <%> inOKPO                = <%>
+                                        <%> inJurIdicalName       = <%>
+                                        <%> inDesc                = <%>
+                                        <%> inGLNPlace            = <%>
+                                        <%> inComDocDate          = <%>'
+                                 , CHR (13), inOrderInvNumber
+                                 , CHR (13), inOrderOperDate
+                                 , CHR (13), inPartnerInvNumber
+                                 , CHR (13), inPartnerOperDate
+                                 , CHR (13), inInvNumberTax
+                                 , CHR (13), inOperDateTax
+                                 , CHR (13), inInvNumberSaleLink
+                                 , CHR (13), inOperDateSaleLink
+                                 , CHR (13), inOKPO
+                                 , CHR (13), inJurIdicalName
+                                 , CHR (13), inDesc
+                                 , CHR (13), inGLNPlace
+                                 , CHR (13), inComDocDate;
+     END IF;
+                                           
 
      -- Меняем параметр
      inGLNPlace:= TRIM (inGLNPlace);
@@ -105,7 +136,30 @@ BEGIN
                    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale()));
               END IF;
 
-         ELSE
+         ELSEIF inOrderInvNumber <> ''
+         THEN
+              IF vbUserId = 5 
+                 AND 1 < (SELECT COUNT(*)
+                              FROM Movement
+                                   INNER JOIN MovementString AS MovementString_OKPO
+                                                             ON MovementString_OKPO.MovementId =  Movement.Id
+                                                            AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+                                                            AND MovementString_OKPO.ValueData = inOKPO
+                                   INNER JOIN MovementString AS MovementString_MovementDesc
+                                                             ON MovementString_MovementDesc.MovementId =  Movement.Id
+                                                            AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
+                                                            AND MovementString_MovementDesc.ValueData IN (inDesc, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal()))
+                              WHERE Movement.DescId = zc_Movement_EDI()
+                                AND Movement.InvNumber = inOrderInvNumber
+                                AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                         )
+              THEN
+                   RAISE EXCEPTION 'Ошибка.inOKPO = <%> %<%>%<%>.'
+                                  , inOKPO
+                                  , CHR (13), inOrderInvNumber
+                                  , CHR (13), inDesc
+                                   ;
+              END IF;
               -- !!!так для продажи!!! + !!!НЕ важна точка доставки!!!
               vbMovementId:= (SELECT Movement.Id
                               FROM Movement
@@ -221,7 +275,7 @@ BEGIN
      PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, vbIsInsert);
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
      SELECT vbMovementId, vbGoodsPropertyId;
 
 END;
@@ -231,7 +285,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 16.04.15                         * 
+ 16.04.15                         *
  02.04.15                                        * add inGLNPlace
  07.08.14                                        * add calc inDesc
  07.08.14                                        * add inPartnerInvNumber := inPartnerInvNumber

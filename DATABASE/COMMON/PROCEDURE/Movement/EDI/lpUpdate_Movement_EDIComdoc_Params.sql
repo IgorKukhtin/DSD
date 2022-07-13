@@ -52,8 +52,35 @@ BEGIN
          END IF;
 
          -- временно заливаем, для предыдущих документов
-         IF COALESCE (vbGLNPlace, '') = ''
+         IF COALESCE (vbGLNPlace, '') = '' AND inOrderInvNumber <> ''
          THEN
+             IF inUserId = 5 
+                AND 1 < (SELECT COUNT(*)
+                         FROM MovementString AS MovementString_InvNumberOrder
+                              INNER JOIN MovementDate AS MovementDate_OperDatePartner
+                                                      ON MovementDate_OperDatePartner.MovementId =  MovementString_InvNumberOrder.MovementId
+                                                     AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                                     AND MovementDate_OperDatePartner.ValueData BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                              INNER JOIN Movement ON Movement.Id = MovementString_InvNumberOrder.MovementId
+                                                 AND Movement.StatusId = zc_Enum_Status_Complete() -- <> zc_Enum_Status_Erased()
+                                                 AND Movement.DescId = zc_Movement_Sale()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                              INNER JOIN ObjectString ON ObjectString.ObjectId = MovementLinkObject_To.ObjectId
+                                                     AND ObjectString.DescId = zc_ObjectString_Partner_GLNCode()
+                                                     AND ObjectString.ValueData <> ''
+                         WHERE MovementString_InvNumberOrder.ValueData = inOrderInvNumber
+                           AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+                        )
+             THEN
+                  RAISE EXCEPTION 'Ошибка.vbGLNPlace = <%> %<%> %<%>.'
+                                 , vbGLNPlace
+                                 , CHR (13), inOrderInvNumber
+                                 , CHR (13), inPartnerOperDate
+                                  ;
+             END IF;
+
              -- Поиск GLN точки доставки из документа продажи
              vbGLNPlace:= (SELECT ObjectString.ValueData
                            FROM MovementString AS MovementString_InvNumberOrder
