@@ -964,6 +964,8 @@ type
     N357: TMenuItem;
     actChoiceGoodsSPSearch_1303: TdsdOpenForm;
     N13035: TMenuItem;
+    actChoiceGoodsFromRemains_1303: TdsdOpenForm;
+    N13036: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

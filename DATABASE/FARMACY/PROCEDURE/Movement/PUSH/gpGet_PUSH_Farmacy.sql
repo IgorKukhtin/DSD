@@ -505,22 +505,6 @@ BEGIN
       (DATE_PART('HOUR', CURRENT_TIME)::Integer IN (10, 16) AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 00 AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20))
    THEN
 
-     SELECT string_agg('Юр. лицо: '||T1.JuridicalName||CHR(13)||'Поставщик: '||T1.FromName||CHR(13)||'Сумма: '||zfConvert_FloatToString(T1.Summa), CHR(13)||CHR(13))
-     INTO vbText
-     FROM gpSelect_Calculation_PartialSale (CURRENT_DATE, inSession) AS T1;
-
-     IF COALESCE (vbText, '') <> ''
-     THEN
-       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
-       VALUES (13, 'По состоянию на '||zfConvert_DateToString (CURRENT_DATE)||' возможна оплата частями:'||CHR(13)||CHR(13)||vbText,
-                   'TCalculationPartialSaleForm', 'Формирование измения долга', 'OperDate', 'ftDateTime',
-                   CURRENT_DATE::TVarChar);
-     END IF;
-   END IF;
-
-/*   IF vbUserId = 3
-   THEN
-
      SELECT string_agg(T1.JuridicalName||CHR(13)||T1.FromName||CHR(13)||T1.Summa::Text, CHR(13))
      INTO vbText
      FROM gpSelect_Calculation_PartialSale (CURRENT_DATE, inSession) AS T1;
@@ -534,7 +518,7 @@ BEGIN
                    'Юр. лицо'||CHR(13)||'Поставщик'||CHR(13)||'Сумма'||
                    CHR(13)||vbText);
      END IF;
-   END IF;*/
+   END IF;
 
 /*   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PharmacyManager()))
       AND DATE_PART('DOW', CURRENT_DATE)::Integer in (2, 5)
@@ -1115,4 +1099,4 @@ LANGUAGE plpgsql VOLATILE;
 -- тест
 -- SELECT * FROM gpGet_PUSH_Farmacy('12198759')
 -- 
-SELECT * FROM gpGet_PUSH_Farmacy(1, '3')
+SELECT * FROM gpGet_PUSH_Farmacy(1, '4183126')

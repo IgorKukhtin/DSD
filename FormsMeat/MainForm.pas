@@ -1394,6 +1394,8 @@ type
     miReport_SaleTare_Gofro: TMenuItem;
     actReport_MIProtocolUpdate: TdsdOpenForm;
     miReport_MIProtocolUpdate: TMenuItem;
+    actOrderCarInfo: TdsdOpenForm;
+    N58: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

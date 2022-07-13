@@ -493,6 +493,7 @@ BEGIN
         FROM Object_Goods_Retail
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                          AND Object_Goods_Main.isSupplementSUN1 = TRUE
+                                         AND Object_Goods_Main.isNot = FALSE
              LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Object_Goods_Retail.ID
              LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
                                      ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId

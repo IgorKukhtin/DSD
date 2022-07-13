@@ -1182,6 +1182,28 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_ObjectCode_Basis() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_ObjectCode_Basis', zc_Object_Goods(), 'Код АЛАН' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ObjectCode_Basis');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_OrderCarInfo_OperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderCarInfo_OperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_OrderCarInfo_OperDate', zc_Object_OrderCarInfo(), 'День недели заказ' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderCarInfo_OperDate');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_OrderCarInfo_OperDatePartner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderCarInfo_OperDatePartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_OrderCarInfo_OperDatePartner', zc_Object_OrderCarInfo(), 'День отгрузка контрагенту' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderCarInfo_OperDatePartner');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_OrderCarInfo_Days() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderCarInfo_Days'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_OrderCarInfo_Days', zc_Object_OrderCarInfo(), 'Изменение в днях для дата/время отгрузки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderCarInfo_Days');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_OrderCarInfo_Hour() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderCarInfo_Hour'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_OrderCarInfo_Hour', zc_Object_OrderCarInfo(), 'Часы, Время отгрузки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderCarInfo_Hour');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_OrderCarInfo_Min() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderCarInfo_Min'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_OrderCarInfo_Min', zc_Object_OrderCarInfo(), 'Минуты, Время отгрузки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderCarInfo_Min');
+
+
+
 
      
  
@@ -2297,6 +2319,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 12.07.22         * zc_ObjectFloat_OrderCarInfo_...
  04.07.22                                                                                      * zc_ObjectFloat_CashSettings_DeviationsPrice1303
  20.06.22                                                                                      * zc_ObjectFloat_CashSettings_MinPriceSale
  15.06.22                                                                                      * zc_ObjectFloat_CashSettings_PriceFormSendVIP

@@ -558,6 +558,12 @@ BEGIN
                                       )
                                   AND vbisEliminateColdSUN = TRUE
                                )
+          -- отбросили !!НОТ!!
+        , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
+                           FROM ObjectBoolean AS OB_Goods_NOT
+                           WHERE OB_Goods_NOT.DescId   = zc_ObjectBoolean_Goods_NOT_Sun_v2()
+                             AND OB_Goods_NOT.ValueData = TRUE
+                          )
         , tmpRemains AS (SELECT Container.WhereObjectId AS UnitId
                               , Container.ObjectId      AS GoodsId
                               , SUM (COALESCE (tmpRemainsPD.Amount, Container.Amount, 0))                              AS Amount
@@ -598,6 +604,9 @@ BEGIN
                               -- а здесь, отбросили !!холод!!
                               LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = Container.ObjectId
                              
+                              -- а здесь, отбросили !!НОТ!!
+                              LEFT JOIN tmpGoods_NOT ON tmpGoods_NOT.ObjectId = Container.ObjectId
+
                               -- найдем дисконтній товар
                               LEFT JOIN _tmpGoods_DiscountExternal_Supplement_v2 AS _tmpGoods_DiscountExternal
                                                                                  ON _tmpGoods_DiscountExternal.UnitId  = Container.WhereObjectId
@@ -608,6 +617,8 @@ BEGIN
                            AND COALESCE (_tmpGoods_TP_exception_Supplement_V2.GoodsId, 0) = 0
                            AND tmpConditionsKeep.ObjectId IS NULL
                            AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+                           -- отбросили !!НОТ!!
+                           AND tmpGoods_NOT.ObjectId IS NULL
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
                         )

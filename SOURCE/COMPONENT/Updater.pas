@@ -17,7 +17,7 @@ type
      class procedure AutomaticUpdateProgram;
      class procedure AutomaticUpdateProgramStart;
      class procedure AutomaticUpdateRecoveryFarmacy;
-     class procedure AutomaticDownloadFarmacy;
+     class procedure AutomaticDownloadFarmacy(APath : string);
      class function AutomaticUpdateProgramTestStart : boolean;
   end;
 
@@ -703,21 +703,20 @@ begin
 
 end;
 
-class procedure TUpdater.AutomaticDownloadFarmacy;
-var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
+class procedure TUpdater.AutomaticDownloadFarmacy(APath : string);
 begin
 
-  if not FileExists(ExtractFilePath(ParamStr(0)) + 'Farmacy.exe') then
+  if not FileExists(APath + 'Farmacy.exe') then
   begin
-    FileWriteString(ExtractFilePath(ParamStr(0)) + 'Farmacy.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('Farmacy.exe'),
-      GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'Farmacy.exe', '')));
+    FileWriteString(APath + 'Farmacy.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('Farmacy.exe'),
+      GetBinaryPlatfotmSuffics(APath + 'Farmacy.exe', '')));
     ShowMessage('Файл Farmacy.exe загружен.');
   end;
 
   // Востановление ярлыка Farmacy.exe
   if not FileExists(GetSpecialFolderPath(CSIDL_DESKTOP) + '\Farmacy.exe.lnk') then
   begin
-    CreateShortCut(GetSpecialFolderPath(CSIDL_DESKTOP) + '\Farmacy.exe.lnk', '', ExtractFilePath(ParamStr(0)) + 'Farmacy.exe');
+    CreateShortCut(GetSpecialFolderPath(CSIDL_DESKTOP) + '\Farmacy.exe.lnk', '', APath + 'Farmacy.exe');
   end;
 
 end;

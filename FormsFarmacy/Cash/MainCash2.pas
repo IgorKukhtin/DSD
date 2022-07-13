@@ -622,6 +622,8 @@ type
     N13032: TMenuItem;
     actDownloadFarmacy: TAction;
     Farmacyexe1: TMenuItem;
+    actChoiceGoodsFromRemains_1303: TdsdOpenForm;
+    N13033: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -7225,8 +7227,17 @@ begin
 end;
 
 procedure TMainCashForm2.actDownloadFarmacyExecute(Sender: TObject);
+var Path : string;
 begin
-  TUpdater.AutomaticDownloadFarmacy;
+  Path := ExpandFileName('..\..\Project\Bin\');
+
+  if not TDirectory.Exists(Path) then
+  begin
+    ShowMessage('Проверьте путь ' + Path + 'Farmacy.exe.');
+    Exit;
+  end;
+
+  TUpdater.AutomaticDownloadFarmacy(Path);
 end;
 
 procedure TMainCashForm2.actUpdateProgramExecute(Sender: TObject);

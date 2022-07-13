@@ -41,7 +41,7 @@ BEGIN
                                                     ON MovementDate_Insert.MovementId = Movement.Id
                                                    AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
                        WHERE Movement.DescId = zc_Movement_Send()
-                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                         AND Movement.StatusId <> zc_Enum_Status_UnComplete()
                          AND Movement.OperDate >= '01.03.2021'
                          AND Movement.OperDate < vbOperDate + INTERVAL '7 DAY')
      , tmpResult AS (SELECT Movement.ID                                                                    AS ID

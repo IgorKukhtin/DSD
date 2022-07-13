@@ -60,8 +60,9 @@ RETURNS TABLE (MovementId             Integer
              , Amount_Weight2 TFloat, Amount_Sh2 TFloat
              , Amount_Weight_Dozakaz1 TFloat, Amount_Sh_Dozakaz1 TFloat
              , Amount_Weight_Dozakaz2 TFloat, Amount_Sh_Dozakaz2 TFloat
+
              , Amount TFloat, AmountZakaz TFloat, AmountSecond1 TFloat, AmountSecond2 TFloat
-             , Amount_Weight TFloat, AmountZakaz_Weight TFloat, Amount_Sh TFloat, AmountZakaz_Sh TFloat
+             , TotalAmount_Weight TFloat, AmountZakaz_Weight TFloat, Amount_Sh TFloat, AmountZakaz_Sh TFloat
 
              , Amount_WeightSK TFloat
              
@@ -110,7 +111,13 @@ RETURNS TABLE (MovementId             Integer
              , CodeSticker TVarChar
 
              , CarInfoName  TVarChar
-             , OperDate_CarInfo TDateTime 
+             , OperDate_CarInfo TDateTime, OperDate_CarInfo_date TDateTime 
+
+             , DayOfWeekName              TVarChar
+             , DayOfWeekName_Partner      TVarChar
+             , DayOfWeekName_CarInfo      TVarChar
+             , DayOfWeekName_CarInfo_date TVarChar
+
              , GoodsSubSendId       Integer
              , GoodsSubSendCode     Integer
              , GoodsSubSendName     TVarChar
@@ -441,7 +448,13 @@ BEGIN
                              , CASE WHEN inIsRemains = FALSE THEN zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)  ELSE 0 END     AS GoodsPropertyId_basis 
 
                              , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_CarInfo.ObjectId  ELSE 0 END           AS CarInfoId
-                             , CASE WHEN inIsRemains = FALSE THEN MovementDate_CarInfo.ValueData  ELSE NULL END    ::TDateTime AS OperDate_CarInfo 
+                             , CASE WHEN inIsRemains = FALSE THEN MovementDate_CarInfo.ValueData  ELSE NULL END    ::TDateTime AS OperDate_CarInfo
+                             -- Дата смены
+                             , CASE WHEN inIsRemains = FALSE THEN CASE WHEN EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) < 8 THEN DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData) - INTERVAL '1 DAY'
+                                                                       ELSE DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
+                                                                  END
+                                    ELSE NULL
+                               END    ::TDateTime  AS OperDate_CarInfo_date 
                              
                         FROM Movement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -592,10 +605,15 @@ BEGIN
                               END
                             , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30102(), zc_Enum_InfoMoney_30103()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END
                             , CASE WHEN inIsRemains = FALSE THEN zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId), COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId))  ELSE 0 END
-                             , CASE WHEN inIsRemains = FALSE THEN zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)  ELSE 0 END 
+                            , CASE WHEN inIsRemains = FALSE THEN zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)  ELSE 0 END 
 
-                             , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_CarInfo.ObjectId  ELSE 0 END
-                             , CASE WHEN inIsRemains = FALSE THEN MovementDate_CarInfo.ValueData  ELSE NULL END
+                            , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_CarInfo.ObjectId  ELSE 0 END
+                            , CASE WHEN inIsRemains = FALSE THEN MovementDate_CarInfo.ValueData  ELSE NULL END
+                            , CASE WHEN inIsRemains = FALSE THEN CASE WHEN EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) < 8 THEN DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData) - INTERVAL '1 DAY'
+                                                                      ELSE DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
+                                                                 END
+                                   ELSE NULL
+                              END
                           )
 
      , tmpMovement AS (SELECT tmpMovement2.MovementId
@@ -618,6 +636,7 @@ BEGIN
                             , tmpMovement2.GoodsPropertyId_basis
                             , tmpMovement2.CarInfoId
                             , tmpMovement2.OperDate_CarInfo
+                            , tmpMovement2.OperDate_CarInfo_date
                 
                             , SUM (Amount1 + Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2) AS Amount
                             , SUM (Amount1 + Amount2 )                                AS AmountZakaz
@@ -690,6 +709,7 @@ BEGIN
                               , tmpMovement2.GoodsPropertyId_basis
                               , tmpMovement2.CarInfoId
                               , tmpMovement2.OperDate_CarInfo
+                              , tmpMovement2.OperDate_CarInfo_date
                       )
 
      -- выбираем для заказов документы продажи и перемещения по цене 
@@ -958,7 +978,7 @@ BEGIN
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountSecond1 ELSE 0 END                    :: TFloat AS AmountSecond1
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountSecond2 ELSE 0 END                    :: TFloat AS AmountSecond2
 
-           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2 + tmpMovement.AmountSecond_Weight1 + tmpMovement.AmountSecond_Weight2) ELSE 0 END :: TFloat AS Amount_Weight
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2 + tmpMovement.AmountSecond_Weight1 + tmpMovement.AmountSecond_Weight2) ELSE 0 END :: TFloat AS TotalAmount_Weight
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2) ELSE 0 END                                                                       :: TFloat AS AmountZakaz_Weight  -- вес без дозаказа
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Sh1 + tmpMovement.Amount_Sh2 + tmpMovement.AmountSecond_Sh1 + tmpMovement.AmountSecond_Sh2) ELSE 0 END                 :: TFloat AS Amount_Sh
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Sh1 + tmpMovement.Amount_Sh2) ELSE 0 END                                                                               :: TFloat AS AmountZakaz_Sh      -- шт без дозаказа
@@ -1034,9 +1054,15 @@ BEGIN
            --временно классификатор Алан
            , tmpObject_GoodsPropertyValue_basis.CodeSticker  ::TVarChar AS CodeSticker 
 
-           , Object_CarInfo.ValueData      ::TVarChar   AS CarInfoName
-           , tmpMovement.OperDate_CarInfo  ::TDateTime  AS OperDate_CarInfo 
-           
+           , Object_CarInfo.ValueData           ::TVarChar   AS CarInfoName
+           , tmpMovement.OperDate_CarInfo       ::TDateTime  AS OperDate_CarInfo 
+           , tmpMovement.OperDate_CarInfo_date  ::TDateTime  AS OperDate_CarInfo_date
+
+           , tmpWeekDay.DayOfWeekName                   ::TVarChar AS DayOfWeekName
+           , tmpWeekDay_Partner.DayOfWeekName           ::TVarChar AS DayOfWeekName_Partner
+           , tmpWeekDay_CarInfo.DayOfWeekName           ::TVarChar AS DayOfWeekName_CarInfo
+           , tmpWeekDay_CarInfo_date.DayOfWeekName      ::TVarChar AS DayOfWeekName_CarInfo_date
+
            , tmpGoodsByGoodsKindParam.GoodsSubSendId       ::Integer
            , tmpGoodsByGoodsKindParam.GoodsSubSendCode     ::Integer
            , tmpGoodsByGoodsKindParam.GoodsSubSendName     ::TVarChar
@@ -1130,6 +1156,11 @@ BEGIN
 
           LEFT JOIN tmpGoodsByGoodsKindParam ON tmpGoodsByGoodsKindParam.GoodsId = tmpMovement.GoodsId
                                             AND COALESCE (tmpGoodsByGoodsKindParam.GoodsKindId, 0) = COALESCE (tmpMovement.GoodsKindId, 0)
+
+          LEFT JOIN zfCalc_DayOfWeekName (Movement.OperDate) AS tmpWeekDay ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner_order) AS tmpWeekDay_Partner ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo) AS tmpWeekDay_CarInfo ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo_date) AS tmpWeekDay_CarInfo_date ON 1=1
 
          ;
 

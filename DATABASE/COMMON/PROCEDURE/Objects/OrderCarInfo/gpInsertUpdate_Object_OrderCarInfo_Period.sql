@@ -1,0 +1,158 @@
+-- Function: gpInsertUpdate_Object_OrderCarInfo_Period ()
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderCarInfo_Period (TDateTime, TDateTime, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderCarInfo_Period(
+      IN inStartDate             TDateTime, 
+      IN inEndDate               TDateTime, 
+      IN inSession               TVarChar
+)
+RETURNS VOID
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_OrderCarInfo());
+   vbUserId:= lpGetUserBySession (inSession);
+    
+   CREATE TEMP TABLE _tmpData (RouteId Integer, RetailId Integer, OperDate TFloat, OperDatePartner TFloat, Days TFloat, Hour TFloat, Min TFloat) ON COMMIT DROP;   
+   INSERT INTO _tmpData (RouteId, RetailId, OperDate, OperDatePartner, Days, Hour, Min)
+   WITH
+       tmpMovementAll AS (SELECT Movement.*
+                                 -- Дата/время отгрузки
+                               , MovementDate_CarInfo.ValueData AS OperDate_CarInfo
+                                 -- Дата смены
+                               , CASE WHEN EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) < 8 THEN DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData) - INTERVAL '1 DAY'
+                                      ELSE DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
+                                 END  AS OperDate_CarInfo_date
+                          FROM Movement
+                               LEFT JOIN MovementDate AS MovementDate_CarInfo
+                                                      ON MovementDate_CarInfo.MovementId = Movement.Id
+                                                     AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
+                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                            AND Movement.DescId = zc_Movement_OrderExternal()
+                          )
+
+
+     , tmpMovement AS (SELECT DISTINCT
+                              Movement.OperDate
+                            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+
+                            , MovementLinkObject_Route.ObjectId                        AS RouteId
+                            , CASE WHEN Object_From.DescId = zc_Object_Unit()
+                                        THEN MovementLinkObject_From.ObjectId
+                                   -- временно
+                                   WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
+                                     OR Object_Route.ValueData ILIKE 'Самов%'
+                                     OR Object_Route.ValueData ILIKE '%-колбаса'
+                                     OR Object_Route.ValueData ILIKE '%Кривой Рог%'
+                                           THEN 0
+                                   ELSE ObjectLink_Juridical_Retail.ChildObjectId
+                              END AS RetailId
+                           
+                            , MovementLinkObject_CarInfo.ObjectId                      AS CarInfoId
+                            , Movement.OperDate_CarInfo                                AS OperDate_CarInfo
+                            , Movement.OperDate_CarInfo_date                           AS OperDate_CarInfo_date
+
+                       FROM tmpMovementAll AS Movement
+                            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_CarInfo
+                                                         ON MovementLinkObject_CarInfo.MovementId = Movement.Id
+                                                        AND MovementLinkObject_CarInfo.DescId = zc_MovementLinkObject_CarInfo()
+
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                                         ON MovementLinkObject_Route.MovementId = Movement.Id
+                                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+                            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
+                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                       WHERE COALESCE (MovementLinkObject_Route.ObjectId,0) <> 0 
+                          )
+
+       -- Результат
+       SELECT DISTINCT
+              tmpMovement.RouteId               AS RouteId
+            , tmpMovement.RetailId              AS RetailId
+
+            --, tmpWeekDay.DayOfWeekName                   ::TVarChar AS OperDate
+            --, tmpWeekDay_Partner.DayOfWeekName           ::TVarChar AS OperDatePartner
+            , CASE EXTRACT (DOW FROM tmpMovement.OperDate) WHEN 0 THEN 7 ELSE EXTRACT (DOW FROM tmpMovement.OperDate) END               ::TFloat AS OperDate
+            , CASE EXTRACT (DOW FROM tmpMovement.OperDatePartner) WHEN 0 THEN 7 ELSE EXTRACT (DOW FROM tmpMovement.OperDatePartner) END ::TFloat AS OperDatePartner
+            
+            , CASE WHEN tmpMovement.OperDate_CarInfo < tmpMovement.OperDatePartner
+                        THEN -1 * EXTRACT (DAY FROM tmpMovement.OperDatePartner - DATE_TRUNC ('DAY', tmpMovement.OperDate_CarInfo))
+                   WHEN tmpMovement.OperDatePartner < tmpMovement.OperDate_CarInfo
+                        THEN  1 * EXTRACT (DAY FROM DATE_TRUNC ('DAY', tmpMovement.OperDate_CarInfo) - tmpMovement.OperDatePartner)
+                   ELSE 0
+              END :: Integer AS Days
+
+            , EXTRACT (Hour FROM tmpMovement.OperDate_CarInfo)   ::TFloat AS Hour
+            , EXTRACT (Minute FROM tmpMovement.OperDate_CarInfo) ::TFloat AS Min
+ 
+       FROM tmpMovement
+          --LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate) AS tmpWeekDay ON 1=1
+          --LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner) AS tmpWeekDay_Partner ON 1=1
+    ;
+   
+   -- Сохраненные данные
+   CREATE TEMP TABLE _tmpOrderCarInfo (Id Integer, RouteId Integer, RetailId Integer) ON COMMIT DROP; 
+   INSERT INTO _tmpOrderCarInfo (Id, RouteId, RetailId)
+    SELECT Object_OrderCarInfo.Id
+         , OrderCarInfo_Route.ChildObjectId             AS RouteId
+         , ObjectLink_OrderCarInfo_Retail.ChildObjectId AS RetailId
+    FROM Object AS Object_OrderCarInfo
+        LEFT JOIN ObjectLink AS OrderCarInfo_Route
+                             ON OrderCarInfo_Route.ObjectId = Object_OrderCarInfo.Id
+                            AND OrderCarInfo_Route.DescId = zc_ObjectLink_OrderCarInfo_Route()
+        
+        LEFT JOIN ObjectLink AS ObjectLink_OrderCarInfo_Retail 
+                             ON ObjectLink_OrderCarInfo_Retail.ObjectId = Object_OrderCarInfo.Id
+                            AND ObjectLink_OrderCarInfo_Retail.DescId = zc_ObjectLink_OrderCarInfo_Retail()
+
+    WHERE Object_OrderCarInfo.DescId = zc_Object_OrderCarInfo()
+      AND Object_OrderCarInfo.isErased = FALSE
+    ; 
+   
+   -- сохранили <Объект>
+   PERFORM lpInsertUpdate_Object_OrderCarInfo (ioId	      := COALESCE (_tmpOrderCarInfo.Id, 0)
+                                             , inRouteId  := _tmpData.RouteId
+                                             , inRetailId := _tmpData.RetailId
+                                             , inOperDate := _tmpData.OperDate
+                                             , inOperDatePartner := _tmpData.OperDatePartner 
+                                             , inDays     := _tmpData.Days
+                                             , inHour     := _tmpData.Hour
+                                             , inMin      := _tmpData.Min  
+                                             , inUserId   := vbUserId
+                                              )
+   FROM _tmpData 
+       LEFT JOIN _tmpOrderCarInfo ON _tmpOrderCarInfo.RouteId = _tmpData.RouteId
+                                 AND _tmpOrderCarInfo.RetailId = _tmpData.RetailId
+  ;
+  
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.07.22         *
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_OrderCarInfo()

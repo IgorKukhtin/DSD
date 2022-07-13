@@ -113,6 +113,7 @@ type
     procedure LoadMobileReportFormTest;
     procedure LoadModelServiceFormTest;
     procedure LoadMovementFormTest;
+    procedure LoadOrderCarInfoFormTest;
     procedure LoadOrderGoodsFormTest;
     procedure LoadOrderFinanceFormTest;
     procedure LoadOrderFinanceMovementFormTest;
@@ -855,6 +856,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalChoiceForm');
 
+end;
+
+ procedure TLoadFormTest.LoadOrderCarInfoFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderCarInfoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderCarInfoForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderCarInfoEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderCarInfoEditForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalServiceListFormTest;
@@ -2715,13 +2724,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
    }
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_UpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_UpdateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_UpdateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_UpdateDialogForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalDialogForm'));

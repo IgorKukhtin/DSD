@@ -1011,7 +1011,10 @@ end;
 
 procedure TLoadFormTest.LoadLoadFormTest;
 begin
-    {
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemains_1303Form'));
+    TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromRemains_1303Form');
+
+   {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoad_AddForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListLoad_AddForm');
 
@@ -1027,11 +1030,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TMovenentLoadForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemsLoadForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMovementItemsLoadForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromPriceListForm'));
     TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromPriceListForm');
     exit;
- {
+
   // отчет поиск товара по всей сети
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsFromRemainsSetPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsFromRemainsSetPriceDialogForm');
