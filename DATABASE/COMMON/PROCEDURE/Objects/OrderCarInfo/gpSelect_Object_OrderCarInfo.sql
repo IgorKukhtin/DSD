@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_OrderCarInfo(
 RETURNS TABLE (Id Integer 
              , RouteId Integer, RouteCode Integer, RouteName TVarChar
              , RetailId Integer, RetailCode Integer, RetailName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TVarChar, OperDatePartner TVarChar
              , Days TFloat
              , Hour TFloat, Min TFloat
@@ -34,6 +35,10 @@ BEGIN
            , Object_Retail.Id          AS RetailId
            , Object_Retail.ObjectCode  AS RetailCode
            , Object_Retail.ValueData   AS RetailName 
+
+           , Object_Unit.Id          AS UnitId
+           , Object_Unit.ObjectCode  AS UnitCode
+           , Object_Unit.ValueData   AS UnitName 
 
            , CASE WHEN COALESCE (ObjectFloat_OperDate.ValueData,0) = 1 THEN 'Ïí' 
                   WHEN COALESCE (ObjectFloat_OperDate.ValueData,0) = 2 THEN 'Âò'
@@ -61,15 +66,20 @@ BEGIN
            
        FROM Object AS Object_OrderCarInfo
             
-            LEFT JOIN ObjectLink AS OrderCarInfo_Route
-                                 ON OrderCarInfo_Route.ObjectId = Object_OrderCarInfo.Id
-                                AND OrderCarInfo_Route.DescId = zc_ObjectLink_OrderCarInfo_Route()
-            LEFT JOIN Object AS Object_Route ON Object_Route.Id = OrderCarInfo_Route.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Route
+                                 ON ObjectLink_Route.ObjectId = Object_OrderCarInfo.Id
+                                AND ObjectLink_Route.DescId = zc_ObjectLink_OrderCarInfo_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Route.ChildObjectId
             
-            LEFT JOIN ObjectLink AS ObjectLink_OrderCarInfo_Retail 
-                                 ON ObjectLink_OrderCarInfo_Retail.ObjectId = Object_OrderCarInfo.Id
-                                AND ObjectLink_OrderCarInfo_Retail.DescId = zc_ObjectLink_OrderCarInfo_Retail()
-            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_OrderCarInfo_Retail.ChildObjectId            
+            LEFT JOIN ObjectLink AS ObjectLink_Retail 
+                                 ON ObjectLink_Retail.ObjectId = Object_OrderCarInfo.Id
+                                AND ObjectLink_Retail.DescId = zc_ObjectLink_OrderCarInfo_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Retail.ChildObjectId            
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit 
+                                 ON ObjectLink_Unit.ObjectId = Object_OrderCarInfo.Id
+                                AND ObjectLink_Unit.DescId = zc_ObjectLink_OrderCarInfo_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_OperDate
                                   ON ObjectFloat_OperDate.ObjectId = Object_OrderCarInfo.Id

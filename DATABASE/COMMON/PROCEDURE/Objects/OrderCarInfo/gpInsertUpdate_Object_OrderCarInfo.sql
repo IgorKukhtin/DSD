@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_OrderCarInfo (Integer, Integer, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderCarInfo (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderCarInfo (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderCarInfo(
    INOUT ioId                    Integer, 
       IN inRouteId               Integer, 
       IN inRetailId              Integer,
+      IN inUnitId                Integer,
       IN inOperDate              TFloat ,     -- 
       IN inOperDatePartner       TFloat ,     -- 
       IN inDays                  TFloat ,     -- 
@@ -26,6 +28,7 @@ BEGIN
    ioId := lpInsertUpdate_Object_OrderCarInfo (ioId	      := ioId
                                              , inRouteId  := inRouteId
                                              , inRetailId := inRetailId
+                                             , inUnitId   := inUnitId
                                              , inOperDate := inOperDate
                                              , inOperDatePartner := inOperDatePartner 
                                              , inDays     := inDays
