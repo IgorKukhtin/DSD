@@ -66,7 +66,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             item
               Format = ',0.###'
               Kind = skSum
-              Column = TotalAmount_Weight
+              Column = Amount_Weight
             end
             item
               Format = ',0.###'
@@ -246,7 +246,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalAmount_Weight
+              Column = Amount_Weight
             end
             item
               Format = ',0.####'
@@ -891,9 +891,9 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object TotalAmount_Weight: TcxGridDBColumn
+          object Amount_Weight: TcxGridDBColumn
             Caption = #1047#1072#1082#1072#1079' + '#1044#1086#1079#1072#1082#1072#1079' '#1080#1090#1086#1075', '#1082#1075
-            DataBinding.FieldName = 'TotalAmount_Weight'
+            DataBinding.FieldName = 'Amount_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.###;-,0.###; ;'

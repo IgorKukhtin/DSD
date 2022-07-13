@@ -64,7 +64,7 @@ type
     cxLabel8: TcxLabel;
     edByDoc: TcxCheckBox;
     GuidesTo: TdsdGuides;
-    TotalAmount_Weight: TcxGridDBColumn;
+    Amount_Weight: TcxGridDBColumn;
     Amount_Sh: TcxGridDBColumn;
     Amount_Weight_Dozakaz1: TcxGridDBColumn;
     Amount_Sh_Dozakaz1: TcxGridDBColumn;
