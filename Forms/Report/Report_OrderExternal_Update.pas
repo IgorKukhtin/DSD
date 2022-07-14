@@ -118,6 +118,9 @@ type
     GoodsKindName_sub: TcxGridDBColumn;
     AmountWeight_child_one: TcxGridDBColumn;
     AmountWeight_child_sec: TcxGridDBColumn;
+    actPrintGoodsDiff: TdsdPrintAction;
+    spSelectPrintGoodsDiff: TdsdStoredProc;
+    bbPrintGoodsDiff: TdxBarButton;
   private
     { Private declarations }
   public
