@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxCurrencyEdit;
+  DataModul, cxCurrencyEdit, cxCalendar;
 
 type
   TOrderCarInfoForm = class(TParentForm)
@@ -68,6 +68,10 @@ type
     macInsertUpdate_Period: TMultiAction;
     bbInsertUpdate_Period: TdxBarButton;
     UnitName: TcxGridDBColumn;
+    OperDate_CarInfo: TcxGridDBColumn;
+    DayOfWeekName_CarInfo: TcxGridDBColumn;
+    OperDate_CarInfo_date: TcxGridDBColumn;
+    DayOfWeekName_CarInfo_date: TcxGridDBColumn;
   private
     { Private declarations }
   public

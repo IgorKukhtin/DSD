@@ -195,7 +195,7 @@ BEGIN
                             , Movement.ToId                                            AS ToId
                             , MovementLinkObject_Route.ObjectId                        AS RouteId
                             , CASE --
-                                   WHEN Object_Route.Id IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
+                                   WHEN ObjectLink_Juridical_Retail.ChildObjectId IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
                                         THEN Object_From.Id
                                    WHEN Object_From.DescId = zc_Object_Unit()
                                         THEN Object_From.Id
@@ -307,7 +307,7 @@ BEGIN
                                , MovementDate_OperDatePartner.ValueData
                                , Movement.ToId
                                , MovementLinkObject_Route.ObjectId
-                               , CASE WHEN Object_Route.Id IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
+                               , CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
                                            THEN Object_From.Id
                                       WHEN Object_From.DescId = zc_Object_Unit()
                                            THEN Object_From.Id

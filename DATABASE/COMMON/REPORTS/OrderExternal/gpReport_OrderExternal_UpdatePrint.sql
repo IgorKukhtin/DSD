@@ -169,7 +169,7 @@ BEGIN
      , tmpMovement AS (SELECT MIN (Movement.OperDate)             AS OperDate
                             , MovementLinkObject_Route.ObjectId   AS RouteId
                               --
-                            , CASE WHEN Object_Route.Id IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
+                            , CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
                                         THEN Object_From.Id
                                    WHEN Object_From.DescId = zc_Object_Unit()
                                         THEN Object_From.Id
@@ -248,7 +248,7 @@ BEGIN
                             LEFT JOIN tmpChild AS tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
 
                        GROUP BY MovementLinkObject_Route.ObjectId
-                              , CASE WHEN Object_Route.Id IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
+                              , CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId IS NULL AND MovementLinkObject_Route.ObjectId IS NULL
                                           THEN Object_From.Id
                                      WHEN Object_From.DescId = zc_Object_Unit()
                                           THEN Object_From.Id
