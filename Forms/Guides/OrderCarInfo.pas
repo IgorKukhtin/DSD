@@ -67,6 +67,7 @@ type
     actInsertUpdate_Period: TdsdExecStoredProc;
     macInsertUpdate_Period: TMultiAction;
     bbInsertUpdate_Period: TdxBarButton;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -42,7 +42,6 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colAmountAll
             end
             item
               Format = ',0.00'
@@ -63,7 +62,6 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colAmountAll
             end
             item
               Format = ',0.00'
@@ -73,22 +71,18 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = colDailyCheck
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = colDailySale
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = colDeferredSend
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = colDeferredSendIn
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -145,7 +139,7 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             Width = 35
           end
           object colPriceOptSP_1303: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1054#1054#1062' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072
+            Caption = #1054#1054#1062' ('#1056#1054#1054#1062')'
             DataBinding.FieldName = 'PriceOptSP_1303'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -155,17 +149,17 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             Width = 70
           end
           object colPriceSale_1303: TcxGridDBColumn
-            Caption = #1056#1086#1079#1085'. '#1094#1077#1085#1072' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072
+            Caption = #1052#1072#1082#1089'. '#1076#1086#1087#1091#1089#1090'. '#1056#1086#1079#1085' '#1094#1077#1085#1072' ('#1056#1054#1054#1062')'
             DataBinding.FieldName = 'PriceSale_1303'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 79
           end
           object colPriceSale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1056#1086#1079#1085' '#1094#1077#1085#1072' ('#1082#1072#1089#1089#1072')'
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -183,33 +177,35 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             Options.Editing = False
             Width = 82
           end
+          object colPriceSaleIncome: TcxGridDBColumn
+            Caption = #1056#1086#1079#1085'. '#1094#1077#1085#1072' ('#1095#1077#1082' '#1055#1050#1052#1059' 1303)'
+            DataBinding.FieldName = 'PriceSaleIncome'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
           object colPrice_min: TcxGridDBColumn
-            Caption = #1052#1080#1085'. '#1094#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080
+            Caption = #1055#1088#1080#1084'. '#1056#1086#1079#1085'. '#1094#1077#1085#1072' '#1087#1088#1080' '#1079#1072#1082#1091#1087#1082#1077' '#1089#1077#1075#1086#1076#1085#1103' ('#1095#1077#1082' '#1087#1086' '#1055#1050#1052#1059' 1303)'
             DataBinding.FieldName = 'Price_min'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 73
+            Width = 121
           end
-          object colPriceSite: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1089#1072#1081#1090#1072
-            DataBinding.FieldName = 'PriceSite'
+          object colPrice_min_NDS: TcxGridDBColumn
+            Caption = #1052#1080#1085'. '#1094#1077#1085#1072' '#1087#1086#1089#1090'. '#1087#1088#1080' '#1079#1072#1082#1091#1087#1082#1077' '#1089#1077#1075#1086#1076#1085#1103' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'Price_min_NDS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
-          end
-          object DateChangeSite: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085#1099' '#1089#1072#1081#1090#1072
-            DataBinding.FieldName = 'DateChangeSite'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 78
+            Width = 101
           end
           object colAmount: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -234,39 +230,6 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             Options.Editing = False
             Width = 73
           end
-          object colDeferredSend: TcxGridDBColumn
-            Caption = #1054#1090#1083'. '#1074' '#1087#1077#1088#1077#1084#1077#1097'.'
-            DataBinding.FieldName = 'DeferredSend'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 79
-          end
-          object colDeferredSendIn: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080' '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097'.'
-            DataBinding.FieldName = 'DeferredSendIn'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object colPriceSaleIncome: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1090#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080' '#1086#1090' '#1087#1086#1089#1090')'
-            DataBinding.FieldName = 'PriceSaleIncome'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 104
-          end
           object colAmountIncome: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072') '#1074' '#1087#1091#1090#1080
             DataBinding.FieldName = 'AmountIncome'
@@ -279,18 +242,6 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             Options.Editing = False
             Width = 98
           end
-          object colAmountAll: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089' '#1091#1095'. '#1090#1086#1074'. '#1074' '#1087#1091#1090#1080
-            DataBinding.FieldName = 'AmountAll'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1090#1086#1074#1072#1088#1072' '#1074' '#1087#1091#1090#1080') '
-            Options.Editing = False
-            Width = 98
-          end
           object colMinExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
             DataBinding.FieldName = 'MinExpirationDate'
@@ -298,22 +249,6 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 112
-          end
-          object AreaName: TcxGridDBColumn
-            Caption = #1056#1077#1075#1080#1086#1085
-            DataBinding.FieldName = 'AreaName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object RetailName: TcxGridDBColumn
-            Caption = #1057#1077#1090#1100
-            DataBinding.FieldName = 'RetailName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 84
           end
           object JuridicalName_Unit: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
@@ -339,16 +274,6 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             Options.Editing = False
             Width = 100
           end
-          object c0lPhone: TcxGridDBColumn
-            Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1082#1086#1085#1090'.'#1083#1080#1094#1086')'
-            DataBinding.FieldName = 'Phone'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' '#1082#1086#1085#1090#1072#1082#1090#1085#1086#1075#1086' '#1083#1080#1094#1072
-            Options.Editing = False
-            Width = 109
-          end
           object Phone_Unit: TcxGridDBColumn
             Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1087#1086#1076#1088#1072#1079#1076'.)'
             DataBinding.FieldName = 'Phone_Unit'
@@ -357,28 +282,6 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             HeaderHint = #1058#1077#1083#1077#1092#1086#1085' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
             Options.Editing = False
             Width = 71
-          end
-          object colDailyCheck: TcxGridDBColumn
-            Caption = #1050#1072#1089#1089#1072' '#1079#1072' '#1089#1091#1090#1082#1080
-            DataBinding.FieldName = 'DailyCheck'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 76
-          end
-          object colDailySale: TcxGridDBColumn
-            Caption = #1041#1077#1079#1085#1072#1083' '#1079#1072' '#1089#1091#1090#1082#1080
-            DataBinding.FieldName = 'DailySale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 79
           end
           object colColor_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'

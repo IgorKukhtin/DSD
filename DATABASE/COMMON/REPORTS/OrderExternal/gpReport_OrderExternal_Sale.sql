@@ -17,7 +17,13 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
                -- Дата/время отгрузки
              , OperDate_CarInfo TDateTime
                -- Дата смены
-             , OperDate_CarInfo_date TDateTime
+             , OperDate_CarInfo_date TDateTime   
+
+             , DayOfWeekName              TVarChar
+             , DayOfWeekName_Partner      TVarChar
+             , DayOfWeekName_CarInfo      TVarChar
+             , DayOfWeekName_CarInfo_date TVarChar
+             
                --
              , OperDate_Sale TDateTime, OperDatePartner_Sale TDateTime 
              , InvNumber TVarChar, InvNumberOrderPartner TVarChar, InvNumber_Order TVarChar
@@ -56,15 +62,15 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , DiffTax      TFloat
              , isPrint_M    Boolean
              , CountPrint_M TFloat
-             
-           , AmountSale_Weight_M      TFloat
-           , Amount_Weight_M          TFloat
-           , Amount_Weight_Dozakaz_M  TFloat
-           
-, TotalCount_Diff TFloat
-, TotalWeight_Diff TFloat
-, TotalAmountTax TFloat
-, TotalWeightTax TFloat
+
+             , AmountSale_Weight_M      TFloat
+             , Amount_Weight_M          TFloat
+             , Amount_Weight_Dozakaz_M  TFloat
+
+             , TotalCount_Diff TFloat
+             , TotalWeight_Diff TFloat
+             , TotalAmountTax TFloat
+             , TotalWeightTax TFloat
               )
 
 AS
@@ -900,6 +906,12 @@ BEGIN
            , tmpMovement.OperDate_CarInfo      ::TDateTime    AS OperDate_CarInfo
              -- Дата смены
            , tmpMovement.OperDate_CarInfo_date ::TDateTime    AS OperDate_CarInfo_date
+
+           , tmpWeekDay.DayOfWeekName                   ::TVarChar AS DayOfWeekName
+           , tmpWeekDay_Partner.DayOfWeekName           ::TVarChar AS DayOfWeekName_Partner
+           , tmpWeekDay_CarInfo.DayOfWeekName           ::TVarChar AS DayOfWeekName_CarInfo
+           , tmpWeekDay_CarInfo_date.DayOfWeekName      ::TVarChar AS DayOfWeekName_CarInfo_date
+
              --
            , tmpMovement.OperDate_Sale         ::TDateTime 
            , tmpMovement.OperDatePartner_Sale  ::TDateTime 
@@ -1031,7 +1043,12 @@ BEGIN
 
           LEFT JOIN tmpGoodsArticle ON tmpGoodsArticle.GoodsPropertyId = tmpPartnerLinkGoodsProperty.GoodsPropertyId
                                    AND tmpGoodsArticle.GoodsId = tmpMovement.GoodsId
-                                   AND tmpGoodsArticle.GoodsKindId = tmpMovement.GoodsKindId
+                                   AND tmpGoodsArticle.GoodsKindId = tmpMovement.GoodsKindId 
+
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_Order) AS tmpWeekDay ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner_Order) AS tmpWeekDay_Partner ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo) AS tmpWeekDay_CarInfo ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo_date) AS tmpWeekDay_CarInfo_date ON 1=1
          ;
 
 END;

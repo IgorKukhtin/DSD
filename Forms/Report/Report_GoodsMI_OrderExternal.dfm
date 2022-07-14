@@ -4,6 +4,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   ClientWidth = 1203
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -236
   ExplicitWidth = 1219
   ExplicitHeight = 522
   PixelsPerInch = 96
@@ -66,7 +67,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             item
               Format = ',0.###'
               Kind = skSum
-              Column = TotalAmount_Weight
+              Column = Amount_Weight
             end
             item
               Format = ',0.###'
@@ -131,17 +132,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_child
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountSecond_child
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalAmount_Child
+              Column = Amount_Child
             end
             item
               Format = ',0.####'
@@ -206,6 +197,32 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountWeight_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_child_one
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_child_sec
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child_one
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child_sec
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -246,7 +263,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalAmount_Weight
+              Column = Amount_Weight
             end
             item
               Format = ',0.####'
@@ -311,17 +328,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_child
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountSecond_child
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalAmount_Child
+              Column = Amount_Child
             end
             item
               Format = ',0.####'
@@ -386,6 +393,32 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountWeight_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_child_one
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_child_sec
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child_one
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child_sec
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -891,9 +924,9 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object TotalAmount_Weight: TcxGridDBColumn
+          object Amount_Weight: TcxGridDBColumn
             Caption = #1047#1072#1082#1072#1079' + '#1044#1086#1079#1072#1082#1072#1079' '#1080#1090#1086#1075', '#1082#1075
-            DataBinding.FieldName = 'TotalAmount_Weight'
+            DataBinding.FieldName = 'Amount_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
@@ -1035,36 +1068,39 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             HeaderHint = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1044#1072#1090#1072' '#1085#1072#1095'. +3<= '#1044#1072#1090#1072'.'#1091' '#1087#1086#1082#1091#1087')'
             Width = 70
           end
-          object Amount_child: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090'.'
-            DataBinding.FieldName = 'Amount_child'
+          object Amount_child_one: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074'-1'
+            DataBinding.FieldName = 'Amount_child_one'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072
             Options.Editing = False
             Width = 87
           end
-          object AmountSecond_child: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072
-            DataBinding.FieldName = 'AmountSecond_child'
+          object Amount_child_sec: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074'-2'
+            DataBinding.FieldName = 'Amount_child_sec'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072
             Options.Editing = False
             Width = 104
           end
-          object TotalAmount_Child: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089' ('#1079#1072#1082#1072#1079' + '#1076#1086#1079#1072#1082#1072#1079')'
-            DataBinding.FieldName = 'TotalAmount_Child'
+          object Amount_Child: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074
+            DataBinding.FieldName = 'Amount_Child'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089' ('#1079#1072#1082#1072#1079' + '#1076#1086#1079#1072#1082#1072#1079')'
@@ -1072,16 +1108,67 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Width = 87
           end
           object Amount_diff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1047#1072#1082#1072#1079#1072' '#1086#1090' '#1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089
             DataBinding.FieldName = 'Amount_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1085#1077' '#1093#1074#1072#1090#1072#1077#1090' '#1076#1083#1103' '#1088#1077#1079#1077#1088#1074#1072
+            Options.Editing = False
+            Width = 87
+          end
+          object AmountWeight_child: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074',  '#1074#1077#1089
+            DataBinding.FieldName = 'AmountWeight_child'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1047#1072#1082#1072#1079#1072' '#1086#1090' '#1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072'+'#1087#1088#1080#1093#1086#1076', '#1074#1077#1089
             Options.Editing = False
-            Width = 87
+            Width = 70
+          end
+          object AmountWeight_child_one: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074'-1,  '#1074#1077#1089
+            DataBinding.FieldName = 'AmountWeight_child_one'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072', '#1074#1077#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountWeight_child_sec: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074'-2,  '#1074#1077#1089
+            DataBinding.FieldName = 'AmountWeight_child_sec'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072', '#1074#1077#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountWeight_diff: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089', '#1074#1077#1089
+            DataBinding.FieldName = 'AmountWeight_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1085#1077' '#1093#1074#1072#1090#1072#1077#1090' '#1076#1083#1103' '#1088#1077#1079#1077#1088#1074#1072', '#1074#1077#1089
+            Options.Editing = False
+            Width = 80
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082

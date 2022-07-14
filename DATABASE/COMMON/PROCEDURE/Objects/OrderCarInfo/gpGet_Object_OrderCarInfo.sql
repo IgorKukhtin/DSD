@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_OrderCarInfo(
 RETURNS TABLE (Id Integer 
              , RouteId Integer, RouteCode Integer, RouteName TVarChar
              , RetailId Integer, RetailCode Integer, RetailName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TFloat, OperDatePartner TFloat, Days TFloat
              , Hour TFloat, Min TFloat
              ) AS
@@ -31,6 +32,10 @@ BEGIN
            , CAST (0 as Integer)    AS RetailCode
            , CAST ('' as TVarChar)  AS RetailName
 
+           , CAST (0 as Integer)    AS UnitId  
+           , CAST (0 as Integer)    AS UnitCode
+           , CAST ('' as TVarChar)  AS UnitName
+
            , CAST (0 AS TFloat)     AS OperDate
            , CAST (0 AS TFloat)     AS OperDatePartner 
            , CAST (0 AS TFloat)     AS Days
@@ -49,6 +54,10 @@ BEGIN
            , Object_Retail.ObjectCode  AS RetailCode
            , Object_Retail.ValueData   AS RetailName 
 
+           , Object_Unit.Id          AS UnitId
+           , Object_Unit.ObjectCode  AS UnitCode
+           , Object_Unit.ValueData   AS UnitName 
+
            , COALESCE (ObjectFloat_OperDate.ValueData,0)        :: TFloat  AS OperDate
            , COALESCE (ObjectFloat_OperDatePartner.ValueData,0) :: TFloat  AS OperDatePartner 
            , COALESCE (ObjectFloat_Days.ValueData,0)            :: TFloat  AS Days
@@ -56,15 +65,20 @@ BEGIN
            , COALESCE (ObjectFloat_Min.ValueData,0)             :: TFloat  AS Min
            
        FROM Object AS Object_OrderCarInfo
-            LEFT JOIN ObjectLink AS OrderCarInfo_Route
-                                 ON OrderCarInfo_Route.ObjectId = Object_OrderCarInfo.Id
-                                AND OrderCarInfo_Route.DescId = zc_ObjectLink_OrderCarInfo_Route()
-            LEFT JOIN Object AS Object_Route ON Object_Route.Id = OrderCarInfo_Route.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Route
+                                 ON ObjectLink_Route.ObjectId = Object_OrderCarInfo.Id
+                                AND ObjectLink_Route.DescId = zc_ObjectLink_OrderCarInfo_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Route.ChildObjectId
             
-            LEFT JOIN ObjectLink AS ObjectLink_OrderCarInfo_Retail 
-                                 ON ObjectLink_OrderCarInfo_Retail.ObjectId = Object_OrderCarInfo.Id
-                                AND ObjectLink_OrderCarInfo_Retail.DescId = zc_ObjectLink_OrderCarInfo_Retail()
-            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_OrderCarInfo_Retail.ChildObjectId            
+            LEFT JOIN ObjectLink AS ObjectLink_Retail 
+                                 ON ObjectLink_Retail.ObjectId = Object_OrderCarInfo.Id
+                                AND ObjectLink_Retail.DescId = zc_ObjectLink_OrderCarInfo_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Retail.ChildObjectId            
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit 
+                                 ON ObjectLink_Unit.ObjectId = Object_OrderCarInfo.Id
+                                AND ObjectLink_Unit.DescId = zc_ObjectLink_OrderCarInfo_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_OperDate
                                   ON ObjectFloat_OperDate.ObjectId = Object_OrderCarInfo.Id

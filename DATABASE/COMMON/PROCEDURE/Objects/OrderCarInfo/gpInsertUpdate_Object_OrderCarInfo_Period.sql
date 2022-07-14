@@ -16,8 +16,8 @@ BEGIN
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_OrderCarInfo());
    vbUserId:= lpGetUserBySession (inSession);
     
-   CREATE TEMP TABLE _tmpData (RouteId Integer, RetailId Integer, OperDate TFloat, OperDatePartner TFloat, Days TFloat, Hour TFloat, Min TFloat) ON COMMIT DROP;   
-   INSERT INTO _tmpData (RouteId, RetailId, OperDate, OperDatePartner, Days, Hour, Min)
+   CREATE TEMP TABLE _tmpData (RouteId Integer, RetailId Integer, UnitId Integer, OperDate TFloat, OperDatePartner TFloat, Days TFloat, Hour TFloat, Min TFloat, Ord Integer) ON COMMIT DROP;   
+   INSERT INTO _tmpData (RouteId, RetailId, UnitId, OperDate, OperDatePartner, Days, Hour, Min, Ord)
    WITH
        tmpMovementAll AS (SELECT Movement.*
                                  -- Дата/время отгрузки
@@ -27,9 +27,10 @@ BEGIN
                                       ELSE DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
                                  END  AS OperDate_CarInfo_date
                           FROM Movement
-                               LEFT JOIN MovementDate AS MovementDate_CarInfo
-                                                      ON MovementDate_CarInfo.MovementId = Movement.Id
-                                                     AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
+                               INNER JOIN MovementDate AS MovementDate_CarInfo
+                                                       ON MovementDate_CarInfo.MovementId = Movement.Id
+                                                      AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
+                               
                           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                             AND Movement.StatusId = zc_Enum_Status_Complete()
                             AND Movement.DescId = zc_Movement_OrderExternal()
@@ -51,7 +52,8 @@ BEGIN
                                            THEN 0
                                    ELSE ObjectLink_Juridical_Retail.ChildObjectId
                               END AS RetailId
-                           
+                            , MovementLinkObject_To.ObjectId AS UnitId
+                            
                             , MovementLinkObject_CarInfo.ObjectId                      AS CarInfoId
                             , Movement.OperDate_CarInfo                                AS OperDate_CarInfo
                             , Movement.OperDate_CarInfo_date                           AS OperDate_CarInfo_date
@@ -64,6 +66,10 @@ BEGIN
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_CarInfo
                                                          ON MovementLinkObject_CarInfo.MovementId = Movement.Id
                                                         AND MovementLinkObject_CarInfo.DescId = zc_MovementLinkObject_CarInfo()
+
+					        LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -87,7 +93,8 @@ BEGIN
        -- Результат
        SELECT DISTINCT
               tmpMovement.RouteId               AS RouteId
-            , tmpMovement.RetailId              AS RetailId
+            , tmpMovement.RetailId              AS RetailId 
+            , tmpMovement.UnitId                AS UnitId
 
             --, tmpWeekDay.DayOfWeekName                   ::TVarChar AS OperDate
             --, tmpWeekDay_Partner.DayOfWeekName           ::TVarChar AS OperDatePartner
@@ -102,27 +109,45 @@ BEGIN
               END :: Integer AS Days
 
             , EXTRACT (Hour FROM tmpMovement.OperDate_CarInfo)   ::TFloat AS Hour
-            , EXTRACT (Minute FROM tmpMovement.OperDate_CarInfo) ::TFloat AS Min
+            , EXTRACT (Minute FROM tmpMovement.OperDate_CarInfo) ::TFloat AS Min    
+            , ROW_Number() OVER( PARTITION BY tmpMovement.RouteId, tmpMovement.RetailId, tmpMovement.UnitId 
+                                            , CASE EXTRACT (DOW FROM tmpMovement.OperDate) WHEN 0 THEN 7 ELSE EXTRACT (DOW FROM tmpMovement.OperDate) END
+                                            , CASE EXTRACT (DOW FROM tmpMovement.OperDatePartner) WHEN 0 THEN 7 ELSE EXTRACT (DOW FROM tmpMovement.OperDatePartner) END
+                                 ORDER BY  tmpMovement.OperDate_CarInfo desc) AS Ord
  
        FROM tmpMovement
           --LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate) AS tmpWeekDay ON 1=1
-          --LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner) AS tmpWeekDay_Partner ON 1=1
-    ;
+          --LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner) AS tmpWeekDay_Partner ON 1=1 
+       ;
    
    -- Сохраненные данные
-   CREATE TEMP TABLE _tmpOrderCarInfo (Id Integer, RouteId Integer, RetailId Integer) ON COMMIT DROP; 
-   INSERT INTO _tmpOrderCarInfo (Id, RouteId, RetailId)
+   CREATE TEMP TABLE _tmpOrderCarInfo (Id Integer, RouteId Integer, RetailId Integer, UnitId Integer, OperDate TFloat, OperDatePartner TFloat) ON COMMIT DROP; 
+   INSERT INTO _tmpOrderCarInfo (Id, RouteId, RetailId, UnitId, OperDate, OperDatePartner)
     SELECT Object_OrderCarInfo.Id
-         , OrderCarInfo_Route.ChildObjectId             AS RouteId
-         , ObjectLink_OrderCarInfo_Retail.ChildObjectId AS RetailId
+         , ObjectLink_Route.ChildObjectId      AS RouteId
+         , ObjectLink_Retail.ChildObjectId     AS RetailId
+         , ObjectLink_Unit.ChildObjectId       AS UnitId
+         , COALESCE (ObjectFloat_OperDate.ValueData,0)        :: TFloat  AS OperDate
+         , COALESCE (ObjectFloat_OperDatePartner.ValueData,0) :: TFloat  AS OperDatePartner
     FROM Object AS Object_OrderCarInfo
-        LEFT JOIN ObjectLink AS OrderCarInfo_Route
-                             ON OrderCarInfo_Route.ObjectId = Object_OrderCarInfo.Id
-                            AND OrderCarInfo_Route.DescId = zc_ObjectLink_OrderCarInfo_Route()
-        
-        LEFT JOIN ObjectLink AS ObjectLink_OrderCarInfo_Retail 
-                             ON ObjectLink_OrderCarInfo_Retail.ObjectId = Object_OrderCarInfo.Id
-                            AND ObjectLink_OrderCarInfo_Retail.DescId = zc_ObjectLink_OrderCarInfo_Retail()
+            LEFT JOIN ObjectLink AS ObjectLink_Route
+                                 ON ObjectLink_Route.ObjectId = Object_OrderCarInfo.Id
+                                AND ObjectLink_Route.DescId = zc_ObjectLink_OrderCarInfo_Route()
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Retail 
+                                 ON ObjectLink_Retail.ObjectId = Object_OrderCarInfo.Id
+                                AND ObjectLink_Retail.DescId = zc_ObjectLink_OrderCarInfo_Retail()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit 
+                                 ON ObjectLink_Unit.ObjectId = Object_OrderCarInfo.Id
+                                AND ObjectLink_Unit.DescId = zc_ObjectLink_OrderCarInfo_Unit()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_OperDate
+                              ON ObjectFloat_OperDate.ObjectId = Object_OrderCarInfo.Id
+                             AND ObjectFloat_OperDate.DescId = zc_ObjectFloat_OrderCarInfo_OperDate()
+        LEFT JOIN ObjectFloat AS ObjectFloat_OperDatePartner
+                              ON ObjectFloat_OperDatePartner.ObjectId = Object_OrderCarInfo.Id
+                             AND ObjectFloat_OperDatePartner.DescId = zc_ObjectFloat_OrderCarInfo_OperDatePartner()
 
     WHERE Object_OrderCarInfo.DescId = zc_Object_OrderCarInfo()
       AND Object_OrderCarInfo.isErased = FALSE
@@ -132,6 +157,7 @@ BEGIN
    PERFORM lpInsertUpdate_Object_OrderCarInfo (ioId	      := COALESCE (_tmpOrderCarInfo.Id, 0)
                                              , inRouteId  := _tmpData.RouteId
                                              , inRetailId := _tmpData.RetailId
+                                             , inUnitId   := _tmpData.UnitId
                                              , inOperDate := _tmpData.OperDate
                                              , inOperDatePartner := _tmpData.OperDatePartner 
                                              , inDays     := _tmpData.Days
@@ -141,7 +167,11 @@ BEGIN
                                               )
    FROM _tmpData 
        LEFT JOIN _tmpOrderCarInfo ON _tmpOrderCarInfo.RouteId = _tmpData.RouteId
-                                 AND _tmpOrderCarInfo.RetailId = _tmpData.RetailId
+                                 AND COALESCE (_tmpOrderCarInfo.RetailId,0) = COALESCE (_tmpData.RetailId,0)
+                                 AND _tmpOrderCarInfo.UnitId = _tmpData.UnitId
+                                 AND _tmpOrderCarInfo.OperDate = _tmpData.OperDate
+                                 AND _tmpOrderCarInfo.OperDatePartner = _tmpData.OperDatePartner
+   WHERE _tmpData.Ord = 1
   ;
   
 END;

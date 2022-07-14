@@ -51,6 +51,9 @@ type
     edHour: TcxCurrencyEdit;
     cxLabel16: TcxLabel;
     edMin: TcxCurrencyEdit;
+    cxLabel1: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public
