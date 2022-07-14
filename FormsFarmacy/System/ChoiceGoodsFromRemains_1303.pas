@@ -57,6 +57,8 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     colPriceSaleIncome: TcxGridDBColumn;
     colPrice_min_NDS: TcxGridDBColumn;
+    celIntenalSPName: TcxGridDBColumn;
+    celBrandSPName: TcxGridDBColumn;
   private
     { Private declarations }
   public

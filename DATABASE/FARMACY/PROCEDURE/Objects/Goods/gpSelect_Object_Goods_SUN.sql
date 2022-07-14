@@ -38,6 +38,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, Name TVarChar
              , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
              , UnitSupplementSUN1OutId Integer, UnitSupplementSUN1OutName TVarChar
              , UnitSupplementSUN2OutId Integer, UnitSupplementSUN2OutName TVarChar
+             , UnitSupplementSUN1InId Integer, UnitSupplementSUN1InName TVarChar
              , SupplementMin Integer, SupplementMinPP Integer
              , isUkrainianTranslation boolean, isColdSUNCK boolean, isColdSUN boolean
               ) AS
@@ -161,6 +162,8 @@ BEGIN
            , Object_UnitSupplementSUN1Out.ValueData                              AS UnitSupplementSUN1OutName
            , Object_Goods_Main.UnitSupplementSUN1OutId 
            , Object_UnitSupplementSUN2Out.ValueData                              AS UnitSupplementSUN2OutName
+           , Object_Goods_Main.UnitSupplementSUN1InId 
+           , Object_UnitSupplementSUN1In.ValueData                               AS UnitSupplementSUN1InName
            , Object_Goods_Main.SupplementMin 
            , Object_Goods_Main.SupplementMinPP 
            , Trim(COALESCE(Object_Goods_Main.NameUkr, '')) <> ''                 AS isUkrainianTranslation
@@ -182,6 +185,7 @@ BEGIN
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = Object_Goods_Retail.UserUpdateId
            LEFT JOIN Object AS Object_UnitSupplementSUN1Out ON Object_UnitSupplementSUN1Out.Id = Object_Goods_Main.UnitSupplementSUN1OutId
            LEFT JOIN Object AS Object_UnitSupplementSUN2Out ON Object_UnitSupplementSUN2Out.Id = Object_Goods_Main.UnitSupplementSUN2OutId
+           LEFT JOIN Object AS Object_UnitSupplementSUN1In ON Object_UnitSupplementSUN1In.Id = Object_Goods_Main.UnitSupplementSUN1InId
            
            LEFT JOIN tmpNDS ON tmpNDS.Id = Object_Goods_Main.NDSKindId
            LEFT JOIN Object AS Object_GoodsPairSun ON Object_GoodsPairSun.Id = Object_Goods_Retail.GoodsPairSunId

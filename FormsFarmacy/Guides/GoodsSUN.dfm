@@ -437,6 +437,14 @@ inherited GoodsSUNForm: TGoodsSUNForm
             Options.Editing = False
             Width = 140
           end
+          object UnitSupplementSUN1InName: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100' '#1074#1085#1077' '#1088#1072#1073#1086#1090#1099' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053'1'
+            DataBinding.FieldName = 'UnitSupplementSUN1InName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 136
+          end
           object isSupplementSmudge: TcxGridDBColumn
             Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1 '#1088#1072#1079#1084#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088
             DataBinding.FieldName = 'isSupplementSmudge'
@@ -1786,6 +1794,75 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end>
       Caption = 'execUpdate_isSupplementMarkSUN2'
     end
+    object mactSetUnitSupplementSUN1in: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actChoiceUnitSupplementSUN1In
+      ActionList = <
+        item
+          Action = actExecSetUnitSupplementSUN1In
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1040#1087#1090#1077#1082#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100' '#1074#1085#1077' '#1088#1072#1073#1086#1090#1099' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053'1"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1040#1087#1090#1077#1082#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100' '#1074#1085#1077' '#1088#1072#1073#1086#1090#1099' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053'1"'
+      ImageIndex = 79
+    end
+    object actChoiceUnitSupplementSUN1In: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceUnitSupplementSUN1In'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitSupplementSUN1'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecSetUnitSupplementSUN1In: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetUnitSupplementSUN1In
+      StoredProcList = <
+        item
+          StoredProc = spSetUnitSupplementSUN1In
+        end>
+      Caption = 'actExecSetUnitSupplementSUN1In'
+    end
+    object mactClearUnitSupplementSUN1In: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecClearUnitSupplementSUN1In
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1040#1087#1090#1077#1082#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100' '#1074#1085#1077' '#1088#1072#1073#1086#1090#1099' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053'1"?'
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1040#1087#1090#1077#1082#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100' '#1074#1085#1077' '#1088#1072#1073#1086#1090#1099' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053'1"'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1040#1087#1090#1077#1082#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100' '#1074#1085#1077' '#1088#1072#1073#1086#1090#1099' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053'1"'
+      ImageIndex = 76
+    end
+    object actExecClearUnitSupplementSUN1In: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spClearUnitSupplementSUN1In
+      StoredProcList = <
+        item
+          StoredProc = spClearUnitSupplementSUN1In
+        end>
+      Caption = 'actExecClearUnitSupplementSUN1In'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -2182,6 +2259,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
         item
           Visible = True
           ItemName = 'dxBarButton14'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton25'
         end>
     end
     object dxBarSubItem3: TdxBarSubItem
@@ -2213,6 +2294,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
         item
           Visible = True
           ItemName = 'dxBarButton15'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton26'
         end>
     end
     object dxBarSubItem4: TdxBarSubItem
@@ -2373,6 +2458,14 @@ inherited GoodsSUNForm: TGoodsSUNForm
     end
     object dxBarButton24: TdxBarButton
       Action = mactUpdate_isSupplementMarkSUN2
+      Category = 0
+    end
+    object dxBarButton25: TdxBarButton
+      Action = mactSetUnitSupplementSUN1in
+      Category = 0
+    end
+    object dxBarButton26: TdxBarButton
+      Action = mactClearUnitSupplementSUN1In
       Category = 0
     end
   end
@@ -3444,5 +3537,53 @@ inherited GoodsSUNForm: TGoodsSUNForm
     PackSize = 1
     Left = 512
     Top = 248
+  end
+  object spSetUnitSupplementSUN1In: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_UnitSupplementSUN1In'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitSupplementSUN1InId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitSupplementSUN1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 152
+  end
+  object spClearUnitSupplementSUN1In: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_UnitSupplementSUN1In'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitSupplementSUN1InId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 104
   end
 end

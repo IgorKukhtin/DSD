@@ -18,6 +18,8 @@ type
      class procedure AutomaticUpdateProgramStart;
      class procedure AutomaticUpdateRecoveryFarmacy;
      class procedure AutomaticDownloadFarmacy(APath : string);
+     class procedure AutomaticDownloadFarmacyCash(APath : string);
+     class procedure AutomaticDownloadFarmacyCashServise(APath : string);
      class function AutomaticUpdateProgramTestStart : boolean;
   end;
 
@@ -719,6 +721,27 @@ begin
     CreateShortCut(GetSpecialFolderPath(CSIDL_DESKTOP) + '\Farmacy.exe.lnk', '', APath + 'Farmacy.exe');
   end;
 
+end;
+
+class procedure TUpdater.AutomaticDownloadFarmacyCash(APath : string);
+begin
+
+  FileWriteString(APath + 'FarmacyCash.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('FarmacyCash.exe'),
+    GetBinaryPlatfotmSuffics(APath + 'FarmacyCash.exe', '')));
+
+  // Востановление ярлыка FarmacyCash.exe
+  if not FileExists(GetSpecialFolderPath(CSIDL_DESKTOP) + '\FarmacyCash.exe.lnk') then
+  begin
+    CreateShortCut(GetSpecialFolderPath(CSIDL_DESKTOP) + '\FarmacyCash.exe.lnk', '', APath + 'FarmacyCash.exe');
+  end;
+
+end;
+
+class procedure TUpdater.AutomaticDownloadFarmacyCashServise(APath : string);
+begin
+
+  FileWriteString(APath + 'FarmacyCashServise.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('FarmacyCashServise.exe'),
+    GetBinaryPlatfotmSuffics(APath + 'FarmacyCashServise.exe', '')));
 end;
 
 end.

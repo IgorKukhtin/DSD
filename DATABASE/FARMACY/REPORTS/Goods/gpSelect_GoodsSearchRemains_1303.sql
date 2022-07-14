@@ -30,6 +30,10 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , Price_min_NDS TFloat
              , Price_min TFloat
              , PriceSaleIncome TFloat
+             , IntenalSPId   Integer 
+             , IntenalSPName TVarChar
+             , BrandSPId     Integer 
+             , BrandSPName   TVarChar
              , Color_calc Integer
              )
 AS
@@ -59,13 +63,40 @@ BEGIN
                           , Goods_Main.Name
                           , Goods_Main.GoodsGroupId
                           , Goods_Main.NDSKindId
+
+                          , COALESCE (Object_IntenalSP.Id ,0)          ::Integer  AS IntenalSPId
+                          , COALESCE (Object_IntenalSP.ValueData,'')   ::TVarChar AS IntenalSPName
+                          , COALESCE (Object_BrandSP.Id ,0)            ::Integer  AS BrandSPId
+                          , COALESCE (Object_BrandSP.ValueData,'')     ::TVarChar AS BrandSPName
                      FROM Object_Goods_Main AS Goods_Main
                           INNER JOIN Object_Goods_Retail AS Goods_Retail
                                                          ON Goods_Main.Id  = Goods_Retail.GoodsMainId
                                                         AND Goods_Retail.RetailId = vbObjectId 
                           INNER JOIN tmpGoods1303 ON tmpGoods1303.GoodsId = Goods_Retail.Id
+
+                          LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
+                                                           ON MI_IntenalSP.MovementItemId = tmpGoods1303.MovementItemId
+                                                          AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+                          LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = MI_IntenalSP.ObjectId 
+
+                          LEFT JOIN MovementItemLinkObject AS MI_BrandSP
+                                                           ON MI_BrandSP.MovementItemId = tmpGoods1303.MovementItemId
+                                                          AND MI_BrandSP.DescId = zc_MILinkObject_BrandSP()
+                          LEFT JOIN Object AS Object_BrandSP ON Object_BrandSP.Id = MI_BrandSP.ObjectId 
+
                      WHERE (','||inCodeSearch||',' ILIKE '%,'||CAST(Goods_Main.ObjectCode AS TVarChar)||',%' AND inCodeSearch <> '')
                         OR (upper(Goods_Main.Name) ILIKE UPPER('%'||inGoodsSearch||'%')  AND inGoodsSearch <> '' AND inCodeSearch = '')
+                        OR (MI_IntenalSP.ObjectId in (SELECT Object_IntenalSP.Id        
+                                                      FROM OBJECT AS Object_IntenalSP
+                                                      WHERE Object_IntenalSP.DescId = zc_Object_IntenalSP()
+                                                        AND upper(Object_IntenalSP.ValueData) ILIKE UPPER('%'||inGoodsSearch||'%')) AND inGoodsSearch <> '' AND inCodeSearch = '')
+                        OR (MI_BrandSP.ObjectId  in (SELECT Object_BrandSP.Id        
+                                                     FROM OBJECT AS Object_BrandSP
+                                                     WHERE Object_BrandSP.DescId = zc_Object_BrandSP()
+                                                       AND upper(Object_BrandSP.ValueData) ILIKE UPPER('%'||inGoodsSearch||'%')) AND inGoodsSearch <> '' AND inCodeSearch = '')
+
+                    --    OR (upper(Object_IntenalSP.ValueData) ILIKE UPPER('%'||inGoodsSearch||'%')  AND inGoodsSearch <> '' AND inCodeSearch = '')
+                    --    OR (upper(Object_BrandSP.ValueData) ILIKE UPPER('%'||inGoodsSearch||'%')  AND inGoodsSearch <> '' AND inCodeSearch = '')
                      )
 
       , containerAll AS (SELECT Container.descid
@@ -462,6 +493,10 @@ BEGIN
              , ROUND (MinPrice_List.Price * (1.0 + COALESCE (tmpGoodsParams.NDS, 0) / 100.0), 2) :: TFloat  AS Price_min_NDS
              , ROUND (MinPrice_List.Price * (1.0 + COALESCE (tmpGoodsParams.NDS, 0) / 100.0) * (1.0 + 8.0 / 100.0), 2) :: TFloat  AS Price_min
              , tmpIncome_1303.PriceSale AS PriceSaleIncome
+             , tmpGoods.IntenalSPId
+             , tmpGoods.IntenalSPName
+             , tmpGoods.BrandSPId
+             , tmpGoods.BrandSPName
              , CASE WHEN tmpGoods1303.PriceSale <
                          CASE WHEN COALESCE(tmpData.Amount, 0) <> 0 
                               THEN CASE WHEN Object_Price.Price < COALESCE (tmpIncome_1303.PriceSale, ROUND (MinPrice_List.Price * (1.0 + COALESCE (tmpGoodsParams.NDS, 0) / 100.0) * (1.0 + 8.0 / 100.0), 2))
@@ -514,4 +549,4 @@ $BODY$
 -- тест
 -- 
 
-select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'зафирон' , inPartnerMedicalID := 0 /*4474307*/ ,  inSession := '3');
+select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'PANTOPRAZOLE' , inPartnerMedicalID := 0 /*4474307*/ ,  inSession := '3');

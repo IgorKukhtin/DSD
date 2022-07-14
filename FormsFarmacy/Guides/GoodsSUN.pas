@@ -228,6 +228,16 @@ type
     mactUpdate_isSupplementMarkSUN2: TMultiAction;
     execUpdate_isSupplementMarkSUN2: TdsdExecStoredProc;
     dxBarButton24: TdxBarButton;
+    UnitSupplementSUN1InName: TcxGridDBColumn;
+    mactSetUnitSupplementSUN1in: TMultiAction;
+    actChoiceUnitSupplementSUN1In: TOpenChoiceForm;
+    actExecSetUnitSupplementSUN1In: TdsdExecStoredProc;
+    spSetUnitSupplementSUN1In: TdsdStoredProc;
+    spClearUnitSupplementSUN1In: TdsdStoredProc;
+    dxBarButton25: TdxBarButton;
+    mactClearUnitSupplementSUN1In: TMultiAction;
+    actExecClearUnitSupplementSUN1In: TdsdExecStoredProc;
+    dxBarButton26: TdxBarButton;
   private
     { Private declarations }
   public

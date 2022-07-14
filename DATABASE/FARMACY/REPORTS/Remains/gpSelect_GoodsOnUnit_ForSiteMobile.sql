@@ -611,6 +611,91 @@ BEGIN
                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
                            GROUP BY MovementItemMaster.ObjectId
                                   , MovementLinkObject_Unit.ObjectId)                      
+          -- Товары дисконтной программы
+          , tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
+                                     , ObjectLink_Unit.ChildObjectId                  AS UnitId
+                                FROM Object AS Object_DiscountExternalTools
+                                      LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                           ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalTools.Id
+                                                          AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                           ON ObjectLink_Unit.ObjectId = Object_DiscountExternalTools.Id
+                                                          AND ObjectLink_Unit.DescId = zc_ObjectLink_DiscountExternalTools_Unit()
+                                 WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools()
+                                   AND Object_DiscountExternalTools.isErased = False
+                                 )
+          -- Товары дисконтной программы
+          , tmpGoodsDiscount AS (SELECT tmpUnitDiscount.UnitId                                 AS UnitId
+                                      , ObjectLink_BarCode_Goods.ChildObjectId                 AS GoodsId
+                                      , tmpUnitDiscount.DiscountExternalId                     AS DiscountExternalId
+                                      , COALESCE (ObjectBoolean_DiscountSite.ValueData, False) AS isDiscountSite
+                                                   
+                                      , MAX(ObjectFloat_MaxPrice.ValueData)                    AS MaxPrice 
+                                      , MAX(ObjectFloat_DiscountProcent.ValueData)             AS DiscountProcent 
+                                                                               
+                                  FROM Object AS Object_BarCode
+
+                                       LEFT JOIN ObjectBoolean AS ObjectBoolean_DiscountSite
+                                                                ON ObjectBoolean_DiscountSite.ObjectId = Object_BarCode.Id
+                                                               AND ObjectBoolean_DiscountSite.DescId = zc_ObjectBoolean_BarCode_DiscountSite()
+                                                               AND ObjectBoolean_DiscountSite.ValueData = True
+
+                                       LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                            ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                           AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                           
+                                       LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                            ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                           AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                       LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+                                       LEFT JOIN tmpUnitDiscount ON tmpUnitDiscount.DiscountExternalId = ObjectLink_BarCode_Object.ChildObjectId 
+
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                                             ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                                            AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
+                                                             ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
+                                                            AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()
+
+                                 WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                   AND Object_BarCode.isErased = False
+                                   AND Object_Object.isErased = False
+                                   AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
+                                   AND ObjectLink_BarCode_Goods.ChildObjectId in (SELECT DISTINCT _tmpGoodsMinPrice_List.GoodsId FROM _tmpGoodsMinPrice_List)
+                                 GROUP BY tmpUnitDiscount.UnitId
+                                        , ObjectLink_BarCode_Goods.ChildObjectId
+                                        , ObjectBoolean_DiscountSite.ValueData
+                                        , tmpUnitDiscount.DiscountExternalId 
+                          )
+          , tmpGoodsSP AS (SELECT Object_Goods_Retail.Id      AS GoodsId
+                                                                -- № п/п - на всякий случай
+                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                           FROM Movement
+                                INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                                        ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                       AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                                       AND MovementDate_OperDateStart.ValueData  <= CURRENT_DATE
+ 
+                                INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                        ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                       AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                                       AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+                                INNER JOIN MovementLinkObject AS MLO_MedicalProgramSP
+                                                              ON MLO_MedicalProgramSP.MovementId = Movement.Id
+                                                             AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+ 
+                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+ 
+                                LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail 
+                                                              ON Object_Goods_Retail.GoodsMainId = MovementItem.ObjectId
+                                                             AND Object_Goods_Retail.RetailId = 4
+
+                           WHERE Movement.DescId = zc_Movement_GoodsSP()
+                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          )
                            
 
         SELECT Object_Goods.Id                                                     AS Id
@@ -626,23 +711,27 @@ BEGIN
                                             COALESCE (Reserve_TP.Amount, 0))
                     END ::TFloat                                                   AS Remains
 
-             , CASE WHEN COALESCE((tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
-                                  COALESCE (PDGoodsRemains.Amount, 0) -
-                                  COALESCE (Reserve_TP.Amount, 0)), 0) <= 0
-                    THEN Null
-                    WHEN tmpList.GoodsId_retail = tmpList.GoodsId
-                    THEN CASE WHEN COALESCE(tmpPrice_Site.Price, 0) > 0 AND tmpPrice_Site.Price > Price_Unit.Price
-                                        THEN tmpPrice_Site.Price ELSE Price_Unit.Price END
-                    ELSE Price_Unit.Price END :: TFloat  AS Price_unit
+             , zfCalc_PriceCash(CASE WHEN COALESCE((tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
+                                                   COALESCE (PDGoodsRemains.Amount, 0) -
+                                                   COALESCE (Reserve_TP.Amount, 0)), 0) <= 0
+                                     THEN Null
+                                     WHEN tmpList.GoodsId_retail = tmpList.GoodsId
+                                     THEN CASE WHEN COALESCE(tmpPrice_Site.Price, 0) > 0 AND tmpPrice_Site.Price > Price_Unit.Price
+                                                         THEN tmpPrice_Site.Price ELSE Price_Unit.Price END
+                                     ELSE Price_Unit.Price END,
+                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                     COALESCE(GoodsDiscount.GoodsId, 0) <> 0) :: TFloat  AS Price_unit
              
              
-             , CASE WHEN COALESCE((tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
-                                  COALESCE (PDGoodsRemains.Amount, 0) -
-                                  COALESCE (Reserve_TP.Amount, 0)), 0) <= 0
-                    THEN Null
-                    WHEN tmpList.GoodsId_retail = tmpList.GoodsId
-                    THEN COALESCE (tmpPrice_Site.Price, Price_Unit.Price)
-                    ELSE Price_Unit.Price END :: TFloat AS Price_unit_sale
+             , zfCalc_PriceCash(CASE WHEN COALESCE((tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
+                                                   COALESCE (PDGoodsRemains.Amount, 0) -
+                                                   COALESCE (Reserve_TP.Amount, 0)), 0) <= 0
+                                     THEN Null
+                                     WHEN tmpList.GoodsId_retail = tmpList.GoodsId
+                                     THEN COALESCE (tmpPrice_Site.Price, Price_Unit.Price)
+                                     ELSE Price_Unit.Price END,
+                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                     COALESCE(GoodsDiscount.GoodsId, 0) <> 0) :: TFloat AS Price_unit_sale
 
              , COALESCE(tmpList.Multiplicity, 0) :: TFloat AS Multiplicity
 
@@ -669,6 +758,15 @@ BEGIN
              LEFT JOIN tmpPDGoodsRemains AS PDGoodsRemains
                                          ON PDGoodsRemains.GoodsId = tmpList.GoodsId_retail
                                         AND PDGoodsRemains.UnitId = tmpList.UnitId
+
+             LEFT JOIN tmpGoodsDiscount AS GoodsDiscount
+                                        ON GoodsDiscount.GoodsId = tmpList.GoodsId
+                                       AND GoodsDiscount.UnitId = tmpList.UnitId
+                                       
+             -- Соц Проект
+             LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = tmpList.GoodsId
+                                 AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
+
         WHERE COALESCE(CASE WHEN (tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
                                                COALESCE (PDGoodsRemains.Amount, 0) -
                                                COALESCE (Reserve_TP.Amount, 0)) <= 0 THEN NULL

@@ -5,11 +5,12 @@ DROP FUNCTION IF EXISTS gpSelect_GoodsSPRegistry_1303_All (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_GoodsSPRegistry_1303_All(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (GoodsId       Integer
-             , GoodsMainId   Integer
-             , NDS           TFloat
-             , PriceOptSP    TFloat
-             , PriceSale     TFloat
+RETURNS TABLE (GoodsId        Integer
+             , GoodsMainId    Integer
+             , NDS            TFloat
+             , PriceOptSP     TFloat
+             , PriceSale      TFloat
+             , MovementItemId Integer
              )
 AS
 $BODY$
@@ -67,7 +68,8 @@ BEGIN
                               WHERE MovementItem.OperDate <= CURRENT_DATE
                                 AND MovementItem.DateEnd > CURRENT_DATE
                               )
-      , tmpGoodsSPRegistry_1303 AS (SELECT MovementItem.ObjectId         AS GoodsId
+      , tmpGoodsSPRegistry_1303 AS (SELECT MovementItem.Id               AS MovementItemId
+                                         , MovementItem.ObjectId         AS GoodsId
                                          , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat       AS NDS
                                          , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
                                          , ROUND(MIFloat_PriceOptSP.ValueData  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2)::TFloat AS PriceSale
@@ -116,6 +118,7 @@ BEGIN
 
              , COALESCE (tmpMIGoodsSP_1303.PriceSale,
                ROUND(tmpGoodsSPRegistry_1303.PriceOptSP  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2), 0)::TFloat AS PriceSale
+             , tmpGoodsSPRegistry_1303.MovementItemId
 
         FROM tmpGoodsSPRegistry_1303
         

@@ -2814,6 +2814,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MCRequestItem_MCRequest() RETURNS Integ
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
  SELECT 'zc_ObjectLink_MCRequestItem_MCRequest', 'Запрос на изменение категории наценки', zc_Object_MCRequestItem(), zc_Object_MCRequest() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MCRequestItem_MCRequest');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_UnitSupplementSUN1In() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UnitSupplementSUN1In'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_UnitSupplementSUN1In', 'Аптека получатель вне работы дополнения СУН1', zc_Object_Goods(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UnitSupplementSUN1In');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

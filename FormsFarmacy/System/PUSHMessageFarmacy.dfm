@@ -24,7 +24,7 @@ object PUSHMessageFarmacyForm: TPUSHMessageFarmacyForm
     object Memo: TcxMemo
       Left = 1
       Top = 1
-      Align = alClient
+      Align = alTop
       Lines.Strings = (
         '')
       ParentFont = False
@@ -45,11 +45,13 @@ object PUSHMessageFarmacyForm: TPUSHMessageFarmacyForm
     end
     object cxGrid: TcxGrid
       Left = 1
-      Top = 62
+      Top = 70
       Width = 564
-      Height = 207
-      Align = alBottom
+      Height = 199
+      Align = alClient
       TabOrder = 1
+      ExplicitTop = 62
+      ExplicitHeight = 207
       object cxGridDBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = PUSHDS
@@ -72,6 +74,16 @@ object PUSHMessageFarmacyForm: TPUSHMessageFarmacyForm
       object cxGridLevel1: TcxGridLevel
         GridView = cxGridDBTableView1
       end
+    end
+    object Splitter: TcxSplitter
+      Left = 1
+      Top = 62
+      Width = 564
+      Height = 8
+      HotZoneClassName = 'TcxMediaPlayer8Style'
+      AlignSplitter = salTop
+      Control = Memo
+      ExplicitTop = -7
     end
   end
   object pn2: TPanel

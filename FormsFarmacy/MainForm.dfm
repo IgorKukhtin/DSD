@@ -890,7 +890,7 @@
     object actGoodsSPJournal: TdsdOpenForm [66]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+      Caption = #1056#1077#1077#1089#1090#1088' '#1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1054#1047')'
       FormName = 'TGoodsSPJournalForm'
       FormNameParam.Value = 'TGoodsSPJournalForm'
       FormNameParam.DataType = ftString
@@ -5047,7 +5047,7 @@
     object actGoodsSP_1303: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072'  '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303  ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+      Caption = #1056#1077#1077#1089#1090#1088' '#1055#1086#1089#1090'. 1303 ('#1088#1091#1095#1085#1086#1081' '#1074#1074#1086#1076'-'#1086#1090#1087#1091#1097#1077#1085#1085#1086' '#1087#1086' '#1082#1072#1089#1089#1077')'
       FormName = 'TGoodsSP_1303JournalForm'
       FormNameParam.Value = 'TGoodsSP_1303JournalForm'
       FormNameParam.DataType = ftString
@@ -5147,7 +5147,7 @@
     object actGoodsSPRegistry_1303: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072' 1303 ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+      Caption = #1056#1077#1077#1089#1090#1088' '#1055#1086#1089#1090'. 1303 ('#1076#1072#1085#1085#1099#1077' '#1050#1072#1096#1090#1072#1085#1072')'
       FormName = 'TGoodsSPRegistry_1303JournalForm'
       FormNameParam.Value = 'TGoodsSPRegistry_1303JournalForm'
       FormNameParam.DataType = ftString
@@ -5169,7 +5169,7 @@
     object actGoodsSPSearch_1303Journal: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072' 1303 '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072
+      Caption = #1056#1077#1077#1089#1090#1088' '#1055#1086#1089#1090'. 1303 ('#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1054#1047')'
       FormName = 'TGoodsSPSearch_1303JournalForm'
       FormNameParam.Value = 'TGoodsSPSearch_1303JournalForm'
       FormNameParam.DataType = ftString
@@ -5202,8 +5202,8 @@
     object actChoiceGoodsSPSearch_1303: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' "'#1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303"'
-      Hint = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' "'#1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303"'
+      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1086#1089#1090'. 1303 ('#1056#1054#1054#1062')'
+      Hint = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1086#1089#1090'. 1303 ('#1056#1054#1054#1062')'
       FormName = 'TChoiceGoodsSPSearch_1303Form'
       FormNameParam.Value = 'TChoiceGoodsSPSearch_1303Form'
       FormNameParam.DataType = ftString
@@ -5221,6 +5221,17 @@
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
+    end
+    object actLoadingFarmacyCash: TdsdOpenStaticForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' FarmacyCash'
+      FormName = 'TLoadingFarmacyCashForm'
+      FormNameParam.Value = 'TLoadingFarmacyCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -6814,6 +6825,9 @@
       end
       object N270: TMenuItem [43]
         Action = actClearDefaultUnit
+      end
+      object FarmacyCash2: TMenuItem
+        Action = actLoadingFarmacyCash
       end
     end
   end
