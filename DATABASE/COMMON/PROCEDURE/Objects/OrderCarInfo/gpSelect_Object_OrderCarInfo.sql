@@ -50,12 +50,12 @@ BEGIN
                            , COALESCE (ObjectFloat_Min.ValueData,0)             :: TFloat  AS Min
 
                              -- !!!Дата/время отгрузки - Расчет!!!
-                           , (CURRENT_DATE - (CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN 7 ELSE EXTRACT (DOW FROM CURRENT_DATE) END :: TVarChar || ' DAY') :: INTERVAL
+                           , (CURRENT_DATE - (zfCalc_DayOfWeekNumber (CURRENT_DATE) :: TVarChar || ' DAY') :: INTERVAL
                                            + ((ObjectFloat_OperDatePartner.ValueData :: Integer) :: TVarChar || ' DAY') :: INTERVAL
                                            + ((CASE WHEN ObjectFloat_Days.ValueData > 0 THEN  1 * ObjectFloat_Days.ValueData ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
                                            - ((CASE WHEN ObjectFloat_Days.ValueData < 0 THEN -1 * ObjectFloat_Days.ValueData ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
-                                           + ((COALESCE (ObjectFloat_Hour.ValueData, 0) :: Integer) :: TVarChar || ' HOUR') :: INTERVAL
-                                           + ((COALESCE (ObjectFloat_Min.ValueData, 0) :: Integer) :: TVarChar || ' MINUTE') :: INTERVAL
+                                           + ((COALESCE (ObjectFloat_Hour.ValueData, 0) :: Integer) :: TVarChar || ' HOUR')   :: INTERVAL
+                                           + ((COALESCE (ObjectFloat_Min.ValueData, 0)  :: Integer) :: TVarChar || ' MINUTE') :: INTERVAL
                              ) :: TDateTime AS OperDate_CarInfo
 
                            , Object_OrderCarInfo.isErased  AS isErased

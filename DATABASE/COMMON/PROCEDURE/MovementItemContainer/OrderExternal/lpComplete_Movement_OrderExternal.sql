@@ -57,7 +57,7 @@ BEGIN
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
 
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN Object_From.Id ELSE 0 END, 0) AS PartnerId
-          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE 0 END, 0) AS UnitId_From
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() OR (MovementLinkObject_Route.ObjectId IS NULL AND Object_Route.Id IS NULL) THEN Object_From.Id ELSE 0 END, 0) AS UnitId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_ArticleLoss() THEN Object_From.Id ELSE 0 END, 0) AS ArticleLoss_From
 
           , MovementLinkObject_Route.ObjectId AS RouteId
@@ -206,9 +206,16 @@ order by Movement.OperDate*/
 
 
      -- заполняем
-     IF EXISTS (SELECT 1 FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_CarInfo() AND DATE_TRUNC ('DAY', MovementDate.ValueData) = MovementDate.ValueData)
+     IF EXISTS (SELECT 1
+                FROM MovementDate
+                WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_CarInfo()
+                  AND (DATE_TRUNC ('DAY', MovementDate.ValueData) = MovementDate.ValueData
+                    OR EXTRACT (HOUR FROM MovementDate.ValueData) = 0
+                      )
+               )
         AND vbUnitId_to = 8459 -- Розподільчий комплекс
-      --AND inUserId = 5
+        AND inUserId = 5
+        AND 1=0
      THEN
          -- Нашли
          vbMovementId_CarInfo:= (SELECT MAX (Movement.Id)
@@ -227,7 +234,9 @@ order by Movement.OperDate*/
                                       INNER JOIN MovementDate AS MovementDate_CarInfo
                                                               ON MovementDate_CarInfo.MovementId = Movement.Id
                                                              AND MovementDate_CarInfo.DescId     = zc_MovementDate_CarInfo()
-                                                             AND MovementDate_CarInfo.ValueData <> DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
+                                                             AND (MovementDate_CarInfo.ValueData <> DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
+                                                               OR EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) <> 0
+                                                                 )
                                       -- Дата такая же
                                       INNER JOIN MovementDate AS MovementDate_OperDatePartner
                                                               ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -274,7 +283,62 @@ order by Movement.OperDate*/
                    WHERE MovementDate_CarInfo.MovementId = vbMovementId_CarInfo
                      AND MovementDate_CarInfo.DescId     = zc_MovementDate_CarInfo()
                   ) AS tmp;
+         ELSE
+             -- заполняем
+             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), inMovementId, tmp.OperDate_CarInfo)        -- Дата/время отгрузки
+             FROM (SELECT COALESCE (
+                                    (SELECT -- !!!Дата/время отгрузки - Расчет!!!
+                                           (vbOperDatePartner 
+                                          + ((CASE WHEN ObjectFloat_Days.ValueData > 0 THEN  1 * ObjectFloat_Days.ValueData ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                          - ((CASE WHEN ObjectFloat_Days.ValueData < 0 THEN -1 * ObjectFloat_Days.ValueData ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                          + ((COALESCE (ObjectFloat_Hour.ValueData, 0) :: Integer) :: TVarChar || ' HOUR')   :: INTERVAL
+                                          + ((COALESCE (ObjectFloat_Min.ValueData, 0)  :: Integer) :: TVarChar || ' MINUTE') :: INTERVAL
+                                           ) :: TDateTime
+                                    FROM Object AS Object_OrderCarInfo
+                                         LEFT JOIN ObjectLink AS ObjectLink_Route
+                                                              ON ObjectLink_Route.ObjectId = Object_OrderCarInfo.Id
+                                                             AND ObjectLink_Route.DescId   = zc_ObjectLink_OrderCarInfo_Route()
+                                         LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                                              ON ObjectLink_Retail.ObjectId = Object_OrderCarInfo.Id
+                                                             AND ObjectLink_Retail.DescId   = zc_ObjectLink_OrderCarInfo_Retail()
 
+                                         INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                               ON ObjectLink_Unit.ObjectId      = Object_OrderCarInfo.Id
+                                                              AND ObjectLink_Unit.DescId        = zc_ObjectLink_OrderCarInfo_Unit()
+                                                              AND ObjectLink_Unit.ChildObjectId = vbUnitId_to
+
+                                         INNER JOIN ObjectFloat AS ObjectFloat_OperDate
+                                                                ON ObjectFloat_OperDate.ObjectId  = Object_OrderCarInfo.Id
+                                                               AND ObjectFloat_OperDate.DescId    = zc_ObjectFloat_OrderCarInfo_OperDate()
+                                                               AND ObjectFloat_OperDate.ValueData =  zfCalc_DayOfWeekNumber (vbOperDate)
+                                         INNER JOIN ObjectFloat AS ObjectFloat_OperDatePartner
+                                                                ON ObjectFloat_OperDatePartner.ObjectId  = Object_OrderCarInfo.Id
+                                                               AND ObjectFloat_OperDatePartner.DescId    = zc_ObjectFloat_OrderCarInfo_OperDatePartner()
+                                                               AND ObjectFloat_OperDatePartner.ValueData = zfCalc_DayOfWeekNumber (vbOperDatePartner)
+
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Days
+                                                               ON ObjectFloat_Days.ObjectId = Object_OrderCarInfo.Id
+                                                              AND ObjectFloat_Days.DescId = zc_ObjectFloat_OrderCarInfo_Days()
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Hour
+                                                               ON ObjectFloat_Hour.ObjectId = Object_OrderCarInfo.Id
+                                                              AND ObjectFloat_Hour.DescId = zc_ObjectFloat_OrderCarInfo_Hour()
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Min
+                                                               ON ObjectFloat_Min.ObjectId = Object_OrderCarInfo.Id
+                                                              AND ObjectFloat_Min.DescId = zc_ObjectFloat_OrderCarInfo_Min()
+                                    WHERE Object_OrderCarInfo.DescId   = zc_Object_OrderCarInfo()
+                                      AND Object_OrderCarInfo.isErased = FALSE
+                                      AND COALESCE (ObjectLink_Route.ChildObjectId, 0)  = COALESCE (vbRouteId, 0)
+                                      AND (ObjectLink_Retail.ChildObjectId = vbRetailId    OR COALESCE (vbRetailId, 0) = 0)
+                                      AND (ObjectLink_Retail.ChildObjectId = vbUnitId_From OR COALESCE (vbUnitId_From, 0) = 0)
+                                    ORDER BY ObjectFloat_Hour.ValueData DESC
+                                    LIMIT 1
+                                   )
+                                 , MovementDate_CarInfo.ValueData
+                                  ) AS OperDate_CarInfo
+                   FROM MovementDate AS MovementDate_CarInfo
+                   WHERE MovementDate_CarInfo.MovementId = inMovementId
+                     AND MovementDate_CarInfo.DescId     = zc_MovementDate_CarInfo()
+                  ) AS tmp;
          END IF;
      END IF;
 
@@ -286,7 +350,7 @@ order by Movement.OperDate*/
          IF vbIsSamoV = TRUE
          THEN
              -- Дата/время отгрузки
-             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), inMovementId, vbOperDate + INTERVAL '1 DAY' + INTERVAL '5 MIN');
+             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), inMovementId, vbOperDate + INTERVAL '1 DAY' + INTERVAL '0 MIN');
          ELSE
              -- Дата/время отгрузки
              PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), inMovementId, vbOperDate + INTERVAL '1 DAY' + INTERVAL '0 MIN');
