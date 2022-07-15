@@ -381,6 +381,7 @@ begin
               //
               if (StartDate <= DocData) and (DocData <= EndDate) then
               begin
+// if List[i] = 'comdoc_20220708093713_f0d886da-cc79-4720-b444-88ac76b81f02_0024163_007.p7s' then ShowMessage('');
                 // тянем файл к нам
                 Stream.Clear;
                 FIdFTP.Get(List[i], Stream);
@@ -3535,7 +3536,7 @@ begin
     else begin
       ParamByName('inDesc').Value := 'Sale';
       ParamByName('inInvNumberTax').Value := '';
-      ParamByName('inInvNumberSaleLink').Value := '';
+      //ParamByName('inInvNumberSaleLink').Value := '';
     end;
 
     for i := 0 to Сторони.Count - 1 do
