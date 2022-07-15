@@ -119,6 +119,7 @@ type
     OperDate_CarInfo: TcxGridDBColumn;
     OperDate_CarInfo_date: TcxGridDBColumn;
     TotalAmount_Weight: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

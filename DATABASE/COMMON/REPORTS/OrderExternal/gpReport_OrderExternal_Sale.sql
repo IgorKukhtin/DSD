@@ -29,6 +29,8 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , InvNumber TVarChar, InvNumberOrderPartner TVarChar, InvNumber_Order TVarChar
              , FromDescName TVarChar, FromId Integer, FromCode Integer, FromName TVarChar
              , RouteId Integer, RouteName TVarChar
+             , RetailId Integer, RetailName TVarChar
+
              , PaidKindId Integer, PaidKindName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, Article TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -925,6 +927,9 @@ BEGIN
            , Object_From.ValueData                      AS FromName
            , Object_Route.Id                            AS RouteId
            , Object_Route.ValueData                     AS RouteName
+           , Object_Retail.Id                           AS RetailId
+           , Object_Retail.ValueData                    AS RetailName
+           
            , Object_PaidKind.Id                         AS PaidKindId
            , Object_PaidKind.ValueData                  AS PaidKindName
            , Object_GoodsKind.Id                        AS GoodsKindId
@@ -1017,6 +1022,14 @@ BEGIN
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
           LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId
           
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = tmpMovement.FromId
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
           LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMovement.RouteId
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMovement.PaidKindId
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovement.GoodsId

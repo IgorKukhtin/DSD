@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_GoodsByGoodsKind_OrderScaleCeh() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_GoodsByGoodsKind_OrderScaleCeh' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_GoodsByGoodsKind_Sticker() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_GoodsByGoodsKind_Sticker' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_GoodsByGoodsKind_Norm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_GoodsByGoodsKind_Norm' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_GoodsByGoodsKind_NewQuality() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_GoodsByGoodsKind_Top' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_GoodsByGoodsKind_NewQuality() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_GoodsByGoodsKind_NewQuality' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_GoodsByGoodsKind_Top() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_GoodsByGoodsKind_Top' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 DO $$
@@ -47,22 +47,22 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Object_G
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_GoodsByGoodsKind())||'> - изменение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_VMC');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_GoodsByGoodsKind_Sticker()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_GoodsByGoodsKind_Norm() -- zc_Enum_Process_Update_Object_GoodsByGoodsKind_Sticker
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 6
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_GoodsByGoodsKind())||'> - изменение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_GoodsByGoodsKind_Norm');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_GoodsByGoodsKind_Sticker()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_GoodsByGoodsKind_NewQuality() -- zc_Enum_Process_Update_Object_GoodsByGoodsKind_Sticker
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 7
-                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_GoodsByGoodsKind())||'> - изменение данных.'
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_GoodsByGoodsKind())||'> - изменение данных.Качественные.'
                                   , inEnumName:= 'zc_Enum_Process_Update_GoodsByGoodsKind_NewQuality');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_GoodsByGoodsKind_Sticker()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_GoodsByGoodsKind_Top() -- zc_Enum_Process_Update_Object_GoodsByGoodsKind_Sticker
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 8
-                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_GoodsByGoodsKind())||'> - изменение данных.'
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_GoodsByGoodsKind())||'> - изменение данных.Топ.'
                                   , inEnumName:= 'zc_Enum_Process_Update_GoodsByGoodsKind_Top');
 END $$;
 
