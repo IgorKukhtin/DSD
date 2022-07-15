@@ -1,8 +1,8 @@
--- Function: gpReport_OrderExternal_UpdateGoodsPrint()
+-- Function: gpReport_OrderExternal_UpdateGoodsDiffPrint()
 
-DROP FUNCTION IF EXISTS gpReport_OrderExternal_UpdateGoodsPrint (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal_UpdateGoodsDiffPrint (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_OrderExternal_UpdateGoodsPrint(
+CREATE OR REPLACE FUNCTION gpReport_OrderExternal_UpdateGoodsDiffPrint(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inIsDate_CarInfo    Boolean   , -- по  дате  Дата/время отгрузки
@@ -17,8 +17,8 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKind
              , Ord Integer
 
              , Amount_sh                 TFloat
-             , AmountWeight              TFloat      --не хватает для резерва
-             , AmountWeight1             TFloat      --не хватает для резерва
+             , AmountWeight              TFloat
+             , AmountWeight1             TFloat
              , AmountWeight2             TFloat
              , AmountWeight3             TFloat
              , AmountWeight4             TFloat
@@ -128,7 +128,6 @@ BEGIN
                         )
             -- группа
           , tmpRoute AS (SELECT tmp.OperDate_CarInfo
-                            --, STRING_AGG (tmp.RouteName, '; ' ) AS RouteName
                               , STRING_AGG (tmp.RouteName, CHR (13)) AS RouteName
                          FROM (SELECT DISTINCT
                                       tmpMovementAll.OperDate_CarInfo
@@ -348,8 +347,7 @@ BEGIN
              , tmpMovement.OperDate_inf :: Text AS OperDate_inf
         FROM tmpMov AS tmpMovement
         -- !!!если есть заказ!!!
-        WHERE tmpMovement.Amount_sh    <> 0
-           OR tmpMovement.AmountWeight <> 0
+        WHERE tmpMovement.AmountWeight_diff <> 0
        ;
 
      -- Результат
@@ -427,18 +425,18 @@ BEGIN
 
                                , _Result.AmountWeight
                                , _Result.Amount_sh
-                               , CASE WHEN _Result.Ord = 1  THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight1
-                               , CASE WHEN _Result.Ord = 2  THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight2
-                               , CASE WHEN _Result.Ord = 3  THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight3
-                               , CASE WHEN _Result.Ord = 4  THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight4
-                               , CASE WHEN _Result.Ord = 5  THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight5
-                               , CASE WHEN _Result.Ord = 6  THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight6
-                               , CASE WHEN _Result.Ord = 7  THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight7
-                               , CASE WHEN _Result.Ord = 8  THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight8
-                               , CASE WHEN _Result.Ord = 9  THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight9
-                               , CASE WHEN _Result.Ord = 10 THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight10
-                               , CASE WHEN _Result.Ord = 11 THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight11
-                               , CASE WHEN _Result.Ord = 12 THEN _Result.AmountWeight ELSE 0 END  AS AmountWeight12
+                               , CASE WHEN _Result.Ord = 1  THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight1
+                               , CASE WHEN _Result.Ord = 2  THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight2
+                               , CASE WHEN _Result.Ord = 3  THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight3
+                               , CASE WHEN _Result.Ord = 4  THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight4
+                               , CASE WHEN _Result.Ord = 5  THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight5
+                               , CASE WHEN _Result.Ord = 6  THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight6
+                               , CASE WHEN _Result.Ord = 7  THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight7
+                               , CASE WHEN _Result.Ord = 8  THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight8
+                               , CASE WHEN _Result.Ord = 9  THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight9
+                               , CASE WHEN _Result.Ord = 10 THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight10
+                               , CASE WHEN _Result.Ord = 11 THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight11
+                               , CASE WHEN _Result.Ord = 12 THEN _Result.AmountWeight_diff ELSE 0 END  AS AmountWeight12
 
                                , _Result.AmountWeight_child_one
                                , _Result.AmountWeight_child_sec
@@ -536,8 +534,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 01.07.22         *
+ 14.07.22         *
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal_UpdateGoodsPrint (inStartDate:= '05.07.2022', inEndDate:= '28.06.2022', inIsDate_CarInfo:= FALSE, inToId := 8459, inSession := '5') WHERE GoodsCode IN (306, 163)
+-- SELECT * FROM gpReport_OrderExternal_UpdateGoodsDiffPrint (inStartDate:= '05.07.2022', inEndDate:= '28.06.2022', inIsDate_CarInfo:= FALSE, inToId := 8459, inSession := '5') WHERE GoodsCode IN (306, 163)

@@ -104,7 +104,8 @@ uses
   Cash_Emulation in '..\FormsFarmacy\Cash\Cash_Emulation.pas',
   Cash_FP3530T_NEW in '..\FormsFarmacy\Cash\Cash_FP3530T_NEW.pas',
   FP3141_TLB in '..\FormsFarmacy\Cash\FP3141_TLB.pas',
-  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas';
+  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
+  LoadingFarmacyCash in '..\FormsFarmacy\Guides\LoadingFarmacyCash.pas' {LoadingFarmacyCashForm};
 
 {$R *.res}
 

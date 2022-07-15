@@ -1,6 +1,6 @@
 inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
   ActiveControl = edCodeSearch
-  Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' "'#1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303"'
+  Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1086#1089#1090'. 1303 ('#1056#1054#1054#1062')'
   ClientHeight = 462
   ClientWidth = 885
   ShowHint = True
@@ -76,6 +76,9 @@ inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
             end>
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.CellAutoHeight = True
           Styles.Content = nil
           Styles.Inactive = nil

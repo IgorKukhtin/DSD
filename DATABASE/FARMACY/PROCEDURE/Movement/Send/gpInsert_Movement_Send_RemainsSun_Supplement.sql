@@ -17,7 +17,7 @@ BEGIN
      vbUserId := inSession;
 
      -- все Товары для схемы SUN Supplement
-     CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, isSupplementMarkSUN1 Boolean, isSmudge Boolean, SupplementMin Integer, SupplementMinPP Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, isSupplementMarkSUN1 Boolean, isSmudge Boolean, SupplementMin Integer, SupplementMinPP Integer, UnitSupplementSUN1InId Integer) ON COMMIT DROP;
      -- все подразделения отдающие товар SUN Supplement
      CREATE TEMP TABLE _tmpGoodsUnit_SUN_Supplement   (GoodsId Integer, UnitOutId Integer) ON COMMIT DROP;
 

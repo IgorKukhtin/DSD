@@ -91,7 +91,7 @@ BEGIN
 
   --raise notice 'Value 05: % % %', vbStartDate, vbEndDate, inSession;
 
-  IF vbStartDate IS NULL OR vbEndDate IS NULL OR vbStartDate::Time < CURRENT_TIMESTAMP::Time OR  vbEndDate::Time  > CURRENT_TIMESTAMP::Time
+  IF vbStartDate IS NULL OR vbEndDate IS NULL OR vbStartDate::Time > CURRENT_TIMESTAMP::Time OR vbEndDate::Time < CURRENT_TIMESTAMP::Time
   THEN
     RETURN 0;
   END IF;

@@ -32,6 +32,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UnitSupplementSUN1Out(), inGoodsMainId, NULL);
    -- сохранили свойство <Дополнение СУН1>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UnitSupplementSUN2Out(), inGoodsMainId, NULL);
+   -- сохранили свойство <Дополнение СУН1>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UnitSupplementSUN1In(), inGoodsMainId, NULL);
 
    -- сохранили свойство <Дополнение СУН1>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SupplementSUN1Smudge(), inGoodsMainId, False);
@@ -47,6 +49,7 @@ BEGIN
                                 , isSupplementMarkSUN1 = False
                                 , UnitSupplementSUN1OutId = NULL
                                 , UnitSupplementSUN2OutId = NULL
+                                , UnitSupplementSUN1InId = NULL
                                 , isSupplementSmudge = False
                                 , SupplementMin = 0
                                 , SupplementMinPP = 0

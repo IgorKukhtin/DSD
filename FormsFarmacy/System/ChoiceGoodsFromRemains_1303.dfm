@@ -84,6 +84,9 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
             end>
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -286,6 +289,22 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
           object colColor_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
             Visible = False
+          end
+          object celIntenalSPName: TcxGridDBColumn
+            Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072
+            DataBinding.FieldName = 'IntenalSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 168
+          end
+          object celBrandSPName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1077#1083#1100#1085#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
+            DataBinding.FieldName = 'BrandSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 144
           end
         end
       end

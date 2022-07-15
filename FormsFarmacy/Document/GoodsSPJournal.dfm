@@ -1,5 +1,5 @@
 inherited GoodsSPJournalForm: TGoodsSPJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1086#1074#1072#1088#1099' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1054#1047')>'
   ClientHeight = 535
   ClientWidth = 910
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -15,17 +15,17 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
     Width = 910
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 821
+    ExplicitWidth = 910
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 910
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 821
+      ExplicitWidth = 910
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 910
         Height = 478
-        ExplicitWidth = 821
+        ExplicitWidth = 910
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -102,7 +102,7 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
   end
   inherited Panel: TPanel
     Width = 910
-    ExplicitWidth = 821
+    ExplicitWidth = 910
     inherited deStart: TcxDateEdit
       EditValue = 43101d
     end

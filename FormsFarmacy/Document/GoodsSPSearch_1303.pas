@@ -63,11 +63,6 @@ type
     bbStartLoadDop: TdxBarButton;
     bbStartLoadHelsi: TdxBarButton;
     ExchangeRate: TcxGridDBColumn;
-    actDosage_1303Choice: TOpenChoiceForm;
-    actCountSP_1303Choice: TOpenChoiceForm;
-    actMakerSP_1303Choice: TOpenChoiceForm;
-    actCountry_1303Choice: TOpenChoiceForm;
-    actCurrencyChoice: TOpenChoiceForm;
     Dosage_1303Name: TcxGridDBColumn;
     actGoodsMain: TOpenChoiceForm;
     spClearGoods: TdsdStoredProc;
@@ -76,6 +71,13 @@ type
     Col: TcxGridDBColumn;
     actChoiceGoodsSPSearch_1303: TdsdOpenForm;
     dxBarButton2: TdxBarButton;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    actClearGoods: TdsdExecStoredProc;
+    dxBarButton3: TdxBarButton;
+    spSetGoods: TdsdStoredProc;
+    actSetGoods: TdsdExecStoredProc;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

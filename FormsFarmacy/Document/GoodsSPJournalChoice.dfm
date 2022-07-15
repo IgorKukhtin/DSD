@@ -1,5 +1,5 @@
 inherited GoodsSPJournalChoiceForm: TGoodsSPJournalChoiceForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1086#1074#1072#1088#1099' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1054#1047')>'
   ClientHeight = 535
   ClientWidth = 821
   AddOnFormData.ChoiceAction = ChoiceGuides
@@ -9,7 +9,7 @@ inherited GoodsSPJournalChoiceForm: TGoodsSPJournalChoiceForm
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   ExplicitWidth = 837
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -103,35 +103,6 @@ inherited GoodsSPJournalChoiceForm: TGoodsSPJournalChoiceForm
   inherited ActionList: TActionList
     Left = 31
     Top = 266
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TGoodsSP_MovementForm'
-      FormNameParam.Value = 'TGoodsSP_MovementForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMask'
-          Value = 'false'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-    end
     object ChoiceGuides: TdsdChoiceGuides [3]
       Category = 'DSDLib'
       MoveParams = <>
@@ -156,32 +127,6 @@ inherited GoodsSPJournalChoiceForm: TGoodsSPJournalChoiceForm
       ImageIndex = 7
       DataSource = MasterDS
     end
-    inherited actInsertMask: TdsdInsertUpdateAction
-      FormName = 'TGoodsSP_MovementForm'
-      FormNameParam.Value = 'TGoodsSP_MovementForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMask'
-          Value = 'True'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-    end
     object actInsertMask1: TdsdInsertUpdateAction [5]
       Category = 'DSDLib'
       MoveParams = <>
@@ -202,7 +147,7 @@ inherited GoodsSPJournalChoiceForm: TGoodsSPJournalChoiceForm
         end
         item
           Name = 'inMask'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -231,6 +176,61 @@ inherited GoodsSPJournalChoiceForm: TGoodsSPJournalChoiceForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TGoodsSP_MovementForm'
+      FormNameParam.Value = 'TGoodsSP_MovementForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      FormName = 'TGoodsSP_MovementForm'
+      FormNameParam.Value = 'TGoodsSP_MovementForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TGoodsSP_MovementForm'
       FormNameParam.Value = 'TGoodsSP_MovementForm'
@@ -245,7 +245,7 @@ inherited GoodsSPJournalChoiceForm: TGoodsSPJournalChoiceForm
         end
         item
           Name = 'inMask'
-          Value = 'false'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -380,7 +380,7 @@ inherited GoodsSPJournalChoiceForm: TGoodsSPJournalChoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -501,13 +501,13 @@ inherited GoodsSPJournalChoiceForm: TGoodsSPJournalChoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime

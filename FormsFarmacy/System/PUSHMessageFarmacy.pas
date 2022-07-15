@@ -11,7 +11,7 @@ uses
   cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB, cxDBData, cxGridLevel,
   cxClasses, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGrid, Datasnap.DBClient, Math, cxCurrencyEdit,
-  dxSkinsdxBarPainter, Vcl.ActnList, dsdAction, dxBarExtItems, dxBar;
+  dxSkinsdxBarPainter, Vcl.ActnList, dsdAction, dxBarExtItems, dxBar, cxSplitter;
 
 type
   TPUSHMessageFarmacyForm = class(TForm)
@@ -47,6 +47,7 @@ type
     ActionList: TActionList;
     actExportExel: TdsdGridToExcel;
     dxBarButton2: TdxBarButton;
+    Splitter: TcxSplitter;
     procedure FormCreate(Sender: TObject);
     procedure MemoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btOpenFormClick(Sender: TObject);
@@ -277,6 +278,9 @@ begin
     end else PUSHMessageFarmacyForm.cxGrid.Visible := False;
     PUSHMessageFarmacyForm.dxBarManagerBar1.Visible := PUSHMessageFarmacyForm.cxGrid.Visible;
     PUSHMessageFarmacyForm.actExportExel.Enabled := PUSHMessageFarmacyForm.cxGrid.Visible;
+    PUSHMessageFarmacyForm.Splitter.Visible := PUSHMessageFarmacyForm.cxGrid.Visible;
+    if not PUSHMessageFarmacyForm.cxGrid.Visible then PUSHMessageFarmacyForm.Memo.Align := alClient;
+
 
     if AButton <> '' then
     begin
