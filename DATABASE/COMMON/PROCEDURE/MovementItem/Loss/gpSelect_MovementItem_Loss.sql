@@ -142,6 +142,7 @@ BEGIN
                                 , Container.ObjectId                          AS GoodsId
                                 , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                                , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0) AS GoodsKindId_complete
                                 , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                                     , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                                     , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
@@ -172,6 +173,11 @@ BEGIN
                                                      ON ObjectLink_Goods_InfoMoney.ObjectId = Container.ObjectId
                                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+                                LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                                     ON ObjectLink_GoodsKindComplete.ObjectId = Object_PartionGoods.Id
+                                                    AND ObjectLink_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+
                            WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                            GROUP BY CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                                       , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
@@ -182,6 +188,7 @@ BEGIN
                                     END
                                   , Container.ObjectId
                                   , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                  , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)
                                   , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                                       , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                                       , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
@@ -362,6 +369,7 @@ BEGIN
                                 , Container.ObjectId                          AS GoodsId
                                 , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                                , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0) AS GoodsKindId_complete
                                 , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                                     , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                                     , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
@@ -392,6 +400,11 @@ BEGIN
                                                      ON ObjectLink_Goods_InfoMoney.ObjectId = Container.ObjectId
                                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+                                LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                                     ON ObjectLink_GoodsKindComplete.ObjectId = Object_PartionGoods.Id
+                                                    AND ObjectLink_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+
                            WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                            GROUP BY CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                                       , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
@@ -402,6 +415,7 @@ BEGIN
                                     END
                                   , Container.ObjectId
                                   , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                  , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)
                                   , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                                       , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                                       , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
@@ -527,6 +541,8 @@ BEGIN
                                   OR vbDescId_from <> zc_Object_Unit()
                                     )
                                 AND COALESCE (tmpRemains.PartionGoodsName,'') = COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData,'')
+                                AND COALESCE (tmpRemains.GoodsKindId_complete, 0) = COALESCE (MILO_GoodsKindComplete.ObjectId, 0)
+                                
             ;
 
      END IF;
