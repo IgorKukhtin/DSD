@@ -84,6 +84,9 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
             end>
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil

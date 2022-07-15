@@ -9,6 +9,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_GoodsSPSearch_1303(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id            Integer
+             , GoodsId       Integer
+             , GoodsCode     Integer
+             , GoodsName     TVarChar
 
              , Col           Integer
              , PriceOptSP    TFloat
@@ -53,6 +56,8 @@ BEGIN
     WITH 
         tmpMovementItem AS ( SELECT MovementItem.Id
 
+                                  , MovementItem.ObjectId
+
                                   , MovementItem.Amount::Integer                          AS Col
 
                                   , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
@@ -90,6 +95,9 @@ BEGIN
                               WHERE MovementItemId IN (SELECT DISTINCT tmpMovementItem.Id FROM tmpMovementItem))
 
         SELECT MovementItem.Id                                       AS Id
+             , MovementItem.ObjectId                                 AS GoodsId
+             , Object_Goods.ObjectCode                               AS GoodsCode
+             , Object_Goods.Name                                     AS GoodsName
 
              , MovementItem.Col                                      AS Col
 
@@ -126,6 +134,7 @@ BEGIN
 
         FROM tmpMovementItem AS MovementItem
  
+             LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId 
 
              LEFT JOIN MovementItemString AS MIString_CodeATX
                                           ON MIString_CodeATX.MovementItemId = MovementItem.Id

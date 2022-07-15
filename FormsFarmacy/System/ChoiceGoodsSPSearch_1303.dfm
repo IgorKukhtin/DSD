@@ -76,6 +76,9 @@ inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
             end>
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.CellAutoHeight = True
           Styles.Content = nil
           Styles.Inactive = nil

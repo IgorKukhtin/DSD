@@ -89,7 +89,7 @@ BEGIN
      -- все Товары для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, isSupplementMarkSUN1 Boolean, isSmudge Boolean, SupplementMin Integer, SupplementMinPP Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, isSupplementMarkSUN1 Boolean, isSmudge Boolean, SupplementMin Integer, SupplementMinPP Integer, UnitSupplementSUN1InId Integer) ON COMMIT DROP;
      END IF;
 
      -- все подразделения отдающие товар SUN Supplement
@@ -205,7 +205,9 @@ BEGIN
         SELECT Object_Unit.Id
              , COALESCE (NULLIF(OF_DeySupplSun1.ValueData, 0), 30)::Integer              AS DeySupplSun1
              , COALESCE (NULLIF(OF_MonthSupplSun1.ValueData, 0), 8)::Integer             AS MonthSupplSun1
-             , COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE)  :: Boolean   AS isSUN_Supplement_in
+             , (COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE) OR
+               COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE) = FALSE AND
+               COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) = FALSE) :: Boolean   AS isSUN_Supplement_in
              , COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) :: Boolean   AS isSUN_Supplement_out             
              , COALESCE (ObjectBoolean_SUN_Supplement_Priority.ValueData, FALSE) :: Boolean   AS isSUN_Supplement_Priority             
              , CASE WHEN ObjectDate_FirstCheck.ValueData IS NOT NULL AND
@@ -220,6 +222,9 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_in
                                      ON ObjectBoolean_SUN_Supplement_in.ObjectId = Object_Unit.Id
                                     AND ObjectBoolean_SUN_Supplement_in.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_in()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN
+                                     ON ObjectBoolean_SUN.ObjectId = Object_Unit.Id
+                                    AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN()
              LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_out
                                      ON ObjectBoolean_SUN_Supplement_out.ObjectId = Object_Unit.Id
                                     AND ObjectBoolean_SUN_Supplement_out.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_out()
@@ -238,8 +243,10 @@ BEGIN
         WHERE Object_Unit.DescId = zc_Object_Unit()
           -- если указан день недели - проверим его
           AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
-          AND (COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE) = TRUE 
-            OR COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) = TRUE)         
+          AND ((COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE) = TRUE 
+            OR COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) = TRUE) 
+            AND COALESCE (ObjectBoolean_SUN.ValueData, FALSE) = TRUE
+            OR Object_Unit.ID IN (SELECT DISTINCT Object_Goods_Main.UnitSupplementSUN1InId FROM Object_Goods_Main WHERE Object_Goods_Main.UnitSupplementSUN1InId IS NOT NULL))         
        ;
 
      -- Товары дисконтных проектов
@@ -483,13 +490,14 @@ BEGIN
      END IF;*/
 
      -- все Товары для схемы SUN Supplement
-     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, isSupplementMarkSUN1, isSmudge, SupplementMin, SupplementMinPP)
+     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, isSupplementMarkSUN1, isSmudge, SupplementMin, SupplementMinPP, UnitSupplementSUN1InId)
         SELECT Object_Goods_Retail.ID
              , Object_Goods_Retail.KoeffSUN_Supplementv1
              , Object_Goods_Main.isSupplementMarkSUN1
              , Object_Goods_Main.isSupplementSmudge
              , Object_Goods_Main.SupplementMin
              , Object_Goods_Main.SupplementMinPP 
+             , Object_Goods_Main.UnitSupplementSUN1InId 
         FROM Object_Goods_Retail
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                          AND Object_Goods_Main.isSupplementSUN1 = TRUE
@@ -822,6 +830,7 @@ BEGIN
                                  OR COALESCE (tmpPrice.MCSValue, 0) <> 0
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
+        , tmpUnitSupplementSUN1In AS ((SELECT DISTINCT Object_Goods_Main.UnitSupplementSUN1InId AS UnitId FROM Object_Goods_Main WHERE Object_Goods_Main.UnitSupplementSUN1InId IS NOT NULL))
      -- 1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains_all_Supplement (UnitId, GoodsId, Price, MCS, Layout, AmountRemains, AmountNotSend, AmountSalesDay, AmountSalesMonth, 
                                               MinExpirationDate, isCloseMCS, SupplementMin)
@@ -857,6 +866,8 @@ BEGIN
         FROM _tmpGoods_SUN_Supplement
         
              LEFT JOIN _tmpUnit_SUN_Supplement ON 1 = 1
+             
+             LEFT JOIN tmpUnitSupplementSUN1In ON tmpUnitSupplementSUN1In.UnitId = _tmpUnit_SUN_Supplement.UnitId
         
              LEFT JOIN tmpPrice AS tmpObject_Price 
                                 ON tmpObject_Price.UnitId  = _tmpUnit_SUN_Supplement.UnitId
@@ -884,6 +895,10 @@ BEGIN
                                                      
              LEFT JOIN _tmpGoods_TP_exception_Supplement ON _tmpGoods_TP_exception_Supplement.GoodsId = _tmpGoods_SUN_Supplement.GoodsId
                                                         AND _tmpGoods_TP_exception_Supplement.UnitId = _tmpUnit_SUN_Supplement.UnitId
+                                                        
+        WHERE (COALESCE (tmpUnitSupplementSUN1In.UnitId, 0) = 0
+           OR tmpUnitSupplementSUN1In.UnitId = _tmpGoods_SUN_Supplement.UnitSupplementSUN1InId)
+          AND COALESCE (CASE WHEN Object_Unit.ValueData LIKE 'Апт. пункт %' THEN _tmpGoods_SUN_Supplement.SupplementMinPP ELSE _tmpGoods_SUN_Supplement.SupplementMin END, 0) >= 0 
        ;
                                      
      IF EXISTS (SELECT 1
@@ -1274,7 +1289,7 @@ BEGIN
                                 AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
                                THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
                                          THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
-                                         ELSE 0
+                                         ELSE 0 END
                                WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
                                THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
                                          THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
@@ -1292,7 +1307,7 @@ BEGIN
                                         AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
                                        THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
                                                  THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
-                                                 ELSE 0
+                                                 ELSE 0 END
                                        WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
                                        THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
                                                  THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
@@ -1339,7 +1354,7 @@ BEGIN
                                     AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
                                    THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
                                              THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
-                                             ELSE 0
+                                             ELSE 0 END
                                    WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
                                    THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
                                              THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
@@ -1357,7 +1372,7 @@ BEGIN
                                             AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
                                            THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
                                                      THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
-                                                     ELSE 0
+                                                     ELSE 0 END
                                            WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
                                            THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
                                                      THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
@@ -1378,6 +1393,9 @@ BEGIN
                AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) >= 0
                AND _tmpUnit_SunExclusion_Supplement.UnitId_to IS NULL
                AND  COALESCE(_tmpGoods_Sun_exception_Supplement.Amount, 0) = 0
+               AND NOT (_tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
+                        AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
+                        AND FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) < 0)               
              ORDER BY CASE WHEN COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0 THEN 1000000 
                            ELSE (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                                  THEN - _tmpRemains_all_Supplement.AmountRemains
