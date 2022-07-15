@@ -288,7 +288,7 @@ BEGIN
                           )
 
 
-         , tmpMIOrder AS ( SELECT MovementItem.ObjectId AS GoodsId
+         , tmpMIOrder AS (SELECT MovementItem.ObjectId AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())  AS GoodsKindId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
@@ -326,6 +326,7 @@ BEGIN
 
                           WHERE MovementItem.MovementId = inMovementId
                             AND MovementItem.isErased   = FALSE
+                            AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) <> 0
                             AND (vbFromId_group = CASE WHEN MILinkObject_Receipt.ObjectId > 0
                                                         AND (ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (1942, 5064881) -- ян-щлскэяхх + ян-онянк
