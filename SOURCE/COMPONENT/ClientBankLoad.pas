@@ -861,7 +861,7 @@ end;
 
 function TOTPBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DAT_PR').AsDateTime
+  result := FDataSet.FieldByName('DAT_ARC').AsDateTime // DAT_PR
 end;
 
 function TOTPBankLoad.GetOperSumm: real;
