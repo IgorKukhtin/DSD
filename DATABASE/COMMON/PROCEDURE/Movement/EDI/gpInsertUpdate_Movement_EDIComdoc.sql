@@ -32,37 +32,6 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     IF vbUserId = 5 AND 1=0
-     THEN
-         RAISE EXCEPTION 'test параметр.<%> inOrderInvNumber      = <%>
-                                        <%> inOrderOperDate       = <%>
-                                        <%> inPartnerInvNumber    = <%>
-                                        <%> inPartnerOperDate     = <%>
-                                        <%> inInvNumberTax        = <%>
-                                        <%> inOperDateTax         = <%>
-                                        <%> inInvNumberSaleLink   = <%>
-                                        <%> inOperDateSaleLink    = <%>
-                                        <%> inOKPO                = <%>
-                                        <%> inJurIdicalName       = <%>
-                                        <%> inDesc                = <%>
-                                        <%> inGLNPlace            = <%>
-                                        <%> inComDocDate          = <%>'
-                                 , CHR (13), inOrderInvNumber
-                                 , CHR (13), inOrderOperDate
-                                 , CHR (13), inPartnerInvNumber
-                                 , CHR (13), inPartnerOperDate
-                                 , CHR (13), inInvNumberTax
-                                 , CHR (13), inOperDateTax
-                                 , CHR (13), inInvNumberSaleLink
-                                 , CHR (13), inOperDateSaleLink
-                                 , CHR (13), inOKPO
-                                 , CHR (13), inJurIdicalName
-                                 , CHR (13), inDesc
-                                 , CHR (13), inGLNPlace
-                                 , CHR (13), inComDocDate;
-     END IF;
-                                           
-
      -- Меняем параметр
      inGLNPlace:= TRIM (inGLNPlace);
 
@@ -84,7 +53,8 @@ BEGIN
          THEN inGLNPlace:= '';
          END IF;
 
-         IF inGLNPlace <> ''
+         -- 1.1
+         IF inGLNPlace <> '' AND inOrderInvNumber <> ''
          THEN
               -- !!!так для продажи!!! + !!!по точке доставки!!! + !!!inDesc!!!
               vbMovementId:= (SELECT Movement.Id
@@ -107,7 +77,7 @@ BEGIN
                               ORDER BY 1
                               LIMIT 1 -- !!!временно, т.к. пока непонятно почему появился > 1, пример - 4437188100 от '28.08.2015'!!!
                              );
-              IF COALESCE (vbMovementId, 0) = 0
+              IF COALESCE (vbMovementId, 0) = 0 AND inOrderInvNumber <> ''
               THEN
               -- !!!так для продажи!!! + !!!по точке доставки!!! + !!!zc_Movement_OrderExternal!!!
               vbMovementId:= (SELECT Movement.Id
@@ -136,6 +106,7 @@ BEGIN
                    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale()));
               END IF;
 
+         -- 1.2.
          ELSEIF inOrderInvNumber <> ''
          THEN
               IF vbUserId = 5 
@@ -154,7 +125,7 @@ BEGIN
                                 AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
                          )
               THEN
-                   RAISE EXCEPTION 'Ошибка.inOKPO = <%> %<%>%<%>.'
+                   RAISE EXCEPTION 'Ошибка.inOKPO = <%>%inOrderInvNumber=<%>%<%>.'
                                   , inOKPO
                                   , CHR (13), inOrderInvNumber
                                   , CHR (13), inDesc
@@ -182,8 +153,75 @@ BEGIN
                    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale()));
               END IF;
 
+
+         -- 1.3. inInvNumberSaleLink
+         ELSEIF inInvNumberSaleLink <> ''
+         THEN
+              IF vbUserId = 5 
+                 AND 1 < (SELECT COUNT(*)
+                          FROM Movement
+                                   INNER JOIN MovementString AS MovementString_OKPO
+                                                             ON MovementString_OKPO.MovementId =  Movement.Id
+                                                            AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+                                                            AND MovementString_OKPO.ValueData = inOKPO
+                                   INNER JOIN MovementString AS MovementString_MovementDesc
+                                                             ON MovementString_MovementDesc.MovementId =  Movement.Id
+                                                            AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
+                                                            AND MovementString_MovementDesc.ValueData IN (inDesc, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal()))
+
+                                   LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
+                                                                  ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
+                                                                 AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
+                                   LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
+                                                                  ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id 
+                                                                 AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
+                                   INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId)
+                                                                       AND Movement_Sale.InvNumber = inInvNumberSaleLink
+                              WHERE Movement.DescId = zc_Movement_EDI()
+                                AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                         )
+              THEN
+                   RAISE EXCEPTION 'Ошибка.inOKPO = <%>%inInvNumberSaleLink = <%>%<%>.'
+                                  , inOKPO
+                                  , CHR (13), inInvNumberSaleLink
+                                  , CHR (13), inDesc
+                                   ;
+              END IF;
+              -- !!!так для продажи!!! + по Номеру Документа + !!!НЕ важна точка доставки!!!
+              vbMovementId:= (SELECT Movement.Id
+                              FROM Movement
+                                   INNER JOIN MovementString AS MovementString_OKPO
+                                                             ON MovementString_OKPO.MovementId =  Movement.Id
+                                                            AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+                                                            AND MovementString_OKPO.ValueData = inOKPO
+                                   INNER JOIN MovementString AS MovementString_MovementDesc
+                                                             ON MovementString_MovementDesc.MovementId =  Movement.Id
+                                                            AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
+                                                            AND MovementString_MovementDesc.ValueData IN (inDesc, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal()))
+
+                                   LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
+                                                                  ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
+                                                                 AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
+                                   LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
+                                                                  ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id 
+                                                                 AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
+                                   INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId)
+                                                                       AND Movement_Sale.InvNumber = inInvNumberSaleLink
+                              WHERE Movement.DescId = zc_Movement_EDI()
+                                AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                             );
+
+              IF vbMovementId <> 0
+              THEN
+                   -- !!!поменяли у документа EDI признак!!!
+                   PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale()));
+              END IF;
+
+
          END IF;
      END IF;
+
+
 
      IF EXISTS (SELECT MovementDesc.Id FROM MovementDesc WHERE MovementDesc.Code = inDesc AND MovementDesc.Id = zc_Movement_ReturnIn())
      THEN
@@ -206,6 +244,40 @@ BEGIN
                            AND Movement.InvNumber = inOrderInvNumber
                            AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
                         );
+     END IF;
+
+
+     IF vbUserId = 5 AND 1=0
+     THEN
+         RAISE EXCEPTION 'test параметр.<%> inOrderInvNumber      = <%>
+                                        <%> inOrderOperDate       = <%>
+                                        <%> inPartnerInvNumber    = <%>
+                                        <%> inPartnerOperDate     = <%>
+                                        <%> inInvNumberTax        = <%>
+                                        <%> inOperDateTax         = <%>
+                                        <%> inInvNumberSaleLink   = <%>
+                                        <%> inOperDateSaleLink    = <%>
+                                        <%> inOKPO                = <%>
+                                        <%> inJurIdicalName       = <%>
+                                        <%> inDesc                = <%>
+                                        <%> inGLNPlace            = <%>
+                                        <%> inComDocDate          = <%>
+                                        <%> vbMovementId          = <%>'
+                                 , CHR (13), inOrderInvNumber
+                                 , CHR (13), inOrderOperDate
+                                 , CHR (13), inPartnerInvNumber
+                                 , CHR (13), inPartnerOperDate
+                                 , CHR (13), inInvNumberTax
+                                 , CHR (13), inOperDateTax
+                                 , CHR (13), inInvNumberSaleLink
+                                 , CHR (13), inOperDateSaleLink
+                                 , CHR (13), inOKPO
+                                 , CHR (13), inJurIdicalName
+                                 , CHR (13), inDesc
+                                 , CHR (13), inGLNPlace
+                                 , CHR (13), inComDocDate
+                                 , CHR (13), vbMovementId
+                                  ;
      END IF;
 
      -- определяем признак Создание/Корректировка
