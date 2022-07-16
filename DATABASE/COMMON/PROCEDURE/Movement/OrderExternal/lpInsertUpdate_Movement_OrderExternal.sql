@@ -30,6 +30,9 @@ AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbMovementId_CarInfo Integer;
+   DECLARE vbRouteId  Integer;
+   DECLARE vbRetailId Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) OR inOperDateMark <> DATE_TRUNC ('DAY', inOperDateMark)
@@ -45,26 +48,26 @@ BEGIN
      -- определяем ключ доступа
    --vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
      vbAccessKeyId:= CASE WHEN inFromId = 8411 -- Склад ГП ф Киев
-                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev()
                           WHEN inToId = 8411 -- Склад ГП ф Киев
-                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev()
                           WHEN inToId = 346093 -- Склад ГП ф.Одесса
-                               THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
+                               THEN zc_Enum_Process_AccessKey_DocumentOdessa()
                           WHEN inToId = 8413 -- Склад ГП ф.Кривой Рог
-                               THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
+                               THEN zc_Enum_Process_AccessKey_DocumentKrRog()
                           WHEN inToId = 8417 -- Склад ГП ф.Николаев (Херсон)
-                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
+                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev()
                           WHEN inToId = 8425 -- Склад ГП ф.Харьков
-                               THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
+                               THEN zc_Enum_Process_AccessKey_DocumentKharkov()
                           WHEN inToId = 8415 -- Склад ГП ф.Черкассы (Кировоград)
-                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
+                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi()
                           WHEN inToId = 301309 -- Склад ГП ф.Запорожье
-                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
+                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye()
                           WHEN inToId = 3080691 -- Склад ГП ф.Львов
-                               THEN zc_Enum_Process_AccessKey_DocumentLviv() 
+                               THEN zc_Enum_Process_AccessKey_DocumentLviv()
 
                           WHEN inToId = 8020714 -- Склад База ГП (Ирна)
-                               THEN zc_Enum_Process_AccessKey_DocumentIrna() 
+                               THEN zc_Enum_Process_AccessKey_DocumentIrna()
 
                           ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_OrderExternal())
                      END;
@@ -80,8 +83,142 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateMark(), ioId, inOperDateMark);
      -- сохранили свойство <Дата отгрузки контрагенту>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
+
      -- !!!временно!!!
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), ioId, CASE WHEN inOperDate = inOperDatePartner THEN inOperDate + INTERVAL '1 DAY' + INTERVAL '0 MIN' ELSE inOperDatePartner + INTERVAL '5 MIN' END);
+     IF /*vbIsInsert = TRUE AND*/ inToId = 8459 -- Розподільчий комплекс
+      -- AND inUserId = 5
+     THEN
+         --
+         vbRouteId := (SELECT MLO.ObjectId FROM  MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_Route());
+         vbRetailId:= (SELECT CASE WHEN Object_Route.Id IS NULL AND ObjectLink_Juridical_Retail.ChildObjectId IS NULL
+                                        THEN Object_From.Id
+                                   WHEN Object_From.DescId = zc_Object_Unit()
+                                        THEN Object_From.Id
+                                   -- временно
+                                   WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
+                                     OR Object_Route.ValueData ILIKE 'Самов%'
+                                     OR Object_Route.ValueData ILIKE '%-колбаса'
+                                     OR Object_Route.ValueData ILIKE '%Кривой Рог%'
+                                        THEN 0
+                                   ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0)
+                              END
+                       FROM MovementLinkObject AS MovementLinkObject_From
+                            LEFT JOIN Object AS Object_From  ON Object_From.Id  = MovementLinkObject_From.ObjectId
+                            LEFT JOIN Object AS Object_Route ON Object_Route.Id = vbRouteId
+                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                       WHERE MovementLinkObject_From.MovementId = ioId
+                         AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                      );
+
+         -- Нашли
+         vbMovementId_CarInfo:= (SELECT MIN (Movement.Id)
+                                 FROM Movement
+                                      -- Склад такой же
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                   AND MovementLinkObject_To.ObjectId   = inToId
+                                      -- Маршрут такой же
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                                                   ON MovementLinkObject_Route.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_Route.DescId     = zc_MovementLinkObject_Route()
+                                      -- установлена дата
+                                      INNER JOIN MovementDate AS MovementDate_CarInfo
+                                                              ON MovementDate_CarInfo.MovementId = Movement.Id
+                                                             AND MovementDate_CarInfo.DescId     = zc_MovementDate_CarInfo()
+                                                             AND (MovementDate_CarInfo.ValueData <> DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
+                                                               OR EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) <> 0
+                                                                 )
+                                      -- Дата такая же
+                                      INNER JOIN MovementDate AS MovementDate_OperDatePartner
+                                                              ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                                             AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                                                             AND MovementDate_OperDatePartner.ValueData  = inOperDatePartner
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                    ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                   AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                           ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                           ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
+                                 WHERE Movement.Id <> ioId
+                                   AND Movement.OperDate = inOperDate
+                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                   AND Movement.DescId   = zc_Movement_OrderExternal()
+                                   AND (((ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId OR COALESCE (vbRetailId, 0) = 0)
+                                      AND(MovementLinkObject_Route.ObjectId         = vbRouteId  OR COALESCE (vbRouteId, 0)  = 0)
+                                        )
+                                     OR (MovementLinkObject_From.ObjectId = inFromId AND COALESCE (vbRetailId, 0) = 0 AND COALESCE (vbRouteId, 0) = 0)
+                                       )
+                                );
+         --
+         IF vbRouteId > 0 OR vbRetailId > 0
+         THEN
+             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo()
+                                                , ioId
+                                                , COALESCE ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_CarInfo AND MD.DescId = zc_MovementDate_CarInfo())
+                                                          , (SELECT -- !!!Дата/время отгрузки - Расчет!!!
+                                                                    (inOperDatePartner 
+                                                                   + ((CASE WHEN ObjectFloat_Days.ValueData > 0 THEN  1 * ObjectFloat_Days.ValueData ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                                                   - ((CASE WHEN ObjectFloat_Days.ValueData < 0 THEN -1 * ObjectFloat_Days.ValueData ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                                                   + ((COALESCE (ObjectFloat_Hour.ValueData, 0) :: Integer) :: TVarChar || ' HOUR')   :: INTERVAL
+                                                                   + ((COALESCE (ObjectFloat_Min.ValueData, 0)  :: Integer) :: TVarChar || ' MINUTE') :: INTERVAL
+                                                                    ) :: TDateTime
+                                                             FROM Object AS Object_OrderCarInfo
+                                                                  LEFT JOIN ObjectLink AS ObjectLink_Route
+                                                                                       ON ObjectLink_Route.ObjectId = Object_OrderCarInfo.Id
+                                                                                      AND ObjectLink_Route.DescId   = zc_ObjectLink_OrderCarInfo_Route()
+                                                                  LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                                                                       ON ObjectLink_Retail.ObjectId = Object_OrderCarInfo.Id
+                                                                                      AND ObjectLink_Retail.DescId   = zc_ObjectLink_OrderCarInfo_Retail()
+
+                                                                  INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                                                        ON ObjectLink_Unit.ObjectId      = Object_OrderCarInfo.Id
+                                                                                       AND ObjectLink_Unit.DescId        = zc_ObjectLink_OrderCarInfo_Unit()
+                                                                                       AND ObjectLink_Unit.ChildObjectId = inToId
+
+                                                                  INNER JOIN ObjectFloat AS ObjectFloat_OperDate
+                                                                                         ON ObjectFloat_OperDate.ObjectId  = Object_OrderCarInfo.Id
+                                                                                        AND ObjectFloat_OperDate.DescId    = zc_ObjectFloat_OrderCarInfo_OperDate()
+                                                                                        AND ObjectFloat_OperDate.ValueData =  zfCalc_DayOfWeekNumber (inOperDate)
+                                                                  INNER JOIN ObjectFloat AS ObjectFloat_OperDatePartner
+                                                                                         ON ObjectFloat_OperDatePartner.ObjectId  = Object_OrderCarInfo.Id
+                                                                                        AND ObjectFloat_OperDatePartner.DescId    = zc_ObjectFloat_OrderCarInfo_OperDatePartner()
+                                                                                        AND ObjectFloat_OperDatePartner.ValueData = zfCalc_DayOfWeekNumber (inOperDatePartner)
+
+                                                                  LEFT JOIN ObjectFloat AS ObjectFloat_Days
+                                                                                        ON ObjectFloat_Days.ObjectId = Object_OrderCarInfo.Id
+                                                                                       AND ObjectFloat_Days.DescId = zc_ObjectFloat_OrderCarInfo_Days()
+                                                                  LEFT JOIN ObjectFloat AS ObjectFloat_Hour
+                                                                                        ON ObjectFloat_Hour.ObjectId = Object_OrderCarInfo.Id
+                                                                                       AND ObjectFloat_Hour.DescId = zc_ObjectFloat_OrderCarInfo_Hour()
+                                                                  LEFT JOIN ObjectFloat AS ObjectFloat_Min
+                                                                                        ON ObjectFloat_Min.ObjectId = Object_OrderCarInfo.Id
+                                                                                       AND ObjectFloat_Min.DescId = zc_ObjectFloat_OrderCarInfo_Min()
+                                                             WHERE Object_OrderCarInfo.DescId   = zc_Object_OrderCarInfo()
+                                                               AND Object_OrderCarInfo.isErased = FALSE
+                                                               AND COALESCE (ObjectLink_Route.ChildObjectId, 0)  = COALESCE (vbRouteId, 0)
+                                                               AND COALESCE (ObjectLink_Retail.ChildObjectId, 0) = COALESCE (vbRetailId, 0)
+                                                             ORDER BY ObjectFloat_Hour.ValueData DESC
+                                                             LIMIT 1
+                                                            )
+                                                          , CASE WHEN inOperDate = inOperDatePartner
+                                                                      THEN inOperDate + INTERVAL '1 DAY' + INTERVAL '0 MIN'
+                                                                 ELSE inOperDatePartner + INTERVAL '0 MIN'
+                                                            END
+                                                           )
+                                                 );
+         END IF;
+
+     END IF;
 
      -- сохранили свойство <Номер заявки у контрагента>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
@@ -117,7 +254,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), ioId, inPriceListId);
 
      -- сохранили связь с <Контрагент>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);    
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
 
 
      IF vbIsInsert = TRUE
@@ -150,67 +287,67 @@ $BODY$
 -- update Movement set AccessKeyId = AccessKeyId_new from (
 select Object_to.*, Movement.Id, Movement.OperDate, Movement.InvNumber, Movement.AccessKeyId AS AccessKeyId_old
                    , CASE WHEN MovementLinkObject .ObjectId = 8411 -- Склад ГП ф Киев
-                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev()
                           WHEN MovementLinkObject.ObjectId IN (346093 -- Склад ГП ф.Одесса
                                                              , 346094 -- Склад возвратов ф.Одесса
                                                               )
-                               THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
+                               THEN zc_Enum_Process_AccessKey_DocumentOdessa()
                           WHEN MovementLinkObject.ObjectId IN (8413 -- Склад ГП ф.Кривой Рог
                                                              , 428366 -- Склад возвратов ф.Кривой Рог
                                                               )
-                               THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
+                               THEN zc_Enum_Process_AccessKey_DocumentKrRog()
                           WHEN MovementLinkObject .ObjectId= 8417 -- Склад ГП ф.Николаев (Херсон)
-                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
+                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev()
                           WHEN MovementLinkObject.ObjectId IN (8425   -- Склад ГП ф.Харьков
                                                              , 409007 -- Склад возвратов ф.Харьков
                                                               )
-                               THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
+                               THEN zc_Enum_Process_AccessKey_DocumentKharkov()
                           WHEN MovementLinkObject .ObjectId= 8415 -- Склад ГП ф.Черкассы (Кировоград)
-                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
+                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi()
                           WHEN MovementLinkObject .ObjectId= 301309 -- Склад ГП ф.Запорожье
-                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
+                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye()
                           WHEN MovementLinkObject .ObjectId = 3080691 -- Склад ГП ф.Львов
-                               THEN zc_Enum_Process_AccessKey_DocumentLviv() 
+                               THEN zc_Enum_Process_AccessKey_DocumentLviv()
                           ELSE zc_Enum_Process_AccessKey_DocumentDnepr()
                      END as AccessKeyId_new
-from Movement 
- left join     MovementLinkObject as mlo on mlo.DescId = zc_MovementLinkObject_from() 
+from Movement
+ left join     MovementLinkObject as mlo on mlo.DescId = zc_MovementLinkObject_from()
             and mlo.MovementId = Movement .Id
- left join     MovementLinkObject on MovementLinkObject.DescId = zc_MovementLinkObject_To() 
+ left join     MovementLinkObject on MovementLinkObject.DescId = zc_MovementLinkObject_To()
             and MovementLinkObject .MovementId = Movement .Id
- left join     Object as Object_from on Object_from.Id = MLO.ObjectId 
- left join     Object as Object_to on Object_to.Id = MovementLinkObject.ObjectId 
+ left join     Object as Object_from on Object_from.Id = MLO.ObjectId
+ left join     Object as Object_to on Object_to.Id = MovementLinkObject.ObjectId
  left join     Object as Object_a on Object_a.Id = Movement.AccessKeyId
 where Movement.OperDate >= '01.12.2020'
 and Movement.DescId = zc_Movement_OrderExternal()
 and Object_from.DescId <> zc_Object_Unit()
 -- and Movement.StatusId <> zc_Enum_Status_Erased()
 and Movement.AccessKeyId <> CASE WHEN MovementLinkObject .ObjectId = 8411 -- Склад ГП ф Киев
-                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev()
                           WHEN MovementLinkObject.ObjectId IN (346093 -- Склад ГП ф.Одесса
                                                              , 346094 -- Склад возвратов ф.Одесса
                                                               )
-                               THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
+                               THEN zc_Enum_Process_AccessKey_DocumentOdessa()
                           WHEN MovementLinkObject.ObjectId IN (8413 -- Склад ГП ф.Кривой Рог
                                                              , 428366 -- Склад возвратов ф.Кривой Рог
                                                               )
-                               THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
+                               THEN zc_Enum_Process_AccessKey_DocumentKrRog()
                           WHEN MovementLinkObject .ObjectId= 8417 -- Склад ГП ф.Николаев (Херсон)
-                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
+                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev()
                           WHEN MovementLinkObject.ObjectId IN (8425   -- Склад ГП ф.Харьков
                                                              , 409007 -- Склад возвратов ф.Харьков
                                                               )
-                               THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
+                               THEN zc_Enum_Process_AccessKey_DocumentKharkov()
                           WHEN MovementLinkObject .ObjectId= 8415 -- Склад ГП ф.Черкассы (Кировоград)
-                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
+                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi()
                           WHEN MovementLinkObject .ObjectId= 301309 -- Склад ГП ф.Запорожье
-                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
+                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye()
                           WHEN MovementLinkObject .ObjectId = 3080691 -- Склад ГП ф.Львов
-                               THEN zc_Enum_Process_AccessKey_DocumentLviv() 
+                               THEN zc_Enum_Process_AccessKey_DocumentLviv()
                           ELSE zc_Enum_Process_AccessKey_DocumentDnepr()
                      END
-limit 100 
---) as tmp 
+limit 100
+--) as tmp
 --where Movement.Id = tmp.Id
 */
 -- тест

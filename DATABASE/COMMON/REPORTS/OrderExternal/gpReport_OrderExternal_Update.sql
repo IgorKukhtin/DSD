@@ -51,6 +51,8 @@ RETURNS TABLE (OperDate        TDateTime
                -- Итого не хватает для резерва, вес
              , AmountWeight_diff      TFloat
              
+             , OperDate_CarInfo_calc TDateTime
+
              , Ord Integer
               )
 
@@ -345,6 +347,13 @@ BEGIN
                                      AND Object_GoodsByGoodsKind_View.GoodsId IN (SELECT DISTINCT tmpMovement.GoodsId FROM tmpMovement)
                                      AND 1=0
                                   )
+             , tmpOrderCarInfo AS (SELECT gpSelect.RouteId, gpSelect.RetailId
+                                        , gpSelect.OperDate_int, gpSelect.OperDatePartner_int
+                                        , gpSelect.Days, gpSelect.Hour, gpSelect.Min
+                                   FROM gpSelect_Object_OrderCarInfo (inIsShowAll:= FALSE, inSession:= inSession) AS gpSelect
+
+                                   WHERE gpSelect.UnitId = inToId
+                                  )
        -- Результат
        SELECT
              tmpMovement.OperDate              AS OperDate
@@ -406,7 +415,7 @@ BEGIN
            , tmpMovement.EndWeighing   :: TDateTime AS EndWeighing
            , tmpWeekDay_StartW.DayOfWeekName ::TVarChar AS DayOfWeekName_StartW
            , tmpWeekDay_EndW.DayOfWeekName   ::TVarChar AS DayOfWeekName_EndW
-           
+
            , ((EXTRACT (EPOCH FROM tmpMovement.EndWeighing - tmpMovement.StartWeighing) )    / 60 / 60) ::Integer AS Hours_EndW
            , ((EXTRACT (EPOCH FROM tmpMovement.EndWeighing - tmpMovement.OperDate_CarInfo) ) / 60 / 60) ::Integer AS Hours_real
 
@@ -417,18 +426,32 @@ BEGIN
              -- Итого не хватает для резерва, вес
            , tmpMovement.AmountWeight_diff        ::TFloat AS AmountWeight_diff
 
+             -- !!!Дата/время отгрузки - Расчет!!!
+           , (tmpMovement.OperDatePartner + ((CASE WHEN tmpOrderCarInfo.Days > 0 THEN  1 * tmpOrderCarInfo.Days ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                          - ((CASE WHEN tmpOrderCarInfo.Days < 0 THEN -1 * tmpOrderCarInfo.Days ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                          + ((COALESCE (tmpOrderCarInfo.Hour, 0) :: Integer) :: TVarChar || ' HOUR')   :: INTERVAL
+                                          + ((COALESCE (tmpOrderCarInfo.Min, 0)  :: Integer) :: TVarChar || ' MINUTE') :: INTERVAL
+             ) :: TDateTime AS OperDate_CarInfo_calc
+
            , tmpMovement.Ord                      :: Integer AS Ord
+
       FROM tmpMovement
-          LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
-          LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMovement.RouteId
+          LEFT JOIN tmpOrderCarInfo ON tmpOrderCarInfo.RouteId             = tmpMovement.RouteId
+                                   AND tmpOrderCarInfo.RetailId            = tmpMovement.RetailId
+                                   AND tmpOrderCarInfo.OperDate_int        = zfCalc_DayOfWeekNumber (tmpMovement.OperDate)
+                                   AND tmpOrderCarInfo.OperDatePartner_int = zfCalc_DayOfWeekNumber (tmpMovement.OperDatePartner)
+
+          LEFT JOIN Object AS Object_To      ON Object_To.Id      = tmpMovement.ToId
+          LEFT JOIN Object AS Object_Route   ON Object_Route.Id   = tmpMovement.RouteId
           LEFT JOIN Object AS Object_CarInfo ON Object_CarInfo.Id = tmpMovement.CarInfoId
-          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = tmpMovement.RetailId
-          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate) AS tmpWeekDay ON 1=1
-          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner) AS tmpWeekDay_Partner ON 1=1
-          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo) AS tmpWeekDay_CarInfo ON 1=1
+          LEFT JOIN Object AS Object_Retail  ON Object_Retail.Id  = tmpMovement.RetailId
+
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate)              AS tmpWeekDay              ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner)       AS tmpWeekDay_Partner      ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo)      AS tmpWeekDay_CarInfo      ON 1=1
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo_date) AS tmpWeekDay_CarInfo_date ON 1=1
-          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.StartWeighing) AS tmpWeekDay_StartW ON 1=1
-          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.EndWeighing) AS tmpWeekDay_EndW ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.StartWeighing)         AS tmpWeekDay_StartW       ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.EndWeighing)           AS tmpWeekDay_EndW         ON 1=1
 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovement.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMovement.GoodsKindId

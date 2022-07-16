@@ -15,8 +15,11 @@ RETURNS TABLE (Id Integer
              , Hour TFloat, Min TFloat
              , OperDate_CarInfo TDateTime, OperDate_CarInfo_date TDateTime
              , DayOfWeekName_CarInfo TVarChar, DayOfWeekName_CarInfo_date TVarChar
+             , OperDate_int Integer
+             , OperDatePartner_int Integer
              , isErased boolean
-             ) AS
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -170,6 +173,9 @@ BEGIN
                   ELSE '???'
              END    :: TVarChar AS DayOfWeekName_CarInfo
 
+           , tmpRes.OperDate        AS OperDate_int
+           , tmpRes.OperDatePartner AS OperDatePartner_int
+
            , tmpRes.isErased
 
        FROM tmpRes
@@ -186,4 +192,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_OrderCarInfo (TRUE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_OrderCarInfo (FALSE, zfCalc_UserAdmin())
