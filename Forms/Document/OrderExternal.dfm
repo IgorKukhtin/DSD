@@ -1248,6 +1248,32 @@ inherited OrderExternalForm: TOrderExternalForm
       Status = mtDelete
       Guides = GuidesStatus_wms
     end
+    object actUpdate_MIChild_AmountSecondNull: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MIChild_AmountSecondNull
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MIChild_AmountSecondNull
+        end>
+      Caption = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 71
+    end
+    object actUpdate_MIChild_AmountNull: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MIChild_AmountNull
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MIChild_AmountNull
+        end>
+      Caption = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082' '#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082' '#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 70
+    end
     object actUpdateOperDatePartner: TdsdDataSetRefresh
       Category = 'OperDatePartner'
       MoveParams = <>
@@ -1399,9 +1425,6 @@ inherited OrderExternalForm: TOrderExternalForm
       ActionList = <
         item
           Action = actUpdateMIChild_Amount
-        end
-        item
-          Action = actRefreshChild
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')?'
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082')'
@@ -1682,6 +1705,18 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_MIChild_AmountNull'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_MIChild_AmountSecondNull'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenFormOrderExternalChild'
         end
         item
@@ -1792,6 +1827,14 @@ inherited OrderExternalForm: TOrderExternalForm
     object bbOpenFormOrderExternalChild: TdxBarButton
       Action = actOpenFormOrderExternalChild
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1088#1077#1079#1077#1088#1074#1072' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+      Category = 0
+    end
+    object bbUpdate_MIChild_AmountNull: TdxBarButton
+      Action = actUpdate_MIChild_AmountNull
+      Category = 0
+    end
+    object bbUpdate_MIChild_AmountSecondNull: TdxBarButton
+      Action = actUpdate_MIChild_AmountSecondNull
       Category = 0
     end
   end
@@ -3490,8 +3533,8 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 714
-    Top = 200
+    Left = 866
+    Top = 328
   end
   object spUpdateMIChild_AmountSecond: TdsdStoredProc
     StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecond'
@@ -3509,5 +3552,39 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 866
     Top = 200
+  end
+  object spUpdate_MIChild_AmountNull: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountNull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 994
+    Top = 336
+  end
+  object spUpdate_MIChild_AmountSecondNull: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecondNull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1058
+    Top = 336
   end
 end

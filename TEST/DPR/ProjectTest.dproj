@@ -4794,6 +4794,10 @@
 				<Form>OrderCarInfoEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_OrderExternal_MIChild_Detail.pas">
+				<Form>Report_OrderExternal_MIChild_DetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -157,6 +157,12 @@ type
     bbReport_Goods: TdxBarButton;
     actOpenFormOrderExternalChild: TdsdInsertUpdateAction;
     bbOpenFormOrderExternalChild: TdxBarButton;
+    spUpdate_MIChild_AmountNull: TdsdStoredProc;
+    spUpdate_MIChild_AmountSecondNull: TdsdStoredProc;
+    actUpdate_MIChild_AmountNull: TdsdExecStoredProc;
+    actUpdate_MIChild_AmountSecondNull: TdsdExecStoredProc;
+    bbUpdate_MIChild_AmountNull: TdxBarButton;
+    bbUpdate_MIChild_AmountSecondNull: TdxBarButton;
   private
     { Private declarations }
   public

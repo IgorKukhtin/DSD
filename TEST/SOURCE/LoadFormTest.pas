@@ -1124,7 +1124,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
   {exit;
@@ -2724,6 +2724,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
    }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_MIChild_DetailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_MIChild_DetailForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_UpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_UpdateForm');
