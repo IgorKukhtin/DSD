@@ -117,6 +117,10 @@ type
     bbPrint_byRemains: TdxBarButton;
     spSelectRemains: TdsdStoredProc;
     actPrintReserv: TdsdPrintAction;
+    bbPrintReserv: TdxBarButton;
+    RetailName_print: TcxGridDBColumn;
+    actPrintReservRetail: TdsdPrintAction;
+    bbPrintReservRetail: TdxBarButton;
   private
     { Private declarations }
   public
