@@ -82,6 +82,16 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_diff_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeightSecond
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -143,6 +153,16 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_diff_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeightSecond
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -217,6 +237,7 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072
@@ -229,6 +250,7 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072
@@ -244,7 +266,33 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
             Options.Editing = False
             Width = 70
           end
-          object GoodsName_master_ch: TcxGridDBColumn [9]
+          object AmountWeight: TcxGridDBColumn [9]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090'., '#1074#1077#1089
+            DataBinding.FieldName = 'AmountWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072', '#1074#1077#1089
+            Options.Editing = False
+            Width = 83
+          end
+          object AmountWeightSecond: TcxGridDBColumn [10]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072', '#1074#1077#1089
+            DataBinding.FieldName = 'AmountWeightSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072', '#1074#1077#1089
+            Options.Editing = False
+            Width = 104
+          end
+          object GoodsName_master_ch: TcxGridDBColumn [11]
             Caption = '***'#1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName_master'
             HeaderAlignmentHorz = taCenter
@@ -253,7 +301,7 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
             Options.Editing = False
             Width = 70
           end
-          object GoodsKindName_master_ch: TcxGridDBColumn [10]
+          object GoodsKindName_master_ch: TcxGridDBColumn [12]
             Caption = '***'#1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName_master'
             HeaderAlignmentHorz = taCenter
@@ -262,7 +310,7 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
             Options.Editing = False
             Width = 70
           end
-          object MeasureName_master_ch: TcxGridDBColumn [11]
+          object MeasureName_master_ch: TcxGridDBColumn [13]
             Caption = '***'#1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName_master'
             HeaderAlignmentHorz = taCenter
@@ -271,7 +319,7 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
             Options.Editing = False
             Width = 70
           end
-          object Amount_remains_ch: TcxGridDBColumn [12]
+          object Amount_remains_ch: TcxGridDBColumn [14]
             Caption = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090'. '#1088#1072#1089#1095'.'
             DataBinding.FieldName = 'Amount_remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -282,7 +330,7 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
             Options.Editing = False
             Width = 70
           end
-          object Amount_order_ch: TcxGridDBColumn [13]
+          object Amount_order_ch: TcxGridDBColumn [15]
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount_order'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -293,7 +341,7 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
             Options.Editing = False
             Width = 70
           end
-          object Amount_diff_ch: TcxGridDBColumn [14]
+          object Amount_diff_ch: TcxGridDBColumn [16]
             Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089
             DataBinding.FieldName = 'Amount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -304,7 +352,7 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
             Options.Editing = False
             Width = 100
           end
-          object InvNumber_send_ch: TcxGridDBColumn [15]
+          object InvNumber_send_ch: TcxGridDBColumn [17]
             Caption = #8470' '#1076#1086#1082'. '
             DataBinding.FieldName = 'InvNumber_send'
             HeaderAlignmentHorz = taCenter
@@ -313,7 +361,7 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
             Options.Editing = False
             Width = 100
           end
-          object OperDate_send_ch: TcxGridDBColumn [16]
+          object OperDate_send_ch: TcxGridDBColumn [18]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '
             DataBinding.FieldName = 'OperDate_send'
             HeaderAlignmentHorz = taCenter
@@ -322,7 +370,7 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
             Options.Editing = False
             Width = 70
           end
-          object isPeresort_ch: TcxGridDBColumn [17]
+          object isPeresort_ch: TcxGridDBColumn [19]
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090
             DataBinding.FieldName = 'isPeresort'
             HeaderAlignmentHorz = taCenter

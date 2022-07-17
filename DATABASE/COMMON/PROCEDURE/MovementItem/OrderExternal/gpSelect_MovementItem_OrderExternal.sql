@@ -343,7 +343,10 @@ BEGIN
                            , COALESCE (tmpMI_Goods.StartBegin, NULL)    :: TDateTime    AS StartBegin
                            , COALESCE (tmpMI_Goods.EndBegin, NULL)      :: TDateTime    AS EndBegin
                            , COALESCE (tmpMI_Goods.diffBegin_sec, 0)    :: TFloat       AS diffBegin_sec
-                           , COALESCE (tmpMI_Goods.isErased, FALSE)                     AS isErased
+                           , COALESCE (tmpMI_Goods.isErased, FALSE)                     AS isErased 
+                           --
+                           , ((COALESCE (tmpMI_Goods.Amount, 0) + COALESCE (tmpMI_Goods.AmountSecond, 0)) 
+                             *  CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_all
                        FROM tmpMI_Goods
                             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
                                                 AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
@@ -364,7 +367,14 @@ BEGIN
                                                                                   WHEN ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье                                                                                       THEN tmpMI_Goods.GoodsKindId
                                                                                        THEN tmpMI_Goods.GoodsKindId
                                                                                   ELSE 0
-                                                                             END
+                                                                             END 
+
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                 ON ObjectLink_Goods_Measure.ObjectId = COALESCE (tmpMI_Goods.GoodsId, tmpRemains.GoodsId)
+                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                  ON ObjectFloat_Weight.ObjectId = COALESCE (tmpMI_Goods.GoodsId, tmpRemains.GoodsId)
+                                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
                      )
             -- Товары из EDI
           , tmpMI_EDI_All AS (SELECT MovementItem.Id
@@ -472,6 +482,7 @@ BEGIN
                                , tmpMI.AmountRemains               AS AmountRemains
                                , tmpMI.Amount                      AS Amount
                                , COALESCE (tmpMI.AmountSecond, 0)  AS AmountSecond
+                               , COALESCE (tmpMI.AmountWeight_all,0)   AS AmountWeight_all
                                , COALESCE (tmpMI.Summ, 0)          AS Summ
                                , tmpMI_EDI_find.Amount             AS AmountEDI
                                , COALESCE (tmpMI.GoodsKindId, tmpMI_EDI_find.GoodsKindId)     AS GoodsKindId
@@ -553,18 +564,26 @@ BEGIN
                         )
 
           , tmpMI_Child AS (SELECT MovementItem.ParentId
-                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount
-                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount ELSE 0 END) AS AmountSecond
-                                 , SUM (MovementItem.Amount) AS Amount_all
+                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight
+                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount ELSE 0 END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeightSecond
+                                 , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_all
                             FROM MovementItem
                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                              ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()  
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                      ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                       ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                                      AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+
                             WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Child()
                               AND MovementItem.isErased   = FALSE
                             GROUP BY MovementItem.ParentId
-                           )
+                            )
              
        SELECT
              0 :: Integer               AS Id
@@ -718,9 +737,9 @@ BEGIN
            , tmpMI.EndBegin                    AS EndBegin
            , tmpMI.diffBegin_sec               AS diffBegin_sec
            
-           , tmpMI_Child.Amount       ::TFloat AS Amount_child
-           , tmpMI_Child.AmountSecond ::TFloat AS AmountSecond_child
-           , (COALESCE (tmpMI_Child.Amount_all, 0) - (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)))  ::TFloat AS AmountDiff_child
+           , tmpMI_Child.AmountWeight       ::TFloat AS Amount_child
+           , tmpMI_Child.AmountWeightSecond ::TFloat AS AmountSecond_child
+           , (COALESCE (tmpMI_Child.AmountWeight_all, 0) - COALESCE (tmpMI.AmountWeight_all,0) )  ::TFloat AS AmountDiff_child
 
 
        FROM tmpMI_all AS tmpMI
@@ -947,12 +966,22 @@ BEGIN
                            , COALESCE (tmpMI_Goods.EndBegin, NULL)      :: TDateTime    AS EndBegin
                            , COALESCE (tmpMI_Goods.diffBegin_sec, 0)    :: TFloat       AS diffBegin_sec
                            , COALESCE (tmpMI_Goods.isErased, FALSE)                     AS isErased
+                           --
+                           , ((COALESCE (tmpMI_Goods.Amount, 0) + COALESCE (tmpMI_Goods.AmountSecond, 0)) 
+                             *  CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_all
                        FROM tmpMI_Goods
                             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
                                                 AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
                                                 AND (tmpMIPromo.GoodsKindId     = tmpMI_Goods.GoodsKindId
                                                   OR tmpMIPromo.GoodsKindId     = 0)
                             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
+
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                 ON ObjectLink_Goods_Measure.ObjectId = COALESCE (tmpMI_Goods.GoodsId, 0)
+                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                  ON ObjectFloat_Weight.ObjectId = COALESCE (tmpMI_Goods.GoodsId, 0)
+                                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
                      )
             -- Товары из EDI
           , tmpMI_EDI_All AS (SELECT MovementItem.Id
@@ -1059,7 +1088,8 @@ BEGIN
                                , COALESCE (tmpMI.GoodsId, tmpMI_EDI_find.GoodsId) AS GoodsId
                                , tmpMI.AmountRemains               AS AmountRemains
                                , tmpMI.Amount                      AS Amount
-                               , COALESCE (tmpMI.AmountSecond, 0)  AS AmountSecond
+                               , COALESCE (tmpMI.AmountSecond, 0)  AS AmountSecond 
+                               , COALESCE (tmpMI.AmountWeight_all,0) AS AmountWeight_all
                                , COALESCE (tmpMI.Summ, 0)          AS Summ
                                , COALESCE (tmpMI.ChangePercent, 0) AS ChangePercent
                                , tmpMI_EDI_find.Amount             AS AmountEDI
@@ -1099,18 +1129,26 @@ BEGIN
                                      )
 
           , tmpMI_Child AS (SELECT MovementItem.ParentId
-                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount
-                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount ELSE 0 END) AS AmountSecond
-                                 , SUM (MovementItem.Amount) AS Amount_all
+                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight
+                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount ELSE 0 END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeightSecond
+                                 , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_all
                             FROM MovementItem
                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                              ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()  
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                      ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                       ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                                      AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+
                             WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Child()
                               AND MovementItem.isErased   = FALSE
                             GROUP BY MovementItem.ParentId
-                           )
+                            )
 
        SELECT
              tmpMI.MovementItemId :: Integer    AS Id
@@ -1173,9 +1211,9 @@ BEGIN
            , tmpMI.EndBegin                    AS EndBegin
            , tmpMI.diffBegin_sec               AS diffBegin_sec
 
-           , tmpMI_Child.Amount       ::TFloat AS Amount_child
-           , tmpMI_Child.AmountSecond ::TFloat AS AmountSecond_child
-           , (COALESCE (tmpMI_Child.Amount_all, 0) - (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) )  ::TFloat AS AmountDiff_child
+           , tmpMI_Child.AmountWeight       ::TFloat AS Amount_child
+           , tmpMI_Child.AmountWeightSecond ::TFloat AS AmountSecond_child
+           , (COALESCE (tmpMI_Child.AmountWeight_all, 0) - COALESCE (tmpMI.AmountWeight_all,0) )  ::TFloat AS AmountDiff_child
        FROM tmpMI_all AS tmpMI
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpMI.GoodsKindId OR tmpPromo.GoodsKindId = 0)

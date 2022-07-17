@@ -310,6 +310,9 @@ type
     spUpdate_MI_AmountPartner_round: TdsdStoredProc;
     ExecuteDialogUpdateAmountPartner: TExecuteDialog;
     bbRoundAmountPartner: TdxBarButton;
+    actPrintTEST: TdsdPrintAction;
+    bbTEST: TdxBarButton;
+    spSelectPrint_test: TdsdStoredProc;
   private
     { Private declarations }
   public

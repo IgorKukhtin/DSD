@@ -14,7 +14,9 @@ RETURNS TABLE (Id Integer, ParentId Integer, LineNum Integer
              , GoodsId_master Integer, GoodsCode_master Integer, GoodsName_master TVarChar
              , GoodsKindId_master Integer, GoodsKindName_master TVarChar
              , MeasureName TVarChar, MeasureName_master TVarChar
-             , Amount TFloat, AmountSecond TFloat, Amount_remains TFloat, Amount_order TFloat, Amount_diff TFloat
+             , Amount TFloat, AmountSecond TFloat
+             , AmountWeight TFloat, AmountWeightSecond TFloat
+             , Amount_remains TFloat, Amount_order TFloat, Amount_diff TFloat
              , MovementId_send Integer, InvNumber_send TVarChar, OperDate_send TDateTime
              , isPeresort Boolean, isErased Boolean
 
@@ -90,7 +92,10 @@ BEGIN
                            , MovementItem.ParentId
                            , MovementItem.GoodsId                          AS GoodsId
                            , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) = 0 THEN MovementItem.Amount ELSE 0 END AS Amount
-                           , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) > 0 THEN MovementItem.Amount ELSE 0 END AS AmountSecond
+                           , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) > 0 THEN MovementItem.Amount ELSE 0 END AS AmountSecond 
+                           , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) = 0 THEN MovementItem.Amount ELSE 0 END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS AmountWeight
+                           , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) > 0 THEN MovementItem.Amount ELSE 0 END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS AmountWeightSecond 
+                           
                            , COALESCE (MIFloat_Remains.ValueData, 0)       AS Amount_remains
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                            , MovementItem.MovementId_send                  AS MovementId_send
@@ -104,9 +109,13 @@ BEGIN
                            LEFT JOIN tmpMI_Float AS MIFloat_Remains
                                                  ON MIFloat_Remains.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
-                         --LEFT JOIN tmpMI_Float AS MIFloat_Movement
-                         --                      ON MIFloat_Movement.MovementItemId = MovementItem.Id
-                         --                     AND MIFloat_Movement.DescId = zc_MIFloat_MovementId()
+
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                ON ObjectLink_Goods_Measure.ObjectId = MovementItem.GoodsId
+                                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                 ON ObjectFloat_Weight.ObjectId = MovementItem.GoodsId
+                                                AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
                      )
     , tmpPeresort AS (SELECT DISTINCT
                              tmpMI_Master.GoodsId, tmpMI_Master.GoodsKindId
@@ -138,8 +147,10 @@ BEGIN
            , Object_Measure.ValueData           AS MeasureName
            , Object_Measure_master.ValueData    AS MeasureName_master
 
-           , tmpMI.Amount           :: TFloat   AS Amount
-           , tmpMI.AmountSecond     :: TFloat   AS AmountSecond
+           , tmpMI.Amount              :: TFloat   AS Amount
+           , tmpMI.AmountSecond        :: TFloat   AS AmountSecond  
+           , tmpMI.AmountWeight        :: TFloat   AS AmountWeight
+           , tmpMI.AmountWeightSecond  :: TFloat   AS AmountWeightSecond
            , tmpMI.Amount_remains   :: TFloat   AS Amount_remains
 
              -- Заявка - переводим в ед.изм. - MeasureId_child
