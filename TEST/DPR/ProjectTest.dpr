@@ -1379,7 +1379,8 @@ uses
   OrderExternalChild in '..\..\Forms\Document\OrderExternalChild.pas' {OrderExternalChildForm: TParentForm},
   OrderExternalChild_BySend in '..\..\Forms\Document\OrderExternalChild_BySend.pas' {OrderExternalChild_BySendForm: TParentForm},
   OrderCarInfo in '..\..\Forms\Guides\OrderCarInfo.pas' {OrderCarInfoForm: TParentForm},
-  OrderCarInfoEdit in '..\..\Forms\Guides\OrderCarInfoEdit.pas' {OrderCarInfoEditForm: TParentForm};
+  OrderCarInfoEdit in '..\..\Forms\Guides\OrderCarInfoEdit.pas' {OrderCarInfoEditForm: TParentForm},
+  Report_OrderExternal_MIChild_Detail in '..\..\Forms\Report\Report_OrderExternal_MIChild_Detail.pas' {Report_OrderExternal_MIChild_DetailForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

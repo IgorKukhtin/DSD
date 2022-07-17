@@ -91,6 +91,8 @@ type
     GuidesCarInfo: TdsdGuides;
     actOpenFormSend: TdsdOpenForm;
     bbOpenFormSend: TdxBarButton;
+    actOpenFormOrderExternalChildDetail: TdsdOpenForm;
+    bbOpenFormOrderExternalChildDetail: TdxBarButton;
   private
     { Private declarations }
   public

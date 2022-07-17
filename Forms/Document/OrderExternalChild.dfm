@@ -845,6 +845,62 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
         end>
       isShowModal = False
     end
+    object actOpenFormOrderExternalChildDetail: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1056#1077#1079#1077#1088#1074
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1056#1077#1079#1077#1088#1074
+      ImageIndex = 39
+      FormName = 'TReport_OrderExternal_MIChild_DetailForm'
+      FormNameParam.Value = 'TReport_OrderExternal_MIChild_DetailForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToId'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToName'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actOpenFormSend: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
@@ -967,6 +1023,14 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormOrderExternalChildDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1038,6 +1102,10 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
     end
     object bbOpenFormSend: TdxBarButton
       Action = actOpenFormSend
+      Category = 0
+    end
+    object bbOpenFormOrderExternalChildDetail: TdxBarButton
+      Action = actOpenFormOrderExternalChildDetail
       Category = 0
     end
   end
