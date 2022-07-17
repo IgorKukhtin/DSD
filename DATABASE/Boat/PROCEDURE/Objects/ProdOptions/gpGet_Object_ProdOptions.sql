@@ -173,7 +173,13 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
                                ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
                               AND ObjectLink_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
-          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                               ON ObjectLink_ProdColorGroup.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
+                              AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+          LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
        WHERE Object_ProdOptions.Id = inId;
    END IF;
    
@@ -191,4 +197,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_ProdOptions (0, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Object_ProdOptions (0, 0, zfCalc_UserAdmin())
