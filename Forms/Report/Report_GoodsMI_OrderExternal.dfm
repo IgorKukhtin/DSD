@@ -4,7 +4,6 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   ClientWidth = 1203
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -236
   ExplicitWidth = 1219
   ExplicitHeight = 522
   PixelsPerInch = 96

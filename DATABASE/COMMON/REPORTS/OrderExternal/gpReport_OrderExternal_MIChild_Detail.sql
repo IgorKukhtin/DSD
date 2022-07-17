@@ -236,6 +236,7 @@ BEGIN
                           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                 ON ObjectFloat_Weight.ObjectId = tmpContainer.GoodsId
                                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                     WHERE COALESCE (CLO_GoodsKind.ObjectId, zc_GoodsKind_Basis()) = inGoodsKindId OR inGoodsKindId = 0
                      GROUP BY tmpContainer.GoodsId
                             , COALESCE (CLO_GoodsKind.ObjectId, 0)
                             , tmpContainer.Amount

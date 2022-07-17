@@ -57,7 +57,8 @@ $BODY$
 
     DECLARE vbOperDate_Begin1 TDateTime;
 
-    DECLARE vbMovementId_tax Integer;
+    DECLARE vbMovementId_tax Integer;   
+    DECLARE vbCountMI Integer;
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -528,6 +529,14 @@ BEGIN
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE);
 
+
+    --если мало строк, на печати выводим на 1 странице 2 копии
+    vbCountMI := (SELECT Count (*)
+                  FROM MovementItem 
+                  WHERE MovementItem.MovementId = inMovementId
+                    AND MovementItem.DescId = zc_MI_Master()
+                    AND MovementItem.isErased = FALSE
+                  );
      --
     OPEN Cursor1 FOR
 --     WITH tmpObject_GoodsPropertyValue AS
@@ -856,6 +865,9 @@ BEGIN
 
              -- этому Юр Лицу печатается "За довіренністю ...."
            , vbIsOKPO_04544524 :: Boolean AS isOKPO_04544524
+           
+           --если мало строк печатается 2 копии
+           , CASE WHEN COALESCE (vbCountMI,0) > 3 THEN FALSE ELSE TRUE END AS isTwoCopies
 
        FROM tmpMovement AS Movement
             LEFT JOIN tmpMovementLinkMovement AS MovementLinkMovement_Sale
