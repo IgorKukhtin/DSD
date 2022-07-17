@@ -31,7 +31,6 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbMovementId_CarInfo Integer;
-   DECLARE vbRouteId  Integer;
    DECLARE vbRetailId Integer;
 BEGIN
      -- проверка
@@ -89,7 +88,6 @@ BEGIN
       -- AND inUserId = 5
      THEN
          --
-         vbRouteId := (SELECT MLO.ObjectId FROM  MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_Route());
          vbRetailId:= (SELECT CASE WHEN Object_Route.Id IS NULL AND ObjectLink_Juridical_Retail.ChildObjectId IS NULL
                                         THEN Object_From.Id
                                    WHEN Object_From.DescId = zc_Object_Unit()
@@ -104,7 +102,7 @@ BEGIN
                               END
                        FROM MovementLinkObject AS MovementLinkObject_From
                             LEFT JOIN Object AS Object_From  ON Object_From.Id  = MovementLinkObject_From.ObjectId
-                            LEFT JOIN Object AS Object_Route ON Object_Route.Id = vbRouteId
+                            LEFT JOIN Object AS Object_Route ON Object_Route.Id = inRouteId
                             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                                 AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
@@ -154,13 +152,13 @@ BEGIN
                                    AND Movement.StatusId = zc_Enum_Status_Complete()
                                    AND Movement.DescId   = zc_Movement_OrderExternal()
                                    AND (((ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId OR COALESCE (vbRetailId, 0) = 0)
-                                      AND(MovementLinkObject_Route.ObjectId         = vbRouteId  OR COALESCE (vbRouteId, 0)  = 0)
+                                      AND(MovementLinkObject_Route.ObjectId         = inRouteId  OR COALESCE (inRouteId, 0)  = 0)
                                         )
-                                     OR (MovementLinkObject_From.ObjectId = inFromId AND COALESCE (vbRetailId, 0) = 0 AND COALESCE (vbRouteId, 0) = 0)
+                                     OR (MovementLinkObject_From.ObjectId = inFromId AND COALESCE (vbRetailId, 0) = 0 AND COALESCE (inRouteId, 0) = 0)
                                        )
                                 );
          --
-         IF vbRouteId > 0 OR vbRetailId > 0
+         IF inRouteId > 0 OR vbRetailId > 0
          THEN
              PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo()
                                                 , ioId
@@ -205,7 +203,7 @@ BEGIN
                                                                                        AND ObjectFloat_Min.DescId = zc_ObjectFloat_OrderCarInfo_Min()
                                                              WHERE Object_OrderCarInfo.DescId   = zc_Object_OrderCarInfo()
                                                                AND Object_OrderCarInfo.isErased = FALSE
-                                                               AND COALESCE (ObjectLink_Route.ChildObjectId, 0)  = COALESCE (vbRouteId, 0)
+                                                               AND COALESCE (ObjectLink_Route.ChildObjectId, 0)  = COALESCE (inRouteId, 0)
                                                                AND COALESCE (ObjectLink_Retail.ChildObjectId, 0) = COALESCE (vbRetailId, 0)
                                                              ORDER BY ObjectFloat_Hour.ValueData DESC
                                                              LIMIT 1
@@ -216,6 +214,30 @@ BEGIN
                                                             END
                                                            )
                                                  );
+             --
+             IF inUserId = 5 AND 1=0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.%  %  %  %  %.', inRouteId , vbRetailId, vbMovementId_CarInfo
+                                                        , (select MD.ValueData from MovementDate AS MD where MD.MovementId = vbMovementId_CarInfo and MD.DescId = zc_MovementDate_CarInfo())
+                                                        , (select MD.ValueData from MovementDate AS MD where MD.MovementId = ioId and MD.DescId = zc_MovementDate_CarInfo())
+                                                         ;
+             END IF;
+
+         ELSE
+             --
+             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo()
+                                                , ioId
+                                                , CASE WHEN inOperDate = inOperDatePartner
+                                                            THEN inOperDate + INTERVAL '1 DAY' + INTERVAL '0 MIN'
+                                                       ELSE inOperDatePartner + INTERVAL '0 MIN'
+                                                  END
+                                                 );
+             --
+             IF inUserId = 5 AND 1=0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.err.';
+             END IF;
+
          END IF;
 
      END IF;

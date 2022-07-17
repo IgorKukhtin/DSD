@@ -121,6 +121,11 @@ type
     actPrintGoodsDiff: TdsdPrintAction;
     spSelectPrintGoodsDiff: TdsdStoredProc;
     bbPrintGoodsDiff: TdxBarButton;
+    OperDate_CarInfo_calc: TcxGridDBColumn;
+    DayOfWeekName_CarInfo_calc: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    Min_calc: TcxGridDBColumn;
+    Id_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

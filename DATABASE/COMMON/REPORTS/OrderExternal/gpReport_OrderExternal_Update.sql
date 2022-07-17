@@ -50,10 +50,16 @@ RETURNS TABLE (OperDate        TDateTime
              , AmountWeight_child     TFloat
                -- Итого не хватает для резерва, вес
              , AmountWeight_diff      TFloat
-             
-             , OperDate_CarInfo_calc TDateTime
+
+               --
+             , OperDate_CarInfo_calc      TDateTime
+             , DayOfWeekName_CarInfo_calc TVarChar
+             , Min_calc                   Integer
+             , Id_calc                    Integer
 
              , Ord Integer
+             , DayOfWeekName_CarInfo_all_1 TVarChar
+             , DayOfWeekName_CarInfo_all_2 TVarChar
               )
 
 AS
@@ -90,6 +96,24 @@ BEGIN
                                UNION
                                 SELECT Movement.*
                                        -- Дата/время отгрузки
+                                     , Movement.OperDate AS OperDate_CarInfo
+                                       -- Дата смены
+                                     , Movement.OperDate AS OperDate_CarInfo_date
+                                FROM Movement
+                                     LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                            ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                           AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                                     LEFT JOIN MovementDate AS MovementDate_CarInfo
+                                                            ON MovementDate_CarInfo.MovementId = Movement.Id
+                                                           AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
+                                WHERE Movement.OperDate BETWEEN inStartDate AND inStartDate + INTERVAL '7 DAY'
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  AND Movement.DescId = zc_Movement_OrderExternal()
+                                  AND MovementDate_CarInfo.MovementId IS NULL
+                                  AND inIsDate_CarInfo = TRUE
+                               UNION
+                                SELECT Movement.*
+                                       -- Дата/время отгрузки
                                      , MovementDate_CarInfo.ValueData AS OperDate_CarInfo
                                        -- Дата смены
                                      , CASE WHEN EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) < 8 THEN DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData) - INTERVAL '1 DAY'
@@ -102,7 +126,7 @@ BEGIN
                                                         AND Movement.StatusId = zc_Enum_Status_Complete()
                                                         AND Movement.DescId = zc_Movement_OrderExternal()
                                 WHERE MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
-                                  AND MovementDate_CarInfo.ValueData >= inStartDate
+                                  AND MovementDate_CarInfo.ValueData >= inStartDate + INTERVAL '8 HOUR'
                                 --AND MovementDate_CarInfo.ValueData <= inEndDate
                                   AND inStartDate = inEndDate
                                 --AND inStartDate >= CURRENT_DATE - INTERVAL '5 DAY'
@@ -192,6 +216,13 @@ BEGIN
                          FROM (SELECT DISTINCT tmpMovementAll.OperDate_CarInfo , tmpMovementAll.OperDate_CarInfo_date FROM tmpMovementAll
                               ) AS tmp
                         )
+       , tmpNPP_date AS (SELECT -- Дата смены
+                                tmp.OperDate_CarInfo_date
+                                -- № п/п
+                              , ROW_NUMBER() OVER (ORDER BY tmp.OperDate_CarInfo_date ASC) AS Ord
+                         FROM (SELECT DISTINCT tmpMovementAll.OperDate_CarInfo_date FROM tmpMovementAll
+                              ) AS tmp
+                        )
      , tmpMovement AS (SELECT Movement.OperDate
                             , MovementDate_OperDatePartner.ValueData                   AS OperDatePartner
                             , Movement.ToId                                            AS ToId
@@ -207,7 +238,7 @@ BEGIN
                                      OR Object_Route.ValueData ILIKE '%-колбаса'
                                      OR Object_Route.ValueData ILIKE '%Кривой Рог%'
                                            THEN 0
-                                   ELSE ObjectLink_Juridical_Retail.ChildObjectId
+                                   ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0)
                               END AS RetailId
                             , STRING_AGG (DISTINCT CASE WHEN Object_Route.ValueData ILIKE 'Маршрут №%'
                                                           OR Object_Route.ValueData ILIKE 'Самов%'
@@ -319,7 +350,7 @@ BEGIN
                                         OR Object_Route.ValueData ILIKE '%-колбаса'
                                         OR Object_Route.ValueData ILIKE '%Кривой Рог%'
                                            THEN 0
-                                      ELSE ObjectLink_Juridical_Retail.ChildObjectId
+                                      ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0)
                                  END
                                , MovementLinkObject_CarInfo.ObjectId
                                , Movement.OperDate_CarInfo
@@ -345,9 +376,9 @@ BEGIN
                                    WHERE ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     > 0
                                      AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
                                      AND Object_GoodsByGoodsKind_View.GoodsId IN (SELECT DISTINCT tmpMovement.GoodsId FROM tmpMovement)
-                                     AND 1=0
+                                   --AND 1=0
                                   )
-             , tmpOrderCarInfo AS (SELECT gpSelect.RouteId, gpSelect.RetailId
+             , tmpOrderCarInfo AS (SELECT gpSelect.Id, gpSelect.RouteId, gpSelect.RetailId
                                         , gpSelect.OperDate_int, gpSelect.OperDatePartner_int
                                         , gpSelect.Days, gpSelect.Hour, gpSelect.Min
                                    FROM gpSelect_Object_OrderCarInfo (inIsShowAll:= FALSE, inSession:= inSession) AS gpSelect
@@ -427,19 +458,36 @@ BEGIN
            , tmpMovement.AmountWeight_diff        ::TFloat AS AmountWeight_diff
 
              -- !!!Дата/время отгрузки - Расчет!!!
-           , (tmpMovement.OperDatePartner + ((CASE WHEN tmpOrderCarInfo.Days > 0 THEN  1 * tmpOrderCarInfo.Days ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
-                                          - ((CASE WHEN tmpOrderCarInfo.Days < 0 THEN -1 * tmpOrderCarInfo.Days ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
-                                          + ((COALESCE (tmpOrderCarInfo.Hour, 0) :: Integer) :: TVarChar || ' HOUR')   :: INTERVAL
-                                          + ((COALESCE (tmpOrderCarInfo.Min, 0)  :: Integer) :: TVarChar || ' MINUTE') :: INTERVAL
-             ) :: TDateTime AS OperDate_CarInfo_calc
+           , (CASE WHEN tmpOrderCarInfo.Id IS NULL
+                        THEN NULL
+                   ELSE tmpMovement.OperDatePartner + ((CASE WHEN tmpOrderCarInfo.Days > 0 THEN  1 * tmpOrderCarInfo.Days ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                                    - ((CASE WHEN tmpOrderCarInfo.Days < 0 THEN -1 * tmpOrderCarInfo.Days ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                                    + ((COALESCE (tmpOrderCarInfo.Hour, 0) :: Integer) :: TVarChar || ' HOUR')   :: INTERVAL
+                                                    + ((COALESCE (tmpOrderCarInfo.Min, 0)  :: Integer) :: TVarChar || ' MINUTE') :: INTERVAL
+              END) :: TDateTime AS OperDate_CarInfo_calc
+           , tmpWeekDay_CarInfo_calc.DayOfWeekName      ::TVarChar AS DayOfWeekName_CarInfo_calc
+
+           , ((EXTRACT (EPOCH FROM tmpMovement.OperDate_CarInfo
+                                 - (tmpMovement.OperDatePartner + ((CASE WHEN tmpOrderCarInfo.Days > 0 THEN  1 * tmpOrderCarInfo.Days ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                                                - ((CASE WHEN tmpOrderCarInfo.Days < 0 THEN -1 * tmpOrderCarInfo.Days ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                                                + ((COALESCE (tmpOrderCarInfo.Hour, 0) :: Integer) :: TVarChar || ' HOUR')   :: INTERVAL
+                                                                + ((COALESCE (tmpOrderCarInfo.Min, 0)  :: Integer) :: TVarChar || ' MINUTE') :: INTERVAL
+                                   ) :: TDateTime
+                       )) / 60) ::Integer AS Min_calc
+           , tmpOrderCarInfo.Id AS Id_calc
 
            , tmpMovement.Ord                      :: Integer AS Ord
+           , (CASE WHEN tmpNPP_date.Ord < 10 THEN '0' ELSE '' END || tmpNPP_date.Ord :: TVarChar || ' ' || tmpWeekDay_CarInfo_date.DayOfWeekName || '-' || EXTRACT (DAY FROM tmpMovement.OperDate_CarInfo_date) :: TVarChar ) :: TVarChar AS DayOfWeekName_CarInfo_all_1
+           , (CASE WHEN tmpNPP_date.Ord < 10 THEN '0' ELSE '' END || tmpNPP_date.Ord :: TVarChar || '/'
+           || CASE WHEN tmpMovement.Ord < 10 THEN '0' ELSE '' END || tmpMovement.Ord :: TVarChar || '-' || zfConvert_TimeShortToString (tmpMovement.OperDate_CarInfo)) :: TVarChar AS DayOfWeekName_CarInfo_all_2
 
       FROM tmpMovement
-          LEFT JOIN tmpOrderCarInfo ON tmpOrderCarInfo.RouteId             = tmpMovement.RouteId
-                                   AND tmpOrderCarInfo.RetailId            = tmpMovement.RetailId
-                                   AND tmpOrderCarInfo.OperDate_int        = zfCalc_DayOfWeekNumber (tmpMovement.OperDate)
-                                   AND tmpOrderCarInfo.OperDatePartner_int = zfCalc_DayOfWeekNumber (tmpMovement.OperDatePartner)
+          LEFT JOIN tmpNPP_date ON tmpNPP_date.OperDate_CarInfo_date = tmpMovement.OperDate_CarInfo_date
+          LEFT JOIN tmpOrderCarInfo ON tmpOrderCarInfo.RouteId                = tmpMovement.RouteId
+
+                                   AND COALESCE (tmpOrderCarInfo.RetailId, 0) = tmpMovement.RetailId
+                                   AND tmpOrderCarInfo.OperDate_int           = zfCalc_DayOfWeekNumber (tmpMovement.OperDate)
+                                   AND tmpOrderCarInfo.OperDatePartner_int    = zfCalc_DayOfWeekNumber (tmpMovement.OperDatePartner)
 
           LEFT JOIN Object AS Object_To      ON Object_To.Id      = tmpMovement.ToId
           LEFT JOIN Object AS Object_Route   ON Object_Route.Id   = tmpMovement.RouteId
@@ -452,6 +500,11 @@ BEGIN
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo_date) AS tmpWeekDay_CarInfo_date ON 1=1
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.StartWeighing)         AS tmpWeekDay_StartW       ON 1=1
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.EndWeighing)           AS tmpWeekDay_EndW         ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName ((tmpMovement.OperDatePartner + ((CASE WHEN tmpOrderCarInfo.Days > 0 THEN  1 * tmpOrderCarInfo.Days ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                                                       - ((CASE WHEN tmpOrderCarInfo.Days < 0 THEN -1 * tmpOrderCarInfo.Days ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
+                                                                       + ((COALESCE (tmpOrderCarInfo.Hour, 0) :: Integer) :: TVarChar || ' HOUR')   :: INTERVAL
+                                                                       + ((COALESCE (tmpOrderCarInfo.Min, 0)  :: Integer) :: TVarChar || ' MINUTE') :: INTERVAL
+                                                                       ) :: TDateTime)                    AS tmpWeekDay_CarInfo_calc ON 1=1
 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovement.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMovement.GoodsKindId
@@ -479,6 +532,7 @@ BEGIN
       -- !!!если есть заказ!!!
       WHERE tmpMovement.AmountSh     <> 0
          OR tmpMovement.AmountWeight <> 0
+      ORDER BY tmpMovement.OperDate_CarInfo_date, tmpMovement.OperDate_CarInfo
      ;
 
 END;

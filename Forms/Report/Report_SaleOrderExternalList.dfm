@@ -380,6 +380,22 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object RouteName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090
+        DataBinding.FieldName = 'RouteName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object RetailName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+        DataBinding.FieldName = 'RetailName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object FromDescName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1086#1090' '#1082#1086#1075#1086')'
         DataBinding.FieldName = 'FromDescName'
@@ -1044,10 +1060,12 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 304
     Top = 296

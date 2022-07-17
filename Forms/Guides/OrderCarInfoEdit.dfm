@@ -237,7 +237,7 @@ object OrderCarInfoEditForm: TOrderCarInfoEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDate_day'
+        Name = 'inOperDate'
         Value = Null
         Component = edOperDate
         DataType = ftFloat
@@ -245,7 +245,7 @@ object OrderCarInfoEditForm: TOrderCarInfoEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDatePartner_day'
+        Name = 'inOperDatePartner'
         Value = Null
         Component = edOperDatePartner
         DataType = ftFloat

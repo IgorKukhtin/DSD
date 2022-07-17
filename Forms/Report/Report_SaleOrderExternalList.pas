@@ -68,6 +68,8 @@ type
     spSelectPrint_SaleOrder: TdsdStoredProc;
     actPrintSaleOrder: TdsdPrintAction;
     FromDescName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
   private
   public
   end;

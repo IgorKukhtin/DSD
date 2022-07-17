@@ -51,7 +51,7 @@ BEGIN
                                      OR Object_Route.ValueData ILIKE 'Самов%'
                                      OR Object_Route.ValueData ILIKE '%-колбаса'
                                      OR Object_Route.ValueData ILIKE '%Кривой Рог%'
-                                           THEN 0
+                                        THEN 0
                                    ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0)
                               END AS RetailId
                             , MovementLinkObject_To.ObjectId AS UnitId

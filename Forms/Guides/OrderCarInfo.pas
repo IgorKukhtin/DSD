@@ -72,6 +72,7 @@ type
     DayOfWeekName_CarInfo: TcxGridDBColumn;
     OperDate_CarInfo_date: TcxGridDBColumn;
     DayOfWeekName_CarInfo_date: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ object OrderCarInfoForm: TOrderCarInfoForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1072#1092#1080#1082' '#1086#1090#1075#1088#1091#1079#1082#1080'>'
   ClientHeight = 367
-  ClientWidth = 848
+  ClientWidth = 894
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,14 +21,14 @@ object OrderCarInfoForm: TOrderCarInfoForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 848
+    Width = 894
     Height = 341
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 853
+    ExplicitWidth = 848
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -80,6 +80,17 @@ object OrderCarInfoForm: TOrderCarInfoForm
         Options.Editing = False
         Width = 117
       end
+      object OperDate_CarInfo: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'/'#1074#1088' '#1086#1090#1075#1088#1091#1079#1082#1080
+        DataBinding.FieldName = 'OperDate_CarInfo'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'dd.mm hh:mm'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1083#1072#1085
+        Options.Editing = False
+        Width = 80
+      end
       object OperDate: TcxGridDBColumn
         Caption = #1044#1077#1085#1100' '#1079#1072#1103#1074#1082#1072
         DataBinding.FieldName = 'OperDate'
@@ -97,41 +108,30 @@ object OrderCarInfoForm: TOrderCarInfoForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1088#1072#1089#1095#1077#1090
+        HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1088#1072#1089#1095#1077#1090' ('#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077' '#1047#1072#1082#1072#1079')'
         Width = 70
-      end
-      object OperDate_CarInfo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072'/'#1074#1088' '#1086#1090#1075#1088#1091#1079#1082#1080
-        DataBinding.FieldName = 'OperDate_CarInfo'
-        PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'dd.mm hh:mm'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1092#1072#1082#1090
-        Options.Editing = False
-        Width = 80
       end
       object DayOfWeekName_CarInfo: TcxGridDBColumn
         Caption = #1044#1077#1085#1100' '#1086#1090#1075#1088#1091#1079#1082#1080
         DataBinding.FieldName = 'DayOfWeekName_CarInfo'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1092#1072#1082#1090
+        HeaderHint = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1076#1083#1103' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1083#1072#1085
         Width = 80
       end
       object OperDate_CarInfo_date: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1089#1084#1077#1085#1072')'
+        Caption = #1044#1072#1090#1072' ('#1089#1084#1077#1085#1072')'
         DataBinding.FieldName = 'OperDate_CarInfo_date'
         PropertiesClassName = 'TcxDateEditProperties'
         Properties.DisplayFormat = 'dd.mm'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1092#1072#1082#1090' '#1076#1083#1103' '#1088#1072#1073#1086#1095#1072#1103' '#1089#1084#1077#1085#1072
+        HeaderHint = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1083#1072#1085' '#1076#1083#1103' '#1088#1072#1073#1086#1095#1072#1103' '#1089#1084#1077#1085#1072
         Options.Editing = False
-        Width = 70
+        Width = 80
       end
       object DayOfWeekName_CarInfo_date: TcxGridDBColumn
-        Caption = #1044#1077#1085#1100' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1089#1084#1077#1085#1072')'
+        Caption = #1044#1077#1085#1100' ('#1089#1084#1077#1085#1072')'
         DataBinding.FieldName = 'DayOfWeekName_CarInfo_date'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -146,7 +146,9 @@ object OrderCarInfoForm: TOrderCarInfoForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1086#1090#1082#1083#1086#1085#1077#1085#1085#1080#1077' '#1074' '#1076#1085#1103#1093' '#1086#1090' '#1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1088#1072#1089#1095#1077#1090
+        HeaderHint = 
+          #1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1083#1072#1085' - '#1086#1090#1082#1083#1086#1085#1077#1085#1085#1080#1077' '#1074' '#1076#1085#1103#1093' '#1086#1090' '#1044#1072#1090 +
+          #1099' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1088#1072#1089#1095#1077#1090
         Width = 74
       end
       object Hour: TcxGridDBColumn
@@ -156,7 +158,7 @@ object OrderCarInfoForm: TOrderCarInfoForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1063#1072#1089#1099', '#1042#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
+        HeaderHint = #1063#1072#1089#1099', '#1042#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1083#1072#1085
         Width = 110
       end
       object Min: TcxGridDBColumn
@@ -166,7 +168,7 @@ object OrderCarInfoForm: TOrderCarInfoForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1052#1080#1085#1091#1090#1099', '#1042#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
+        HeaderHint = #1052#1080#1085#1091#1090#1099', '#1042#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1083#1072#1085
         Width = 120
       end
       object isErased: TcxGridDBColumn
@@ -179,6 +181,13 @@ object OrderCarInfoForm: TOrderCarInfoForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 72
+      end
+      object Id: TcxGridDBColumn
+        DataBinding.FieldName = 'Id'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel

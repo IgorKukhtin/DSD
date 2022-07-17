@@ -25,10 +25,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsChado_outlet Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Unit());
      vbUserId:= lpGetUserBySession (inSession);
+
+     --
+     vbIsChado_outlet:= vbUserId = 1234551;
 
 
      -- Результат
@@ -64,7 +68,7 @@ BEGIN
            , Object_Bank.ValueData           AS BankName
 
            , Object_AccountDirection.ValueData  AS AccountDirectionName
-           
+
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
 
            , Object_PriceList.Id            AS PriceListId
@@ -86,7 +90,7 @@ BEGIN
                        THEN '2007-04-01' -- 5 Elem  -- 28025(36) in (36477)
 
                   WHEN Object_Unit.ValueData = 'магазин CHADO'
-                       THEN '2007-12-03' -- Chado   -- 70064 + 39629(I) + 103288(m12) in (169245,67594,284803) 
+                       THEN '2007-12-03' -- Chado   -- 70064 + 39629(I) + 103288(m12) in (169245,67594,284803)
 
                   WHEN Object_Unit.ValueData = 'магазин SAVOY'
                        THEN '2008-03-31' -- Savoy   -- OK
@@ -122,7 +126,7 @@ BEGIN
              END :: TDateTime AS StartDate_sybase
 
            , COALESCE (ObjectBoolean_PartnerBarCode.ValueData, FALSE) :: Boolean  AS isPartnerBarCode
-           
+
            , CASE WHEN tmpReportOLAP.UnitId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isOLAP
 
            , Object_Unit.isErased            AS isErased
@@ -149,8 +153,8 @@ BEGIN
                                   ON OF_Unit_PeriodYearTag.ObjectId = Object_Unit.Id
                                  AND OF_Unit_PeriodYearTag.DescId = zc_ObjectFloat_Unit_PeriodYearTag()
 
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartnerBarCode 
-                                    ON ObjectBoolean_PartnerBarCode.ObjectId = Object_Unit.Id 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartnerBarCode
+                                    ON ObjectBoolean_PartnerBarCode.ObjectId = Object_Unit.Id
                                    AND ObjectBoolean_PartnerBarCode.DescId = zc_ObjectBoolean_Unit_PartnerBarCode()
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
@@ -211,6 +215,8 @@ BEGIN
 
      WHERE Object_Unit.DescId = zc_Object_Unit()
        AND (Object_Unit.isErased = FALSE OR inIsShowAll = TRUE)
+       -- магазин Chado-Outlet
+       AND (vbIsChado_outlet = FALSE OR Object_Unit.Id = 1550)
        -- AND (Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId OR ObjectLink_User_Unit.ChildObjectId IS NULL)
     ;
 
