@@ -86,17 +86,16 @@ BEGIN
                              )
 
           , tmpMI_Child AS (SELECT MovementItem.ParentId
-                                 , SUM (COALESCE (MovementItem.Amount,0))            AS Amount
-                                 , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
-                                 , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_diff
-                            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                                 INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                        AND MovementItem.DescId     = zc_MI_Child()
-                                                        AND MovementItem.isErased   = tmpIsErased.isErased
-
-                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                             ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount
+                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount ELSE 0 END) AS AmountSecond
+                                 , SUM (MovementItem.Amount) AS Amount_all
+                            FROM MovementItem
+                                 LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                             ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId     = zc_MI_Child()
+                              AND MovementItem.isErased   = FALSE
                             GROUP BY MovementItem.ParentId
                             )
 
@@ -329,17 +328,16 @@ BEGIN
                                      )
 
           , tmpMI_Child AS (SELECT MovementItem.ParentId
-                                 , SUM (COALESCE (MovementItem.Amount,0))            AS Amount
-                                 , SUM (COALESCE (MIFloat_AmountSecond.ValueData,0)) AS AmountSecond
-                                 , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount_diff
-                            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                                 INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                        AND MovementItem.DescId     = zc_MI_Child()
-                                                        AND MovementItem.isErased   = tmpIsErased.isErased
-
-                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                             ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount
+                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount ELSE 0 END) AS AmountSecond
+                                 , SUM (MovementItem.Amount) AS Amount_all
+                            FROM MovementItem
+                                 LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                             ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId     = zc_MI_Child()
+                              AND MovementItem.isErased   = FALSE
                             GROUP BY MovementItem.ParentId
                             )
 
