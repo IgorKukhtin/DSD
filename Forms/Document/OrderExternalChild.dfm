@@ -898,6 +898,23 @@ inherited OrderExternalChildForm: TOrderExternalChildForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end

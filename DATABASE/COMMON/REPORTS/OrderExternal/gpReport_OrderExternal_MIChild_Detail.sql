@@ -1,11 +1,13 @@
 -- Function: Report_OrderExternal_MIChild_Detail()
 
 DROP FUNCTION IF EXISTS Report_OrderExternal_MIChild_Detail (TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS Report_OrderExternal_MIChild_Detail (TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION Report_OrderExternal_MIChild_Detail(
     IN inOperDate                TDateTime , -- Дата документа
     IN inToId                    Integer   , -- Кому (в документе)
     IN inGoodsId                 Integer   , -- товар
+    IN inGoodsKindId             Integer   , -- товар
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -136,6 +138,7 @@ BEGIN
                            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                  ON ObjectFloat_Weight.ObjectId = Movement.GoodsId_child
                                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                       WHERE COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) = inGoodsKindId OR inGoodsKindId = 0
                        GROUP BY Movement.Id
                               , Movement.OperDate
                               , Movement.InvNumber

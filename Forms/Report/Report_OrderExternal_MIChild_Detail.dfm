@@ -22,6 +22,8 @@ inherited Report_OrderExternal_MIChild_DetailForm: TReport_OrderExternal_MIChild
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 337
+        ExplicitLeft = 216
+        ExplicitTop = -20
         ExplicitWidth = 1020
         ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -449,9 +451,9 @@ inherited Report_OrderExternal_MIChild_DetailForm: TReport_OrderExternal_MIChild
       ExplicitWidth = 34
     end
     inherited cxLabel2: TcxLabel
-      Left = 800
+      Left = 910
       Visible = False
-      ExplicitLeft = 800
+      ExplicitLeft = 910
     end
     object cxLabel6: TcxLabel
       Left = 157
@@ -485,6 +487,22 @@ inherited Report_OrderExternal_MIChild_DetailForm: TReport_OrderExternal_MIChild
       end>
     TabOrder = 7
     Width = 267
+  end
+  object cxLabel4: TcxLabel [4]
+    Left = 759
+    Top = 6
+    Caption = #1042#1080#1076':'
+  end
+  object edGoodsKind: TcxButtonEdit [5]
+    Left = 789
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 9
+    Width = 84
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -755,9 +773,17 @@ inherited Report_OrderExternal_MIChild_DetailForm: TReport_OrderExternal_MIChild
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = GuidesGoodsKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 171
+    Left = 384
+    Top = 179
   end
   inherited BarManager: TdxBarManager
     Left = 168
@@ -988,6 +1014,23 @@ inherited Report_OrderExternal_MIChild_DetailForm: TReport_OrderExternal_MIChild
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = GuidesGoodsKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindName'
+        Value = Null
+        Component = GuidesGoodsKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 304
     Top = 288
@@ -1050,5 +1093,35 @@ inherited Report_OrderExternal_MIChild_DetailForm: TReport_OrderExternal_MIChild
         MultiSelectSeparator = ','
       end>
     Left = 576
+  end
+  object GuidesGoodsKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsKind
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TGoodsKind_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsKind_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 810
+    Top = 2
   end
 end
