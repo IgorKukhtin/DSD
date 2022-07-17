@@ -116,6 +116,7 @@ type
     actPrint_byRemains: TdsdPrintAction;
     bbPrint_byRemains: TdxBarButton;
     spSelectRemains: TdsdStoredProc;
+    actPrintReserv: TdsdPrintAction;
   private
     { Private declarations }
   public

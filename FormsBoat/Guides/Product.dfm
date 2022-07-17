@@ -2120,6 +2120,7 @@ object ProductForm: TProductForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewProdOptItems
+      Action = actChoiceFormProdOptions_Object
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
