@@ -192,7 +192,7 @@ BEGIN
                           END :: TFloat  AS BasisPriceWVAT
                
                           -- цена продажи без НДС - если товар указан то берем цену товара, иначе это Boat Structure тогда берем SalePrice
-                        , CASE WHEN ObjectLink_Goods.ChildObjectId > 0
+                        , CASE WHEN ObjectLink_Goods.ChildObjectId > 0 AND Object_ProdColorPattern.Id IS NULL -- AND 1=0
                                     THEN CASE WHEN vbPriceWithVAT = FALSE
                                               THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                                               ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
@@ -203,7 +203,7 @@ BEGIN
                           END :: TFloat AS SalePrice
                
                           -- цена продажи с НДС - если товар указан то берем цену товара, иначе это Boat Structure тогда берем SalePrice
-                        , CASE WHEN ObjectLink_Goods.ChildObjectId > 0
+                        , CASE WHEN ObjectLink_Goods.ChildObjectId > 0 AND Object_ProdColorPattern.Id IS NULL -- AND 1=0
                                     THEN CASE WHEN vbPriceWithVAT = FALSE
                                               THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
                                               ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
@@ -375,25 +375,25 @@ BEGIN
          , tmpRes.ProdColorPatternId
          , (tmpRes.ProdColorPatternName || ' (' || tmpProdColorPattern.ModelName || ')') :: TVarChar  AS ProdColorPatternName
 
-         , CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpRes.GoodsId ELSE 0 END                                                 :: Integer  AS GoodsId
-         , COALESCE (CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsId ELSE NULL END, tmpRes.GoodsId)      :: Integer  AS GoodsId_choice
-         , COALESCE (CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsCode ELSE NULL END, tmpRes.GoodsCode)  :: Integer  AS GoodsCode
-         , COALESCE (CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsName ELSE NULL END, tmpRes.GoodsName)  :: TVarChar AS GoodsName
+         , CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpRes.GoodsId ELSE tmpRes.GoodsId END                                                      :: Integer  AS GoodsId
+         , COALESCE (tmpRes.GoodsId,   CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsId ELSE NULL END, tmpRes.GoodsId)      :: Integer  AS GoodsId_choice
+         , COALESCE (tmpRes.GoodsCode, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsCode ELSE NULL END, tmpRes.GoodsCode)  :: Integer  AS GoodsCode
+         , COALESCE (tmpRes.GoodsName, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsName ELSE NULL END, tmpRes.GoodsName)  :: TVarChar AS GoodsName
 
          , tmpRes.TaxKindId :: INteger
-         , COALESCE (tmpProdColorPattern.TaxKindName, tmpRes.TaxKindName)        :: TVarChar AS TaxKindName
-         , COALESCE (tmpProdColorPattern.TaxKind_Value, tmpRes.TaxKind_Value)    :: TFloat   AS TaxKind_Value
+         , COALESCE (tmpRes.TaxKindName,   tmpProdColorPattern.TaxKindName, tmpRes.TaxKindName)        :: TVarChar AS TaxKindName
+         , COALESCE (tmpRes.TaxKind_Value, tmpProdColorPattern.TaxKind_Value, tmpRes.TaxKind_Value)    :: TFloat   AS TaxKind_Value
 
            -- Цена вх. без НДС - всегда из товара
-         , COALESCE (tmpProdColorPattern.EKPrice, tmpRes.EKPrice) :: TFloat AS EKPrice
+         , COALESCE (tmpRes.EKPrice, tmpProdColorPattern.EKPrice, tmpRes.EKPrice) :: TFloat AS EKPrice
            -- Цена вх. с НДС
-         , COALESCE (tmpProdColorPattern.EKPriceWVAT, tmpRes.EKPriceWVAT) :: TFloat AS EKPriceWVAT
+         , COALESCE (tmpRes.EKPriceWVAT, tmpProdColorPattern.EKPriceWVAT, tmpRes.EKPriceWVAT) :: TFloat AS EKPriceWVAT
 
            -- Цена продажи без ндс (Artikel)
-         , COALESCE (tmpProdColorPattern.BasisPrice, tmpRes.BasisPrice) :: TFloat AS BasisPrice
+         , COALESCE (tmpRes.BasisPrice, tmpProdColorPattern.BasisPrice, tmpRes.BasisPrice) :: TFloat AS BasisPrice
 
            -- Цена продажи с НДС
-         , COALESCE (tmpProdColorPattern.BasisPriceWVAT, tmpRes.BasisPriceWVAT) :: TFloat  AS BasisPriceWVAT
+         , COALESCE (tmpRes.BasisPriceWVAT, tmpProdColorPattern.BasisPriceWVAT, tmpRes.BasisPriceWVAT) :: TFloat  AS BasisPriceWVAT
 
            -- цена продажи без НДС - если товар указан то берем цену товара, иначе это Boat Structure тогда берем SalePrice
          , tmpRes.SalePrice :: TFloat
@@ -407,11 +407,11 @@ BEGIN
          , tmpRes.InsertDate
          , tmpRes.isErased
 
-         , COALESCE (CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsGroupNameFull ELSE NULL END, tmpRes.GoodsGroupNameFull)       ::TVarChar  AS GoodsGroupNameFull
-         , COALESCE (CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsGroupName ELSE NULL END, tmpRes.GoodsGroupName)               ::TVarChar  AS GoodsGroupName
-         , COALESCE (CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.Article ELSE NULL END, tmpRes.Article)                             ::TVarChar  AS Article
-         , COALESCE (CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.ProdColorName ELSE NULL END, tmpRes.ProdColorName)                 ::TVarChar  AS ProdColorName
-         , COALESCE (CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.MeasureName ELSE NULL END, tmpRes.MeasureName)                     ::TVarChar  AS MeasureName
+         , COALESCE (tmpRes.GoodsGroupNameFull, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsGroupNameFull ELSE NULL END, tmpRes.GoodsGroupNameFull)       ::TVarChar  AS GoodsGroupNameFull
+         , COALESCE (tmpRes.GoodsGroupName, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsGroupName ELSE NULL END, tmpRes.GoodsGroupName)               ::TVarChar  AS GoodsGroupName
+         , COALESCE (tmpRes.Article, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.Article ELSE NULL END, tmpRes.Article)                             ::TVarChar  AS Article
+         , COALESCE (tmpRes.ProdColorName, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.ProdColorName ELSE NULL END, tmpRes.ProdColorName)                 ::TVarChar  AS ProdColorName
+         , COALESCE (tmpRes.MeasureName, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.MeasureName ELSE NULL END, tmpRes.MeasureName)                     ::TVarChar  AS MeasureName
 
          , tmpRes.MaterialOptionsId
          , tmpRes.MaterialOptionsName
