@@ -264,16 +264,17 @@
     Left = 1
     Top = 8
     Width = 337
-    Height = 649
+    Height = 655
     TabOrder = 0
     Properties.ActivePage = Main
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 649
+    ClientRectBottom = 655
     ClientRectRight = 337
     ClientRectTop = 24
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
+      ExplicitHeight = 635
       object edName: TcxTextEdit
         Left = 40
         Top = 114
@@ -694,16 +695,15 @@
     object Child: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1091#1079#1083#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 625
       object cxGrid3: TcxGrid
         Left = 0
         Top = 0
         Width = 337
-        Height = 625
+        Height = 631
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 625
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource1

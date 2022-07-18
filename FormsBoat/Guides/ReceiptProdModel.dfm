@@ -822,6 +822,25 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Options.Editing = False
           Width = 172
         end
+        object ProdColorName_ch1: TcxGridDBColumn
+          Caption = 'Farbe'
+          DataBinding.FieldName = 'ProdColorName'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
+        end
+        object Comment_goods_ch1: TcxGridDBColumn
+          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
+          DataBinding.FieldName = 'Comment_goods'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+          Options.Editing = False
+          Width = 80
+        end
         object ObjectName_ch1: TcxGridDBColumn
           Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
           DataBinding.FieldName = 'ObjectName'
@@ -845,15 +864,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 55
-        end
-        object ProdColorName_ch1: TcxGridDBColumn
-          Caption = 'Farbe'
-          DataBinding.FieldName = 'ProdColorName'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 80
         end
         object Value_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'Value'

@@ -196,6 +196,9 @@ type
     ProdColorName_pcp: TcxGridDBColumn;
     ColorPatternName_ch2: TcxGridDBColumn;
     ProdColorPatternName_all_ch2: TcxGridDBColumn;
+    ProdColorName: TcxGridDBColumn;
+    Comment_goods: TcxGridDBColumn;
+    Comment_goods_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public
