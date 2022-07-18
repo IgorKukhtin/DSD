@@ -77,6 +77,7 @@ BEGIN
           -- Элементы сборки Узлов - Boat Structure
         , tmpReceiptGoodsChild_ProdColorPattern AS (SELECT gpSelect.ReceiptGoodsId
                                                          , gpSelect.GoodsId
+                                                         , gpSelect.ProdColorPatternName_all
                                                          , gpSelect.ProdColorName
                                                          , gpSelect.MaterialOptionsName
                                                            -- Сумма вх. с НДС, до 2-х знаков
@@ -147,7 +148,7 @@ BEGIN
          , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
 
          , tmpMaterialOptions.MaterialOptionsName :: TVarChar AS MaterialOptionsName
-         , tmpProdColorPattern.ProdColorName      :: TVarChar AS ProdColorName_pcp
+         , COALESCE (tmpProdColorPattern.ProdColorName, tmpProdColorPattern_next.ProdColorName, tmpProdColorPattern_next_all.ProdColorName) :: TVarChar AS ProdColorName_pcp
 
          , Object_Insert.ValueData            AS InsertName
          , Object_Update.ValueData            AS UpdateName
@@ -258,13 +259,35 @@ BEGIN
                      GROUP BY tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
                     ) AS tmpMaterialOptions
                       ON tmpMaterialOptions.ReceiptGoodsId = Object_ReceiptGoods.Id
+          -- если это Товар
           LEFT JOIN (SELECT tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
                           , STRING_AGG (tmpReceiptGoodsChild_ProdColorPattern.ProdColorName, ';') AS ProdColorName
                      FROM tmpReceiptGoodsChild_ProdColorPattern
-                     WHERE tmpReceiptGoodsChild_ProdColorPattern.GoodsId > 0
+                     WHERE tmpReceiptGoodsChild_ProdColorPattern.GoodsId > 0 OR tmpReceiptGoodsChild_ProdColorPattern.ProdColorPatternName_all ILIKE 'Stitching%'
                      GROUP BY tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
                     ) AS tmpProdColorPattern
                       ON tmpProdColorPattern.ReceiptGoodsId = Object_ReceiptGoods.Id
+                     AND tmpProdColorPattern.ProdColorName <> ''
+
+          -- если это Примечание, одинаковое значение
+          LEFT JOIN (SELECT tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
+                          , STRING_AGG (DISTINCT tmpReceiptGoodsChild_ProdColorPattern.ProdColorName, ';') AS ProdColorName
+                     FROM tmpReceiptGoodsChild_ProdColorPattern
+                     WHERE tmpReceiptGoodsChild_ProdColorPattern.GoodsId IS NULL
+                     GROUP BY tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
+                    ) AS tmpProdColorPattern_next
+                      ON tmpProdColorPattern_next.ReceiptGoodsId = Object_ReceiptGoods.Id
+                     AND tmpProdColorPattern.ProdColorName <> ''
+                     AND POSITION (';' IN tmpProdColorPattern.ProdColorName) = 0
+
+          -- если это Примечание, хоть одно отличное значение
+          LEFT JOIN (SELECT tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
+                          , STRING_AGG (tmpReceiptGoodsChild_ProdColorPattern.ProdColorName, ';') AS ProdColorName
+                     FROM tmpReceiptGoodsChild_ProdColorPattern
+                     WHERE tmpReceiptGoodsChild_ProdColorPattern.GoodsId IS NULL
+                     GROUP BY tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
+                    ) AS tmpProdColorPattern_next_all
+                      ON tmpProdColorPattern_next_all.ReceiptGoodsId = Object_ReceiptGoods.Id
 
      WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
       AND (Object_ReceiptGoods.isErased = FALSE OR inIsErased = TRUE)
