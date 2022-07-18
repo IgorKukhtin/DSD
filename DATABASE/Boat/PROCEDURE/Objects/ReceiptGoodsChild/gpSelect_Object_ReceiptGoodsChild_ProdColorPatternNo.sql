@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , GoodsGroupName TVarChar
              , Article TVarChar , Article_all TVarChar
              , ProdColorName TVarChar
+             , Comment_goods TVarChar
              , MeasureName TVarChar
              , MaterialOptionsId Integer, MaterialOptionsName TVarChar
 
@@ -77,6 +78,7 @@ BEGIN
          , ObjectString_Article.ValueData        ::TVarChar  AS Article 
          , zfCalc_Article_all (ObjectString_Article.ValueData) ::TVarChar AS Article_all
          , Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
+         , ObjectString_Goods_Comment.ValueData              AS Comment_goods
          , Object_Measure.ValueData              ::TVarChar  AS MeasureName
 
          , Object_MaterialOptions.Id          ::Integer  AS MaterialOptionsId
@@ -161,6 +163,10 @@ BEGIN
                                ON ObjectLink_Goods_ProdColor.ObjectId = Object_Object.Id
                               AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
           LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Goods_Comment
+                                 ON ObjectString_Goods_Comment.ObjectId = Object_Object.Id
+                                AND ObjectString_Goods_Comment.DescId   = zc_ObjectString_Goods_Comment()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Object.Id

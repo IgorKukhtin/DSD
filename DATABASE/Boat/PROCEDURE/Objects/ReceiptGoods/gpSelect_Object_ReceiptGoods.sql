@@ -21,6 +21,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
+             , Comment_goods TVarChar
+             
 
                -- Сумма вх. без НДС, до 2-х знаков - Товар
              , EKPrice_summ_goods     TFloat
@@ -162,20 +164,22 @@ BEGIN
          , ObjectString_Article.ValueData        ::TVarChar  AS Article
          , Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
          , Object_Measure.ValueData              ::TVarChar  AS MeasureName
+         , ObjectString_Goods_Comment.ValueData  ::TVarChar  AS Comment_goods
 
-        , tmpReceiptGoodsChild.EKPrice_summ_goods      ::TFloat
-        , tmpReceiptGoodsChild.EKPriceWVAT_summ_goods  ::TFloat
 
-        , tmpReceiptGoodsChild.EKPrice_summ_colPat     ::TFloat
-        , tmpReceiptGoodsChild.EKPriceWVAT_summ_colPat ::TFloat
+         , tmpReceiptGoodsChild.EKPrice_summ_goods      ::TFloat
+         , tmpReceiptGoodsChild.EKPriceWVAT_summ_goods  ::TFloat
 
-        , (COALESCE (tmpReceiptGoodsChild.EKPrice_summ_colPat,0)     + COALESCE (tmpReceiptGoodsChild.EKPrice_summ_goods,0))     ::TFloat AS EKPrice_summ
-        , (COALESCE (tmpReceiptGoodsChild.EKPriceWVAT_summ_colPat,0) + COALESCE (tmpReceiptGoodsChild.EKPriceWVAT_summ_goods,0)) ::TFloat AS EKPriceWVAT_summ
+         , tmpReceiptGoodsChild.EKPrice_summ_colPat     ::TFloat
+         , tmpReceiptGoodsChild.EKPriceWVAT_summ_colPat ::TFloat
 
-          -- Цена продажи без ндс
-        , COALESCE (tmpPriceBasis.ValuePrice, 0)     ::TFloat AS BasisPrice
-          -- Цена продажи с ндс
-        , COALESCE (tmpPriceBasis.ValuePriceWVAT, 0) ::TFloat AS BasisPriceWVAT
+         , (COALESCE (tmpReceiptGoodsChild.EKPrice_summ_colPat,0)     + COALESCE (tmpReceiptGoodsChild.EKPrice_summ_goods,0))     ::TFloat AS EKPrice_summ
+         , (COALESCE (tmpReceiptGoodsChild.EKPriceWVAT_summ_colPat,0) + COALESCE (tmpReceiptGoodsChild.EKPriceWVAT_summ_goods,0)) ::TFloat AS EKPriceWVAT_summ
+
+           -- Цена продажи без ндс
+         , COALESCE (tmpPriceBasis.ValuePrice, 0)     ::TFloat AS BasisPrice
+           -- Цена продажи с ндс
+         , COALESCE (tmpPriceBasis.ValuePriceWVAT, 0) ::TFloat AS BasisPriceWVAT
 
      FROM Object AS Object_ReceiptGoods
           LEFT JOIN ObjectString AS ObjectString_Code
@@ -236,6 +240,10 @@ BEGIN
                               AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
           LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
 
+          LEFT JOIN ObjectString AS ObjectString_Goods_Comment
+                                 ON ObjectString_Goods_Comment.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_Comment.DescId   = zc_ObjectString_Goods_Comment()
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -251,7 +259,7 @@ BEGIN
           LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
           LEFT JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptGoodsId = Object_ReceiptGoods.Id
-          
+
           LEFT JOIN (SELECT tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
                           , STRING_AGG (DISTINCT tmpReceiptGoodsChild_ProdColorPattern.MaterialOptionsName, ';') AS MaterialOptionsName
                      FROM tmpReceiptGoodsChild_ProdColorPattern
@@ -277,8 +285,8 @@ BEGIN
                      GROUP BY tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
                     ) AS tmpProdColorPattern_next
                       ON tmpProdColorPattern_next.ReceiptGoodsId = Object_ReceiptGoods.Id
-                     AND tmpProdColorPattern.ProdColorName <> ''
-                     AND POSITION (';' IN tmpProdColorPattern.ProdColorName) = 0
+                     AND tmpProdColorPattern_next.ProdColorName <> ''
+                     AND POSITION (';' IN tmpProdColorPattern_next.ProdColorName) = 0
 
           -- если это Примечание, хоть одно отличное значение
           LEFT JOIN (SELECT tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId

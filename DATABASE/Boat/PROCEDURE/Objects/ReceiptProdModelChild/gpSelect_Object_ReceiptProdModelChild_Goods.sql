@@ -379,6 +379,9 @@ BEGIN
                             AND ObjectProtocol.UserId <> 5 -- 139 Maxim
                          )
      SELECT tmpResult.*
+
+          , ObjectString_Goods_Comment.ValueData AS Comment_goods
+
           , CASE WHEN 1=0 AND tmpProtocol.UserId = 139 -- Maxim
                       THEN TRUE
                  ELSE COALESCE (ObjectBoolean_Check.ValueData, FALSE)
@@ -396,6 +399,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Check
                                   ON ObjectBoolean_Check.ObjectId = tmpResult.Id
                                  AND ObjectBoolean_Check.DescId   = zc_ObjectBoolean_Check()
+          LEFT JOIN ObjectString AS ObjectString_Goods_Comment
+                                 ON ObjectString_Goods_Comment.ObjectId = tmpResult.ObjectId
+                                AND ObjectString_Goods_Comment.DescId   = zc_ObjectString_Goods_Comment()
      ;
      
      RETURN NEXT Cursor1;
