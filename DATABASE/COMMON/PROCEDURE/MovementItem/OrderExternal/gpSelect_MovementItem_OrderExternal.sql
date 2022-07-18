@@ -21,9 +21,10 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , isErased Boolean
              , isPriceEDIDiff Boolean
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
-             , Amount_child TFloat
-             , AmountSecond_child TFloat
-             , AmountDiff_child TFloat
+             , AmountWeight_child_one  TFloat
+             , AmountWeightSecond_child_sec  TFloat                                                   
+             , AmountWeight_child TFloat
+             , AmountWeightDiff_child TFloat
               )
 AS
 $BODY$
@@ -630,9 +631,10 @@ BEGIN
            , NULL                 :: TDateTime  AS EndBegin
            , 0                    :: TFloat     AS diffBegin_sec
 
-           , 0                    ::TFloat AS Amount_child
-           , 0                    ::TFloat AS AmountSecond_child
-           , 0                    ::TFloat AS AmountDiff_child
+           , 0                    ::TFloat AS AmountWeight_child_one
+           , 0                    ::TFloat AS AmountWeightSecond_child_sec
+           , 0                    ::TFloat AS AmountWeight
+           , 0                    ::TFloat AS AmountWeightDiff_child
 
        FROM tmpGoods
 
@@ -737,11 +739,10 @@ BEGIN
            , tmpMI.EndBegin                    AS EndBegin
            , tmpMI.diffBegin_sec               AS diffBegin_sec
            
-           , tmpMI_Child.AmountWeight       ::TFloat AS Amount_child
-           , tmpMI_Child.AmountWeightSecond ::TFloat AS AmountSecond_child
-           , (COALESCE (tmpMI_Child.AmountWeight_all, 0) - COALESCE (tmpMI.AmountWeight_all,0) )  ::TFloat AS AmountDiff_child
-
-
+           , tmpMI_Child.AmountWeight       ::TFloat AS AmountWeight_child_one
+           , tmpMI_Child.AmountWeightSecond ::TFloat AS AmountWeightSecond_child_sec                                                    
+           , COALESCE (tmpMI_Child.AmountWeight_all, 0) ::TFloat AS AmountWeight_child
+           , (COALESCE (tmpMI_Child.AmountWeight_all, 0) - COALESCE (tmpMI.AmountWeight_all,0) )  ::TFloat AS AmountWeightDiff_child
        FROM tmpMI_all AS tmpMI
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpMI.GoodsKindId OR tmpPromo.GoodsKindId = 0)
@@ -1211,9 +1212,11 @@ BEGIN
            , tmpMI.EndBegin                    AS EndBegin
            , tmpMI.diffBegin_sec               AS diffBegin_sec
 
-           , tmpMI_Child.AmountWeight       ::TFloat AS Amount_child
-           , tmpMI_Child.AmountWeightSecond ::TFloat AS AmountSecond_child
-           , (COALESCE (tmpMI_Child.AmountWeight_all, 0) - COALESCE (tmpMI.AmountWeight_all,0) )  ::TFloat AS AmountDiff_child
+           , tmpMI_Child.AmountWeight       ::TFloat AS AmountWeight_child_one
+           , tmpMI_Child.AmountWeightSecond ::TFloat AS AmountWeightSecond_child_sec                                                    
+           , COALESCE (tmpMI_Child.AmountWeight_all, 0) ::TFloat AS AmountWeight_child
+           , (COALESCE (tmpMI_Child.AmountWeight_all, 0) - COALESCE (tmpMI.AmountWeight_all,0) )  ::TFloat AS AmountWeightDiff_child
+          --, (COALESCE (tmpMI_Child.AmountWeight_all, 0) - COALESCE (tmpMI.AmountWeight_all,0) )  ::TFloat AS AmountDiff_child
        FROM tmpMI_all AS tmpMI
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpMI.GoodsKindId OR tmpPromo.GoodsKindId = 0)

@@ -2,7 +2,7 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 460
   ClientWidth = 1434
-  ExplicitLeft = -199
+  ExplicitLeft = -331
   ExplicitWidth = 1450
   ExplicitHeight = 499
   PixelsPerInch = 96
@@ -59,17 +59,17 @@ inherited OrderExternalForm: TOrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_child
+              Column = AmountWeight_child_one
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSecond_child
+              Column = AmountWeightSecond_child_sec
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountDiff_child
+              Column = AmountWeightDiff_child
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -109,17 +109,17 @@ inherited OrderExternalForm: TOrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_child
+              Column = AmountWeight_child_one
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSecond_child
+              Column = AmountWeightSecond_child_sec
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountDiff_child
+              Column = AmountWeightDiff_child
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -367,9 +367,9 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 210
           end
-          object Amount_child: TcxGridDBColumn
+          object AmountWeight_child_one: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090'., '#1074#1077#1089
-            DataBinding.FieldName = 'Amount_child'
+            DataBinding.FieldName = 'AmountWeight_child_one'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -379,9 +379,9 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 87
           end
-          object AmountSecond_child: TcxGridDBColumn
+          object AmountWeightSecond_child_sec: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072', '#1074#1077#1089
-            DataBinding.FieldName = 'AmountSecond_child'
+            DataBinding.FieldName = 'AmountWeightSecond_child_sec'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -391,9 +391,9 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 104
           end
-          object AmountDiff_child: TcxGridDBColumn
+          object AmountWeightDiff_child: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089' ('#1079#1072#1082#1072#1079' + '#1076#1086#1079#1072#1082#1072#1079'), '#1074#1077#1089
-            DataBinding.FieldName = 'AmountDiff_child'
+            DataBinding.FieldName = 'AmountWeightDiff_child'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

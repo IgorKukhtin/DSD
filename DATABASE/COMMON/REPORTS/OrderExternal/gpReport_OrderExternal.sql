@@ -37,7 +37,7 @@ RETURNS TABLE (MovementId             Integer
              , PaidKindName TVarChar
 
              , JuridicalName TVarChar
-             , RetailName TVarChar
+             , RetailName TVarChar  , RetailName_print TVarChar
              , PartnerTagName TVarChar
              , RegionName TVarChar
              , CityKindName TVarChar
@@ -1039,7 +1039,10 @@ BEGIN
            , Object_PaidKind.ValueData                  AS PaidKindName
 
            , Object_Juridical.ValueData    AS JuridicalName
-           , Object_Retail.ValueData       AS RetailName
+           , Object_Retail.ValueData       AS RetailName  
+           --для печати
+           , COALESCE (Object_Retail.ValueData, Object_From.ValueData)  ::TVarChar AS  RetailName_print
+           
            , View_Partner_Address.PartnerTagName
            , View_Partner_Address.RegionName
            , View_Partner_Address.CityKindName

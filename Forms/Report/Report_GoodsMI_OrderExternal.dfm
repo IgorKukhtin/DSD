@@ -1358,6 +1358,12 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Visible = False
             Width = 60
           end
+          object RetailName_print: TcxGridDBColumn
+            DataBinding.FieldName = 'RetailName_print'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
     end
@@ -1881,18 +1887,20 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintReserv: TdsdPrintAction
+    object actPrintReservRetail: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084' '#1087#1086' '#1076#1085#1103#1084')'
-      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084' '#1087#1086' '#1076#1085#1103#1084')'
-      ImageIndex = 23
+      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089') '#1090#1086#1088#1075'.'#1089#1077#1090#1100
+      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089') '#1090#1086#1088#1075'.'#1089#1077#1090#1100
+      ImageIndex = 17
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'InfoMoneyName;routename'
+          IndexFieldNames = 
+            'OperDate_CarInfo_date;GoodsName;GoodsKindName;RetailName_print;O' +
+            'perDate_CarInfo;'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -1909,8 +1917,44 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084' '#1087#1086' '#1076#1085#1103#1084')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084' '#1087#1086' '#1076#1085#1103#1084')'
+      ReportName = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089') '#1090#1086#1088#1075' '#1089#1077#1090#1100
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089') '#1090#1086#1088#1075' '#1089#1077#1090#1100
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintReserv: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089')'
+      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089')'
+      ImageIndex = 23
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'OperDate_CarInfo_date;GoodsName;GoodsKindName;OperDate;FromName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -2561,6 +2605,18 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintReservRetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintReserv'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -2620,6 +2676,14 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     end
     object bbPrint_byRemains: TdxBarButton
       Action = actPrint_byRemains
+      Category = 0
+    end
+    object bbPrintReserv: TdxBarButton
+      Action = actPrintReserv
+      Category = 0
+    end
+    object bbPrintReservRetail: TdxBarButton
+      Action = actPrintReservRetail
       Category = 0
     end
   end
