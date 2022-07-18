@@ -81,6 +81,7 @@ type
     isEnabled: TcxGridDBColumn;
     ProdOptionsName: TcxGridDBColumn;
     actChoiceFormOption: TOpenChoiceForm;
+    actChoiceFormProdColor_goods: TOpenChoiceForm;
   private
     { Private declarations }
   public
