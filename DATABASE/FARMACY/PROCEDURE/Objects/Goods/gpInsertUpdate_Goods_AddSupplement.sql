@@ -18,11 +18,21 @@ $BODY$
    DECLARE vbUnitKey TVarChar;
    DECLARE vbDay Integer;
    DECLARE text_var1 text;
+   DECLARE vbisEliminateColdSUN Boolean;
 BEGIN
 
    IF COALESCE(inGoodsId, 0) = 0 THEN
       RETURN;
    END IF;
+
+   SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
+   INTO vbisEliminateColdSUN
+   FROM Object AS Object_CashSettings
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
+                                ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+   WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+   LIMIT 1;
 
    vbUserId := lpGetUserBySession (inSession);
    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
@@ -54,6 +64,25 @@ BEGIN
    IF COALESCE (vbUnitId, 0) = 0
    THEN
      RAISE EXCEPTION 'Ошибка определения аптеки сотрудника.';          
+   END IF;
+   
+   IF (SELECT Object_Goods_Main.isNOT FROM Object_Goods_Main WHERE Object_Goods_Main.Id = vbGoodsMainId) = TRUE
+   THEN
+     RAISE EXCEPTION 'Товар НОТ запрещен к перемещению СУН.';   
+   END IF;
+
+   IF (vbisEliminateColdSUN = TRUE) AND
+      EXISTS(SELECT Object_Goods_Main.ID
+        FROM Object_Goods_Main 
+        
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                     ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                    AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+                                    
+        WHERE Object_Goods_Main.ID = vbGoodsMainId
+          AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE OR Object_Goods_Main.isColdSUN = TRUE))
+   THEN
+     RAISE EXCEPTION 'Товар "Холод" запрещен к перемещению СУН.';   
    END IF;
 
    IF COALESCE (vbUnit1Id, 0) = vbUnitId OR COALESCE (vbUnit2Id, 0) = vbUnitId

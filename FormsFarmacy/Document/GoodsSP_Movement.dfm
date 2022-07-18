@@ -360,13 +360,26 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       Top = 5
       Caption = '% '#1085#1072#1094#1077#1085#1082#1080
     end
-    object ctPercentMarkup: TcxCurrencyEdit
+    object cePercentMarkup: TcxCurrencyEdit
       Left = 901
       Top = 23
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       TabOrder = 11
       Width = 60
+    end
+    object cePercentPayment: TcxCurrencyEdit
+      Left = 967
+      Top = 23
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      TabOrder = 12
+      Width = 60
+    end
+    object cxLabel7: TcxLabel
+      Left = 967
+      Top = 5
+      Caption = '% '#1076#1086#1087#1083#1072#1090#1099
     end
   end
   object edOperDateStart: TcxDateEdit [2]
@@ -1156,7 +1169,14 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       item
         Name = 'PercentMarkup'
         Value = Null
-        Component = ctPercentMarkup
+        Component = cePercentMarkup
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentPayment'
+        Value = Null
+        Component = cePercentPayment
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1217,7 +1237,15 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       item
         Name = 'inPercentMarkup'
         Value = Null
-        Component = ctPercentMarkup
+        Component = cePercentMarkup
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentPayment'
+        Value = Null
+        Component = cePercentPayment
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1257,7 +1285,10 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         Control = edMedicalProgramSP
       end
       item
-        Control = ctPercentMarkup
+        Control = cePercentMarkup
+      end
+      item
+        Control = cePercentPayment
       end>
     Left = 232
     Top = 193

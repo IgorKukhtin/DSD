@@ -187,6 +187,7 @@ type
     mactUpdatePublishedSiteHide: TMultiAction;
     isNotUploadSites: TcxGridDBColumn;
     dxBarSeparator4: TdxBarSeparator;
+    MakerNameUkr: TcxGridDBColumn;
   private
     { Private declarations }
   public

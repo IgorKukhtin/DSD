@@ -1,6 +1,5 @@
 -- Function: gpGet_Movement_GoodsSP()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_GoodsSP (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_GoodsSP (Integer, Boolean, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_GoodsSP(
@@ -14,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
              , MedicalProgramSPId Integer, MedicalProgramSPCode Integer, MedicalProgramSPName TVarChar
-             , PercentMarkup TFloat
+             , PercentMarkup TFloat, PercentPayment TFloat
               )
 AS
 $BODY$
@@ -45,22 +44,24 @@ BEGIN
               , 0                            AS MedicalProgramSPCode
               , ''::TVarChar                 AS MedicalProgramSPName
               , 0::TFloat                    AS PercentMarkup
+              , 0::TFloat                    AS PercentPayment
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      
      RETURN QUERY
-         SELECT Movement.Id                            AS Id
-              , Movement.InvNumber                     AS InvNumber
-              , Movement.OperDate                      AS OperDate
-              , Object_Status.ObjectCode               AS StatusCode
-              , Object_Status.ValueData                AS StatusName
-              , MovementDate_OperDateStart.ValueData   AS OperDateStart
-              , MovementDate_OperDateEnd.ValueData     AS OperDateEnd
-              , Object_MedicalProgramSP.Id            AS MedicalProgramSPId
-              , Object_MedicalProgramSP.ObjectCode    AS MedicalProgramSPCode
-              , Object_MedicalProgramSP.ValueData     AS MedicalProgramSPName
-              , MovementFloat_PercentMarkup.ValueData AS PercentMarkup
-  
+         SELECT Movement.Id                             AS Id
+              , Movement.InvNumber                      AS InvNumber
+              , Movement.OperDate                       AS OperDate
+              , Object_Status.ObjectCode                AS StatusCode
+              , Object_Status.ValueData                 AS StatusName
+              , MovementDate_OperDateStart.ValueData    AS OperDateStart
+              , MovementDate_OperDateEnd.ValueData      AS OperDateEnd
+              , Object_MedicalProgramSP.Id              AS MedicalProgramSPId
+              , Object_MedicalProgramSP.ObjectCode      AS MedicalProgramSPCode
+              , Object_MedicalProgramSP.ValueData       AS MedicalProgramSPName
+              , MovementFloat_PercentMarkup.ValueData   AS PercentMarkup
+              , MovementFloat_PercentPayment.ValueData  AS PercentPayment
+
          FROM Movement
                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
    
@@ -80,6 +81,10 @@ BEGIN
                LEFT JOIN MovementFloat AS MovementFloat_PercentMarkup
                                        ON MovementFloat_PercentMarkup.MovementId = Movement.Id
                                       AND MovementFloat_PercentMarkup.DescId = zc_MovementFloat_PercentMarkup()
+
+               LEFT JOIN MovementFloat AS MovementFloat_PercentPayment
+                                       ON MovementFloat_PercentPayment.MovementId = Movement.Id
+                                      AND MovementFloat_PercentPayment.DescId = zc_MovementFloat_PercentPayment()
                                       
          WHERE Movement.Id = inMovementId
            AND Movement.DescId = zc_Movement_GoodsSP();

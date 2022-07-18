@@ -27,7 +27,6 @@ object FormDispensingForm: TFormDispensingForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 598
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -55,13 +54,20 @@ object FormDispensingForm: TFormDispensingForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 50
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 338
+        Width = 142
+      end
+      object NameUkr: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091#1082#1088'.'
+        DataBinding.FieldName = 'NameUkr'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 148
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

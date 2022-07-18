@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1060#1086#1088#1084#1072' '#1086#1090#1087#1091#1089#1082#1072
-  ClientHeight = 159
+  ClientHeight = 195
   ClientWidth = 386
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 79
-    Top = 122
+    Top = 154
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 229
-    Top = 122
+    Top = 154
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,6 +60,17 @@
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 296
+  end
+  object edNameUkr: TcxTextEdit
+    Left = 40
+    Top = 119
+    TabOrder = 6
+    Width = 296
+  end
+  object cxLabel2: TcxLabel
+    Left = 40
+    Top = 96
+    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1059#1082#1088'.'
   end
   object ActionList: TActionList
     Left = 272
@@ -121,6 +132,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNameUkr'
+        Value = Null
+        Component = edNameUkr
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -164,13 +183,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CountryId'
+        Name = 'NameUkr'
         Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CountryName'
-        Value = ''
+        Component = edNameUkr
         DataType = ftString
         MultiSelectSeparator = ','
       end>

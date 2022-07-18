@@ -43,6 +43,7 @@ type
     ChoiceGuides: TdsdChoiceGuides;
     MedicalProgramSPName: TcxGridDBColumn;
     PercentMarkup: TcxGridDBColumn;
+    PercentPayment: TcxGridDBColumn;
   private
     { Private declarations }
   public

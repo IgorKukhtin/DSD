@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_GoodsSP()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_GoodsSP (Integer, TVarChar, TDateTime, TDateTime, TDateTime, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_GoodsSP (Integer, TVarChar, TDateTime, TDateTime, TDateTime, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_GoodsSP(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Списания>
@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_GoodsSP(
     IN inOperDateEnd         TDateTime , --
     IN inMedicalProgramSPId  Integer   , --
     IN inPercentMarkup       TFloat    , --
+    IN inPercentPayment      TFloat    , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -44,6 +45,9 @@ BEGIN
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_PercentMarkup(), ioId, inPercentMarkup);
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_PercentPayment(), ioId, inPercentPayment);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);

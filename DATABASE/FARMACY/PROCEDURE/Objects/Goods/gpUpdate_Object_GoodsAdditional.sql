@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsAdditional(Integer, TVarChar, Integ
 CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsAdditional(
     IN inId                  Integer ,    -- ключ объекта <Товар главный>
     IN inMakerName           TVarChar,    -- Производитель
+    IN inMakerNameUkr        TVarChar,    -- Производитель
     IN inFormDispensingId    Integer ,    -- Форма отпуска
     IN inNumberPlates        Integer ,    -- Кол-во пластин в упаковке:
     IN inQtyPackage          Integer ,    -- Кол-во в упаковке:
@@ -24,6 +25,7 @@ BEGIN
              FROM Object_Goods_Main
              WHERE Object_Goods_Main.Id                                = inId
                AND COALESCE(Object_Goods_Main.MakerName, '')           = COALESCE(inMakerName, '')  
+               AND COALESCE(Object_Goods_Main.MakerNameUkr, '')        = COALESCE(inMakerNameUkr, '')  
                AND COALESCE(Object_Goods_Main.FormDispensingId, 0)     = COALESCE(inFormDispensingId, 0)  
                AND COALESCE(Object_Goods_Main.NumberPlates, 0)         = COALESCE(inNumberPlates, 0)  
                AND COALESCE(Object_Goods_Main.QtyPackage, 0)           = COALESCE(inQtyPackage, 0)  
@@ -36,6 +38,8 @@ BEGIN
    
    -- сохранили свойство <Производитель>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Maker(), inId, inMakerName);
+   -- сохранили свойство <Производитель>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_MakerUkr(), inId, inMakerNameUkr);
 
    -- сохранили свойство <Форма отпуска>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_FormDispensing(), inId, inFormDispensingId);
@@ -51,6 +55,7 @@ BEGIN
     -- Сохранили в плоскую таблицй
    BEGIN
      UPDATE Object_Goods_Main SET MakerName          = NULLIF(inMakerName, '')  
+                                , MakerNameUkr       = NULLIF(inMakerNameUkr, '')  
                                 , FormDispensingId   = NULLIF(inFormDispensingId, 0)  
                                 , NumberPlates       = NULLIF(inNumberPlates, 0)    
                                 , QtyPackage         = NULLIF(inQtyPackage, 0)    

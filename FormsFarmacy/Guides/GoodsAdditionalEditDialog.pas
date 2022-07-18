@@ -45,6 +45,9 @@ type
     GoodsMakerNameGuides: TdsdGuides;
     FormDispensingGuides: TdsdGuides;
     cb_IsRecipe: TcxCheckBox;
+    edMakerNameUkr: TcxTextEdit;
+    cxLabel1: TcxLabel;
+    cb_MakerNameUkr: TcxCheckBox;
   private
     { Private declarations }
   public

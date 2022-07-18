@@ -199,8 +199,6 @@ type
     lblMedicSP: TLabel;
     miSetSP: TMenuItem;
     MainColPriceSaleSP: TcxGridDBColumn;
-    DiffSP1: TcxGridDBColumn;
-    DiffSP2: TcxGridDBColumn;
     MainColIntenalSPName: TcxGridDBColumn;
     actOpenGoodsSP_UserForm: TdsdOpenForm;
     miOpenGoodsSP_UserForm: TMenuItem;
@@ -624,6 +622,7 @@ type
     Farmacyexe1: TMenuItem;
     actChoiceGoodsFromRemains_1303: TdsdOpenForm;
     N13033: TMenuItem;
+    MainBrandSPName: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

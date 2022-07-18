@@ -1429,9 +1429,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Member_NameUkr() RETURNS Integer AS $
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Member_NameUkr', zc_Object_Member(), 'ФИО на Украинском языке' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_NameUkr');  
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_FormDispensing_NameUkr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_FormDispensing_NameUkr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_FormDispensing_NameUkr', zc_Object_FormDispensing(), 'Название украинское' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_FormDispensing_NameUkr');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_MakerUkr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_MakerUkr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Goods_MakerUkr', zc_Object_Goods(), 'Производитель украинское название' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_MakerUkr');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 18.07.22                                                                                                         * zc_ObjectString_FormDispensing_NameUkr, zc_ObjectString_Goods_MakerUkr
  24.06.22                                                                                                         * zc_ObjectString_Education_NameUkr, zc_ObjectString_Member_NameUkr
  22.12.21         * zc_ObjectString_MemberMinus_Number
  25.11.21                                                                                                         * zc_ObjectString_SurchargeWages_Description

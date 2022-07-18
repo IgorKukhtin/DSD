@@ -394,7 +394,7 @@ BEGIN
    END IF;
 
      -- Коллеги, ожидайте, на вас следует перемещение по СУН!. после отправлено
-   IF vbPositionCode = 2 AND 
+/*   IF vbPositionCode = 2 AND 
       EXISTS(SELECT 1
              FROM  Movement
                    INNER JOIN MovementBoolean AS MovementBoolean_SUN
@@ -433,10 +433,10 @@ BEGIN
             )
    THEN
      INSERT INTO _PUSH (Id, Text) VALUES (7, 'Коллеги, ожидайте, на вас следует перемещение по СУН!');
-   END IF;
+   END IF;*/
 
      -- Коллеги, ожидайте, на вас следует перемещение по СУН!. в 16:00
-   IF date_part('HOUR',    CURRENT_TIME)::Integer = 16
+/*   IF date_part('HOUR',    CURRENT_TIME)::Integer = 16
      AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 00
      AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
      AND vbPositionCode = 2
@@ -476,7 +476,7 @@ BEGIN
       THEN
         INSERT INTO _PUSH (Id, Text) VALUES (8, 'Коллеги, ожидайте, на вас следует перемещение по СУН!');
       END IF;
-   END IF;
+   END IF;*/
    
    -- Удалить отмененные чеки
     WITH 

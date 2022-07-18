@@ -20,7 +20,7 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 104
-    Top = 267
+    Top = 279
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -30,7 +30,7 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object cxButton2: TcxButton
     Left = 278
-    Top = 267
+    Top = 279
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -49,7 +49,7 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object cb_FormDispensing: TcxCheckBox
     Left = 381
-    Top = 85
+    Top = 126
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
@@ -59,7 +59,7 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object cb_NumberPlates: TcxCheckBox
     Left = 381
-    Top = 136
+    Top = 171
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
@@ -69,7 +69,7 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object cb_QtyPackage: TcxCheckBox
     Left = 381
-    Top = 184
+    Top = 216
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
@@ -95,7 +95,7 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object edNumberPlates: TcxCurrencyEdit
     Left = 7
-    Top = 136
+    Top = 171
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 8
@@ -103,17 +103,17 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object cxLabel3: TcxLabel
     Left = 7
-    Top = 119
+    Top = 154
     Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1089#1090#1080#1085' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077':'
   end
   object cxLabel7: TcxLabel
     Left = 8
-    Top = 167
+    Top = 199
     Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077':'
   end
   object ceQtyPackage: TcxCurrencyEdit
     Left = 8
-    Top = 184
+    Top = 216
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 11
@@ -121,14 +121,14 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object cbIsRecipe: TcxCheckBox
     Left = 8
-    Top = 219
+    Top = 246
     Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1072
     TabOrder = 12
     Width = 96
   end
   object edFormDispensing: TcxButtonEdit
     Left = 8
-    Top = 85
+    Top = 126
     Properties.Buttons = <
       item
         Default = True
@@ -140,17 +140,38 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object cxLabel14: TcxLabel
     Left = 7
-    Top = 68
+    Top = 109
     Caption = #1060#1086#1088#1084#1072' '#1086#1090#1087#1091#1089#1082#1072
   end
   object cb_IsRecipe: TcxCheckBox
     Left = 381
-    Top = 219
+    Top = 246
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
     TabOrder = 15
+    Width = 73
+  end
+  object edMakerNameUkr: TcxTextEdit
+    Left = 8
+    Top = 83
+    TabOrder = 16
+    Width = 332
+  end
+  object cxLabel1: TcxLabel
+    Left = 8
+    Top = 62
+    Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' '#1059#1082#1088'. '#1085#1072#1079#1074#1072#1085#1080#1077
+  end
+  object cb_MakerNameUkr: TcxCheckBox
+    Left = 381
+    Top = 83
+    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
+    Caption = #1080#1079#1084#1077#1085#1080#1090#1100
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 18
     Width = 73
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -176,6 +197,14 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
         Name = 'MakerName'
         Value = Null
         Component = edMakerName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MakerNameUkr'
+        Value = Null
+        Component = edMakerNameUkr
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -213,6 +242,14 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
         Name = 'inis_MakerName'
         Value = Null
         Component = cb_MakerName
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_MakerNameUkr'
+        Value = Null
+        Component = cb_MakerNameUkr
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
