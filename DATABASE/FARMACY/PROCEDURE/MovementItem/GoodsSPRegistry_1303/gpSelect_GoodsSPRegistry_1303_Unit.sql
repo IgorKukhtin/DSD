@@ -15,6 +15,7 @@ RETURNS TABLE (GoodsId         Integer
              , PriceSale       TFloat
              , Remains         TFloat
              , PriceSaleIncome TFloat
+             , MovementItemId  Integer
              )
 AS
 $BODY$
@@ -81,7 +82,8 @@ BEGIN
                               WHERE MovementItem.OperDate <= CURRENT_DATE
                                 AND MovementItem.DateEnd > CURRENT_DATE
                               )
-      , tmpGoodsSPRegistry_1303 AS (SELECT MovementItem.ObjectId         AS GoodsId
+      , tmpGoodsSPRegistry_1303 AS (SELECT MovementItem.Id               AS MovementItemId
+                                         , MovementItem.ObjectId         AS GoodsId
                                          , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat       AS NDS
                                          , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
                                          , ROUND(MIFloat_PriceOptSP.ValueData  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2)::TFloat AS PriceSale
@@ -133,7 +135,9 @@ BEGIN
                          )
        , tmpData_Union AS (SELECT COALESCE(tmpGoodsSPRegistry_1303.GoodsId, tmpMIGoodsSP_1303.GoodsId)    AS GoodsId
 
-                               , COALESCE (tmpMIGoodsSP_1303.PriceOptSP,  tmpGoodsSPRegistry_1303.PriceOptSP, 0)::TFloat                                               AS PriceOptSP
+                                , COALESCE (tmpMIGoodsSP_1303.PriceOptSP,  tmpGoodsSPRegistry_1303.PriceOptSP, 0)::TFloat                                               AS PriceOptSP
+ 
+                                , tmpGoodsSPRegistry_1303.MovementItemId
 
                           FROM tmpGoodsSPRegistry_1303
                           
@@ -151,6 +155,8 @@ BEGIN
                                , Round(tmpData_Union.PriceOptSP  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2)::TFloat  AS PriceSale
                                  
                                , tmpContainer.Amount::TFloat      AS Remains
+
+                               , tmpData_Union.MovementItemId
 
                           FROM tmpData_Union
                           
@@ -233,6 +239,7 @@ BEGIN
          , tmpData_1303.PriceSale
          , tmpData_1303.Remains
          , tmpIncome_1303.PriceSale AS PriceSaleIncome
+         , tmpData_1303.MovementItemId
     FROM tmpData_1303  
     
          LEFT JOIN tmpIncome_1303 ON tmpIncome_1303.GoodsId = tmpData_1303.GoodsId

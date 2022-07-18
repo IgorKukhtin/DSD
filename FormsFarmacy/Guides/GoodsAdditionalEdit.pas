@@ -29,6 +29,8 @@ type
     edFormDispensing: TcxButtonEdit;
     cxLabel14: TcxLabel;
     FormDispensingGuides: TdsdGuides;
+    edMakerNameUkr: TcxTextEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

@@ -1,6 +1,6 @@
 -- Function: gpUpdate_Object_GoodsAdditionalFilter()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsAdditionalFilter(Integer, TVarChar, Boolean, Integer, Boolean, Integer, Boolean, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsAdditionalFilter(Integer, TVarChar, Boolean, Integer, Boolean, Integer, Boolean, Integer, Boolean, Boolean, Boolean, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsAdditionalFilter(
     IN inId                  Integer ,    -- ключ объекта <Товар главный>
@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsAdditionalFilter(
     IN inis_QtyPackage       Boolean ,    -- 
     IN inIsRecipe            Boolean ,    -- Рецептура
     IN inis_IsRecipe         Boolean ,    -- 
+    IN inMakerNameUkr        TVarChar,    -- Производитель
+    IN inis_MakerNameUkr     Boolean ,    -- 
     IN inSession             TVarChar     -- текущий пользователь
 )
 RETURNS VOID AS
@@ -30,11 +32,13 @@ BEGIN
    END IF;
 
    SELECT CASE WHEN inis_MakerName = TRUE        THEN inMakerName        ELSE COALESCE(Object_Goods_Main.MakerName, '') END
+        , CASE WHEN inis_MakerNameUkr = TRUE     THEN inMakerNameUkr     ELSE COALESCE(Object_Goods_Main.MakerNameUkr, '') END
         , CASE WHEN inis_FormDispensingId = TRUE THEN inFormDispensingId ELSE COALESCE(Object_Goods_Main.FormDispensingId, 0) END
         , CASE WHEN inis_NumberPlates = TRUE     THEN inNumberPlates     ELSE COALESCE(Object_Goods_Main.NumberPlates, 0) END
         , CASE WHEN inis_QtyPackage = TRUE       THEN inQtyPackage       ELSE COALESCE(Object_Goods_Main.QtyPackage, 0) END
         , CASE WHEN inis_IsRecipe = TRUE         THEN inIsRecipe         ELSE COALESCE(Object_Goods_Main.IsRecipe, False) END
    INTO inMakerName
+      , inMakerNameUkr
       , inFormDispensingId
       , inNumberPlates
       , inQtyPackage
@@ -47,6 +51,7 @@ BEGIN
              FROM Object_Goods_Main
              WHERE Object_Goods_Main.Id                                = inId
                AND COALESCE(Object_Goods_Main.MakerName, '')           = COALESCE(inMakerName, '')  
+               AND COALESCE(Object_Goods_Main.MakerNameUkr, '')        = COALESCE(inMakerNameUkr, '')  
                AND COALESCE(Object_Goods_Main.FormDispensingId, 0)     = COALESCE(inFormDispensingId, 0)  
                AND COALESCE(Object_Goods_Main.NumberPlates, 0)         = COALESCE(inNumberPlates, 0)  
                AND COALESCE(Object_Goods_Main.QtyPackage, 0)           = COALESCE(inQtyPackage, 0)  
@@ -59,6 +64,8 @@ BEGIN
    
    -- сохранили свойство <Производитель>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Maker(), inId, inMakerName);
+   -- сохранили свойство <Производитель>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_MakerUkr(), inId, inMakerNameUkr);
 
    -- сохранили свойство <Форма отпуска>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_FormDispensing(), inId, inFormDispensingId);
@@ -74,6 +81,7 @@ BEGIN
     -- Сохранили в плоскую таблицй
    BEGIN
      UPDATE Object_Goods_Main SET MakerName          = NULLIF(inMakerName, '')  
+                                , MakerNameUkr       = NULLIF(inMakerNameUkr, '')  
                                 , FormDispensingId   = NULLIF(inFormDispensingId, 0)  
                                 , NumberPlates       = NULLIF(inNumberPlates, 0)    
                                 , QtyPackage         = NULLIF(inQtyPackage, 0)    

@@ -220,6 +220,7 @@ type
     actUpdate_Published_Revert: TdsdExecStoredProc;
     spUpdate_Published_Revert: TdsdStoredProc;
     dxBarButton19: TdxBarButton;
+    MakerNameUkr: TcxGridDBColumn;
   private
     { Private declarations }
   public

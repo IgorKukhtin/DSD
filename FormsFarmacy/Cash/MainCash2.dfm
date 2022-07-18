@@ -510,28 +510,6 @@ inherited MainCashForm2: TMainCashForm2
           Styles.OnGetContentStyle = MainFixPercentStylesGetContentStyle
           Width = 89
         end
-        object DiffSP1: TcxGridDBColumn
-          Caption = #1089#1082'1'
-          DataBinding.FieldName = 'DiffSP1'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          Options.Editing = False
-          Width = 45
-        end
-        object DiffSP2: TcxGridDBColumn
-          Caption = #1054#1087#1083#1072#1090#1072' '#1075#1086#1089'-'#1074#1086#1084' '#1087#1086' '#1057#1055
-          DataBinding.FieldName = 'DiffSP2'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          Options.Editing = False
-          Width = 45
-        end
         object MainColIntenalSPName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072' ('#1089#1087')'
           DataBinding.FieldName = 'IntenalSPName'
@@ -1134,6 +1112,13 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 90
+        end
+        object MainBrandSPName: TcxGridDBColumn
+          Caption = #1058#1086#1088#1075#1086#1074#1077#1083#1100#1085#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
+          DataBinding.FieldName = 'BrandSPName'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 120
         end
       end
       object MainGridLevel: TcxGridLevel

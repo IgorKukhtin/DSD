@@ -260,6 +260,14 @@ inherited GoodsSiteForm: TGoodsSiteForm
             Options.Editing = False
             Width = 116
           end
+          object MakerNameUkr: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' '#1059#1082#1088'. '#1085#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'MakerNameUkr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 114
+          end
           object FormDispensingName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1090#1087#1091#1089#1082#1072
             DataBinding.FieldName = 'FormDispensingName'
@@ -719,6 +727,16 @@ inherited GoodsSiteForm: TGoodsSiteForm
           ToParam.ComponentItem = 'inis_IsRecipe'
           ToParam.DataType = ftBoolean
           ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'inis_MakerNameUkr'
+          ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end>
       Caption = 'actDialogGoodsAdditional'
       FormName = 'TGoodsAdditionalEditDialogForm'
@@ -731,6 +749,14 @@ inherited GoodsSiteForm: TGoodsSiteForm
           Value = ''
           Component = FormParams
           ComponentItem = 'MakerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MakerNameUkr'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MakerNameUkr'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -800,6 +826,14 @@ inherited GoodsSiteForm: TGoodsSiteForm
           Value = False
           Component = FormParams
           ComponentItem = 'inis_IsRecipe'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_MakerNameUkr'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inis_MakerNameUkr'
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2713,6 +2747,13 @@ inherited GoodsSiteForm: TGoodsSiteForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'MakerNameUkr'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'FormDispensingId'
         Value = '0'
         ComponentItem = 'Key'
@@ -2739,6 +2780,13 @@ inherited GoodsSiteForm: TGoodsSiteForm
       end
       item
         Name = 'inis_MakerName'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_MakerNameUkr'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
@@ -3120,6 +3168,24 @@ inherited GoodsSiteForm: TGoodsSiteForm
         Value = Null
         Component = FormParams
         ComponentItem = 'inis_IsRecipe'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMakerNameUkr'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MakerNameUkr'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_MakerNameUkr'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inis_MakerNameUkr'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

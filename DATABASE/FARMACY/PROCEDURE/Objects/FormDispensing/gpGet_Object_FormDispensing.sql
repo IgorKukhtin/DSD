@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_FormDispensing(
     IN inId          Integer,        -- Должности
     IN inSession     TVarChar        -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameUkr TVarChar
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -21,14 +21,21 @@ BEGIN
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_FormDispensing()) AS Code
            , CAST ('' as TVarChar)  AS NAME
+           , CAST ('' as TVarChar)  AS NameUkr
            , False                  AS isErased;
    ELSE
        RETURN QUERY 
-       SELECT Object_FormDispensing.Id          AS Id
-            , Object_FormDispensing.ObjectCode  AS Code
-            , Object_FormDispensing.ValueData   AS Name
-            , Object_FormDispensing.isErased    AS isErased
+       SELECT Object_FormDispensing.Id                       AS Id
+            , Object_FormDispensing.ObjectCode               AS Code
+            , Object_FormDispensing.ValueData                AS Name
+            , ObjectString_FormDispensing_NameUkr.ValueData  AS NameUkr
+            , Object_FormDispensing.isErased                 AS isErased
        FROM Object AS Object_FormDispensing
+
+           LEFT JOIN ObjectString AS ObjectString_FormDispensing_NameUkr
+                                  ON ObjectString_FormDispensing_NameUkr.ObjectId = Object_FormDispensing.Id
+                                 AND ObjectString_FormDispensing_NameUkr.DescId = zc_ObjectString_FormDispensing_NameUkr()   
+
        WHERE Object_FormDispensing.Id = inId;
    END IF;
    

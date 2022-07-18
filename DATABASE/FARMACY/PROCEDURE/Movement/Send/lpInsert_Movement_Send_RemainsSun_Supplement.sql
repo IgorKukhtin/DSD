@@ -157,7 +157,7 @@ BEGIN
      THEN
        CREATE TEMP TABLE _tmpRemains_all_Supplement   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, Layout TFloat, AmountRemains TFloat, AmountNotSend TFloat, 
                                                        AmountSalesDay TFloat, AmountSalesMonth TFloat, AverageSalesMonth TFloat, Need TFloat, GiveAway TFloat, AmountUse TFloat, 
-                                                       MinExpirationDate TDateTime, isCloseMCS boolean, SupplementMin Integer) ON COMMIT DROP;
+                                                       MinExpirationDate TDateTime, isCloseMCS boolean, SupplementMin Integer, SurplusCalc TFloat, NeedCalc TFloat) ON COMMIT DROP;
      END IF;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
@@ -898,7 +898,6 @@ BEGIN
                                                         
         WHERE (COALESCE (tmpUnitSupplementSUN1In.UnitId, 0) = 0
            OR tmpUnitSupplementSUN1In.UnitId = _tmpGoods_SUN_Supplement.UnitSupplementSUN1InId)
-          AND COALESCE (CASE WHEN Object_Unit.ValueData LIKE 'Апт. пункт %' THEN _tmpGoods_SUN_Supplement.SupplementMinPP ELSE _tmpGoods_SUN_Supplement.SupplementMin END, 0) >= 0 
        ;
                                      
      IF EXISTS (SELECT 1
@@ -1142,11 +1141,12 @@ BEGIN
                          COALESCE(_tmpRemains_all_Supplement.GiveAway, 0)::TVArChar 
                   FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.GoodsId = 5215530 AND _tmpRemains_all_Supplement.UnitId = 9951517);*/
                   
-     -- 3. распределяем
-     --
-     -- курсор1 - все что можно распределить
-     OPEN curPartion_next FOR
-        SELECT _tmpRemains_all_Supplement.UnitId
+                  
+    -- 2.3 Запишем сколько отдаем
+    
+    UPDATE _tmpRemains_all_Supplement SET SurplusCalc = T1.Need
+    FROM 
+       (SELECT _tmpRemains_all_Supplement.UnitId
              , _tmpRemains_all_Supplement.GoodsId
              , CASE WHEN COALESCE (_tmpRemains_all_Supplement.GiveAway, 0) > 0 THEN COALESCE (_tmpRemains_all_Supplement.GiveAway, 0) ELSE 
                - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
@@ -1186,7 +1186,6 @@ BEGIN
                                                                              + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)
                              END / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
                  END END AS Need
-             , COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
        FROM _tmpRemains_all_Supplement
 
             LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
@@ -1256,183 +1255,204 @@ BEGIN
            OR COALESCE(_tmpGoodsUnit_SUN_Supplement.UnitOutId, 0) = _tmpRemains_all_Supplement.UnitId)
          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
          AND COALESCE(_tmpSUN_Send_Supplement.GoodsID, 0) = 0
-         AND COALESCE(_tmpSUN_Send_Supplement.GoodsID, 0) = 0
-       ORDER BY _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority DESC
-              , 3 DESC
-              , _tmpRemains_all_Supplement.UnitId
-              , _tmpRemains_all_Supplement.GoodsId
+         AND COALESCE(_tmpSUN_Send_Supplement.GoodsID, 0) = 0) AS T1
+         
+    WHERE _tmpRemains_all_Supplement.UnitId = T1.UnitId
+      AND _tmpRemains_all_Supplement.GoodsId = T1.GoodsId 
        ;
+        
+    -- 2.4 Запишем сколько надо
+                     
+    UPDATE _tmpRemains_all_Supplement SET NeedCalc = T1.Need
+    FROM 
+      (SELECT _tmpRemains_all_Supplement.UnitId
+            , _tmpRemains_all_Supplement.GoodsId
+            , FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
+                    CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
+                    CASE WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
+                         THEN CASE WHEN _tmpRemains_all_Supplement.AmountRemains + 1 < COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0)
+                                   THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0))
+                                   ELSE 0 END
+                         WHEN _tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
+                          AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
+                         THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
+                                   THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
+                                   ELSE 0 END
+                         WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
+                         THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
+                                   THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
+                                   ELSE 0 END
+                         WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
+                         THEN - _tmpRemains_all_Supplement.AmountRemains
+                         ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                         END  - _tmpRemains_all_Supplement.AmountUse
+                    ELSE
+                    FLOOR ((CASE WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
+                                 THEN CASE WHEN _tmpRemains_all_Supplement.AmountRemains + 1 < COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0)
+                                           THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0))
+                                           ELSE 0 END
+                                 WHEN _tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
+                                  AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
+                                 THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
+                                           THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
+                                           ELSE 0 END
+                                 WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
+                                 THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
+                                           THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
+                                           ELSE 0 END
+                                 WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0)<= 0
+                                 THEN - _tmpRemains_all_Supplement.AmountRemains
+                                 ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                                 END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
+
+                    END END) AS Need
+       FROM _tmpRemains_all_Supplement
+
+            LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
+
+            LEFT JOIN _tmpGoodsUnit_SUN_Supplement ON _tmpGoodsUnit_SUN_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
+                                                  AND _tmpGoodsUnit_SUN_Supplement.UnitOutId = _tmpRemains_all_Supplement.UnitId
+
+            LEFT JOIN (SELECT DISTINCT _tmpGoodsUnit_SUN_Supplement.GoodsId FROM _tmpGoodsUnit_SUN_Supplement) AS _tmpGoodsUnit_SUN_Supplement_All 
+                                                                                                               ON _tmpGoodsUnit_SUN_Supplement_All.GoodsID = _tmpRemains_all_Supplement.GoodsId
+
+            LEFT JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId
+
+            -- найдем дисконтній товар
+            LEFT JOIN _tmpGoods_DiscountExternal_Supplement AS _tmpGoods_DiscountExternal
+                                                            ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_Supplement.UnitId
+                                                           AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_Supplement.GoodsId
+
+            -- отбросили !!исключения!!
+            LEFT JOIN _tmpUnit_SunExclusion_Supplement ON _tmpUnit_SunExclusion_Supplement.UnitId_from = vbUnitId_from
+                                                      AND _tmpUnit_SunExclusion_Supplement.UnitId_to   = _tmpRemains_all_Supplement.UnitId
+
+            -- отключена Получать товар который отдавался
+            LEFT JOIN _tmpGoods_Sun_exception_Supplement AS _tmpGoods_Sun_exception_Supplement
+                                                         ON _tmpGoods_Sun_exception_Supplement.UnitId  = _tmpRemains_all_Supplement.UnitId
+                                                        AND _tmpGoods_Sun_exception_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
+
+       WHERE FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
+                        CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
+                        CASE WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
+                             THEN CASE WHEN _tmpRemains_all_Supplement.AmountRemains + 1 < COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0)
+                                       THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0))
+                                       ELSE 0 END
+                             WHEN _tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
+                              AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
+                             THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
+                                       THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
+                                       ELSE 0 END
+                             WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
+                             THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
+                                       THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
+                                       ELSE 0 END
+                             WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
+                             THEN - _tmpRemains_all_Supplement.AmountRemains
+                             ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                             END  - _tmpRemains_all_Supplement.AmountUse
+                        ELSE
+                        FLOOR ((CASE WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
+                                     THEN CASE WHEN _tmpRemains_all_Supplement.AmountRemains + 1 < COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0)
+                                               THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0))
+                                               ELSE 0 END
+                                     WHEN _tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
+                                      AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
+                                     THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
+                                               THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
+                                               ELSE 0 END
+                                     WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
+                                     THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
+                                               THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
+                                               ELSE 0 END
+                                     WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
+                                     THEN - _tmpRemains_all_Supplement.AmountRemains
+                                     ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                                     END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
+
+                        END END) > 0
+         AND _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = False
+         AND _tmpUnit_SUN_Supplement.isSUN_Supplement_in = True
+         AND (COALESCE(_tmpGoodsUnit_SUN_Supplement_All.GoodsId, 0) = 0 
+           OR COALESCE(_tmpGoodsUnit_SUN_Supplement.UnitOutId, 0) = 0)
+         AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+         AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) >= 0
+         AND _tmpUnit_SunExclusion_Supplement.UnitId_to IS NULL
+         AND  COALESCE(_tmpGoods_Sun_exception_Supplement.Amount, 0) = 0
+         AND NOT (_tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
+                  AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
+                  AND FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) < 0)
+         AND (COALESCE(_tmpGoods_SUN_Supplement.isSupplementMarkSUN1, False) = False OR COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) >= 0)) AS T1
+         
+    WHERE _tmpRemains_all_Supplement.UnitId = T1.UnitId
+      AND _tmpRemains_all_Supplement.GoodsId = T1.GoodsId
+      AND COALESCE (_tmpRemains_all_Supplement.SurplusCalc, 0) = 0;
+                  
+    raise notice 'Value 05: % %', 
+      (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SurplusCalc, 0) > 0), 
+      (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.NeedCalc, 0) > 0);
+    
+                      
+     -- 3. распределяем
+     --
+     -- курсор1 - все что можно распределить
+     OPEN curPartion_next FOR 
+         SELECT _tmpRemains_all_Supplement.UnitId
+              , _tmpRemains_all_Supplement.GoodsId
+              , _tmpRemains_all_Supplement.NeedCalc
+         FROM _tmpRemains_all_Supplement
+         WHERE _tmpRemains_all_Supplement.NeedCalc > 0
+         ORDER BY _tmpRemains_all_Supplement.NeedCalc DESC
+                , _tmpRemains_all_Supplement.UnitId
+                , _tmpRemains_all_Supplement.GoodsId;
+
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbSurplus, vbKoeffSUN;
+         FETCH curPartion_next INTO vbUnitId_to, vbGoodsId, vbNeed;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
-/*             IF vbGoodsId = 5215530
-             THEN
-               raise notice 'Value 05: % % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END,
-                 (SELECT _tmpRemains_all_Supplement.AmountRemains::TVArChar||'  '||_tmpRemains_all_Supplement.Need::TVArChar||'  '||_tmpRemains_all_Supplement.GiveAway::TVArChar 
-                  FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_from AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId);
-             END IF;
-*/
          -- курсор2. - Потребность для vbGoodsId
          OPEN curResult_next FOR
-             SELECT _tmpRemains_all_Supplement.UnitId
-                  , FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
-                          CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                          CASE WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
-                               THEN CASE WHEN _tmpRemains_all_Supplement.AmountRemains + 1 < COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0)
-                                         THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0))
-                                         ELSE 0 END
-                               WHEN _tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
-                                AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
-                               THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
-                                         THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
-                                         ELSE 0 END
-                               WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
-                               THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
-                                         THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
-                                         ELSE 0 END
-                               WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
-                               THEN - _tmpRemains_all_Supplement.AmountRemains
-                               ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
-                               END  - _tmpRemains_all_Supplement.AmountUse
-                          ELSE
-                          FLOOR ((CASE WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
-                                       THEN CASE WHEN _tmpRemains_all_Supplement.AmountRemains + 1 < COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0)
-                                                 THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0))
-                                                 ELSE 0 END
-                                       WHEN _tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
-                                        AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
-                                       THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
-                                                 THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
-                                                 ELSE 0 END
-                                       WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
-                                       THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
-                                                 THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
-                                                 ELSE 0 END
-                                       WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0)<= 0
-                                       THEN - _tmpRemains_all_Supplement.AmountRemains
-                                       ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
-                                       END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
+           SELECT _tmpRemains_all_Supplement.UnitId
+                , _tmpRemains_all_Supplement.SurplusCalc
+           FROM _tmpRemains_all_Supplement
 
-                          END END)
-             FROM _tmpRemains_all_Supplement
-
-                  LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
-
-                  LEFT JOIN _tmpGoodsUnit_SUN_Supplement ON _tmpGoodsUnit_SUN_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
-                                                        AND _tmpGoodsUnit_SUN_Supplement.UnitOutId = _tmpRemains_all_Supplement.UnitId
-
-                  LEFT JOIN (SELECT DISTINCT _tmpGoodsUnit_SUN_Supplement.GoodsId FROM _tmpGoodsUnit_SUN_Supplement) AS _tmpGoodsUnit_SUN_Supplement_All 
-                                                                                                                     ON _tmpGoodsUnit_SUN_Supplement_All.GoodsID = _tmpRemains_all_Supplement.GoodsId
-
-                  LEFT JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId
-
-                  -- найдем дисконтній товар
-                  LEFT JOIN _tmpGoods_DiscountExternal_Supplement AS _tmpGoods_DiscountExternal
-                                                                 ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_Supplement.UnitId
-                                                                AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_Supplement.GoodsId
-
-                  -- отбросили !!исключения!!
-                  LEFT JOIN _tmpUnit_SunExclusion_Supplement ON _tmpUnit_SunExclusion_Supplement.UnitId_from = vbUnitId_from
-                                                            AND _tmpUnit_SunExclusion_Supplement.UnitId_to   = _tmpRemains_all_Supplement.UnitId
-
-                  -- отключена Получать товар который отдавался
-                  LEFT JOIN _tmpGoods_Sun_exception_Supplement AS _tmpGoods_Sun_exception_Supplement
-                                                               ON _tmpGoods_Sun_exception_Supplement.UnitId  = _tmpRemains_all_Supplement.UnitId
-                                                              AND _tmpGoods_Sun_exception_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
-
-             WHERE FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
-                              CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                              CASE WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
-                                   THEN CASE WHEN _tmpRemains_all_Supplement.AmountRemains + 1 < COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0)
-                                             THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0))
-                                             ELSE 0 END
-                                   WHEN _tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
-                                    AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
-                                   THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
-                                             THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
-                                             ELSE 0 END
-                                   WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
-                                   THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
-                                             THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
-                                             ELSE 0 END
-                                   WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
-                                   THEN - _tmpRemains_all_Supplement.AmountRemains
-                                   ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
-                                   END  - _tmpRemains_all_Supplement.AmountUse
-                              ELSE
-                              FLOOR ((CASE WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
-                                           THEN CASE WHEN _tmpRemains_all_Supplement.AmountRemains + 1 < COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0)
-                                                     THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0))
-                                                     ELSE 0 END
-                                           WHEN _tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
-                                            AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
-                                           THEN CASE WHEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) > 0
-                                                     THEN FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains)
-                                                     ELSE 0 END
-                                           WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
-                                           THEN CASE WHEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains) >= 1
-                                                     THEN TRUNC(COALESCE(_tmpRemains_all_Supplement.AmountSalesMonth, 0) - _tmpRemains_all_Supplement.AmountRemains)
-                                                     ELSE 0 END
-                                           WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
-                                           THEN - _tmpRemains_all_Supplement.AmountRemains
-                                           ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
-                                           END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
-
-                              END END) > 0
-               AND _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = False
-               AND _tmpRemains_all_Supplement.UnitId <> vbUnitId_from
-               AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId
-               AND _tmpUnit_SUN_Supplement.isSUN_Supplement_in = True
-               AND (COALESCE(_tmpGoodsUnit_SUN_Supplement_All.GoodsId, 0) = 0 
-                 OR COALESCE(_tmpGoodsUnit_SUN_Supplement.UnitOutId, 0) = 0)
-               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
-               AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) >= 0
-               AND _tmpUnit_SunExclusion_Supplement.UnitId_to IS NULL
-               AND  COALESCE(_tmpGoods_Sun_exception_Supplement.Amount, 0) = 0
-               AND NOT (_tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
-                        AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
-                        AND FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) < 0)               
-             ORDER BY CASE WHEN COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0 THEN 1000000 
-                           ELSE (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
-                                 THEN - _tmpRemains_all_Supplement.AmountRemains
-                                 ELSE (_tmpRemains_all_Supplement.Need  -_tmpRemains_all_Supplement.AmountRemains)::Integer
-                                 END - _tmpRemains_all_Supplement.AmountUse) END
-                    , (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
-                            THEN - _tmpRemains_all_Supplement.AmountRemains
-                            ELSE (_tmpRemains_all_Supplement.Need  -_tmpRemains_all_Supplement.AmountRemains)::Integer
-                            END - _tmpRemains_all_Supplement.AmountUse) DESC
-                    , _tmpRemains_all_Supplement.UnitId
-                    , _tmpRemains_all_Supplement.GoodsId;
+                LEFT JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId
+                
+           WHERE _tmpRemains_all_Supplement.SurplusCalc > 0
+             AND _tmpRemains_all_Supplement.UnitId <> vbUnitId_to
+             AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId
+           ORDER BY _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority DESC
+                  , _tmpRemains_all_Supplement.SurplusCalc DESC
+                  , _tmpRemains_all_Supplement.UnitId
+                  , _tmpRemains_all_Supplement.GoodsId
+           ;
+                    
          -- начало цикла по курсору2 - остаток сроковых - под него надо найти Автозаказ
          LOOP
              -- данные по Автозаказ
-             FETCH curResult_next INTO vbUnitId_to, vbNeed;
+             FETCH curResult_next INTO vbUnitId_from, vbSurplus;
              -- если данные закончились, или все кол-во найдено тогда выход
-             IF NOT FOUND OR (vbSurplus) <= 0 THEN EXIT; END IF;
+             IF NOT FOUND OR (vbNeed) <= 0 THEN EXIT; END IF;
 
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR FLOOR (vbSurplus) <= 0 THEN EXIT; END IF;
              
-
-/*             IF vbGoodsId = 17140
-             THEN
-               raise notice 'Value 05: % % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END,
-                 (SELECT _tmpRemains_all_Supplement.AmountRemains::TVArChar||'  '||_tmpRemains_all_Supplement.Need::TVArChar||'  '||_tmpRemains_all_Supplement.GiveAway::TVArChar 
-                  FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_from AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId);
-             END IF;
-*/
              INSERT INTO _tmpResult_Supplement (UnitId_from, UnitId_to, GoodsId, Amount)
                VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END);
 
              UPDATE _tmpRemains_all_Supplement SET AmountUse = AmountUse + CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END
+                                                 ,  NeedCalc = NeedCalc - CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END  
              WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_to
                AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId;
+               
+             UPDATE _tmpRemains_all_Supplement SET SurplusCalc = SurplusCalc - CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END  
+             WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_from
+               AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId;
 
-             vbSurplus := vbSurplus - CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END;
+             vbNeed := vbNeed - CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END;
 
          END LOOP; -- финиш цикла по курсору2
          CLOSE curResult_next; -- закрыли курсор2.

@@ -14,6 +14,7 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
        , ObjectString_Thumb.ValueData                            as thumb
        , ObjectBlob_Description.ValueData                        as description
        , ObjectString_Goods_Maker.ValueData                      as manufacturer
+       , ObjectString_Goods_MakerUkr.ValueData                   as ManufacturerUkr
        , ObjectLink_Goods_Appointment.ChildObjectId              as appointment_id
        , Object_GoodsGroup.Id                                    as category_id
        , NULL::TFloat                                            AS Price
@@ -28,13 +29,17 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
        , COALESCE(ObjectBoolean_Goods_HideOnTheSite.ValueData, FALSE) AS isHideOnTheSite
        , tmpBarCode.BarCode
 
+       , Object_FormDispensing.ValueData                        AS FormDispensingName
+       , ObjectString_FormDispensing_NameUkr.ValueData          AS FormDispensingNameUkr
+       
+       , ObjectFloat_Goods_NumberPlates.ValueData::Integer      AS NumberPlates   
+       , ObjectFloat_Goods_QtyPackage.ValueData::Integer        AS QtyPackage
+       , COALESCE(ObjectBoolean_Goods_Recipe.ValueData, FALSE)  AS isRecipe
+
     -- FROM Object_Goods_View AS Object_Goods
     FROM ObjectLink AS ObjectLink_Goods_Object
 
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
-        LEFT JOIN ObjectString AS ObjectString_Goods_Maker
-                               ON ObjectString_Goods_Maker.ObjectId = ObjectLink_Goods_Object.ObjectId
-                              AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
 
         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                              ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_Goods_Object.ObjectId
@@ -101,6 +106,32 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
                               , string_agg(tmpBarCode.GoodsName, ',') AS BarCode
                          FROM tmpBarCode                        
                          GROUP BY tmpBarCode.GoodsId) AS tmpBarCode ON tmpBarCode.GoodsId = ObjectLink_Goods_Object.ObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+                               ON ObjectString_Goods_Maker.ObjectId = ObjectLink_Main.ChildObjectId 
+                              AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
+        LEFT JOIN ObjectString AS ObjectString_Goods_MakerUkr
+                               ON ObjectString_Goods_MakerUkr.ObjectId = ObjectLink_Main.ChildObjectId 
+                              AND ObjectString_Goods_MakerUkr.DescId = zc_ObjectString_Goods_MakerUkr()   
+
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_FormDispensing
+                             ON ObjectLink_Goods_FormDispensing.ObjectId = ObjectLink_Main.ChildObjectId 
+                            AND ObjectLink_Goods_FormDispensing.DescId = zc_ObjectLink_Goods_FormDispensing()
+        LEFT JOIN Object AS Object_FormDispensing ON Object_FormDispensing.Id = ObjectLink_Goods_FormDispensing.ChildObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_FormDispensing_NameUkr
+                               ON ObjectString_FormDispensing_NameUkr.ObjectId = Object_FormDispensing.Id
+                              AND ObjectString_FormDispensing_NameUkr.DescId = zc_ObjectString_FormDispensing_NameUkr()   
+
+        LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_NumberPlates
+                                    ON ObjectFloat_Goods_NumberPlates.ObjectId = ObjectLink_Main.ChildObjectId 
+                                   AND ObjectFloat_Goods_NumberPlates.DescId = zc_ObjectFloat_Goods_NumberPlates()
+        LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_QtyPackage
+                                    ON ObjectFloat_Goods_QtyPackage.ObjectId = ObjectLink_Main.ChildObjectId 
+                                   AND ObjectFloat_Goods_QtyPackage.DescId = zc_ObjectFloat_Goods_QtyPackage()
+        LEFT OUTER JOIN ObjectBoolean AS ObjectBoolean_Goods_Recipe
+                                      ON ObjectBoolean_Goods_Recipe.ObjectId = ObjectLink_Main.ChildObjectId 
+                                     AND ObjectBoolean_Goods_Recipe.DescId = zc_ObjectBoolean_Goods_Recipe()
 
     WHERE ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!бпелеммн!!!
       -- AND (ObjectBoolean_Goods_Published.ValueData = TRUE OR ObjectBoolean_Goods_Published.ValueData IS NULL)

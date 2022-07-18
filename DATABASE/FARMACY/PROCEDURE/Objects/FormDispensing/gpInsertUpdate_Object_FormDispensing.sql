@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_FormDispensing(
  INOUT ioId	             Integer   ,    -- ключ объекта <Форма випуску (Соц. проект)> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <>
+    IN inNameUkr             TVarChar  ,    -- Название объекта <>
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -32,6 +33,9 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_FormDispensing(), vbCode_calc, inName);
+
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_FormDispensing_NameUkr(), ioId, inNameUkr);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

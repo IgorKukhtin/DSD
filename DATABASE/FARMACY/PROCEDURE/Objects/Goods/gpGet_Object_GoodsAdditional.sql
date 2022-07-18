@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, Name TVarChar
              , isErased Boolean
              , NameUkr TVarChar
              , MakerName TVarChar
+             , MakerNameUkr TVarChar
              , FormDispensingId Integer
              , FormDispensingName TVarChar
              , NumberPlates Integer
@@ -34,6 +35,7 @@ BEGIN
            , Object_Goods_Main.NameUkr
 
            , Object_Goods_Main.MakerName
+           , Object_Goods_Main.MakerNameUkr
            , Object_Goods_Main.FormDispensingId
            , Object_FormDispensing.ValueData                                          AS FormDispensingName
            , Object_Goods_Main.NumberPlates

@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MedicalProgramSP_Goods (
 
 RETURNS TABLE (GoodsId Integer
              , MedicalProgramSPID Integer
-             , MedicalProgramSPFree Boolean 
+             , PercentPayment TFloat 
              , IntenalSPId Integer
              , PriceRetSP TFloat
              , PriceSP TFloat
@@ -61,7 +61,7 @@ BEGIN
                                           AND Object_MedicalProgramSPLink.isErased = False)
          , tmpGoodsSP AS (SELECT Object_Goods_Retail.Id        AS GoodsId
                                , MLO_MedicalProgramSP.ObjectId AS MedicalProgramSPID 
-                               , COALESCE(ObjectBoolean_Free.ValueData, FALSE) AS MedicalProgramSPFree
+                               , COALESCE(MovementFloat_PercentPayment.ValueData, 0)::TFloat  AS PercentPayment
                                , MI_IntenalSP.ObjectId         AS IntenalSPId
                                , MIFloat_PriceRetSP.ValueData  AS PriceRetSP
                                , MIFloat_PriceSP.ValueData     AS PriceSP
@@ -86,12 +86,11 @@ BEGIN
                                INNER JOIN MovementLinkObject AS MLO_MedicalProgramSP
                                                              ON MLO_MedicalProgramSP.MovementId = Movement.Id
                                                             AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
-
                                LEFT JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPId = MLO_MedicalProgramSP.ObjectId
 
-                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Free 	
-                                                       ON ObjectBoolean_Free.ObjectId = MLO_MedicalProgramSP.ObjectId
-                                                      AND ObjectBoolean_Free.DescId = zc_ObjectBoolean_MedicalProgramSP_Free()
+                               LEFT JOIN MovementFloat AS MovementFloat_PercentPayment
+                                                       ON MovementFloat_PercentPayment.MovementId = Movement.Id
+                                                      AND MovementFloat_PercentPayment.DescId = zc_MovementFloat_PercentPayment()
 
                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.DescId     = zc_MI_Master()
@@ -148,14 +147,19 @@ BEGIN
                           
     SELECT tmpGoodsSP.GoodsId
          , tmpGoodsSP.MedicalProgramSPID
-         , tmpGoodsSP.MedicalProgramSPFree
+         , tmpGoodsSP.PercentPayment
          , tmpGoodsSP.IntenalSPId
          , tmpGoodsSP.PriceRetSP
 
             --
             -- Цена со скидкой для СП
             --
-         ,  CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
+         ,  CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
+                 THEN ROUND (CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
+                                  THEN zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                                  ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END * tmpGoodsSP.PercentPayment / 100, 2) -- Фиксированный % доплаты
+                                       
+                 WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
                       THEN 0 -- по 0, т.к. цена доплаты = 0
 
                  WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0)
@@ -190,36 +194,41 @@ BEGIN
             --
             -- Цена без скидки для СП
             --
-         ,  CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0)
-                      THEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) -- по нашей цене, т.к. она меньше чем цена возмещения
+         , CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
+                 THEN CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
+                           THEN zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                           ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END -- Фиксированный % доплаты
+            ELSE
+              CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0)
+                        THEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) -- по нашей цене, т.к. она меньше чем цена возмещения
 
-                 ELSE
+                   ELSE
 
-            CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
-                      THEN 0 -- по 0, т.к. цена доплаты = 0
+              CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
+                        THEN 0 -- по 0, т.к. цена доплаты = 0
 
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0)
-                      THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
+                   WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0)
+                        THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
-                   AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
-                         - zfCalc_PriceCash(CashSessionSnapShot.Price, True)
-                           ) -- разница с ценой возмещения и "округлили в большую"
-                      THEN 0
+                   WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                     AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                           - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                           - zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                             ) -- разница с ценой возмещения и "округлили в большую"
+                        THEN 0
 
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
-                      THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
-                         - zfCalc_PriceCash(CashSessionSnapShot.Price, True)
-                           ) -- разница с ценой возмещения и "округлили в большую"
+                   WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                        THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                           - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                           - zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                             ) -- разница с ценой возмещения и "округлили в большую"
 
-                 ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
+                   ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
 
-            END
-          + COALESCE (tmpGoodsSP.PriceSP, 0)
+              END
+            + COALESCE (tmpGoodsSP.PriceSP, 0)
 
-            END :: TFloat AS PriceSaleSP
+            END END :: TFloat AS PriceSaleSP
     FROM tmpGoodsSP
     
          INNER JOIN tmpCashSessionSnapShot AS CashSessionSnapShot ON CashSessionSnapShot.ObjectId = tmpGoodsSP.GoodsId                                       
@@ -239,6 +248,6 @@ ALTER FUNCTION gpSelect_MedicalProgramSP_Goods (Integer, Integer, TVarChar, TVar
  31.07.19                                                       *
 */
 
--- select * from gpSelect_MedicalProgramSP_Goods(inSPKindId := 4823009 , inMedicalProgramSPId := 18078175 , inCashSessionId := '{3444D087-A78F-4FDC-A48C-0FD43254A196}' ,  inSession := '3');
+-- 
 
-select * from gpSelect_MedicalProgramSP_Goods(inSPKindId := 4823009 , inMedicalProgramSPId := 18078228 , inCashSessionId := '{3444D087-A78F-4FDC-A48C-0FD43254A196}' ,  inSession := '3');
+select * from gpSelect_MedicalProgramSP_Goods(inSPKindId := 4823009 , inMedicalProgramSPId := 18078175  , inCashSessionId := '{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}' ,  inSession := '3');

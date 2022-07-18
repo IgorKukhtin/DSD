@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , MorionCode Integer, BarCode TVarChar, isErrorBarCode Boolean, BarCode_Color  Integer 
              , isResolution_224  boolean
              , isUkrainianTranslation boolean
-             , MakerName TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
+             , MakerName TVarChar, MakerNameUkr TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
              , isExpDateExcSite boolean, isHideOnTheSite boolean
              , DiscontSiteStart TDateTime, DiscontSiteEnd TDateTime, DiscontAmountSite TFloat, DiscontPercentSite TFloat
              , isNotUploadSites Boolean
@@ -134,6 +134,7 @@ BEGIN
            , Trim(COALESCE(Object_Goods_Main.NameUkr, '')) <> ''                 AS isUkrainianTranslation
 
            , Object_Goods_Main.MakerName
+           , Object_Goods_Main.MakerNameUkr
            , Object_Goods_Main.FormDispensingId
            , Object_FormDispensing.ValueData                                     AS FormDispensingName
            , Object_Goods_Main.NumberPlates

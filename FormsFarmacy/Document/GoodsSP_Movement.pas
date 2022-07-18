@@ -78,7 +78,9 @@ type
     cxLabel5: TcxLabel;
     CountSPMin: TcxGridDBColumn;
     cxLabel6: TcxLabel;
-    ctPercentMarkup: TcxCurrencyEdit;
+    cePercentMarkup: TcxCurrencyEdit;
+    cePercentPayment: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
   private
     { Private declarations }
   public
