@@ -329,7 +329,8 @@ uses
   MaterialOptionsEdit in '..\..\FormsBoat\Guides\MaterialOptionsEdit.pas' {MaterialOptionsEditForm: TParentForm},
   MaterialOptions in '..\..\FormsBoat\Guides\MaterialOptions.pas' {MaterialOptionsForm: TParentForm},
   MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm},
-  ProdOptions in '..\..\FormsBoat\Guides\ProdOptions.pas' {ProdOptionsForm: TParentForm};
+  ProdOptions in '..\..\FormsBoat\Guides\ProdOptions.pas' {ProdOptionsForm: TParentForm},
+  GoodsGroupChoice in '..\..\FormsBoat\Guides\GoodsGroupChoice.pas' {GoodsGroupChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

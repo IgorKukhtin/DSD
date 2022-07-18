@@ -274,7 +274,6 @@
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitHeight = 635
       object edName: TcxTextEdit
         Left = 40
         Top = 114
@@ -695,7 +694,6 @@
     object Child: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1091#1079#1083#1072
       ImageIndex = 1
-      ExplicitHeight = 625
       object cxGrid3: TcxGrid
         Left = 0
         Top = 0
@@ -703,7 +701,6 @@
         Height = 631
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 625
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource1
@@ -1461,11 +1458,12 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 280
+    Left = 8
+    Top = 320
   end
   object GuidesProdColor: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edProdColor
     FormNameParam.Value = 'TProdColorForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1487,8 +1485,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 8
-    Top = 306
+    Left = 56
+    Top = 266
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -1514,8 +1512,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 187
+    Left = 296
+    Top = 171
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1560,8 +1558,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 264
-    Top = 240
+    Left = 280
+    Top = 216
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -1593,11 +1591,11 @@
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParentGroup
-    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.Value = 'TGoodsGroupChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsGroup_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TGoodsGroupChoiceForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1715,8 +1713,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 136
+    Left = 296
+    Top = 128
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
