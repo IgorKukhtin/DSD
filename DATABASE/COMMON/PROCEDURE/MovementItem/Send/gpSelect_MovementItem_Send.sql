@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , StorageName TVarChar
              , Price TFloat
              , AmountRemains TFloat
+             , Amount_child_sec TFloat, Amount_diff TFloat      --резерв
              , isErased Boolean
               )
 AS
@@ -119,6 +120,16 @@ BEGIN
                                 ) AS tmp
                            WHERE tmp.Ord = 1 -- !!!берем только ОДНУ партию!!!
                           )
+
+       --данные из документов заказа по резерву для текущего документа
+      , tmpOrderExternalChild AS (SELECT tmp.GoodsId
+                                       , tmp.GoodsKindId 
+                                       , SUM (COALESCE (tmp.AmountSecond,0)) AS AmountSecond
+                                  FROM gpSelect_MI_OrderExternalChild_bySend (inMovementId, inIsErased, inSession) AS tmp
+                                  GROUP BY tmp.GoodsId
+                                         , tmp.GoodsKindId
+                                 )
+
        -- Результат
        SELECT
              0                          AS Id
@@ -148,7 +159,10 @@ BEGIN
            , CAST (NULL AS TVarChar)    AS StorageName
            , CAST (NULL AS TFloat)      AS Price
 
-           , tmpRemains.Amount :: TFloat AS AmountRemains
+           , tmpRemains.Amount   :: TFloat AS AmountRemains   
+
+           , CAST (NULL AS TFloat)      AS Amount_child_sec --итого резерв для заявок 
+           , CAST (NULL AS TFloat)      AS Amount_diff      --разница перемещения с резервом
 
            , FALSE                      AS isErased
 
@@ -248,6 +262,9 @@ BEGIN
 
            , tmpRemains.Amount :: TFloat           AS AmountRemains
 
+           , tmpReserv.AmountSecond :: TFloat AS Amount_child_sec --итого резерв для заявок 
+           , (COALESCE (tmpReserv.AmountSecond,0) - COALESCE (MovementItem.Amount,0))  ::TFloat AS Amount_diff
+
            , MovementItem.isErased                 AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -318,6 +335,9 @@ BEGIN
                                 AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
             LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
 
+            LEFT JOIN tmpOrderExternalChild AS tmpReserv
+                                            ON tmpReserv.GoodsId = MovementItem.ObjectId 
+                                           AND tmpReserv.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
             ;
 
 
@@ -440,6 +460,16 @@ BEGIN
                                 ) AS tmp
                            WHERE tmp.Ord = 1 -- !!!берем только ОДНУ партию!!!
                           )
+
+       --данные из документов заказа по резерву для текущего документа
+      , tmpOrderExternalChild AS (SELECT tmp.GoodsId
+                                       , tmp.GoodsKindId 
+                                       , SUM (COALESCE (tmp.AmountSecond,0)) AS AmountSecond
+                                  FROM gpSelect_MI_OrderExternalChild_bySend (inMovementId, inIsErased, inSession) AS tmp
+                                  GROUP BY tmp.GoodsId
+                                         , tmp.GoodsKindId
+                                 )
+
        -- Результат
        SELECT
              tmpMI_Goods.MovementItemId         AS Id
@@ -471,6 +501,9 @@ BEGIN
            , tmpMIContainer.Price               AS Price
 
            , tmpRemains.Amount :: TFloat        AS AmountRemains
+
+           , tmpReserv.AmountSecond :: TFloat AS Amount_child_sec --итого резерв для заявок 
+           , (COALESCE (tmpReserv.AmountSecond,0) - COALESCE (tmpMI_Goods.Amount,0))  ::TFloat AS Amount_diff
 
            , tmpMI_Goods.isErased               AS isErased
 
@@ -511,7 +544,9 @@ BEGIN
             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
                                 AND COALESCE (tmpRemains.PartionGoodsId,0) = COALESCE (tmpMIContainer.PartionGoodsId, Object_PartionGoods.Id, 0)
 
-
+            LEFT JOIN tmpOrderExternalChild AS tmpReserv
+                                            ON tmpReserv.GoodsId = tmpMI_Goods.GoodsId
+                                           AND tmpReserv.GoodsKindId = COALESCE (tmpMI_Goods.GoodsKindId, 0)
             ;
 
      END IF;
@@ -525,6 +560,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.07.22         *
  08.02.22         *
  28.01.21         * PartionGoodsId
  19.10.18         *
