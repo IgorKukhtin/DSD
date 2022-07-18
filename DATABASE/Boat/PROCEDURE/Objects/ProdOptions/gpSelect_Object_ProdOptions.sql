@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BrandId Integer, BrandName TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
+             , ColorPatternId Integer, ColorPatternName TVarChar
              , GoodsId Integer, GoodsId_choice Integer, GoodsCode Integer, GoodsName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , EKPrice TFloat, EKPriceWVAT TFloat
@@ -53,9 +54,11 @@ BEGIN
                            )
           -- Опции, которые определены как Boat Structure
         , tmpProdColorPattern AS (SELECT Object_ProdColorPattern.Id                    AS ProdColorPatternId
+                                     /*, Object_ColorPattern.Id                        AS ColorPatternId
+                                       , Object_ColorPattern.ValueData                 AS ColorPatternName
 
                                        , Object_Model.Id                    ::Integer  AS ModelId
-                                       , Object_Model.ValueData             ::TVarChar AS ModelName
+                                       , Object_Model.ValueData             ::TVarChar AS ModelName*/
 
                                        , Object_Goods.Id                    ::Integer  AS GoodsId
                                        , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
@@ -94,13 +97,14 @@ BEGIN
                                                               ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
                                                              AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorPattern_Comment()
                                        -- Модель
-                                       LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                                     /*LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
                                                             ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
                                                            AND ObjectLink_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
+                                       LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
                                        LEFT JOIN ObjectLink AS ObjectLink_Model
                                                             ON ObjectLink_Model.ObjectId = ObjectLink_ColorPattern.ChildObjectId
                                                            AND ObjectLink_Model.DescId   = zc_ObjectLink_ColorPattern_Model()
-                                       LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+                                       LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId*/
                                        -- Комплектующие
                                        LEFT JOIN ObjectLink AS ObjectLink_Goods
                                                             ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
@@ -160,10 +164,16 @@ BEGIN
                         , Object_Brand.ValueData             AS BrandName
                         , Object_ProdEngine.Id               AS ProdEngineId
                         , Object_ProdEngine.ValueData        AS ProdEngineName
-               
-                        
-                        , Object_ProdColorPattern.Id        :: Integer   AS ProdColorPatternId
-                        , Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END :: TVarChar  AS ProdColorPatternName
+
+                          -- Boat Structure               
+                        , Object_ProdColorPattern.Id          AS ProdColorPatternId
+                        , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData
+                                                          , Object_ProdColorPattern.ValueData
+                                                          , Object_Model_pcp.ValueData
+                                                          , Object_ProdColorPattern.isErased
+                                                           ) AS ProdColorPatternName
+                        , Object_ColorPattern.Id              AS ColorPatternId
+                        , Object_ColorPattern.ValueData       AS ColorPatternName
                
                         , Object_Goods.Id         :: Integer  AS GoodsId
                         , Object_Goods.ObjectCode :: Integer  AS GoodsCode
@@ -289,6 +299,7 @@ BEGIN
                                              AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
                          LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
                
+                         -- Boat Structure
                          LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
                                               ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdOptions.Id
                                              AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdOptions_ProdColorPattern()
@@ -298,7 +309,16 @@ BEGIN
                                               ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
                                              AND ObjectLink_ProdColorGroup.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
                          LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
-               
+
+                         LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                                              ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                                             AND ObjectLink_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
+                         LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
+                         LEFT JOIN ObjectLink AS ObjectLink_Model_pcp
+                                              ON ObjectLink_Model_pcp.ObjectId = ObjectLink_ColorPattern.ChildObjectId
+                                             AND ObjectLink_Model_pcp.DescId   = zc_ObjectLink_ColorPattern_Model()
+                         LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_Model_pcp.ChildObjectId
+
                          -- Комплектующие
                          LEFT JOIN ObjectLink AS ObjectLink_Goods
                                               ON ObjectLink_Goods.ObjectId = Object_ProdOptions.Id
@@ -372,8 +392,11 @@ BEGIN
          , tmpRes.ProdEngineName
 
          
+           -- Boat Structure               
          , tmpRes.ProdColorPatternId
-         , (tmpRes.ProdColorPatternName || ' (' || tmpProdColorPattern.ModelName || ')') :: TVarChar  AS ProdColorPatternName
+         , tmpRes.ProdColorPatternName
+         , tmpRes.ColorPatternId
+         , tmpRes.ColorPatternName
 
          , CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpRes.GoodsId ELSE tmpRes.GoodsId END                                                      :: Integer  AS GoodsId
          , COALESCE (tmpRes.GoodsId,   CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsId ELSE NULL END, tmpRes.GoodsId)      :: Integer  AS GoodsId_choice

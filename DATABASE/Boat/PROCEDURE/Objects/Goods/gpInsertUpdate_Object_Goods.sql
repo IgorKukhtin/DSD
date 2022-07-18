@@ -179,7 +179,9 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsSize(), ioId, inGoodsSizeId);
    -- сохранили связь с <>
+   IF inProdColorId > 0 THEN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_ProdColor(), ioId, inProdColorId);
+   END IF;
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Partner(), ioId, inPartnerId);
    -- сохранили связь с <>

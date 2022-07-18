@@ -104,8 +104,8 @@ BEGIN
          , tmpSelect.ProdColorName
          , tmpSelect.MeasureName
 
-         , MAX (CASE WHEN tmpSelect.NPP_pcp = 1 THEN tmpSelect.MaterialOptionsId   ELSE 0  END) :: Integer  AS MaterialOptionsId
-         , MAX (CASE WHEN tmpSelect.NPP_pcp = 1 THEN tmpSelect.MaterialOptionsName ELSE '' END) :: TVarChar AS MaterialOptionsName
+         , MAX (CASE WHEN tmpSelect.NPP_pcp = 1 THEN tmpSelect.MaterialOptionsId   ELSE tmpSelect.MaterialOptionsId   END) :: Integer  AS MaterialOptionsId
+         , MAX (CASE WHEN tmpSelect.NPP_pcp = 1 THEN tmpSelect.MaterialOptionsName ELSE tmpSelect.MaterialOptionsName END) :: TVarChar AS MaterialOptionsName
          , ''  :: TVarChar AS Id_Site
          , tmpSelect.CodeVergl
 
@@ -113,6 +113,8 @@ BEGIN
          , MAX (CASE WHEN tmpSelect.NPP_pcp = 1 THEN tmpSelect.NPP_pcp ELSE 0 END) :: Integer AS NPP_pcp
 
      FROM tmpSelect
+     WHERE (tmpSelect.ProdColorPatternId > 0 AND tmpSelect.ProdColorName <> '')
+        OR tmpSelect.ProdColorPatternId IS NULL
 
      GROUP BY tmpSelect.Name
             , tmpSelect.ModelId
@@ -122,7 +124,6 @@ BEGIN
             , tmpSelect.BrandName
             , tmpSelect.ProdEngineId
             , tmpSelect.ProdEngineName
-
 
             , tmpSelect.ProdColorPatternId
             , tmpSelect.ProdColorPatternName

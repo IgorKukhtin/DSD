@@ -64,9 +64,8 @@ BEGIN
                               FROM Object AS Object_Goods
                               WHERE Object_Goods.DescId = zc_Object_Goods()
                                 AND Object_Goods.isErased = FALSE
-                           -- ORDER BY Object_Goods.Id ASC
-                              ORDER BY Object_Goods.Id DESC
-                              LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=0 THEN 25000 ELSE 350000 END
+                              ORDER BY CASE WHEN vbUserId = 5 THEN Object_Goods.Id ELSE 0 END ASC, Object_Goods.Id DESC
+                              LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=1 THEN 1000 ELSE 350000 END
                              )
      , tmpGoods_all AS (SELECT tmpGoods_limit.*
                         FROM tmpGoods_limit
@@ -85,7 +84,7 @@ BEGIN
                                                       OR ObjectString_Article.ValueData ILIKE 'BEL%'
                                                         )
                         WHERE Object_Goods.DescId = zc_Object_Goods()
-                          AND inIsLimit_100 = TRUE
+                        --AND inIsLimit_100 = TRUE
                        )
             -- Комплектующие
           , tmpGoods AS (SELECT Object_Goods.Id                     AS Id

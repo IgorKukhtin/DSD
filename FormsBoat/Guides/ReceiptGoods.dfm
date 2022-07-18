@@ -929,8 +929,16 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
           Width = 58
+        end
+        object ProdColorPatternName_all_ch2: TcxGridDBColumn
+          Caption = '***'#1069#1083#1077#1084#1077#1085#1090
+          DataBinding.FieldName = 'ProdColorPatternName_all'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
         end
         object ProdColorName_ch2: TcxGridDBColumn
           Caption = 'Farbe'
@@ -1099,7 +1107,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Width = 100
         end
         object ColorPatternName_ch2: TcxGridDBColumn
-          Caption = #1064#1072#1073#1083#1086#1085' Boat Structure:'
+          Caption = #1064#1072#1073#1083#1086#1085' Boat Structure'
           DataBinding.FieldName = 'ColorPatternName'
           Visible = False
           HeaderAlignmentHorz = taCenter
@@ -2228,6 +2236,22 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Component = Child2CDS
           ComponentItem = 'Article'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternId'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ColorPatternId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternName'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ColorPatternName'
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
       isShowModal = False

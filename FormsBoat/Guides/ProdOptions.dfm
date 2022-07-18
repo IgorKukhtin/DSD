@@ -1086,6 +1086,23 @@ object ProdOptionsForm: TProdOptionsForm
           ComponentItem = 'ProdColorPatternName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternName'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end

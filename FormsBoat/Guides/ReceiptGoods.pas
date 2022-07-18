@@ -195,6 +195,7 @@ type
     MaterialOptionsName: TcxGridDBColumn;
     ProdColorName_pcp: TcxGridDBColumn;
     ColorPatternName_ch2: TcxGridDBColumn;
+    ProdColorPatternName_all_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

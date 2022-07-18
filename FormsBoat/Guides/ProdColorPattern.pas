@@ -82,6 +82,7 @@ type
     ProdOptionsName: TcxGridDBColumn;
     actChoiceFormOption: TOpenChoiceForm;
     actChoiceFormProdColor_goods: TOpenChoiceForm;
+    Id: TcxGridDBColumn;
   private
     { Private declarations }
   public

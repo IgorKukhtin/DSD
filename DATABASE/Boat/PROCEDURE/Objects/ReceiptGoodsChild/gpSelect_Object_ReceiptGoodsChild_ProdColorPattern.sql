@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, ReceiptGoodsId Integer
                -- Boat Structure 
              , ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar, ProdColorPatternName_all TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
+             , ColorPatternId Integer, ColorPatternName TVarChar
                -- Категория Опций
              , MaterialOptionsId Integer, MaterialOptionsName TVarChar
                --
@@ -62,6 +63,9 @@ BEGIN
                              INNER JOIN ObjectLink AS OL_ProdColorPattern_ColorPattern
                                                    ON OL_ProdColorPattern_ColorPattern.ChildObjectId = ObjectLink_ReceiptGoods_ColorPattern.ChildObjectId
                                                   AND OL_ProdColorPattern_ColorPattern.DescId        = zc_ObjectLink_ProdColorPattern_ColorPattern()
+                             -- НЕ удален Элементы Boat Structure
+                             INNER JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id       = OL_ProdColorPattern_ColorPattern.ObjectId
+                                                                         AND Object_ProdColorPattern.isErased = FALSE
                         WHERE ObjectLink_ReceiptGoods_ColorPattern.DescId = zc_ObjectLink_ReceiptGoods_ColorPattern()
                           AND inIsShowAll = TRUE
                        )
@@ -129,14 +133,18 @@ BEGIN
           , tmpProdColorPattern.isErased      :: Boolean  AS isErased
           , ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptGoodsId ORDER BY Object_ProdColorPattern.ObjectCode ASC) :: Integer AS NPP
 
-          , Object_ProdColorPattern.Id              AS ProdColorPatternId
-          , Object_ProdColorPattern.ObjectCode      AS ProdColorPatternCode
-          --, Object_ProdColorPattern.ValueData       AS ProdColorPatternName
-          , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END || ' (' || Object_Model_pcp.ValueData || ')') :: TVarChar  AS  ProdColorPatternName
-          , (Object_ProdColorGroup.ValueData || CASE WHEN Object_ProdColorPattern.ValueData <> '1' THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END) :: TVarChar AS ProdColorPatternName_all
-
+          , Object_ProdColorPattern.Id                    AS ProdColorPatternId
+          , Object_ProdColorPattern.ObjectCode            AS ProdColorPatternCode
+          , zfCalc_ValueData_isErased (Object_ProdColorPattern.ValueData, Object_ProdColorPattern.isErased) AS ProdColorPatternName
+          , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData
+                                            , Object_ProdColorPattern.ValueData
+                                            , Object_Model_pcp.ValueData
+                                            , Object_ProdColorPattern.isErased
+                                             ) AS ProdColorPatternName_all
           , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
           , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
+          , Object_ColorPattern_pcp.Id                    AS ColorPatternId
+          , Object_ColorPattern_pcp.ValueData             AS ColorPatternName
 
           , Object_MaterialOptions.Id          ::Integer  AS MaterialOptionsId
           , Object_MaterialOptions.ValueData   ::TVarChar AS MaterialOptionsName
@@ -182,14 +190,16 @@ BEGIN
                               AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
           LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
 
-               LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_ColorPattern
-                                    ON ObjectLink_ProdColorPattern_ColorPattern.ObjectId = Object_ProdColorPattern.Id
-                                   AND ObjectLink_ProdColorPattern_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
+          -- Модель
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_ColorPattern
+                               ON ObjectLink_ProdColorPattern_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_ProdColorPattern_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
+          LEFT JOIN Object AS Object_ColorPattern_pcp ON Object_ColorPattern_pcp.Id = ObjectLink_ProdColorPattern_ColorPattern.ChildObjectId
 
-               LEFT JOIN ObjectLink AS ObjectLink_ColorPattern_Model
-                                    ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ProdColorPattern_ColorPattern.ChildObjectId
-                                   AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
-               LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern_Model
+                               ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ProdColorPattern_ColorPattern.ChildObjectId
+                              AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
+          LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods
                                ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id

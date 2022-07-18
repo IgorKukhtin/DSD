@@ -375,6 +375,20 @@ object ProdColorPatternForm: TProdColorPatternForm
         Options.Editing = False
         Width = 78
       end
+      object Id: TcxGridDBColumn
+        DataBinding.FieldName = 'Id'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

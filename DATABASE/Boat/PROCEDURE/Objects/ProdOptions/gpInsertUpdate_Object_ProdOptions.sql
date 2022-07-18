@@ -50,7 +50,7 @@ BEGIN
    END IF;
 
    -- проверка - у таких опций здесь нельзя установить значение <Комплектующие>
-   IF inGoodsId > 0
+   IF 1=0 AND inGoodsId > 0
       AND (EXISTS (SELECT 1 FROM ObjectLink AS ObjectLink_ProdColorPattern_ProdOptions
                    WHERE ObjectLink_ProdColorPattern_ProdOptions.ChildObjectId = ioId
                      AND ObjectLink_ProdColorPattern_ProdOptions.DescId        = zc_ObjectLink_ProdColorPattern_ProdOptions()
@@ -71,7 +71,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdOptions_Comment(), ioId, inComment);
 
    -- у таких опций здесь цена = 0
-   IF inGoodsId > 0
+   IF inGoodsId > 0 AND 1=0
    THEN
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_SalePrice(), ioId, 0);
