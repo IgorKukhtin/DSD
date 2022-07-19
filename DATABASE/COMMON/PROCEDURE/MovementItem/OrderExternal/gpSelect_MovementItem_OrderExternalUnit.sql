@@ -88,7 +88,7 @@ BEGIN
           , tmpMI_Child AS (SELECT MovementItem.ParentId
                                  , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount
                                  , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount ELSE 0 END) AS AmountSecond
-                                 , SUM (MovementItem.Amount) AS Amount_all
+                                 , SUM (MovementItem.Amount) AS Amount_diff
                             FROM MovementItem
                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                              ON MIFloat_MovementId.MovementItemId = MovementItem.Id
@@ -330,7 +330,7 @@ BEGIN
           , tmpMI_Child AS (SELECT MovementItem.ParentId
                                  , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount
                                  , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount ELSE 0 END) AS AmountSecond
-                                 , SUM (MovementItem.Amount) AS Amount_all
+                                 , SUM (MovementItem.Amount) AS Amount_diff
                             FROM MovementItem
                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                              ON MIFloat_MovementId.MovementItemId = MovementItem.Id
