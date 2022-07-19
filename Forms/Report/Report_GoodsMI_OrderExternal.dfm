@@ -4,7 +4,6 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   ClientWidth = 1203
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -292
   ExplicitWidth = 1219
   ExplicitHeight = 522
   PixelsPerInch = 96
@@ -1937,8 +1936,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate_CarInfo_date;FromName;InvNumber;GoodsGroupName;GoodsNam' +
-            'e;GoodsKindName;OperDate_CarInfo;'
+            'OperDate_CarInfo_date;OperDate_CarInfo;FromName;InvNumber;GoodsG' +
+            'roupName;GoodsName;GoodsKindName;'
           GridView = cxGridDBTableView
         end>
       Params = <
