@@ -141,15 +141,18 @@ BEGIN
     IF inEndDate < '01.06.2014' THEN
        RETURN QUERY
        SELECT *
+            , 0 :: TFloat AS SaleReturn_Weight
+            , 0 :: TFloat AS SaleReturn_Summ 
+            , 0 :: TFloat AS Sale_Summ_opt
             , FALSE AS isTop
             , 0 AS PaidKindId
             , '' ::TVarChar AS PaidKindName
             , NULL ::TDateTime AS OperDate 
             , ''   ::TVarChar  AS DayOfWeekName_Full
- 
             , 0 ::TFloat AS Sale_SummIn_pav
             , 0 ::TFloat AS ReturnIn_SummIn_pav
             , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
+
        FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
                                              , inEndDate
                                              , inBranchId
@@ -177,13 +180,16 @@ BEGIN
        SELECT gpReport.* 
             , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
             , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+            , 0 :: TFloat AS SaleReturn_Weight
+            , 0 :: TFloat AS SaleReturn_Summ 
+            , 0 :: TFloat AS Sale_Summ_opt
             , FALSE AS isTop
-            , 0 AS PaidKindId
-            , ''   ::TVarChar AS PaidKindName
+            , 0 AS PaidKindId, ''   ::TVarChar AS PaidKindName
             , NULL ::TDateTime AS OperDate 
             , ''   ::TVarChar  AS DayOfWeekName_Full
             , Sale_SummIn_pav TFloat, ReturnIn_SummIn_pav TFloat  --- сумма вх (схема павильоны)
             , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
+
        FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
                                                  , inEndDate
                                                  , inBranchId
