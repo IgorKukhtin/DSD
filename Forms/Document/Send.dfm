@@ -2,6 +2,8 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 602
   ClientWidth = 1172
+  ExplicitLeft = -146
+  ExplicitTop = -78
   ExplicitWidth = 1188
   ExplicitHeight = 641
   PixelsPerInch = 96
@@ -60,6 +62,16 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child_sec
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -105,6 +117,16 @@ inherited SendForm: TSendForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child_sec
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Diff
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -334,7 +356,31 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 100
           end
-          object InDate: TcxGridDBColumn [19]
+          object Amount_child_sec: TcxGridDBColumn [19]
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1076#1083#1103' '#1079#1072#1103#1074#1086#1082
+            DataBinding.FieldName = 'Amount_child_sec'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1076#1083#1103' '#1079#1072#1103#1074#1086#1082
+            Options.Editing = False
+            Width = 104
+          end
+          object Amount_Diff: TcxGridDBColumn [20]
+            Caption = #1054#1090#1082#1083'. '#1088#1077#1079#1077#1088#1074#1072' '#1086#1090' '#1087#1077#1088#1077#1084'-'#1103
+            DataBinding.FieldName = 'Amount_Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083'. '#1088#1077#1079#1077#1088#1074#1072' '#1086#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 87
+          end
+          object InDate: TcxGridDBColumn [21]
             Caption = #1044#1072#1090#1072' '#1087#1088'. '#1086#1090' '#1087#1086#1089#1090'. '
             DataBinding.FieldName = 'InDate'
             HeaderAlignmentHorz = taCenter
@@ -343,7 +389,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 80
           end
-          object PartnerInName: TcxGridDBColumn [20]
+          object PartnerInName: TcxGridDBColumn [22]
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'PartnerInName'
             HeaderAlignmentHorz = taCenter
@@ -352,7 +398,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 80
           end
-          object PartionGoodsId: TcxGridDBColumn [21]
+          object PartionGoodsId: TcxGridDBColumn [23]
             DataBinding.FieldName = 'PartionGoodsId'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -376,6 +422,9 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
