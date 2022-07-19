@@ -61,6 +61,10 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+   if vbUserId = 5 and inStartDate   = inEndDate     
+   then inStartDate := DATE_TRUNC ('MONTH', inStartDate);
+   end if;
+
      -- определяется
      SELECT CASE WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData ELSE '24447183_3524907224_SS181220125402.ZS2' /*'Ключ - Неграш О.В..ZS2'*/                                                  END AS UserSign
           , CASE WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData ELSE '24447183_S181220141414.ZS2' /*'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'*/   END AS UserSeal

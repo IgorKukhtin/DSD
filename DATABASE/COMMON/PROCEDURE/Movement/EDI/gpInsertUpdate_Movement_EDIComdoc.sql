@@ -109,8 +109,8 @@ BEGIN
          -- 1.2.
          ELSEIF inOrderInvNumber <> ''
          THEN
-              IF vbUserId = 5 
-                 AND 1 < (SELECT COUNT(*)
+              IF /*vbUserId = 5 
+                 AND*/ 1 < (SELECT COUNT(*)
                               FROM Movement
                                    INNER JOIN MovementString AS MovementString_OKPO
                                                              ON MovementString_OKPO.MovementId =  Movement.Id

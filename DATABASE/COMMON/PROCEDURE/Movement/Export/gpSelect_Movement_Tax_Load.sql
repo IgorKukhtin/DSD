@@ -36,6 +36,10 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка. Признаки Только зарегистрированные и Только не зарегистрированные не могут быть выбранны одновременно.';
      END IF;
+     IF inIsRegisterOnly = TRUE OR inIsNotRegisterOnly = TRUE
+     THEN
+         RAISE EXCEPTION 'Ошибка. Признаки Только зарегистрированные и Только не зарегистрированные не могут быть выбранны.%Выгружаются все Налоговые + Зарегистрированые корректировки или только Зарегистрированые корректировки или Все.', CHR (13);
+     END IF;
      
      --
      RETURN QUERY
@@ -210,12 +214,16 @@ BEGIN
                                          ON ObjectHistoryString_JuridicalDetails_INN.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                                         AND ObjectHistoryString_JuridicalDetails_INN.DescId = zc_ObjectHistoryString_JuridicalDetails_INN()
 
-      WHERE ((MovementDate_DateRegistered.ValueData BETWEEN inStartDateReg AND inEndDateReg AND MovementString_InvNumberRegistered.ValueData <> '' AND inIsRegisterOnly = TRUE)
-        --OR Movement.DescId = zc_Movement_Tax()
-        --OR inStartDateReg > inEndDateReg
+    /*WHERE ((MovementDate_DateRegistered.ValueData BETWEEN inStartDateReg AND inEndDateReg AND MovementString_InvNumberRegistered.ValueData <> '' AND inIsRegisterOnly = TRUE)
           OR (inIsRegisterOnly = FALSE AND inIsNotRegisterOnly = FALSE)
           OR (COALESCE (MovementString_InvNumberRegistered.ValueData, '') = '' AND inIsNotRegisterOnly = TRUE)
+            )*/
+
+      WHERE ((MovementDate_DateRegistered.ValueData BETWEEN inStartDateReg AND inEndDateReg AND MovementString_InvNumberRegistered.ValueData <> '')
+          OR Movement.DescId = zc_Movement_Tax()
+          OR inStartDateReg > inEndDateReg
             )
+
         AND MovementFloat_TotalSummPVAT.ValueData <> 0
         AND COALESCE (MovementString_InvNumberBranch.ValueData, '') <> '2'
       /*AND ((inIsRegisterOnly = FALSE AND inIsNotRegisterOnly = FALSE) 
