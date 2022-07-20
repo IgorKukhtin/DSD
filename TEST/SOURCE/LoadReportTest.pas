@@ -144,8 +144,8 @@ begin
   LoadReportFromFile('Отчет - заявки (Резерв минус)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (Резерв минус).fr3');
   LoadReportFromFile('Отчет - заявки (Резерв минус) торг сеть', ReportPath + '\Отчеты (товарные)\Отчет - заявки (Резерв минус) торг сеть.fr3');
 
-  LoadReportFromFile('PrintMovement_Sale1_test', ReportPath + '\Товарный Учет\PrintMovement_Sale1_test.fr3');
-  exit;
+  //LoadReportFromFile('PrintMovement_Sale1_test', ReportPath + '\Товарный Учет\PrintMovement_Sale1_test.fr3');
+  //exit;
  // LoadReportFromFile('Печать Заявки (Информация по отгрузке)', ReportPath + '\Товарный Учет\Печать Заявки (Информация по отгрузке).fr3');
  // LoadReportFromFile('Печать Заявки резерв минус (Информация по отгрузке)', ReportPath + '\Товарный Учет\Печать Заявки резерв минус (Информация по отгрузке).fr3');
  // exit;

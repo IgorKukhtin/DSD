@@ -781,9 +781,24 @@ BEGIN
                             , SUM (tmpMovement2.AmountWeight_child_sec) AS AmountWeight_child_sec
                             , SUM (tmpMovement2.AmountWeight_child)     AS AmountWeight_child
 
-                            , SUM (tmpMovement2.AmountSh_child_one) AS AmountSh_child_one
-                            , SUM (tmpMovement2.AmountSh_child_sec) AS AmountSh_child_sec
-                            , SUM (tmpMovement2.AmountSh_child)     AS AmountSh_child 
+                            , SUM (CASE WHEN COALESCE (tmpMovement2.AmountSh_child_one,0) <> 0 THEN tmpMovement2.Amount_child_one 
+                                         ELSE CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 
+                                                   THEN tmpMovement2.AmountWeight_child_one / ObjectFloat_Weight.ValueData 
+                                                   ELSE 0 
+                                              END 
+                                         END  ) AS AmountSh_child_one
+                            , SUM (CASE WHEN COALESCE (tmpMovement2.AmountSh_child_sec,0) <> 0 THEN tmpMovement2.Amount_child_sec 
+                                        ELSE CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 
+                                                   THEN tmpMovement2.AmountWeight_child_sec / ObjectFloat_Weight.ValueData 
+                                                   ELSE 0 
+                                              END 
+                                         END ) AS AmountSh_child_sec
+                            , SUM (CASE WHEN COALESCE(tmpMovement2.AmountSh_child,0) <> 0 THEN tmpMovement2.AmountSh_child 
+                                        ELSE CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 
+                                                   THEN tmpMovement2.AmountWeight_child / ObjectFloat_Weight.ValueData 
+                                                   ELSE 0 
+                                              END 
+                                         END )         AS AmountSh_child 
                             --
 
                             , SUM (Amount1 * Price) AS Summ1
