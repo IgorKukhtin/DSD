@@ -222,6 +222,26 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_child_sec
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSh_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSh_child_one
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSh_child_sec
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSh_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -418,6 +438,26 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_child_sec
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSh_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSh_child_one
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSh_child_sec
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSh_diff
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -1169,6 +1209,56 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Options.Editing = False
             Width = 80
           end
+          object AmountSh_child: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074',  '#1096#1090
+            DataBinding.FieldName = 'AmountSh_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072'+'#1087#1088#1080#1093#1086#1076', '#1096#1090
+            Options.Editing = False
+            Width = 100
+          end
+          object AmountSh_child_one: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074'-1, '#1096#1090
+            DataBinding.FieldName = 'AmountSh_child_one'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1086#1089#1090#1072#1090#1082#1072', '#1096#1090
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountSh_child_sec: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074'-2, '#1096#1090
+            DataBinding.FieldName = 'AmountSh_child_sec'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1089' '#1087#1088#1080#1093#1086#1076#1072', '#1096#1090
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountSh_diff: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089', '#1096#1090
+            DataBinding.FieldName = 'AmountSh_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1085#1077' '#1093#1074#1072#1090#1072#1077#1090' '#1076#1083#1103' '#1088#1077#1079#1077#1088#1074#1072', '#1096#1090
+            Options.Editing = False
+            Width = 100
+          end
           object AmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'AmountRemains'
@@ -1898,8 +1988,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate_CarInfo_date;GoodsName;GoodsKindName;RetailName_print;O' +
-            'perDate_CarInfo;'
+            'OperDate_CarInfo_date;GoodsGroupName;GoodsName;GoodsKindName;Ope' +
+            'rDate_CarInfo;'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1935,7 +2025,9 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'OperDate_CarInfo_date;GoodsName;GoodsKindName;OperDate;FromName'
+          IndexFieldNames = 
+            'OperDate_CarInfo_date;OperDate_CarInfo;FromName;InvNumber;GoodsG' +
+            'roupName;GoodsName;GoodsKindName;'
           GridView = cxGridDBTableView
         end>
       Params = <

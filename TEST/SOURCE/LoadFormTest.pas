@@ -2728,13 +2728,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_MIChild_DetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_MIChild_DetailForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_UpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_UpdateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_UpdateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_UpdateDialogForm');
-  exit;
-   }
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalDialogForm'));
