@@ -468,7 +468,7 @@ BEGIN
 
                          , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END) AS Amount_sh
                          , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END) AS AmountSecond_sh
-                         , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END) AS Amount_all_sh
+                         , SUM (COALESCE (MovementItem.Amount,0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END) AS Amount_all_sh
 
                     FROM tmpMIChild AS MovementItem
                          LEFT JOIN tmpMIFloat_Child AS MIFloat_MovementId
@@ -568,9 +568,9 @@ BEGIN
                              , SUM (tmpMI_Child.AmountSecond_Weight) AS AmountWeight_child_sec -- с Прихода
                              , SUM (tmpMI_Child.Amount_all_Weight)   AS AmountWeight_child     -- Итого
 
-                             , SUM (tmpMI_Child.Amount_sh)       AS AmountSh_child_one -- с Остатка
-                             , SUM (tmpMI_Child.AmountSecond_sh) AS AmountSh_child_sec -- с Прихода
-                             , SUM (tmpMI_Child.Amount_all_sh)   AS AmountSh_child     -- Итого
+                             , SUM (COALESCE (tmpMI_Child.Amount_sh,0))       AS AmountSh_child_one -- с Остатка
+                             , SUM (COALESCE (tmpMI_Child.AmountSecond_sh,0)) AS AmountSh_child_sec -- с Прихода
+                             , SUM (COALESCE (tmpMI_Child.Amount_all_sh,0))   AS AmountSh_child     -- Итого
     
                              --
                              , CASE WHEN inIsRemains = FALSE 
