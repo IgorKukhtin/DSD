@@ -1325,9 +1325,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -1433,7 +1430,6 @@ object OrderClientForm: TOrderClientForm
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -1460,10 +1456,16 @@ object OrderClientForm: TOrderClientForm
           object PartnerName_ch3: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'PartnerName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1089#1090#1072#1074#1097#1080#1082' ('#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077')'
-            Options.Editing = False
             Width = 120
           end
           object InvNumber_ch3: TcxGridDBColumn
@@ -1518,10 +1520,16 @@ object OrderClientForm: TOrderClientForm
           object ObjectCode_ch3: TcxGridDBColumn
             Caption = 'Interne Nr'
             DataBinding.FieldName = 'ObjectCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
-            Options.Editing = False
             Width = 55
           end
           object Article_Object_ch3: TcxGridDBColumn
@@ -1551,7 +1559,6 @@ object OrderClientForm: TOrderClientForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 200
           end
           object DescName_ch3: TcxGridDBColumn
@@ -1562,6 +1569,16 @@ object OrderClientForm: TOrderClientForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object Comment_goods_ch3: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
+            DataBinding.FieldName = 'Comment_goods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            Options.Editing = False
+            Width = 80
           end
           object MeasureName_ch3: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -1583,9 +1600,15 @@ object OrderClientForm: TOrderClientForm
           object ProdColorName_ch3: TcxGridDBColumn
             Caption = 'Farbe'
             DataBinding.FieldName = 'ProdColorName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
           end
           object ProdOptionsName_ch3: TcxGridDBColumn

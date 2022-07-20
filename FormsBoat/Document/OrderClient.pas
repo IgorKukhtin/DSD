@@ -386,6 +386,7 @@ type
     actPrintStructureGoods: TdsdPrintAction;
     bb: TdxBarButton;
     MaterialOptionsName_ch2: TcxGridDBColumn;
+    Comment_goods_ch3: TcxGridDBColumn;
   private
   public
   end;

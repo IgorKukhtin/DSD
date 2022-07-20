@@ -3363,6 +3363,14 @@ object ProductForm: TProductForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMaterialOptionsId'
+        Value = Null
+        Component = ProdColorItemsCDS
+        ComponentItem = 'MaterialOptionsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId_OrderClient'
         Value = Null
         Component = MasterCDS
