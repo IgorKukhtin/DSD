@@ -78,6 +78,11 @@ RETURNS TABLE (MovementId             Integer
              , AmountWeight_child        TFloat -- Итого        вес
              , AmountWeight_diff         TFloat -- разница резерв с итого заявка    вес
 
+             , AmountSh_child_one    TFloat -- с Остатка    шт
+             , AmountSh_child_sec    TFloat -- с Прихода    шт
+             , AmountSh_child        TFloat -- Итого        шт
+             , AmountSh_diff         TFloat -- разница резерв с итого заявка    шт
+
              , AmountRemains            TFloat
              , AmountRemains_Sh         TFloat
              , AmountRemains_Weight     TFloat 
@@ -461,6 +466,10 @@ BEGIN
                          , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ELSE 0 END) AS AmountSecond_Weight
                          , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_all_Weight
 
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END) AS Amount_sh
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END) AS AmountSecond_sh
+                         , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END) AS Amount_all_sh
+
                     FROM tmpMIChild AS MovementItem
                          LEFT JOIN tmpMIFloat_Child AS MIFloat_MovementId
                                                     ON MIFloat_MovementId.MovementItemId = MovementItem.Id
@@ -558,7 +567,11 @@ BEGIN
                              , SUM (tmpMI_Child.Amount_Weight)       AS AmountWeight_child_one -- с Остатка
                              , SUM (tmpMI_Child.AmountSecond_Weight) AS AmountWeight_child_sec -- с Прихода
                              , SUM (tmpMI_Child.Amount_all_Weight)   AS AmountWeight_child     -- Итого
-                            
+
+                             , SUM (tmpMI_Child.Amount_sh)       AS AmountSh_child_one -- с Остатка
+                             , SUM (tmpMI_Child.AmountSecond_sh) AS AmountSh_child_sec -- с Прихода
+                             , SUM (tmpMI_Child.Amount_all_sh)   AS AmountSh_child     -- Итого
+    
                              --
                              , CASE WHEN inIsRemains = FALSE 
                                     THEN CASE WHEN MIFloat_CountForPrice.ValueData > 0
@@ -767,7 +780,10 @@ BEGIN
                             , SUM (tmpMovement2.AmountWeight_child_one) AS AmountWeight_child_one
                             , SUM (tmpMovement2.AmountWeight_child_sec) AS AmountWeight_child_sec
                             , SUM (tmpMovement2.AmountWeight_child)     AS AmountWeight_child
-                            
+
+                            , SUM (tmpMovement2.AmountSh_child_one) AS AmountSh_child_one
+                            , SUM (tmpMovement2.AmountSh_child_sec) AS AmountSh_child_sec
+                            , SUM (tmpMovement2.AmountSh_child)     AS AmountSh_child 
                             --
 
                             , SUM (Amount1 * Price) AS Summ1
@@ -1101,9 +1117,14 @@ BEGIN
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (COALESCE (tmpMovement.Amount,0) - COALESCE (tmpMovement.Amount_Child,0) ) ELSE 0 END ::TFloat AS Amount_diff-- разница резерв с итого заявка  
            --вес
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_child_one  ELSE 0 END  ::TFloat AS AmountWeight_child_one       -- с Остатка
-           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_child_sec  ELSE 0 END  ::TFloat AS AmountWeight_child_sec -- с Прихода
-           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_child  ELSE 0 END      ::TFloat AS AmountWeight_child  -- Итого
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_child_sec  ELSE 0 END  ::TFloat AS AmountWeight_child_sec       -- с Прихода
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_child  ELSE 0 END      ::TFloat AS AmountWeight_child           -- Итого
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (COALESCE (tmpMovement.Amount_Weight,0) - COALESCE (tmpMovement.AmountWeight_child,0) ) ELSE 0 END ::TFloat AS AmountWeight_diff-- разница резерв с итого заявка  
+           --шт
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountSh_child_one  ELSE 0 END  ::TFloat AS AmountSh_child_one       -- с Остатка
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountSh_child_sec  ELSE 0 END  ::TFloat AS AmountSh_child_sec       -- с Прихода
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountSh_child  ELSE 0 END      ::TFloat AS AmountSh_child           -- Итого
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (COALESCE (tmpMovement.Amount_Sh,0) - COALESCE (tmpMovement.AmountSh_child,0) ) ELSE 0 END ::TFloat AS AmountSh_diff-- разница резерв с итого заявка  
 
 
              --остатки
@@ -1300,4 +1321,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_OrderExternal (inStartDate:= '21.06.2022', inEndDate:= '21.06.2022', inJuridicalId:=0, inRetailId:= 0, inFromId := 0, inToId := 346093, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 1986, inIsByDoc := False, inIsRemains := TRUE, inSession:= zfCalc_UserAdmin())
  --WHERE GOODSID = 7493  
- select * from gpReport_OrderExternal(inStartDate := ('11.07.2022')::TDateTime , inEndDate := ('11.07.2022')::TDateTime , inJuridicalId := 0 , inRetailId := 0 , inFromId := 0 , inToId := 8459 , inRouteId := 0 , inRouteSortingId := 0 , inGoodsGroupId := 0 , inIsByDoc := 'True' , inIsRemains := 'False' ,  inSession := '9457');
+ --select * from gpReport_OrderExternal(inStartDate := ('11.07.2022')::TDateTime , inEndDate := ('11.07.2022')::TDateTime , inJuridicalId := 0 , inRetailId := 0 , inFromId := 0 , inToId := 8459 , inRouteId := 0 , inRouteSortingId := 0 , inGoodsGroupId := 0 , inIsByDoc := 'True' , inIsRemains := 'False' ,  inSession := '9457');

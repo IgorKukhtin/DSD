@@ -51,6 +51,12 @@ RETURNS TABLE (OperDate        TDateTime
                -- Итого не хватает для резерва, вес
              , AmountWeight_diff      TFloat
 
+               -- Резервы, шт
+             , AmountSh_child_one   TFloat
+             , AmountSh_child_sec   TFloat
+             , AmountSh_child       TFloat
+             , AmountSh_diff        TFloat
+           
                --
              , OperDate_CarInfo_calc      TDateTime
              , DayOfWeekName_CarInfo_calc TVarChar
@@ -193,6 +199,10 @@ BEGIN
                          , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ELSE 0 END) AS AmountSecond_Weight
                          , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_all_Weight
 
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END) AS Amount_sh
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END) AS AmountSecond_sh
+                         , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 0 ELSE 0 END) AS Amount_all_sh
+
                     FROM tmpMIChild AS MovementItem
                          LEFT JOIN tmpMIFloat_Child AS MIFloat_MovementId
                                                     ON MIFloat_MovementId.MovementItemId = MovementItem.Id
@@ -206,16 +216,16 @@ BEGIN
                     GROUP BY MovementItem.ParentId
                    )
 
-              -- Сортировка № п/п
-            , tmpNPP AS (SELECT -- Дата/время отгрузки
-                                tmp.OperDate_CarInfo
-                                -- Дата смены
-                              , tmp.OperDate_CarInfo_date
-                                -- № п/п
-                              , ROW_NUMBER() OVER (PARTITION BY tmp.OperDate_CarInfo_date ORDER BY tmp.OperDate_CarInfo ASC) AS Ord
-                         FROM (SELECT DISTINCT tmpMovementAll.OperDate_CarInfo , tmpMovementAll.OperDate_CarInfo_date FROM tmpMovementAll
-                              ) AS tmp
-                        )
+         -- Сортировка № п/п
+       , tmpNPP AS (SELECT -- Дата/время отгрузки
+                           tmp.OperDate_CarInfo
+                           -- Дата смены
+                         , tmp.OperDate_CarInfo_date
+                           -- № п/п
+                         , ROW_NUMBER() OVER (PARTITION BY tmp.OperDate_CarInfo_date ORDER BY tmp.OperDate_CarInfo ASC) AS Ord
+                    FROM (SELECT DISTINCT tmpMovementAll.OperDate_CarInfo , tmpMovementAll.OperDate_CarInfo_date FROM tmpMovementAll
+                         ) AS tmp
+                   )
        , tmpNPP_date AS (SELECT -- Дата смены
                                 tmp.OperDate_CarInfo_date
                                 -- № п/п
@@ -273,11 +283,20 @@ BEGIN
                             , SUM (tmpMI_Child.AmountSecond_Weight) AS AmountWeight_child_sec -- с Прихода
                             , SUM (tmpMI_Child.Amount_all_Weight)   AS AmountWeight_child     -- Итого
 
+                            , SUM (tmpMI_Child.Amount_sh)           AS AmountSh_child_one -- с Остатка
+                            , SUM (tmpMI_Child.AmountSecond_sh)     AS AmountSh_child_sec -- с Прихода
+                            , SUM (tmpMI_Child.Amount_all_sh)       AS AmountSh_child     -- Итого
+
                               -- Итого не хватает для резерва, вес
                             , SUM ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
                                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
                                  - COALESCE (tmpMI_Child.Amount_all_Weight, 0)
                                   ) AS AmountWeight_diff
+
+                            , SUM ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 0 ELSE 0 END
+                                 - COALESCE (tmpMI_Child.Amount_all_sh, 0)
+                                  ) AS AmountSh_diff
 
                        FROM tmpMovementAll AS Movement
                             LEFT JOIN tmpWeighing ON tmpWeighing.Id = Movement.Id
@@ -453,9 +472,15 @@ BEGIN
              -- Резервы, вес
            , tmpMovement.AmountWeight_child_one   ::TFloat AS AmountWeight_child_one
            , tmpMovement.AmountWeight_child_sec   ::TFloat AS AmountWeight_child_sec
-           , tmpMovement.AmountWeight_child       ::TFloat AS AmountWeight_child
+           , tmpMovement.AmountWeight_child       ::TFloat AS AmountWeight_child    
              -- Итого не хватает для резерва, вес
            , tmpMovement.AmountWeight_diff        ::TFloat AS AmountWeight_diff
+             -- Резервы, шт
+           , tmpMovement.AmountSh_child_one       ::TFloat AS AmountSh_child_one
+           , tmpMovement.AmountSh_child_sec       ::TFloat AS AmountSh_child_sec
+           , tmpMovement.AmountSh_child           ::TFloat AS AmountSh_child
+             -- Итого не хватает для резерва, шт
+           , tmpMovement.AmountSh_diff            ::TFloat AS AmountSh_diff
 
              -- !!!Дата/время отгрузки - Расчет!!!
            , (CASE WHEN tmpOrderCarInfo.Id IS NULL
