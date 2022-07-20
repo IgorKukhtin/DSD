@@ -221,6 +221,7 @@ BEGIN
                                                    , inProductId              := inProductId
                                                    , inGoodsId                := ioGoodsId
                                                    , inProdColorPatternId     := tmp.ProdColorPatternId
+                                                   , inMaterialOptionsId      := inMaterialOptionsId
                                                    , inMovementId_OrderClient := inMovementId_OrderClient
                                                    , inComment                := inComment
                                                    , inIsEnabled              := TRUE :: Boolean

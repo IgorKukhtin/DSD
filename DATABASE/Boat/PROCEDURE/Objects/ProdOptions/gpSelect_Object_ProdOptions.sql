@@ -271,6 +271,7 @@ BEGIN
                                                ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                                               AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
                
+                         -- Категория Опций
                          LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
                                               ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
                                              AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()

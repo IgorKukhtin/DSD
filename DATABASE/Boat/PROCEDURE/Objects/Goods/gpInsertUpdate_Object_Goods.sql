@@ -29,7 +29,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inMatchCode              TVarChar,
     IN inFeeNumber              TVarChar,
     IN inComment                TVarChar,
-    IN inisArc                  Boolean,
+    IN inIsArc                  Boolean,
     IN inFeet                   TFloat,
     IN inMetres                 TFloat,   
     IN inAmountMin              TFloat,
@@ -179,9 +179,9 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsSize(), ioId, inGoodsSizeId);
    -- сохранили связь с <>
-   IF inProdColorId > 0 THEN
+   --IF inProdColorId > 0 THEN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_ProdColor(), ioId, inProdColorId);
-   END IF;
+   --END IF;
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Partner(), ioId, inPartnerId);
    -- сохранили связь с <>
@@ -197,7 +197,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, vbInfoMoneyId);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Arc(), ioId, inisArc);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Arc(), ioId, inIsArc);
    -- сохранили свойство <>
    --PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_PartnerDate(), ioId, inPartnerDate);
 

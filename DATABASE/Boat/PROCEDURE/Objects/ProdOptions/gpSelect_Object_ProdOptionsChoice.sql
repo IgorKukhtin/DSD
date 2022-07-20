@@ -113,7 +113,7 @@ BEGIN
          , MAX (CASE WHEN tmpSelect.NPP_pcp = 1 THEN tmpSelect.NPP_pcp ELSE 0 END) :: Integer AS NPP_pcp
 
      FROM tmpSelect
-     WHERE (tmpSelect.ProdColorPatternId > 0 AND tmpSelect.ProdColorName <> '')
+     WHERE (tmpSelect.ProdColorPatternId > 0 AND tmpSelect.ProdColorName <> '' AND tmpSelect.NPP_pcp = 1)
         OR tmpSelect.ProdColorPatternId IS NULL
 
      GROUP BY tmpSelect.Name

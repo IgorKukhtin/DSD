@@ -259,6 +259,7 @@ BEGIN
                                                    , inProductId              := ioId
                                                    , inGoodsId                := tmp.GoodsId
                                                    , inProdColorPatternId     := tmp.ProdColorPatternId
+                                                   , inMaterialOptionsId      := tmp.MaterialOptionsId
                                                    , inMovementId_OrderClient := inMovementId_OrderClient
                                                    , inComment                := tmp.Comment
                                                    , inIsEnabled              := TRUE

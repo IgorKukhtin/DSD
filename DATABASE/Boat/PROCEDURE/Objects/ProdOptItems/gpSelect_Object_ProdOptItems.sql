@@ -138,12 +138,61 @@ BEGIN
                               -- установленный Шаблон у Лодки
                               WHERE ObjectLink_ReceiptProdModel_master.DescId = zc_ObjectLink_Product_ReceiptProdModel()
                              )
+       -- все Опции - для этой структуры
+     , tmpProdOptions_pcp AS (SELECT Object_ProdOptions.Id, Object_ProdOptions.ObjectCode, Object_ProdOptions.ValueData
+                                     -- всегда установлено
+                                   , tmpProdColorPattern.ProductId
+                                   , tmpProdColorPattern.ReceiptProdModelId
+                                     -- всегда установлена
+                                   , tmpProdColorPattern.ModelId
+                                     -- либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure /либо ПУСТО
+                                   , tmpProdColorPattern.ObjectId  AS GoodsId
+                                     -- либо из Boat Structure Цвет - Goods/Comment
+                                   , tmpProdColorPattern.ProdColorId    AS ProdColorId
+                                   , tmpProdColorPattern.ProdColorName  AS ProdColorName
+                                     -- Boat Structure
+                                   , tmpProdColorPattern.ProdColorPatternId
+                                     -- Категория Опций
+                                   , ObjectLink_MaterialOptions.ChildObjectId AS MaterialOptionsId
+
+                                     -- Кол-во
+                                   , tmpProdColorPattern.Value
+
+                                     -- Цена вх. без НДС - Комплектующие (если есть)
+                                   , tmpProdColorPattern.EKPrice
+                                     -- № п/п, только для 1 берем иныу из Boat Structure
+                                   , ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ProductId, tmpProdColorPattern.ProdColorPatternId
+                                                        ORDER BY CASE WHEN Object_MaterialOptions.ValueData ILIKE 'LISSE/MATT' THEN 0 ELSE 1 END
+                                                               , Object_ProdOptions.ObjectCode ASC
+                                                       ) :: Integer AS NPP_pcp
+
+                              FROM tmpProdColorPattern
+                                   -- Структура у самой Опции
+                                   INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                         ON ObjectLink_ProdColorPattern.ChildObjectId = tmpProdColorPattern.ProdColorPatternId
+                                                        AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ProdOptions_ProdColorPattern()
+                                   --
+                                   INNER JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdColorPattern.ObjectId
+                                   -- Модель лодки
+                                   INNER JOIN ObjectLink AS ObjectLink_Model
+                                                         ON ObjectLink_Model.ObjectId      = Object_ProdOptions.Id
+                                                        AND ObjectLink_Model.DescId        = zc_ObjectLink_ProdOptions_Model()
+                                                        AND ObjectLink_Model.ChildObjectId = tmpProdColorPattern.ModelId
+                                   -- Категория Опций
+                                   LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                        ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                                                       AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ProdOptions_MaterialOptions()
+                                   LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+
+                              WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
+                                AND Object_ProdOptions.isErased = FALSE
+                             )
            -- все Опции по моделям
          , tmpProdOptions AS (SELECT Object_ProdOptions.Id, Object_ProdOptions.ObjectCode, Object_ProdOptions.ValueData
                                      -- здесь нет значений, т.к. эти Опции для "всех" Лодок
                                    , 0 AS ProductId
                                    , 0 AS ReceiptProdModelId
-                                     -- как правило не установлена
+                                     -- как правило !!установлена!!
                                    , COALESCE (ObjectLink_Model.ChildObjectId, 0) AS ModelId
                                      -- 
                                    , ObjectLink_Goods.ChildObjectId               AS GoodsId
@@ -204,52 +253,48 @@ BEGIN
 
                              UNION ALL
                               -- для этой структуры
-                              SELECT Object_ProdOptions.Id, Object_ProdOptions.ObjectCode, Object_ProdOptions.ValueData
+                              SELECT tmpProdOptions_pcp.Id, tmpProdOptions_pcp.ObjectCode, tmpProdOptions_pcp.ValueData
                                      -- всегда установлено
-                                   , tmpProdColorPattern.ProductId
-                                   , tmpProdColorPattern.ReceiptProdModelId
+                                   , tmpProdOptions_pcp.ProductId
+                                   , tmpProdOptions_pcp.ReceiptProdModelId
                                      -- всегда установлена
-                                   , tmpProdColorPattern.ModelId
-                                     -- либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure /либо ПУСТО
-                                   , tmpProdColorPattern.ObjectId AS GoodsId
-                                     -- Цвет /либо Comment из Boat Structure
-                                   , tmpProdColorPattern.ProdColorId
-                                   , tmpProdColorPattern.ProdColorName
+                                   , tmpProdOptions_pcp.ModelId
+                                     -- либо Goods-Options, либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure /либо ПУСТО
+                                   , COALESCE (ObjectLink_Goods.ChildObjectId, CASE WHEN tmpProdOptions_pcp.NPP_pcp = 1 THEN tmpProdOptions_pcp.GoodsId ELSE 0 END)    AS GoodsId
+                                     -- либо Цвет Goods-Options, либо из Boat Structure Цвет - Goods/Comment
+                                   , COALESCE (Object_ProdColor.Id, CASE WHEN tmpProdOptions_pcp.NPP_pcp = 1 THEN tmpProdOptions_pcp.ProdColorId ELSE 0 END)           AS ProdColorId
+                                   , COALESCE (Object_ProdColor.ValueData, CASE WHEN tmpProdOptions_pcp.NPP_pcp = 1 THEN tmpProdOptions_pcp.ProdColorName ELSE '' END) AS ProdColorName
                                      -- Boat Structure
-                                   , tmpProdColorPattern.ProdColorPatternId
-                                   , ObjectLink_MaterialOptions.ChildObjectId AS MaterialOptionsId
+                                   , tmpProdOptions_pcp.ProdColorPatternId
+                                     -- Категория Опций
+                                   , tmpProdOptions_pcp.MaterialOptionsId
 
                                      -- Кол-во
-                                   , tmpProdColorPattern.Value       AS Value
+                                   , tmpProdOptions_pcp.Value
                                      -- Цена вх. без НДС - Комплектующие (если есть)
-                                   , tmpProdColorPattern.EKPrice     AS EKPrice
+                                   , COALESCE (ObjectFloat_EKPrice.ValueData, tmpProdOptions_pcp.EKPrice) AS EKPrice
                                      -- опция - Цена продажи без НДС
                                    , ObjectFloat_SalePrice.ValueData AS SalePrice
 
-                              FROM tmpProdColorPattern
-                                   -- Структура у самой Опции
-                                   INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
-                                                         ON ObjectLink_ProdColorPattern.ChildObjectId = tmpProdColorPattern.ProdColorPatternId
-                                                        AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ProdOptions_ProdColorPattern()
-                                   --
-                                   INNER JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdColorPattern.ObjectId
-                                   -- Модель лодки
-                                   INNER JOIN ObjectLink AS ObjectLink_Model
-                                                         ON ObjectLink_Model.ObjectId      = Object_ProdOptions.Id
-                                                        AND ObjectLink_Model.DescId        = zc_ObjectLink_ProdOptions_Model()
-                                                        AND ObjectLink_Model.ChildObjectId = tmpProdColorPattern.ModelId
+                              FROM tmpProdOptions_pcp
                                    -- Цена продажи без НДС Опции
                                    LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
-                                                         ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
+                                                         ON ObjectFloat_SalePrice.ObjectId = tmpProdOptions_pcp.Id
                                                         AND ObjectFloat_SalePrice.DescId   = zc_ObjectFloat_ProdOptions_SalePrice()
+                                   -- Комплектующие - Опции
+                                   LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                        ON ObjectLink_Goods.ObjectId = tmpProdOptions_pcp.Id
+                                                       AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdOptions_Goods()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
+                                                        ON ObjectLink_Goods_ProdColor.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                       AND ObjectLink_Goods_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
+                                   LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
 
-                                   LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
-                                                        ON ObjectLink_MaterialOptions.ObjectId = Object_ProdOptions.Id
-                                                       AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
-
-                              WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
-                                AND Object_ProdOptions.isErased = FALSE
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                                         ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                        AND ObjectFloat_EKPrice.DescId   = zc_ObjectFloat_Goods_EKPrice()
                              )
+
       -- ??ВСЕ?? документы Заказ Клиента
     , tmpOrderClient AS (SELECT Movement.Id                              AS MovementId
                               , MovementLinkObject_Product.ObjectId      AS ProductId
@@ -651,10 +696,10 @@ BEGIN
                               AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ProdColorPattern_ColorPattern()
           LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
 
-               LEFT JOIN ObjectLink AS ObjectLink_ColorPattern_Model
-                                    ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ColorPattern.ChildObjectId
-                                   AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
-               LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern_Model
+                               ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ColorPattern.ChildObjectId
+                              AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
+          LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
 
           LEFT JOIN ObjectFloat AS ObjectFloat_ProdOptions_CodeVergl
                                 ON ObjectFloat_ProdOptions_CodeVergl.ObjectId = Object_ProdOptions.Id

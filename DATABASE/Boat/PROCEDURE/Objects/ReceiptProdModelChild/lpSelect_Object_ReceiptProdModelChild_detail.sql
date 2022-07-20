@@ -224,9 +224,13 @@ BEGIN
             , tmpRes.ReceiptGoodsChildId
 
             , Object_ProdColorGroup.Id AS ProdColorGroupId, Object_ProdColorGroup.ValueData AS ProdColorGroupName
+              -- Boat Structure
             , tmpRes.ProdColorPatternId
-            --, Object_ProdColorPattern.ValueData AS ProdColorPatternName
-            , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END || ' (' || Object_Model_pcp.ValueData || ')') :: TVarChar  AS  ProdColorPatternName
+            , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData
+                                              , Object_ProdColorPattern.ValueData
+                                              , Object_Model_pcp.ValueData
+                                              , Object_ProdColorPattern.isErased
+                                               ) AS ProdColorPatternName
 
               -- значение Farbe
             , Object_ProdColor.Id           AS ProdColorId

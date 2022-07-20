@@ -53,7 +53,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
 
      vbUserId:= lpGetUserBySession (inSession);
-     
+
      --из шапки лодка по ней находим модель
      vbReceiptProdModelId := (SELECT ObjectLink_Product_ReceiptProdModel.ChildObjectId
                               FROM MovementLinkObject AS MovementLinkObject_Product
@@ -201,7 +201,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModelChild_Object
                                  ON ObjectLink_ReceiptProdModelChild_Object.ChildObjectId = _tmpItem.ObjectId
                                 AND ObjectLink_ReceiptProdModelChild_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
-            ---берем  не удаленные
+            --- берем не удаленные
             INNER JOIN Object AS Object_ReceiptProdModelChild ON Object_ReceiptProdModelChild.Id = ObjectLink_ReceiptProdModelChild_Object.ObjectId
                                                              AND Object_ReceiptProdModelChild.IsErased = FALSE
             -- ReceiptProdModel по лодке
@@ -234,6 +234,14 @@ BEGIN
                        GROUP BY _tmpItem.ParentId
                       )
          , tmpProdColor AS (SELECT _tmpItem.GoodsId
+                                 , STRING_AGG (DISTINCT _tmpProdColorItems.ProdColorName, '; ') AS ProdColorName
+                            FROM _tmpItem
+                                 JOIN _tmpProdColorItems ON _tmpProdColorItems.ProdColorPatternId = _tmpItem.ProdColorPatternId
+                                                        AND _tmpProdColorItems.ProdColorName      <> ''
+                            WHERE _tmpItem.GoodsId > 0
+                            GROUP BY _tmpItem.GoodsId
+                           )
+     , tmpProdColor_all AS (SELECT _tmpItem.GoodsId
                                  , STRING_AGG (_tmpProdColorItems.ProdColorName, '; ') AS ProdColorName
                             FROM _tmpItem
                                  JOIN _tmpProdColorItems ON _tmpProdColorItems.ProdColorPatternId = _tmpItem.ProdColorPatternId
@@ -241,7 +249,8 @@ BEGIN
                             WHERE _tmpItem.GoodsId > 0
                             GROUP BY _tmpItem.GoodsId
                            )
- 
+
+      -- Результат
       SELECT
              _tmpItem.MovementItemId                  AS MovementItemId
            , _tmpItem.ObjectId                        AS KeyId
@@ -257,15 +266,21 @@ BEGIN
            , Object_Partner.Id                        AS PartnerId
            , Object_Partner.ValueData                 AS PartnerName
 
-           , _tmpItem.AmountBasis                     AS Amount_basis   -- Количество шаблон сборки
-           --,  COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) AS Amount_unit    -- Количество резерв
-           , CASE WHEN ObjectDesc_Object.Id = zc_Object_Goods()          THEN COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) ELSE 0 END ::TFloat   AS Amount_unit    -- Количество резерв
-           , CASE WHEN ObjectDesc_Object.Id = zc_Object_ReceiptService() THEN COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) ELSE 0 END ::TFloat   AS Value_service  -- работы/услуги
-           
-           , _tmpItem.AmountPartner                   AS Amount_partner -- Количество заказ поставщику
+             -- Количество шаблон сборки
+           , _tmpItem.AmountBasis                     AS Amount_basis
+             -- Количество резерв
+             --,  COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) AS Amount_unit
+             -- Количество резерв
+           , CASE WHEN ObjectDesc_Object.Id = zc_Object_Goods()          THEN COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) ELSE 0 END ::TFloat   AS Amount_unit
+             -- работы/услуги
+           , CASE WHEN ObjectDesc_Object.Id = zc_Object_ReceiptService() THEN COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) ELSE 0 END ::TFloat   AS Value_service
+             -- Количество заказ поставщику
+           , _tmpItem.AmountPartner                   AS Amount_partner
 
-           , _tmpItem.OperPrice                       AS OperPrice_basis   -- Цена вх без НДС
-           , _tmpItem.OperPricePartner                AS OperPrice_partner -- Цена вх без НДС
+             -- Цена вх без НДС
+           , _tmpItem.OperPrice                       AS OperPrice_basis
+             -- Цена вх без НДС
+           , _tmpItem.OperPricePartner                AS OperPrice_partner
              -- Цена вх. с затратами без НДС
            , CASE WHEN tmpSumm.Amount_unit > 0 THEN COALESCE (tmpSumm.TotalSummCost_unit / tmpSumm.Amount_unit) ELSE 0 END :: TFloat AS OperPrice_unit
 
@@ -279,16 +294,18 @@ BEGIN
            , _tmpItem.isErased
 
            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_GoodsGroup.ValueData    AS GoodsGroupName
-           , Object_Measure.ValueData       AS MeasureName
-           , Object_GoodsTag.ValueData      AS GoodsTagName
-           , Object_GoodsType.ValueData     AS GoodsTypeName
+           , Object_GoodsGroup.ValueData           AS GoodsGroupName
+           , Object_Measure.ValueData              AS MeasureName
+           , ObjectString_Goods_Comment.ValueData  AS Comment_goods
+           , Object_GoodsTag.ValueData             AS GoodsTagName
+           , Object_GoodsType.ValueData            AS GoodsTypeName
+
            , CASE WHEN Object_ProdColor.ValueData <> ''
-                  THEN Object_ProdColor.ValueData
-                    || CASE WHEN tmpProdColor.ProdColorName <> '' THEN '; ' || tmpProdColor.ProdColorName ELSE '' END
+                  THEN CASE WHEN tmpProdColor.ProdColorName <> '' OR 1=1 THEN ''  ELSE Object_ProdColor.ValueData END
+                    || CASE WHEN tmpProdColor.ProdColorName <> '' THEN '_' || tmpProdColor.ProdColorName ELSE '' END
                   ELSE tmpProdColor.ProdColorName
-             END :: TVarChar AS ProdColorName
-           , Object_ProdOptions.ValueData   AS ProdOptionsName
+             END :: TVarChar                       AS ProdColorName
+           , Object_ProdOptions.ValueData          AS ProdOptionsName
 
            , Movement_OrderPartner.Id                                   AS MovementId_OrderPartner
            , zfConvert_StringToNumber (Movement_OrderPartner.InvNumber) AS InvNumber
@@ -307,6 +324,10 @@ BEGIN
                                    ON ObjectString_Article_object.ObjectId = Object_Object.Id
                                   AND ObjectString_Article_object.DescId   = zc_ObjectString_Article()
             LEFT JOIN ObjectDesc AS ObjectDesc_Object ON ObjectDesc_Object.Id = Object_Object.DescId
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_Comment
+                                   ON ObjectString_Goods_Comment.ObjectId = Object_Object.Id
+                                  AND ObjectString_Goods_Comment.DescId   = zc_ObjectString_Goods_Comment()
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = _tmpItem.UnitId
 
@@ -404,19 +425,19 @@ BEGIN
            , zfConvert_StringToNumber (Movement_OrderPartner.InvNumber) AS InvNumber
            , Movement_OrderPartner.OperDate
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
-           
+
            , MIString_PartNumber.ValueData AS PartNumber
 
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber_partion
            , Movement.OperDate  AS OperDate_partion
-           
+
            , _tmpItem.PartionId
 
            , _tmpReceiptLevel.ReceiptLevelName :: TVarChar AS ReceiptLevelName
 
        FROM _tmpItem
             LEFT JOIN _tmpItem AS _tmpItem_parent ON _tmpItem_parent.MovementItemId = _tmpItem.ParentId
-            
+
             LEFT JOIN _tmpProdColorItems ON _tmpProdColorItems.ProdColorPatternId = _tmpItem.ProdColorPatternId
 
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = _tmpItem.PartionId
@@ -461,7 +482,7 @@ BEGIN
 
             LEFT JOIN _tmpReceiptLevel ON _tmpReceiptLevel.GoodsId = _tmpItem.ObjectId  and 1=0
      --WHERE _tmpItem.GoodsId > 0
-       WHERE Object_Object.DescId <> zc_Object_ProdColorPattern() 
+       WHERE Object_Object.DescId <> zc_Object_ProdColorPattern()
      ;
      RETURN NEXT Cursor2;
 

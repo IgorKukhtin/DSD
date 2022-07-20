@@ -1,16 +1,18 @@
 -- Function: gpInsertUpdate_Object_ProdColorItems()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorItems(
  INOUT ioId                     Integer   ,    -- ключ объекта <Лодки>
-    IN inCode                   Integer   ,    -- Код объекта 
+    IN inCode                   Integer   ,    -- Код объекта
     IN inProductId              Integer   ,
     IN inGoodsId                Integer   ,
     IN inProdColorPatternId     Integer   ,
+    IN inMaterialOptionsId      Integer   ,
     IN inMovementId_OrderClient Integer   ,
     IN inComment                TVarChar  ,
-    IN inIsEnabled              Boolean   , 
+    IN inIsEnabled              Boolean   ,
  INOUT ioIsProdOptions          Boolean   ,    -- добавить как опцию
     IN inSession                TVarChar       -- сессия пользователя
 )
@@ -19,7 +21,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
-   DECLARE vbIsInsert Boolean; 
+   DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdColorItems());
@@ -50,6 +52,31 @@ BEGIN
                                              , inUserId        := vbUserId
                                               );
    END IF;
+   -- Проверка
+   IF inIsEnabled = TRUE
+      AND COALESCE (inMaterialOptionsId, 0) = 0
+      -- Если есть в опциях
+      AND EXISTS (SELECT 1
+                  FROM Object AS Object_ProdOptions
+                       -- Категория Опций
+                       INNER JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                             ON ObjectLink_MaterialOptions.ObjectId      = Object_ProdOptions.Id
+                                            AND ObjectLink_MaterialOptions.DescId        = zc_ObjectLink_ProdOptions_MaterialOptions()
+                                            AND ObjectLink_MaterialOptions.ChildObjectId > 0
+                       -- только с такой структурой
+                       INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                             ON ObjectLink_ProdColorPattern.ObjectId      = Object_ProdOptions.Id
+                                            AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ProdOptions_ProdColorPattern()
+                                            AND ObjectLink_ProdColorPattern.ChildObjectId = inProdColorPatternId
+                  WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
+                    AND Object_ProdOptions.isErased = FALSE
+                 )
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент <Категория Опций> не установлен.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdColorItems'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
 
 
    IF inIsEnabled = FALSE
@@ -68,7 +95,7 @@ BEGIN
    ELSE
        -- определяем признак Создание/Корректировка
        vbIsInsert:= COALESCE (ioId, 0) = 0;
-    
+
         -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
        IF COALESCE (ioId,0) = 0 AND inCode = 0
        THEN
@@ -79,17 +106,17 @@ BEGIN
                                                               AND ObjectLink_Product.DescId = zc_ObjectLink_ProdColorItems_Product()
                                                               AND ObjectLink_Product.ChildObjectId = inProductId AND COALESCE (inProductId,0) <> 0
                                     WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems())
-                                   , 0) + 1; 
-       ELSE 
+                                   , 0) + 1;
+       ELSE
             vbCode_calc:= inCode;
        END IF;
-       
+
        -- проверка прав уникальности для свойства <Наименование >
        --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdColorItems(), inName, vbUserId);
-    
+
        -- сохранили <Объект>
        ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdColorItems(), vbCode_calc, '');
-    
+
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColorItems_Comment(), ioId, inComment);
 
@@ -98,12 +125,15 @@ BEGIN
 
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_Product(), ioId, inProductId);
-    
+
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_Goods(), ioId, inGoodsId);
-    
+
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_ProdColorPattern(), ioId, inProdColorPatternId);
+
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_MaterialOptions(), ioId, inMaterialOptionsId);
 
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdColorItems_OrderClient(), ioId, inMovementId_OrderClient);

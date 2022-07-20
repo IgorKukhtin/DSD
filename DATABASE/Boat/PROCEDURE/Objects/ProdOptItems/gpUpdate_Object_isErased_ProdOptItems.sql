@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_ProdOptItems (Integer, Boolean,
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_ProdOptItems(
     IN inObjectId Integer,
-    IN inIsErased Boolean, 
+    IN inIsErased Boolean,
     IN inSession  TVarChar
 )
 RETURNS VOID
@@ -12,6 +12,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbProdColorPatternId Integer;
+   DECLARE vbProdOptionsId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_ProdOptItems());
@@ -41,13 +42,14 @@ BEGIN
                                                       , inProductId              := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId   = zc_ObjectLink_ProdOptItems_Product())
                                                       , inGoodsId                := tmp.GoodsId_Receipt
                                                       , inProdColorPatternId     := tmp.ProdColorPatternId
+                                                      , inMaterialOptionsId      := tmp.MaterialOptionsId_Receipt
                                                       , inMovementId_OrderClient := tmp.MovementId_OrderClient
                                                       , inComment                := '' :: TVarChar
                                                       , inIsEnabled              := TRUE :: Boolean
                                                       , ioIsProdOptions          := FALSE
                                                       , inSession                := inSession
                                                       )
-                                                      
+
            FROM gpSelect_Object_ProdColorItems (0,FALSE,FALSE,FALSE, inSession) as tmp
            -- Лодка
            WHERE tmp.MovementId_OrderClient = (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = inObjectId AND OFl.DescId   = zc_ObjectFloat_ProdOptItems_OrderClient()) :: Integer
@@ -56,19 +58,25 @@ BEGIN
           ;
 
        ELSE
+           vbProdOptionsId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_ProdOptItems_ProdOptions());
            -- восстанавливаем в Items Boat Structure - Факт
            PERFORM gpInsertUpdate_Object_ProdColorItems(ioId                     := tmp.Id
                                                       , inCode                   := tmp.Code
                                                       , inProductId              := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId   = zc_ObjectLink_ProdOptItems_Product())
                                                       , inGoodsId                := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId   = zc_ObjectLink_ProdOptItems_Goods())
                                                       , inProdColorPatternId     := tmp.ProdColorPatternId
+                                                      , inMaterialOptionsId      := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbProdOptionsId AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions())
                                                       , inMovementId_OrderClient := tmp.MovementId_OrderClient
                                                       , inComment                := '' :: TVarChar
                                                       , inIsEnabled              := TRUE :: Boolean
-                                                      , ioIsProdOptions          := CASE WHEN tmp.GoodsId_Receipt <> (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId   = zc_ObjectLink_ProdOptItems_Goods()) THEN TRUE ELSE FALSE END
+                                                      , ioIsProdOptions          := CASE WHEN tmp.GoodsId_Receipt           <> (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_ProdOptItems_Goods())
+                                                                                           OR tmp.MaterialOptionsId_Receipt <> (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbProdOptionsId AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions())
+                                                                                         THEN TRUE
+                                                                                         ELSE FALSE
+                                                                                    END
                                                       , inSession                := inSession
-                                                      )
-                                                      
+                                                       )
+
            FROM gpSelect_Object_ProdColorItems (0,FALSE,FALSE,FALSE, inSession) as tmp
            -- Лодка
            WHERE tmp.MovementId_OrderClient = (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = inObjectId AND OFl.DescId   = zc_ObjectFloat_ProdOptItems_OrderClient()) :: Integer
@@ -77,9 +85,9 @@ BEGIN
           ;
 
        END IF;
-       
+
    END IF;
-   
+
    -- изменили
    PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inIsErased:=inIsErased, inUserId:= vbUserId);
 
