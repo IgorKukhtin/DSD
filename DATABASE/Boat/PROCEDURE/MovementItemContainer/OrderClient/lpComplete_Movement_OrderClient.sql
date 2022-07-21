@@ -589,6 +589,7 @@ BEGIN
                                                    , inPartionId           := NULL
                                                    , inObjectId            := CASE WHEN _tmpItem.ObjectId > 0 THEN _tmpItem.ObjectId ELSE _tmpItem.ProdColorPatternId END
                                                    , inGoodsId             := _tmpItem.ObjectId_parent
+                                                   , inGoodsId_Basis       := _tmpItem.ObjectId_Basis
                                                    , inAmountBasis         := _tmpItem.OperCount
                                                    , inAmount              := CASE WHEN _tmpItem.ObjectDescId = zc_Object_ReceiptService() THEN _tmpItem.OperCount ELSE 0 END
                                                    , inAmountPartner       := 0 -- !!!временно!!!
@@ -605,6 +606,8 @@ BEGIN
         FROM (-- Собрали Узлы
               SELECT 0 AS ObjectId_parent
                    , CASE WHEN _tmpItem.ObjectId_parent_find > 0 THEN _tmpItem.ObjectId_parent_find ELSE _tmpItem.ObjectId_parent END AS ObjectId
+                     -- если была замена, какой узел был в ReceiptProdModel
+                   , CASE WHEN _tmpItem.ObjectId_parent_find <> _tmpItem.ObjectId_parent THEN _tmpItem.ObjectId_parent ELSE 0 END AS ObjectId_Basis
                    , _tmpItem.OperCount_parent AS OperCount
                    , SUM (_tmpItem.OperCount * _tmpItem.OperPrice) / CASE WHEN _tmpItem.OperCount_parent > 0 THEN _tmpItem.OperCount_parent ELSE 1 END AS OperPrice
                    , 0 AS ColorPatternId
@@ -620,13 +623,18 @@ BEGIN
                  --                                                        END
               WHERE _tmpItem.ObjectId_parent <> 0
               GROUP BY CASE WHEN _tmpItem.ObjectId_parent_find > 0 THEN _tmpItem.ObjectId_parent_find ELSE _tmpItem.ObjectId_parent END
+                     , CASE WHEN _tmpItem.ObjectId_parent_find <> _tmpItem.ObjectId_parent THEN _tmpItem.ObjectId_parent ELSE 0 END
                      , _tmpItem.OperCount_parent
                      , CASE WHEN _tmpItem.ProdColorPatternId > 0 THEN 0 ELSE _tmpItem.ProdOptionsId END
              UNION
               -- Все Составляющие
               SELECT DISTINCT
                      CASE WHEN _tmpItem.ObjectId_parent_find > 0 THEN _tmpItem.ObjectId_parent_find ELSE _tmpItem.ObjectId_parent END AS ObjectId_parent
+                     -- 
                    , _tmpItem.ObjectId
+                     -- если была замена, какой узел был в ReceiptProdModel
+                   , CASE WHEN _tmpItem.ObjectId_parent_find <> _tmpItem.ObjectId_parent THEN _tmpItem.ObjectId_parent ELSE 0 END AS ObjectId_Basis
+                     --
                    , _tmpItem.OperCount
                    , _tmpItem.OperPrice
                    , _tmpItem.ColorPatternId
@@ -856,6 +864,7 @@ BEGIN
                                                     , inPartionId           := _tmpItem.PartionId
                                                     , inObjectId            := _tmpItem.ObjectId
                                                     , inGoodsId             := NULL
+                                                    , inGoodsId_Basis       := NULL
                                                     , inAmountBasis         := 0
                                                     , inAmount              := _tmpItem.OperCount
                                                     , inAmountPartner       := 0

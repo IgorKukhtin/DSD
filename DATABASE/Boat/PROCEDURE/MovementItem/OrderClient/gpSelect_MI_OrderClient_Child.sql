@@ -67,7 +67,7 @@ BEGIN
      -- таблица - элементы документа, со всеми свойствами
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer, ParentId Integer, PartionId Integer
                                , UnitId Integer, PartnerId Integer
-                               , GoodsId Integer, ObjectId Integer
+                               , GoodsId Integer, ObjectId Integer, ObjectId_basis Integer
                                , ProdOptionsId Integer
                                , ColorPatternId Integer
                                , ProdColorPatternId  Integer
@@ -79,24 +79,28 @@ BEGIN
                                , isErased Boolean
                                 ) ON COMMIT DROP;
      -- элементы документа
-     INSERT INTO _tmpItem (MovementItemId, ParentId, PartionId, UnitId, PartnerId, GoodsId, ObjectId, ProdOptionsId, ColorPatternId, ProdColorPatternId, Amount, AmountBasis, AmountPartner, OperPrice, OperPricePartner, isErased)
-        SELECT MovementItem.Id                           AS MovementItemId
-             , COALESCE (MovementItem.ParentId, 0)       AS ParentId
-             , MovementItem.PartionId                    AS PartionId
-             , MILinkObject_Unit.ObjectId                AS UnitId
-             , MILinkObject_Partner.ObjectId             AS PartnerId
-
-             , COALESCE (MILinkObject_Goods.ObjectId, 0) AS GoodsId
-             , MovementItem.ObjectId                     AS ObjectId
-             , MILinkObject_ProdOptions.ObjectId         AS ProdOptionsId
-             , MILinkObject_ColorPattern.ObjectId        AS ColorPatternId
-             , MILinkObject_ProdColorPattern.ObjectId    AS ProdColorPatternId
-
-             , MovementItem.Amount                       AS Amount
-             , MIFloat_AmountBasis.ValueData             AS AmountBasis
-             , MIFloat_AmountPartner.ValueData           AS AmountPartner
-             , MIFloat_OperPrice.ValueData               AS OperPrice
-             , MIFloat_OperPricePartner.ValueData        AS OperPricePartner
+     INSERT INTO _tmpItem (MovementItemId, ParentId, PartionId, UnitId, PartnerId, GoodsId, ObjectId, ObjectId_basis, ProdOptionsId, ColorPatternId, ProdColorPatternId, Amount, AmountBasis, AmountPartner, OperPrice, OperPricePartner, isErased)
+        SELECT MovementItem.Id                                                     AS MovementItemId
+             , COALESCE (MovementItem.ParentId, 0)                                 AS ParentId
+             , MovementItem.PartionId                                              AS PartionId
+             , MILinkObject_Unit.ObjectId                                          AS UnitId
+             , MILinkObject_Partner.ObjectId                                       AS PartnerId
+                                                                                   
+             , COALESCE (MILinkObject_Goods.ObjectId, 0)                           AS GoodsId
+             , MovementItem.ObjectId                                               AS ObjectId
+               -- какой узел был в ReceiptProdModel
+             , COALESCE (MILinkObject_Goods_basis.ObjectId, 0)                     AS ObjectId_basis
+--           , COALESCE (MILinkObject_Goods_basis.ObjectId, MovementItem.ObjectId) AS ObjectId_basis
+               --
+             , MILinkObject_ProdOptions.ObjectId                                   AS ProdOptionsId
+             , MILinkObject_ColorPattern.ObjectId                                  AS ColorPatternId
+             , MILinkObject_ProdColorPattern.ObjectId                              AS ProdColorPatternId
+                                                                                   
+             , MovementItem.Amount                                                 AS Amount
+             , MIFloat_AmountBasis.ValueData                                       AS AmountBasis
+             , MIFloat_AmountPartner.ValueData                                     AS AmountPartner
+             , MIFloat_OperPrice.ValueData                                         AS OperPrice
+             , MIFloat_OperPricePartner.ValueData                                  AS OperPricePartner
                -- !!! временно для отладки
            --,  CASE WHEN MS.ValueData = '1' THEN MIFloat_OperPrice.ValueData
 
@@ -118,6 +122,9 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                               ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_basis
+                                              ON MILinkObject_Goods_basis.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Goods_basis.DescId         = zc_MILinkObject_GoodsBasis()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdOptions
                                               ON MILinkObject_ProdOptions.MovementItemId = MovementItem.Id
                                              AND MILinkObject_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
@@ -143,14 +150,17 @@ BEGIN
 
 
      -- таблица - элементы ProdColorItems
-     CREATE TEMP TABLE _tmpProdColorItems (ProductId Integer, ProdColorPatternId Integer, GoodsId Integer, ProdColorName TVarChar) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpProdColorItems (ProductId Integer, ProdColorPatternId Integer, MaterialOptionsId Integer, GoodsId Integer, ProdColorName TVarChar) ON COMMIT DROP;
      --
-     INSERT INTO _tmpProdColorItems (ProductId, ProdColorPatternId, GoodsId, ProdColorName)
+     INSERT INTO _tmpProdColorItems (ProductId, ProdColorPatternId, MaterialOptionsId, GoodsId, ProdColorName)
         SELECT ObjectLink_Product.ChildObjectId          AS ProductId
              , ObjectLink_ProdColorPattern.ChildObjectId AS ProdColorPatternId
+               -- Категория Опций
+             , ObjectLink_MaterialOptions.ChildObjectId  AS MaterialOptionsId
+               --
              , ObjectLink_Goods.ChildObjectId            AS GoodsId
                -- здесь цвет (когда нет GoodsId)
-             , CASE WHEN ObjectLink_Goods.ChildObjectId > 0 THEN COALESCE (Object_ProdColor.ValueData) WHEN TRIM (ObjectString_Comment.ValueData) <> '' THEN TRIM (ObjectString_Comment.ValueData) ELSE TRIM (COALESCE (ObjectString_ProdColorPattern_Comment.ValueData, '')) END AS ProdColorName
+             , CASE WHEN ObjectLink_Goods.ChildObjectId > 0 THEN COALESCE (Object_ProdColor.ValueData) WHEN TRIM (ObjectString_Comment.ValueData) <> '' THEN TRIM (ObjectString_Comment.ValueData) ELSE TRIM (COALESCE (ObjectString_Comment_pcp.ValueData, '')) END AS ProdColorName
 
         FROM Object AS Object_ProdColorItems
              -- Лодка
@@ -163,6 +173,10 @@ BEGIN
                                    AND ObjectFloat_MovementId_OrderClient.DescId    = zc_ObjectFloat_ProdColorItems_OrderClient()
                                    AND ObjectFloat_MovementId_OrderClient.ValueData = inMovementId
 
+             -- Категория Опций
+             LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                  ON ObjectLink_MaterialOptions.ObjectId = Object_ProdColorItems.Id
+                                 AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ProdColorItems_MaterialOptions()
              -- здесь цвет, если было изменение для Лодки (когда нет GoodsId)
              LEFT JOIN ObjectString AS ObjectString_Comment
                                     ON ObjectString_Comment.ObjectId = Object_ProdColorItems.Id
@@ -182,9 +196,9 @@ BEGIN
                                   ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdColorItems.Id
                                  AND ObjectLink_ProdColorPattern.DescId   = zc_ObjectLink_ProdColorItems_ProdColorPattern()
              -- здесь цвет из Boat Structure (когда нет GoodsId)
-             LEFT JOIN ObjectString AS ObjectString_ProdColorPattern_Comment
-                                    ON ObjectString_ProdColorPattern_Comment.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
-                                   AND ObjectString_ProdColorPattern_Comment.DescId   = zc_ObjectString_ProdColorPattern_Comment()
+             LEFT JOIN ObjectString AS ObjectString_Comment_pcp
+                                    ON ObjectString_Comment_pcp.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
+                                   AND ObjectString_Comment_pcp.DescId   = zc_ObjectString_ProdColorPattern_Comment()
 
         WHERE Object_ProdColorItems.DescId   = zc_Object_ProdColorItems()
           AND Object_ProdColorItems.isErased = FALSE
@@ -193,14 +207,14 @@ BEGIN
      -- таблица - элементы _tmpReceiptLevel
      CREATE TEMP TABLE _tmpReceiptLevel (GoodsId Integer, ReceiptLevelName TVarChar) ON COMMIT DROP;
      --
-     INSERT INTO _tmpReceiptLevel ( GoodsId, ReceiptLevelName)
+     INSERT INTO _tmpReceiptLevel (GoodsId, ReceiptLevelName)
         SELECT DISTINCT
-               _tmpItem.ObjectId AS GoodsId
+               CASE WHEN _tmpItem.ObjectId_basis > 0 THEN _tmpItem.ObjectId_basis ELSE _tmpItem.ObjectId END AS GoodsId
              , Object_ReceiptLevel.ValueData :: TVarChar AS ReceiptLevelName
         FROM _tmpItem
             LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModelChild_Object
-                                 ON ObjectLink_ReceiptProdModelChild_Object.ChildObjectId = _tmpItem.ObjectId
-                                AND ObjectLink_ReceiptProdModelChild_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
+                                 ON ObjectLink_ReceiptProdModelChild_Object.ChildObjectId = CASE WHEN _tmpItem.ObjectId_basis > 0 THEN _tmpItem.ObjectId_basis ELSE _tmpItem.ObjectId END
+                                AND ObjectLink_ReceiptProdModelChild_Object.DescId        = zc_ObjectLink_ReceiptProdModelChild_Object()
             --- берем не удаленные
             INNER JOIN Object AS Object_ReceiptProdModelChild ON Object_ReceiptProdModelChild.Id = ObjectLink_ReceiptProdModelChild_Object.ObjectId
                                                              AND Object_ReceiptProdModelChild.IsErased = FALSE
@@ -234,18 +248,21 @@ BEGIN
                        GROUP BY _tmpItem.ParentId
                       )
          , tmpProdColor AS (SELECT _tmpItem.GoodsId
-                                 , STRING_AGG (DISTINCT _tmpProdColorItems.ProdColorName, '; ') AS ProdColorName
+                                 , CASE WHEN Object_MaterialOptions.ValueData<> '' THEN Object_MaterialOptions.ValueData || ' - ' ELSE '' END || _tmpProdColorItems.ProdColorName AS ProdColorName
                             FROM _tmpItem
                                  JOIN _tmpProdColorItems ON _tmpProdColorItems.ProdColorPatternId = _tmpItem.ProdColorPatternId
                                                         AND _tmpProdColorItems.ProdColorName      <> ''
+                                 LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = _tmpProdColorItems.MaterialOptionsId
+                                 LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = _tmpProdColorItems.ProdColorPatternId
                             WHERE _tmpItem.GoodsId > 0
-                            GROUP BY _tmpItem.GoodsId
+                            ORDER BY _tmpItem.GoodsId, Object_ProdColorPattern.ObjectCode
                            )
      , tmpProdColor_all AS (SELECT _tmpItem.GoodsId
-                                 , STRING_AGG (_tmpProdColorItems.ProdColorName, '; ') AS ProdColorName
+                                 , STRING_AGG (DISTINCT CASE WHEN Object_MaterialOptions.ValueData <> '' THEN Object_MaterialOptions.ValueData || ' - ' ELSE '' END || _tmpProdColorItems.ProdColorName, '; ') AS ProdColorName
                             FROM _tmpItem
                                  JOIN _tmpProdColorItems ON _tmpProdColorItems.ProdColorPatternId = _tmpItem.ProdColorPatternId
                                                         AND _tmpProdColorItems.ProdColorName      <> ''
+                                 LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = _tmpProdColorItems.MaterialOptionsId
                             WHERE _tmpItem.GoodsId > 0
                             GROUP BY _tmpItem.GoodsId
                            )
@@ -260,6 +277,11 @@ BEGIN
            , ObjectString_Article_Object.ValueData    AS Article_Object
            , Object_Object.ValueData                  AS ObjectName
            , ObjectDesc_Object.ItemName               AS DescName
+
+           , Object_Object_basis.Id                   AS GoodsId_basis
+           , Object_Object_basis.ObjectCode           AS GoodsCode_basis
+           , Object_Object_basis.ValueData            AS GoodsName_basis
+           , ObjectString_Article_basis.ValueData     AS Article_basis
 
            , 0 :: Integer                             AS UnitId
            , tmpSumm.UnitName :: TVarChar             AS UnitName
@@ -301,9 +323,12 @@ BEGIN
            , Object_GoodsType.ValueData            AS GoodsTypeName
 
            , CASE WHEN Object_ProdColor.ValueData <> ''
-                  THEN CASE WHEN tmpProdColor.ProdColorName <> '' OR 1=1 THEN ''  ELSE Object_ProdColor.ValueData END
-                    || CASE WHEN tmpProdColor.ProdColorName <> '' THEN '_' || tmpProdColor.ProdColorName ELSE '' END
-                  ELSE tmpProdColor.ProdColorName
+                  THEN CASE WHEN 1=0 THEN Object_ProdColor.ValueData ELSE '' END
+                    || CASE WHEN (SELECT STRING_AGG (tmpProdColor.ProdColorName, '; ') FROM tmpProdColor WHERE tmpProdColor.GoodsId = _tmpItem.ObjectId) <> ''
+                            THEN '*' || (SELECT STRING_AGG (tmpProdColor .ProdColorName, '; ') FROM tmpProdColor WHERE tmpProdColor.GoodsId = _tmpItem.ObjectId)
+                            ELSE ''
+                       END
+                  ELSE (SELECT STRING_AGG (DISTINCT tmpProdColor .ProdColorName, '; ') FROM tmpProdColor WHERE tmpProdColor.GoodsId = _tmpItem.ObjectId)
              END :: TVarChar                       AS ProdColorName
            , Object_ProdOptions.ValueData          AS ProdOptionsName
 
@@ -316,7 +341,6 @@ BEGIN
            , _tmpReceiptLevel.ReceiptLevelName :: TVarChar AS ReceiptLevelName
 
        FROM _tmpItem
-            LEFT JOIN tmpProdColor ON tmpProdColor.GoodsId = _tmpItem.ObjectId
             LEFT JOIN tmpSumm      ON tmpSumm.ParentId     = _tmpItem.MovementItemId
 
             LEFT JOIN Object AS Object_Object ON Object_Object.Id = _tmpItem.ObjectId
@@ -324,6 +348,11 @@ BEGIN
                                    ON ObjectString_Article_object.ObjectId = Object_Object.Id
                                   AND ObjectString_Article_object.DescId   = zc_ObjectString_Article()
             LEFT JOIN ObjectDesc AS ObjectDesc_Object ON ObjectDesc_Object.Id = Object_Object.DescId
+
+            LEFT JOIN Object AS Object_Object_basis ON Object_Object_basis.Id = _tmpItem.ObjectId_basis
+            LEFT JOIN ObjectString AS ObjectString_Article_basis
+                                   ON ObjectString_Article_basis.ObjectId = Object_Object_basis.Id
+                                  AND ObjectString_Article_basis.DescId   = zc_ObjectString_Article()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_Comment
                                    ON ObjectString_Goods_Comment.ObjectId = Object_Object.Id
@@ -367,7 +396,7 @@ BEGIN
                                    ON MovementDate_OperDatePartner.MovementId = Movement_OrderPartner.Id
                                   AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
 
-            LEFT JOIN _tmpReceiptLevel ON _tmpReceiptLevel.GoodsId = _tmpItem.ObjectId--  and 1=0
+            LEFT JOIN _tmpReceiptLevel ON _tmpReceiptLevel.GoodsId = CASE WHEN _tmpItem.ObjectId_basis > 0 THEN _tmpItem.ObjectId_basis ELSE _tmpItem.ObjectId END
 
        -- без этой структуры
        WHERE _tmpItem.GoodsId  = 0
@@ -389,6 +418,11 @@ BEGIN
                   ELSE Object_Object.ValueData
              END :: TVarChar AS ObjectName
            , ObjectDesc_Object.ItemName               AS DescName
+           
+           , Object_Object_basis.Id                   AS GoodsId_basis
+           , Object_Object_basis.ObjectCode           AS GoodsCode_basis
+           , Object_Object_basis.ValueData            AS GoodsName_basis
+           , ObjectString_Article_basis.ValueData     AS Article_basis
 
            , Object_Unit.Id                           AS UnitId
            , Object_Unit.ValueData                    AS UnitName
@@ -452,6 +486,11 @@ BEGIN
                                   AND ObjectString_Article_object.DescId   = zc_ObjectString_Article()
             LEFT JOIN ObjectDesc AS ObjectDesc_Object ON ObjectDesc_Object.Id = Object_Object.DescId
 
+            LEFT JOIN Object AS Object_Object_basis ON Object_Object_basis.Id = _tmpItem.ObjectId_basis
+            LEFT JOIN ObjectString AS ObjectString_Article_basis
+                                   ON ObjectString_Article_basis.ObjectId = Object_Object_basis.Id
+                                  AND ObjectString_Article_basis.DescId   = zc_ObjectString_Article()
+
             LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
                                  ON ObjectLink_ProdColorGroup.ObjectId = _tmpItem.ProdColorPatternId
                                 AND ObjectLink_ProdColorGroup.DescId    = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
@@ -480,7 +519,7 @@ BEGIN
                                    ON MovementDate_OperDatePartner.MovementId = Movement_OrderPartner.Id
                                   AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
 
-            LEFT JOIN _tmpReceiptLevel ON _tmpReceiptLevel.GoodsId = _tmpItem.ObjectId  and 1=0
+            LEFT JOIN _tmpReceiptLevel ON _tmpReceiptLevel.GoodsId = _tmpItem.ObjectId AND 1=0
      --WHERE _tmpItem.GoodsId > 0
        WHERE Object_Object.DescId <> zc_Object_ProdColorPattern()
      ;

@@ -1589,6 +1589,54 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 45
           end
+          object GoodsCode_basis_ch3: TcxGridDBColumn
+            Caption = '***Interne Nr'
+            DataBinding.FieldName = 'GoodsCode_basis'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1079#1077#1083' ('#1073#1072#1079#1086#1074#1099#1081')'
+            Width = 80
+          end
+          object Article_basis_ch3: TcxGridDBColumn
+            Caption = '***Artikel Nr'
+            DataBinding.FieldName = 'Article_basis'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1079#1077#1083' ('#1073#1072#1079#1086#1074#1099#1081')'
+            Width = 80
+          end
+          object GoodsName_basis_ch3: TcxGridDBColumn
+            Caption = '***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            DataBinding.FieldName = 'GoodsName_basis'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1079#1077#1083' ('#1073#1072#1079#1086#1074#1099#1081')'
+            Width = 80
+          end
           object PartNumber_ch3: TcxGridDBColumn
             Caption = 'S/N'
             DataBinding.FieldName = 'PartNumber'
@@ -1950,6 +1998,51 @@ object OrderClientForm: TOrderClientForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
+          end
+          object GoodsCode_basis_ch4: TcxGridDBColumn
+            AlternateCaption = '80'
+            Caption = '***Interne Nr'
+            DataBinding.FieldName = 'GoodsCode_basis'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderHint = #1059#1079#1077#1083' ('#1073#1072#1079#1086#1074#1099#1081')'
+            Width = 80
+          end
+          object Article_basis_ch4: TcxGridDBColumn
+            AlternateCaption = '80'
+            Caption = '***Artikel Nr'
+            DataBinding.FieldName = 'Article_basis'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderHint = #1059#1079#1077#1083' ('#1073#1072#1079#1086#1074#1099#1081')'
+            Width = 80
+          end
+          object GoodsName_basis_ch4: TcxGridDBColumn
+            AlternateCaption = '80'
+            Caption = '***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            DataBinding.FieldName = 'GoodsName_basis'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderHint = #1059#1079#1077#1083' ('#1073#1072#1079#1086#1074#1099#1081')'
+            Width = 80
           end
           object ProdColorName_ch4: TcxGridDBColumn
             Caption = 'Farbe'

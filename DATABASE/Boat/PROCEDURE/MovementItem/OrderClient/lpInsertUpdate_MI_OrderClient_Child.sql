@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, I
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderClient_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,7 +12,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderClient_Child(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPartionId           Integer   , -- Комплектующие / Работы/Услуги
     IN inObjectId            Integer   , -- Комплектующие / Работы/Услуги
-    IN inGoodsId             Integer   , -- Комплектующие - какой узел собирается
+    IN inGoodsId_Basis       Integer   , -- Комплектующие - какой узел собирается
+    IN inGoodsId             Integer   , -- Комплектующие - если была замена, какой узел был в ReceiptProdModel
     IN inAmountBasis         TFloat    , -- Количество 
     IN inAmount              TFloat    , -- Количество резерв
     IN inAmountPartner       TFloat    , -- Количество заказ поставщику
@@ -48,6 +50,8 @@ BEGIN
      
      -- сохранили связь с <Комплектующие> - какой узел собирается
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
+     -- сохранили связь с <Комплектующие> - если была замена, какой узел был в ReceiptProdModel
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsBasis(), ioId, inGoodsId_Basis);
      -- сохранили связь с <Подразделение> - на котором происходит резерв
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
      -- сохранили связь с <Поставщик> - кому уходит заказ поставщика

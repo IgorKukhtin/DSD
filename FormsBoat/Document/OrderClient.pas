@@ -387,6 +387,12 @@ type
     bb: TdxBarButton;
     MaterialOptionsName_ch2: TcxGridDBColumn;
     Comment_goods_ch3: TcxGridDBColumn;
+    GoodsCode_basis_ch3: TcxGridDBColumn;
+    GoodsName_basis_ch3: TcxGridDBColumn;
+    Article_basis_ch3: TcxGridDBColumn;
+    GoodsCode_basis_ch4: TcxGridDBColumn;
+    Article_basis_ch4: TcxGridDBColumn;
+    GoodsName_basis_ch4: TcxGridDBColumn;
   private
   public
   end;
