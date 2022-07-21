@@ -28,7 +28,6 @@ object OrderCarInfoForm: TOrderCarInfoForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 848
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -262,6 +261,10 @@ object OrderCarInfoForm: TOrderCarInfoForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
           ItemName = 'bbEdit'
         end
         item
@@ -381,6 +384,10 @@ object OrderCarInfoForm: TOrderCarInfoForm
       Action = macInsertUpdate_Period
       Category = 0
     end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -415,6 +422,11 @@ object OrderCarInfoForm: TOrderCarInfoForm
           Name = 'Id'
           Value = Null
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = '0'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -438,6 +450,11 @@ object OrderCarInfoForm: TOrderCarInfoForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -668,6 +685,33 @@ object OrderCarInfoForm: TOrderCarInfoForm
       InfoAfterExecute = #1042#1057#1045' '#1076#1072#1085#1085#1099#1077' '#1079#1072#1083#1080#1090#1099
       Caption = #1047#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1072#1085#1085#1099#1077' '#1079#1072' '#1087#1077#1088#1080#1086#1076
       ImageIndex = 41
+    end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+      FormName = 'TOrderCarInfoEditForm'
+      FormNameParam.Value = 'TOrderCarInfoEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object spSelect: TdsdStoredProc
