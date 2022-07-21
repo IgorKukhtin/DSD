@@ -37,9 +37,17 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKind
                -- Итого не хватает для резерва, вес
              , AmountWeight_diff         TFloat
 
+             , AmountSh_child_one    TFloat
+             , AmountSh_child_sec    TFloat
+             , AmountSh_child        TFloat
+             , AmountSh_diff         TFloat           
+
+
              , Amount_remains_min_Weight TFloat
              , Amount_remains_max_Weight TFloat
-
+             , Amount_remains_min_Sh TFloat
+             , Amount_remains_max_Sh TFloat
+             
              , OperDate_CarInfo1         TVarChar
              , OperDate_CarInfo2         TVarChar
              , OperDate_CarInfo3         TVarChar
@@ -68,7 +76,11 @@ BEGIN
      vbEndDate   := ((inStartDate + INTERVAL'1 Day' )::Date||' 7:59') :: TDateTime;
 
      -- Результат
-     CREATE TEMP TABLE _Result (GoodsId Integer, GoodsKindId Integer, Amount_sh TFloat, AmountWeight TFloat, AmountWeight_child_one TFloat, AmountWeight_child_sec TFloat, AmountWeight_child TFloat, AmountWeight_diff TFloat, Amount_remains_min_Weight TFloat, Amount_remains_max_Weight TFloat
+     CREATE TEMP TABLE _Result (GoodsId Integer, GoodsKindId Integer, Amount_sh TFloat, AmountWeight TFloat
+                              , AmountWeight_child_one TFloat, AmountWeight_child_sec TFloat, AmountWeight_child TFloat, AmountWeight_diff TFloat
+                              , AmountSh_child_one TFloat, AmountSh_child_sec TFloat, AmountSh_child TFloat, AmountSh_diff TFloat
+                              , Amount_remains_min_Weight TFloat, Amount_remains_max_Weight TFloat
+                              , Amount_remains_min_Sh TFloat, Amount_remains_max_Sh TFloat
                               , Count_Partner TFloat
                               , OperDate_CarInfo TDateTime, OperDate_CarInfo_date TDateTime
                               , GroupPrint Integer, Ord Integer, OperDate_inf Text
@@ -202,12 +214,21 @@ BEGIN
                          , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ELSE 0 END) AS Amount_Weight
                          , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ELSE 0 END) AS AmountSecond_Weight
                          , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_all_Weight
+
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END) AS Amount_sh
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END) AS AmountSecond_sh
+                         , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END) AS Amount_all_sh
+
+
                            --
                        --, MIN (COALESCE (MIFloat_Remains.ValueData, 0)) AS Amount_remains_min
                        --, MAX (COALESCE (MIFloat_Remains.ValueData, 0)) AS Amount_remains_max
                            --
                          , MIN (COALESCE (MIFloat_Remains.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_remains_min_Weight
                          , MAX (COALESCE (MIFloat_Remains.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_remains_max_Weight
+
+                         , MIN (COALESCE (MIFloat_Remains.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END) AS Amount_remains_min_Sh
+                         , MAX (COALESCE (MIFloat_Remains.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END) AS Amount_remains_max_Sh
 
                     FROM tmpMIChild AS MovementItem
                          LEFT JOIN tmpMIFloat_Child AS MIFloat_MovementId
@@ -238,16 +259,30 @@ BEGIN
                             ,  (tmpMI_Child.AmountSecond_Weight) AS AmountWeight_child_sec -- с Прихода
                             ,  (tmpMI_Child.Amount_all_Weight)   AS AmountWeight_child     -- Итого
 
+                            ,  (tmpMI_Child.Amount_sh)       AS AmountSh_child_one -- с Остатка
+                            ,  (tmpMI_Child.AmountSecond_sh) AS AmountSh_child_sec -- с Прихода
+                            ,  (tmpMI_Child.Amount_all_sh)   AS AmountSh_child     -- Итого
+                            
                               -- Итого не хватает для резерва, вес
                             , ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
                              * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
                              - COALESCE (tmpMI_Child.Amount_all_Weight, 0)
                               ) AS AmountWeight_diff
 
+                            , ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END
+                             - COALESCE (tmpMI_Child.Amount_all_sh, 0)
+                              ) AS AmountSh_diff
+
                               -- мин Остаток начальный для резерва
                             , tmpMI_Child.Amount_remains_min_Weight
                               -- макс Остаток начальный для резерва
                             , tmpMI_Child.Amount_remains_max_Weight
+
+                              -- мин Остаток начальный для резерва
+                            , tmpMI_Child.Amount_remains_min_Sh
+                              -- макс Остаток начальный для резерва
+                            , tmpMI_Child.Amount_remains_max_Sh
 
                             , MovementLinkObject_From.ObjectId AS FromId
 
@@ -306,8 +341,15 @@ BEGIN
                        , SUM (tmpMovement.AmountWeight_child)     AS AmountWeight_child
                        , SUM (tmpMovement.AmountWeight_diff)      AS AmountWeight_diff
 
+                       , SUM (tmpMovement.AmountSh_child_one) AS AmountSh_child_one
+                       , SUM (tmpMovement.AmountSh_child_sec) AS AmountSh_child_sec
+                       , SUM (tmpMovement.AmountSh_child)     AS AmountSh_child
+                       , SUM (tmpMovement.AmountSh_diff)      AS AmountSh_diff
+
                        , MIN (tmpMovement.Amount_remains_min_Weight) AS Amount_remains_min_Weight
                        , MAX (tmpMovement.Amount_remains_max_Weight) AS Amount_remains_max_Weight
+                       , MIN (tmpMovement.Amount_remains_min_Sh)     AS Amount_remains_min_Sh
+                       , MAX (tmpMovement.Amount_remains_max_Sh)     AS Amount_remains_max_Sh
                          --
                        , COUNT (DISTINCT tmpMovement.FromId) AS Count_Partner
                          -- Дата/время отгрузки
@@ -332,13 +374,17 @@ BEGIN
       -- Результат
      INSERT INTO _Result (GoodsId, GoodsKindId, Amount_sh, AmountWeight
                         , AmountWeight_child_one, AmountWeight_child_sec, AmountWeight_child, AmountWeight_diff
-                        , Amount_remains_min_Weight, Amount_remains_max_Weight
+                        , AmountSh_child_one, AmountSh_child_sec, AmountSh_child, AmountSh_diff
+                        , Amount_remains_min_Weight, Amount_remains_max_Weight 
+                        , Amount_remains_min_Sh, Amount_remains_max_Sh
                         , Count_Partner, OperDate_CarInfo, OperDate_CarInfo_date, GroupPrint, Ord, OperDate_inf)
         SELECT tmpMovement.GoodsId, tmpMovement.GoodsKindId
              , tmpMovement.Amount_sh
              , tmpMovement.AmountWeight
              , tmpMovement.AmountWeight_child_one, tmpMovement.AmountWeight_child_sec, tmpMovement.AmountWeight_child, tmpMovement.AmountWeight_diff
-             , tmpMovement.Amount_remains_min_Weight, tmpMovement.Amount_remains_max_Weight
+             , tmpMovement.AmountSh_child_one, tmpMovement.AmountSh_child_sec, tmpMovement.AmountSh_child, tmpMovement.AmountSh_diff
+             , tmpMovement.Amount_remains_min_Weight, tmpMovement.Amount_remains_max_Weight 
+             , tmpMovement.Amount_remains_min_Sh, tmpMovement.Amount_remains_max_Sh
              , tmpMovement.Count_Partner
              , tmpMovement.OperDate_CarInfo
              , tmpMovement.OperDate_CarInfo_date
@@ -413,9 +459,15 @@ BEGIN
                          , SUM (tmp.AmountWeight_child)      AS AmountWeight_child
                          , SUM (tmp.AmountWeight_diff)       AS AmountWeight_diff
 
+                         , SUM (tmp.AmountSh_child_one)  AS AmountSh_child_one
+                         , SUM (tmp.AmountSh_child_sec)  AS AmountSh_child_sec
+                         , SUM (tmp.AmountSh_child)      AS AmountSh_child
+                         , SUM (tmp.AmountSh_diff)       AS AmountSh_diff
+
                          , MIN (tmp.Amount_remains_min_Weight) AS Amount_remains_min_Weight
                          , MAX (tmp.Amount_remains_max_Weight) AS Amount_remains_max_Weight
-
+                         , MIN (tmp.Amount_remains_min_Sh) AS Amount_remains_min_Sh
+                         , MAX (tmp.Amount_remains_max_Sh) AS Amount_remains_max_Sh
                     FROM (SELECT _Result.GoodsId
                                , _Result.GoodsKindId
                                , _Result.OperDate_CarInfo_date
@@ -443,8 +495,15 @@ BEGIN
                                , _Result.AmountWeight_child
                                , _Result.AmountWeight_diff
 
+                               , _Result.AmountSh_child_one
+                               , _Result.AmountSh_child_sec
+                               , _Result.AmountSh_child
+                               , _Result.AmountSh_diff
+
                                , _Result.Amount_remains_min_Weight
-                               , _Result.Amount_remains_max_Weight
+                               , _Result.Amount_remains_max_Weight  
+                               , _Result.Amount_remains_min_Sh
+                               , _Result.Amount_remains_max_Sh
                           FROM  _Result
                          ) AS tmp
                     GROUP BY tmp.GoodsId
@@ -488,9 +547,16 @@ BEGIN
             , tmpGroup.AmountWeight_child      :: TFloat
             , tmpGroup.AmountWeight_diff       :: TFloat
 
+            , tmpGroup.AmountSh_child_one      :: TFloat
+            , tmpGroup.AmountSh_child_sec      :: TFloat
+            , tmpGroup.AmountSh_child          :: TFloat
+            , tmpGroup.AmountSh_diff           :: TFloat
+
             , tmpGroup.Amount_remains_min_Weight   :: TFloat
             , tmpGroup.Amount_remains_max_Weight   :: TFloat
-
+            , tmpGroup.Amount_remains_min_Sh   :: TFloat
+            , tmpGroup.Amount_remains_max_Sh   :: TFloat
+            
             , tmpColumn.OperDate_CarInfo1      :: TVarChar
             , tmpColumn.OperDate_CarInfo2      :: TVarChar
             , tmpColumn.OperDate_CarInfo3      :: TVarChar

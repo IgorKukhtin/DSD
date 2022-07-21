@@ -1,9 +1,11 @@
 -- Function: gpGet_Object_OrderCarInfo (Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Object_OrderCarInfo (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_OrderCarInfo (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_OrderCarInfo(
-    IN inId          Integer,       -- ключ объекта <Автомобиль>
+    IN inId          Integer,       -- ключ объекта <Автомобиль> 
+    IN inMaskId      Integer,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer 
@@ -19,7 +21,7 @@ BEGIN
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_OrderCarInfo());
 
-   IF COALESCE (inId, 0) = 0
+   IF COALESCE (inId, 0) = 0 AND COALESCE (inMaskId, 0) = 0
    THEN
        RETURN QUERY 
        SELECT
@@ -45,7 +47,7 @@ BEGIN
    ELSE
        RETURN QUERY 
        SELECT 
-             Object_OrderCarInfo.Id    AS Id
+             CASE WHEN inMaskId <> 0 THEN 0 ELSE Object_OrderCarInfo.Id END :: Integer AS Id
            , Object_Route.Id           AS RouteId
            , Object_Route.ObjectCode   AS RouteCode
            , Object_Route.ValueData    AS RouteName
@@ -96,7 +98,7 @@ BEGIN
                                   ON ObjectFloat_Min.ObjectId = Object_OrderCarInfo.Id
                                  AND ObjectFloat_Min.DescId = zc_ObjectFloat_OrderCarInfo_Min()
 
-       WHERE Object_OrderCarInfo.Id = inId;
+       WHERE Object_OrderCarInfo.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
       
    END IF;
   
@@ -107,6 +109,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.07.22         *
  12.07.22         *
 */
 

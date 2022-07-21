@@ -27,7 +27,7 @@ BEGIN
      vbEndDate   := ((inStartDate + INTERVAL'1 Day' )::Date||' 7:59') :: TDateTime;
 
      -- Результат
-     CREATE TEMP TABLE _Result (RouteId Integer, RetailId Integer, AmountWeight TFloat, AmountWeight_child_one TFloat, AmountWeight_child_sec TFloat, AmountWeight_child TFloat
+     CREATE TEMP TABLE _Result (RouteId Integer, RetailId Integer, AmountWeight TFloat, AmountWeight_child_one TFloat, AmountWeight_child_sec TFloat, AmountWeight_child TFloat , AmountWeight_diff TFloat
                               , Count_Partner TFloat
                               , OperDate TDateTime, OperDate_CarInfo TDateTime, OperDate_CarInfo_date TDateTime
                               , GroupPrint Integer, Ord Integer, OperDate_inf TVarChar
@@ -270,10 +270,13 @@ BEGIN
                               , tmpNPP.Ord
                        )
      -- Результат
-     INSERT INTO _Result (RouteId, RetailId, AmountWeight, AmountWeight_child_one, AmountWeight_child_sec, AmountWeight_child
+     INSERT INTO _Result (RouteId, RetailId, AmountWeight, AmountWeight_child_one, AmountWeight_child_sec, AmountWeight_child, AmountWeight_diff
                         , Count_Partner, OperDate, OperDate_CarInfo, OperDate_CarInfo_date, GroupPrint, Ord, OperDate_inf, StartWeighing, EndWeighing
                          )
-         SELECT tmpMovement.RouteId, tmpMovement.RetailId, tmpMovement.AmountWeight, tmpMovement.AmountWeight_child_one, tmpMovement.AmountWeight_child_sec, tmpMovement.AmountWeight_child
+         SELECT tmpMovement.RouteId, tmpMovement.RetailId
+              , tmpMovement.AmountWeight
+              , tmpMovement.AmountWeight_child_one, tmpMovement.AmountWeight_child_sec, tmpMovement.AmountWeight_child
+              , (COALESCE (tmpMovement.AmountWeight,0) - COALESCE (tmpMovement.AmountWeight_child,0)) :: TFloat AS  AmountWeight_diff
               , tmpMovement.Count_Partner
                 -- Дата заявки
               , tmpMovement.OperDate
@@ -392,7 +395,8 @@ BEGIN
            , _Result.AmountWeight          :: TFloat   AS AmountWeight
            , _Result.AmountWeight_child_one:: TFloat   AS AmountWeight_child_one
            , _Result.AmountWeight_child_sec:: TFloat   AS AmountWeight_child_sec
-           , _Result.AmountWeight_child    :: TFloat   AS AmountWeight_child
+           , _Result.AmountWeight_child    :: TFloat   AS AmountWeight_child 
+           , _Result.AmountWeight_diff     :: TFloat   AS AmountWeight_diff
            , _Result.Count_Partner         :: TFloat   AS Count_Partner
 
            , _Result.Ord                   :: Integer  AS Ord

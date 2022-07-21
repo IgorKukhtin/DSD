@@ -126,6 +126,9 @@ type
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     Min_calc: TcxGridDBColumn;
     Id_calc: TcxGridDBColumn;
+    spSelectPrintGoodsDiff_3: TdsdStoredProc;
+    actPrintGoodsDiff_3: TdsdPrintAction;
+    bbPrintGoodsDiff_3: TdxBarButton;
   private
     { Private declarations }
   public

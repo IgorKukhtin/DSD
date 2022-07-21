@@ -73,6 +73,8 @@ type
     OperDate_CarInfo_date: TcxGridDBColumn;
     DayOfWeekName_CarInfo_date: TcxGridDBColumn;
     Id: TcxGridDBColumn;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
   private
     { Private declarations }
   public

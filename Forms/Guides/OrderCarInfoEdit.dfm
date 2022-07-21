@@ -287,6 +287,12 @@ object OrderCarInfoEditForm: TOrderCarInfoEditForm
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 322
     Top = 200
@@ -297,10 +303,18 @@ object OrderCarInfoEditForm: TOrderCarInfoEditForm
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'MaskId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
