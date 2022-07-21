@@ -118,6 +118,8 @@ type
     actExecGetInventoryHouseholdInventoryID: TdsdExecStoredProc;
     actOFInventoryHouseholdInventory: TdsdOpenForm;
     spGetInventoryHouseholdInventoryID: TdsdStoredProc;
+    actPUSHInventBarcode: TdsdShowPUSHMessage;
+    spPUSHInventBarcode: TdsdStoredProc;
   private
     { Private declarations }
   public

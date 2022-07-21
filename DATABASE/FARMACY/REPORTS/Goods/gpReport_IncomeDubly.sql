@@ -13,11 +13,11 @@ RETURNS TABLE (ORD           Integer
              , ToId          Integer
              , ToName        TVarChar
              , FromId        Integer
-             , ToFrom        TVarChar
+             , FromName      TVarChar
              , OperDate      TDateTime
              , InvNumber     TVarChar
              , StatusId      Integer
-             , StatusFrom    TVarChar
+             , StatusName    TVarChar
               )
 AS
 $BODY$
@@ -131,7 +131,7 @@ BEGIN
          , tmpCountIncomeOrd.OperDate
          , Movement_Income.InvNumber
          , Movement_Income.StatusId
-         , Object_Status.ValueData           AS StatusFrom
+         , Object_Status.ValueData           AS StatusName
     FROM tmpCountIncomeOrd     
     
          INNER JOIN MI_IncomeGroup ON MI_IncomeGroup.ToId = tmpCountIncomeOrd.ToId
@@ -162,4 +162,3 @@ $BODY$
 
 -- тест
 -- select * from gpReport_IncomeDubly(inDateStart := ('01.07.2022')::TDateTime , inDateFinal := ('31.07.2022')::TDateTime , inUnitId := 0 , inisShowAll := 'TRUE' ,  inSession := '3');   
-

@@ -1260,6 +1260,16 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = False
     end
+    object actPUSHInventBarcode: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHInventBarcode
+      StoredProcList = <
+        item
+          StoredProc = spPUSHInventBarcode
+        end>
+      Caption = 'actPUSHInventBarcode'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2383,5 +2393,47 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 748
     Top = 499
+  end
+  object spPUSHInventBarcode: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_PUSH_InventBarcode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = ''
+        Component = edBarCode
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 650
+    Top = 368
   end
 end

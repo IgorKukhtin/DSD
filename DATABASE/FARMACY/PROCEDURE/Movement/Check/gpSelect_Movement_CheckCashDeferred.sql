@@ -93,7 +93,7 @@ BEGIN
         , tmpMIConfirmedKind AS (SELECT tmpMI.GoodsId, SUM (tmpMI.Amount) AS Amount
                                  FROM tmpMI
                                       INNER JOIN tmpMov ON tmpMov.Id = tmpMI.MovementId
-                                                       AND tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_Complete() 
+                                                       AND tmpMov.ConfirmedKindId <> zc_Enum_ConfirmedKind_UnComplete() 
                                  GROUP BY tmpMI.GoodsId
                                 )
         , tmpContainer AS (SELECT Container.ObjectId
@@ -489,7 +489,7 @@ BEGIN
           , tmpMIConfirmedKind AS (SELECT tmpMI_all.ObjectId AS GoodsId, SUM (tmpMI_all.Amount) AS Amount
                                    FROM tmpMI_all
                                         INNER JOIN tmpMov ON tmpMov.ID = tmpMI_all.MovementId
-                                                        AND tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_Complete() 
+                                                        AND tmpMov.ConfirmedKindId <> zc_Enum_ConfirmedKind_UnComplete() 
                                    GROUP BY tmpMI_all.ObjectId
                                   )
           , tmpContainer AS (SELECT Container.ObjectId
@@ -832,4 +832,4 @@ ALTER FUNCTION gpSelect_Movement_CheckCashDeferred (Integer, TVarChar) OWNER TO 
 --
 --SELECT * FROM gpSelect_Movement_CheckCashDeferred (inType := 3, inSession:= '3')
 
-select * from gpSelect_Movement_CheckCashDeferred(inType := 0 ,  inSession := '3');
+select * from gpSelect_Movement_CheckCashDeferred(inType := 2 ,  inSession := '3');

@@ -29,10 +29,34 @@ BEGIN
   THEN
     RETURN 0;
   END IF;
+  
+  
+  IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) OR
+    NOT EXISTS(SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_CashierPharmacy()) 
+  THEN
+    RETURN 0;
+  END IF;
 
-  IF EXISTS(SELECT * FROM MovementBoolean 
-            WHERE MovementBoolean.DescId = zc_MovementBoolean_AccruedFine()
-              AND MovementBoolean.MovementId = inMovementId)
+  IF EXISTS(SELECT Movement.Id
+            FROM Movement  
+                  INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                               AND MovementLinkObject_Unit.ObjectId = (SELECT MovementLinkObject.ObjectId
+                                                                                      FROM MovementLinkObject 
+                                                                                      WHERE MovementLinkObject.MovementId = inMovementId
+                                                                                        AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit())
+                  INNER JOIN MovementBoolean AS MovementBoolean_FullInvent
+                                             ON MovementBoolean_FullInvent.MovementId = Movement.Id
+                                            AND MovementBoolean_FullInvent.DescId = zc_MovementBoolean_FullInvent()
+                                            AND MovementBoolean_FullInvent.ValueData = TRUE
+                                            
+                  INNER JOIN MovementProtocol ON date_trunc('Day', MovementProtocol.OperDate) = CURRENT_DATE
+                                             AND MovementProtocol.MovementId = Movement.Id
+                                             AND MovementProtocol.isInsert = TRUE
+
+           WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '10 DAY'
+             AND Movement.DescId = zc_Movement_Inventory())
   THEN
     RETURN 0;
   END IF;

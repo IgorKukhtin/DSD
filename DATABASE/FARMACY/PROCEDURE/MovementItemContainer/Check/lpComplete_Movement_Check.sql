@@ -41,6 +41,12 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Изменять статус ВИП чек для резерва под продажи запрещено.';    
     END IF;
     
+    IF EXISTS (SELECT 1
+               FROM MovementItem AS MI
+               WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.Amount < 0 AND MI.isErased = FALSE)
+    THEN
+        RAISE EXCEPTION 'Ошибка. Количество меньше 0 в чеке запрещено.';    
+    END IF;
     
      -- Проверим чтоб сроковый товар был прикреплен к партиям и был остаток
      IF EXISTS(SELECT 1
@@ -752,4 +758,4 @@ $BODY$
 
 --  select * from gpUpdate_Status_Check(inMovementId := 22802944 , ioStatusCode := 2 ,  inSession := '3');
 
-select * from gpUpdate_Status_Check(inMovementId := 27809861 , ioStatusCode := 2 ,  inSession := '3');
+--select * from gpUpdate_Status_Check(inMovementId := 27809861 , ioStatusCode := 2 ,  inSession := '3');

@@ -57,7 +57,7 @@ type
                                AParams : string = '';
                                ATypeParams : string = '';
                                AValueParams : string = '';
-                               AFormLoad : Boolean = False;
+                               AFormLoad : Boolean = True;
                                AExecStoredProc : Boolean = False;
                                ASpecialLighting : Boolean = False;
                                ATextColor : Integer = clWindowText;
@@ -229,7 +229,7 @@ function ShowPUSHMessageCash(AMessage : string;
                              AParams : string = '';
                              ATypeParams : string = '';
                              AValueParams : string = '';
-                             AFormLoad : Boolean = False;
+                             AFormLoad : Boolean = True;
                              AExecStoredProc : Boolean = False;
                              ASpecialLighting : Boolean = False;
                              ATextColor : Integer = clWindowText;

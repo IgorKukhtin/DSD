@@ -968,6 +968,8 @@ type
     N13036: TMenuItem;
     actLoadingFarmacyCash: TdsdOpenStaticForm;
     FarmacyCash2: TMenuItem;
+    actReport_IncomeDubly: TdsdOpenForm;
+    N358: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

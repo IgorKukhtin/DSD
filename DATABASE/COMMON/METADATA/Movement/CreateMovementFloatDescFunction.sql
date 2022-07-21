@@ -639,10 +639,16 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MovementFloat_PercentPayment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PercentPayment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_PercentPayment', '% доплаты покупателем' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PercentPayment');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_MobileDiscount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_MobileDiscount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_MobileDiscount', 'Скидка с мобильного приложения' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_MobileDiscount');  
+    
     
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 21.07.22                                                                                     * zc_MovementFloat_MobileDiscount
  15.07.22                                                                                     * zc_MovementFloat_PercentPayment
  04.02.22                                                                                     * zc_MovementFloat_DaysGrace
  21.12.21                                                                                     * zc_MovementFloat_TotalSummActual, zc_MovementFloat_TotalSummNotActual

@@ -5233,6 +5233,17 @@
       GuiParams = <>
       isShowModal = True
     end
+    object actReport_IncomeDubly: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1086#1090#1077#1085#1094#1080#1072#1083#1100#1085#1099#1077' '#1076#1091#1073#1083#1080' '#1087#1088#1080#1093#1086#1076#1086#1074
+      FormName = 'TReport_IncomeDublyForm'
+      FormNameParam.Value = 'TReport_IncomeDublyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6690,6 +6701,9 @@
         Caption = #1054#1090#1095#1077#1090#1099
         object N348: TMenuItem
           Action = actReport_CheckUpdateNotMCS
+        end
+        object N358: TMenuItem
+          Action = actReport_IncomeDubly
         end
       end
       object miTaxUnit: TMenuItem [3]

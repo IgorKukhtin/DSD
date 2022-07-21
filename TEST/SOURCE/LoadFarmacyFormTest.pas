@@ -1123,12 +1123,17 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_OrderFineForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeDublyDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeDublyDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeDublyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeDublyForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_OrderFineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_OrderFineForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_OrderFineDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_OrderFineDialogForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_SiteDelayDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_SiteDelayDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_SiteDelayDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_SiteDelayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_SiteDelayForm');

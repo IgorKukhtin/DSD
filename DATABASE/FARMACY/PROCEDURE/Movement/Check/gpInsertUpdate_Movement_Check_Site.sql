@@ -6,8 +6,9 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, Boolean, TDateTime, TVarChar);
-      
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, Boolean, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, Boolean, TDateTime, TFloat, TVarChar);
+        
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_Site(
  INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
     IN inUnitId            Integer   , -- Ключ объекта <Подразделение>
@@ -25,6 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_Site(
     IN inUserReferals      Integer   , -- По рекомендации сотрудника
     IN inisConfirmByPhone  Boolean   , -- Подтвердить телефонным звонком
     IN inDateComing        TDateTime , -- Дата прихода в аптеку
+    IN inMobileDiscount    TFloat    , -- Скидка с мобильного приложения
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -174,6 +176,11 @@ BEGIN
     IF inDateComing IS NOT NULL
     THEN
       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Coming(), ioId, date_trunc('day',inDateComing));
+    END IF;
+    
+    IF COALESCE(inMobileDiscount, 0) > 0
+    THEN
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MobileDiscount(), ioId, inMobileDiscount);
     END IF;
 
     -- сохранили протокол

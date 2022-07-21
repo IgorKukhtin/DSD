@@ -51,7 +51,12 @@ BEGIN
                                                              ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
                                                             AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
                                                             
+                                   LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                                           ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                                          AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
                               WHERE COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = False
+                                AND COALESCE(MovementFloat_TotalCount.ValueData, 0) > 0 
                              )
              , tmpMLO_ConfirmedKind AS (SELECT MLO_ConfirmedKind.*
                                         FROM MovementLinkObject AS MLO_ConfirmedKind
@@ -74,6 +79,7 @@ BEGIN
                                           ON MovementItem.MovementId = tmpMov.Id
                                          AND MovementItem.DescId     = zc_MI_Master()
                                          AND MovementItem.isErased   = FALSE
+                                         AND MovementItem.Amount     > 0
                              )
              , tmpMI_all AS (SELECT tmpMI_Full.MovementId, tmpMI_Full.UnitId, tmpMI_Full.GoodsId, SUM (tmpMI_Full.Amount) AS Amount
                              FROM tmpMI_Full
@@ -94,7 +100,7 @@ BEGIN
                                    FROM tmpMov_all AS Movement
                                         INNER JOIN tmpMLO_ConfirmedKind AS MovementLinkObject_ConfirmedKind
                                                                         ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
-                                                                       AND MovementLinkObject_ConfirmedKind.ObjectId   = zc_Enum_ConfirmedKind_Complete()
+                                                                       AND MovementLinkObject_ConfirmedKind.ObjectId   <> zc_Enum_ConfirmedKind_UnComplete()
                                   )
              , tmpComplete AS (SELECT tmpMov_Complete.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
                                FROM tmpMov_Complete
@@ -102,6 +108,7 @@ BEGIN
                                             ON MovementItem.MovementId = tmpMov_Complete.Id
                                            AND MovementItem.DescId     = zc_MI_Master()
                                            AND MovementItem.isErased   = FALSE
+                                           AND MovementItem.Amount     > 0
                                GROUP BY tmpMov_Complete.UnitId, MovementItem.ObjectId
                               )
              , tmpRemains AS (SELECT tmpMI.MovementId
@@ -203,3 +210,5 @@ $BODY$
 -- SELECT * FROM gpGet_Movement_Check_ConfirmedKind (inSession:= zfCalc_UserAdmin())
 
 select * from gpGet_Movement_Check_ConfirmedKind( inSession := '3');
+
+
