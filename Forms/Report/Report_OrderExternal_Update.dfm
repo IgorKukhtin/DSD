@@ -1,10 +1,9 @@
 inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
-  Caption = 'c'
+  Caption = #1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' - '#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
   ClientHeight = 590
   ClientWidth = 1184
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -100
   ExplicitWidth = 1200
   ExplicitHeight = 629
   PixelsPerInch = 96
