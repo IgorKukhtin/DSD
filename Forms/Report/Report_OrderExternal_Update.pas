@@ -45,7 +45,7 @@ type
     actOpenForm: TdsdOpenForm;
     bbOpenDocument: TdxBarButton;
     getMovementCheck: TdsdStoredProc;
-    CountPartner: TcxGridDBColumn;
+    Count_Partner: TcxGridDBColumn;
     actOpenChoiceCarInfoForm: TOpenChoiceForm;
     spUpdate_CarInfo: TdsdStoredProc;
     macUpdate_CarInfo_list: TMultiAction;

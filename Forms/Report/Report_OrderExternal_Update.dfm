@@ -4,6 +4,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
   ClientWidth = 1184
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -307
   ExplicitWidth = 1200
   ExplicitHeight = 629
   PixelsPerInch = 96
@@ -91,7 +92,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             item
               Format = ',0.'
               Kind = skSum
-              Column = CountPartner
+              Column = Count_Partner
             end
             item
               Format = ',0.'
@@ -167,7 +168,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             item
               Format = ',0.'
               Kind = skSum
-              Column = CountPartner
+              Column = Count_Partner
             end
             item
               Format = ',0.'
@@ -481,9 +482,9 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             Options.Editing = False
             Width = 55
           end
-          object CountPartner: TcxGridDBColumn
+          object Count_Partner: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1058#1058
-            DataBinding.FieldName = 'CountPartner'
+            DataBinding.FieldName = 'Count_Partner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = ',0.;-,0.; ;'
