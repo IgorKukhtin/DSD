@@ -133,6 +133,12 @@ type
     bbPrintGoods_Upack: TdxBarButton;
     Count_Doc: TcxGridDBColumn;
     isRemains: TcxGridDBColumn;
+    actPrintGoodsDiff_Upack: TdsdPrintAction;
+    spSelectPrintGoodsDiff_Upack: TdsdStoredProc;
+    actPrintGoodsDiff_3Upack: TdsdPrintAction;
+    spSelectPrintGoodsDiff_3Upack: TdsdStoredProc;
+    bbPrintGoodsDiff_Upack: TdxBarButton;
+    bbPrintGoodsDiff_3Upack: TdxBarButton;
   private
     { Private declarations }
   public

@@ -533,7 +533,6 @@ BEGIN
                                    WHERE ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     > 0
                                      AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
                                      AND Object_GoodsByGoodsKind_View.GoodsId IN (SELECT DISTINCT tmpGroup.GoodsId FROM tmpGroup)
-                                     AND inisSub = TRUE
                                   )
 
 
