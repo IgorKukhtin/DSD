@@ -289,12 +289,12 @@ BEGIN
                || vbFieldNameText ||
         ' FROM
          (SELECT * FROM CROSSTAB (''
-                                    SELECT ARRAY[Movement_Data.MemberId        -- AS MemberId
-                                               , Movement_Data.PositionId      -- AS PositionId
-                                               , Movement_Data.PositionLevelId -- AS PositionLevelId
-                                               , Movement_Data.PersonalGroupId -- AS PersonalGroupId
-                                               , Movement_Data.UnitId          -- AS MemberId
-                                               , COALESCE (Movement_Data.WorkTimeKindId_key, 0)                              -- AS WorkTimeKindId_key
+                                    SELECT ARRAY[Movement_Data.MemberId                             -- AS MemberId
+                                               , Movement_Data.PositionId                           -- AS PositionId
+                                               , Movement_Data.PositionLevelId                      -- AS PositionLevelId
+                                               , Movement_Data.PersonalGroupId                      -- AS PersonalGroupId
+                                               , Movement_Data.UnitId                               -- AS UnitId
+                                               , COALESCE (Movement_Data.WorkTimeKindId_key, 0)     -- AS WorkTimeKindId_key
                                                 ] :: Integer[]
                                          , Movement_Data.OperDate AS OperDate
                                          , ARRAY[zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) :: VarChar
