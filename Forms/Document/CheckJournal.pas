@@ -105,6 +105,7 @@ type
     isMobileApplication: TcxGridDBColumn;
     isConfirmByPhone: TcxGridDBColumn;
     DateComing: TcxGridDBColumn;
+    MobileDiscount: TcxGridDBColumn;
   private
     { Private declarations }
   public

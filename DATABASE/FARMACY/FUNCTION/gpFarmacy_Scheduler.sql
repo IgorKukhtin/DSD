@@ -567,6 +567,41 @@ BEGIN
 
     END IF;    
 
+    IF date_part('isodow', CURRENT_DATE)::Integer in (6) AND date_part('HOUR',  CURRENT_TIME)::Integer = 8 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
+    THEN
+
+      -- Отложка возвратов поставщику перед полной инвентаризацией
+      BEGIN
+         PERFORM gpUpdate_Movement_ReturnOut_Deferred(Movement.Id, TRUE, inSession)
+         FROM Object AS Object_Unit
+
+               INNER JOIN ObjectBoolean AS ObjectBoolean_AlertRecounting
+                                      ON ObjectBoolean_AlertRecounting.ObjectId = Object_Unit.Id
+                                     AND ObjectBoolean_AlertRecounting.DescId = zc_ObjectBoolean_Unit_AlertRecounting()
+                                     AND ObjectBoolean_AlertRecounting.ValueData = TRUE
+                                     
+              INNER JOIN  Movement ON Movement.DescId = zc_Movement_ReturnOut()
+                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                 
+              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From()
+                                           AND MovementLinkObject_Unit.ObjectId = Object_Unit.Id  
+ 
+              LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                        ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                       AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                          
+           WHERE Object_Unit.DescId = zc_Object_Unit()
+             AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE;
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_Movement_ReturnOut_Deferred', True, text_var1::TVarChar, vbUserId);
+      END;         
+
+    END IF;    
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -975,6 +975,7 @@ type
     procedure SetPromoCodeLoyaltySM(ALoyaltySMID: Integer;
       APhone, AName: string; ASummaRemainder, AChangeSumma: Currency);
     procedure PromoCodeLoyaltyCalc;
+    procedure MobileDiscountCalc;
     procedure SetLoyaltySaveMoney;
     function SetLoyaltySaveMoneyDiscount: Boolean;
     function GetCash: ICash;
@@ -1763,6 +1764,7 @@ begin
   FormParams.ParamByName('Category1303Name').Value := '';
   FormParams.ParamByName('isAutoVIPforSales').Value := False;
   FormParams.ParamByName('isPaperRecipeSP').Value := False;
+  FormParams.ParamByName('MobileDiscount').Value := 0;
 
   ClearFilterAll;
 
@@ -2090,6 +2092,8 @@ begin
       FormParams.ParamByName('InvNumberOrder').AsString;
   if FormParams.ParamByName('isAutoVIPforSales').Value = TRUE then
     lblCashMember.Caption := lblCashMember.Caption + ' ВИП чек для резерва под продажи';
+  if FormParams.ParamByName('MobileDiscount').AsFloat > 0 then
+    lblCashMember.Caption := lblCashMember.Caption + '; Дисконт по приложению: ' + CurrToStr(FormParams.ParamByName('MobileDiscount').AsFloat) + ' грн.';
 
   lblBayer.Caption := FormParams.ParamByName('BayerName').AsString;
   ceSummCard.Value := FormParams.ParamByName('SummCard').Value;
@@ -5105,6 +5109,161 @@ begin
                 FormParams.ParamByName('RoundingDown').Value) *
                 (nSumAll - nChangeSumma) / nSumAll / CheckCDS.FieldByName
                 ('Amount').asCurrency, 0);
+          end
+          else
+            nPrice := 0.1;
+          if nPrice < 0.1 then
+            nPrice := 0.1;
+
+          if nPrice <> CheckCDS.FieldByName('Price').asCurrency then
+          begin
+            CheckCDS.Edit;
+            CheckCDS.FieldByName('Price').asCurrency := nPrice;
+            CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
+            CheckCDS.FieldByName('Summ').asCurrency :=
+              GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+              CheckCDS.FieldByName('Price').asCurrency,
+              FormParams.ParamByName('RoundingDown').Value);
+            CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+              GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+              CheckCDS.FieldByName('PriceSale').asCurrency,
+              FormParams.ParamByName('RoundingDown').Value) -
+              CheckCDS.FieldByName('Summ').asCurrency;
+            CheckCDS.Post;
+          end;
+        end;
+      end
+      else if Self.FormParams.ParamByName('SiteDiscount').Value > 0 then
+      begin
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          GetPrice(IfZero(CheckCDS.FieldByName('PricePartionDate').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency),
+          Self.FormParams.ParamByName('SiteDiscount').Value);
+        CheckCDS.FieldByName('ChangePercent').asCurrency :=
+          Self.FormParams.ParamByName('SiteDiscount').Value;
+        CheckCDS.FieldByName('Summ').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        CheckCDS.Post;
+      end
+      else if CheckCDS.FieldByName('PricePartionDate').asCurrency > 0 then
+      begin
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          CheckCDS.FieldByName('PricePartionDate').asCurrency;
+        CheckCDS.FieldByName('Summ').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        CheckCDS.Post;
+      end
+      else if CheckCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+      begin
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          CheckCDS.FieldByName('PriceDiscount').asCurrency;
+        CheckCDS.FieldByName('Summ').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        CheckCDS.Post;
+      end
+      else
+      begin
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          CheckCDS.FieldByName('PriceSale').asCurrency;
+        CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
+        CheckCDS.FieldByName('Summ').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.FieldByName('SummChangePercent').asCurrency := 0;
+        CheckCDS.Post;
+      end;
+      CheckCDS.Next;
+    end;
+  finally
+    CheckCDS.RecNo := nRecNo;
+    CheckCDS.Filtered := True;
+    CheckCDS.EnableControls;
+  end;
+end;
+
+procedure TMainCashForm2.MobileDiscountCalc;
+var
+  nRecNo: Integer;
+  nSumAll, nPrice, nChangeSumma: Currency;
+begin
+
+  CheckCDS.DisableControls;
+  CheckCDS.Filtered := false;
+  nSumAll := 0;
+  nRecNo := CheckCDS.RecNo;
+  try
+
+    nChangeSumma := FormParams.ParamByName('MobileDiscount').Value;
+
+    if nChangeSumma > 0 then
+    begin
+      CheckCDS.First;
+      while not CheckCDS.Eof do
+      begin
+        if not CheckCDS.FieldByName('isPresent').AsBoolean then
+        begin
+          if CheckCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+            nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount')
+              .asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,
+              FormParams.ParamByName('RoundingDown').Value)
+          else
+            nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+              CheckCDS.FieldByName('PriceSale').asCurrency,
+              FormParams.ParamByName('RoundingDown').Value);
+        end;
+        CheckCDS.Next;
+      end;
+    end;
+
+    CheckCDS.First;
+    while not CheckCDS.Eof do
+    begin
+
+      if nChangeSumma > 0 then
+      begin
+        if (CheckCDS.FieldByName('Amount').asCurrency <> 0) and (nSumAll > 0)
+        then
+        begin
+          if nChangeSumma < nSumAll then
+          begin
+            if CheckCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+              nPrice := RoundTo(GetSumm(CheckCDS.FieldByName('Amount')
+                .asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,
+                FormParams.ParamByName('RoundingDown').Value) *
+                (nSumAll - nChangeSumma) / nSumAll / CheckCDS.FieldByName
+                ('Amount').asCurrency, -2)
+            else
+              nPrice := RoundTo(GetSumm(CheckCDS.FieldByName('Amount')
+                .asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
+                FormParams.ParamByName('RoundingDown').Value) *
+                (nSumAll - nChangeSumma) / nSumAll / CheckCDS.FieldByName
+                ('Amount').asCurrency, -2);
           end
           else
             nPrice := 0.1;
@@ -10224,6 +10383,9 @@ Begin
     FormParams.ParamByName('LoyaltySMSumma').Value) > 0 then
     PromoCodeLoyaltyCalc;
 
+  if FormParams.ParamByName('MobileDiscount').AsFloat > 0 then
+    MobileDiscountCalc;
+
   FTotalSumm := 0;
   FSummLoyalty := 0;
   try
@@ -10662,6 +10824,7 @@ begin
   FormParams.ParamByName('Category1303Name').Value := '';
   FormParams.ParamByName('isAutoVIPforSales').Value := False;
   FormParams.ParamByName('isPaperRecipeSP').Value := False;
+  FormParams.ParamByName('MobileDiscount').Value := 0;
 
   FFiscalNumber := '';
   pnlVIP.Visible := false;

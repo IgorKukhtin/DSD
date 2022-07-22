@@ -38,6 +38,11 @@ RETURNS TABLE (Id            Integer
              , MakerCountrySP_1303Name TVarChar             
              , CurrencyId   Integer 
              , CurrencyName TVarChar             
+
+             , MorionCode    Integer
+             , NDS           TFloat
+             , PriceOOC      TFloat
+             , PriceSale     TFloat
              
              , Color_Count   Integer
 
@@ -54,7 +59,11 @@ BEGIN
     
     RETURN QUERY
     WITH 
-        tmpMovementItem AS ( SELECT MovementItem.Id
+        tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                            , ObjectFloat_NDSKind_NDS.ValueData
+                       FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                       WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
+      , tmpMovementItem AS ( SELECT MovementItem.Id
 
                                   , MovementItem.ObjectId
 
@@ -126,6 +135,14 @@ BEGIN
              , COALESCE (Object_Currency.Id ,0)          ::Integer  AS CurrencyId
              , COALESCE (Object_Currency.ValueData,'')   ::TVarChar AS CurrencyName
 
+             , Object_Goods.MorionCode 
+             , ObjectFloat_NDSKind_NDS.ValueData                     AS NDS
+             , CASE WHEN COALESCE (MovementItem.ObjectId, 0) > 0 
+                    THEN ROUND(MovementItem.PriceOptSP  * 
+                        (100.0 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)) / 100.0 * 1.1, 2) END::TFloat AS PriceOOC
+             , CASE WHEN COALESCE (MovementItem.ObjectId, 0) > 0 
+                    THEN ROUND(MovementItem.PriceOptSP  * 
+                        (100.0 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)) / 100.0 * 1.1 * 1.1, 2) END::TFloat AS PriceSale
              
              , zc_Color_White() AS Color_Count
 
@@ -135,6 +152,9 @@ BEGIN
         FROM tmpMovementItem AS MovementItem
  
              LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId 
+
+             LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                  ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
 
              LEFT JOIN MovementItemString AS MIString_CodeATX
                                           ON MIString_CodeATX.MovementItemId = MovementItem.Id

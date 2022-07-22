@@ -4446,6 +4446,10 @@
 				<Form>Report_IncomeDublyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Inventory_ProficitReturnOut.pas">
+				<Form>Report_Inventory_ProficitReturnOutForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

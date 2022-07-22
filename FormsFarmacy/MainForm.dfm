@@ -5244,6 +5244,19 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Inventory_ProficitReturnOut: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = 
+        #1058#1086#1074#1072#1088#1099' '#1080#1079' '#1087#1086#1083#1085#1099#1093' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1081'  '#1087#1088#1080#1089#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1074' '#1074#1086#1079#1074#1088#1072#1090#1072#1093' '#1087#1086#1089#1090 +
+        #1072#1074#1097#1080#1082#1091
+      FormName = 'TReport_Inventory_ProficitReturnOutForm'
+      FormNameParam.Value = 'TReport_Inventory_ProficitReturnOutForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6704,6 +6717,9 @@
         end
         object N358: TMenuItem
           Action = actReport_IncomeDubly
+        end
+        object N359: TMenuItem
+          Action = actReport_Inventory_ProficitReturnOut
         end
       end
       object miTaxUnit: TMenuItem [3]
