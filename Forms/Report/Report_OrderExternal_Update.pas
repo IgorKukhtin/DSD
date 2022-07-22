@@ -123,7 +123,6 @@ type
     bbPrintGoodsDiff: TdxBarButton;
     OperDate_CarInfo_calc: TcxGridDBColumn;
     DayOfWeekName_CarInfo_calc: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
     Min_calc: TcxGridDBColumn;
     Id_calc: TcxGridDBColumn;
     spSelectPrintGoodsDiff_3: TdsdStoredProc;
@@ -132,6 +131,8 @@ type
     spSelectPrintGoods_upack: TdsdStoredProc;
     actPrintGoods_Upack: TdsdPrintAction;
     bbPrintGoods_Upack: TdxBarButton;
+    Count_Doc: TcxGridDBColumn;
+    isRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public

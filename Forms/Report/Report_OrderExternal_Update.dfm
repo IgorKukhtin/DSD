@@ -87,6 +87,16 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSh_child
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = CountPartner
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = Count_Doc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -153,6 +163,16 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSh_child
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = CountPartner
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = Count_Doc
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -452,14 +472,37 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             Options.Editing = False
             Width = 100
           end
-          object CountPartner: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1058#1058'/'#1044#1086#1082'.'
-            DataBinding.FieldName = 'CountPartner'
+          object isRemains: TcxGridDBColumn
+            Caption = #1056#1077#1079#1077#1088#1074' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isRemains'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1058#1058'/'#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1089' '#1056#1077#1079#1077#1088#1074#1080#1088#1086#1074#1072#1085#1080#1077#1084
+            Options.Editing = False
+            Width = 55
+          end
+          object CountPartner: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1058#1058
+            DataBinding.FieldName = 'CountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1058#1058
             Options.Editing = False
             Width = 80
+          end
+          object Count_Doc: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1044#1086#1082'.'
+            DataBinding.FieldName = 'Count_Doc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
+            Options.Editing = False
           end
           object AmountWeight: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086', '#1074#1077#1089
@@ -585,8 +628,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
             HeaderHint = #1048#1090#1086#1075#1086' '#1085#1077' '#1093#1074#1072#1090#1072#1077#1090' '#1076#1083#1103' '#1088#1077#1079#1077#1088#1074#1072', '#1096#1090
             Options.Editing = False
             Width = 100
-          end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
