@@ -20,6 +20,9 @@ $BODY$
    DECLARE vbMovementId Integer;
    DECLARE vbCountForPrice TFloat;
    DECLARE vbStatusId Integer;
+
+   DECLARE vbPriceListId Integer;
+   DECLARE vbOperDate_pl TDateTime;
 BEGIN
       -- проверка прав пользовател€ на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
@@ -66,7 +69,7 @@ BEGIN
 
 
       IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
-      THEN 
+      THEN
            -- –аспроводим ƒокумент
            PERFORM lpUnComplete_Movement_OrderExternal (inMovementId:= vbMovementId, inUserId:= vbUserId);
       END IF;
@@ -75,6 +78,47 @@ BEGIN
       -- если есть кол-во
       IF inAmount <> 0
       THEN
+          -- !!!замена!!!
+          SELECT tmp.PriceListId, tmp.OperDate
+                 INTO vbPriceListId, vbOperDate_pl
+          FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                    , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                                    , inMovementDescId := zc_Movement_Sale()
+                                                    , inOperDate_order := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId)
+                                                    , inOperDatePartner:=  NULL
+                                                    , inDayPrior_PriceReturn:= NULL
+                                                    , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                    , inOperDatePartner_order:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                     ) AS tmp;
+          -- !!!замена!!!
+          IF 1 < (SELECT COUNT(*)
+                  FROM (SELECT DISTINCT
+                               ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                             , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
+
+                        FROM ObjectLink AS ObjectLink_PriceListItem_Goods
+                             INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                   ON ObjectLink_PriceListItem_PriceList.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
+                                                  AND ObjectLink_PriceListItem_PriceList.ChildObjectId = vbPriceListId
+                                                  AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
+                             LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                     ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                    AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                    AND vbOperDate_pl >= ObjectHistory_PriceListItem.StartDate AND vbOperDate_pl < ObjectHistory_PriceListItem.EndDate
+                             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                          ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                         AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                                         AND ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0
+                        WHERE ObjectLink_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                          AND ObjectLink_PriceListItem_Goods.ChildObjectId = inGoodsId
+                       ) AS tmp
+                 )
+          THEN
+              -- !!!замена!!!
+              inPrice:= 0;
+          END IF;
+
+
           -- сохранили элемент
           SELECT ioId INTO vbId FROM lpInsertUpdate_MovementItem_OrderExternal (ioId            := vbId
                                                                               , inMovementId    := vbMovementId
@@ -83,13 +127,13 @@ BEGIN
                                                                               , inAmountSecond  := 0
                                                                               , inGoodsKindId   := inGoodsKindId
                                                                               , ioPrice         := inPrice
-                                                                              , ioCountForPrice := vbCountForPrice
+                                                                              , ioCountForPrice := 1
                                                                               , inUserId        := vbUserId
                                                                                );
-    
+
           -- сохранили свойство <√лобальный уникальный идентификатор>
           PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
-    
+
       END IF;
 
       -- сохранили свойство <ƒата/врем€ сохранени€ с мобильного устройства>

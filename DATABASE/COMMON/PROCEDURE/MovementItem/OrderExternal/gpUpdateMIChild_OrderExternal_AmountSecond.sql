@@ -15,7 +15,12 @@ $BODY$
    DECLARE vbUnitId   Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
-      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
+      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal_child());
+
+
+      -- сохранили свойство <Был сформирован резерв> - да
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Remains(), inMovementId, TRUE);
+
 
       -- данные из документа
       SELECT CASE WHEN EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) < 8

@@ -15,7 +15,12 @@ $BODY$
    DECLARE vbUnitId   Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
-      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
+      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal_child());
+
+
+      -- сохранили свойство <Был сформирован резерв> - да
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Remains(), inMovementId, TRUE);
+
 
       -- данные из документа
       SELECT CASE WHEN EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) < 8
@@ -136,10 +141,11 @@ BEGIN
                       GROUP BY tmpMI.GoodsId_sub
                              , tmpMI.GoodsKindId_sub
                      )
-        -- ВСЕ заявки, в которых есть Резерв !!!для остатка!!! за эту "смену" или позже
+        -- ВСЕ заявки, в которых есть Резерв !!!для остатка!!! за эту "смену" или позже + !!!"прошлый" день!!!
       , tmpMIChild_All AS (SELECT MovementItem.Id                               AS MovementItemId
                                 , MovementItem.ObjectId                         AS GoodsId_sub
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_sub
+                                  -- весь резерв: с остатка+перемещение
                                 , COALESCE (MovementItem.Amount,0)              AS Amount
                            FROM Movement
                                 INNER JOIN MovementDate AS MovementDate_CarInfo
@@ -147,6 +153,51 @@ BEGIN
                                                        AND MovementDate_CarInfo.DescId     = zc_MovementDate_CarInfo()
                                                        -- за эту "смену" или позже
                                                        AND MovementDate_CarInfo.ValueData  >= vbOperDate + INTERVAL '8 HOUR'
+                                -- на этот склад
+                                INNER JOIN MovementLinkObject AS MLO_To
+                                                              ON MLO_To.MovementId = Movement.Id
+                                                             AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                                             AND MLO_To.ObjectId   = vbUnitId
+                                -- Элемент Резерв
+                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.DescId     = zc_MI_Child()
+                                                       AND MovementItem.isErased   = FALSE
+                                                       AND MovementItem.Amount     > 0
+                                -- Элемент заявки не удален
+                                INNER JOIN MovementItem AS MovementItem_parent
+                                                        ON MovementItem_parent.MovementId = Movement.Id
+                                                       AND MovementItem_parent.DescId     = zc_MI_Master()
+                                                       AND MovementItem_parent.Id         = MovementItem.ParentId
+                                                       AND MovementItem_parent.isErased   = FALSE
+                                                    --AND MovementItem_parent.Amount + COALESCE (MIFloat_AmountSecond_parent.ValueData, 0) > 0
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                -- Только для "товаров" из текущей заявки
+                                INNER JOIN (SELECT DISTINCT tmpMI.GoodsId_sub, tmpMI.GoodsKindId_sub FROM tmpMI
+                                           ) AS tmpGoods
+                                             ON tmpGoods.GoodsId_sub      = MovementItem.ObjectId
+                                            AND tmpGoods.GoodsKindId_sub = MILinkObject_GoodsKind.ObjectId
+                           WHERE Movement.DescId   = zc_Movement_OrderExternal()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND Movement.Id      <> inMovementId
+
+                          UNION ALL
+                          -- Предыдущие заявки - "прошлый" день
+                           SELECT MovementItem.Id                               AS MovementItemId
+                                , MovementItem.ObjectId                         AS GoodsId_sub
+                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_sub
+                                  -- весь резерв: с остатка+перемещение
+                                , COALESCE (MovementItem.Amount,0)              AS Amount
+                           FROM Movement
+                                INNER JOIN MovementDate AS MovementDate_CarInfo
+                                                        ON MovementDate_CarInfo.MovementId = Movement.Id
+                                                       AND MovementDate_CarInfo.DescId     = zc_MovementDate_CarInfo()
+                                                       -- за !!!Предыдущую!!! "смену"
+                                                       AND MovementDate_CarInfo.ValueData  >= CURRENT_DATE + INTERVAL '8 HOUR'
+                                                       AND MovementDate_CarInfo.ValueData  < vbOperDate + INTERVAL '8 HOUR'
+                                                       -- если ???точно??? не отгружена
+                                                       AND MovementDate_CarInfo.ValueData  < CURRENT_TIMESTAMP
                                 -- на этот склад
                                 INNER JOIN MovementLinkObject AS MLO_To
                                                               ON MLO_To.MovementId = Movement.Id

@@ -29,6 +29,7 @@ RETURNS TABLE (OperDate        TDateTime
                --
              , Count_Partner TFloat
              , Count_Doc TFloat
+             , isRemains Boolean
              , CountPartner TVarChar
              , Days Integer, Times TVarChar
 
@@ -264,6 +265,7 @@ BEGIN
 
                             , tmpNPP.Ord
                             , MovementString_CarComment.ValueData          ::TVarChar  AS CarComment
+                            , COALESCE (MovementBoolean_Remains.ValueData, FALSE)      AS isRemains
 
                             , CASE WHEN inIsGoods = TRUE THEN MovementItem.ObjectId ELSE 0 END AS GoodsId
                             , CASE WHEN inIsGoods = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) ELSE 0 END AS GoodsKindId
@@ -302,6 +304,10 @@ BEGIN
                             LEFT JOIN tmpWeighing ON tmpWeighing.Id = Movement.Id
 
                             LEFT JOIN tmpNPP ON tmpNPP.OperDate_CarInfo = Movement.OperDate_CarInfo
+
+                            LEFT JOIN MovementBoolean AS MovementBoolean_Remains
+                                                      ON MovementBoolean_Remains.MovementId = Movement.Id
+                                                     AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
 
                             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                    ON MovementDate_OperDatePartner.MovementId = Movement.Id
@@ -376,6 +382,7 @@ BEGIN
                                , Movement.OperDate_CarInfo_date
                                , MovementString_CarComment.ValueData
                                , tmpNPP.Ord
+                               , COALESCE (MovementBoolean_Remains.ValueData, FALSE)
 
                                , CASE WHEN inIsGoods = TRUE THEN MovementItem.ObjectId ELSE 0 END
                                , CASE WHEN inIsGoods = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) ELSE 0 END
@@ -442,6 +449,7 @@ BEGIN
 
            , tmpMovement.CountPartner   :: TFloat  AS Count_Partner
            , tmpMovement.CountDoc       :: TFloat  AS Count_Doc
+           , tmpMovement.isRemains      :: Boolean AS isRemains
          --, (zfConvert_IntToString (tmpMovement.CountPartner::integer) || ' / '  || zfConvert_IntToString (tmpMovement.CountDoc::integer))  :: TVarChar  AS CountPartner
            , (tmpMovement.CountPartner :: TVarChar || ' / '  || tmpMovement.CountDoc :: TVarChar) :: TVarChar  AS CountPartner
 

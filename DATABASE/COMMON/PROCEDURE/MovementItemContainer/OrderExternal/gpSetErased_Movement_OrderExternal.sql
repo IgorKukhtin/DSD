@@ -28,6 +28,18 @@ BEGIN
          vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_OrderExternal());
      END IF;
 
+
+     -- сохранили свойство <Был сформирован резерв> - нет
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Remains(), inMovementId, FALSE);
+
+     -- Обнулили ВЕСЬ Резерв
+     PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Child(), MovementItem.ObjectId, inMovementId, 0, MovementItem.ParentId)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Child()
+       AND MovementItem.isErased   = FALSE 
+      ;
+
      --
      outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := inSession);
 

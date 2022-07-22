@@ -15,6 +15,17 @@ BEGIN
      --
      outPrinted := gpUpdate_Movement_OrderExternal_Print (inId := inMovementId, inNewPrinted := FALSE, inSession := lfGet_User_Session (inUserId));
 
+     -- сохранили свойство <Был сформирован резерв> - нет
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Remains(), inMovementId, FALSE);
+
+     -- Обнулили ВЕСЬ Резерв
+     PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Child(), MovementItem.ObjectId, inMovementId, 0, MovementItem.ParentId)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Child()
+       AND MovementItem.isErased   = FALSE 
+      ;
+
      -- проверка - если <Master> Удален, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
 
