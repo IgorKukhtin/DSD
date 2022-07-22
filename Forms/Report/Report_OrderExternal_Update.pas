@@ -129,6 +129,9 @@ type
     spSelectPrintGoodsDiff_3: TdsdStoredProc;
     actPrintGoodsDiff_3: TdsdPrintAction;
     bbPrintGoodsDiff_3: TdxBarButton;
+    spSelectPrintGoods_upack: TdsdStoredProc;
+    actPrintGoods_Upack: TdsdPrintAction;
+    bbPrintGoods_Upack: TdxBarButton;
   private
     { Private declarations }
   public

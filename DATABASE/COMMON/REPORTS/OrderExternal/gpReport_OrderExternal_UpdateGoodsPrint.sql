@@ -1,12 +1,15 @@
 -- Function: gpReport_OrderExternal_UpdateGoodsPrint()
 
-DROP FUNCTION IF EXISTS gpReport_OrderExternal_UpdateGoodsPrint (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_OrderExternal_UpdateGoodsPrint (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal_UpdateGoodsPrint (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_OrderExternal_UpdateGoodsPrint(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inIsDate_CarInfo    Boolean   , -- по  дате  Дата/время отгрузки
-    IN inToId              Integer   , -- Кому (в документе)
+    IN inisSub             Boolean   ,
+    IN inToId              Integer   , -- Кому (в документе) 
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsGroupNameFull TVarChar, MeasureName TVarChar
@@ -516,6 +519,24 @@ BEGIN
                            , tmp.OperDate_CarInfo_date
                    )
 
+         , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                        , Object_GoodsByGoodsKind_View.GoodsKindId
+                                        , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId      AS GoodsId_sub
+                                        , ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId  AS GoodsKindId_sub
+                                   FROM Object_GoodsByGoodsKind_View
+                                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+                                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+                                   WHERE ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     > 0
+                                     AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
+                                     AND Object_GoodsByGoodsKind_View.GoodsId IN (SELECT DISTINCT tmpGroup.GoodsId FROM tmpGroup)
+                                     AND inisSub = TRUE
+                                  )
+
+
        SELECT Object_Goods.Id                               AS GoodsId
             , Object_Goods.ObjectCode                       AS GoodsCode
             , Object_Goods.ValueData                        AS GoodsName
@@ -576,20 +597,25 @@ BEGIN
             , tmpColumn.OperDate_CarInfo12     :: TVarChar
 
        FROM tmpGroup
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGroup.GoodsId
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGroup.GoodsKindId
             LEFT JOIN tmpColumn ON tmpColumn.GroupPrint = tmpGroup.GroupPrint
-
-            LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
-                                   ON ObjectString_Goods_GroupNameFull.ObjectId = tmpGroup.GoodsId
-                                  AND ObjectString_Goods_GroupNameFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN zfCalc_DayOfWeekName (tmpGroup.OperDate_CarInfo_date) AS tmpWeekDay ON 1=1
 
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+          LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = tmpGroup.GoodsId
+                                       AND tmpGoodsByGoodsKind.GoodsKindId = tmpGroup.GoodsKindId
+
+          LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = CASE WHEN inisSub = TRUE THEN COALESCE (tmpGoodsByGoodsKind.GoodsId_sub, tmpGroup.GoodsId) ELSE tmpGroup.GoodsId END
+          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = CASE WHEN inisSub = TRUE THEN COALESCE (tmpGoodsByGoodsKind.GoodsKindId_sub, tmpGroup.GoodsKindId) ELSE tmpGroup.GoodsKindId END 
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                 ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_GroupNameFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
        ORDER BY tmpGroup.GroupPrint
               , tmpGroup.Ord
@@ -609,4 +635,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal_UpdateGoodsPrint (inStartDate:= '05.07.2022', inEndDate:= '28.06.2022', inIsDate_CarInfo:= FALSE, inToId := 8459, inSession := '5') WHERE GoodsCode IN (306, 163)
+-- SELECT * FROM gpReport_OrderExternal_UpdateGoodsPrint (inStartDate:= '05.07.2022', inEndDate:= '28.06.2022', inIsDate_CarInfo:= FALSE, inisSub:= FALSE, inToId := 8459, inSession := '5') WHERE GoodsCode IN (306, 163)
