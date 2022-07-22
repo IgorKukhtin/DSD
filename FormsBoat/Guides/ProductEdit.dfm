@@ -63,7 +63,7 @@ object ProductEditForm: TProductEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 423
+    Top = 425
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
@@ -563,7 +563,26 @@ object ProductEditForm: TProductEditForm
     Height = 25
     Action = actGetCIN
     Default = True
-    TabOrder = 73
+    TabOrder = 69
+  end
+  object edInvNumber_load: TcxTextEdit
+    Left = 291
+    Top = 493
+    TabOrder = 71
+    Width = 94
+  end
+  object cxLabel32: TcxLabel
+    Left = 291
+    Top = 470
+    Caption = #8470' '#1079#1072#1082#1072#1079#1072' '#1089#1072#1081#1090
+  end
+  object cxButton4: TcxButton
+    Left = 418
+    Top = 490
+    Width = 126
+    Height = 25
+    Action = mactLoadAgilis
+    TabOrder = 76
   end
   object ActionList: TActionList
     Left = 232
@@ -749,6 +768,71 @@ object ProductEditForm: TProductEditForm
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       ImageIndex = 13
       Status = mtDelete
+    end
+    object mactLoadAgilis: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actLoadAgilis
+        end
+        item
+          Action = mactInsertUpdate_load
+        end
+        item
+          Action = actDataSetRefresh
+        end
+        item
+          Action = actGetCIN
+        end>
+      Caption = 'mactLoadAgilis'
+    end
+    object actLoadAgilis: TdsdLoadAgilis
+      Category = 'DSDLib'
+      MoveParams = <>
+      URLParam.Value = 
+        'https://agilis-jettenders.com/wp-admin/admin-ajax.php?action=cat' +
+        'alog_csv3&order='
+      URLParam.DataType = ftString
+      URLParam.MultiSelectSeparator = ','
+      OrderParam.Value = ''
+      OrderParam.Component = edInvNumber_load
+      OrderParam.DataType = ftString
+      OrderParam.MultiSelectSeparator = ','
+      DataSet = ClientDataSet
+      CreateFileTitleParam.Value = True
+      CreateFileTitleParam.DataType = ftBoolean
+      CreateFileTitleParam.MultiSelectSeparator = ','
+      FieldCountParam.Value = 20
+      FieldCountParam.MultiSelectSeparator = ','
+      FieldTitleParam.Value = 'Title'
+      FieldTitleParam.DataType = ftString
+      FieldTitleParam.MultiSelectSeparator = ','
+      FieldValueParam.Value = 'Value'
+      FieldValueParam.DataType = ftString
+      FieldValueParam.MultiSelectSeparator = ','
+      Caption = 'actLoadAgilis'
+    end
+    object mactInsertUpdate_load: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_load
+        end>
+      DataSource = DS
+      Caption = 'mactInsertUpdate_load'
+    end
+    object actInsertUpdate_load: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_load
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_load
+        end>
+      Caption = 'actInsertUpdate_load'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -1784,5 +1868,274 @@ object ProductEditForm: TProductEditForm
     PackSize = 1
     Left = 476
     Top = 222
+  end
+  object ClientDataSet: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 384
+    Top = 456
+  end
+  object DS: TDataSource
+    DataSet = ClientDataSet
+    Left = 430
+    Top = 439
+  end
+  object spInsertUpdate_load: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_OrderClient_load'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioProductId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_OrderClient'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = Null
+        Component = edInvNumber_load
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle1'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle1'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue1'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle2'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue2'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle3'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title3'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue3'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value3'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle4'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title4'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue4'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value4'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle5'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title5'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue5'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value5'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle6'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title6'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue6'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value6'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle7'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title7'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue7'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value7'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle8'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title8'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue8'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value8'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle9'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title9'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue9'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value9'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle10'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title10'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue10'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value10'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle11'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title11'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue11'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value11'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTitle12'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Title12'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue12'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value12'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 408
   end
 end

@@ -21,7 +21,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   dsdGuides, cxMaskEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxDropDownEdit, cxCalendar, cxCheckBox, dxSkinsdxBarPainter, dxBarExtItems,
-  dxBar, cxClasses, Vcl.ExtCtrls;
+  dxBar, cxClasses, Vcl.ExtCtrls, Data.DB, Datasnap.DBClient;
 
 type
   TProductEditForm = class(TParentForm)
@@ -131,6 +131,16 @@ type
     edAmountIn_remAll: TcxCurrencyEdit;
     cxLabel31: TcxLabel;
     cxButton3: TcxButton;
+    edInvNumber_load: TcxTextEdit;
+    cxLabel32: TcxLabel;
+    cxButton4: TcxButton;
+    actLoadAgilis: TdsdLoadAgilis;
+    ClientDataSet: TClientDataSet;
+    DS: TDataSource;
+    mactLoadAgilis: TMultiAction;
+    mactInsertUpdate_load: TMultiAction;
+    actInsertUpdate_load: TdsdExecStoredProc;
+    spInsertUpdate_load: TdsdStoredProc;
   private
     { Private declarations }
   public
