@@ -4,7 +4,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
   ClientWidth = 1184
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -307
   ExplicitWidth = 1200
   ExplicitHeight = 629
   PixelsPerInch = 96
@@ -751,19 +750,17 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       ExplicitLeft = 2
     end
     inherited cxLabel2: TcxLabel
-      Left = 778
-      Top = 8
+      Left = 874
       Visible = False
-      ExplicitLeft = 778
-      ExplicitTop = 8
+      ExplicitLeft = 874
     end
-    object edIsDate_CarInfo: TcxCheckBox
-      Left = 791
+    object edIsSubPrint: TcxCheckBox
+      Left = 650
       Top = 5
-      Action = actRefresh_Car
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080
       TabOrder = 4
-      Visible = False
-      Width = 115
+      Width = 151
     end
     object cbisGoods: TcxCheckBox
       Left = 197
@@ -950,7 +947,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       Caption = #1055#1086' '#1076#1072#1090#1077' '#1086#1090#1075#1088#1091#1079#1082#1080
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object macUpdateMIChild_AmountNull: TMultiAction [7]
@@ -1018,7 +1014,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         item
           Name = 'IsDate_CarInfo'
           Value = Null
-          Component = edIsDate_CarInfo
+          Component = edIsSubPrint
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1202,6 +1198,13 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
           Name = 'inText'
           Value = #1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsSubPrint'
+          Value = Null
+          Component = edIsSubPrint
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')3'#1076#1085#1103
@@ -1515,6 +1518,13 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
           Value = Null
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsSubPrint'
+          Value = Null
+          Component = edIsSubPrint
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')'
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')'
@@ -1564,6 +1574,13 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
           Name = 'inText'
           Value = #1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsSubPrint'
+          Value = Null
+          Component = edIsSubPrint
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')'
@@ -1685,7 +1702,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = Null
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2256,7 +2273,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = ''
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2300,7 +2317,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = False
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2590,7 +2607,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = False
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2644,7 +2661,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = False
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2695,7 +2712,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = False
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2749,7 +2766,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = False
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2803,7 +2820,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = False
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

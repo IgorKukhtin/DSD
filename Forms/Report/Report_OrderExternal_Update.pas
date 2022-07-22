@@ -57,7 +57,7 @@ type
     DayOfWeekName: TcxGridDBColumn;
     DayOfWeekName_Partner: TcxGridDBColumn;
     DayOfWeekName_CarInfo: TcxGridDBColumn;
-    edIsDate_CarInfo: TcxCheckBox;
+    edIsSubPrint: TcxCheckBox;
     actRefresh_Car: TdsdDataSetRefresh;
     spUpdate_CarInfo_grid: TdsdStoredProc;
     actUpdate_CarInfo_grid: TdsdExecStoredProc;
