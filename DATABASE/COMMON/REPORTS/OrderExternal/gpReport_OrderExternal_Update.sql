@@ -30,7 +30,7 @@ RETURNS TABLE (OperDate        TDateTime
              , Count_Partner TFloat
              , Count_Doc TFloat
              , isRemains Boolean
-             , CountPartner TVarChar
+             , Count_Partner_str TVarChar
              , Days Integer, Times TVarChar
 
              , DayOfWeekName              TVarChar
@@ -450,8 +450,7 @@ BEGIN
            , tmpMovement.CountPartner   :: TFloat  AS Count_Partner
            , tmpMovement.CountDoc       :: TFloat  AS Count_Doc
            , tmpMovement.isRemains      :: Boolean AS isRemains
-         --, (zfConvert_IntToString (tmpMovement.CountPartner::integer) || ' / '  || zfConvert_IntToString (tmpMovement.CountDoc::integer))  :: TVarChar  AS CountPartner
-           , (tmpMovement.CountPartner :: TVarChar || ' / '  || tmpMovement.CountDoc :: TVarChar) :: TVarChar  AS CountPartner
+           , (tmpMovement.CountPartner :: TVarChar || ' / '  || tmpMovement.CountDoc :: TVarChar) :: TVarChar  AS Count_Partner_str
 
            , CASE WHEN tmpMovement.OperDate_CarInfo < tmpMovement.OperDatePartner
                        THEN -1 * EXTRACT (DAY FROM tmpMovement.OperDatePartner - DATE_TRUNC ('DAY', tmpMovement.OperDate_CarInfo))
