@@ -63,6 +63,7 @@ type
     DayOfWeekName_Partner: TcxGridDBColumn;
     DayOfWeekName_CarInfo: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
+    isRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public

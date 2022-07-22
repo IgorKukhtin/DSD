@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DayOfWeekName          TVarChar
              , DayOfWeekName_Partner  TVarChar
              , DayOfWeekName_CarInfo  TVarChar
+             , isRemains Boolean
               )
 AS
 $BODY$
@@ -48,6 +49,7 @@ BEGIN
                                , MovementLinkObject_Route.ObjectId          AS RouteId
                                , ObjectLink_Juridical_Retail.ChildObjectId  AS RetailId
                                , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+                               , COALESCE (MovementBoolean_Remains.ValueData, FALSE)  AS isRemains
                           FROM Movement
                               INNER JOIN MovementDate AS MovementDate_OperDatePartner
                                                       ON MovementDate_OperDatePartner.MovementId = Movement.Id
@@ -67,6 +69,10 @@ BEGIN
                                                            ON MovementLinkObject_From.MovementId = Movement.Id
                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                               LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                              LEFT JOIN MovementBoolean AS MovementBoolean_Remains
+                                                        ON MovementBoolean_Remains.MovementId = Movement.Id
+                                                       AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
 
                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
@@ -212,6 +218,8 @@ BEGIN
            , tmpWeekDay.DayOfWeekName         ::TVarChar AS DayOfWeekName
            , tmpWeekDay_Partner.DayOfWeekName ::TVarChar AS DayOfWeekName_Partner
            , tmpWeekDay_CarInfo.DayOfWeekName ::TVarChar AS DayOfWeekName_CarInfo
+           
+           , Movement.isRemains               :: Boolean AS isRemains
 
        FROM tmpMovement AS Movement
 
