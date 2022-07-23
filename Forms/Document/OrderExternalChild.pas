@@ -93,6 +93,8 @@ type
     bbOpenFormSend: TdxBarButton;
     actOpenFormOrderExternalChildDetail: TdsdOpenForm;
     bbOpenFormOrderExternalChildDetail: TdxBarButton;
+    actReport_GoodsMotion: TdsdOpenForm;
+    bbReport_GoodsMotion: TdxBarButton;
   private
     { Private declarations }
   public

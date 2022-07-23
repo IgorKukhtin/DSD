@@ -2018,8 +2018,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 264
-    Top = 248
+    Left = 240
+    Top = 256
   end
   object getMovementCheck: TdsdStoredProc
     StoredProcName = 'gpGet_MovementCheck'
@@ -2397,8 +2397,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 416
+    Left = 408
+    Top = 392
   end
   object spUpdateMIChild_AmountSecond_report: TdsdStoredProc
     StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecond_report'
@@ -2456,8 +2456,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 472
+    Left = 424
+    Top = 440
   end
   object spUpdateMIChild_AmountNull_report: TdsdStoredProc
     StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountNull_report'
@@ -2515,8 +2515,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 576
-    Top = 408
+    Left = 584
+    Top = 392
   end
   object spUpdateMIChild_AmountSecondNull_report: TdsdStoredProc
     StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecondNull_report'
@@ -2574,8 +2574,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 552
-    Top = 464
+    Left = 592
+    Top = 456
   end
   object spSelectPrintGoodsDiff: TdsdStoredProc
     StoredProcName = 'gpReport_OrderExternal_UpdateGoodsDiffPrint'

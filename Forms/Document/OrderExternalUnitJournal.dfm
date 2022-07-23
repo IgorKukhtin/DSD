@@ -465,6 +465,15 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object IsRemains: TcxGridDBColumn
+            Caption = #1056#1077#1079#1077#1088#1074' '#1089#1092#1086#1088#1084'. '
+            DataBinding.FieldName = 'IsRemains'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1099#1083' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085' '#1088#1077#1079#1077#1088#1074
+            Options.Editing = False
+          end
           object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
@@ -918,6 +927,86 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
       Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
       ImageIndex = 69
     end
+    object actUpdateMIChild_AmountNull: TdsdExecStoredProc
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_AmountNull
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_AmountNull
+        end>
+      Caption = 'actUpdateMIChild_AmountNull'
+      ImageIndex = 70
+    end
+    object macUpdateMIChild_AmountNull_list: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_AmountNull
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateMIChild_AmountNull_list'
+      ImageIndex = 70
+    end
+    object macUpdateMIChild_AmountNull: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMIChild_AmountNull_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082' '#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1089#1090#1088 +
+        #1086#1082'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082' '#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1086#1073#1085#1091#1083#1077#1085#1099
+      Caption = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082' '#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1086#1089#1090#1072#1090#1086#1082' '#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 70
+    end
+    object actUpdateMIChild_AmountSecondNull: TdsdExecStoredProc
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_AmountSecondNull
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_AmountSecondNull
+        end>
+      Caption = 'actUpdateMIChild_AmountSecondNull'
+      ImageIndex = 71
+    end
+    object macUpdateMIChild_AmountSecondNull_list: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMIChild_AmountSecondNull
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateMIChild_AmountSecondNull_list'
+      ImageIndex = 71
+    end
+    object macUpdateMIChild_AmountSecondNull: TMultiAction
+      Category = 'UpdateMIChild'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMIChild_AmountSecondNull_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1089#1090#1088#1086#1082'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1056#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077') '#1086#1073#1085#1091#1083#1077#1085#1099
+      Caption = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 71
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1034,6 +1123,18 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMIChild_AmountNull'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_AmountSecondNull'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1067,6 +1168,14 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
     end
     object bbUpdateMIChild_AmountSecond: TdxBarButton
       Action = macUpdateMIChild_AmountSecond
+      Category = 0
+    end
+    object bbUpdateMIChild_AmountNull: TdxBarButton
+      Action = macUpdateMIChild_AmountNull
+      Category = 0
+    end
+    object bbUpdateMIChild_AmountSecondNull: TdxBarButton
+      Action = macUpdateMIChild_AmountSecondNull
       Category = 0
     end
   end
@@ -1378,6 +1487,40 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
       end>
     PackSize = 1
     Left = 850
+    Top = 216
+  end
+  object spUpdateMIChild_AmountNull: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountNull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 962
+    Top = 168
+  end
+  object spUpdateMIChild_AmountSecondNull: TdsdStoredProc
+    StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecondNull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 970
     Top = 216
   end
 end
