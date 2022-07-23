@@ -31,7 +31,7 @@ BEGIN
     END IF;    
 
     -- сохранили <Элемент документа>
-    PERFORM lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inGoodsId, inMovementId, inCol, NULL);
+    PERFORM lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inGoodsId, inMovementId, inCol, NULL, zc_Enum_Process_Auto_PartionClose());
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, False);
