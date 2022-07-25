@@ -287,6 +287,12 @@ type
     macRoundAmountPartner_list: TMultiAction;
     macRoundAmountPartner: TMultiAction;
     bbRoundAmountPartner: TdxBarButton;
+    spGet_Export_FileNameXML: TdsdStoredProc;
+    spSelectSale_xml: TdsdStoredProc;
+    actExport_fileXml: TdsdStoredProcExportToFile;
+    actGet_Export_FileNameXml: TdsdExecStoredProc;
+    macExport_XML: TMultiAction;
+    bbExport_XML: TdxBarButton;
   private
     { Private declarations }
   public

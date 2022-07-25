@@ -21,6 +21,8 @@ inherited Sale_OrderForm: TSale_OrderForm
       inherited cxGrid: TcxGrid
         Width = 1370
         Height = 395
+        ExplicitLeft = -3
+        ExplicitTop = -3
         ExplicitWidth = 1370
         ExplicitHeight = 395
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -2621,6 +2623,41 @@ inherited Sale_OrderForm: TSale_OrderForm
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
       ImageIndex = 30
     end
+    object actExport_fileXml: TdsdStoredProcExportToFile
+      Category = 'Export_file'
+      MoveParams = <>
+      dsdStoredProcName = spSelectSale_xml
+      FileExt = '.xml'
+      Left = 1208
+      Top = 168
+    end
+    object actGet_Export_FileNameXml: TdsdExecStoredProc
+      Category = 'Export_file'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileNameXML
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileNameXML
+        end>
+      Caption = 'actGet_Export_FileName'
+    end
+    object macExport_XML: TMultiAction
+      Category = 'Export_file'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileNameXml
+        end
+        item
+          Action = actExport_fileXml
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' xml '#1092#1072#1081#1083'?'
+      InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' XML'
+      Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' XML'
+      ImageIndex = 60
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2822,6 +2859,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Visible = True
           ItemName = 'bbPromo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport_XML'
         end
         item
           Visible = True
@@ -3080,6 +3125,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object bbUpdateMaskSend: TdxBarButton
       Action = mactUpdateMaskSend
+      Category = 0
+    end
+    object bbExport_XML: TdxBarButton
+      Action = macExport_XML
       Category = 0
     end
   end
@@ -5985,5 +6034,81 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 272
     Top = 507
+  end
+  object spGet_Export_FileNameXML: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Sale_FileNameXML'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 392
+  end
+  object spSelectSale_xml: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_XML'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 432
+  end
+  object ExportCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 880
+    Top = 552
+  end
+  object ExportDS: TDataSource
+    DataSet = ExportCDS
+    Left = 912
+    Top = 552
   end
 end

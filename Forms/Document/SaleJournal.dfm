@@ -5926,7 +5926,10 @@ inherited SaleJournalForm: TSaleJournalForm
   object ExportCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
+    FieldDefs = <>
+    IndexDefs = <>
     Params = <>
+    StoreDefs = True
     Left = 56
     Top = 584
   end
