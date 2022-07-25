@@ -36,9 +36,9 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.CellAutoHeight = True
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
@@ -60,9 +60,16 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
           object GoodsCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsMainEdit
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 63
           end
           object MorionCode: TcxGridDBColumn [2]
@@ -88,6 +95,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             DataBinding.FieldName = 'IntenalSP_1303Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 151
           end
           object BrandSPName: TcxGridDBColumn [5]
@@ -95,6 +103,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             DataBinding.FieldName = 'BrandSPName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 115
           end
           object KindOutSP_1303Name: TcxGridDBColumn [6]
@@ -102,6 +111,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             DataBinding.FieldName = 'KindOutSP_1303Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
           end
           object Dosage_1303Name: TcxGridDBColumn [7]
@@ -109,6 +119,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             DataBinding.FieldName = 'Dosage_1303Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 82
           end
           object CountSP_1303Name: TcxGridDBColumn [8]
@@ -116,6 +127,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             DataBinding.FieldName = 'CountSP_1303Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 134
           end
           object MakerCountrySP_1303Name: TcxGridDBColumn [9]
@@ -123,6 +135,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             DataBinding.FieldName = 'MakerCountrySP_1303Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object CodeATX: TcxGridDBColumn [10]
@@ -130,6 +143,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             DataBinding.FieldName = 'CodeATX'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
           end
           object ReestrSP: TcxGridDBColumn [11]
@@ -137,6 +151,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             DataBinding.FieldName = 'ReestrSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 116
           end
           object ValiditySP: TcxGridDBColumn [12]
@@ -145,6 +160,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             PropertiesClassName = 'TcxDateEditProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 89
           end
           object PriceOptSP: TcxGridDBColumn [13]
@@ -154,6 +170,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 91
           end
           object NDS: TcxGridDBColumn [14]
@@ -190,6 +207,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'DosageID '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
+            Options.Editing = False
             Width = 63
           end
           object ExchangeRate: TcxGridDBColumn [18]
@@ -203,6 +221,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             HeaderHint = 
               #9#1054#1092#1110#1094#1110#1081#1085#1080#1081' '#1082#1091#1088#1089','#1074#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1081' '#1053#1072#1094#1110#1086#1085#1072#1083#1100#1085#1080#1084' '#1073#1072#1085#1082#1086#1084' '#1059#1082#1088#1072#1111#1085#1080' '#1085#1072' '#1076#1072#1090#1091 +
               ' '#1087#1086#1076#1072#1085#1085#1103' '#1076#1077#1082#1083#1072#1088#1072#1094#1110#1111' '#1079#1084#1110#1085#1080' '#1086#1087#1090#1086#1074#1086'-'#1074#1110#1076#1087#1091#1089#1082#1085#1086#1111' '#1094#1110#1085#1080
+            Options.Editing = False
             Width = 83
           end
           object OrderNumberSP: TcxGridDBColumn [19]
@@ -214,6 +233,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1076#1080#1085#1080#1094#1103' '#1074#1080#1084#1110#1088#1091' '#1089#1080#1083#1080' '#1076#1110#1111
+            Options.Editing = False
             Width = 66
           end
           object OrderDateSP: TcxGridDBColumn [20]
@@ -222,6 +242,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             PropertiesClassName = 'TcxDateEditProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 76
           end
           inherited colIsErased: TcxGridDBColumn
@@ -233,6 +254,22 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
+          end
+          object isSale: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1097#1077#1085#1086' '
+            DataBinding.FieldName = 'isSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object DoubleId: TcxGridDBColumn
+            Caption = #1044#1091#1073#1083#1100
+            DataBinding.FieldName = 'DoubleId'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
           end
         end
       end
@@ -338,6 +375,16 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
           StoredProc = spInsertMI
         end>
       Caption = 'actInsertMI'
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProc = spUpdate_Goods
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint_GoodsSP
@@ -678,6 +725,40 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084
       ImageIndex = 79
+    end
+    object actGoodsMainEdit: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TIntenalSPForm'
+      FormName = 'TGoodsMainForm'
+      FormNameParam.Value = 'TGoodsMainForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1682,6 +1763,14 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCol'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Col'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 912
@@ -1729,5 +1818,48 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
     PackSize = 1
     Left = 912
     Top = 352
+  end
+  object spUpdate_Goods: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_GoodsSPSearch_1303_Goods'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCol'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Col'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 392
+    Top = 344
   end
 end

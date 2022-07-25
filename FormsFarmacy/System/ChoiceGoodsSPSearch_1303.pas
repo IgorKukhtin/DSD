@@ -49,6 +49,11 @@ type
     dxBarControlContainerItem3: TdxBarControlContainerItem;
     dxBarControlContainerItem4: TdxBarControlContainerItem;
     spGet: TdsdStoredProc;
+    GoodsCode: TcxGridDBColumn;
+    MorionCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
   private
     { Private declarations }
   public
