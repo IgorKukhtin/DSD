@@ -5257,6 +5257,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_AnalysisBonusesIncome: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1040#1085#1072#1083#1080#1079' '#1073#1086#1085#1091#1089#1086#1074' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084
+      FormName = 'TReport_AnalysisBonusesIncomeForm'
+      FormNameParam.Value = 'TReport_AnalysisBonusesIncomeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6720,6 +6731,9 @@
         end
         object N359: TMenuItem
           Action = actReport_Inventory_ProficitReturnOut
+        end
+        object N360: TMenuItem
+          Action = actReport_AnalysisBonusesIncome
         end
       end
       object miTaxUnit: TMenuItem [3]
