@@ -44,6 +44,9 @@ RETURNS TABLE (Id            Integer
              , PriceOOC      TFloat
              , PriceSale     TFloat
              
+             , DoubleId      Integer
+             , isSale        Boolean
+             
              , Color_Count   Integer
 
              , isErased      Boolean
@@ -102,6 +105,36 @@ BEGIN
                                  AND (MovementItem.isErased = FALSE  OR inIsErased = TRUE))
       , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject
                               WHERE MovementItemId IN (SELECT DISTINCT tmpMovementItem.Id FROM tmpMovementItem))
+      , tmpDouble AS (SELECT MovementItem.ObjectId
+                           , ROW_NUMBER() OVER (ORDER BY MovementItem.ObjectId)::Integer AS DoubleId
+                      FROM tmpMovementItem AS MovementItem
+                      GROUP BY MovementItem.ObjectId
+                      HAVING COUNT(*) > 1
+                     )
+        -- выбираем продажи по товарам соц.проекта
+      , tmpSaleAll AS (SELECT Movement_Sale.Id
+                   FROM Movement AS Movement_Sale
+
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                                      ON MovementLinkObject_SPKind.MovementId = Movement_Sale.Id
+                                                     AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+                                                     AND MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303()
+
+
+                   WHERE Movement_Sale.DescId in (zc_Movement_Sale(), zc_Movement_Check())
+                     AND Movement_Sale.OperDate >= '15.02.2022'
+                     AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                  )
+      -- выбираем продажи по товарам соц.проекта
+      , tmpMI_Sale AS (SELECT DISTINCT Object_Goods.GoodsMainId     AS GoodsId
+                        FROM tmpSaleAll AS Movement_Sale
+                             INNER JOIN MovementItem AS MI_Sale
+                                                     ON MI_Sale.MovementId = Movement_Sale.Id
+                                                    AND MI_Sale.DescId = zc_MI_Master()
+                                                    AND MI_Sale.isErased = FALSE
+                                                    AND MI_Sale.Amount > 0
+                             LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = MI_Sale.ObjectId
+                       )
 
         SELECT MovementItem.Id                                       AS Id
              , MovementItem.ObjectId                                 AS GoodsId
@@ -143,15 +176,20 @@ BEGIN
              , CASE WHEN COALESCE (MovementItem.ObjectId, 0) > 0 
                     THEN ROUND(MovementItem.PriceOptSP  * 
                         (100.0 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)) / 100.0 * 1.1 * 1.1, 2) END::TFloat AS PriceSale
+
+             , tmpDouble.DoubleId                                    AS DoubleId
+             , COALESCE (tmpMI_Sale.GoodsId, 0) > 0                  AS isSale       
              
              , zc_Color_White() AS Color_Count
 
 
              , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
-
+             
         FROM tmpMovementItem AS MovementItem
  
              LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId 
+
+             LEFT JOIN tmpMI_Sale ON tmpMI_Sale.GoodsId = Object_Goods.Id
 
              LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                   ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
@@ -198,6 +236,8 @@ BEGIN
                                               ON MI_Currency.MovementItemId = MovementItem.Id
                                              AND MI_Currency.DescId = zc_MILinkObject_Currency()
              LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MI_Currency.ObjectId 
+             
+             LEFT JOIN tmpDouble ON tmpDouble.ObjectId = MovementItem.ObjectId 
         ORDER BY MovementItem.Col
 
          ;

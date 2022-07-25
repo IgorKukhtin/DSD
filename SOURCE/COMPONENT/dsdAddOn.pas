@@ -20,7 +20,7 @@ const
   CUSTOM_FILTER = -1;
   CUSTOM_FILTERLOAD = -2;
   MY_CUST_FILTER = '(Отметить все)';
-  MY_CUST_FILTERLOAD = '(Звгрузить из файла)';
+  MY_CUST_FILTERLOAD = '(Загрузить из файла)';
 
 type
   TMultiplyType = (mtRight, mtBottom, mtLeft, mtTop);

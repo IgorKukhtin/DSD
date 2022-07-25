@@ -1,10 +1,11 @@
 -- Function: gpUpdate_MI_GoodsSPSearch_1303_ClearGoods()
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_GoodsSPSearch_1303_ClearGoods (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_GoodsSPSearch_1303_ClearGoods (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_GoodsSPSearch_1303_ClearGoods(
     IN inId                  Integer   ,    -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   ,    -- Идентификатор документа
+    IN inCol                 Integer   ,    -- Номер п.п.
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS VOID
@@ -29,7 +30,7 @@ BEGIN
     END IF;    
 
     -- сохранили <Элемент документа>
-    PERFORM lpInsertUpdate_MovementItem (inId, zc_MI_Master(), 0, inMovementId, 0, NULL, zc_Enum_Process_Auto_PartionClose());
+    PERFORM lpInsertUpdate_MovementItem (inId, zc_MI_Master(), 0, inMovementId, inCol, NULL, zc_Enum_Process_Auto_PartionClose());
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, False);

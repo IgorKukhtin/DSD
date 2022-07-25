@@ -903,6 +903,66 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             VisibleForCustomization = False
           end
+          object IntenalSP_1303Name: TcxGridDBColumn
+            Caption = 
+              #9#1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1072#1073#1086' '#1079#1072#1075#1072#1083#1100#1085#1086#1087#1088#1080#1081#1085#1103#1090#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086 +
+              ' '#1079#1072#1089#1086#1073#1091
+            DataBinding.FieldName = 'IntenalSP_1303Name'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 192
+          end
+          object BrandSPName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1077#1083#1100#1085#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            DataBinding.FieldName = 'BrandSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 154
+          end
+          object KindOutSP_1303Name: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1074#1080#1087#1091#1089#1082#1091' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            DataBinding.FieldName = 'KindOutSP_1303Name'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 143
+          end
+          object Dosage_1303Name: TcxGridDBColumn
+            Caption = #1044#1086#1079#1091#1074#1072#1085#1085#1103' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            DataBinding.FieldName = 'Dosage_1303Name'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object CountSP_1303Name: TcxGridDBColumn
+            Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1090#1072#1073#1083#1077#1090#1086#1082' '#1074' '#1091#1087#1072#1082#1086#1074#1094#1110' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            DataBinding.FieldName = 'CountSP_1303Name'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 132
+          end
+          object MakerCountrySP_1303Name: TcxGridDBColumn
+            Caption = #1053#1072#1081#1084#1077#1085#1091#1074#1072#1085#1085#1103' '#1074#1080#1088#1086#1073#1085#1080#1082#1072', '#1082#1088#1072#1111#1085#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            DataBinding.FieldName = 'MakerCountrySP_1303Name'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 129
+          end
+          object PriceOptSP: TcxGridDBColumn
+            Caption = #1047#1072#1076#1077#1082#1083#1072#1088#1086#1074#1072#1085#1072' '#1086#1087#1090#1086#1074#1086'-'#1074#1110#1076#1087#1091#1089#1082#1085#1072' '#1094#1110#1085#1072
+            DataBinding.FieldName = 'PriceOptSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
         end
       end
       object cbisInsert: TcxCheckBox

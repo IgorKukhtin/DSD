@@ -3,7 +3,7 @@ inherited SaleForm: TSaleForm
   ClientHeight = 681
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -133
+  ExplicitLeft = -389
   ExplicitTop = -184
   ExplicitWidth = 1378
   ExplicitHeight = 720
@@ -6397,8 +6397,8 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1080
-    Top = 504
+    Left = 1104
+    Top = 544
   end
   object spSelectSale_xml: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_XML'

@@ -82,6 +82,10 @@ type
     NDS: TcxGridDBColumn;
     PriceOOC: TcxGridDBColumn;
     PriceSale: TcxGridDBColumn;
+    isSale: TcxGridDBColumn;
+    DoubleId: TcxGridDBColumn;
+    actGoodsMainEdit: TOpenChoiceForm;
+    spUpdate_Goods: TdsdStoredProc;
   private
     { Private declarations }
   public

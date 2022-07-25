@@ -232,6 +232,14 @@ type
     mactUpdateMaskReturn: TMultiAction;
     bbUpdateMaskReturn: TdxBarButton;
     bbUpdateMaskSend: TdxBarButton;
+    spGet_Export_FileNameXML: TdsdStoredProc;
+    spSelectSale_xml: TdsdStoredProc;
+    actExport_fileXml: TdsdStoredProcExportToFile;
+    ExportCDS: TClientDataSet;
+    ExportDS: TDataSource;
+    actGet_Export_FileNameXml: TdsdExecStoredProc;
+    macExport_XML: TMultiAction;
+    bbExport_XML: TdxBarButton;
   private
     { Private declarations }
   public

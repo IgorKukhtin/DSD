@@ -85,6 +85,29 @@ inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object GoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object MorionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1084#1086#1088#1080#1086#1085#1072
+            DataBinding.FieldName = 'MorionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object GoodsName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 263
+          end
           object colIntenalSP_1303Name: TcxGridDBColumn
             Caption = 
               #9#1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1072#1073#1086' '#1079#1072#1075#1072#1083#1100#1085#1086#1087#1088#1080#1081#1085#1103#1090#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086 +
@@ -151,6 +174,24 @@ inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
           object colColor_Count: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
             Visible = False
+          end
+          object NDS: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 44
+          end
+          object PriceSale: TcxGridDBColumn
+            Caption = #1056#1086#1079#1085'. '#1094#1077#1085#1072
+            DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
           end
         end
       end

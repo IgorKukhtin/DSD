@@ -119,6 +119,13 @@ type
     dxBarButton2: TdxBarButton;
     PriceRegistryFull: TcxGridDBColumn;
     SummaRegistryFull: TcxGridDBColumn;
+    IntenalSP_1303Name: TcxGridDBColumn;
+    BrandSPName: TcxGridDBColumn;
+    KindOutSP_1303Name: TcxGridDBColumn;
+    Dosage_1303Name: TcxGridDBColumn;
+    CountSP_1303Name: TcxGridDBColumn;
+    MakerCountrySP_1303Name: TcxGridDBColumn;
+    PriceOptSP: TcxGridDBColumn;
   private
     { Private declarations }
   public
