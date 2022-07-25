@@ -328,9 +328,10 @@ uses
   ReceiptGoodsEditEnter in '..\..\FormsBoat\Guides\ReceiptGoodsEditEnter.pas' {ReceiptGoodsEditEnterForm: TParentForm},
   MaterialOptionsEdit in '..\..\FormsBoat\Guides\MaterialOptionsEdit.pas' {MaterialOptionsEditForm: TParentForm},
   MaterialOptions in '..\..\FormsBoat\Guides\MaterialOptions.pas' {MaterialOptionsForm: TParentForm},
-  MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm},
+  ProdOptions_Comment in '..\..\FormsBoat\Guides\ProdOptions_Comment.pas' {ProdOptions_CommentForm: TParentForm},
   ProdOptions in '..\..\FormsBoat\Guides\ProdOptions.pas' {ProdOptionsForm: TParentForm},
-  GoodsGroupChoice in '..\..\FormsBoat\Guides\GoodsGroupChoice.pas' {GoodsGroupChoiceForm: TParentForm};
+  GoodsGroupChoice in '..\..\FormsBoat\Guides\GoodsGroupChoice.pas' {GoodsGroupChoiceForm: TParentForm},
+  MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
