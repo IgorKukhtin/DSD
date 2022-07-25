@@ -76,7 +76,7 @@ BEGIN
 
                           LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                                            ON MI_IntenalSP.MovementItemId = tmpGoods1303.MovementItemId
-                                                          AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+                                                          AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP_1303()
                           LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = MI_IntenalSP.ObjectId 
 
                           LEFT JOIN MovementItemLinkObject AS MI_BrandSP
@@ -549,4 +549,4 @@ $BODY$
 -- тест
 -- 
 
-select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'PANTOPRAZOLE' , inPartnerMedicalID := 0 /*4474307*/ ,  inSession := '3');
+select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'Анаст' , inPartnerMedicalID := 0 /*4474307*/ ,  inSession := '3');

@@ -78,7 +78,14 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , AmountWeight_child_one   TFloat
              , AmountWeight_child_sec   TFloat
              , TotalAmountWeight_child  TFloat
-             , AmountWeight_diff        TFloat
+             , AmountWeight_diff        TFloat 
+             , AmountWeight_diff_fact   TFloat 
+
+             , AmountSh_child_one   TFloat
+             , AmountSh_child_sec   TFloat
+             , TotalAmountSh_child  TFloat
+             , AmountSh_diff        TFloat 
+             , AmountSh_diff_fact   TFloat
               )
 
 AS
@@ -439,6 +446,10 @@ BEGIN
                          , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ELSE 0 END) AS Amount_Weight
                          , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ELSE 0 END) AS AmountSecond_Weight
                          , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_all_Weight
+
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END) AS Amount_sh
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END) AS AmountSecond_sh
+                         , SUM (COALESCE (MovementItem.Amount,0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END) AS Amount_all_sh
                     FROM tmpMIChild AS MovementItem
                          LEFT JOIN tmpMIFloat_Child AS MIFloat_MovementId
                                                     ON MIFloat_MovementId.MovementItemId = MovementItem.Id
@@ -499,7 +510,11 @@ BEGIN
                              -- Резервы
                            , CAST (SUM (tmpMovement2.AmountWeight_child_one) AS TFloat) AS AmountWeight_child_one -- с Остатка
                            , CAST (SUM (tmpMovement2.AmountWeight_child_sec) AS TFloat) AS AmountWeight_child_sec -- с Прихода
-                           , CAST (SUM (tmpMovement2.AmountWeight_child)     AS TFloat) AS AmountWeight_child     -- Итого
+                           , CAST (SUM (tmpMovement2.AmountWeight_child)     AS TFloat) AS AmountWeight_child     -- Итого  
+                           
+                           , CAST (SUM (tmpMovement2.AmountSh_child_one) AS TFloat) AS AmountSh_child_one -- с Остатка
+                           , CAST (SUM (tmpMovement2.AmountSh_child_sec) AS TFloat) AS AmountSh_child_sec -- с Прихода
+                           , CAST (SUM (tmpMovement2.AmountSh_child)     AS TFloat) AS AmountSh_child     -- Итого
                       FROM (
                             SELECT tmpOrder.MovementId_Sale
                                  , tmpOrder.OperDate_Sale
@@ -551,7 +566,11 @@ BEGIN
                                    -- Резервы
                                  , SUM (tmpMI_Child.Amount_Weight)       AS AmountWeight_child_one -- с Остатка
                                  , SUM (tmpMI_Child.AmountSecond_Weight) AS AmountWeight_child_sec -- с Прихода
-                                 , SUM (tmpMI_Child.Amount_all_Weight)   AS AmountWeight_child     -- Итого
+                                 , SUM (tmpMI_Child.Amount_all_Weight)   AS AmountWeight_child     -- Итого 
+
+                                 , SUM (tmpMI_Child.Amount_sh)           AS AmountSh_child_one -- с Остатка
+                                 , SUM (tmpMI_Child.AmountSecond_sh)     AS AmountSh_child_sec -- с Прихода
+                                 , SUM (tmpMI_Child.Amount_all_sh)       AS AmountSh_child     -- Итого
                           FROM (SELECT tmpMovementAll.* FROM tmpMovementAll WHERE tmpMovementAll.MovementId_Order <> 0 AND COALESCE (tmpMovementAll.Ord, 1) = 1
                                 ) AS tmpOrder
                                 -- строки
@@ -674,6 +693,10 @@ BEGIN
                             , tmpMovementOrder.AmountWeight_child_sec AS AmountWeight_child_sec -- с Прихода
                             , tmpMovementOrder.AmountWeight_child     AS AmountWeight_child     -- Итого  
 
+                            , tmpMovementOrder.AmountSh_child_one     AS AmountSh_child_one -- с Остатка
+                            , tmpMovementOrder.AmountSh_child_sec     AS AmountSh_child_sec -- с Прихода
+                            , tmpMovementOrder.AmountSh_child         AS AmountSh_child     -- Итого 
+
                             , CAST (0 AS TFloat)                     AS AmountSalePartner_Weight
                             , CAST (0 AS TFloat)                     AS AmountSalePartner_Sh
                             , CAST (0 AS TFloat)                     AS AmountSale_Weight
@@ -723,6 +746,9 @@ BEGIN
                             , CAST (0 AS TFloat)     AS AmountWeight_child_one -- с Остатка
                             , CAST (0 AS TFloat)     AS AmountWeight_child_sec -- с Прихода
                             , CAST (0 AS TFloat)     AS AmountWeight_child     -- Итого  
+                            , CAST (0 AS TFloat)     AS AmountSh_child_one -- с Остатка
+                            , CAST (0 AS TFloat)     AS AmountSh_child_sec -- с Прихода
+                            , CAST (0 AS TFloat)     AS AmountSh_child     -- Итого  
                             
                             , tmpMovementSale.AmountSalePartner_Weight  AS AmountSalePartner_Weight
                             , tmpMovementSale.AmountSalePartner_Sh      AS AmountSalePartner_Sh
@@ -776,7 +802,11 @@ BEGIN
                        , SUM (tmpDataUnion.AmountWeight_child_one) AS AmountWeight_child_one
                        , SUM (tmpDataUnion.AmountWeight_child_sec) AS AmountWeight_child_sec
                        , SUM (tmpDataUnion.AmountWeight_child)     AS AmountWeight_child
-                       
+
+                       , SUM (tmpDataUnion.AmountSh_child_one)     AS AmountSh_child_one
+                       , SUM (tmpDataUnion.AmountSh_child_sec)     AS AmountSh_child_sec
+                       , SUM (tmpDataUnion.AmountSh_child)         AS AmountSh_child
+
                        , SUM (tmpDataUnion.AmountSalePartner_Weight)  AS AmountSalePartner_Weight
                        , SUM (tmpDataUnion.AmountSalePartner_Sh)      AS AmountSalePartner_Sh
                        , SUM (tmpDataUnion.AmountSale_Weight)     AS AmountSale_Weight
@@ -849,7 +879,10 @@ BEGIN
                        , (tmpDataUnion.Amount_Dozakaz)        AS Amount_Dozakaz    
                        , (tmpDataUnion.AmountWeight_child_one) AS AmountWeight_child_one
                        , (tmpDataUnion.AmountWeight_child_sec) AS AmountWeight_child_sec
-                       , (tmpDataUnion.AmountWeight_child)     AS AmountWeight_child
+                       , (tmpDataUnion.AmountWeight_child)     AS AmountWeight_child 
+                       , (tmpDataUnion.AmountSh_child_one)     AS AmountSh_child_one
+                       , (tmpDataUnion.AmountSh_child_sec)     AS AmountSh_child_sec
+                       , (tmpDataUnion.AmountSh_child)         AS AmountSh_child
                        , (tmpDataUnion.AmountSalePartner_Weight)  AS AmountSalePartner_Weight
                        , (tmpDataUnion.AmountSalePartner_Sh)      AS AmountSalePartner_Sh
                        , (tmpDataUnion.AmountSale_Weight)     AS AmountSale_Weight
@@ -865,6 +898,7 @@ BEGIN
                       , SUM (COALESCE (tmpDataUnion.Amount_Weight_Itog,0) + COALESCE (tmpDataUnion.Amount_Weight_Dozakaz,0)) OVER (PARTITION BY tmpDataUnion.MovementId_Order, tmpDataUnion.GoodsId, tmpDataUnion.GoodsKindId) AS TotalAmount_Weight
                       , SUM (COALESCE (tmpDataUnion.Amount12,0) + COALESCE (tmpDataUnion.Amount_Dozakaz,0))                  OVER (PARTITION BY tmpDataUnion.MovementId_Order, tmpDataUnion.GoodsId, tmpDataUnion.GoodsKindId) AS TotalAmount 
                       , SUM (COALESCE (tmpDataUnion.AmountWeight_child,0))OVER (PARTITION BY tmpDataUnion.MovementId_Order, tmpDataUnion.GoodsId, tmpDataUnion.GoodsKindId) AS TotalAmountWeight_child
+                      , SUM (COALESCE (tmpDataUnion.AmountSh_child,0))OVER (PARTITION BY tmpDataUnion.MovementId_Order, tmpDataUnion.GoodsId, tmpDataUnion.GoodsKindId) AS TotalAmountSh_child
                   FROM tmpData1 AS tmpDataUnion
                   )
 
@@ -903,7 +937,11 @@ BEGIN
                            , tmp.AmountWeight_child_one
                            , tmp.AmountWeight_child_sec
                            , tmp.AmountWeight_child
-                           , tmp.TotalAmountWeight_child
+                           , tmp.TotalAmountWeight_child    
+                           , tmp.AmountSh_child_one
+                           , tmp.AmountSh_child_sec
+                           , tmp.AmountSh_child
+                           , tmp.TotalAmountSh_child
                            , tmp.AmountSalePartner_Weight
                            , tmp.AmountSalePartner_Sh
                            , tmp.AmountSale_Weight
@@ -1093,6 +1131,14 @@ BEGIN
            , tmpMovement.AmountWeight_child_sec   ::TFloat
            , tmpMovement.AmountWeight_child       ::TFloat
            , ((COALESCE (tmpMovement.Amount_Weight_Itog,0) + COALESCE (tmpMovement.Amount_Weight_Dozakaz,0) ) - COALESCE (tmpMovement.TotalAmountWeight_child,0)) ::TFloat AS  AmountWeight_diff
+           , (COALESCE (tmpMovement.AmountSale_Weight,0) - COALESCE (tmpMovement.TotalAmountWeight_child,0)) ::TFloat AS  AmountWeight_diff_fact --разница с факт отгрузкой
+
+           , tmpMovement.AmountSh_child_one   ::TFloat
+           , tmpMovement.AmountSh_child_sec   ::TFloat
+           , tmpMovement.AmountSh_child       ::TFloat
+           , ((COALESCE (tmpMovement.Amount_Sh_Itog,0) + COALESCE (tmpMovement.Amount_Sh_Dozakaz,0) ) - COALESCE (tmpMovement.TotalAmountSh_child,0)) ::TFloat AS  AmountSh_diff
+           , (COALESCE (tmpMovement.AmountSale_Sh,0) - COALESCE (tmpMovement.TotalAmountSh_child,0)) ::TFloat AS  AmountSh_diff_fact --разница с факт отгрузкой
+            
        FROM tmpData_All AS tmpMovement
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
           LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId

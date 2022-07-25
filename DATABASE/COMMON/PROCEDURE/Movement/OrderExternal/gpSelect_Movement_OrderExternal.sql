@@ -29,7 +29,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , VATPercent TFloat, ChangePercent TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
-             , isEDI Boolean, isPromo Boolean
+             , isEDI Boolean
+             , IsRemains Boolean
+             , isPromo Boolean
              , MovementPromo TVarChar
              , Comment TVarChar
              , InsertName TVarChar
@@ -155,6 +157,7 @@ BEGIN
            , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
 
            , COALESCE (MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
+           , COALESCE (MovementBoolean_Remains.ValueData, FALSE) ::Boolean AS IsRemains
 
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
@@ -301,8 +304,12 @@ BEGIN
                                      AND MovementBoolean_PrintComment.DescId = zc_MovementBoolean_PrintComment()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
-                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                      ON MovementBoolean_Promo.MovementId = Movement.Id
                                      AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Remains
+                                      ON MovementBoolean_Remains.MovementId = Movement.Id
+                                     AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id

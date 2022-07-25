@@ -1227,7 +1227,8 @@ uses
   Report_Check_OrderFine in '..\..\FormsFarmacy\Report\Report_Check_OrderFine.pas' {Report_Check_OrderFineForm: TParentForm},
   ChoiceGoodsFromRemains_1303 in '..\..\FormsFarmacy\System\ChoiceGoodsFromRemains_1303.pas' {ChoiceGoodsFromRemains_1303Form: TParentForm},
   Report_IncomeDublyDialog in '..\..\FormsFarmacy\Report\Report_IncomeDublyDialog.pas' {Report_IncomeDublyDialogForm: TParentForm},
-  Report_IncomeDubly in '..\..\FormsFarmacy\Report\Report_IncomeDubly.pas' {Report_IncomeDublyForm: TParentForm};
+  Report_IncomeDubly in '..\..\FormsFarmacy\Report\Report_IncomeDubly.pas' {Report_IncomeDublyForm: TParentForm},
+  Report_Inventory_ProficitReturnOut in '..\..\FormsFarmacy\Report\Report_Inventory_ProficitReturnOut.pas' {Report_Inventory_ProficitReturnOutForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

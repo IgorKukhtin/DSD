@@ -51,7 +51,8 @@ RETURNS TABLE (
   SummCard TFloat,
   isBanAdd boolean, 
   isDiscountCommit Boolean, 
-  isAutoVIPforSales Boolean
+  isAutoVIPforSales Boolean,
+  MobileDiscount TFloat
  )
 AS
 $BODY$
@@ -131,6 +132,7 @@ BEGIN
             , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) THEN TRUE ELSE FALSE END AS isBanAdd
             , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)                 AS isDiscountCommit
             , COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False)                AS isAutoVIPforSales
+            , COALESCE(MovementFloat_MobileDiscount.ValueData, 0)::TFloat               AS MobileDiscount
         FROM Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -256,6 +258,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ManualDiscount
                                     ON MovementFloat_ManualDiscount.MovementId =  Movement.Id
                                    AND MovementFloat_ManualDiscount.DescId = zc_MovementFloat_ManualDiscount()
+
+            LEFT JOIN MovementFloat AS MovementFloat_MobileDiscount
+                                    ON MovementFloat_MobileDiscount.MovementId =  Movement.Id
+                                   AND MovementFloat_MobileDiscount.DescId = zc_MovementFloat_MobileDiscount()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
                                          ON MovementLinkObject_MemberSP.MovementId = Movement.Id

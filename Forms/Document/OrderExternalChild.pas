@@ -87,12 +87,14 @@ type
     GoodsKindName_master_ch: TcxGridDBColumn;
     MeasureName_master_ch: TcxGridDBColumn;
     isPeresort_ch: TcxGridDBColumn;
-    Amount_diff_ch: TcxGridDBColumn;
+    AmountWeight_diff: TcxGridDBColumn;
     GuidesCarInfo: TdsdGuides;
     actOpenFormSend: TdsdOpenForm;
     bbOpenFormSend: TdxBarButton;
     actOpenFormOrderExternalChildDetail: TdsdOpenForm;
     bbOpenFormOrderExternalChildDetail: TdxBarButton;
+    actReport_GoodsMotion: TdsdOpenForm;
+    bbReport_GoodsMotion: TdxBarButton;
   private
     { Private declarations }
   public

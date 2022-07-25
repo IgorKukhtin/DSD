@@ -78,6 +78,10 @@ type
     spSetGoods: TdsdStoredProc;
     actSetGoods: TdsdExecStoredProc;
     dxBarButton4: TdxBarButton;
+    MorionCode: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
+    PriceOOC: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
   private
     { Private declarations }
   public

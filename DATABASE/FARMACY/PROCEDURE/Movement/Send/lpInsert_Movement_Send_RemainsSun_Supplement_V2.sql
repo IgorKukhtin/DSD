@@ -309,7 +309,7 @@ BEGIN
                       ,  COALESCE(NULLIF(OF_DS.ValueData, 0), 10):: Integer AS DaySendSUN
                  FROM ObjectBoolean AS OB
                       LEFT JOIN ObjectFloat   AS OF_DS            ON OF_DS.ObjectId            = OB.ObjectId AND OF_DS.DescId            = zc_ObjectFloat_Unit_HT_SUN_v2()
-                 WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_V2()
+                 WHERE OB.ValueData = TRUE AND OB.DescId in (zc_ObjectBoolean_Unit_SUN_v2_Supplement_in(), zc_ObjectBoolean_Unit_SUN_v2_Supplement_out())
                  ),
      tmpSUN_Send AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
                           , MovementItem.ObjectId            AS GoodsId
@@ -350,7 +350,7 @@ BEGIN
                  FROM ObjectBoolean AS OB
                       LEFT JOIN ObjectFloat   AS OF_DS            ON OF_DS.ObjectId            = OB.ObjectId AND OF_DS.DescId            = zc_ObjectFloat_Unit_HT_SUN_v2()
                       LEFT JOIN ObjectFloat   AS OF_DSA           ON OF_DSA.ObjectId           = OB.ObjectId AND OF_DSA.DescId           = zc_ObjectFloat_Unit_HT_SUN_All()
-                 WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN_V2() AND COALESCE (OF_DSA.ValueData, 0) > 0
+                 WHERE OB.ValueData = TRUE AND OB.DescId in (zc_ObjectBoolean_Unit_SUN_v2_Supplement_in(), zc_ObjectBoolean_Unit_SUN_v2_Supplement_out()) AND COALESCE (OF_DSA.ValueData, 0) > 0
                  ),
      tmpSUN_Send AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
                           , MovementItem.ObjectId            AS GoodsId
@@ -359,10 +359,10 @@ BEGIN
                                                         ON MovementLinkObject_To.MovementId = Movement.Id
                                                        AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
 
-                          INNER JOIN MovementBoolean AS MovementBoolean_SUN
-                                                     ON MovementBoolean_SUN.MovementId = Movement.Id
-                                                    AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
-                                                    AND MovementBoolean_SUN.ValueData  = TRUE
+                          LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                                    ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                   AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                                   
                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                  AND MovementItem.DescId     = zc_MI_Master()
                                                  AND MovementItem.isErased   = FALSE
@@ -373,6 +373,7 @@ BEGIN
                      WHERE Movement.OperDate BETWEEN inOperDate - ((SELECT MAX(tmpUnit.DaySendSUN) AS DaySendSUNAll FROM tmpUnit) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
                        AND Movement.DescId   = zc_Movement_Send()
                        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                       AND COALESCE (MovementBoolean_SUN.ValueData, False) = False
                      GROUP BY MovementLinkObject_To.ObjectId
                             , MovementItem.ObjectId
                      HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (tmpUnit.DaySendSUN :: TVarChar || ' DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
@@ -383,6 +384,8 @@ BEGIN
                             
      INSERT INTO _tmpSUN_Send_SupplementAll_V2 (UnitId, GoodsId)
      SELECT tmpSUN_Send.UnitId_to, tmpSUN_Send.GoodsId FROM tmpSUN_Send;
+
+     --raise notice 'Value 05: % %', (select Count(*) from _tmpSUN_Send_Supplement_V2), (select Count(*) from _tmpSUN_Send_SupplementAll_V2);      
      
      -- исключаем такие перемещения
      INSERT INTO _tmpUnit_SunExclusion_Supplement_V2 (UnitId_from, UnitId_to)

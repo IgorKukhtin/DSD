@@ -4,7 +4,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
   ClientWidth = 1184
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -307
   ExplicitWidth = 1200
   ExplicitHeight = 629
   PixelsPerInch = 96
@@ -751,19 +750,17 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       ExplicitLeft = 2
     end
     inherited cxLabel2: TcxLabel
-      Left = 778
-      Top = 8
+      Left = 874
       Visible = False
-      ExplicitLeft = 778
-      ExplicitTop = 8
+      ExplicitLeft = 874
     end
-    object edIsDate_CarInfo: TcxCheckBox
-      Left = 791
+    object edIsSubPrint: TcxCheckBox
+      Left = 650
       Top = 5
-      Action = actRefresh_Car
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080
       TabOrder = 4
-      Visible = False
-      Width = 115
+      Width = 151
     end
     object cbisGoods: TcxCheckBox
       Left = 197
@@ -950,7 +947,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       Caption = #1055#1086' '#1076#1072#1090#1077' '#1086#1090#1075#1088#1091#1079#1082#1080
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object macUpdateMIChild_AmountNull: TMultiAction [7]
@@ -1018,7 +1014,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         item
           Name = 'IsDate_CarInfo'
           Value = Null
-          Component = edIsDate_CarInfo
+          Component = edIsSubPrint
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1155,6 +1151,170 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       View = cxGridDBTableView
       Caption = 'macUpdate_CarInfo_list'
     end
+    object actUpdate_CarInfo_grid: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CarInfo_grid
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CarInfo_grid
+        end>
+      Caption = 'actUpdate_CarInfo'
+    end
+    object actPrintGoodsDiff_3: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintGoodsDiff_3
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintGoodsDiff_3
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' '#1090#1086#1083#1100#1082#1086' '#1084#1080#1085#1091#1089' '#1088#1077#1079#1077#1088#1074' <'#1048#1090#1086#1075#1086' '#1079#1072' 3 '#1076#1085#1103'>'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' '#1090#1086#1083#1100#1082#1086' '#1084#1080#1085#1091#1089' '#1088#1077#1079#1077#1088#1074' <'#1048#1090#1086#1075#1086' '#1079#1072' 3 '#1076#1085#1103'>'
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = ItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44562d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inText'
+          Value = #1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsSubPrint'
+          Value = Null
+          Component = edIsSubPrint
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')3'#1076#1085#1103
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')3'#1076#1085#1103
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintGoodsDiff_3Upack: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintGoodsDiff_3Upack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintGoodsDiff_3Upack
+        end>
+      Caption = 
+        #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1059#1087#1072#1082#1086#1074#1082#1080' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' '#1090#1086#1083#1100#1082#1086' '#1084#1080#1085#1091#1089' '#1088#1077#1079#1077#1088#1074' <'#1048#1090#1086#1075#1086' '#1079#1072' 3 '#1076 +
+        #1085#1103'>'
+      Hint = 
+        #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1059#1087#1072#1082#1086#1074#1082#1080' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' '#1090#1086#1083#1100#1082#1086' '#1084#1080#1085#1091#1089' '#1088#1077#1079#1077#1088#1074' <'#1048#1090#1086#1075#1086' '#1079#1072' 3 '#1076 +
+        #1085#1103'>'
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = ItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44562d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inText'
+          Value = #1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')3'#1076#1085#1103' '#1091#1087#1072#1082
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')3'#1076#1085#1103' '#1091#1087#1072#1082
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintGoodsDiff_Upack: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintGoodsDiff_Upack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintGoodsDiff_Upack
+        end>
+      Caption = 
+        #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1059#1087#1072#1082#1086#1074#1082#1080#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' '#1090#1086#1083#1100#1082#1086' '#1084#1080#1085#1091#1089' '#1088#1077#1079#1077#1088#1074' <'#1048#1090#1086#1075#1086' '#1079#1072' '#1086#1076#1080#1085 +
+        ' '#1076#1077#1085#1100' '#1087#1086' '#1084#1072#1088#1096#1088#1091#1090#1072#1084'>'
+      Hint = 
+        #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1059#1087#1072#1082#1086#1074#1082#1080#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' '#1090#1086#1083#1100#1082#1086' '#1084#1080#1085#1091#1089' '#1088#1077#1079#1077#1088#1074' <'#1048#1090#1086#1075#1086' '#1079#1072' '#1086#1076#1080#1085 +
+        ' '#1076#1077#1085#1100' '#1087#1086' '#1084#1072#1088#1096#1088#1091#1090#1072#1084'>'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = ItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupPrint;Ord;GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44562d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inText'
+          Value = #1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')'#1091#1087#1072#1082#1086#1074#1082#1072
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')'#1091#1087#1072#1082#1086#1074#1082#1072
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrintGoods_Upack: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1200,63 +1360,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrintGoodsDiff_3: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrintGoodsDiff_3
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintGoodsDiff_3
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' '#1090#1086#1083#1100#1082#1086' '#1084#1080#1085#1091#1089' '#1088#1077#1079#1077#1088#1074' <'#1048#1090#1086#1075#1086' '#1079#1072' 3 '#1076#1085#1103'>'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' '#1090#1086#1083#1100#1082#1086' '#1084#1080#1085#1091#1089' '#1088#1077#1079#1077#1088#1074' <'#1048#1090#1086#1075#1086' '#1079#1072' 3 '#1076#1085#1103'>'
-      ImageIndex = 23
-      DataSets = <
-        item
-          DataSet = ItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 44562d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 44562d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inText'
-          Value = #1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')3'#1076#1085#1103
-      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')3'#1076#1085#1103
-      ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actUpdate_CarInfo_grid: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_CarInfo_grid
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_CarInfo_grid
-        end>
-      Caption = 'actUpdate_CarInfo'
     end
     object actUpdate_CarInfo: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1415,6 +1518,13 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
           Value = Null
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsSubPrint'
+          Value = Null
+          Component = edIsSubPrint
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')'
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')'
@@ -1464,6 +1574,13 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
           Name = 'inText'
           Value = #1056#1077#1079#1077#1088#1074' '#1084#1080#1085#1091#1089
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsSubPrint'
+          Value = Null
+          Component = edIsSubPrint
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = #1055#1077#1095#1072#1090#1100' '#1058#1086#1074#1072#1088#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077')'
@@ -1585,7 +1702,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = Null
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1725,6 +1842,14 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintGoodsDiff_Upack'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintGoodsDiff_3Upack'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1788,6 +1913,15 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     end
     object bbPrintGoods_Upack: TdxBarButton
       Action = actPrintGoods_Upack
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1059#1087#1072#1082#1086#1074#1082#1080' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' <'#1048#1090#1086#1075#1086' '#1079#1072' '#1086#1076#1080#1085' '#1076#1077#1085#1100' '#1087#1086' '#1084#1072#1088#1096#1088#1091#1090#1072#1084'>'
+      Category = 0
+    end
+    object bbPrintGoodsDiff_Upack: TdxBarButton
+      Action = actPrintGoodsDiff_Upack
+      Category = 0
+    end
+    object bbPrintGoodsDiff_3Upack: TdxBarButton
+      Action = actPrintGoodsDiff_3Upack
       Category = 0
     end
   end
@@ -1884,8 +2018,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 264
-    Top = 248
+    Left = 240
+    Top = 256
   end
   object getMovementCheck: TdsdStoredProc
     StoredProcName = 'gpGet_MovementCheck'
@@ -2139,7 +2273,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = ''
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2153,8 +2287,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 832
-    Top = 184
+    Left = 784
+    Top = 144
   end
   object spSelectPrintGoods: TdsdStoredProc
     StoredProcName = 'gpReport_OrderExternal_UpdateGoodsPrint'
@@ -2183,7 +2317,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = False
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2204,8 +2338,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 832
-    Top = 240
+    Left = 848
+    Top = 160
   end
   object spUpdateMIChild_Amount_report: TdsdStoredProc
     StoredProcName = 'gpUpdateMIChild_OrderExternal_Amount_report'
@@ -2263,8 +2397,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 416
+    Left = 408
+    Top = 392
   end
   object spUpdateMIChild_AmountSecond_report: TdsdStoredProc
     StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecond_report'
@@ -2322,8 +2456,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 472
+    Left = 424
+    Top = 440
   end
   object spUpdateMIChild_AmountNull_report: TdsdStoredProc
     StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountNull_report'
@@ -2381,8 +2515,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 576
-    Top = 408
+    Left = 584
+    Top = 392
   end
   object spUpdateMIChild_AmountSecondNull_report: TdsdStoredProc
     StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountSecondNull_report'
@@ -2440,8 +2574,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 552
-    Top = 464
+    Left = 592
+    Top = 456
   end
   object spSelectPrintGoodsDiff: TdsdStoredProc
     StoredProcName = 'gpReport_OrderExternal_UpdateGoodsDiffPrint'
@@ -2473,7 +2607,14 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = False
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSub'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2488,7 +2629,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       end>
     PackSize = 1
     Left = 856
-    Top = 288
+    Top = 216
   end
   object spSelectPrintGoodsDiff_3: TdsdStoredProc
     StoredProcName = 'gpReport_OrderExternal_UpdateGoodsDiff3Print'
@@ -2520,7 +2661,14 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = False
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSub'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2534,8 +2682,8 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 936
-    Top = 184
+    Left = 848
+    Top = 280
   end
   object spSelectPrintGoods_upack: TdsdStoredProc
     StoredProcName = 'gpReport_OrderExternal_UpdateGoodsPrint'
@@ -2564,7 +2712,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       item
         Name = 'inIsDate_CarInfo'
         Value = False
-        Component = edIsDate_CarInfo
+        Component = edIsSubPrint
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2586,6 +2734,114 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       end>
     PackSize = 1
     Left = 944
-    Top = 240
+    Top = 152
+  end
+  object spSelectPrintGoodsDiff_Upack: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderExternal_UpdateGoodsDiffPrint'
+    DataSet = ItemsCDS
+    DataSets = <
+      item
+        DataSet = ItemsCDS
+      end
+      item
+        DataSet = HeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 44562d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 44562d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDate_CarInfo'
+        Value = False
+        Component = edIsSubPrint
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSub'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 936
+    Top = 208
+  end
+  object spSelectPrintGoodsDiff_3Upack: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderExternal_UpdateGoodsDiff3Print'
+    DataSet = ItemsCDS
+    DataSets = <
+      item
+        DataSet = ItemsCDS
+      end
+      item
+        DataSet = HeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 44562d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 44562d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDate_CarInfo'
+        Value = False
+        Component = edIsSubPrint
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSub'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 272
   end
 end

@@ -970,6 +970,8 @@ type
     FarmacyCash2: TMenuItem;
     actReport_IncomeDubly: TdsdOpenForm;
     N358: TMenuItem;
+    actReport_Inventory_ProficitReturnOut: TdsdOpenForm;
+    N359: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

@@ -16,6 +16,7 @@ uses
 
 type
   TCheckLiki24Form = class(TCheckDeferredForm)
+    Action1: TAction;
   private
     { Private declarations }
   public

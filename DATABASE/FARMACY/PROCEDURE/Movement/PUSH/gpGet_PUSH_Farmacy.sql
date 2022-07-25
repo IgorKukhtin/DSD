@@ -1084,6 +1084,20 @@ BEGIN
        END IF;   
    END IF;
     
+   IF inNumberPUSH = 1 AND vbUserId IN (3, 375661, 11263040)
+   THEN
+       SELECT string_agg(T1.GoodsCode::TEXT||' - '||T1.GoodsName, CHR(13)) AS InvNumber
+       INTO vbText
+       FROM gpReport_Inventory_ProficitReturnOut (CURRENT_DATE - INTERVAL '4 DAY', CURRENT_DATE, inSession) AS T1
+       WHERE T1.OperDateStatus = CURRENT_DATE - INTERVAL '1 DAY';   
+
+       IF COALESCE (vbText, '') <> ''
+       THEN         
+         INSERT INTO _PUSH (Id, Text)
+         VALUES (26, 'Товары из полных инвентаризаций присутствующие в возвратах поставщику:'||CHR(13)||CHR(13)||vbText);
+       END IF;   
+   END IF;
+
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id
           , _PUSH.Text                   AS Text

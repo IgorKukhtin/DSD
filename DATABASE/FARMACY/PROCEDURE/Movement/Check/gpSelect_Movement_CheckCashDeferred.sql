@@ -158,7 +158,11 @@ BEGIN
             , Movement.StatusId
             , Object_Status.ObjectCode                   AS StatusCode
             , MovementFloat_TotalCount.ValueData         AS TotalCount
-            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+            , (MovementFloat_TotalSumm.ValueData -
+              CASE WHEN COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) = 0 
+                    AND COALESCE(MovementFloat_MobileDiscount.ValueData, 0) > 0
+                   THEN COALESCE(MovementFloat_MobileDiscount.ValueData, 0)
+                   ELSE 0 END)::TFloat                   AS TotalSumm
             , Object_Unit.ValueData                      AS UnitName
             , Object_CashRegister.ValueData              AS CashRegisterName
             , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId
@@ -227,6 +231,7 @@ BEGIN
             , COALESCE(MovementBoolean_MobileApplication.ValueData, False)::Boolean   AS isMobileApplication
             , COALESCE(MovementBoolean_ConfirmByPhone.ValueData, False)::Boolean      AS isConfirmByPhone
             , MovementDate_Coming.ValueData                                AS DateComing
+            , COALESCE(MovementFloat_MobileDiscount.ValueData, 0)::TFloat  AS MobileDiscount
 
        FROM tmpMovement as tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
@@ -352,6 +357,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ManualDiscount
                                     ON MovementFloat_ManualDiscount.MovementId =  Movement.Id
                                    AND MovementFloat_ManualDiscount.DescId = zc_MovementFloat_ManualDiscount()
+
+            LEFT JOIN MovementFloat AS MovementFloat_MobileDiscount
+                                    ON MovementFloat_MobileDiscount.MovementId =  Movement.Id
+                                   AND MovementFloat_MobileDiscount.DescId = zc_MovementFloat_MobileDiscount()
+
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_MemberSP
                                          ON MovementLinkObject_MemberSP.MovementId = Movement.Id

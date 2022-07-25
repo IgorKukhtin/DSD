@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
              , DayCount TFloat
              , isEDI Boolean
+             , IsRemains Boolean
              , Comment TVarChar
              , StartBegin      TDateTime
              , EndBegin        TDateTime
@@ -130,7 +131,8 @@ BEGIN
                                    - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime)
                           )) :: TFloat AS DayCount
            
-           , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
+           , COALESCE (MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI 
+           , COALESCE (MovementBoolean_Remains.ValueData, FALSE) ::Boolean AS IsRemains
            , MovementString_Comment.ValueData       AS Comment
 
            , MovementDate_StartBegin.ValueData  AS StartBegin
@@ -230,12 +232,16 @@ BEGIN
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Print
-                                      ON MovementBoolean_Print.MovementId =  Movement.Id
+                                      ON MovementBoolean_Print.MovementId = Movement.Id
                                      AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Remains
+                                      ON MovementBoolean_Remains.MovementId = Movement.Id
+                                     AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id

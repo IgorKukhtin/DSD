@@ -14,17 +14,17 @@ inherited CheckJournalForm: TCheckJournalForm
     Height = 477
     TabOrder = 3
     ExplicitTop = 77
-    ExplicitWidth = 911
+    ExplicitWidth = 919
     ExplicitHeight = 477
     ClientRectBottom = 477
     ClientRectRight = 919
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 911
+      ExplicitWidth = 919
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
         Width = 919
         Height = 477
-        ExplicitWidth = 911
+        ExplicitWidth = 919
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -625,6 +625,16 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 78
           end
+          object MobileDiscount: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072' '#1089' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+            DataBinding.FieldName = 'MobileDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
         end
       end
     end
@@ -632,7 +642,7 @@ inherited CheckJournalForm: TCheckJournalForm
   inherited Panel: TPanel
     Width = 919
     Height = 51
-    ExplicitWidth = 911
+    ExplicitWidth = 919
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 42370d

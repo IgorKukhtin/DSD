@@ -65,7 +65,15 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             Options.Editing = False
             Width = 63
           end
-          object GoodsName: TcxGridDBColumn [2]
+          object MorionCode: TcxGridDBColumn [2]
+            Caption = #1050#1086#1076' '#1084#1086#1088#1080#1086#1085#1072
+            DataBinding.FieldName = 'MorionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
+          object GoodsName: TcxGridDBColumn [3]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -73,7 +81,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             Options.Editing = False
             Width = 228
           end
-          object IntenalSP_1303Name: TcxGridDBColumn [3]
+          object IntenalSP_1303Name: TcxGridDBColumn [4]
             Caption = 
               #9#1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1072#1073#1086' '#1079#1072#1075#1072#1083#1100#1085#1086#1087#1088#1080#1081#1085#1103#1090#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086 +
               ' '#1079#1072#1089#1086#1073#1091
@@ -82,56 +90,56 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 151
           end
-          object BrandSPName: TcxGridDBColumn [4]
+          object BrandSPName: TcxGridDBColumn [5]
             Caption = #1058#1086#1088#1075#1086#1074#1077#1083#1100#1085#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'BrandSPName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 115
           end
-          object KindOutSP_1303Name: TcxGridDBColumn [5]
+          object KindOutSP_1303Name: TcxGridDBColumn [6]
             Caption = #1060#1086#1088#1084#1072' '#1074#1080#1087#1091#1089#1082#1091' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'KindOutSP_1303Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
-          object Dosage_1303Name: TcxGridDBColumn [6]
+          object Dosage_1303Name: TcxGridDBColumn [7]
             Caption = #1044#1086#1079#1091#1074#1072#1085#1085#1103' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'Dosage_1303Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 82
           end
-          object CountSP_1303Name: TcxGridDBColumn [7]
+          object CountSP_1303Name: TcxGridDBColumn [8]
             Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1090#1072#1073#1083#1077#1090#1086#1082' '#1074' '#1091#1087#1072#1082#1086#1074#1094#1110' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'CountSP_1303Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 134
           end
-          object MakerCountrySP_1303Name: TcxGridDBColumn [8]
+          object MakerCountrySP_1303Name: TcxGridDBColumn [9]
             Caption = #1053#1072#1081#1084#1077#1085#1091#1074#1072#1085#1085#1103' '#1074#1080#1088#1086#1073#1085#1080#1082#1072', '#1082#1088#1072#1111#1085#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'MakerCountrySP_1303Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object CodeATX: TcxGridDBColumn [9]
+          object CodeATX: TcxGridDBColumn [10]
             Caption = #1050#1086#1076' '#1040#1058#1061
             DataBinding.FieldName = 'CodeATX'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
-          object ReestrSP: TcxGridDBColumn [10]
+          object ReestrSP: TcxGridDBColumn [11]
             Caption = #8470' '#1088#1077#1108#1089#1090#1088#1072#1094#1110#1081#1085#1086#1075#1086' '#1087#1086#1089#1074#1110#1076#1095#1077#1085#1085#1103
             DataBinding.FieldName = 'ReestrSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 116
           end
-          object ValiditySP: TcxGridDBColumn [11]
+          object ValiditySP: TcxGridDBColumn [12]
             Caption = #1058#1077#1088#1084#1110#1085' '#1076#1110#1111
             DataBinding.FieldName = 'ValiditySP'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -139,7 +147,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 89
           end
-          object PriceOptSP: TcxGridDBColumn [12]
+          object PriceOptSP: TcxGridDBColumn [13]
             Caption = #1047#1072#1076#1077#1082#1083#1072#1088#1086#1074#1072#1085#1072' '#1086#1087#1090#1086#1074#1086'-'#1074#1110#1076#1087#1091#1089#1082#1085#1072' '#1094#1110#1085#1072
             DataBinding.FieldName = 'PriceOptSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -148,7 +156,35 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 91
           end
-          object Currency: TcxGridDBColumn [13]
+          object NDS: TcxGridDBColumn [14]
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 37
+          end
+          object PriceOOC: TcxGridDBColumn [15]
+            Caption = #1052#1072#1082#1089'. '#1087#1088#1080#1093#1086#1076' '#1094#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'  '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceOOC'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object PriceSale: TcxGridDBColumn [16]
+            Caption = #1056#1086#1079#1085'. '#1094#1077#1085#1072
+            DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Currency: TcxGridDBColumn [17]
             Caption = #1042#1072#1083#1102#1090#1072
             DataBinding.FieldName = 'CurrencyName'
             HeaderAlignmentHorz = taCenter
@@ -156,7 +192,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             HeaderHint = 'DosageID '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
             Width = 63
           end
-          object ExchangeRate: TcxGridDBColumn [14]
+          object ExchangeRate: TcxGridDBColumn [18]
             Caption = #1054#1092#1110#1094#1110#1081#1085#1080#1081' '#1082#1091#1088#1089
             DataBinding.FieldName = 'ExchangeRate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -169,7 +205,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
               ' '#1087#1086#1076#1072#1085#1085#1103' '#1076#1077#1082#1083#1072#1088#1072#1094#1110#1111' '#1079#1084#1110#1085#1080' '#1086#1087#1090#1086#1074#1086'-'#1074#1110#1076#1087#1091#1089#1082#1085#1086#1111' '#1094#1110#1085#1080
             Width = 83
           end
-          object OrderNumberSP: TcxGridDBColumn [15]
+          object OrderNumberSP: TcxGridDBColumn [19]
             Caption = #8470' '#1085#1072#1082#1072#1091', '#1074' '#1103#1082#1086#1084#1091' '#1074#1085#1077#1089#1077#1085#1086' '#1051#1047
             DataBinding.FieldName = 'OrderNumberSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -180,7 +216,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
             HeaderHint = #1054#1076#1080#1085#1080#1094#1103' '#1074#1080#1084#1110#1088#1091' '#1089#1080#1083#1080' '#1076#1110#1111
             Width = 66
           end
-          object OrderDateSP: TcxGridDBColumn [16]
+          object OrderDateSP: TcxGridDBColumn [20]
             Caption = #1044#1072#1090#1072' '#1085#1072#1082#1072#1079#1091', '#1074' '#1103#1082#1086#1084#1091' '#1074#1085#1077#1089#1077#1085#1086' '#1051#1047
             DataBinding.FieldName = 'OrderDateSP'
             PropertiesClassName = 'TcxDateEditProperties'

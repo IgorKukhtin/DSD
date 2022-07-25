@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_GoodsSPSearch_1303_From_Excel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSPSearch_1303_From_Excel (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSPSearch_1303_From_Excel (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSPSearch_1303_From_Excel(
     IN inMovementId               Integer   ,    -- Идентификатор документа
@@ -30,6 +30,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbId Integer;
+   DECLARE vbGoodsId Integer;
 
    DECLARE vbIntenalSP_1303Id Integer;
    DECLARE vbBrandSPId Integer;
@@ -44,6 +45,7 @@ $BODY$
    DECLARE vbOrderNumberSP Integer;
 
    DECLARE vbValiditySP TDateTime;
+   DECLARE vbCount Integer;
    DECLARE text_var1 text;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
@@ -173,6 +175,14 @@ BEGIN
      EXCEPTION WHEN others THEN 
        vbValiditySP := Null;
      END;
+     
+     inOrderDateNumberSP := REPLACE(inOrderDateNumberSP, ', від', '; від');
+     inOrderDateNumberSP := REPLACE(inOrderDateNumberSP, '; від', ';від');
+     inOrderDateNumberSP := REPLACE(inOrderDateNumberSP, 'від.', 'від ');
+     
+     vbCount := 1;
+     WHILE SPLIT_PART (inOrderDateNumberSP, ';', vbCount + 1) <> '' LOOP vbCount := vbCount + 1; END LOOP;     
+     inOrderDateNumberSP := SPLIT_PART (inOrderDateNumberSP, ';', vbCount);
 
      -- Дата та номер наказу МОЗ про декларування змін оптово-відпускної ціни на лікарські засоби
      BEGIN  
@@ -198,50 +208,51 @@ BEGIN
      END IF;
 
      -- ищем если уже создали
-     vbId := (SELECT MovementItem.Id
-              FROM MovementItem
+     SELECT MovementItem.Id, MovementItem.ObjectId
+     INTO vbId, vbGoodsId
+     FROM MovementItem
 
 
-                   LEFT JOIN MovementItemLinkObject AS MI_IntenalSP_1303
-                                                    ON MI_IntenalSP_1303.MovementItemId = MovementItem.Id
-                                                   AND MI_IntenalSP_1303.DescId = zc_MILinkObject_IntenalSP_1303()
+          LEFT JOIN MovementItemLinkObject AS MI_IntenalSP_1303
+                                           ON MI_IntenalSP_1303.MovementItemId = MovementItem.Id
+                                          AND MI_IntenalSP_1303.DescId = zc_MILinkObject_IntenalSP_1303()
                                                     
+ 
+          LEFT JOIN MovementItemLinkObject AS MI_BrandSP
+                                           ON MI_BrandSP.MovementItemId = MovementItem.Id
+                                          AND MI_BrandSP.DescId = zc_MILinkObject_BrandSP()                                                    
 
-                   LEFT JOIN MovementItemLinkObject AS MI_BrandSP
-                                                    ON MI_BrandSP.MovementItemId = MovementItem.Id
-                                                   AND MI_BrandSP.DescId = zc_MILinkObject_BrandSP()                                                    
+          LEFT JOIN MovementItemLinkObject AS MI_Dosage_1303
+                                           ON MI_Dosage_1303.MovementItemId = MovementItem.Id
+                                          AND MI_Dosage_1303.DescId = zc_MILinkObject_Dosage_1303()
 
-                   LEFT JOIN MovementItemLinkObject AS MI_Dosage_1303
-                                                    ON MI_Dosage_1303.MovementItemId = MovementItem.Id
-                                                   AND MI_Dosage_1303.DescId = zc_MILinkObject_Dosage_1303()
+          LEFT JOIN MovementItemLinkObject AS MI_KindOutSP_1303
+                                           ON MI_KindOutSP_1303.MovementItemId = MovementItem.Id
+                                          AND MI_KindOutSP_1303.DescId = zc_MILinkObject_KindOutSP_1303()
+                                          AND MI_KindOutSP_1303.ObjectId = vbKindOutSP_1303Id
 
-                   LEFT JOIN MovementItemLinkObject AS MI_KindOutSP_1303
-                                                    ON MI_KindOutSP_1303.MovementItemId = MovementItem.Id
-                                                   AND MI_KindOutSP_1303.DescId = zc_MILinkObject_KindOutSP_1303()
-                                                   AND MI_KindOutSP_1303.ObjectId = vbKindOutSP_1303Id
+          LEFT JOIN MovementItemLinkObject AS MI_CountSP_1303
+                                           ON MI_CountSP_1303.MovementItemId = MovementItem.Id
+                                          AND MI_CountSP_1303.DescId = zc_MILinkObject_CountSP_1303()
 
-                   LEFT JOIN MovementItemLinkObject AS MI_CountSP_1303
-                                                    ON MI_CountSP_1303.MovementItemId = MovementItem.Id
-                                                   AND MI_CountSP_1303.DescId = zc_MILinkObject_CountSP_1303()
-
-                   LEFT JOIN MovementItemString AS MIString_CodeATX
-                                                ON MIString_CodeATX.MovementItemId = MovementItem.Id
-                                               AND MIString_CodeATX.DescId = zc_MIString_CodeATX()  
+          LEFT JOIN MovementItemString AS MIString_CodeATX
+                                       ON MIString_CodeATX.MovementItemId = MovementItem.Id
+                                      AND MIString_CodeATX.DescId = zc_MIString_CodeATX()  
                                               
-                   LEFT JOIN MovementItemString AS MIString_ReestrSP
-                                                ON MIString_ReestrSP.MovementItemId = MovementItem.Id
-                                               AND MIString_ReestrSP.DescId = zc_MIString_ReestrSP()  
+          LEFT JOIN MovementItemString AS MIString_ReestrSP
+                                       ON MIString_ReestrSP.MovementItemId = MovementItem.Id
+                                      AND MIString_ReestrSP.DescId = zc_MIString_ReestrSP()  
 
-              WHERE MovementItem.MovementId = inMovementId
-                AND (MI_IntenalSP_1303.ObjectId = vbIntenalSP_1303Id OR COALESCE(vbIntenalSP_1303Id, 0) = 0) 
-                AND (MI_BrandSP.ObjectId = vbBrandSPId OR COALESCE(vbBrandSPId, 0) = 0)
-                AND (MI_Dosage_1303.ObjectId = vbDosage_1303Id OR COALESCE(vbDosage_1303Id, 0) = 0)
-                AND (MI_CountSP_1303.ObjectId = vbCountSP_1303Id OR COALESCE(vbCountSP_1303Id, 0) = 0)
-                AND COALESCE(MIString_CodeATX.ValueData, '') = TRIM(inCodeATX)
-                AND COALESCE(MIString_ReestrSP.ValueData, '') = TRIM(inReestrSP)
-              Limit 1 -- на всякий случай
-              );
-              
+     WHERE MovementItem.MovementId = inMovementId
+       AND (MI_IntenalSP_1303.ObjectId = vbIntenalSP_1303Id OR COALESCE(vbIntenalSP_1303Id, 0) = 0) 
+       AND (MI_BrandSP.ObjectId = vbBrandSPId OR COALESCE(vbBrandSPId, 0) = 0)
+       AND (MI_Dosage_1303.ObjectId = vbDosage_1303Id OR COALESCE(vbDosage_1303Id, 0) = 0)
+       AND (MI_CountSP_1303.ObjectId = vbCountSP_1303Id OR COALESCE(vbCountSP_1303Id, 0) = 0)
+       AND COALESCE(MIString_CodeATX.ValueData, '') = TRIM(inCodeATX)
+       AND COALESCE(MIString_ReestrSP.ValueData, '') = TRIM(inReestrSP)
+     Limit 1 -- на всякий случай
+     ;
+                            
      IF EXISTS(SELECT MovementItem.ID FROM MovementItem WHERE MovementItem.ID = vbId AND MovementItem.isErased = True)
      THEN
        UPDATE MovementItem SET isErased = False  WHERE MovementItem.ID = vbId AND MovementItem.isErased = True;
@@ -255,6 +266,7 @@ BEGIN
     -- сохранить запись
     PERFORM lpInsertUpdate_MovementItem_GoodsSPSearch_1303 (ioId                      := COALESCE(vbId, 0)
                                                           , inMovementId              := inMovementId
+                                                          , inGoodsId                 := COALESCE(vbGoodsId, 0)
                                                           , inCol                     := inCol
                                                           , inIntenalSP_1303Id        := vbIntenalSP_1303Id
                                                           , inBrandSPId               := vbBrandSPId
@@ -271,19 +283,33 @@ BEGIN
                                                           , inOrderNumberSP           := vbOrderNumberSP
                                                           , inOrderDateSP             := vbOrderDateSP
                                                           , inUserId                  := vbUserId);
+                                                          
+    /*IF COALESCE(vbId, 0) <> 0 AND vbOrderDateSP IS NOT NULL
+    THEN
+      -- сохранили <>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OrderNumberSP(), vbId, vbOrderNumberSP);
 
+      -- сохранили <>
+      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OrderDateSP(), vbId, vbOrderDateSP);
+    
+    END IF;*/
+                                                                                                                    
   EXCEPTION
      WHEN others THEN 
        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
        --PERFORM lpAddObject_Goods_Temp_Error('gpInsertUpdate_MI_GoodsSPSearch_1303_From_Excel', text_var1::TVarChar, vbUserId);
   END;
 
-  IF COALESCE (text_var1, '') <> ''
+  /*raise NOTICE  'Value 03: <%> <%> <%> <%>', 
+                      vbId, vbGoodsId, vbOrderDateSP, vbOrderNumberSP;  */   
+  
+
+/*  IF COALESCE (text_var1, '') <> ''
   THEN
      raise EXCEPTION  'Value 03: <%> <%> <%> <%> <%> <%> <%> <%> <%> <%> <%> <%> <%> <%>', 
                       vbId, vbIntenalSP_1303Id, vbBrandSPId, vbKindOutSP_1303Id, vbDosage_1303Id, vbCountSP_1303Id, 
                       vbMakerCountrySP_1303Id, vbCurrencyId, vbExchangeRate, vbValiditySP, vbOrderDateSP, vbOrderNumberSP, text_var1, TRIM(inMakerCountrySP_1303Name);     
-  END IF;
+  END IF;*/
   
 END;
 $BODY$
@@ -296,4 +322,5 @@ $BODY$
 
 -- тест
 
--- select * from gpInsertUpdate_MI_GoodsSPSearch_1303_From_Excel(inMovementId := 28341113 , inIntenalSPName := 'Comb drug' , inBrandSPName := 'Діаніл ПД 4 з вмістом глюкози 1,36% м/об/13,6мг/мл' , inKindOutSP_1303Name := 'Розчин для перитонеального діалізу' , inDosage_1303Name := 'на 1000 мл розчину: Глюкоза моногідрат 15 г, натрію хлорид 5,38, кальцію хлорид дигідрат 0,184 г, магнію хлорид гексагідрат 0,051 г, натрію лактат 4,48 г' , inCountSP_1303Name := '2000 мл розчину у пластиковому мішку "Віафлекс" PL146-3,одинарному, обладнаному ін`єкційним портом та з`єднувачем, або у мішку "Твін Бег" обладнаному ін`єкційним портом з інтегрованим за допомогаю двох магістралей та Y-з`єднувача порожнім пластиковим мішк' , inMakerCountrySP_1303Name := 'Бакстер Хелскеа С.А., Ірландія Бакстер Меньюфекчерінг Сп. з о.о., Польща' , inCodeATX := 'B05DB' , inReestrSP := 'UA/12425/01/03' , inValiditySP := 'необмежений' , inPriceOptSP := 1037.27 , inExchangeRate := '28,3408 грн. (за 1 дол. США)' , inOrderDateNumberSP := 'від 15.10.2020 № 2334' ,  inSession := '3');
+-- select * from gpInsertUpdate_MI_GoodsSPSearch_1303_From_Excel(inMovementId := 28341113 , inIntenalSPName := 'Comb drug' , inBrandSPName := 'Діаніл ПД 4 з вмістом глюкози 1,36% м/об/13,6мг/мл' , inKindOutSP_1303Name := 'Розчин для перитонеального діалізу' , inDosage_1303Name := 'на 1000 мл розчину: Глюкоза моногідрат 15 г, натрію хлорид 5,38, кальцію хлорид дигідрат 0,184 г, магнію хлорид гексагідрат 0,051 г, натрію лактат 4,48 г' , inCountSP_1303Name := '2000 мл розчину у пластиковому мішку "Віафлекс" PL146-3,одинарному, обладнаному ін`єкційним портом та з`єднувачем, або у мішку "Твін Бег" обладнаному ін`єкційним портом з інтегрованим за допомогаю двох магістралей та Y-з`єднувача порожнім пластиковим мішк' , inMakerCountrySP_1303Name := 'Бакстер Хелскеа С.А., Ірландія Бакстер Меньюфекчерінг Сп. з о.о., Польща' , inCodeATX := 'B05DB' , inReestrSP := 'UA/12425/01/03' , inValiditySP := 'необмежений' , inPriceOptSP := 1037.27 , inExchangeRate := '28,3408 грн. (за 1 дол. США)', inCol := 1, inOrderDateNumberSP := 'від 16.03.2016 №191, від 29.11.2018 №2221 ' ,  inSession := '3');
+

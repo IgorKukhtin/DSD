@@ -12,7 +12,9 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal_UpdateGoodsPrint(
     IN inToId              Integer   , -- Кому (в документе) 
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsGroupNameFull TVarChar, MeasureName TVarChar
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar
+             , GoodsGroupNameFull TVarChar, MeasureName TVarChar
+             , GoodsCode_sub Integer, GoodsName_sub TVarChar, GoodsKindName_sub  TVarChar
              , DayOfWeekName_CarInfo TVarChar
              , OperDate_CarInfo_date TDateTime
              , Count_Partner Integer
@@ -533,7 +535,6 @@ BEGIN
                                    WHERE ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     > 0
                                      AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
                                      AND Object_GoodsByGoodsKind_View.GoodsId IN (SELECT DISTINCT tmpGroup.GoodsId FROM tmpGroup)
-                                     AND inisSub = TRUE
                                   )
 
 
@@ -544,6 +545,10 @@ BEGIN
             , Object_GoodsKind.ValueData                    AS GoodsKindName
             , ObjectString_Goods_GroupNameFull.ValueData    AS GoodsGroupNameFull
             , Object_Measure.ValueData                      AS MeasureName
+
+            , Object_Goods_sub.ObjectCode                AS GoodsCode_sub
+            , Object_Goods_sub.ValueData                 AS GoodsName_sub
+            , Object_GoodsKind_sub.ValueData             AS GoodsKindName_sub
 
             , tmpWeekDay.DayOfWeekName_Full    :: TVarChar  AS DayOfWeekName_CarInfo
             , tmpGroup.OperDate_CarInfo_date   :: TDateTime AS OperDate_CarInfo_date
@@ -607,6 +612,9 @@ BEGIN
 
           LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = CASE WHEN inisSub = TRUE THEN COALESCE (tmpGoodsByGoodsKind.GoodsId_sub, tmpGroup.GoodsId) ELSE tmpGroup.GoodsId END
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = CASE WHEN inisSub = TRUE THEN COALESCE (tmpGoodsByGoodsKind.GoodsKindId_sub, tmpGroup.GoodsKindId) ELSE tmpGroup.GoodsKindId END 
+
+          LEFT JOIN Object AS Object_Goods_sub     ON Object_Goods_sub.Id     = tmpGoodsByGoodsKind.GoodsId_sub
+          LEFT JOIN Object AS Object_GoodsKind_sub ON Object_GoodsKind_sub.Id = tmpGoodsByGoodsKind.GoodsKindId_sub
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id

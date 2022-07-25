@@ -42,50 +42,10 @@ BEGIN
                             , ObjectFloat_NDSKind_NDS.ValueData
                        FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                        WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
-      , tmpMovGoodsSP_1303 AS (SELECT Movement.Id                           AS Id
-                                    , Movement.OperDate                     AS OperDate
-                                    , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC) AS ord
-                               FROM Movement 
-                               WHERE Movement.DescId = zc_Movement_GoodsSP_1303()
-                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
-                               )
-      , tmpMIGoodsSP_1303All AS (SELECT Movement.OperDate                     AS OperDate
-                                      , COALESCE (MovementNext.OperDate, zc_DateEnd()) AS DateEnd
-                                      , MovementItem.Id                       AS MovementItemId
-                                      , MovementItem.ObjectId                 AS GoodsId
-                                      , MovementItem.Amount                   AS PriceSale
-                                 FROM tmpMovGoodsSP_1303 AS Movement
-                                            
-                                      INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
-                                                             AND MovementItem.MovementId = Movement.Id
-                                                             AND MovementItem.isErased = False
-                                                             AND (MovementItem.ObjectId = vbGoodsId OR COALESCE (vbGoodsId, 0) = 0)
-
-                                                                                                                                   
-                                      LEFT JOIN tmpMovGoodsSP_1303 AS MovementNext
-                                                                   ON MovementNext.Ord =  Movement.Ord + 1
-                                  )
-      , tmpMIFlot AS (SELECT *
-                      FROM  MovementItemFloat
-                      WHERE MovementItemFloat.MovementItemId in (SELECT tmpMIGoodsSP_1303All.MovementItemId FROM tmpMIGoodsSP_1303All))
-      , tmpMIGoodsSP_1303 AS (SELECT MovementItem.GoodsId
-                                   , MovementItem.PriceSale
-                                   , MIFloat_PriceOptSP.ValueData          AS PriceOptSP
-                                   , ROW_NUMBER()OVER(PARTITION BY MovementItem.GoodsId ORDER BY MovementItem.DateEnd DESC) as ORD
-
-                              FROM tmpMIGoodsSP_1303All AS MovementItem
-
-                                   LEFT JOIN tmpMIFlot AS MIFloat_PriceOptSP
-                                                               ON MIFloat_PriceOptSP.MovementItemId = MovementItem.MovementItemId
-                                                              AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
-
-                              WHERE MovementItem.OperDate <= CURRENT_DATE
-                                AND MovementItem.DateEnd > CURRENT_DATE
-                              )
       , tmpGoodsSPRegistry_1303 AS (SELECT MovementItem.Id               AS MovementItemId
                                          , MovementItem.ObjectId         AS GoodsId
                                          , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat       AS NDS
-                                         , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
+                                         , MIFloat_PriceOptSP.ValueData                                 AS PriceOptSP
                                          , ROUND(MIFloat_PriceOptSP.ValueData  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2)::TFloat AS PriceSale
 
                                                                           -- № п/п - на всякий случай
@@ -121,8 +81,9 @@ BEGIN
                                          LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                                               ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
 
-                                    WHERE Movement.DescId = zc_Movement_GoodsSPRegistry_1303()
+                                    WHERE Movement.DescId = zc_Movement_GoodsSPSearch_1303()
                                       AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                                      AND COALESCE (MovementItem.ObjectId, 0) <> 0
                                    )
        , tmpContainer AS (SELECT Container.ObjectId
                                , SUM(Container.Amount)                  AS Amount
@@ -133,43 +94,27 @@ BEGIN
                             AND (Container.ObjectId = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
                           GROUP BY Container.ObjectId
                          )
-       , tmpData_Union AS (SELECT COALESCE(tmpGoodsSPRegistry_1303.GoodsId, tmpMIGoodsSP_1303.GoodsId)    AS GoodsId
-
-                                , COALESCE (tmpMIGoodsSP_1303.PriceOptSP,  tmpGoodsSPRegistry_1303.PriceOptSP, 0)::TFloat                                               AS PriceOptSP
- 
-                                , tmpGoodsSPRegistry_1303.MovementItemId
-
-                          FROM tmpGoodsSPRegistry_1303
-                          
-                               FULL JOIN tmpMIGoodsSP_1303 ON tmpMIGoodsSP_1303.GoodsId = tmpGoodsSPRegistry_1303.GoodsId
-                                                          AND tmpMIGoodsSP_1303.Ord = 1
-                                                                              
-                          WHERE COALESCE(tmpGoodsSPRegistry_1303.Ord, 1) = 1
-                           )
        , tmpData_1303 AS (SELECT Object_Goods_Retail.Id    AS GoodsId
                                , Object_Goods.Id           AS GoodsMainId  
-                               , ObjectFloat_NDSKind_NDS.ValueData                     AS NDS
 
-                               , tmpData_Union.PriceOptSP                              AS PriceOptSP
-
-                               , Round(tmpData_Union.PriceOptSP  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2)::TFloat  AS PriceSale
+                               , tmpGoodsSPRegistry_1303.NDS                          AS NDS
+                               , tmpGoodsSPRegistry_1303.PriceOptSP                   AS PriceOptSP
+                               , tmpGoodsSPRegistry_1303.PriceSale                    AS PriceSale
                                  
                                , tmpContainer.Amount::TFloat      AS Remains
 
-                               , tmpData_Union.MovementItemId
+                               , tmpGoodsSPRegistry_1303.MovementItemId
 
-                          FROM tmpData_Union
+                          FROM tmpGoodsSPRegistry_1303
                           
-                               LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id =tmpData_Union.GoodsId
+                               LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = tmpGoodsSPRegistry_1303.GoodsId
                                LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.Id
                                                                                    AND Object_Goods_Retail.RetailId = vbObjectId
                               
-                               LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
-                                                    ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
-                                                    
                                LEFT JOIN tmpContainer ON tmpContainer.ObjectId = Object_Goods_Retail.Id 
                                                     
                           WHERE COALESCE (Object_Goods_Retail.Id, 0) <> 0
+                            AND tmpGoodsSPRegistry_1303.Ord = 1
                           )
        , tmpIncome_All AS (SELECT Container.ObjectId                                          AS GoodsId
                                 , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)   AS MovementId

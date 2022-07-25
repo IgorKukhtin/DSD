@@ -107,6 +107,16 @@ type
     macUpdateMIChild_Amount: TMultiAction;
     macUpdateMIChild_AmountSecond: TMultiAction;
     bbUpdateMIChild_AmountSecond: TdxBarButton;
+    spUpdateMIChild_AmountNull: TdsdStoredProc;
+    spUpdateMIChild_AmountSecondNull: TdsdStoredProc;
+    actUpdateMIChild_AmountNull: TdsdExecStoredProc;
+    macUpdateMIChild_AmountNull_list: TMultiAction;
+    macUpdateMIChild_AmountNull: TMultiAction;
+    actUpdateMIChild_AmountSecondNull: TdsdExecStoredProc;
+    macUpdateMIChild_AmountSecondNull_list: TMultiAction;
+    macUpdateMIChild_AmountSecondNull: TMultiAction;
+    bbUpdateMIChild_AmountNull: TdxBarButton;
+    bbUpdateMIChild_AmountSecondNull: TdxBarButton;
   private
     { Private declarations }
   public

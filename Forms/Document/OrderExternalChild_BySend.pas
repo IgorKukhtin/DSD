@@ -80,6 +80,8 @@ type
     Amount_diff_ch: TcxGridDBColumn;
     actOpenFormSend: TdsdOpenForm;
     bbOpenFormSend: TdxBarButton;
+    actReport_GoodsMotion: TdsdOpenForm;
+    bbReport_GoodsMotion: TdxBarButton;
   private
     { Private declarations }
   public

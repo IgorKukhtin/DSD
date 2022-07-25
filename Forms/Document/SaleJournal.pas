@@ -313,6 +313,12 @@ type
     actPrintTEST: TdsdPrintAction;
     bbTEST: TdxBarButton;
     spSelectPrint_test: TdsdStoredProc;
+    spGet_Export_FileNameXML: TdsdStoredProc;
+    spSelectSale_xml: TdsdStoredProc;
+    actGet_Export_FileNameXml: TdsdExecStoredProc;
+    actExport_fileXml: TdsdStoredProcExportToFile;
+    macExport_XML: TMultiAction;
+    bbExport_XML: TdxBarButton;
   private
     { Private declarations }
   public

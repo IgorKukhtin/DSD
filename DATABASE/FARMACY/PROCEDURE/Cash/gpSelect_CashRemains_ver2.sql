@@ -1308,7 +1308,7 @@ BEGIN
                                    
            LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                             ON MI_IntenalSP.MovementItemId = tmpGoodsSP_1303.MovementItemId
-                                           AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+                                           AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP_1303()
            LEFT JOIN  Object AS Object_IntenalSP ON Object_IntenalSP.Id = COALESCE(NULLIF(tmpGoodsSP.IntenalSPId, 0), MI_IntenalSP.ObjectId)
 
            LEFT JOIN MovementItemLinkObject AS MI_BrandSP
