@@ -214,7 +214,7 @@ BEGIN
                       WHERE Object_ProdColorPattern.DescId = zc_Object_ProdColorPattern()
                        AND (Object_ProdColorPattern.isErased = FALSE OR inIsErased = TRUE)
                      )
-                     
+
           , tmpGoodsPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS ObjectId
                                    , Object_GoodsPhoto.Id                      AS PhotoId
                                    , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsPhoto_Goods.ChildObjectId ORDER BY Object_GoodsPhoto.Id) AS Ord
@@ -240,8 +240,7 @@ BEGIN
            tmpData.Id
          , tmpData.Code
          , tmpData.Name
-         --, (tmpData.ProdColorGroupName || ' ' || tmpData.Name) :: TVarChar AS Name_all
-         , (tmpData.ProdColorGroupName || CASE WHEN LENGTH (tmpData.Name) > 1 THEN ' ' || tmpData.Name ELSE '' END || ' (' || tmpData.ModelName || ')') :: TVarChar  AS Name_all
+         , zfCalc_ProdColorPattern_isErased (tmpData.ProdColorGroupName, tmpData.Name, tmpData.ModelName, tmpData.isErased) :: TVarChar  AS Name_all
          , ROW_NUMBER() OVER (PARTITION BY tmpData.ColorPatternId ORDER BY tmpData.Code ASC) :: Integer AS NPP
 
          , tmpData.Comment
@@ -280,16 +279,16 @@ BEGIN
          , tmpData.EKPrice
          , tmpData.EKPriceWVAT
 
-          -- Цена продажи без НДС
-        , tmpData.BasisPrice
-        , tmpData.BasisPriceWVAT
+           -- Цена продажи без НДС
+         , tmpData.BasisPrice
+         , tmpData.BasisPriceWVAT
 
-          -- Цена Options без НДС
-        , tmpData.SalePrice     ::TFloat
-        , tmpData.SalePriceWVAT ::TFloat
+           -- Цена Options без НДС
+         , tmpData.SalePrice     ::TFloat
+         , tmpData.SalePriceWVAT ::TFloat
 
-        , TRUE :: Boolean AS isEnabled
-        , CASE WHEN tmpPhoto1.ObjectId > 0 OR tmpPhoto2.ObjectId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
+         , TRUE :: Boolean AS isEnabled
+         , CASE WHEN tmpPhoto1.ObjectId > 0 OR tmpPhoto2.ObjectId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
 
      FROM tmpData
              LEFT JOIN tmpProdColorPatternPhoto AS tmpPhoto1
@@ -306,8 +305,7 @@ BEGIN
            tmpData.Id
          , tmpData.Code
          , tmpData.Name
-         --, (tmpData.ProdColorGroupName || ' ' || tmpData.Name) :: TVarChar AS Name_all
-         , (tmpData.ProdColorGroupName || CASE WHEN LENGTH (tmpData.Name) > 1 THEN ' ' || tmpData.Name ELSE '' END || ' (' || Object_Model.ValueData || ')') :: TVarChar  AS Name_all
+         , zfCalc_ProdColorPattern_isErased (tmpData.ProdColorGroupName, tmpData.Name, Object_Model.ValueData, tmpData.isErased) :: TVarChar  AS Name_all
          , ROW_NUMBER() OVER (PARTITION BY Object_ColorPattern.Id ORDER BY tmpData.Code ASC) :: Integer AS NPP
 
          , tmpData.Comment
@@ -346,16 +344,16 @@ BEGIN
          , tmpData.EKPrice
          , tmpData.EKPriceWVAT
 
-          -- Цена продажи без НДС
-        , tmpData.BasisPrice
-        , tmpData.BasisPriceWVAT
+           -- Цена продажи без НДС
+         , tmpData.BasisPrice
+         , tmpData.BasisPriceWVAT
 
-          -- Цена Options без НДС
-        , tmpData.SalePrice     ::TFloat
-        , tmpData.SalePriceWVAT ::TFloat
+           -- Цена Options без НДС
+         , tmpData.SalePrice     ::TFloat
+         , tmpData.SalePriceWVAT ::TFloat
 
-        , FALSE :: Boolean AS isEnabled
-        , CASE WHEN tmpPhoto1.ObjectId > 0 OR tmpPhoto2.ObjectId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
+         , FALSE :: Boolean AS isEnabled
+         , CASE WHEN tmpPhoto1.ObjectId > 0 OR tmpPhoto2.ObjectId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
 
      FROM Object AS Object_ColorPattern
           INNER JOIN (SELECT 0                  :: Integer AS Id

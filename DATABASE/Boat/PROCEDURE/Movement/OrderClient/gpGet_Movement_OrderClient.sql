@@ -83,9 +83,9 @@ BEGIN
           , Object_Status.ObjectCode                  AS StatusCode
           , Object_Status.ValueData                   AS StatusName
 
-          , MovementBoolean_PriceWithVAT.ValueData    AS PriceWithVAT
+          , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
           , MovementFloat_VATPercent.ValueData        AS VATPercent
-          , MovementFloat_DiscountTax.ValueData     AS DiscountTax
+          , MovementFloat_DiscountTax.ValueData       AS DiscountTax
           , MovementFloat_DiscountNextTax.ValueData   AS DiscountNextTax
 
           , Object_From.Id                            AS FromId

@@ -34,14 +34,14 @@ BEGIN
            ,  0 :: Integer            AS GoodsId
            , '' :: TVarChar           AS GoodsName
            ,  0 :: Integer            AS ProdColorPatternId
-           , '' :: TVarChar           AS ProdColorPatternName 
+           , '' :: TVarChar           AS ProdColorPatternName
            ,  0 :: Integer            AS ColorPatternId
            , '' :: TVarChar           AS ColorPatternName
        ;
    ELSE
      RETURN QUERY
-     SELECT 
-           Object_ProdColorItems.Id         AS Id 
+     SELECT
+           Object_ProdColorItems.Id         AS Id
          , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_Goods.ObjectCode ASC, Object_ProdColorItems.ObjectCode ASC) :: Integer AS Code
          , Object_ProdColorItems.ValueData  AS Name
 
@@ -54,15 +54,14 @@ BEGIN
          , Object_Goods.ValueData    ::TVarChar AS GoodsName
 
          , Object_ProdColorPattern.Id         ::Integer  AS ProdColorPatternId
-         --, Object_ProdColorPattern.ValueData  ::TVarChar AS ProdColorPatternName
-         , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END || ' (' || Object_Model_pcp.ValueData || ')') :: TVarChar  AS  ProdColorPatternName
-         
+         , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model_pcp.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
+
          , Object_ColorPattern.Id        AS ColorPatternId
          , Object_ColorPattern.ValueData AS ColorPatternName
      FROM Object AS Object_ProdColorItems
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorItems.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorItems_Comment()  
+                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorItems_Comment()
 
           LEFT JOIN ObjectLink AS ObjectLink_Product
                                ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
@@ -72,31 +71,32 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Goods
                                ON ObjectLink_Goods.ObjectId = Object_ProdColorItems.Id
                               AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorItems_Goods()
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId 
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_ProdColor
                                ON ObjectLink_ProdColor.ObjectId = Object_ProdColorItems.Id
                               AND ObjectLink_ProdColor.DescId = zc_ObjectLink_ProdColorItems_ProdColor()
-          LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_ProdColor.ChildObjectId 
+          LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_ProdColor.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
                                ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdColorItems.Id
                               AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdColorItems_ProdColorPattern()
-          LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId 
-               LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_ProdColorGroup
-                                    ON ObjectLink_ProdColorPattern_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
-                                   AND ObjectLink_ProdColorPattern_ProdColorGroup.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
-               LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorPattern_ProdColorGroup.ChildObjectId
+          LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
 
-               LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_ColorPattern
-                                    ON ObjectLink_ProdColorPattern_ColorPattern.ObjectId = Object_ProdColorPattern.Id
-                                   AND ObjectLink_ProdColorPattern_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
-               LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ProdColorPattern_ColorPattern.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_ProdColorGroup
+                               ON ObjectLink_ProdColorPattern_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_ProdColorPattern_ProdColorGroup.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+          LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorPattern_ProdColorGroup.ChildObjectId
 
-               LEFT JOIN ObjectLink AS ObjectLink_ColorPattern_Model
-                                    ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ProdColorPattern_ColorPattern.ChildObjectId
-                                   AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
-               LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_ColorPattern
+                               ON ObjectLink_ProdColorPattern_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_ProdColorPattern_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ProdColorPattern_ColorPattern.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern_Model
+                               ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ProdColorPattern_ColorPattern.ChildObjectId
+                              AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
+          LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
      WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems()
       AND Object_ProdColorItems.Id = inId
      ;
@@ -106,7 +106,6 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
@@ -114,4 +113,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
---SELECT * FROM gpGet_Object_ProdColorItems (0, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Object_ProdColorItems (0, zfCalc_UserAdmin())

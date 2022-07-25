@@ -21,10 +21,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MovementId_OrderClient Integer
              , OperDate_OrderClient  TDateTime
              , InvNumber_OrderClient TVarChar
+             , InvNumber_OrderClient_load TVarChar
              , StatusCode_OrderClient Integer
              , StatusName_OrderClient TVarChar
              , VATPercent_OrderClient TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummVAT TFloat
+             , OperPrice_load       TFloat
+             , TransportSumm_load   TFloat
              , isBasicConf Boolean, isProdColorPattern Boolean
 
              , MovementId_Invoice Integer
@@ -81,6 +84,7 @@ BEGIN
            , CAST (0 AS Integer)       AS MovementId_OrderClient
            , CAST (CURRENT_DATE AS TDateTime)  AS OperDate_OrderClient
            , CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) AS InvNumber_OrderClient
+           , CAST ('' AS TVarChar)     AS InvNumber_OrderClient_load
            , Object_Status.Code        AS StatusCode_OrderClient
            , Object_Status.Name        AS StatusName_OrderClient
            , CAST (0 AS TFloat)        AS VATPercent_OrderClient
@@ -88,6 +92,8 @@ BEGIN
            , CAST (0 AS TFloat)        AS TotalSummMVAT
            , CAST (0 AS TFloat)        AS TotalSummPVAT
            , CAST (0 AS TFloat)        AS TotalSummVAT
+           , CAST (0 AS TFloat)        AS OperPrice_load
+           , CAST (0 AS TFloat)        AS TransportSumm_load
 
            , CAST (TRUE AS Boolean)    AS isBasicConf
            , CAST (TRUE AS Boolean)    AS isProdColorPattern
@@ -122,6 +128,8 @@ BEGIN
                              , MovementFloat_DiscountTax.ValueData        AS DiscountTax
                              , MovementFloat_DiscountNextTax.ValueData    AS DiscountNextTax
                              , MovementFloat_VATPercent.ValueData         AS VATPercent
+                             , MovementFloat_OperPrice_load.ValueData     AS OperPrice_load
+                             , MovementFloat_TransportSumm_load.ValueData AS TransportSumm_load
                         FROM Movement
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -141,6 +149,14 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
                                                      ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
                                                     AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
+
+                             LEFT JOIN MovementFloat AS MovementFloat_OperPrice_load
+                                                     ON MovementFloat_OperPrice_load.MovementId = Movement.Id
+                                                    AND MovementFloat_OperPrice_load.DescId     = zc_MovementFloat_OperPrice_load()
+                             LEFT JOIN MovementFloat AS MovementFloat_TransportSumm_load
+                                                     ON MovementFloat_TransportSumm_load.MovementId = Movement.Id
+                                                    AND MovementFloat_TransportSumm_load.DescId     = zc_MovementFloat_TransportSumm_load()
+
                         WHERE Movement.Id = inMovementId_OrderClient
                           AND Movement.DescId = zc_Movement_OrderClient()
                           )
@@ -245,6 +261,7 @@ BEGIN
          , tmpOrderClient.MovementId :: Integer    AS MovementId_OrderClient
          , tmpOrderClient.OperDate   :: TDateTime  AS OperDate_OrderClient
          , zfCalc_InvNumber_isErased ('', tmpOrderClient.InvNumber, tmpOrderClient.OperDate, tmpOrderClient.StatusId) AS InvNumber_OrderClient
+         , tmpOrderClient.InvNumber   :: TVarChar  AS InvNumber_OrderClient_load
          , tmpOrderClient.StatusCode  :: Integer   AS StatusCode_OrderClient
          , tmpOrderClient.StatusName  :: TVarChar  AS StatusName_OrderClient
          , tmpOrderClient.VATPercent  :: TFloat    AS VATPercent_OrderClient
@@ -252,6 +269,9 @@ BEGIN
          , zfCalc_Summ_NoVAT (MovementFloat_TotalSumm.ValueData, tmpOrderClient.VATPercent):: TFloat AS TotalSummMVAT
          , MovementFloat_TotalSumm.ValueData                                               :: TFloat AS TotalSummPVAT
          , zfCalc_Summ_VAT (MovementFloat_TotalSumm.ValueData, tmpOrderClient.VATPercent)  :: TFloat AS TotalSummVAT
+         
+         , tmpOrderClient.OperPrice_load      :: TFloat AS OperPrice_load
+         , tmpOrderClient.TransportSumm_load  :: TFloat AS TransportSumm_load
 
          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
          , CAST (FALSE AS Boolean)          AS isProdColorPattern

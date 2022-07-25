@@ -66,6 +66,13 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
                -- ИТОГО Сумма продажи с НДС - без Скидки
              , BasisWVAT_summ_orig   TFloat
 
+               -- Цена продажи с сайта - без НДС, Basis+options 
+             , OperPrice_load TFloat
+               -- Базовая цена продажи модели с сайта
+             , BasisPrice_load TFloat
+               -- load Сумма транспорт с сайта 
+             , TransportSumm_load TFloat
+
              , SummDiscount1      TFloat
              , SummDiscount2      TFloat
              , SummDiscount3      TFloat
@@ -116,9 +123,11 @@ BEGIN
                               , Object_From.Id             AS FromId
                               , Object_From.ObjectCode     AS FromCode
                               , Object_From.ValueData      AS FromName
-                              , MovementLinkObject_Product.ObjectId      AS ProductId
-                              , MovementFloat_DiscountTax.ValueData      AS DiscountTax
-                              , MovementFloat_DiscountNextTax.ValueData  AS DiscountNextTax
+                              , MovementLinkObject_Product.ObjectId         AS ProductId
+                              , MovementFloat_DiscountTax.ValueData         AS DiscountTax
+                              , MovementFloat_DiscountNextTax.ValueData     AS DiscountNextTax
+                              , MovementFloat_OperPrice_load.ValueData      AS OperPrice_load
+                              , MovementFloat_TransportSumm_load.ValueData  AS TransportSumm_load
                               , Object_InfoMoney_View.InfoMoneyId
                               , Object_InfoMoney_View.InfoMoneyName_all
                                 -- % НДС Заказ клиента
@@ -144,6 +153,13 @@ BEGIN
                               LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
                                                       ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
                                                      AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
+
+                              LEFT JOIN MovementFloat AS MovementFloat_OperPrice_load
+                                                      ON MovementFloat_OperPrice_load.MovementId = Movement.Id
+                                                     AND MovementFloat_OperPrice_load.DescId     = zc_MovementFloat_OperPrice_load()
+                              LEFT JOIN MovementFloat AS MovementFloat_TransportSumm_load
+                                                      ON MovementFloat_TransportSumm_load.MovementId = Movement.Id
+                                                     AND MovementFloat_TransportSumm_load.DescId     = zc_MovementFloat_TransportSumm_load()
 
                               LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
                                                    ON ObjectLink_InfoMoney.ObjectId = Object_From.Id
@@ -226,6 +242,13 @@ BEGIN
                            -- Цена продажи с НДС (ReceiptProdModel - Basis)
                          , zfCalc_SummWVAT (tmpPriceBasis.ValuePrice, tmpOrderClient.VATPercent) AS BasisPriceWVAT
 
+                           -- Цена продажи с сайта - без НДС, Basis+options 
+                         , COALESCE (tmpOrderClient.OperPrice_load, 0)         AS OperPrice_load
+                           -- Сумма транспорт с сайта
+                         , COALESCE (tmpOrderClient.TransportSumm_load, 0)     AS TransportSumm_load
+                           -- Базовая цена продажи модели с сайта
+                         , COALESCE (MIFloat_BasisPrice_load.ValueData, 0)     AS BasisPrice_load
+
                     FROM Object AS Object_Product
                          LEFT JOIN ObjectDate AS ObjectDate_DateSale
                                               ON ObjectDate_DateSale.ObjectId = Object_Product.Id
@@ -243,8 +266,18 @@ BEGIN
                                               ON ObjectLink_ReceiptProdModel.ObjectId = Object_Product.Id
                                              AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_Product_ReceiptProdModel()
 
-                         -- Заказы клиента
+                         -- Заказ клиента
                          LEFT JOIN tmpOrderClient ON tmpOrderClient.ProductId = Object_Product.Id
+
+                         -- Заказ клиента - Лодка
+                         LEFT JOIN MovementItem ON MovementItem.MovementId = tmpOrderClient.MovementId
+                                               AND MovementItem.DescId     = zc_MI_Master()
+                                               AND MovementItem.ObjectId   = Object_Product.Id
+                                               AND MovementItem.isErased   = FALSE
+                         -- Базовая цена продажи модели с сайта
+                         LEFT JOIN MovementItemFloat AS MIFloat_BasisPrice_load
+                                                     ON MIFloat_BasisPrice_load.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_BasisPrice_load.DescId         = zc_MIFloat_BasisPrice_load()
 
                          -- цены для <Шаблон сборка Модели>
                          LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = ObjectLink_ReceiptProdModel.ChildObjectId
@@ -513,6 +546,13 @@ BEGIN
                        --, COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
                        , Object_Product.isBasicConf      AS isBasicConf
 
+                         -- Цена продажи с сайта - без НДС, Basis+options 
+                       , Object_Product.OperPrice_load
+                         -- Сумма транспорт с сайта
+                       , Object_Product.TransportSumm_load
+                         -- Базовая цена продажи модели с сайта
+                       , Object_Product.BasisPrice_load
+
                    FROM tmpProduct AS Object_Product
                         LEFT JOIN tmpProdColorItems_find AS tmpProdColorItems_1
                                                          ON tmpProdColorItems_1.MovementId_OrderClient = Object_Product.MovementId_OrderClient
@@ -655,6 +695,13 @@ BEGIN
          , (COALESCE (tmpCalc_1.BasisPrice_summ, 0)     + COALESCE (tmpCalc_2.BasisPrice_summ, 0))        :: TFloat AS Basis_summ_orig
            -- ИТОГО Сумма продажи с НДС - без Скидки
          , (COALESCE (tmpCalc_1.BasisPriceWVAT_summ, 0) + COALESCE (tmpCalc_2.BasisPriceWVAT_summ, 0))    :: TFloat AS BasisWVAT_summ_orig
+
+           -- Цена продажи с сайта - без НДС, Basis+options 
+         , tmpResAll.OperPrice_load     :: TFloat AS OperPrice_load
+           -- Базовая цена продажи модели с сайта
+         , tmpResAll.BasisPrice_load    :: TFloat AS BasisPrice_load
+           -- Сумма транспорт с сайта 
+         , tmpResAll.TransportSumm_load :: TFloat AS TransportSumm_load
 
            -- ИТОГО Сумма Скидки - без НДС
          , (COALESCE (tmpCalc_1.BasisPrice_summ, 0) - COALESCE (tmpCalc_1.BasisPrice_summ_disc_1, 0)) :: TFloat AS SummDiscount1

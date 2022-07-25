@@ -64,6 +64,16 @@ BEGIN
                                               );
    END IF;
 
+   -- проверка - у таких опций здесь нельзя установить значение <Примечание>
+   IF inGoodsId > 0 AND inComment <> ''
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Для выбранной Опции нельзя установить значение <***Material/farbe>.Т.к. значение определено у <Комплектующих>.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdOptions'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdOptions(), vbCode_calc, inName);
 

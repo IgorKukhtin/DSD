@@ -155,9 +155,9 @@ BEGIN
                                                              ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                                             AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
                                        -- всегда Цвет
-                                       LEFT JOIN ObjectString AS ObjectString_ProdColorPattern_Comment
-                                                              ON ObjectString_ProdColorPattern_Comment.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
-                                                             AND ObjectString_ProdColorPattern_Comment.DescId   = zc_ObjectString_ProdColorPattern_Comment()
+                                       INNER JOIN ObjectString AS ObjectString_ProdColorPattern_Comment
+                                                               ON ObjectString_ProdColorPattern_Comment.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
+                                                              AND ObjectString_ProdColorPattern_Comment.DescId   = zc_ObjectString_ProdColorPattern_Comment()
                                  )
       -- ??ВСЕ?? документы Заказ Клиента
     , tmpOrderClient AS (SELECT Movement.Id                              AS MovementId
@@ -255,7 +255,7 @@ BEGIN
                                      THEN TRUE
 
                                 WHEN tmpProdColorPattern.ProdColorPatternId > 0 AND COALESCE (tmpRes_all.GoodsId, 0) = 0
-                                 AND ObjectString_Comment.ValueData <> COALESCE (tmpProdColorPattern.Comment, '')
+                                 AND ObjectString_Comment.ValueData NOT ILIKE COALESCE (tmpProdColorPattern.Comment, '')
                                  AND ObjectString_Comment.ValueData <> ''
                                      THEN TRUE
 
@@ -287,7 +287,9 @@ BEGIN
                      FROM tmpRes_all
                           LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ProductId                        = tmpRes_all.ProductId
                                                        AND tmpProdColorPattern.ProdColorPatternId               = tmpRes_all.ProdColorPatternId
-                                                       AND COALESCE (tmpProdColorPattern.MaterialOptionsId, 0)  = COALESCE (tmpRes_all.MaterialOptionsId, 0)
+                                                     -- !!!без этого условия  
+                                                     --AND COALESCE (tmpProdColorPattern.MaterialOptionsId, 0)  = COALESCE (tmpRes_all.MaterialOptionsId, 0)
+                                                     -- 
                                                      --AND tmpProdColorPattern.ModelId                          = tmpProduct.ModelId
                                                      --AND tmpProdColorPattern.ReceiptProdModelId               = tmpRes_all.ReceiptProdModelId
 
@@ -326,8 +328,10 @@ BEGIN
                          LEFT JOIN tmpRes_all ON tmpRes_all.ProductId                       = tmpProduct.Id
                                              AND tmpRes_all.MovementId_OrderClient          = tmpProduct.MovementId_OrderClient
                                              AND tmpRes_all.ProdColorPatternId              = tmpProdColorPattern.ProdColorPatternId
-                                             AND COALESCE (tmpRes_all.MaterialOptionsId, 0) = COALESCE (tmpProdColorPattern.MaterialOptionsId, 0)
-                                           --AND tmpRes_all.ReceiptProdModelId              = tmpProdColorPattern.ReceiptProdModelId
+                                             -- пока не надо
+                                             --AND COALESCE (tmpRes_all.MaterialOptionsId, 0) = COALESCE (tmpProdColorPattern.MaterialOptionsId, 0)
+                                             --
+                                             --AND tmpRes_all.ReceiptProdModelId              = tmpProdColorPattern.ReceiptProdModelId
                     WHERE tmpRes_all.ProductId IS NULL
                       AND inIsShowAll          = TRUE
                    )

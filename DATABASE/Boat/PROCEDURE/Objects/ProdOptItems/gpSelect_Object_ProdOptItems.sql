@@ -378,7 +378,10 @@ BEGIN
 
 
                                  -- для этой структуры
-                               , CASE WHEN tmpProdOptions.ProdColorPatternId > 0
+                               , CASE WHEN ObjectFloat_PriceOut.ValueData >= 0 OR 1=1
+                                           THEN ObjectFloat_PriceOut.ValueData
+
+                                      WHEN tmpProdOptions.ProdColorPatternId > 0
                                            THEN -- Цена продажи без НДС - Опция
                                                 tmpProdOptions.SalePrice
 
@@ -391,7 +394,10 @@ BEGIN
                                  END AS SalePrice
 
                                  -- для этой структуры
-                               , CASE WHEN tmpProdOptions.ProdColorPatternId > 0
+                               , CASE WHEN ObjectFloat_PriceOut.ValueData >= 0 OR 1=1
+                                           THEN zfCalc_SummWVAT (ObjectFloat_PriceOut.ValueData, tmpProduct.VATPercent)
+
+                                      WHEN tmpProdOptions.ProdColorPatternId > 0
                                            THEN -- Цена продажи с НДС - Опция
                                                 zfCalc_SummWVAT (tmpProdOptions.SalePrice, tmpProduct.VATPercent)
 
@@ -418,6 +424,10 @@ BEGIN
                                INNER JOIN ObjectFloat AS ObjectFloat_MovementId_OrderClient
                                                       ON ObjectFloat_MovementId_OrderClient.ObjectId = Object_ProdOptItems.Id
                                                      AND ObjectFloat_MovementId_OrderClient.DescId   = zc_ObjectFloat_ProdOptItems_OrderClient()
+                               -- PriceOut
+                               LEFT JOIN ObjectFloat AS ObjectFloat_PriceOut
+                                                     ON ObjectFloat_PriceOut.ObjectId = Object_ProdOptItems.Id
+                                                    AND ObjectFloat_PriceOut.DescId   = zc_ObjectFloat_ProdOptItems_PriceOut()
                                -- Кол-во самих опций
                                LEFT JOIN ObjectFloat AS ObjectFloat_Count
                                                      ON ObjectFloat_Count.ObjectId = Object_ProdOptItems.Id
@@ -617,8 +627,7 @@ BEGIN
 
            -- Boat Structure
          , tmpRes.ProdColorPatternId          :: Integer  AS ProdColorPatternId
-         --, (Object_ProdColorGroup.ValueData || CASE WHEN Object_ProdColorPattern.ValueData <> '1' THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END) :: TVarChar AS ProdColorPatternName 
-         , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END || ' (' || Object_Model_pcp.ValueData || ')') :: TVarChar  AS  ProdColorPatternName
+         , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model_pcp.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
            -- Шаблон Boat Structure
          , Object_ColorPattern.Id             ::Integer   AS ColorPatternId
          , Object_ColorPattern.ValueData      ::TVarChar  AS ColorPatternName

@@ -129,8 +129,7 @@ BEGIN
 
           , Object_ProdColorPattern.Id              AS ProdColorPatternId
           , Object_ProdColorPattern.ObjectCode      AS ProdColorPatternCode
-          --, Object_ProdColorPattern.ValueData       AS ProdColorPatternName
-          , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END || ' (' || Object_Model_pcp.ValueData || ')') :: TVarChar  AS  ProdColorPatternName
+          , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model_pcp.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
 
           , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
           , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName

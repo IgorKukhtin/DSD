@@ -330,7 +330,7 @@ BEGIN
                        END
                   ELSE (SELECT STRING_AGG (DISTINCT tmpProdColor .ProdColorName, '; ') FROM tmpProdColor WHERE tmpProdColor.GoodsId = _tmpItem.ObjectId)
              END :: TVarChar                       AS ProdColorName
-           , Object_ProdOptions.ValueData          AS ProdOptionsName
+           , (CASE WHEN Object_MaterialOptions_opt.ValueData <> '' THEN Object_MaterialOptions_opt.ValueData || ' ' ELSE '' END || Object_ProdOptions.ValueData) :: TVarChar AS ProdOptionsName
 
            , Movement_OrderPartner.Id                                   AS MovementId_OrderPartner
            , zfConvert_StringToNumber (Movement_OrderPartner.InvNumber) AS InvNumber
@@ -380,6 +380,10 @@ BEGIN
                                 AND ObjectLink_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
 
             LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = _tmpItem.ProdOptionsId
+            LEFT JOIN ObjectLink AS ObjectLink_ProdOptions_MaterialOptions
+                                 ON ObjectLink_ProdOptions_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                                AND ObjectLink_ProdOptions_MaterialOptions.DescId   = zc_ObjectLink_ProdOptions_MaterialOptions()
+            LEFT JOIN Object AS Object_MaterialOptions_opt ON Object_MaterialOptions_opt.Id = ObjectLink_ProdOptions_MaterialOptions.ChildObjectId
 
             LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = _tmpItem.PartnerId
             LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = ObjectLink_GoodsGroup.ChildObjectId
@@ -447,7 +451,7 @@ BEGIN
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.ValueData       AS MeasureName
            , _tmpProdColorItems.ProdColorName :: TVarChar AS ProdColorName
-           , Object_ProdOptions.ValueData   AS ProdOptionsName
+           , (CASE WHEN Object_MaterialOptions_opt.ValueData <> '' THEN Object_MaterialOptions_opt.ValueData || ' ' ELSE '' END || Object_ProdOptions.ValueData) :: TVarChar AS ProdOptionsName
 
            , Object_PartionGoods.Amount     AS Amount_in
            , Object_PartionGoods.CountForPrice
@@ -506,6 +510,10 @@ BEGIN
                                 AND ObjectLink_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
 
             LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = _tmpItem.ProdOptionsId
+            LEFT JOIN ObjectLink AS ObjectLink_ProdOptions_MaterialOptions
+                                 ON ObjectLink_ProdOptions_MaterialOptions.ObjectId = Object_ProdOptions.Id
+                                AND ObjectLink_ProdOptions_MaterialOptions.DescId   = zc_ObjectLink_ProdOptions_MaterialOptions()
+            LEFT JOIN Object AS Object_MaterialOptions_opt ON Object_MaterialOptions_opt.Id = ObjectLink_ProdOptions_MaterialOptions.ChildObjectId
 
             LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = COALESCE (Object_PartionGoods.FromId, _tmpItem.PartnerId)
             LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = COALESCE (Object_PartionGoods.GoodsGroupId, ObjectLink_GoodsGroup.ChildObjectId)

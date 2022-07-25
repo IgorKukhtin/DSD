@@ -37,6 +37,34 @@ BEGIN
        IF inIsErased = TRUE
        THEN
            -- восстанавливаем в Items Boat Structure - из Шаблона
+           IF NOT EXISTS (SELECT 1
+                          FROM gpSelect_Object_ProdColorItems (0,FALSE,FALSE,FALSE, inSession) as tmp
+                          -- Лодка
+                          WHERE tmp.MovementId_OrderClient = (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = inObjectId AND OFl.DescId   = zc_ObjectFloat_ProdOptItems_OrderClient()) :: Integer
+                            AND tmp.ProductId = (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId   = zc_ObjectLink_ProdOptItems_Product())
+                            AND tmp.ProdColorPatternId = vbProdColorPatternId
+                            AND tmp.MaterialOptionsId_Receipt > 0
+                         )
+              AND EXISTS (SELECT 1
+                          FROM ObjectLink AS OL
+                               INNER JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id       = OL.ObjectId
+                                                                      AND Object_ProdOptions.isErased = FALSE
+                               -- Категория Опций
+                               INNER JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                     ON ObjectLink_MaterialOptions.ObjectId      = Object_ProdOptions.Id
+                                                    AND ObjectLink_MaterialOptions.DescId        = zc_ObjectLink_ProdOptions_MaterialOptions()
+                                                    AND ObjectLink_MaterialOptions.ChildObjectId > 0
+                          WHERE OL.ChildObjectId = vbProdColorPatternId
+                            AND OL.DescId        = zc_ObjectLink_ProdOptions_ProdColorPattern()
+                         )
+           THEN
+               RAISE EXCEPTION 'Ошибка.Элемент <Категория Опций>-Receipt не установлен. <%> <%>'
+                              , (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = inObjectId AND OFl.DescId = zc_ObjectFloat_ProdOptItems_OrderClient()) :: Integer
+                              , vbProdColorPatternId
+                               ;
+           END IF;
+           
+           -- восстанавливаем в Items Boat Structure - из Шаблона
            PERFORM gpInsertUpdate_Object_ProdColorItems(ioId                     := tmp.Id
                                                       , inCode                   := tmp.Code
                                                       , inProductId              := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId   = zc_ObjectLink_ProdOptItems_Product())

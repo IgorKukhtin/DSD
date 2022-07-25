@@ -15,24 +15,24 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsId Integer, GoodsName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , SalePrice TFloat
-             , Comment TVarChar 
-             , ProdColorPatternId Integer, ProdColorPatternName TVarChar 
+             , Comment TVarChar
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
-             , MaterialOptionsId    Integer 
+             , MaterialOptionsId    Integer
              , MaterialOptionsName  TVarChar
              , Id_Site              TVarChar
-             , CodeVergl            Integer  
+             , CodeVergl            Integer
 
              ) AS
 $BODY$
 BEGIN
-   
+
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_ProdOptions());
-   
+
    IF COALESCE (inId, 0) = 0
    THEN
-       RETURN QUERY 
+       RETURN QUERY
        SELECT
              CAST (0 as Integer)      AS Id
            , lfGet_ObjectCode (0, zc_Object_ProdOptions()) AS Code
@@ -54,14 +54,14 @@ BEGIN
            , CAST ('' AS TVarChar)    AS Comment
 
            , 0  :: Integer            AS ProdColorPatternId
-           , '' :: TVarChar           AS ProdColorPatternName   
+           , '' :: TVarChar           AS ProdColorPatternName
            , Object_ColorPattern.Id        :: Integer   AS ColorPatternId
            , Object_ColorPattern.ValueData :: TVarChar  AS ColorPatternName
            , 0  :: Integer            AS MaterialOptionsId
            , '' :: TVarChar           AS MaterialOptionsName
            , '' :: TVarChar           AS Id_Site
            , CAST (0 AS Integer)   AS CodeVergl
-       FROM Object AS Object_TaxKind 
+       FROM Object AS Object_TaxKind
            LEFT JOIN Object AS Object_Model ON Object_Model.Id = inProModelId
 
           LEFT JOIN ObjectLink AS ObjectLink_Brand
@@ -72,7 +72,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_ProdEngine
                                ON ObjectLink_ProdEngine.ObjectId = Object_Model.Id
                               AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
-          LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId  
+          LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
                                ON ObjectLink_ColorPattern.ChildObjectId = Object_Model.Id
@@ -82,9 +82,9 @@ BEGIN
        WHERE Object_TaxKind.Id = zc_Enum_TaxKind_Basis()
       ;
    ELSE
-     RETURN QUERY 
-     SELECT 
-           Object_ProdOptions.Id              AS Id 
+     RETURN QUERY
+     SELECT
+           Object_ProdOptions.Id              AS Id
          , Object_ProdOptions.ObjectCode      AS Code
          , Object_ProdOptions.ValueData       AS Name
 
@@ -106,26 +106,25 @@ BEGIN
          , ObjectString_Comment.ValueData     AS Comment
 
          , Object_ProdColorPattern.Id        :: Integer   AS ProdColorPatternId
-         --, Object_ProdColorPattern.ValueData :: TVarChar  AS ProdColorPatternName
-         , (Object_ProdColorGroup.ValueData || CASE WHEN LENGTH (Object_ProdColorPattern.ValueData) > 1 THEN ' ' || Object_ProdColorPattern.ValueData ELSE '' END || ' (' || Object_Model.ValueData || ')') :: TVarChar  AS  ProdColorPatternName
+         , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model_pcp.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
 
          , Object_ColorPattern.Id        :: Integer   AS ColorPatternId
          , Object_ColorPattern.ValueData :: TVarChar  AS ColorPatternName
 
          , Object_MaterialOptions.Id        :: Integer   AS MaterialOptionsId
          , Object_MaterialOptions.ValueData :: TVarChar  AS MaterialOptionsName
-         
+
          , ObjectString_Id_Site.ValueData   :: TVarChar  AS Id_Site
          , ObjectFloat_CodeVergl.ValueData  :: Integer   AS CodeVergl
 
      FROM Object AS Object_ProdOptions
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdOptions.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdOptions_Comment()  
+                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdOptions_Comment()
 
           LEFT JOIN ObjectString AS ObjectString_Id_Site
                                  ON ObjectString_Id_Site.ObjectId = Object_ProdOptions.Id
-                                AND ObjectString_Id_Site.DescId = zc_ObjectString_Id_Site()  
+                                AND ObjectString_Id_Site.DescId = zc_ObjectString_Id_Site()
 
           LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
                                 ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
@@ -142,13 +141,13 @@ BEGIN
 
           LEFT JOIN ObjectLink AS ObjectLink_Model
                                ON ObjectLink_Model.ObjectId = Object_ProdOptions.Id
-                              AND ObjectLink_Model.DescId = zc_ObjectLink_ProdOptions_Model()
+                              AND ObjectLink_Model.DescId   = zc_ObjectLink_ProdOptions_Model()
           LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                ON ObjectLink_TaxKind.ObjectId = Object_ProdOptions.Id
                               AND ObjectLink_TaxKind.DescId = zc_ObjectLink_ProdOptions_TaxKind()
-          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId 
+          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Brand
                                ON ObjectLink_Brand.ObjectId = Object_Model.Id
@@ -173,16 +172,22 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
                                ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
                               AND ObjectLink_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
-          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId 
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
                                ON ObjectLink_ProdColorGroup.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
                               AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
           LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern_Model
+                               ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ColorPattern.ChildObjectId
+                              AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
+          LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
+
        WHERE Object_ProdOptions.Id = inId;
+
    END IF;
-   
+
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
