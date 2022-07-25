@@ -1,5 +1,5 @@
 <?php
-  $connectstring = "port=5432 dbname=projectboat host=94.27.55.146 user=postgres password=ET862tira";
-  $host = "http://94.27.55.146/projectboat_utf8_test/index.php";
+  $connectstring = "port=5432 dbname=projectboat_test host=172.20.0.2 user=postgres password=ET862tira";
+  $host = "http://in.mer-lin.org.ua/projectboat_test/index.php";
   $isArchive = true;
 ?>
