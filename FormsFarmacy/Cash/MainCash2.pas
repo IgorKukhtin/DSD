@@ -1,4 +1,3 @@
-
 unit MainCash2;
 
 interface
@@ -5257,13 +5256,13 @@ begin
                 .asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,
                 FormParams.ParamByName('RoundingDown').Value) *
                 (nSumAll - nChangeSumma) / nSumAll / CheckCDS.FieldByName
-                ('Amount').asCurrency, -2)
+                ('Amount').asCurrency, -1)
             else
               nPrice := RoundTo(GetSumm(CheckCDS.FieldByName('Amount')
                 .asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
                 FormParams.ParamByName('RoundingDown').Value) *
                 (nSumAll - nChangeSumma) / nSumAll / CheckCDS.FieldByName
-                ('Amount').asCurrency, -2);
+                ('Amount').asCurrency, -1);
           end
           else
             nPrice := 0.1;
