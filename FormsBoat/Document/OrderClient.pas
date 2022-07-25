@@ -393,6 +393,8 @@ type
     GoodsCode_basis_ch4: TcxGridDBColumn;
     Article_basis_ch4: TcxGridDBColumn;
     GoodsName_basis_ch4: TcxGridDBColumn;
+    OperPrice_load: TcxGridDBColumn;
+    BasisPrice_load: TcxGridDBColumn;
   private
   public
   end;

@@ -131,7 +131,7 @@ type
     edAmountIn_remAll: TcxCurrencyEdit;
     cxLabel31: TcxLabel;
     cxButton3: TcxButton;
-    edInvNumber_load: TcxTextEdit;
+    edInvNumberOrderClient_load: TcxTextEdit;
     cxLabel32: TcxLabel;
     cxButton4: TcxButton;
     actLoadAgilis: TdsdLoadAgilis;
@@ -141,6 +141,10 @@ type
     mactInsertUpdate_load: TMultiAction;
     actInsertUpdate_load: TdsdExecStoredProc;
     spInsertUpdate_load: TdsdStoredProc;
+    cxLabel33: TcxLabel;
+    edOperPrice_load: TcxCurrencyEdit;
+    edTransportSumm_load: TcxCurrencyEdit;
+    cxLabel34: TcxLabel;
   private
     { Private declarations }
   public

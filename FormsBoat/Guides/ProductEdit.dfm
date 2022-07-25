@@ -28,7 +28,7 @@ object ProductEditForm: TProductEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 32
+    Left = 10
     Top = 485
     Width = 75
     Height = 25
@@ -37,7 +37,7 @@ object ProductEditForm: TProductEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 176
+    Left = 91
     Top = 485
     Width = 75
     Height = 25
@@ -565,24 +565,50 @@ object ProductEditForm: TProductEditForm
     Default = True
     TabOrder = 69
   end
-  object edInvNumber_load: TcxTextEdit
-    Left = 291
-    Top = 493
+  object edInvNumberOrderClient_load: TcxTextEdit
+    Left = 331
+    Top = 487
     TabOrder = 71
-    Width = 94
+    Width = 80
   end
   object cxLabel32: TcxLabel
-    Left = 291
+    Left = 331
     Top = 470
     Caption = #8470' '#1079#1072#1082#1072#1079#1072' '#1089#1072#1081#1090
   end
   object cxButton4: TcxButton
-    Left = 418
-    Top = 490
-    Width = 126
+    Left = 177
+    Top = 485
+    Width = 106
     Height = 25
     Action = mactLoadAgilis
     TabOrder = 76
+  end
+  object cxLabel33: TcxLabel
+    Left = 419
+    Top = 470
+    Caption = 'Price (Order)'
+  end
+  object edOperPrice_load: TcxCurrencyEdit
+    Left = 416
+    Top = 487
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 78
+    Width = 79
+  end
+  object edTransportSumm_load: TcxCurrencyEdit
+    Left = 497
+    Top = 487
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 79
+    Width = 73
+  end
+  object cxLabel34: TcxLabel
+    Left = 497
+    Top = 470
+    Caption = 'Transp (Order)'
   end
   object ActionList: TActionList
     Left = 232
@@ -785,7 +811,8 @@ object ProductEditForm: TProductEditForm
         item
           Action = actGetCIN
         end>
-      Caption = 'mactLoadAgilis'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089' '#1089#1072#1081#1090#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1082#1072#1079#1072' '#1082#1083#1080#1077#1085#1090#1072' '#1089' '#1089#1072#1081#1090#1072
     end
     object actLoadAgilis: TdsdLoadAgilis
       Category = 'DSDLib'
@@ -796,7 +823,7 @@ object ProductEditForm: TProductEditForm
       URLParam.DataType = ftString
       URLParam.MultiSelectSeparator = ','
       OrderParam.Value = ''
-      OrderParam.Component = edInvNumber_load
+      OrderParam.Component = edInvNumberOrderClient_load
       OrderParam.DataType = ftString
       OrderParam.MultiSelectSeparator = ','
       DataSet = ClientDataSet
@@ -1285,6 +1312,13 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'InvNumber_OrderClient_load'
+        Value = Null
+        Component = edInvNumberOrderClient_load
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'OperDate_OrderClient'
         Value = Null
         Component = edOperDateOrderClient
@@ -1331,6 +1365,20 @@ object ProductEditForm: TProductEditForm
         Name = 'TotalSummVAT'
         Value = Null
         Component = edTotalSummVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPrice_load'
+        Value = Null
+        Component = edOperPrice_load
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TransportSumm_load'
+        Value = Null
+        Component = edTransportSumm_load
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1872,8 +1920,8 @@ object ProductEditForm: TProductEditForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 384
-    Top = 456
+    Left = 288
+    Top = 480
   end
   object DS: TDataSource
     DataSet = ClientDataSet
@@ -1904,13 +1952,13 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'inInvNumber'
         Value = Null
-        Component = edInvNumber_load
+        Component = edInvNumberOrderClient_load
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inTitle1'
+        Name = 'inTitle'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Title'

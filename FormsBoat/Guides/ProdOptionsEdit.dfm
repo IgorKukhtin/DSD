@@ -63,8 +63,8 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 298
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    Top = 297
+    Caption = '***Material/farbe'
   end
   object edComment: TcxTextEdit
     Left = 10

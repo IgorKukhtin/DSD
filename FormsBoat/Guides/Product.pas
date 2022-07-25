@@ -197,7 +197,11 @@ type
     Amount_ch1: TcxGridDBColumn;
     actUpdate2: TdsdInsertUpdateAction;
     bbUpdate2: TdxBarButton;
-    actactChoiceFormMaterialOptions: TOpenChoiceForm;
+    actChoiceFormMaterialOptions: TOpenChoiceForm;
+    OperPrice_load: TcxGridDBColumn;
+    BasisPrice_load: TcxGridDBColumn;
+    TransportSumm_load: TcxGridDBColumn;
+    actChoiceFormProdOptions_ñomment: TOpenChoiceForm;
   private
     { Private declarations }
   public

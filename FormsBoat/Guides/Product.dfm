@@ -1,4 +1,4 @@
-object ProductForm: TProductForm
+﻿object ProductForm: TProductForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' '#1051#1086#1076#1082#1080'>'
@@ -99,6 +99,21 @@ object ProductForm: TProductForm
             Format = ',0.00'
             Kind = skSum
             Column = Basis_summ2_orig
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = OperPrice_load
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = BasisPrice_load
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = TransportSumm_load
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -163,6 +178,21 @@ object ProductForm: TProductForm
             Format = ',0.00'
             Kind = skSum
             Column = Basis_summ2_orig
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = OperPrice_load
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = BasisPrice_load
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = TransportSumm_load
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -284,6 +314,43 @@ object ProductForm: TProductForm
           HeaderGlyphAlignmentHorz = taCenter
           Options.Editing = False
           Width = 100
+        end
+        object OperPrice_load: TcxGridDBColumn
+          Caption = 'Ladenpreis site'
+          DataBinding.FieldName = 'OperPrice_load'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1058#1054#1043#1054' '#1041#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+          Options.Editing = False
+          Width = 70
+        end
+        object BasisPrice_load: TcxGridDBColumn
+          Caption = '***Ladenpreis site (Basis)'
+          DataBinding.FieldName = 'BasisPrice_load'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1058#1054#1043#1054' '#1041#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' (Basis, '#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+          Options.Editing = False
+          Width = 70
+        end
+        object TransportSumm_load: TcxGridDBColumn
+          Caption = 'Transport site'
+          DataBinding.FieldName = 'TransportSumm_load'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1058#1054#1043#1054' '#1089#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090' '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+          Options.Editing = False
+          Width = 70
         end
         object EKPrice_summ: TcxGridDBColumn
           Caption = 'Total EK'
@@ -810,13 +877,28 @@ object ProductForm: TProductForm
           HeaderAlignmentVert = vaCenter
           Width = 100
         end
+        object Comment_ch2: TcxGridDBColumn
+          Caption = '***Material/farbe'
+          DataBinding.FieldName = 'Comment'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormProdOptions_сomment
+              Default = True
+              Kind = bkEllipsis
+            end>
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderGlyphAlignmentHorz = taCenter
+          Width = 179
+        end
         object MaterialOptionsName_ch2: TcxGridDBColumn
           Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
           DataBinding.FieldName = 'MaterialOptionsName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actactChoiceFormMaterialOptions
+              Action = actChoiceFormMaterialOptions
               Default = True
               Kind = bkEllipsis
             end>
@@ -976,14 +1058,6 @@ object ProductForm: TProductForm
           HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
           Options.Editing = False
           Width = 80
-        end
-        object Comment_ch2: TcxGridDBColumn
-          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-          DataBinding.FieldName = 'Comment'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderGlyphAlignmentHorz = taCenter
-          Width = 179
         end
         object InsertDate_ch2: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -2190,7 +2264,7 @@ object ProductForm: TProductForm
         end>
       isShowModal = False
     end
-    object actactChoiceFormMaterialOptions: TOpenChoiceForm
+    object actChoiceFormMaterialOptions: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3018,6 +3092,58 @@ object ProductForm: TProductForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object actChoiceFormProdOptions_сomment: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdOptions_'#1089'omment'
+      FormName = 'TProdOptions_CommentForm'
+      FormNameParam.Value = 'TProdOptions_CommentForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'Comment'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorPatternId'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdColorPatternId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorPatternName'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdColorPatternName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternId'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ColorPatternId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternName'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ColorPatternName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spSelect: TdsdStoredProc

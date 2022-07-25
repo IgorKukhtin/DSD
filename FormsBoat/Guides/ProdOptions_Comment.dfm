@@ -1,7 +1,7 @@
-object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
+object ProdOptions_CommentForm: TProdOptions_CommentForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Material/farbe>'
   ClientHeight = 376
   ClientWidth = 615
   Color = clBtnFace
@@ -51,14 +51,6 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object Code: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
@@ -474,7 +466,7 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_MaterialOptionsChoice'
+    StoredProcName = 'gpSelect_Object_ProdOptions_'#1089'omment'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -502,7 +494,6 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
     Top = 128
   end
   object spErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_MaterialOptions'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -561,7 +552,6 @@ object MaterialOptionsChoiceForm: TMaterialOptionsChoiceForm
     Top = 248
   end
   object spUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_MaterialOptions'
     DataSets = <>
     OutputType = otResult
     Params = <
