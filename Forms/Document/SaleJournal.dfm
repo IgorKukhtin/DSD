@@ -3844,6 +3844,41 @@ inherited SaleJournalForm: TSaleJournalForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actGet_Export_FileNameXml: TdsdExecStoredProc
+      Category = 'Export_file'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileNameXML
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileNameXML
+        end>
+      Caption = 'actGet_Export_FileName'
+    end
+    object actExport_fileXml: TdsdStoredProcExportToFile
+      Category = 'Export_file'
+      MoveParams = <>
+      dsdStoredProcName = spSelectSale_xml
+      FileExt = '.xml'
+      Left = 1208
+      Top = 168
+    end
+    object macExport_XML: TMultiAction
+      Category = 'Export_file'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileNameXml
+        end
+        item
+          Action = actExport_fileXml
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' xml '#1092#1072#1081#1083'?'
+      InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' XML'
+      Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' XML'
+      ImageIndex = 60
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4016,6 +4051,14 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport_XML'
         end
         item
           BeginGroup = True
@@ -4366,6 +4409,10 @@ inherited SaleJournalForm: TSaleJournalForm
       Action = actPrintTEST
       Category = 0
     end
+    object bbExport_XML: TdxBarButton
+      Action = macExport_XML
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -4591,7 +4638,7 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 351
+    Left = 407
     Top = 488
   end
   object spSelectPrint_Spec: TdsdStoredProc
@@ -6115,5 +6162,74 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 351
     Top = 280
+  end
+  object spGet_Export_FileNameXML: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Sale_FileNameXML'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFile
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 480
+  end
+  object spSelectSale_xml: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_XML'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 472
   end
 end

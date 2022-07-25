@@ -15,8 +15,11 @@ RETURNS TABLE (Id Integer, ParentId Integer, LineNum Integer
              , GoodsKindId_master Integer, GoodsKindName_master TVarChar
              , MeasureName TVarChar, MeasureName_master TVarChar
              , Amount TFloat, AmountSecond TFloat
-             , AmountWeight TFloat, AmountWeightSecond TFloat
-             , Amount_remains TFloat, Amount_order TFloat, Amount_diff TFloat
+             , AmountWeight TFloat, AmountWeightSecond TFloat 
+             , AmountSh TFloat, AmountShSecond TFloat
+             , Amount_remains TFloat , AmountSh_remains TFloat, AmountWeight_remains TFloat
+             , Amount_order TFloat, AmountSh_order TFloat, AmountWeight_order TFloat
+             , Amount_diff TFloat, AmountWeight_diff TFloat
              , MovementId_send Integer, InvNumber_send TVarChar, OperDate_send TDateTime
              , isPeresort Boolean, isErased Boolean
 
@@ -37,7 +40,9 @@ BEGIN
            tmpMI_Master AS (SELECT MovementItem.Id                AS MovementItemId
                                  , MovementItem.ObjectId          AS GoodsId
                                  , MILO_GoodsKind.ObjectId        AS GoodsKindId
-                                 , MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) AS Amount
+                                 , COALESCE (MovementItem.Amount,0) + COALESCE (MIF_AmountSecond.ValueData, 0) AS Amount
+                                 , (COALESCE (MovementItem.Amount,0) + COALESCE (MIF_AmountSecond.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS AmountWeight
+                                 , (COALESCE (MovementItem.Amount,0) + COALESCE (MIF_AmountSecond.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END  AS AmountSh
                                  , MovementItem.isErased
                             FROM MovementItem
                                  LEFT JOIN MovementItemFloat AS MIF_AmountSecond
@@ -45,7 +50,15 @@ BEGIN
                                                             AND MIF_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
                                  LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                                   ON MILO_GoodsKind.MovementItemId = MovementItem.Id
-                                                                 AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                                                 AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind() 
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                      ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                       ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                                      AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+
                             WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND MovementItem.isErased   = FALSE
@@ -94,9 +107,14 @@ BEGIN
                            , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) = 0 THEN MovementItem.Amount ELSE 0 END AS Amount
                            , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) > 0 THEN MovementItem.Amount ELSE 0 END AS AmountSecond 
                            , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) = 0 THEN MovementItem.Amount ELSE 0 END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS AmountWeight
-                           , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) > 0 THEN MovementItem.Amount ELSE 0 END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS AmountWeightSecond 
-                           
+                           , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) > 0 THEN MovementItem.Amount ELSE 0 END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS AmountWeightSecond
+
+                           , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) = 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END AS AmountSh
+                           , CASE WHEN COALESCE (MovementItem.MovementId_send, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END AS AmountShSecond
+
                            , COALESCE (MIFloat_Remains.ValueData, 0)       AS Amount_remains
+                           , COALESCE (MIFloat_Remains.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END                            AS AmountSh_remains
+                           , COALESCE (MIFloat_Remains.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS AmountWeight_remains
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                            , MovementItem.MovementId_send                  AS MovementId_send
                            , MovementItem.isErased
@@ -147,11 +165,15 @@ BEGIN
            , Object_Measure.ValueData           AS MeasureName
            , Object_Measure_master.ValueData    AS MeasureName_master
 
-           , tmpMI.Amount              :: TFloat   AS Amount
-           , tmpMI.AmountSecond        :: TFloat   AS AmountSecond  
-           , tmpMI.AmountWeight        :: TFloat   AS AmountWeight
-           , tmpMI.AmountWeightSecond  :: TFloat   AS AmountWeightSecond
-           , tmpMI.Amount_remains   :: TFloat   AS Amount_remains
+           , tmpMI.Amount               :: TFloat   AS Amount
+           , tmpMI.AmountSecond         :: TFloat   AS AmountSecond  
+           , tmpMI.AmountWeight         :: TFloat   AS AmountWeight
+           , tmpMI.AmountWeightSecond   :: TFloat   AS AmountWeightSecond 
+           , tmpmI.AmountSh             :: TFloat   AS AmountSh
+           , tmpmI.AmountShSecond       :: TFloat   AS AmountShSecond
+           , tmpMI.Amount_remains       :: TFloat   AS Amount_remains
+           , tmpMI.AmountSh_remains     :: TFloat   AS AmountSh_remains
+           , tmpMI.AmountWeight_remains :: TFloat   AS AmountWeight_remains
 
              -- «а€вка - переводим в ед.изм. - MeasureId_child
            , CASE WHEN tmpMI.Ord = 1
@@ -171,8 +193,10 @@ BEGIN
                                  ELSE tmpMI_Master.Amount
                             END
                   ELSE 0
-             END :: TFloat AS Amount_order
-
+             END :: TFloat AS Amount_order 
+           , tmpMI_Master.AmountSh     ::TFloat AS AmountSh_order
+           , tmpMI_Master.AmountWeight ::TFloat AS AmountWeight_order
+             
            , (COALESCE (CASE WHEN tmpMI.Ord = 1
                                   THEN CASE -- ничего не делать
                                             WHEN ObjectLink_Goods_Measure_master.ChildObjectId = ObjectLink_Goods_Measure.ChildObjectId
@@ -192,7 +216,10 @@ BEGIN
                              ELSE 0
                         END, 0)
             - (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0))
-             ) :: TFloat AS Amount_diff
+             ) :: TFloat AS Amount_diff 
+             
+           , (COALESCE (CASE WHEN tmpMI.Ord = 1 THEN tmpMI_Master.AmountWeight ELSE 0 END, 0)
+             - (COALESCE (tmpMI.AmountWeight, 0) + COALESCE (tmpMI.AmountWeightSecond, 0)) ):: TFloat AS AmountWeight_diff   
 
            , Movement_Send.Id                   AS MovementId_send
            , Movement_Send.InvNumber            AS InvNumber_send
