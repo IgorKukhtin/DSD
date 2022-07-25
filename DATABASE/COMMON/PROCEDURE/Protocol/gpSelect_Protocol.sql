@@ -19,10 +19,11 @@ RETURNS TABLE (OperDate TDateTime, ProtocolData TBlob
              , isInsert Boolean)
 AS
 $BODY$
+    DECLARE vbUserId Integer;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
-
+   vbUserId:= lpGetUserBySession (inSession);
 
   -- проверка
   IF COALESCE (inObjectId, 0) = 0 THEN
@@ -64,7 +65,10 @@ BEGIN
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
        
- WHERE Object.Id = inObjectId;
+ WHERE Object.Id = inObjectId
+ ORDER BY ObjectProtocol.Id DESC
+ LIMIT CASE WHEN inObjectId = 5 AND vbUserId = 5 THEN 100 ELSE 10000 END
+;
 
   ELSE
 
