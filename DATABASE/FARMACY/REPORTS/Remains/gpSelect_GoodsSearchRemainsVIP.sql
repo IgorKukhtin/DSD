@@ -91,7 +91,7 @@ BEGIN
                            FROM Container
                            WHERE Container.ObjectID in (SELECT tmpGoods.Id FROM tmpGoods)
                              AND Container.descid = zc_container_count()
-                             AND Container.whereobjectid IN (SELECT T1.ID FROM gpSelect_Object_Unit(False, '3') AS T1
+                             AND Container.whereobjectid IN (SELECT T1.ID FROM gpSelect_Object_Unit(False, False, '3') AS T1
                                                                           INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                                                                 ON ObjectLink_Unit_Juridical.ObjectId = T1.Id
                                                                                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()

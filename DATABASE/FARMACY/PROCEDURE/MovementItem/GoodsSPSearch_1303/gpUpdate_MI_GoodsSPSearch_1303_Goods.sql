@@ -30,6 +30,12 @@ BEGIN
         RAISE EXCEPTION 'Связь уже установлена.';
     END IF;    
 
+    IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+                  WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 11041603 )
+    THEN
+        RAISE EXCEPTION 'Ошибка. У вас нет прав выполнять эту операцию.';     
+    END IF;    
+
     -- сохранили <Элемент документа>
     PERFORM lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inGoodsId, inMovementId, inCol, NULL, zc_Enum_Process_Auto_PartionClose());
 

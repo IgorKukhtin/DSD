@@ -54,6 +54,16 @@ type
     GoodsName: TcxGridDBColumn;
     PriceSale: TcxGridDBColumn;
     NDS: TcxGridDBColumn;
+    PriceOOC: TcxGridDBColumn;
+    spSetGoods: TdsdStoredProc;
+    spClearGoods: TdsdStoredProc;
+    actGoodsMain: TOpenChoiceForm;
+    actClearGoods: TdsdExecStoredProc;
+    actSetGoods: TdsdExecStoredProc;
+    bbSetGoods: TdxBarButton;
+    bbClearGoods: TdxBarButton;
+    actSetVisible: TdsdSetVisibleAction ;
+    actSetEnabled: TdsdSetEnabledAction;
   private
     { Private declarations }
   public

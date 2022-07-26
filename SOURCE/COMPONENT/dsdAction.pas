@@ -9,7 +9,7 @@ uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj, Clipb
   cxGridDBTableView, frxClass, frxExportPDF, frxExportXLS, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
   System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, {IdMultipartFormData,}
-  Winapi.ActiveX, ZConnection, ZDataset
+  Winapi.ActiveX, ZConnection, ZDataset, dxBar
   {$IFDEF DELPHI103RIO}, System.JSON, Actions {$ELSE} , Data.DBXJSON {$ENDIF}, Vcl.Graphics;
 
 type
@@ -6145,6 +6145,12 @@ begin
      begin
        TcxGridColumn(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).Visible := TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value;
        TcxGridColumn(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).VisibleForCustomization := TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value;
+     end else if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component is TdxBarButton then
+     begin
+        if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.DataType = ftBoolean then
+          if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value then
+            TdxBarButton(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).Visible := ivAlways
+          else TdxBarButton(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).Visible := ivNever;
      end else if IsPublishedProp(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'Visible') then
      begin
         if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.DataType = ftBoolean

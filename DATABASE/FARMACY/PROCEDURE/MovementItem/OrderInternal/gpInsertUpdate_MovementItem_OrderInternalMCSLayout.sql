@@ -130,21 +130,21 @@ BEGIN
                                     , MAX(tmpLayout.Amount)::TFloat      AS Amount
                                FROM tmpLayout
                                  
-                                    LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
-                                                            ON Unit_PharmacyItem.ObjectId  = inUnitId
-                                                           AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
-                                       
+                                    LEFT JOIN Object AS Object_Unit
+                                                     ON Object_Unit.Id        = inUnitId
+                                                    AND Object_Unit.DescId    = zc_Object_Unit()
+
                                     LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
                                                            AND tmpLayoutUnit.UnitId = inUnitId
 
                                     LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
                                        
                                WHERE (tmpLayoutUnit.UnitId = inUnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
-                                 AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                                 AND (Object_Unit.ValueData NOT ILIKE 'Апт. пункт %' OR tmpLayout.isPharmacyItem = True)
                                GROUP BY tmpLayout.GoodsId 
                                )
             -- НТЗ
-            , tmpPrice AS (SELECT ObjectLink_Price_Unit.ChildObjectId     AS UnitId
+            , tmpPriceAll AS (SELECT ObjectLink_Price_Unit.ChildObjectId     AS UnitId
                                          , Price_Goods.ChildObjectId               AS GoodsId
                                          , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
                                            -- 03.03.2022 поменял на большее значение НТЗ или выкладка
@@ -191,6 +191,27 @@ BEGIN
                                       AND (COALESCE(MCS_isClose.ValueData,False) = False OR COALESCE(tmpLayoutAll.Amount,0) > 0) 
                                       AND (COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0)) > 0
                                    )
+             , tmpPrice AS (SELECT tmpPriceAll.UnitId
+                                 , tmpPriceAll.GoodsId
+                                 , tmpPriceAll.Price
+                                 , tmpPriceAll.MCSValue
+                                 , tmpPriceAll.MCSValue_min
+                                 , tmpPriceAll.Layout
+                            FROM tmpPriceAll
+                            UNION ALL
+                            SELECT inUnitId   AS UnitId
+                                 , tmpLayoutAll.GoodsId
+                                 , 0::TFloat               AS Price
+                                 , tmpLayoutAll.Amount     AS MCSValue
+                                 , 0::TFloat               AS MCSValue_min
+                                 , tmpLayoutAll.Amount     AS Layout
+                            FROM tmpLayoutAll
+                            
+                                 LEFT JOIN tmpPriceAll ON tmpPriceAll.GoodsId = tmpLayoutAll.GoodsId
+                            
+                            WHERE COALESCE(tmpLayoutAll.Amount, 0) > 0
+                              AND COALESCE(tmpPriceAll.GoodsId, 0) = 0
+                           )
               -- данные из ассорт. матрицы
             , tmpGoodsCategory AS (SELECT ObjectLink_Child_retail.ChildObjectId AS GoodsId
                                         , ObjectFloat_Value.ValueData           AS Value
@@ -631,4 +652,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_OrderInternalMCSLayout (inUnitId := 183292, inNeedCreate:= True, inSession:= '3')
+-- SELECT * FROM gpInsertUpdate_MovementItem_OrderInternalMCSLayout (inUnitId := 19967206, inNeedCreate:= True, inSession:= '3')

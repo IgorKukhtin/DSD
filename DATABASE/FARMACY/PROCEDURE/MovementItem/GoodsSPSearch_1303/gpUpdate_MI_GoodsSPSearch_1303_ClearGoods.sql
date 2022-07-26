@@ -22,6 +22,12 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Документ не записан.';    
     END IF;
+
+    IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+                  WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 11041603 )
+    THEN
+        RAISE EXCEPTION 'Ошибка. У вас нет прав выполнять эту операцию.';     
+    END IF;    
     
     -- Провкряем элемент по документу
     IF EXISTS (SELECT 1 FROM MovementItem WHERE Id = inId AND COALESCE (ObjectId, 0) = 0)
