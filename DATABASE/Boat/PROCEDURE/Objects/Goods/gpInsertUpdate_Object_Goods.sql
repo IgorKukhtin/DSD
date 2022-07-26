@@ -49,7 +49,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inEngineId               Integer,
     IN inSession                TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbGroupNameFull TVarChar;
@@ -64,7 +65,11 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    --
-   IF COALESCE (ioId, 0) = 0
+   IF COALESCE (ioId, 0) = 0 AND inCode = -1
+   THEN
+       inCode:= (SELECT MIN (Object.ObjectCode) - 1 FROM Object WHERE Object.DescId = zc_Object_Goods());
+
+   ELSEIF COALESCE (ioId, 0) = 0
    THEN
        -- Если код не установлен, определяем его как последний+1
        inCode:= lfGet_ObjectCode (inCode, zc_Object_Goods());

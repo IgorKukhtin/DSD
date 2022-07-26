@@ -56,11 +56,20 @@ $BODY$
    DECLARE vbGoodsId            Integer;
    DECLARE vbComment            TVarChar;
    DECLARE vbColor_title        TVarChar;
+   
+   DECLARE vbLISSE_MATT TVarChar;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpGetUserBySession (inSession);
-
+     
+     -- замена
+     IF inValue3 = 'null' THEN inValue3:= ''; END IF;
+     -- замена
+     vbLISSE_MATT:= (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_MaterialOptions()
+                                                           AND (Object.ValueData ILIKE 'LISSE\/MATT'
+                                                             OR Object.ValueData ILIKE 'LISSE/MATT'
+                                                               ));
 
      /*IF inTitle ILIKE 'hypalon_secondary'
      THEN
@@ -493,6 +502,43 @@ BEGIN
                                               , inSession               := inSession
                                                ));
 
+         --  если вдруг был пустой
+         IF COALESCE (ioMovementId_OrderClient, 0) = 0
+         THEN
+             -- нашли
+             ioMovementId_OrderClient:= (SELECT MLO.MovementId FROM MovementLinkObject AS MLO WHERE MLO.ObjectId = ioProductId AND MLO.DescId = zc_MovementLinkObject_Product());
+             -- Проверка
+             IF COALESCE (ioMovementId_OrderClient, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Документ не найден для Лодки <%>.', lfGet_Object_ValueData_sh (ioProductId);
+             END IF;
+         END IF;
+
+         -- еще раз - теперь все параметры
+         ioMovementId_OrderClient:= lpInsertUpdate_Movement_OrderClient(ioId                 := ioMovementId_OrderClient
+                                                                      , inInvNumber          := (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioMovementId_OrderClient)
+                                                                      , inInvNumberPartner   := (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.DescId = zc_MovementString_InvNumberPartner() AND MS.MovementId = ioMovementId_OrderClient)
+                                                                      , inOperDate           := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioMovementId_OrderClient)
+                                                                      , inPriceWithVAT       := COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.DescId = zc_MovementBoolean_PriceWithVAT() AND MB.MovementId = ioMovementId_OrderClient), FALSE)
+                                                                      , inVATPercent         := (SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                                                                 FROM ObjectLink AS ObjectLink_TaxKind
+                                                                                                      LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                                                                                           AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+                                                                                                 WHERE ObjectLink_TaxKind.ObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_From() AND MLO.MovementId = ioMovementId_OrderClient)
+                                                                                                   AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+                                                                                                )
+                                                                      , inDiscountTax        := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_DiscountTax()), 0)
+                                                                      , inDiscountNextTax    := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_DiscountNextTax()), 0)
+                                                                      , inFromId             := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_From() AND MLO.MovementId = ioMovementId_OrderClient)
+                                                                      , inToId               := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_To() AND MLO.MovementId = ioMovementId_OrderClient), zc_Unit_Production())
+                                                                      , inPaidKindId         := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.MovementId = ioMovementId_OrderClient), zc_Enum_PaidKind_FirstForm())
+                                                                      , inProductId          := ioProductId
+                                                                      , inMovementId_Invoice := (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.DescId = zc_MovementLinkMovement_Invoice() AND MLM.MovementId = ioMovementId_OrderClient)
+                                                                      , inComment            := COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.DescId = zc_MovementString_Comment() AND MS.MovementId = ioMovementId_OrderClient), '1')
+                                                                      , inUserId             := vbUserId
+                                                                       );
+
          -- нашли созданный
          vbMovementItemId:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = ioMovementId_OrderClient AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE);
 
@@ -548,17 +594,19 @@ BEGIN
          END IF;
          -- 6.1. Проверка - category_title+inValue3 должен соответствовать MaterialOptionsId
          IF (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary')
-            AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL JOIN Object ON Object.Id = OL.ChildObjectId AND Object.ValueData ILIKE CASE WHEN inValue3 = '' THEN 'LISSE\/MATT' ELSE inValue3 END AND Object.isErased = FALSE WHERE OL.ObjectId = vbProdOptionsId  AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions())
+            AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL JOIN Object ON Object.Id = OL.ChildObjectId AND Object.ValueData ILIKE CASE WHEN COALESCE (inValue3, '') = '' THEN vbLISSE_MATT ELSE inValue3 END AND Object.isErased = FALSE WHERE OL.ObjectId = vbProdOptionsId  AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions())
             -- !!!если MaterialOptions не пустой!!!
-          --AND inValue3 <> ''
+          --AND COALESCE (inValue3, '') <> ''
          THEN
+             -- запомнили
+             inValue12:= vbProdOptionsId :: TVarChar;
              -- !!!временно замена, т.к. другой MaterialOptions!!!
              vbProdOptionsId:= COALESCE ((SELECT OL.ObjectId
                                           FROM ObjectLink AS OL
                                                -- другой MaterialOptions
                                                JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id        = OL.ChildObjectId
                                                                                     -- здесь другое значение
-                                                                                    AND Object_MaterialOptions.ValueData ILIKE CASE WHEN inValue3 = '' THEN 'LISSE\/MATT' ELSE inValue3 END
+                                                                                    AND Object_MaterialOptions.ValueData ILIKE CASE WHEN COALESCE (inValue3, '') = '' THEN vbLISSE_MATT ELSE inValue3 END
                                                                                     AND Object_MaterialOptions.isErased  = FALSE
                                                -- Boat Structure
                                                JOIN ObjectLink AS OL_ProdColorPattern
@@ -586,7 +634,7 @@ BEGIN
              -- 6.1. Проверка
              IF COALESCE (vbProdOptionsId, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Не найдена опция с Key = <%> + MaterialOptions = <%>.', inValue1, inValue3;
+                 RAISE EXCEPTION 'Ошибка.Не найдена опция с Key = <%> + MaterialOptions = <%>. Поиск замены для <%>(<%>)', inValue1, CASE WHEN COALESCE (inValue3, '') = '' THEN vbLISSE_MATT ELSE inValue3 END, lfGet_Object_ValueData (inValue12 :: Integer), inValue12;
              END IF;
              /*RAISE EXCEPTION 'Ошибка.Для <%><%> категория Опций должна быть = <%> в загрузке установлено = <%>.'
                             , inValue1, lfGet_Object_ValueData_sh (vbProdOptionsId)

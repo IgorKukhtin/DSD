@@ -52,6 +52,9 @@ BEGIN
           потом 2 цифры год производства
        Пример: DE-AGLD0001A020 или DE-AGLA0002F019*/
 
+       --
+       -- RAISE EXCEPTION 'Ошибка.<%>', vbModelNom, inModelId;
+
        ioCIN := (SELECT ObjectString_PatternCIN.ValueData
                       || vbModelNom
                       || COALESCE (LEFT (zfCalc_MonthName_ABC( inDateStart), 1), '')
@@ -59,7 +62,7 @@ BEGIN
                       || COALESCE (RIGHT ( (EXTRACT (YEAR FROM inDateStart) ::TVarChar), 2), '')
                  FROM ObjectString AS ObjectString_PatternCIN
                  WHERE ObjectString_PatternCIN.ObjectId = inModelId
-                   AND ObjectString_PatternCIN.DescId = zc_ObjectString_ProdModel_PatternCIN()
+                   AND ObjectString_PatternCIN.DescId   = zc_ObjectString_ProdModel_PatternCIN()
                  );
    END IF;
 

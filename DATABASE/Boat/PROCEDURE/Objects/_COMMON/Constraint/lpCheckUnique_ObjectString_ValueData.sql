@@ -15,20 +15,19 @@ $BODY$
   DECLARE vbObjectName TVarChar;
   DECLARE vbFieldName TVarChar;
 BEGIN
-     IF EXISTS (SELECT ValueData FROM ObjectString WHERE DescId = inDescId AND ValueData = inValueData AND ObjectId <> COALESCE (inId, 0))
+     IF EXISTS (SELECT 1 FROM ObjectString AS OS JOIN Object ON Object.Id = ObjectId AND Object.isErased = FALSE WHERE OS.DescId = inDescId AND OS.ValueData = inValueData AND OS.ObjectId <> COALESCE (inId, 0))
      THEN
-
          --
          SELECT ObjectDesc.ItemName, ObjectStringDesc.ItemName
                 INTO vbObjectName, vbFieldName
          FROM ObjectString
-              LEFT JOIN Object           ON Object.Id           = ObjectString.ObjectId
+              LEFT JOIN Object           ON Object.Id          = ObjectString.ObjectId
               LEFT JOIN ObjectDesc       ON ObjectDesc.Id       = Object.DescId
               LEFT JOIN ObjectStringDesc ON ObjectStringDesc.Id = ObjectString.DescId
          WHERE ObjectString.DescId = inDescId AND ObjectString.ValueData = inValueData AND ObjectString.ObjectId <> COALESCE (inId, 0);
 
          --
-         RAISE EXCEPTION 'Значение <%> не уникально для поля <%> справочника <%>.', inValueData, vbFieldName, vbObjectName;
+         RAISE EXCEPTION 'Значение <%> не уникально%для поля <%>%в справочнике <%>.', inValueData, CHR (13), vbFieldName, CHR (13), vbObjectName;
 
          /*RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Значение "<%>" не уникально для поля "<%>" справочника "<%>"' :: TVarChar
                                                  , inProcedureName := 'lpCheckUnique_ObjectString_ValueData'    :: TVarChar
