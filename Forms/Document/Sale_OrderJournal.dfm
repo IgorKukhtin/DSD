@@ -1,29 +1,29 @@
 inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 535
-  ClientWidth = 1479
+  ClientWidth = 1370
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1495
+  ExplicitWidth = 1386
   ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
-    Width = 1479
+    Width = 1370
     Height = 374
     TabOrder = 3
     ExplicitTop = 76
     ExplicitWidth = 1479
     ExplicitHeight = 374
     ClientRectBottom = 374
-    ClientRectRight = 1479
+    ClientRectRight = 1370
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1479
       ExplicitHeight = 374
       inherited cxGrid: TcxGrid
-        Width = 1479
+        Width = 1370
         Height = 374
         ExplicitWidth = 1479
         ExplicitHeight = 374
@@ -796,7 +796,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1479
+    Width = 1370
     Height = 50
     ExplicitWidth = 1479
     ExplicitHeight = 50
@@ -846,11 +846,12 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   object ExportXmlGrid: TcxGrid [2]
     Left = 0
     Top = 450
-    Width = 1479
+    Width = 1370
     Height = 85
     Align = alBottom
     TabOrder = 6
     Visible = False
+    ExplicitWidth = 1479
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
