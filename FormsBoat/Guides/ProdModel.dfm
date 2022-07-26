@@ -173,6 +173,15 @@ object ProdModelForm: TProdModelForm
         Options.Editing = False
         Width = 179
       end
+      object ColorPatternName: TcxGridDBColumn
+        Caption = #1064#1072#1073#1083#1086#1085' Boat Structure  '
+        DataBinding.FieldName = 'ColorPatternName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
@@ -200,11 +209,6 @@ object ProdModelForm: TProdModelForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
-      end
-      object ColorPatternName: TcxGridDBColumn
-        DataBinding.FieldName = 'ColorPatternName'
-        Visible = False
-        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel

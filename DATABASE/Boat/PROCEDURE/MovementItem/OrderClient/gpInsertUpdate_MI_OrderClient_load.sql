@@ -445,7 +445,7 @@ BEGIN
                                               , inName                  := (SELECT Object.ValueData  FROM Object WHERE Object.Id = ioProductId)
                                               , inBrandId               := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbModelId AND OL.DescId = zc_ObjectLink_ProdModel_Brand())
                                               , inModelId               := vbModelId
-                                              , inEngineId              := NULL
+                                              , inEngineId              := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbModelId AND OL.DescId = zc_ObjectLink_ProdModel_ProdEngine())
                                               , inReceiptProdModelId    :=  (SELECT Object_ReceiptProdModel.Id        AS ReceiptProdModelId
                                                                              FROM Object AS Object_ReceiptProdModel
                                                                                   INNER JOIN ObjectBoolean AS ObjectBoolean_Main
@@ -480,22 +480,22 @@ BEGIN
                                                                                          AND Object_ProdColorItems.isErased = FALSE
                                                                                       )
                                               , inHours                 := 0
-                                              , inDiscountTax           := 0
-                                              , inDiscountNextTax       := 0
+                                              , inDiscountTax           := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_DiscountTax()), 0)
+                                              , inDiscountNextTax       := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_DiscountNextTax()), 0)
                                               , inDateStart             := NULL
                                               , inDateBegin             := NULL
                                               , inDateSale              := NULL
-                                              , inCIN                   := '-'
-                                              , inEngineNum             := ''
-                                              , inComment               := ''
+                                              , inCIN                   := COALESCE ((SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Product_CIN() AND OS.ObjectId = ioProductId), '-')
+                                              , inEngineNum             := COALESCE ((SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Product_EngineNum() AND OS.ObjectId = ioProductId), '')
+                                              , inComment               := COALESCE ((SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Product_Comment() AND OS.ObjectId = ioProductId), '')
 
                                               , inMovementId_OrderClient:= ioMovementId_OrderClient
                                               , inInvNumber_OrderClient := (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioMovementId_OrderClient)
                                               , inOperDate_OrderClient  := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioMovementId_OrderClient)
 
-                                              , inMovementId_Invoice    := NULL
+                                              , inMovementId_Invoice    := (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.DescId = zc_MovementLinkMovement_Invoice() AND MLM.MovementId = ioMovementId_OrderClient)
                                               , inInvNumber_Invoice     := ''
-                                              , inOperDate_Invoice      := NULL
+                                              , inOperDate_Invoice      := (SELECT Movement.OperDate FROM MovementLinkMovement AS MLM JOIN Movement ON Movement.Id = MLM.MovementChildId WHERE MLM.DescId = zc_MovementLinkMovement_Invoice() AND MLM.MovementId = ioMovementId_OrderClient)
                                               , inAmountIn_Invoice      := 0
                                               , inAmountOut_Invoice     := 0
 
