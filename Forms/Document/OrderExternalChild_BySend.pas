@@ -77,7 +77,7 @@ type
     GoodsKindName_master_ch: TcxGridDBColumn;
     MeasureName_master_ch: TcxGridDBColumn;
     isPeresort_ch: TcxGridDBColumn;
-    Amount_diff_ch: TcxGridDBColumn;
+    AmountWeight_diff: TcxGridDBColumn;
     actOpenFormSend: TdsdOpenForm;
     bbOpenFormSend: TdxBarButton;
     actReport_GoodsMotion: TdsdOpenForm;
