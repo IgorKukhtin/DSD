@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnIn_Partner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Partner(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -10,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Partner(
  INOUT ioPrice                  TFloat    , -- Цена
  INOUT ioCountForPrice          TFloat    , -- Цена за количество
    OUT outAmountSumm            TFloat    , -- Сумма расчетная
-   OUT outAmountSummVat         TFloat    , -- Сумма с НДС расчетная
+   OUT outAmountSummVat         TFloat    , -- Сумма с НДС расчетная  
+    IN inCount                  TFloat    , -- Количество батонов или упаковок
     IN inHeadCount              TFloat    , -- Количество голов
     IN inPartionGoods           TVarChar  , -- Партия товара
     IN inGoodsKindId            Integer   , -- Виды товаров
@@ -76,6 +78,7 @@ BEGIN
                                               , inAmountPartner      := inAmountPartner
                                               , ioPrice              := ioPrice
                                               , ioCountForPrice      := ioCountForPrice
+                                              , inCount              := inCount
                                               , inHeadCount          := inHeadCount
                                               , inMovementId_Partion := inMovementId_PartionMI   --COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_MovementId()), 0) :: Integer
                                               , inPartionGoods       := inPartionGoods
