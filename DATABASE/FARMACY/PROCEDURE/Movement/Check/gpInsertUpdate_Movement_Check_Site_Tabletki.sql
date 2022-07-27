@@ -97,7 +97,7 @@ BEGIN
     -- сохранили ФИО покупателя
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Bayer(), ioId, inBayer);
     -- сохранили Контактный телефон (Покупателя)
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BayerPhone(), ioId, inBayerPhone);
+    --PERFORM lpInsertUpdate_MovementString (zc_MovementString_BayerPhone(), ioId, inBayerPhone);
     -- Отмечаем документ как отложенный
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), ioId, TRUE);
     -- сохранили менеджера

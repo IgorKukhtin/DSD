@@ -29,12 +29,13 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
        , COALESCE(ObjectBoolean_Goods_HideOnTheSite.ValueData, FALSE) AS isHideOnTheSite
        , tmpBarCode.BarCode
 
+       , ObjectLink_Goods_FormDispensing.ChildObjectId          AS FormDispensing_Id
        , Object_FormDispensing.ValueData                        AS FormDispensingName
        , ObjectString_FormDispensing_NameUkr.ValueData          AS FormDispensingNameUkr
        
        , ObjectFloat_Goods_NumberPlates.ValueData::Integer      AS NumberPlates   
        , ObjectFloat_Goods_QtyPackage.ValueData::Integer        AS QtyPackage
-       , COALESCE(ObjectBoolean_Goods_Recipe.ValueData, FALSE)  AS isRecipe
+       , CASE WHEN COALESCE(ObjectBoolean_Goods_Recipe.ValueData,FALSE)=TRUE THEN 1::Integer ELSE 0::Integer END AS isRecipe
 
     -- FROM Object_Goods_View AS Object_Goods
     FROM ObjectLink AS ObjectLink_Goods_Object

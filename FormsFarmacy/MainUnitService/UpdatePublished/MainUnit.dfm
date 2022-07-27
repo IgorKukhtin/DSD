@@ -32,7 +32,7 @@ object MainForm: TMainForm
     end
     object btnDownloadPublished: TButton
       Left = 128
-      Top = 3
+      Top = 2
       Width = 265
       Height = 25
       Action = actFD_DownloadPublishedSite
@@ -124,7 +124,7 @@ object MainForm: TMainForm
   end
   object ActionList1: TActionList
     Left = 32
-    Top = 153
+    Top = 145
     object actSite_Param: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -193,8 +193,8 @@ object MainForm: TMainForm
       DataBase.DataType = ftString
       DataBase.MultiSelectSeparator = ','
       SQLParam.Value = 
-        'select Postgres_drug_id As Id, Status AS isPublished  from pharm' +
-        '_drugs'
+        'select Postgres_drug_id As Id, Status AS isPublished, title_uk, ' +
+        'manufacturer, manufacturer_uk  from pharm_drugs'
       SQLParam.DataType = ftString
       SQLParam.MultiSelectSeparator = ','
       Operation = fdoMultiExecuteJSON
@@ -215,8 +215,21 @@ object MainForm: TMainForm
         item
           FieldName = 'isPublished'
           PairName = 'P'
+        end
+        item
+          FieldName = 'title_uk'
+          PairName = 'TU'
+        end
+        item
+          FieldName = 'manufacturer'
+          PairName = 'M'
+        end
+        item
+          FieldName = 'manufacturer_uk'
+          PairName = 'MU'
         end>
       MultiExecuteAction = actUpdate_PublishedSite
+      MultiExecuteCount = 300
       Caption = #1054#1073#1085#1086#1074#1083#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1089' '#1089#1072#1081#1090#1072
       ImageIndex = 27
     end

@@ -39,9 +39,9 @@ BEGIN
                                         AND Movement.StatusId = zc_Enum_Status_Complete()    THEN '6.0'
                                        END :: TVarChar AS BookingStatusNew
 
-                                , MovementString_Bayer.ValueData                     AS Bayer
-                                , MovementString_BayerPhone.ValueData                AS BayerPhone
-                                , MovementString_OrderId.ValueData                   AS OrderId
+                                , MovementString_Bayer.ValueData                              AS Bayer
+                                , COALESCE(MovementString_BayerPhone.ValueData, '')::TVArChar AS BayerPhone
+                                , MovementString_OrderId.ValueData                            AS OrderId
                                 , CASE WHEN Movement.StatusId = zc_Enum_Status_Erased()
                                        THEN COALESCE(Object_CancelReason.ValueData, CancelReasonDefault.Name) END::TVarChar  AS CancelReason
 
@@ -71,9 +71,9 @@ BEGIN
                                 INNER JOIN MovementString AS MovementString_Bayer
                                                           ON MovementString_Bayer.MovementId = Movement.Id
                                                          AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
-                                INNER JOIN MovementString AS MovementString_BayerPhone
-                                                          ON MovementString_BayerPhone.MovementId = Movement.Id
-                                                         AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
+                                LEFT JOIN MovementString AS MovementString_BayerPhone
+                                                         ON MovementString_BayerPhone.MovementId = Movement.Id
+                                                        AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
                                 INNER JOIN MovementString AS MovementString_OrderId
                                                           ON MovementString_OrderId.MovementId = Movement.Id
                                                          AND MovementString_OrderId.DescId = zc_MovementString_OrderId()

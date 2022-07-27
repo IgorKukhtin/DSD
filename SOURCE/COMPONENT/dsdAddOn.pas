@@ -3656,6 +3656,10 @@ begin
         FOnChange := TcxCurrencyEdit(FComponent).Properties.OnEditValueChanged;
         TcxCurrencyEdit(FComponent).Properties.OnEditValueChanged := OnChange;
      end;
+     if FComponent is TcxCheckBox then begin
+        FOnChange := TcxCheckBox(FComponent).Properties.OnEditValueChanged;
+        TcxCheckBox(FComponent).Properties.OnEditValueChanged := OnChange;
+     end;
   end;
 end;
 

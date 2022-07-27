@@ -547,6 +547,13 @@ object UnitTreeCashForm: TUnitTreeCashForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowActive'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 448
@@ -579,6 +586,7 @@ object UnitTreeCashForm: TUnitTreeCashForm
         ShortCut = 13
       end>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

@@ -1655,6 +1655,19 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actUpdate_Published_Revert'
     end
+    object actGoods_SiteUpdate: TdsdOpenForm
+      Category = #1055#1088#1086#1090#1086#1082#1086#1083
+      MoveParams = <>
+      Caption = #1057#1074#1077#1088#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1090#1086#1074#1072#1088#1086#1074' '#1089' '#1089#1072#1081#1090#1086#1084
+      Hint = #1057#1074#1077#1088#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1090#1086#1074#1072#1088#1086#1074' '#1089' '#1089#1072#1081#1090#1086#1084
+      ImageIndex = 29
+      FormName = 'TGoods_SiteUpdateForm'
+      FormNameParam.Value = 'TGoods_SiteUpdateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1764,10 +1777,6 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbUpdate_CountPrice'
         end
         item
@@ -1793,6 +1802,14 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'dxBarButton14'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton20'
         end
         item
           Visible = True
@@ -2206,6 +2223,10 @@ inherited GoodsForm: TGoodsForm
     end
     object dxBarButton19: TdxBarButton
       Action = mactUpdate_Published_Revert
+      Category = 0
+    end
+    object dxBarButton20: TdxBarButton
+      Action = actGoods_SiteUpdate
       Category = 0
     end
   end

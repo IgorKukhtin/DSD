@@ -7109,6 +7109,42 @@ function TdsdForeignData.LocalExecute: Boolean;
       JsonArray: TJSONArray;
       JSONObject: TJSONObject;
 
+  function AdaptStr(S: string): string;
+  var
+    C: Char;
+    Code: SmallInt;
+  begin
+    Result := '';
+
+    for C in S do
+    begin
+      Code := Ord(C);
+
+      if Code = 39 then
+        Result := Result + '`'
+      else if Code = 188 then
+        Result := Result + '1/4'
+      else if Code = 189 then
+        Result := Result + '1/2'
+      else if Code = 190 then
+        Result := Result + '3/4'
+      else if ((Code = 822) or (Code = -4051)) and (dsdProject = prFarmacy) then
+        Result := Result + '-'
+      else if ((Code = 945) or (Code = 593) or (Code = -3999)) and (dsdProject = prFarmacy) then
+        Result := Result + 'a'
+      else if (Code = 946) and (dsdProject = prFarmacy) then
+        Result := Result + 'b'
+      else if (Code = 947) and (dsdProject = prFarmacy) then
+        Result := Result + 'y'
+      else if ((Code = 180) or (Code = 8125) or (Code = 700)) and (dsdProject = prFarmacy) then
+        Result := Result + '`'
+//      else if ((Code <= 0) or (Code >= 822) and (Code < 1000)) and (dsdProject = prFarmacy) then
+//        Result := Result  + C
+      else
+        Result := Result + C;
+    end;
+  end;
+
   procedure AddParamToJSON(AName: string; AValue: Variant; ADataType: TFieldType);
     var intValue: integer; n : Double;
   begin
@@ -7131,7 +7167,9 @@ function TdsdForeignData.LocalExecute: Boolean;
           JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
       end
       else
-        JSONObject.AddPair(LowerCase(AName), TJSONString.Create(AValue));
+      begin
+        JSONObject.AddPair(LowerCase(AName), TJSONString.Create(AdaptStr(AValue)));
+      end;
     except
       on E:Exception do raise Exception.Create('Ошибка добавления <' + AName + '> в Json: ' + e.Message);
     end;

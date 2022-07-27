@@ -191,6 +191,10 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     object tsBaDM: TTabSheet
       Caption = #1041#1072#1044#1052
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PageControl: TcxPageControl
         Left = 0
         Top = 31
@@ -208,6 +212,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Caption = 'tsMain'
           ImageIndex = 0
           TabVisible = False
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object grBaDM: TcxGrid
             Left = 0
             Top = 0
@@ -2318,7 +2324,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     SQL.Strings = (
       
         'SELECT Name, Num_byReportBadm FROM gpSelect_Object_Unit (FALSE, ' +
-        #39'3'#39') AS tmp WHERE Num_byReportBadm > 0 ORDER BY Num_byReportBadm')
+        'FALSE, '#39'3'#39') AS tmp WHERE Num_byReportBadm > 0 ORDER BY Num_byRep' +
+        'ortBadm')
     Params = <>
     Left = 208
     Top = 336
