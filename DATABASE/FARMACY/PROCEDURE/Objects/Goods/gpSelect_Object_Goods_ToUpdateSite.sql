@@ -29,6 +29,18 @@ BEGIN
 
 
    RETURN QUERY
+     WITH tmpFormDispensing AS (SELECT 1 AS IDSite, 18067778 AS ID
+                                UNION ALL 
+                                SELECT 2, 18067781
+                                UNION ALL 
+                                SELECT 3, 18067782
+                                UNION ALL 
+                                SELECT 4, 18067783
+                                UNION ALL 
+                                SELECT 5, 18067780
+                                UNION ALL 
+                                SELECT 6, 18067779)
+   
       SELECT Object_Goods_Retail.Id
            , Object_Goods_Main.ObjectCode
            , Object_Goods_Main.isPublished
@@ -36,7 +48,7 @@ BEGIN
            , Object_Goods_Main.NameUkr
            , Object_Goods_Main.MakerName
            , Object_Goods_Main.MakerNameUkr
-           , Object_Goods_Main.FormDispensingId
+           , tmpFormDispensing.IDSite                            AS FormDispensingId
            , Object_FormDispensing.ValueData                     AS FormDispensingName
            , ObjectString_FormDispensing_NameUkr.ValueData       AS NameUkr
            , Object_Goods_Main.NumberPlates
@@ -52,6 +64,8 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_FormDispensing_NameUkr
                                   ON ObjectString_FormDispensing_NameUkr.ObjectId = Object_FormDispensing.Id
                                  AND ObjectString_FormDispensing_NameUkr.DescId = zc_ObjectString_FormDispensing_NameUkr()   
+                                 
+           LEFT JOIN tmpFormDispensing ON tmpFormDispensing.ID = Object_Goods_Main.FormDispensingId
            
       WHERE Object_Goods_Retail.RetailId = 4
         AND Object_Goods_Main.isPublished = True

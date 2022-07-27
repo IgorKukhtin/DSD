@@ -155,9 +155,9 @@ BEGIN
                                                              ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                                             AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
                                        -- всегда Цвет
-                                       INNER JOIN ObjectString AS ObjectString_ProdColorPattern_Comment
-                                                               ON ObjectString_ProdColorPattern_Comment.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
-                                                              AND ObjectString_ProdColorPattern_Comment.DescId   = zc_ObjectString_ProdColorPattern_Comment()
+                                       LEFT JOIN ObjectString AS ObjectString_ProdColorPattern_Comment
+                                                              ON ObjectString_ProdColorPattern_Comment.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
+                                                             AND ObjectString_ProdColorPattern_Comment.DescId   = zc_ObjectString_ProdColorPattern_Comment()
                                  )
       -- ??ВСЕ?? документы Заказ Клиента
     , tmpOrderClient AS (SELECT Movement.Id                              AS MovementId

@@ -199,6 +199,11 @@ type
     ProdColorName: TcxGridDBColumn;
     Comment_goods: TcxGridDBColumn;
     Comment_goods_ch1: TcxGridDBColumn;
+    actChoiceFormProdOptions_ñomment: TOpenChoiceForm;
+    GoodsCode_receipt_ch2: TcxGridDBColumn;
+    GoodsName_receipt_ch2: TcxGridDBColumn;
+    Article_receipt_ch2: TcxGridDBColumn;
+    ProdColorName_receipt_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -23,6 +23,8 @@ RETURNS TABLE (Id Integer, ReceiptGoodsId Integer
              , MaterialOptionsId Integer, MaterialOptionsName TVarChar
                --
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId_receipt Integer, GoodsCode_receipt  Integer, GoodsName_receipt TVarChar, Article_receipt TVarChar, ProdColorName_receipt TVarChar
+
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
              , Article TVarChar
@@ -153,6 +155,12 @@ BEGIN
           , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
           , Object_Goods.ValueData             ::TVarChar AS GoodsName
 
+          , Object_Goods_receipt.Id            ::Integer  AS GoodsId_receipt
+          , Object_Goods_receipt.ObjectCode    ::Integer  AS GoodsCode_receipt
+          , Object_Goods_receipt.ValueData     ::TVarChar AS GoodsName_receipt
+          , ObjectString_Article_receipt.ValueData        AS Article_receipt
+          , tmpProdColorPattern.Comment        ::TVarChar AS ProdColorName_receipt
+
           , ObjectString_GoodsGroupFull.ValueData      AS GoodsGroupNameFull
           , Object_GoodsGroup.ValueData                AS GoodsGroupName
           , ObjectString_Article.ValueData             AS Article
@@ -206,6 +214,8 @@ BEGIN
                               AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdColorPattern_Goods()
           -- !!!замена!!!
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpProdColorPattern.ObjectId, ObjectLink_Goods.ChildObjectId)
+          -- !!!информативно - что в ReceiptGoodsChild!!!
+          LEFT JOIN Object AS Object_Goods_receipt ON Object_Goods_receipt.Id = tmpProdColorPattern.ObjectId
 
           --
           LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
@@ -214,7 +224,10 @@ BEGIN
 
           LEFT JOIN ObjectString AS ObjectString_Article
                                  ON ObjectString_Article.ObjectId = Object_Goods.Id
-                                AND ObjectString_Article.DescId = zc_ObjectString_Article()
+                                AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+          LEFT JOIN ObjectString AS ObjectString_Article_receipt
+                                 ON ObjectString_Article_receipt.ObjectId = Object_Goods_receipt.Id
+                                AND ObjectString_Article_receipt.DescId   = zc_ObjectString_Article()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id

@@ -1230,7 +1230,8 @@ uses
   Report_IncomeDubly in '..\..\FormsFarmacy\Report\Report_IncomeDubly.pas' {Report_IncomeDublyForm: TParentForm},
   Report_Inventory_ProficitReturnOut in '..\..\FormsFarmacy\Report\Report_Inventory_ProficitReturnOut.pas' {Report_Inventory_ProficitReturnOutForm: TParentForm},
   Report_AnalysisBonusesIncomeDialog in '..\..\FormsFarmacy\Report\Report_AnalysisBonusesIncomeDialog.pas' {Report_AnalysisBonusesIncomeDialogForm: TParentForm},
-  Report_AnalysisBonusesIncome in '..\..\FormsFarmacy\Report\Report_AnalysisBonusesIncome.pas' {Report_AnalysisBonusesIncomeForm: TParentForm};
+  Report_AnalysisBonusesIncome in '..\..\FormsFarmacy\Report\Report_AnalysisBonusesIncome.pas' {Report_AnalysisBonusesIncomeForm: TParentForm},
+  Goods_SiteUpdate in '..\..\FormsFarmacy\Guides\Goods_SiteUpdate.pas' {Goods_SiteUpdateForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

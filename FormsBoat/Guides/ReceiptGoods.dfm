@@ -1,4 +1,4 @@
-object ReceiptGoodsForm: TReceiptGoodsForm
+﻿object ReceiptGoodsForm: TReceiptGoodsForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1086#1074'>'
@@ -840,6 +840,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
+      ExplicitLeft = 2
+      ExplicitTop = 1
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -992,6 +994,21 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentVert = vaCenter
           Width = 80
         end
+        object Comment_ch2: TcxGridDBColumn
+          Caption = '***Material/farbe'
+          DataBinding.FieldName = 'Comment'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormProdOptions_сomment
+              Default = True
+              Kind = bkEllipsis
+            end>
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderGlyphAlignmentHorz = taCenter
+          Width = 100
+        end
         object MaterialOptionsName_ch2: TcxGridDBColumn
           Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
           DataBinding.FieldName = 'MaterialOptionsName'
@@ -1135,14 +1152,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Options.Editing = False
           Width = 70
         end
-        object Comment_ch2: TcxGridDBColumn
-          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-          DataBinding.FieldName = 'Comment'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderGlyphAlignmentHorz = taCenter
-          Width = 100
-        end
         object ColorPatternName_ch2: TcxGridDBColumn
           Caption = #1064#1072#1073#1083#1086#1085' Boat Structure'
           DataBinding.FieldName = 'ColorPatternName'
@@ -1161,6 +1170,70 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 78
+        end
+        object GoodsCode_receipt_ch2: TcxGridDBColumn
+          Caption = '***Interne Nr'
+          DataBinding.FieldName = 'GoodsCode_receipt'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' - '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1072
+          Width = 70
+        end
+        object GoodsName_receipt_ch2: TcxGridDBColumn
+          Caption = '***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+          DataBinding.FieldName = 'GoodsName_receipt'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' - '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1072
+          Width = 70
+        end
+        object Article_receipt_ch2: TcxGridDBColumn
+          Caption = '***Artikel Nr'
+          DataBinding.FieldName = 'Article_receipt'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' - '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1072
+          Width = 70
+        end
+        object ProdColorName_receipt_ch2: TcxGridDBColumn
+          Caption = '***Farbe'
+          DataBinding.FieldName = 'ProdColorName_receipt'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' - '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1072' ('#1090#1086#1083#1100#1082#1086' '#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+          Width = 70
         end
       end
       object cxGridLevel2: TcxGridLevel
@@ -2558,6 +2631,58 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actChoiceFormProdOptions_сomment: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdOptions_'#1089'omment'
+      FormName = 'TProdOptions_CommentForm'
+      FormNameParam.Value = 'TProdOptions_CommentForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'Comment'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorPatternId'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ProdColorPatternId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorPatternName'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ProdColorPatternName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternId'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ColorPatternId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternName'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ColorPatternName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spSelect: TdsdStoredProc

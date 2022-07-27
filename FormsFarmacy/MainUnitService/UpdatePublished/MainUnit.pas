@@ -97,7 +97,7 @@ begin
   except
     on E:Exception do
     begin
-        Add_Log('Ошибка: ' + E.Message);
+        Add_Log('Ошибка: ' + E.Message{+ actFD_DownloadPublishedSite.JsonParam.Value});
     end;
   end;
 end;

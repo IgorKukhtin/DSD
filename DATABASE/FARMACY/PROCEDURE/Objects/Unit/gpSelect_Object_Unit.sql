@@ -1,10 +1,11 @@
 -- Function: gpSelect_Object_Unit()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Unit(Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Unit(Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
-    IN inisShowAll   Boolean,
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inisShowAll    Boolean,
+    IN inisShowActive Boolean,
+    IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Address TVarChar, Phone TVarChar
@@ -300,6 +301,10 @@ BEGIN
                              ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
          
         LEFT JOIN ObjectLink AS ObjectLink_Unit_MarginCategory
                              ON ObjectLink_Unit_MarginCategory.ObjectId = Object_Unit.Id
@@ -760,7 +765,14 @@ BEGIN
                              AND tmpContract.JuridicalId  =  ObjectLink_PartnerMedical_Juridical.ChildObjectId
 
     WHERE Object_Unit.DescId = zc_Object_Unit()
-      AND (inisShowAll = True OR Object_Unit.isErased = False);
+      AND (inisShowAll = True OR Object_Unit.isErased = False)
+      AND (inisShowActive = False OR ObjectLink_Unit_Juridical.ChildObjectId <> 393053
+                                 AND ObjectLink_Juridical_Retail.ChildObjectId = 4
+                                 AND ObjectLink_Unit_Juridical.ObjectId <> 389328
+                                 AND Object_Unit.ValueData NOT ILIKE '%ЗАКРЫТА%'
+                                 AND Object_Unit.ValueData NOT ILIKE '%Зачинена%'
+                                 AND Object_Unit.isErased = False)
+                                 AND COALESCE(ObjectLink_Unit_Parent.ChildObjectId, 0) <> 0;
   
 END;
 $BODY$
@@ -811,4 +823,4 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Object_Unit (False, '2')
+SELECT * FROM gpSelect_Object_Unit (False, True, '2')

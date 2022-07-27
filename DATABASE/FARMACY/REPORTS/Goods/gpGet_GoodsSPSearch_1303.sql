@@ -9,6 +9,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
+             , isEnableEdit Boolean
+             , isVisibleEdit Boolean
              )
 AS
 $BODY$
@@ -51,6 +53,8 @@ BEGIN
               , Object_Status.ValueData                AS StatusName
               , MovementDate_OperDateStart.ValueData   AS OperDateStart
               , MovementDate_OperDateEnd.ValueData     AS OperDateEnd
+              , vbUserId IN (3, 183242)                AS isEnableEdit
+              , vbUserId IN (3, 183242)                AS isVisibleEdit
          FROM Movement
                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
    

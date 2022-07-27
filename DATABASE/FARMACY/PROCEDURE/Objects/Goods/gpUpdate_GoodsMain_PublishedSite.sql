@@ -25,7 +25,10 @@ BEGIN
   CREATE TEMP TABLE tblJSON
   (
      I            Integer,
-     P            Integer
+     P            Integer,
+     TU           TVarChar,
+     M            TVarChar,
+     MU           TVarChar
   ) ON COMMIT DROP;
 
   INSERT INTO tblJSON
@@ -35,12 +38,22 @@ BEGIN
   --raise notice 'Value 05: %', (select Count(*) from tblJSON);      
   
   UPDATE Object_Goods_Main set isPublishedSite = T1.isPublished
+                             , NameUkrSite = T1.NameUkrSite
+                             , MakerNameSite = T1.MakerNameSite
+                             , MakerNameUkrSite = T1.MakerNameUkrSite
                              , DateDownloadsSite = CURRENT_TIMESTAMP
-  FROM (SELECT Object_Goods_Retail.GoodsMainId, tblJSON.P = 1 AS isPublished
+  FROM (SELECT Object_Goods_Retail.GoodsMainId
+             , tblJSON.P = 1 AS isPublished
+             , tblJSON.TU    AS NameUkrSite
+             , tblJSON.M     AS MakerNameSite
+             , tblJSON.MU    AS MakerNameUkrSite
         FROM Object_Goods_Retail 
              INNER JOIN tblJSON  ON tblJSON.I = Object_Goods_Retail.Id) AS T1
   WHERE Object_Goods_Main.ID = T1.GoodsMainId
-    AND (Object_Goods_Main.isPublishedSite <> T1.isPublished OR Object_Goods_Main.isPublishedSite IS NULL);
+    AND (Object_Goods_Main.isPublishedSite <> T1.isPublished OR Object_Goods_Main.isPublishedSite IS NULL OR
+         COALESCE(Object_Goods_Main.NameUkrSite, '') <> COALESCE(T1.NameUkrSite, '') OR
+         COALESCE(Object_Goods_Main.MakerNameSite, '') <> COALESCE(T1.MakerNameSite, '') OR
+         COALESCE(Object_Goods_Main.MakerNameUkrSite, '') <> COALESCE(T1.MakerNameUkrSite, ''));
   
 END;
 $BODY$
@@ -55,5 +68,4 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест 
 
-select * from gpUpdate_GoodsMain_PublishedSite(inJSON := '[{"i":325,"p":"1"},{"i":328,"p":"1"},{"i":331,"p":"1"},{"i":334,"p":"1"}]' ,  inSession := '3');
-
+-- select * from gpUpdate_GoodsMain_PublishedSite(inJSON := '[{"i":325,"p":"1"},{"i":328,"p":"1"},{"i":331,"p":"1"},{"i":334,"p":"1"}]' ,  inSession := '3');

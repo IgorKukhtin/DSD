@@ -1035,6 +1035,7 @@ object OrderClientForm: TOrderClientForm
                 DataBinding.FieldName = 'isEnabled'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
+                Options.Editing = False
                 Width = 45
               end
               object NPP_ch2: TcxGridDBColumn
@@ -1053,6 +1054,7 @@ object OrderClientForm: TOrderClientForm
                 Properties.DisplayFormat = ',0.####;-,0.####; ;'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
+                Options.Editing = False
                 Width = 60
               end
               object Code_ch2: TcxGridDBColumn
@@ -1074,6 +1076,7 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1087#1094#1080#1081
+                Options.Editing = False
                 Width = 54
               end
               object ProdOptPatternName_ch2: TcxGridDBColumn
@@ -1201,6 +1204,7 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 HeaderHint = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1075#1086' '#1076#1086#1087'. '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1103
+                Options.Editing = False
                 Width = 80
               end
               object EKPrice_ch2: TcxGridDBColumn
@@ -1280,11 +1284,12 @@ object OrderClientForm: TOrderClientForm
                 Width = 80
               end
               object Comment_ch2: TcxGridDBColumn
-                Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+                Caption = '***Material/farbe'
                 DataBinding.FieldName = 'Comment'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 HeaderGlyphAlignmentHorz = taCenter
+                Options.Editing = False
                 Width = 179
               end
               object InsertDate_ch2: TcxGridDBColumn
@@ -1318,6 +1323,7 @@ object OrderClientForm: TOrderClientForm
               object Color_fon_ch2: TcxGridDBColumn
                 DataBinding.FieldName = 'Color_fon'
                 Visible = False
+                Options.Editing = False
                 VisibleForCustomization = False
                 Width = 55
               end

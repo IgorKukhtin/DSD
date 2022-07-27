@@ -108,7 +108,7 @@ BEGIN
                          FROM Container
                          WHERE Container.ObjectID in (SELECT tmpGoods.Id FROM tmpGoods)
                            AND Container.descid IN (zc_Container_Count(), zc_Container_CountPartionDate())
-                           AND Container.whereobjectid IN (SELECT T1.ID FROM gpSelect_Object_Unit(False, '3') AS T1)
+                           AND Container.whereobjectid IN (SELECT T1.ID FROM gpSelect_Object_Unit(False, False, '3') AS T1)
                          )
       , containerPD AS (SELECT Container.ParentId
                              , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate

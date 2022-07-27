@@ -278,6 +278,8 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
   inherited DataPanel: TPanel
     Width = 1043
     TabOrder = 3
+    ExplicitLeft = -184
+    ExplicitTop = -16
     ExplicitWidth = 1043
     inherited edInvNumber: TcxTextEdit
       Left = 182
@@ -664,6 +666,19 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
       ImageIndex = 41
       WithoutNext = True
     end
+    object actChoiceGoodsSPSearch_1303: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1086#1089#1090'. 1303 ('#1056#1054#1054#1062')'
+      Hint = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1086#1089#1090'. 1303 ('#1056#1054#1054#1062')'
+      ImageIndex = 26
+      FormName = 'TChoiceGoodsSPSearch_1303Form'
+      FormNameParam.Value = 'TChoiceGoodsSPSearch_1303Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
     object actGoodsMain: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -682,19 +697,6 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-    end
-    object actChoiceGoodsSPSearch_1303: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1086#1089#1090'. 1303 ('#1056#1054#1054#1062')'
-      Hint = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1086#1089#1090'. 1303 ('#1056#1054#1054#1062')'
-      ImageIndex = 26
-      FormName = 'TChoiceGoodsSPSearch_1303Form'
-      FormNameParam.Value = 'TChoiceGoodsSPSearch_1303Form'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
     end
     object actClearGoods: TdsdExecStoredProc
       Category = 'DSDLib'

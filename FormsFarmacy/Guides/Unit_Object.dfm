@@ -4187,6 +4187,25 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_ShowPlanEmployeeUser'
     end
+    object actShowActive: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1057#1082#1088#1099#1090#1100' '#1079#1072#1082#1088#1099#1090#1099#1077' '#1072#1087#1090#1077#1082#1080' '#1080' '#1070#1088'. '#1083#1080#1094#1072
+      Hint = #1057#1082#1088#1099#1090#1100' '#1079#1072#1082#1088#1099#1090#1099#1077' '#1072#1087#1090#1077#1082#1080' '#1080' '#1070#1088'. '#1083#1080#1094#1072
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      HintFalse = #1057#1082#1088#1099#1090#1100' '#1079#1072#1082#1088#1099#1090#1099#1077' '#1072#1087#1090#1077#1082#1080' '#1080' '#1070#1088'. '#1083#1080#1094#1072
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionFalse = #1057#1082#1088#1099#1090#1100' '#1079#1072#1082#1088#1099#1090#1099#1077' '#1072#1087#1090#1077#1082#1080' '#1080' '#1070#1088'. '#1083#1080#1094#1072
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4203,6 +4222,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         Name = 'inisShowAll'
         Value = Null
         Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowActive'
+        Value = Null
+        Component = actShowActive
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4235,6 +4262,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowActive'
         end
         item
           Visible = True
@@ -5125,6 +5160,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton36: TdxBarButton
       Action = mactUpdate_ShowPlanEmployeeUser
+      Category = 0
+    end
+    object bbShowActive: TdxBarButton
+      Action = actShowActive
       Category = 0
     end
   end
