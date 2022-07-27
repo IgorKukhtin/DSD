@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Boolean, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale_Value(
     IN inChangePercentAmount TFloat    , -- % скидки для кол-ва
     IN inPrice               TFloat    , -- Цена
     IN ioCountForPrice       TFloat    , -- Цена за количество
+    IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inHeadCount           TFloat    , -- Количество голов
     IN inBoxCount            TFloat    , -- Количество ящиков
     IN inPartionGoods        TVarChar  , -- Партия товара
@@ -70,14 +72,14 @@ BEGIN
                                           , inAmountChangePercent:= inAmountChangePercent
                                           , inChangePercentAmount:= inChangePercentAmount
                                           , ioPrice              := inPrice
-                                          , ioCountForPrice      := ioCountForPrice
+                                          , ioCountForPrice      := ioCountForPrice 
+                                          , inCount              := inCount
                                           , inHeadCount          := inHeadCount
                                           , inBoxCount           := inBoxCount
                                           , inPartionGoods       := CASE WHEN vbPartionGoodsDate > zc_DateStart() THEN '' ELSE inPartionGoods END
                                           , inGoodsKindId        := inGoodsKindId
                                           , inAssetId            := inAssetId
                                           , inBoxId              := inBoxId
-
                                           , inCountPack          := COALESCE (vbCountPack, 0)
                                           , inWeightTotal        := COALESCE (vbWeightTotal,0)
                                           , inWeightPack         := COALESCE (vbWeightPack,0)

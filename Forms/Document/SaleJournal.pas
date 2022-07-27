@@ -319,6 +319,9 @@ type
     actExport_fileXml: TdsdStoredProcExportToFile;
     macExport_XML: TMultiAction;
     bbExport_XML: TdxBarButton;
+    spSelectPrintBox: TdsdStoredProc;
+    actPrintBox: TdsdPrintAction;
+    bbPrintBox: TdxBarButton;
   private
     { Private declarations }
   public

@@ -2,6 +2,7 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 648
   ClientWidth = 1304
+  ExplicitTop = -151
   ExplicitWidth = 1320
   ExplicitHeight = 687
   PixelsPerInch = 96
@@ -231,7 +232,18 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object AmountChild: TcxGridDBColumn [10]
+          object Count: TcxGridDBColumn [10]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
+            DataBinding.FieldName = 'Count'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object AmountChild: TcxGridDBColumn [11]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1074#1103#1079#1082#1072')'
             DataBinding.FieldName = 'AmountChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -242,7 +254,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 73
           end
-          object AmountChildDiff: TcxGridDBColumn [11]
+          object AmountChildDiff: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1079#1085#1080#1094#1072')'
             DataBinding.FieldName = 'AmountChildDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -253,7 +265,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 68
           end
-          object ChangePercent: TcxGridDBColumn [12]
+          object ChangePercent: TcxGridDBColumn [13]
             Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -263,14 +275,6 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
-          end
-          object CountForPrice: TcxGridDBColumn [13]
-            Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
-            DataBinding.FieldName = 'CountForPrice'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
           end
           object Price: TcxGridDBColumn [14]
             Caption = #1062#1077#1085#1072
@@ -377,6 +381,14 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 200
+          end
+          object CountForPrice: TcxGridDBColumn [24]
+            Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'CountForPrice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object Value5: TcxGridDBColumn
             Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073
@@ -748,9 +760,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -1108,9 +1117,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -1714,7 +1720,7 @@ inherited ReturnInForm: TReturnInForm
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 291
-        Width = 8
+        Width = 1304
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -6043,6 +6049,15 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Count'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inHeadCount'
         Value = Null
         Component = MasterCDS
@@ -6213,6 +6228,15 @@ inherited ReturnInForm: TReturnInForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Count'
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

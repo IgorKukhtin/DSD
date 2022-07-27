@@ -58,6 +58,7 @@ BEGIN
                                              , inChangePercentAmount:= NULL :: TFloat
                                              , ioPrice              := tmp.Price
                                              , ioCountForPrice      := 1
+                                             , inCount              := NULL :: TFloat
                                              , inHeadCount          := NULL :: TFloat
                                              , inBoxCount           := NULL :: TFloat
                                              , inPartionGoods       := ''   :: TVarChar

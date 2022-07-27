@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , Amount TFloat, AmountPartner TFloat, Amount_find TFloat
              , Price TFloat, PriceIn TFloat
              , CountForPrice TFloat, ChangePercent TFloat, Price_Pricelist TFloat, Price_Pricelist_vat TFloat, isCheck_Pricelist Boolean
-             , HeadCount TFloat
+             , Count TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
              , AmountSumm TFloat, AmountSummVat TFloat
@@ -125,6 +125,7 @@ BEGIN
                            , COALESCE (MIFloat_PriceIn.ValueData, 0)       AS PriceIn
                            , MIFloat_CountForPrice.ValueData               AS CountForPrice
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
+                           , MIFloat_Count.ValueData                       AS Count
                            , MIFloat_PromoMovement.ValueData :: Integer    AS MovementId_Promo
                            , MIFloat_MovementSale.ValueData  :: Integer    AS MovementId_sale
                            , MIString_PartionGoods.ValueData               AS PartionGoods
@@ -151,6 +152,10 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                                       ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Count.DescId = zc_MIFloat_Count()
 
                            LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
@@ -251,7 +256,8 @@ BEGIN
                         , COALESCE (tmpMI.Price, tmpMI_parent_find.Price)             AS Price
                         , COALESCE (tmpMI.PriceIn, tmpMI_parent_find.PriceIn)         AS PriceIn
                         , COALESCE (tmpMI.CountForPrice, 1)                           AS CountForPrice
-                        , COALESCE (tmpMI.ChangePercent, tmpMI_parent_find.ChangePercent) AS ChangePercent
+                        , COALESCE (tmpMI.ChangePercent, tmpMI_parent_find.ChangePercent) AS ChangePercent 
+                        , COALESCE (tmpMI.Count,0)                                    AS Count
                         , COALESCE (tmpMI.MovementId_Promo, 0) :: Integer             AS MovementId_Promo
                         , COALESCE (tmpMI.MovementId_sale, 0)  :: Integer             AS MovementId_sale
                         , tmpMI.PartionGoods                                          AS PartionGoods
@@ -412,7 +418,7 @@ BEGIN
            , CAST (COALESCE (tmpPrice_kind.Price_Pricelist_vat, tmpPrice.Price_Pricelist_vat) AS TFloat) AS Price_Pricelist_vat
 
            , FALSE                      AS isCheck_Pricelist
-
+           , CAST (NULL AS TFloat)      AS Count
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
@@ -434,6 +440,7 @@ BEGIN
 
            , 0 :: TFloat AS AmountChild
            , 0 :: TFloat AS AmountChildDiff
+           
 
            , tmpStickerProperty.Value5  :: Integer AS Value5
            , tmpStickerProperty.Value10 :: Integer AS Value10
@@ -509,7 +516,7 @@ BEGIN
                        THEN FALSE
                   ELSE TRUE
              END :: Boolean AS isCheck_Pricelist
-
+           , tmpResult.Count            AS Count
            , 0  :: TFloat         		AS HeadCount
            , tmpResult.PartionGoods        	AS PartionGoods
            , Object_GoodsKind.Id        	AS GoodsKindId
@@ -629,7 +636,8 @@ BEGIN
                            , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                            , COALESCE (MIFloat_PriceIn.ValueData, 0)       AS PriceIn
                            , MIFloat_CountForPrice.ValueData               AS CountForPrice
-                           , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
+                           , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent 
+                           , MIFloat_Count.ValueData                       AS Count
                            , MIFloat_PromoMovement.ValueData :: Integer    AS MovementId_Promo
                            , MIFloat_MovementSale.ValueData  :: Integer    AS MovementId_sale
                            , MIString_PartionGoods.ValueData               AS PartionGoods
@@ -656,6 +664,10 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                                       ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Count.DescId = zc_MIFloat_Count()
 
                            LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
@@ -757,6 +769,7 @@ BEGIN
                         , COALESCE (tmpMI.PriceIn, tmpMI_parent_find.PriceIn)         AS PriceIn
                         , COALESCE (tmpMI.CountForPrice, 1)                           AS CountForPrice
                         , COALESCE (tmpMI.ChangePercent, tmpMI_parent_find.ChangePercent) AS ChangePercent
+                        , COALESCE (tmpMI.Count,0)                                    AS Count
                         , COALESCE (tmpMI.MovementId_Promo, 0) :: Integer             AS MovementId_Promo
                         , COALESCE (tmpMI.MovementId_sale, 0)  :: Integer             AS MovementId_sale
                         , tmpMI.PartionGoods                                          AS PartionGoods
@@ -911,7 +924,7 @@ BEGIN
                        THEN FALSE
                   ELSE TRUE
              END :: Boolean AS isCheck_Pricelist
-
+           , tmpResult.Count  :: TFloat          AS Count
            , 0  :: TFloat         		AS HeadCount
            , tmpResult.PartionGoods        	AS PartionGoods
            , Object_GoodsKind.Id        	AS GoodsKindId
@@ -1025,6 +1038,7 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Integer, TDateTime, Bool
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.07.22         * add Count
  06.12.19         *
  10.10.16         * add tmpGoods ËÁ GoodsListSale
  05.02.16         * 

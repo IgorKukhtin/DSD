@@ -21,8 +21,6 @@ inherited Sale_OrderForm: TSale_OrderForm
       inherited cxGrid: TcxGrid
         Width = 1370
         Height = 395
-        ExplicitLeft = -3
-        ExplicitTop = -3
         ExplicitWidth = 1370
         ExplicitHeight = 395
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -4143,6 +4141,15 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Count'
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

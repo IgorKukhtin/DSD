@@ -21,7 +21,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       inherited cxGrid: TcxGrid
         Width = 1370
         Height = 300
-        ExplicitTop = -3
         ExplicitWidth = 1370
         ExplicitHeight = 300
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -3844,6 +3843,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Count'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inHeadCount'
         Value = Null
         Component = MasterCDS
@@ -3953,6 +3961,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Count'
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
