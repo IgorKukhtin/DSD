@@ -3,23 +3,23 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 420
   ClientWidth = 702
   ExplicitWidth = 718
-  ExplicitHeight = 458
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 702
     Height = 394
-    ExplicitWidth = 699
+    ExplicitWidth = 702
     ExplicitHeight = 394
     ClientRectBottom = 394
     ClientRectRight = 702
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 699
+      ExplicitWidth = 702
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
         Width = 702
         Height = 394
-        ExplicitWidth = 699
+        ExplicitWidth = 702
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -114,6 +114,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
             Options.Editing = False
             Width = 149
+          end
+          object isCountCount: TcxGridDBColumn
+            Caption = #1059#1095#1077#1090' '#1073#1072#1090#1086#1085#1086#1074
+            DataBinding.FieldName = 'isCountCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

@@ -3241,7 +3241,7 @@ procedure TLoadFormTest.LoadUnitFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
-    exit;
+   /// exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
 
@@ -3250,7 +3250,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
-
+   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SheetWorkTimeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SheetWorkTimeForm');
 end;

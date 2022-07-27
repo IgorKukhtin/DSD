@@ -87,6 +87,7 @@ type
     cbPartionGoodsKind: TcxCheckBox;
     cxLabel18: TcxLabel;
     edComment: TcxTextEdit;
+    cbCountCount: TcxCheckBox;
   private
     { Private declarations }
   public
