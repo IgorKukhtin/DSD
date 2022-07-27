@@ -34,6 +34,11 @@ inherited LossForm: TLossForm
               Format = ',0.####'
               Kind = skSum
               Column = HeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -45,6 +50,11 @@ inherited LossForm: TLossForm
               Format = ',0.####'
               Kind = skSum
               Column = HeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -169,15 +179,13 @@ inherited LossForm: TLossForm
             Width = 80
           end
           object Count: TcxGridDBColumn [10]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 80
           end
           object HeadCount: TcxGridDBColumn [11]
@@ -1592,6 +1600,8 @@ inherited LossForm: TLossForm
       item
         Name = 'inCount'
         Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'Count'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

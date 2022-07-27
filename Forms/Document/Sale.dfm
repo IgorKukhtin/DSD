@@ -3,8 +3,6 @@ inherited SaleForm: TSaleForm
   ClientHeight = 681
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -168
-  ExplicitTop = -184
   ExplicitWidth = 1378
   ExplicitHeight = 720
   PixelsPerInch = 96
@@ -240,7 +238,7 @@ inherited SaleForm: TSaleForm
             Width = 60
           end
           object Count: TcxGridDBColumn [10]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -2803,8 +2801,8 @@ inherited SaleForm: TSaleForm
       MoveParams = <>
       dsdStoredProcName = spSelectSale_xml
       FileExt = '.xml'
-      Left = 1208
-      Top = 168
+      Left = 1272
+      Top = 344
     end
     object actGet_Export_FileNameXml: TdsdExecStoredProc
       Category = 'Export_file'
@@ -6251,8 +6249,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 924
-    Top = 112
+    Left = 956
+    Top = 88
   end
   object spUpdateMI_Sale_PriceIn: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Sale_PriceIn'

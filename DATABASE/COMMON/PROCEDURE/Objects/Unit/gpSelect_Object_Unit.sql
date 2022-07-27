@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                UnitId_HistoryCost Integer, UnitCode_HistoryCost Integer, UnitName_HistoryCost TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isLeaf Boolean, isPartionDate Boolean, isPartionGoodsKind boolean, 
+               isCountCount Boolean,
                isIrna Boolean,
                isErased Boolean,
                Address TVarChar,
@@ -148,6 +149,7 @@ BEGIN
            , Object_Unit_View.isLeaf
            , ObjectBoolean_PartionDate.ValueData   AS isPartionDate
            , COALESCE (ObjectBoolean_PartionGoodsKind.ValueData, FALSE) :: Boolean AS isPartionGoodsKind
+           , COALESCE (ObjectBoolean_CountCount.ValueData, FALSE)       :: Boolean AS isCountCount
 
            , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
            , Object_Unit_View.isErased
@@ -208,6 +210,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
                                     ON ObjectBoolean_Guide_Irna.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_CountCount
+                                    ON ObjectBoolean_CountCount.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_CountCount.DescId = zc_ObjectBoolean_Unit_CountCount()
 
             LEFT JOIN tmpPartner_Unit ON tmpPartner_Unit.UnitId = Object_Unit_View.Id
 
@@ -294,7 +300,8 @@ BEGIN
 
            , TRUE  AS isLeaf
            , FALSE AS isPartionDate
-           , FALSE AS isPartionGoodsKind
+           , FALSE AS isPartionGoodsKind 
+           , FALSE AS isCountCount
            , FALSE AS isIrna
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address
@@ -371,7 +378,8 @@ BEGIN
 
            , TRUE  AS isLeaf
            , FALSE AS isPartionDate
-           , FALSE AS isPartionGoodsKind
+           , FALSE AS isPartionGoodsKind 
+           , FALSE AS isCountCount
            , FALSE AS isIrna
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address 
@@ -387,6 +395,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.07.22         * isCountCount
  04.05.22         *
  15.12.21         * add PersonalHead
                     del PersonalSheetWorkTime

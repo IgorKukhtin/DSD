@@ -2,7 +2,6 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 648
   ClientWidth = 1304
-  ExplicitTop = -151
   ExplicitWidth = 1320
   ExplicitHeight = 687
   PixelsPerInch = 96
@@ -233,7 +232,7 @@ inherited ReturnInForm: TReturnInForm
             Width = 60
           end
           object Count: TcxGridDBColumn [10]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -760,6 +759,9 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -1117,6 +1119,9 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -1720,7 +1725,7 @@ inherited ReturnInForm: TReturnInForm
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 291
-        Width = 1304
+        Width = 8
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
