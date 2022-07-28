@@ -22,21 +22,31 @@ BEGIN
        RETURN vbRet;
      END IF;
      
-     if inPromoBonus >= inUpperLimitPromoBonus
+     IF CURRENT_DATE >= '28.07.2022'
      THEN
-       vbRet := inMinPercentPromoBonus;
-     ELSEIF inMarginPercent + inPromoBonus >= inUpperLimitPromoBonus
-     THEN
-       vbRet := vbRet - (inMarginPercent + inPromoBonus - inUpperLimitPromoBonus);
-     ELSEIF inMarginPercent + inPromoBonus > inLowerLimitPromoBonus
-     THEN
-       vbRet := vbRet - (inMarginPercent + inPromoBonus - inLowerLimitPromoBonus);
-     END IF;
-     
-     IF vbRet < inMinPercentPromoBonus
-     THEN
-       vbRet := inMinPercentPromoBonus;       
-     END IF;
+       IF inMarginPercent - inPromoBonus < 4.5
+       THEN 
+         vbRet := 4.5;
+       ELSE
+         vbRet := inMarginPercent - inPromoBonus;       
+       END IF;
+     ELSE 
+       if inPromoBonus >= inUpperLimitPromoBonus
+       THEN
+         vbRet := inMinPercentPromoBonus;
+       ELSEIF inMarginPercent + inPromoBonus >= inUpperLimitPromoBonus
+       THEN
+         vbRet := vbRet - (inMarginPercent + inPromoBonus - inUpperLimitPromoBonus);
+       ELSEIF inMarginPercent + inPromoBonus > inLowerLimitPromoBonus
+       THEN
+         vbRet := vbRet - (inMarginPercent + inPromoBonus - inLowerLimitPromoBonus);
+       END IF;
+       
+       IF vbRet < inMinPercentPromoBonus
+       THEN
+         vbRet := inMinPercentPromoBonus;       
+       END IF;
+     END IF;  
 
      -- Результат
      RETURN vbRet;
@@ -54,4 +64,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT zfCalc_MarginPercent_PromoBonus (1, 7, 10, 7, 1)
+SELECT zfCalc_MarginPercent_PromoBonus (10, 7, 10, 7, 1)
