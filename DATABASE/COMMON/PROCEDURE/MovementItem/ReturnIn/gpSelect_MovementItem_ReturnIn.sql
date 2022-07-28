@@ -516,7 +516,7 @@ BEGIN
                        THEN FALSE
                   ELSE TRUE
              END :: Boolean AS isCheck_Pricelist
-           , tmpResult.Count            AS Count
+           , tmpResult.Count :: TFloat            AS Count
            , 0  :: TFloat         		AS HeadCount
            , tmpResult.PartionGoods        	AS PartionGoods
            , Object_GoodsKind.Id        	AS GoodsKindId
