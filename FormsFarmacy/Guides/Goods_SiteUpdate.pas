@@ -79,6 +79,21 @@ type
     Color_MakerName: TcxGridDBColumn;
     Color_MakerNameUkr: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
+    spUpdate_SiteUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    spUpdate_SiteUpdate_NameUkrSite: TdsdStoredProc;
+    spUpdate_SiteUpdate_MakerNameSite: TdsdStoredProc;
+    spUpdate_SiteUpdate_MakerNameUkrSite: TdsdStoredProc;
+    actUpdate_SiteUpdate_NameUkrSite: TdsdExecStoredProc;
+    mUpdate_SiteUpdate_NameUkrSite: TMultiAction;
+    actUpdate_SiteUpdate_MakerNameSite: TdsdExecStoredProc;
+    mactUpdate_SiteUpdate_MakerNameSite: TMultiAction;
+    actUpdate_SiteUpdate_MakerNameUkrSite: TdsdExecStoredProc;
+    mactUpdate_SiteUpdate_MakerNameUkrSite: TMultiAction;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
   private
   public
   end;

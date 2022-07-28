@@ -3,10 +3,10 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_SiteUpdate(Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_SiteUpdate(
-    IN ininShowAll           Boolean,       -- 
-    IN ininDiffNameUkr       Boolean,       -- 
-    IN ininDiffMakerName     Boolean,       -- 
-    IN ininDiffMakerNameUkr  Boolean,       -- 
+    IN inisShowAll           Boolean,       -- 
+    IN inisDiffNameUkr       Boolean,       -- 
+    IN inisDiffMakerName     Boolean,       -- 
+    IN inisDiffMakerNameUkr  Boolean,       -- 
     IN inSession             TVarChar       -- 
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -59,10 +59,10 @@ BEGIN
       FROM  Object_Goods_Main 
             
       WHERE COALESCE(Object_Goods_Main.isPublishedSite, False) = TRUE
-        AND (COALESCE(Object_Goods_Main.NameUkr, '') <> COALESCE(Object_Goods_Main.NameUkrSite, '') AND ininDiffNameUkr = True OR
-             COALESCE(Object_Goods_Main.MakerName, '') <> COALESCE(Object_Goods_Main.MakerNameSite, '') AND ininDiffMakerName = True OR
-             COALESCE(Object_Goods_Main.MakerNameUkr, '') <> COALESCE(Object_Goods_Main.MakerNameUkrSite, '') AND ininDiffMakerNameUkr = True OR
-             ininShowAll = True
+        AND (COALESCE(Object_Goods_Main.NameUkr, '') <> COALESCE(Object_Goods_Main.NameUkrSite, '') AND inisDiffNameUkr = True OR
+             COALESCE(Object_Goods_Main.MakerName, '') <> COALESCE(Object_Goods_Main.MakerNameSite, '') AND inisDiffMakerName = True OR
+             COALESCE(Object_Goods_Main.MakerNameUkr, '') <> COALESCE(Object_Goods_Main.MakerNameUkrSite, '') AND inisDiffMakerNameUkr = True OR
+             inisShowAll = True
             )
       ;
 

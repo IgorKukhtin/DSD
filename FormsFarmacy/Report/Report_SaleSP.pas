@@ -126,6 +126,8 @@ type
     CountSP_1303Name: TcxGridDBColumn;
     MakerCountrySP_1303Name: TcxGridDBColumn;
     PriceOptSP: TcxGridDBColumn;
+    actPrint3: TdsdPrintAction;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

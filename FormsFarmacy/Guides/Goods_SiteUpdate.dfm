@@ -237,7 +237,6 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
       OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.CellAutoHeight = True
       OptionsView.Footer = True
@@ -275,7 +274,6 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
         DataBinding.FieldName = 'isNameUkrSite'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 63
       end
       object NameUkr: TcxGridDBColumn
@@ -299,7 +297,6 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
         DataBinding.FieldName = 'isMakerNameSite'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 79
       end
       object MakerName: TcxGridDBColumn
@@ -323,7 +320,6 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
         DataBinding.FieldName = 'isMakerNameUkrSite'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 80
       end
       object MakerNameUkr: TcxGridDBColumn
@@ -476,6 +472,10 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
         end
         item
           Visible = True
+          ItemName = 'dxBarSubItem1'
+        end
+        item
+          Visible = True
           ItemName = 'bbStaticText'
         end
         item
@@ -572,6 +572,36 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
       ImageIndex = 1
       ShortCut = 115
     end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mUpdate_SiteUpdate_NameUkrSite
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = mactUpdate_SiteUpdate_MakerNameUkrSite
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = mactUpdate_SiteUpdate_MakerNameSite
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -600,6 +630,90 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SiteUpdate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SiteUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
+    object actUpdate_SiteUpdate_NameUkrSite: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SiteUpdate_NameUkrSite
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SiteUpdate_NameUkrSite
+        end>
+      Caption = 'actUpdate_SiteUpdate_NameUkrSite'
+    end
+    object mUpdate_SiteUpdate_NameUkrSite: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_SiteUpdate_NameUkrSite
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1079#1084'. '#1091#1082#1088'. '#1085#1072#1079#1074#1072#1085#1080#1077'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1079#1084'. '#1091#1082#1088'. '#1085#1072#1079#1074#1072#1085#1080#1077'"'
+      ImageIndex = 79
+    end
+    object actUpdate_SiteUpdate_MakerNameSite: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SiteUpdate_MakerNameSite
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SiteUpdate_MakerNameSite
+        end>
+      Caption = 'actUpdate_SiteUpdate_MakerNameSite'
+    end
+    object mactUpdate_SiteUpdate_MakerNameSite: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_SiteUpdate_MakerNameSite
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1079#1084'. '#1085#1072#1079#1074'. '#1087#1086#1089#1090'."'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1079#1084'. '#1085#1072#1079#1074'. '#1087#1086#1089#1090'."'
+      ImageIndex = 79
+    end
+    object actUpdate_SiteUpdate_MakerNameUkrSite: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SiteUpdate_MakerNameUkrSite
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SiteUpdate_MakerNameUkrSite
+        end>
+      Caption = 'actUpdate_SiteUpdate_MakerNameUkrSite'
+    end
+    object mactUpdate_SiteUpdate_MakerNameUkrSite: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_SiteUpdate_MakerNameUkrSite
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1079#1084'. '#1085#1072#1079#1074'. '#1087#1086#1089#1090'. '#1091#1082#1088'."'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1079#1084'. '#1085#1072#1079#1074'. '#1087#1086#1089#1090'. '#1091#1082#1088'."'
+      ImageIndex = 79
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_SiteUpdate'
@@ -610,7 +724,7 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
       end>
     Params = <
       item
-        Name = 'ininShowAll'
+        Name = 'inisShowAll'
         Value = Null
         Component = cbShowAll
         DataType = ftBoolean
@@ -618,7 +732,7 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininDiffNameUkr'
+        Name = 'inisDiffNameUkr'
         Value = Null
         Component = cbDiffNameUkr
         DataType = ftBoolean
@@ -626,7 +740,7 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininDiffMakerName'
+        Name = 'inisDiffMakerName'
         Value = Null
         Component = cbDiffMakerName
         DataType = ftBoolean
@@ -634,7 +748,7 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininDiffMakerNameUkr'
+        Name = 'inisDiffMakerNameUkr'
         Value = Null
         Component = cbDiffMakerNameUkr
         DataType = ftBoolean
@@ -792,5 +906,157 @@ object Goods_SiteUpdateForm: TGoods_SiteUpdateForm
     PropertiesCellList = <>
     Left = 392
     Top = 304
+  end
+  object spUpdate_SiteUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Goods_SiteUpdate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = 'False'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNameUkr'
+        Value = True
+        Component = ClientDataSet
+        ComponentItem = 'isNameUkrSite'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMakerName'
+        Value = True
+        Component = ClientDataSet
+        ComponentItem = 'isMakerNameSite'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMakerNameUkr'
+        Value = True
+        Component = ClientDataSet
+        ComponentItem = 'isMakerNameUkrSite'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 296
+  end
+  object spUpdate_SiteUpdate_NameUkrSite: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Goods_SiteUpdate_One'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNewData'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isNameUkrSite'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFieldUpdate'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 136
+  end
+  object spUpdate_SiteUpdate_MakerNameSite: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Goods_SiteUpdate_One'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMakerName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isMakerNameSite'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFieldUpdate'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 200
+  end
+  object spUpdate_SiteUpdate_MakerNameUkrSite: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Goods_SiteUpdate_One'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNewData'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isMakerNameUkrSite'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFieldUpdate'
+        Value = '3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 264
   end
 end

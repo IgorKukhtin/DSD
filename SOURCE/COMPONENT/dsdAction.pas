@@ -7120,9 +7120,7 @@ function TdsdForeignData.LocalExecute: Boolean;
     begin
       Code := Ord(C);
 
-      if Code = 39 then
-        Result := Result + '`'
-      else if Code = 188 then
+      if Code = 188 then
         Result := Result + '1/4'
       else if Code = 189 then
         Result := Result + '1/2'
@@ -7137,7 +7135,7 @@ function TdsdForeignData.LocalExecute: Boolean;
       else if (Code = 947) and (dsdProject = prFarmacy) then
         Result := Result + 'y'
       else if ((Code = 180) or (Code = 8125) or (Code = 700)) and (dsdProject = prFarmacy) then
-        Result := Result + '`'
+        Result := Result + ''''
 //      else if ((Code <= 0) or (Code >= 822) and (Code < 1000)) and (dsdProject = prFarmacy) then
 //        Result := Result  + C
       else
