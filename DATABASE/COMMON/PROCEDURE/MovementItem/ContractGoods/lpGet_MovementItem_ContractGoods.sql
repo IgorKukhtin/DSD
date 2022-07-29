@@ -50,8 +50,8 @@ BEGIN
                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                                LEFT JOIN MovementItemFloat AS MIF_Price
-                                                                ON MIF_Price.MovementItemId = MovementItem.Id
-                                                               AND MIF_Price.DescId         = zc_MIFloat_Price()
+                                                           ON MIF_Price.MovementItemId = MovementItem.Id
+                                                          AND MIF_Price.DescId         = zc_MIFloat_Price()
 
                           WHERE Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '12 MONTH') AND inOperDate
                             AND Movement.DescId    = zc_Movement_ContractGoods()

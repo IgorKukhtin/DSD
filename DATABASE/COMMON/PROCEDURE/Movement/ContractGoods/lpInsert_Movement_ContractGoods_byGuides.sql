@@ -70,7 +70,9 @@ BEGIN
                                                        , inGoodsId      := inGoodsId
                                                        , inGoodsKindId  := inGoodsKindId
                                                        , inisBonusNo    := FALSE
-                                                       , inPrice        := inPrice
+                                                       , inPrice        := inPrice 
+                                                       , inChangePrice   := 0 ::TFloat
+                                                       , inChangePercent := 0 ::TFloat
                                                        , inComment      := '' ::TVarChar
                                                        , inUserId       := inUserId
                                                         ) AS tmp;
