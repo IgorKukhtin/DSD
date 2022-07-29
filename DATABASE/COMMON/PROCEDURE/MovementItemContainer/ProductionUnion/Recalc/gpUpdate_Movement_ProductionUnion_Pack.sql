@@ -16,7 +16,8 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Pack());
 
-   IF DATE_TRUNC ('MONTH', inStartDate) < DATE_TRUNC ('MONTH', CURRENT_DATE)
+   IF (DATE_TRUNC ('MONTH', inStartDate) < DATE_TRUNC ('MONTH', CURRENT_DATE)
+       OR EXTRACT (DAY FROM inStartDate) > 20)
       AND (EXTRACT (DAY FROM inStartDate)  / 2 - FLOOR (EXTRACT (DAY FROM inStartDate)  / 2)
         <> EXTRACT (DAY FROM CURRENT_DATE) / 2 - FLOOR (EXTRACT (DAY FROM CURRENT_DATE) / 2)
       --OR EXTRACT (DAY FROM inStartDate) < 14
@@ -26,6 +27,8 @@ BEGIN
        RETURN;
    END IF;
    
+   --IF inStartDate <= '07.07.2022' THEN RETURN; END IF;
+
 /*IF inUnitId NOT IN (8451, 951601)
 THEN
     RAISE EXCEPTION 'Ошибка.<%>', lfGet_Object_ValueData_sh (inUnitId);
