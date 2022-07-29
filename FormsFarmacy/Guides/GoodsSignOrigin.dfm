@@ -1,7 +1,7 @@
 object GoodsSignOriginForm: TGoodsSignOriginForm
   Left = 0
   Top = 0
-  Caption = #1060#1086#1088#1084#1099' '#1086#1090#1087#1091#1089#1082#1072
+  Caption = #1055#1088#1080#1079#1085#1072#1082' '#1087#1088#1086#1080#1089#1093#1086#1078#1076#1077#1085#1080#1103
   ClientHeight = 282
   ClientWidth = 356
   Color = clBtnFace

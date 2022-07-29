@@ -1,7 +1,7 @@
 object GoodsWhoCanForm: TGoodsWhoCanForm
   Left = 0
   Top = 0
-  Caption = #1060#1086#1088#1084#1099' '#1086#1090#1087#1091#1089#1082#1072
+  Caption = #1050#1086#1084#1091' '#1084#1086#1078#1085#1086
   ClientHeight = 282
   ClientWidth = 356
   Color = clBtnFace

@@ -31,6 +31,19 @@ type
     FormDispensingGuides: TdsdGuides;
     edMakerNameUkr: TcxTextEdit;
     cxLabel4: TcxLabel;
+    edDosage: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edVolume: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    ceGoodsWhoCan: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    edGoodsMethodAppl: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    edGoodsSignOrigin: TcxButtonEdit;
+    cxLabel10: TcxLabel;
+    GoodsSignOriginGuides: TdsdGuides;
+    GoodsMethodApplGuides: TdsdGuides;
+    GoodsWhoCanGuides: TdsdGuides;
   private
     { Private declarations }
   public
