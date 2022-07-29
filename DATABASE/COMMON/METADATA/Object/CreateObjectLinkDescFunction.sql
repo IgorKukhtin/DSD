@@ -268,6 +268,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_Box() RETURNS Intege
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsPropertyValue_Box', 'Связь Значения свойств товаров для классификатора с ящиком', zc_Object_GoodsPropertyValue(), zc_Object_Box() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_Box');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsKindSub() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_GoodsKindSub'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsPropertyValue_GoodsKindSub', 'Связь Значения свойств товаров для классификатора с Вид товара (факт расход в накладной)', zc_Object_GoodsPropertyValue(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_GoodsKindSub');
+
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsScaleCeh_From() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsScaleCeh_From'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsScaleCeh_From', 'От кого', zc_Object_GoodsScaleCeh(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsScaleCeh_From');
@@ -2821,6 +2827,7 @@ SELECT 'zc_ObjectLink_Goods_UnitSupplementSUN1In', 'Аптека получатель вне работы
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 29.07.22         * zc_ObjectLink_GoodsPropertyValue_GoodsKindSub
  12.07.22         * zc_ObjectLink_OrderCarInfo_Route 
                     zc_ObjectLink_OrderCarInfo_Retail
  07.06.22         * zc_ObjectLink_GoodsByGoodsKind_GoodsSub_Br

@@ -169,6 +169,30 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object GoodsKindSubName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1092#1072#1082#1090' '#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'GoodsKindSubName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = GoodsKindSubChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1092#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081')'
+        Width = 94
+      end
+      object isGoodsKind: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1072
+        DataBinding.FieldName = 'isGoodsKind'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1072' '#1089' '#1090#1072#1082#1080#1084' '#1074#1080#1076#1086#1084' '#1090#1086#1074'.'
+        Width = 82
+      end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
@@ -786,6 +810,33 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         end>
       isShowModal = True
     end
+    object GoodsKindSubChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsKindChoiceForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = 'TGoodsKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsKindSubId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsKindSubName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object GoodsKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -962,10 +1013,12 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 480
     Top = 280
@@ -1096,6 +1149,23 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'GoodsBoxId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindSubId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsKindSubId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoodsKind'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isGoodsKind'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
