@@ -219,7 +219,7 @@ BEGIN
               -- элемент ReceiptProdModelChild или разложили на ReceiptGoodsChild
             , tmpRes.ObjectId, Object.ObjectCode, Object.ValueData AS ObjectName, Object.DescId AS ObjectDescId, ObjectDesc.ItemName AS DescName
               -- значение
-            , tmpRes.Value :: TFloat AS Value
+            , COALESCE (tmpRes.Value, 0) :: TFloat AS Value
               --
             , tmpRes.ReceiptGoodsChildId
 

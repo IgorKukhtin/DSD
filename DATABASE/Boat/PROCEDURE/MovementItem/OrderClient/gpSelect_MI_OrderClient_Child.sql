@@ -65,22 +65,23 @@ BEGIN
                               );
 
      -- таблица - элементы документа, со всеми свойствами
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, ParentId Integer, PartionId Integer
+     CREATE TEMP TABLE _tmpItem (DescId_mi Integer
+                               , MovementItemId Integer, ParentId Integer, PartionId Integer
                                , UnitId Integer, PartnerId Integer
                                , GoodsId Integer, ObjectId Integer, ObjectId_basis Integer
                                , ProdOptionsId Integer
                                , ColorPatternId Integer
                                , ProdColorPatternId  Integer
                                , Amount TFloat
-                               , AmountBasis TFloat
                                , AmountPartner TFloat
                                , OperPrice TFloat
                                , OperPricePartner TFloat
                                , isErased Boolean
                                 ) ON COMMIT DROP;
      -- элементы документа
-     INSERT INTO _tmpItem (MovementItemId, ParentId, PartionId, UnitId, PartnerId, GoodsId, ObjectId, ObjectId_basis, ProdOptionsId, ColorPatternId, ProdColorPatternId, Amount, AmountBasis, AmountPartner, OperPrice, OperPricePartner, isErased)
-        SELECT MovementItem.Id                                                     AS MovementItemId
+     INSERT INTO _tmpItem (DescId_mi, MovementItemId, ParentId, PartionId, UnitId, PartnerId, GoodsId, ObjectId, ObjectId_basis, ProdOptionsId, ColorPatternId, ProdColorPatternId, Amount, AmountPartner, OperPrice, OperPricePartner, isErased)
+        SELECT MovementItem.DescId                                                 AS DescId_mi
+             , MovementItem.Id                                                     AS MovementItemId
              , COALESCE (MovementItem.ParentId, 0)                                 AS ParentId
              , MovementItem.PartionId                                              AS PartionId
              , MILinkObject_Unit.ObjectId                                          AS UnitId
@@ -97,7 +98,6 @@ BEGIN
              , MILinkObject_ProdColorPattern.ObjectId                              AS ProdColorPatternId
                                                                                    
              , MovementItem.Amount                                                 AS Amount
-             , MIFloat_AmountBasis.ValueData                                       AS AmountBasis
              , MIFloat_AmountPartner.ValueData                                     AS AmountPartner
              , MIFloat_OperPrice.ValueData                                         AS OperPrice
              , MIFloat_OperPricePartner.ValueData                                  AS OperPricePartner
@@ -108,7 +108,7 @@ BEGIN
 
         FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
              INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                    AND MovementItem.DescId     = zc_MI_Child()
+                                    AND MovementItem.DescId     IN (zc_MI_Child(), zc_MI_Detail(), zc_MI_Reserv())
                                     AND MovementItem.isErased   = tmpIsErased.isErased
                -- !!! временно для отладки
              LEFT JOIN MovementString AS MS ON MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_Comment()
@@ -134,9 +134,6 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdColorPattern
                                               ON MILinkObject_ProdColorPattern.MovementItemId = MovementItem.Id
                                              AND MILinkObject_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
-             LEFT JOIN MovementItemFloat AS MIFloat_AmountBasis
-                                         ON MIFloat_AmountBasis.MovementItemId = MovementItem.Id
-                                        AND MIFloat_AmountBasis.DescId         = zc_MIFloat_AmountBasis()
              LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                          ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
@@ -244,26 +241,28 @@ BEGIN
                             LEFT JOIN MovementItemString AS MIString_PartNumber
                                                          ON MIString_PartNumber.MovementItemId = _tmpItem.PartionId
                                                         AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
-                       WHERE _tmpItem.ParentId > 0
+                       WHERE _tmpItem.DescId_mi = zc_MI_Reserv()
                        GROUP BY _tmpItem.ParentId
                       )
+           -- все цвета для Узла
          , tmpProdColor AS (SELECT _tmpItem.GoodsId
-                                 , CASE WHEN Object_MaterialOptions.ValueData<> '' THEN Object_MaterialOptions.ValueData || ' - ' ELSE '' END || _tmpProdColorItems.ProdColorName AS ProdColorName
+                                 , CASE WHEN Object_MaterialOptions.ValueData <> '' THEN Object_MaterialOptions.ValueData || ' - ' ELSE '' END || _tmpProdColorItems.ProdColorName AS ProdColorName
                             FROM _tmpItem
                                  JOIN _tmpProdColorItems ON _tmpProdColorItems.ProdColorPatternId = _tmpItem.ProdColorPatternId
                                                         AND _tmpProdColorItems.ProdColorName      <> ''
                                  LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = _tmpProdColorItems.MaterialOptionsId
                                  LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = _tmpProdColorItems.ProdColorPatternId
-                            WHERE _tmpItem.GoodsId > 0
+                            WHERE _tmpItem.DescId_mi = zc_MI_Detail()
                             ORDER BY _tmpItem.GoodsId, Object_ProdColorPattern.ObjectCode
                            )
+       -- цвета без повтороі для Узла
      , tmpProdColor_all AS (SELECT _tmpItem.GoodsId
                                  , STRING_AGG (DISTINCT CASE WHEN Object_MaterialOptions.ValueData <> '' THEN Object_MaterialOptions.ValueData || ' - ' ELSE '' END || _tmpProdColorItems.ProdColorName, '; ') AS ProdColorName
                             FROM _tmpItem
                                  JOIN _tmpProdColorItems ON _tmpProdColorItems.ProdColorPatternId = _tmpItem.ProdColorPatternId
                                                         AND _tmpProdColorItems.ProdColorName      <> ''
                                  LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = _tmpProdColorItems.MaterialOptionsId
-                            WHERE _tmpItem.GoodsId > 0
+                            WHERE _tmpItem.DescId_mi = zc_MI_Detail()
                             GROUP BY _tmpItem.GoodsId
                            )
 
@@ -289,13 +288,13 @@ BEGIN
            , Object_Partner.ValueData                 AS PartnerName
 
              -- Количество шаблон сборки
-           , _tmpItem.AmountBasis                     AS Amount_basis
+           , _tmpItem.Amount                          AS Amount_basis
              -- Количество резерв
              --,  COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) AS Amount_unit
              -- Количество резерв
-           , CASE WHEN ObjectDesc_Object.Id = zc_Object_Goods()          THEN COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) ELSE 0 END ::TFloat   AS Amount_unit
+           , CASE WHEN ObjectDesc_Object.Id = zc_Object_Goods()          THEN COALESCE (tmpSumm.Amount_unit, 0) ELSE 0 END ::TFloat   AS Amount_unit
              -- работы/услуги
-           , CASE WHEN ObjectDesc_Object.Id = zc_Object_ReceiptService() THEN COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) ELSE 0 END ::TFloat   AS Value_service
+           , CASE WHEN ObjectDesc_Object.Id = zc_Object_ReceiptService() THEN _tmpItem.Amount ELSE 0 END ::TFloat   AS Value_service
              -- Количество заказ поставщику
            , _tmpItem.AmountPartner                   AS Amount_partner
 
@@ -306,7 +305,7 @@ BEGIN
              -- Цена вх. с затратами без НДС
            , CASE WHEN tmpSumm.Amount_unit > 0 THEN COALESCE (tmpSumm.TotalSummCost_unit / tmpSumm.Amount_unit) ELSE 0 END :: TFloat AS OperPrice_unit
 
-           , (_tmpItem.AmountBasis   * _tmpItem.OperPrice)        :: TFloat AS TotalSumm_basis
+           , (_tmpItem.Amount * _tmpItem.OperPrice)                                      :: TFloat AS TotalSumm_basis
            , COALESCE (tmpSumm.TotalSummCost_unit, _tmpItem.Amount * _tmpItem.OperPrice) :: TFloat AS TotalSumm_unit
            , (_tmpItem.AmountPartner * _tmpItem.OperPricePartner) :: TFloat AS TotalSumm_partner
 
@@ -405,6 +404,7 @@ BEGIN
        -- без этой структуры
        WHERE _tmpItem.GoodsId  = 0
          AND _tmpItem.ParentId = 0
+         AND _tmpItem.DescId_mi = zc_MI_Child()
       ;
      RETURN NEXT Cursor1;
 
@@ -433,8 +433,8 @@ BEGIN
            , Object_Partner.Id                        AS PartnerId
            , Object_Partner.ValueData                 AS PartnerName
 
-           , _tmpItem.AmountBasis                     AS Amount_basis       -- Количество шаблон сборки
-           , CASE WHEN Object_Object.DescId = zc_Object_ReceiptService() THEN 0 ELSE _tmpItem.Amount END :: TFloat AS Amount_unit        -- Количество резерв
+           , _tmpItem.Amount                          AS Amount_basis       -- Количество шаблон сборки
+           , CASE WHEN Object_Object.DescId = zc_Object_ReceiptService() THEN 0 ELSE 0 END :: TFloat AS Amount_unit        -- Количество резерв
            , _tmpItem.AmountPartner                   AS Amount_partner     -- Количество заказ поставщику
 
            , _tmpItem.OperPrice                       AS OperPrice_basis   -- Цена вх без НДС
@@ -442,8 +442,8 @@ BEGIN
              -- Цена вх. с затратами без НДС
            , (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice, 0)) :: TFloat AS OperPrice_unit
 
-           , (_tmpItem.AmountBasis   * _tmpItem.OperPrice) :: TFloat AS TotalSumm_basis
-           , (_tmpItem.Amount        * (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice, 0))) :: TFloat AS TotalSumm_unit
+           , (_tmpItem.Amount   * _tmpItem.OperPrice) :: TFloat AS TotalSumm_basis
+           , (0 * (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice, 0))) :: TFloat AS TotalSumm_unit
            , (_tmpItem.AmountPartner * _tmpItem.OperPricePartner) :: TFloat AS TotalSumm_partner
 
            , _tmpItem.isErased
@@ -528,8 +528,10 @@ BEGIN
                                   AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN _tmpReceiptLevel ON _tmpReceiptLevel.GoodsId = _tmpItem.ObjectId AND 1=0
+
+       WHERE _tmpItem.DescId_mi = zc_MI_Detail()
      --WHERE _tmpItem.GoodsId > 0
-       WHERE Object_Object.DescId <> zc_Object_ProdColorPattern()
+--       WHERE Object_Object.DescId <> zc_Object_ProdColorPattern()
      ;
      RETURN NEXT Cursor2;
 

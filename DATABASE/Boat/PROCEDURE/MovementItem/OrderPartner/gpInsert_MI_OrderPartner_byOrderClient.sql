@@ -26,7 +26,7 @@ BEGIN
     END IF;*/
 
 
-     -- Параметры из документа
+    -- Параметры из документа
     SELECT MovementLinkObject_From.ObjectId        AS FromId
          , MovementLinkObject_To.ObjectId          AS ToId
            INTO

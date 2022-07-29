@@ -1,23 +1,21 @@
 -- Function: lpInsertUpdate_MI_OrderClient_Child()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Detail (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderClient_Child(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderClient_Detail(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
+    IN inParentId            Integer   , -- 
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inObjectId            Integer   , -- Комплектующие / Работы/Услуги
-    IN inGoodsId_Basis       Integer   , -- Комплектующие - если была замена, какой узел был в ReceiptProdModel
-    IN inAmount              TFloat    , -- Количество резерв
+    IN inObjectId            Integer   , -- Комплектующие / Работы/Услуги / Boat Structure
+    IN inGoodsId             Integer   , -- Комплектующие - узел
+    IN inAmount              TFloat    , -- Количество для сборки Узла
     IN inAmountPartner       TFloat    , -- Количество заказ поставщику
     IN inOperPrice           TFloat    , -- Цена вх без НДС
     IN inCountForPrice       TFloat    , -- Цена за кол.
     IN inPartnerId           Integer   , -- Поставщик - кому уходит заказ поставщика
     IN inProdOptionsId       Integer   , -- Опция
+    IN inColorPatternId      Integer   , -- Шаблон Boat Structure
+    IN inProdColorPatternId  Integer   , -- Boat Structure
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer
@@ -30,7 +28,7 @@ BEGIN
 
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, NULL, inMovementId, inAmount, NULL, inUserId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Detail(), inObjectId, NULL, inMovementId, inAmount, NULL, inUserId);
 
      -- сохранили свойство <AmountPartner>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
@@ -40,12 +38,17 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
      
      
-     -- сохранили связь с <Комплектующие> - если была замена, какой узел был в ReceiptProdModel
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsBasis(), ioId, inGoodsId_Basis);
+     -- сохранили связь с <Комплектующие - узел>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
      -- сохранили связь с <Поставщик> - кому уходит заказ поставщика
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Partner(), ioId, inPartnerId);
      -- сохранили связь с <Опция>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ProdOptions(), ioId, inProdOptionsId);
+     -- сохранили связь с <Шаблон Boat Structure>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ColorPattern(), ioId, inColorPatternId);
+     -- сохранили связь с <Boat Structure>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ProdColorPattern(), ioId, inProdColorPatternId);
+
 
      IF vbIsInsert = TRUE
      THEN
