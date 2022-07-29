@@ -108,6 +108,7 @@ BEGIN
                                                          , inAmountPartner      := inAmount
                                                          , ioPrice              := inPrice
                                                          , ioCountForPrice      := 0.0
+                                                         , inCount              := 0.0 
                                                          , inHeadCount          := 0.0
                                                          , inMovementId_Partion := 0
                                                          , inPartionGoods       := ''

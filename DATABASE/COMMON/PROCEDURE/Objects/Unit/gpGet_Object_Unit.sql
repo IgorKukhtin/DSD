@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isErased boolean, isLeaf boolean,
                isPartionDate boolean, isPartionGoodsKind boolean,
+               isCountCount Boolean,
                Address TVarChar,
                Comment TVarChar
 ) AS
@@ -83,7 +84,8 @@ BEGIN
            , CAST (NULL AS Boolean) AS isErased
            , CAST (NULL AS Boolean) AS isLeaf
            , CAST (FALSE AS Boolean) AS isPartionDate
-           , CAST (FALSE AS Boolean) AS isPartionGoodsKind
+           , CAST (FALSE AS Boolean) AS isPartionGoodsKind 
+           , CAST (FALSE AS Boolean) AS isCountCount
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
 ;
@@ -139,6 +141,7 @@ BEGIN
 
            , ObjectBoolean_PartionDate.ValueData      AS isPartionDate
            , COALESCE (ObjectBoolean_PartionGoodsKind.ValueData, FALSE) :: Boolean AS isPartionGoodsKind
+           , COALESCE (ObjectBoolean_CountCount.ValueData, FALSE)       :: Boolean AS isCountCount
            , ObjectString_Unit_Address.ValueData      AS Address
            , ObjectString_Unit_Comment.ValueData      AS Comment
 
@@ -193,6 +196,10 @@ BEGIN
                                     ON ObjectBoolean_PartionGoodsKind.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_PartionGoodsKind.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_CountCount
+                                    ON ObjectBoolean_CountCount.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_CountCount.DescId = zc_ObjectBoolean_Unit_CountCount()
+
             LEFT JOIN ObjectLink AS ObjectLink_Unit_SheetWorkTime
                                  ON ObjectLink_Unit_SheetWorkTime.ObjectId = Object_Unit_View.Id
                                 AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
@@ -208,6 +215,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.07.22         * isCountCount
  15.12.21         * PersonalHead
                     dell PersonalSheetWorkTime
  04.10.21         * Comment

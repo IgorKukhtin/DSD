@@ -113,7 +113,7 @@ BEGIN
                                  ON ObjectBlob_Recipient.ObjectId = Object_FinalSUAProtocol.Id
                                 AND ObjectBlob_Recipient.DescId = zc_objectBlob_FinalSUAProtocol_Recipient()
 
-           INNER JOIN (SELECT T1.Id, T1.Code, T1.Name FROM gpSelect_Object_Unit (True, inSession) AS T1) AS tmpUnit
+           INNER JOIN (SELECT T1.Id, T1.Code, T1.Name FROM gpSelect_Object_Unit (True, False, inSession) AS T1) AS tmpUnit
                                 ON ','||ObjectBlob_Recipient.ValueData||',' LIKE '%,'||tmpUnit.Id::TVarChar||',%'
             
       WHERE Object_FinalSUAProtocol.DescId = zc_Object_FinalSUAProtocol()
@@ -140,7 +140,7 @@ BEGIN
                                  ON ObjectBlob_Recipient.ObjectId = Object_FinalSUAProtocol.Id
                                 AND ObjectBlob_Recipient.DescId = zc_objectBlob_FinalSUAProtocol_Assortment()
 
-           INNER JOIN (SELECT T1.Id, T1.Code, T1.Name FROM gpSelect_Object_Unit (True, inSession) AS T1) AS tmpUnit
+           INNER JOIN (SELECT T1.Id, T1.Code, T1.Name FROM gpSelect_Object_Unit (True, False, inSession) AS T1) AS tmpUnit
                                 ON ','||ObjectBlob_Recipient.ValueData||',' LIKE '%,'||tmpUnit.Id::TVarChar||',%'
             
       WHERE Object_FinalSUAProtocol.DescId = zc_Object_FinalSUAProtocol()

@@ -284,6 +284,14 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 66
       end
+      object isCountCount: TcxGridDBColumn
+        Caption = #1059#1095#1077#1090' '#1073#1072#1090#1086#1085#1086#1074
+        DataBinding.FieldName = 'isCountCount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object UnitCode_HistoryCost: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'. ('#1089'/'#1089' '#1074#1086#1079#1074#1088#1072#1090')'
         DataBinding.FieldName = 'UnitCode_HistoryCost'

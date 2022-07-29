@@ -9,7 +9,7 @@ uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj, Clipb
   cxGridDBTableView, frxClass, frxExportPDF, frxExportXLS, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
   System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, {IdMultipartFormData,}
-  Winapi.ActiveX, ZConnection, ZDataset
+  Winapi.ActiveX, ZConnection, ZDataset, dxBar
   {$IFDEF DELPHI103RIO}, System.JSON, Actions {$ELSE} , Data.DBXJSON {$ENDIF}, Vcl.Graphics;
 
 type
@@ -6145,6 +6145,12 @@ begin
      begin
        TcxGridColumn(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).Visible := TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value;
        TcxGridColumn(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).VisibleForCustomization := TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value;
+     end else if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component is TdxBarButton then
+     begin
+        if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.DataType = ftBoolean then
+          if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value then
+            TdxBarButton(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).Visible := ivAlways
+          else TdxBarButton(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).Visible := ivNever;
      end else if IsPublishedProp(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'Visible') then
      begin
         if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.DataType = ftBoolean
@@ -7103,6 +7109,40 @@ function TdsdForeignData.LocalExecute: Boolean;
       JsonArray: TJSONArray;
       JSONObject: TJSONObject;
 
+  function AdaptStr(S: string): string;
+  var
+    C: Char;
+    Code: SmallInt;
+  begin
+    Result := '';
+
+    for C in S do
+    begin
+      Code := Ord(C);
+
+      if Code = 188 then
+        Result := Result + '1/4'
+      else if Code = 189 then
+        Result := Result + '1/2'
+      else if Code = 190 then
+        Result := Result + '3/4'
+      else if ((Code = 822) or (Code = -4051)) and (dsdProject = prFarmacy) then
+        Result := Result + '-'
+      else if ((Code = 945) or (Code = 593) or (Code = -3999)) and (dsdProject = prFarmacy) then
+        Result := Result + 'a'
+      else if (Code = 946) and (dsdProject = prFarmacy) then
+        Result := Result + 'b'
+      else if (Code = 947) and (dsdProject = prFarmacy) then
+        Result := Result + 'y'
+      else if ((Code = 180) or (Code = 8125) or (Code = 700)) and (dsdProject = prFarmacy) then
+        Result := Result + ''''
+//      else if ((Code <= 0) or (Code >= 822) and (Code < 1000)) and (dsdProject = prFarmacy) then
+//        Result := Result  + C
+      else
+        Result := Result + C;
+    end;
+  end;
+
   procedure AddParamToJSON(AName: string; AValue: Variant; ADataType: TFieldType);
     var intValue: integer; n : Double;
   begin
@@ -7125,7 +7165,9 @@ function TdsdForeignData.LocalExecute: Boolean;
           JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
       end
       else
-        JSONObject.AddPair(LowerCase(AName), TJSONString.Create(AValue));
+      begin
+        JSONObject.AddPair(LowerCase(AName), TJSONString.Create(AdaptStr(AValue)));
+      end;
     except
       on E:Exception do raise Exception.Create('Ошибка добавления <' + AName + '> в Json: ' + e.Message);
     end;

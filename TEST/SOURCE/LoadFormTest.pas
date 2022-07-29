@@ -1393,7 +1393,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_TransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_TransportJournalForm');
   //
-  }
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
   //exit;
@@ -1401,6 +1401,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
   {
@@ -1515,18 +1516,18 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
    exit;
 
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalChoiceForm');
 
@@ -3240,7 +3241,7 @@ procedure TLoadFormTest.LoadUnitFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
-    exit;
+   /// exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
 
@@ -3249,7 +3250,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
-
+   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SheetWorkTimeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SheetWorkTimeForm');
 end;

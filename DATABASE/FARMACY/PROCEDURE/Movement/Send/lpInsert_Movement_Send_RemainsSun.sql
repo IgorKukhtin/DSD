@@ -912,9 +912,9 @@ BEGIN
              , CASE -- если НТЗ_МИН = 0 ИЛИ ост <= НТЗ_МИН
                     WHEN COALESCE (tmpObject_Price.MCSValue_min, 0) = 0 OR (COALESCE (tmpRemains.Amount, 0) <= COALESCE (tmpObject_Price.MCSValue_min, 0))
                          THEN CASE -- для такого НТЗ
-                                   WHEN tmpObject_Price.MCSValue >= 0.1 AND tmpObject_Price.MCSValue < 10
+                                   WHEN tmpObject_Price.MCSValue + COALESCE(_tmpGoods_Layout.Layout, 0)  >= 0.1 AND tmpObject_Price.MCSValue + COALESCE(_tmpGoods_Layout.Layout, 0) < 10
                                    -- и 1 >= НТЗ - "остаток"
-                                    AND 1 >= ROUND ((tmpObject_Price.MCSValue
+                                    AND 1 >= ROUND ((tmpObject_Price.MCSValue + COALESCE(_tmpGoods_Layout.Layout, 0)
                                                      -- МИНУС (остаток - "отложено" + "перемещ" + "приход" + "заявка")
                                                    - CASE WHEN 0 < COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) + COALESCE (tmpMI_Send_in.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0) + COALESCE (tmpMI_OrderExternal.Amount, 0)
                                                               THEN COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) + COALESCE (tmpMI_Send_in.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0) + COALESCE (tmpMI_OrderExternal.Amount, 0)
@@ -925,7 +925,7 @@ BEGIN
                                                   / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                                                    ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                                         THEN -- округляем ВВЕРХ
-                                             CEIL ((tmpObject_Price.MCSValue
+                                             CEIL ((tmpObject_Price.MCSValue + COALESCE(_tmpGoods_Layout.Layout, 0)
                                                     -- МИНУС (остаток - "отложено" + "перемещ" + "приход" + "заявка")
                                                   - CASE WHEN 0 < COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) + COALESCE (tmpMI_Send_in.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0) + COALESCE (tmpMI_OrderExternal.Amount, 0)
                                                              THEN COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) + COALESCE (tmpMI_Send_in.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0) + COALESCE (tmpMI_OrderExternal.Amount, 0)
@@ -937,9 +937,9 @@ BEGIN
                                                   ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
 
                                    -- для такого НТЗ
-                                   WHEN tmpObject_Price.MCSValue >= 10
+                                   WHEN tmpObject_Price.MCSValue + COALESCE(_tmpGoods_Layout.Layout, 0) >= 10
                                    -- и 1 >= НТЗ - "остаток"
-                                    AND 1 >= CEIL ((tmpObject_Price.MCSValue
+                                    AND 1 >= CEIL ((tmpObject_Price.MCSValue + COALESCE(_tmpGoods_Layout.Layout, 0)
                                                     -- МИНУС (остаток - "отложено" + "перемещ" + "приход" + "заявка")
                                                   - CASE WHEN 0 < COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) + COALESCE (tmpMI_Send_in.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0) + COALESCE (tmpMI_OrderExternal.Amount, 0)
                                                              THEN COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) + COALESCE (tmpMI_Send_in.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0) + COALESCE (tmpMI_OrderExternal.Amount, 0)
@@ -950,7 +950,7 @@ BEGIN
                                                  / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                                                   ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                                         THEN -- округляем
-                                             ROUND ((tmpObject_Price.MCSValue
+                                             ROUND ((tmpObject_Price.MCSValue + COALESCE(_tmpGoods_Layout.Layout, 0)
                                                      -- МИНУС (остаток - "отложено" + "перемещ" + "приход" + "заявка")
                                                    - CASE WHEN 0 < COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) + COALESCE (tmpMI_Send_in.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0) + COALESCE (tmpMI_OrderExternal.Amount, 0)
                                                               THEN COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) + COALESCE (tmpMI_Send_in.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0) + COALESCE (tmpMI_OrderExternal.Amount, 0)
@@ -962,7 +962,7 @@ BEGIN
                                                    ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
 
                                    ELSE -- округляем ВВНИЗ
-                                        FLOOR ((tmpObject_Price.MCSValue
+                                        FLOOR ((tmpObject_Price.MCSValue + COALESCE(_tmpGoods_Layout.Layout, 0)
                                                 -- МИНУС (остаток - "отложено" + "перемещ" + "приход" + "заявка")
                                               - CASE WHEN 0 < COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) + COALESCE (tmpMI_Send_in.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0) + COALESCE (tmpMI_OrderExternal.Amount, 0)
                                                          THEN COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) + COALESCE (tmpMI_Send_in.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0) + COALESCE (tmpMI_OrderExternal.Amount, 0)
@@ -998,6 +998,9 @@ BEGIN
              LEFT JOIN _tmpGoods_TP_exception AS tmpGoods_TP_exception
                                               ON tmpGoods_TP_exception.UnitId  = tmpObject_Price.UnitId
                                              AND tmpGoods_TP_exception.GoodsId = tmpObject_Price.GoodsId
+
+             LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = tmpObject_Price.UnitId
+                                       AND _tmpGoods_Layout.GoodsId = tmpObject_Price.GoodsId
 
              LEFT JOIN tmpRemains AS tmpRemains
                                   ON tmpRemains.UnitId  = tmpObject_Price.UnitId
@@ -1072,13 +1075,16 @@ BEGIN
              -- баланс по Аптекам получателям - если не соответствует, соотв приход блокируется
              LEFT JOIN _tmpUnit_SUN_balance ON _tmpUnit_SUN_balance.UnitId = _tmpRemains_all.UnitId
              LEFT JOIN _tmpUnit_SUN         ON _tmpUnit_SUN.UnitId         = _tmpRemains_all.UnitId
+             -- Выкладки
+             LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = _tmpRemains_all.UnitId
+                                       AND _tmpGoods_Layout.GoodsId = _tmpRemains_all.GoodsId
 
              -- если товар среди парных
              LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
                        ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_all.GoodsId
 
-         WHERE (-- !!!только с таким НТЗ!!!
-                _tmpRemains_all.MCS >= 1.0
+         WHERE (-- !!!только с таким НТЗ + Выкладки!!!
+                _tmpRemains_all.MCS + COALESCE(_tmpGoods_Layout.Layout, 0) >= 1.0
                 -- !!!Добавили парные!!!
               OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0
                )
@@ -2210,6 +2216,11 @@ BEGIN
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
+        /* IF vbGoodsId = 17674567
+         THEN
+           raise notice 'Value 05: % % %', vbUnitId_from, vbGoodsId, vbAmount;
+         END IF;*/
+
          -- курсор2. - Автозаказ МИНУС сколько уже распределили для vbGoodsId
          OPEN curResult FOR
             SELECT _tmpRemains_calc.UnitId AS UnitId_to
@@ -2430,7 +2441,7 @@ BEGIN
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion; -- закрыли курсор1
 
-     raise notice 'Value 01: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
+     -- raise notice 'Value 01: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
 
      -- 6.1.2. распределяем-2 остатки со сроками - по всем аптекам - здесь только !!!все что осталось!!!
      --
@@ -2475,6 +2486,11 @@ BEGIN
          FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_sun, vbKoeffSUN, vbisNotSold100;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
+
+         /*IF vbGoodsId = 17674567
+         THEN
+           raise notice 'Value 10: % % %', vbUnitId_from, vbGoodsId, vbAmount;
+         END IF;*/
 
          -- курсор2. - Автозаказ МИНУС сколько уже распределили для vbGoodsId
          OPEN curResult_next FOR
@@ -2713,7 +2729,7 @@ BEGIN
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion_next; -- закрыли курсор1
 
-     raise notice 'Value 02: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
+     --raise notice 'Value 02: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
 
      -- !!!Удаляем НЕ получившиеся пары!!!
 /*     DELETE FROM _tmpResult_Partion

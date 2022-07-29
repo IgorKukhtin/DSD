@@ -482,6 +482,8 @@ type
     mactUpdate_ShowPlanEmployeeUser: TMultiAction;
     actUpdate_ShowPlanEmployeeUser: TdsdExecStoredProc;
     dxBarButton36: TdxBarButton;
+    actShowActive: TBooleanStoredProcAction;
+    bbShowActive: TdxBarButton;
   private
     { Private declarations }
   public

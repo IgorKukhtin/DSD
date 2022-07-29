@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioCountForPrice          TFloat    , -- Цена за количество
    OUT outAmountSumm            TFloat    , -- Сумма расчетная
    OUT outAmountSummVat         TFloat    , -- Сумма с НДС расчетная
+    IN inCount                  TFloat    , -- Количество батонов или упаковок
     IN inHeadCount              TFloat    , -- Количество голов
     IN inMovementId_PartionTop  Integer   , -- Id документа продажи из шапки
     IN inMovementId_PartionMI   Integer   , -- Id документа продажи строчная часть
@@ -84,6 +86,7 @@ BEGIN
                                               , inAmountPartner      := ioAmountPartner
                                               , ioPrice              := ioPrice
                                               , ioCountForPrice      := ioCountForPrice
+                                              , inCount              := inCount
                                               , inHeadCount          := inHeadCount
                                               , inMovementId_Partion := inMovementId_PartionMI
                                               , inPartionGoods       := inPartionGoods
@@ -129,6 +132,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 26.07.22         *
  14.05.18         *
  27.04.15         * add inMovementId_top/_MI
  14.02.14                                                         * fix lpInsertUpdate_MovementItem_ReturnIn

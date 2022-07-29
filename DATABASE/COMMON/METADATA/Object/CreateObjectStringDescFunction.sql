@@ -1438,9 +1438,31 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Goods_MakerUkr', zc_Object_Goods(), 'Производитель украинское название' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_MakerUkr');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsWhoCan_NameUkr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsWhoCan_NameUkr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsWhoCan_NameUkr', zc_Object_GoodsWhoCan(), 'Название украинское' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsWhoCan_NameUkr');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsMethodAppl_NameUkr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsMethodAppl_NameUkr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsMethodAppl_NameUkr', zc_Object_GoodsMethodAppl(), 'Название украинское' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsMethodAppl_NameUkr');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsSignOrigin_NameUkr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsSignOrigin_NameUkr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsSignOrigin_NameUkr', zc_Object_GoodsSignOrigin(), 'Название украинское' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsSignOrigin_NameUkr');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_Dosage() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Dosage'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Goods_Dosage', zc_Object_Goods(), 'Дозировка' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Dosage');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_Volume() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Volume'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Goods_Volume', zc_Object_Goods(), 'Объем' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Volume');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 28.07.22                                                                                                         * zc_ObjectString_GoodsWhoCan_NameUkr, zc_ObjectString_GoodsMethodAppl_NameUkr
  18.07.22                                                                                                         * zc_ObjectString_FormDispensing_NameUkr, zc_ObjectString_Goods_MakerUkr
  24.06.22                                                                                                         * zc_ObjectString_Education_NameUkr, zc_ObjectString_Member_NameUkr
  22.12.21         * zc_ObjectString_MemberMinus_Number

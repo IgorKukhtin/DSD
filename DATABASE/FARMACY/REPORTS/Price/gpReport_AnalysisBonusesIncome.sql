@@ -132,10 +132,10 @@ BEGIN
             , (100 - (ContainerPrice.Price/tmpIncome.PriceWithVATMin - 1) * 100)::TFloat AS DiscountMin
             , (100 - (ContainerPrice.Price/tmpIncome.PriceWithVATMax - 1) * 100)::TFloat AS DiscountMax
             , CASE WHEN (100 - (ContainerPrice.Price/tmpIncome.PriceWithVATMin - 1) * 100) > inDiscount
-                   THEN zc_Color_Red() 
+                   THEN zc_Color_Lime() 
                    ELSE zc_Color_White() END         AS ColorMin_calc
             , CASE WHEN (100 - (ContainerPrice.Price/tmpIncome.PriceWithVATMax - 1) * 100) > inDiscount
-                   THEN zc_Color_Red() 
+                   THEN zc_Color_Lime() 
                    ELSE zc_Color_White() END         AS ColorMax_calc
 
        FROM (SELECT ContainerCount.GoodsId, SUM(ContainerCount.Amount)::TFloat AS Amount FROM ContainerCount GROUP BY ContainerCount.GoodsId) ContainerCount

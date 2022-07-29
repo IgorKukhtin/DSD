@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_ReturnIn_Value()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn_Value(
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
+    IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -31,6 +33,7 @@ BEGIN
                                               , inAmountPartner      := inAmountPartner
                                               , ioPrice              := inPrice
                                               , ioCountForPrice      := inCountForPrice
+                                              , inCount              := inCount
                                               , inHeadCount          := inHeadCount
                                               , inMovementId_Partion := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_MovementId()), 0) :: Integer
                                               , inPartionGoods       := inPartionGoods

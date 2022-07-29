@@ -25,10 +25,10 @@ BEGIN
 
       -- –ÂÁÛÎ¸Ú‡Ú
        CREATE TEMP TABLE tmpMI (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer
-                              , Amount TFloat, AmountPartner TFloat, Price TFloat, CountForPrice TFloat, HeadCount TFloat, PartionGoods TVarChar) ON COMMIT DROP;
+                              , Amount TFloat, AmountPartner TFloat, Price TFloat, CountForPrice TFloat, Count TFloat, HeadCount TFloat, PartionGoods TVarChar) ON COMMIT DROP;
 
 
-      INSERT INTO tmpMI  (MovementItemId, GoodsId, GoodsKindId, AssetId, Amount, AmountPartner, Price, CountForPrice, HeadCount, PartionGoods)
+      INSERT INTO tmpMI  (MovementItemId, GoodsId, GoodsKindId, AssetId, Amount, AmountPartner, Price, CountForPrice, Count, HeadCount, PartionGoods)
 
          WITH 
           tmp AS (SELECT MAX (MovementItem.Id)                         AS MovementItemId
@@ -54,6 +54,7 @@ BEGIN
 
              , MIFloat_Price.ValueData                       AS Price
              , MIFloat_CountForPrice.ValueData               AS CountForPrice
+             , MIFloat_Count.ValueData                       AS Count
              , MIFloat_HeadCount.ValueData                   AS HeadCount
              , MIString_PartionGoods.ValueData               AS PartionGoods
 
@@ -74,7 +75,10 @@ BEGIN
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice() 
+            LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -105,6 +109,7 @@ BEGIN
                                              , inChangePercentAmount:= 0     ::TFloat
                                              , ioPrice              := COALESCE (tmpMI.Price,0)         ::TFloat
                                              , ioCountForPrice      := COALESCE (tmpMI.CountForPrice,1) ::TFloat
+                                             , inCount              := COALESCE (tmpMI.Count,0)         ::TFloat
                                              , inHeadCount          := COALESCE (tmpMI.HeadCount,0)     ::TFloat
                                              , inBoxCount           := 0
                                              , inPartionGoods       := COALESCE (tmpMI.PartionGoods,'') ::TVarChar
@@ -136,6 +141,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.07.22         *
  02.06.22         *
 */
 

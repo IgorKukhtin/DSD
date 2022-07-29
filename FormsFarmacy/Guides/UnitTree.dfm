@@ -737,6 +737,13 @@ object UnitTreeForm: TUnitTreeForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowActive'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 416
@@ -776,10 +783,12 @@ object UnitTreeForm: TUnitTreeForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 432

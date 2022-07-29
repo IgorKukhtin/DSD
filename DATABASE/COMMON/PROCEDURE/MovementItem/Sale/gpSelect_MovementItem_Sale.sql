@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , ChangePercentAmount TFloat, TotalPercentAmount TFloat, ChangePercent TFloat
              , Price TFloat, PriceIn TFloat, PriceTare TFloat
              , CountForPrice TFloat, PriceCost TFloat, SumCost TFloat, Price_Pricelist TFloat, Price_Pricelist_vat TFloat
-             , HeadCount TFloat, BoxCount TFloat
+             , Count TFloat, HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar
              , PartionGoodsDate TDateTime
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
@@ -222,6 +222,7 @@ BEGIN
                                  , MIFloat_PriceTare.ValueData                   AS PriceTare
                                  , MIFloat_CountForPrice.ValueData               AS CountForPrice
 
+                                 , MIFloat_Count.ValueData                       AS Count
                                  , MIFloat_HeadCount.ValueData                   AS HeadCount
                                  , MIFloat_BoxCount.ValueData                    AS BoxCount
                                  , MIFloat_CountPack.ValueData                   AS CountPack
@@ -273,6 +274,10 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                                              ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                                                             AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                                             ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Count.DescId = zc_MIFloat_Count()
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                                              ON MIFloat_CountPack.MovementItemId = MovementItem.Id
@@ -413,6 +418,7 @@ BEGIN
            , CAST (COALESCE (tmpPriceList_kind.Price_Pricelist, tmpPriceList.Price_Pricelist) AS TFloat)         AS Price_Pricelist
            , CAST (COALESCE (tmpPriceList_kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat) AS TFloat) AS Price_Pricelist_vat
 
+           , CAST (NULL AS TFloat)      AS Count
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TFloat)      AS BoxCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
@@ -571,6 +577,7 @@ BEGIN
            , COALESCE (tmpPriceList_kind.Price_Pricelist, tmpPriceList.Price_Pricelist)         :: TFloat AS Price_Pricelist
            , COALESCE (tmpPriceList_kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat) :: TFloat AS Price_Pricelist_vat
 
+           , tmpMI_Goods.Count
            , tmpMI_Goods.HeadCount
            , tmpMI_Goods.BoxCount
 
@@ -739,6 +746,7 @@ BEGIN
                                  , MIFloat_PriceTare.ValueData                   AS PriceTare
                                  , MIFloat_CountForPrice.ValueData               AS CountForPrice
 
+                                 , MIFloat_Count.ValueData                       AS Count
                                  , MIFloat_HeadCount.ValueData                   AS HeadCount
                                  , MIFloat_BoxCount.ValueData                    AS BoxCount
                                  , MIFloat_CountPack.ValueData                   AS CountPack
@@ -801,7 +809,12 @@ BEGIN
                                                             AND MIFloat_WeightTotal.DescId = zc_MIFloat_WeightTotal()
                                  LEFT JOIN MovementItemFloat AS MIFloat_WeightPack
                                                              ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
+                                                            AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()  
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                                             ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Count.DescId = zc_MIFloat_Count()
+
                                  LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
                                                                ON MIBoolean_BarCode.MovementItemId = MovementItem.Id
                                                               AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
@@ -931,6 +944,7 @@ BEGIN
                               , COALESCE (tmpPriceList_kind.Price_Pricelist, tmpPriceList.Price_Pricelist)         :: TFloat AS Price_Pricelist
                               , COALESCE (tmpPriceList_kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat) :: TFloat AS Price_Pricelist_vat
 
+                              , tmpMI_Goods.Count 
                               , tmpMI_Goods.HeadCount
                               , tmpMI_Goods.BoxCount
 
@@ -1113,8 +1127,9 @@ BEGIN
            , tmpResult.Price_Pricelist
            , tmpResult.Price_Pricelist_vat
 
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.Count ELSE 0 END     :: TFloat AS Count
            , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.HeadCount ELSE 0 END :: TFloat AS HeadCount
-           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.BoxCount ELSE 0 END :: TFloat AS BoxCount
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.BoxCount ELSE 0 END  :: TFloat AS BoxCount
 
            , tmpResult.PartionGoods
            , tmpResult.PartionGoodsDate
@@ -1167,6 +1182,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.07.22         * add Count
  30.03.22         *
  03.12.21         *
  09.08.21         *

@@ -314,7 +314,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 37
-    Width = 449
+    Width = 209
   end
   object cbPartionGoodsKind: TcxCheckBox
     Left = 40
@@ -333,6 +333,13 @@
     Top = 498
     TabOrder = 40
     Width = 449
+  end
+  object cbCountCount: TcxCheckBox
+    Left = 280
+    Top = 456
+    Caption = #1059#1095#1077#1090' '#1073#1072#1090#1086#1085#1086#1074
+    TabOrder = 41
+    Width = 101
   end
   object ActionList: TActionList
     Left = 16
@@ -411,6 +418,14 @@
         Name = 'inisPartionGoodsKind'
         Value = Null
         Component = cbPartionGoodsKind
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCountCount'
+        Value = Null
+        Component = cbCountCount
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -789,6 +804,13 @@
         Value = Null
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCountCount'
+        Value = Null
+        Component = cbCountCount
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1243,7 +1265,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 319
+    Left = 159
     Top = 438
   end
 end

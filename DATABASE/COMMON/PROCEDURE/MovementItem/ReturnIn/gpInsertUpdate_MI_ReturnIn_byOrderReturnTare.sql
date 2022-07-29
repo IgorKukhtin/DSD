@@ -41,6 +41,7 @@ BEGIN
                                                  , inAmountPartner      := tmp.Amount
                                                  , ioPrice              := NULL
                                                  , ioCountForPrice      := 1
+                                                 , inCount              := NULL
                                                  , inHeadCount          := NULL
                                                  , inMovementId_Partion := NULL
                                                  , inPartionGoods       := NULL

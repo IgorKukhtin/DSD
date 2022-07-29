@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                      Integer   , -- Ключ объекта <Элемент документа>
@@ -15,7 +16,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
     IN inIsCalcAmountPartner     Boolean   , -- Признак - будет ли расчитано <Количество у контрагента>
  INOUT ioPrice                   TFloat    , -- Цена
  INOUT ioCountForPrice           TFloat    , -- Цена за количество
-   OUT outAmountSumm             TFloat    , -- Сумма расчетная
+   OUT outAmountSumm             TFloat    , -- Сумма расчетная 
+    IN inCount                   TFloat    , -- Количество батонов или упаковок
     IN inHeadCount               TFloat    , -- Количество голов
     IN inBoxCount                TFloat    , -- Количество ящиков
     IN inPartionGoods            TVarChar  , -- Партия товара
@@ -137,6 +139,7 @@ BEGIN
                                           , inChangePercentAmount:= ioChangePercentAmount
                                           , ioPrice              := ioPrice
                                           , ioCountForPrice      := ioCountForPrice
+                                          , inCount              := inCount 
                                           , inHeadCount          := inHeadCount
                                           , inBoxCount           := inBoxCount
                                           , inPartionGoods       := inPartionGoods
@@ -160,6 +163,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.07.22         * inCount
  10.10.14                                                       * add box
  08.02.14                                        * была ошибка с lpInsertUpdate_MovementItem_Sale
  04.02.14                        * add lpInsertUpdate_MovementItem_Sale

@@ -1157,6 +1157,7 @@ BEGIN
                                                         , inChangePercentAmount := tmp.ChangePercentAmount
                                                         , inPrice               := tmp.Price
                                                         , ioCountForPrice       := tmp.CountForPrice
+                                                        , inCount               := tmp.Count
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inBoxCount            := tmp.BoxCount
                                                         , inPartionGoods        := tmp.PartionGoods
@@ -1177,6 +1178,7 @@ BEGIN
                                                         , inChangePercent       := tmp.ChangePercent
                                                         , inPrice               := tmp.Price
                                                         , inCountForPrice       := tmp.CountForPrice
+                                                        , inCount               := tmp.Count
                                                         , inHeadCount           := 0
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId

@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, AmountOrder TFloat
              , ChangePercentAmount TFloat, TotalPercentAmount TFloat, ChangePercent TFloat
              , Price TFloat, PriceTare TFloat, CountForPrice TFloat, Price_Pricelist TFloat, Price_Pricelist_vat TFloat
-             , HeadCount TFloat, BoxCount TFloat
+             , Count TFloat, HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -189,6 +189,11 @@ BEGIN
                                          WHERE MovementItemFloat.DescId = zc_MIFloat_HeadCount()
                                            AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
                                         )
+          , tmpMIFLoat_Count AS (SELECT MovementItemFloat.*
+                                 FROM MovementItemFloat
+                                 WHERE MovementItemFloat.DescId = zc_MIFloat_Count()
+                                   AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                )
 
           , tmpMIFLoat_BoxCount AS (SELECT MovementItemFloat.*
                                          FROM MovementItemFloat
@@ -244,6 +249,7 @@ BEGIN
                            , COALESCE (MIFloat_PriceTare.ValueData, 0)     AS PriceTare
                            , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
 
+                           , MIFloat_Count.ValueData                       AS Count
                            , MIFloat_HeadCount.ValueData                   AS HeadCount
                            , MIFloat_BoxCount.ValueData                    AS BoxCount
                            , MIString_PartionGoods.ValueData               AS PartionGoods
@@ -280,6 +286,9 @@ BEGIN
                             LEFT JOIN tmpMIFLoat_CountForPrice AS MIFloat_CountForPrice
                                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                               AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                            LEFT JOIN tmpMIFLoat_Count AS MIFloat_Count
+                                                       ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Count.DescId = zc_MIFloat_Count()
                             LEFT JOIN tmpMIFLoat_HeadCount AS MIFloat_HeadCount
                                                            ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                           AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -430,6 +439,7 @@ BEGIN
                                , tmpMI.AmountChangePercent
                                , tmpMI.ChangePercentAmount
                                , tmpMI.ChangePercent
+                               , tmpMI.Count 
                                , tmpMI.HeadCount
                                , tmpMI.BoxCount
                                , tmpMI.PartionGoods
@@ -473,6 +483,7 @@ BEGIN
            , CAST (COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist) AS TFloat)        AS Price_Pricelist
            , CAST (COALESCE (tmpPriceList_Kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat) AS TFloat) AS Price_Pricelist_vat
 
+           , CAST (NULL AS TFloat)      AS Count
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TFloat)      AS BoxCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
@@ -576,6 +587,7 @@ BEGIN
            , COALESCE (tmpPriceList_Kind.Price_Pricelist,tmpPriceList.Price_Pricelist)     :: TFloat AS Price_Pricelist
            , COALESCE (tmpPriceList_Kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat) :: TFloat AS Price_Pricelist_vat
 
+           , tmpMI.Count              :: TFloat AS Count
            , tmpMI.HeadCount          :: TFloat AS HeadCount
            , tmpMI.BoxCount           :: TFloat AS BoxCount
 
@@ -742,7 +754,11 @@ BEGIN
                                          WHERE MovementItemFloat.DescId = zc_MIFloat_HeadCount()
                                            AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
                                         )
-
+          , tmpMIFLoat_Count AS (SELECT MovementItemFloat.*
+                                 FROM MovementItemFloat
+                                 WHERE MovementItemFloat.DescId = zc_MIFloat_Count()
+                                   AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                )
           , tmpMIFLoat_BoxCount AS (SELECT MovementItemFloat.*
                                          FROM MovementItemFloat
                                          WHERE MovementItemFloat.DescId = zc_MIFloat_BoxCount()
@@ -797,6 +813,7 @@ BEGIN
                            , COALESCE (MIFloat_PriceTare.ValueData, 0)     AS PriceTare
                            , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
 
+                           , MIFloat_Count.ValueData                       AS Count 
                            , MIFloat_HeadCount.ValueData                   AS HeadCount
                            , MIFloat_BoxCount.ValueData                    AS BoxCount
                            , MIString_PartionGoods.ValueData               AS PartionGoods
@@ -833,6 +850,9 @@ BEGIN
                             LEFT JOIN tmpMIFLoat_CountForPrice AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                            LEFT JOIN tmpMIFLoat_Count AS MIFloat_Count
+                                                       ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Count.DescId = zc_MIFloat_Count()    
                             LEFT JOIN tmpMIFLoat_HeadCount AS MIFloat_HeadCount
                                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -981,6 +1001,7 @@ BEGIN
                                , tmpMI.AmountChangePercent
                                , tmpMI.ChangePercentAmount
                                , tmpMI.ChangePercent
+                               , tmpMI.Count 
                                , tmpMI.HeadCount
                                , tmpMI.BoxCount
                                , tmpMI.PartionGoods
@@ -1021,6 +1042,7 @@ BEGIN
            , COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist)         :: TFloat AS Price_Pricelist
            , COALESCE (tmpPriceList_Kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat) :: TFloat AS Price_Pricelist_vat
 
+           , tmpMI.Count              :: TFloat AS Count 
            , tmpMI.HeadCount          :: TFloat AS HeadCount
            , tmpMI.BoxCount           :: TFloat AS BoxCount
 

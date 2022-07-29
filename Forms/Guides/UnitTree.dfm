@@ -70,7 +70,6 @@ object UnitTreeForm: TUnitTreeForm
     Height = 377
     Align = alClient
     TabOrder = 6
-    ExplicitLeft = 353
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -135,6 +134,15 @@ object UnitTreeForm: TUnitTreeForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object isCountCount: TcxGridDBColumn
+        Caption = #1059#1095#1077#1090' '#1073#1072#1090#1086#1085#1086#1074
+        DataBinding.FieldName = 'isCountCount'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

@@ -221,6 +221,8 @@ type
     spUpdate_Published_Revert: TdsdStoredProc;
     dxBarButton19: TdxBarButton;
     MakerNameUkr: TcxGridDBColumn;
+    actGoods_SiteUpdate: TdsdOpenForm;
+    dxBarButton20: TdxBarButton;
   private
     { Private declarations }
   public

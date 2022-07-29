@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Sale_Partner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_Partner(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_Partner(
     IN inAmountPartner       TFloat    , -- Количество у контрагента
  INOUT ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
-   OUT outAmountSumm         TFloat    , -- Сумма расчетная
+   OUT outAmountSumm         TFloat    , -- Сумма расчетная 
+    IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inHeadCount           TFloat    , -- Количество голов
     IN inBoxCount            TFloat    , -- Количество ящиков
     IN inPartionGoods        TVarChar  , -- Партия товара
@@ -63,6 +65,7 @@ BEGIN
                                           , inChangePercentAmount:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_ChangePercentAmount()), 0)
                                           , ioPrice              := ioPrice
                                           , ioCountForPrice      := ioCountForPrice
+                                          , inCount              := inCount
                                           , inHeadCount          := inHeadCount
                                           , inBoxCount           := inBoxCount
                                           , inPartionGoods       := inPartionGoods
@@ -83,6 +86,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.07.22         * inCount
  10.10.14                                                       * add box
  19.05.14                                        * add COALESCE
  19.05.14                                        * add COALESCE
