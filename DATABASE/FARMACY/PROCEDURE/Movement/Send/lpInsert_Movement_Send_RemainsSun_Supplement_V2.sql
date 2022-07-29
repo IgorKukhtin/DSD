@@ -722,6 +722,23 @@ BEGIN
                                  OR COALESCE (tmpPrice.MCSValue, 0) <> 0
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
+        , tmpNotMCS AS (SELECT MovementItemContainer.WhereObjectId_Analyzer AS UnitId
+                             , MovementItemContainer.ObjectId_Analyzer      AS GoodsId
+                             , SUM(- MovementItemContainer.Amount)          AS Amount
+                        FROM MovementBoolean
+
+                             INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = MovementBoolean.MovementId              
+                             
+                             INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId = MovementItemContainer.WhereObjectId_Analyzer
+                                               
+                        WHERE MovementBoolean.DescId = zc_MovementBoolean_NotMCS()
+                          AND MovementBoolean.ValueData = TRUE
+                          AND MovementItemContainer.OperDate >= CURRENT_DATE - (CASE WHEN _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_out = TRUE
+                                                                                     THEN _tmpUnit_SUN_Supplement_V2.DeySupplOut 
+                                                                                     ELSE _tmpUnit_SUN_Supplement_V2.DeySupplIn END::TVarChar ||' DAY') :: INTERVAL                     
+                        GROUP BY MovementItemContainer.WhereObjectId_Analyzer
+                               , MovementItemContainer.ObjectId_Analyzer
+                             )
      -- 1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains_all_Supplement_V2 (UnitId, GoodsId, Price, MCS, Layout, AmountRemains, AmountNotSend, AmountSalesDay, 
                                                  MinExpirationDate, isCloseMCS, AmountUse)
@@ -748,7 +765,7 @@ BEGIN
                     THEN COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) ELSE 0 END AS AmountRemains
              , COALESCE (tmpRemains.AmountNotSend, 0)                                                                            AS AmountNotSend
                -- реализация
-             , COALESCE (tmpSalesDay.AmountSalesDay, 0)      AS AmountSalesDay
+             , COALESCE (tmpSalesDay.AmountSalesDay, 0) - COALESCE (tmpNotMCS.Amount, 0)      AS AmountSalesDay
              , tmpRemains.MinExpirationDate
              , COALESCE (tmpObject_Price.isCloseMCS, FALSE)  AS isCloseMCS
              , 0
@@ -761,6 +778,9 @@ BEGIN
              INNER JOIN tmpPrice AS tmpObject_Price
                                  ON tmpObject_Price.UnitId  = COALESCE(tmpRemains.UnitId, tmpSalesDay.UnitId)
                                 AND tmpObject_Price.GoodsId = COALESCE(tmpRemains.GoodsId, tmpSalesDay.GoodsId)
+                                
+             LEFT JOIN tmpNotMCS ON tmpNotMCS.UnitId  = COALESCE(tmpRemains.UnitId, tmpSalesDay.UnitId)
+                                AND tmpNotMCS.GoodsId = COALESCE(tmpRemains.GoodsId, tmpSalesDay.GoodsId)
                                  
              LEFT JOIN _tmpGoods_Sun_exception_Supplement_V2 ON _tmpGoods_Sun_exception_Supplement_V2.UnitId  = COALESCE(tmpRemains.UnitId, tmpSalesDay.UnitId)
                                               AND _tmpGoods_Sun_exception_Supplement_V2.GoodsId = COALESCE(tmpRemains.GoodsId, tmpSalesDay.GoodsId)
@@ -1073,4 +1093,4 @@ $BODY$
 
 -- 
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3);
