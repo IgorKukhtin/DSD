@@ -983,6 +983,19 @@
           HeaderHint = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1075#1086' '#1076#1086#1087'. '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1103
           Width = 80
         end
+        object AmountBasis_ch2: TcxGridDBColumn
+          Caption = 'Value'
+          DataBinding.FieldName = 'AmountBasis'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1072
+          Options.Editing = False
+          Width = 70
+        end
         object EKPrice_ch2: TcxGridDBColumn
           Caption = 'Netto EK'
           DataBinding.FieldName = 'EKPrice'

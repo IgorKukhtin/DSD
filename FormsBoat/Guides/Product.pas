@@ -202,6 +202,7 @@ type
     BasisPrice_load: TcxGridDBColumn;
     TransportSumm_load: TcxGridDBColumn;
     actChoiceFormProdOptions_ñomment: TOpenChoiceForm;
+    AmountBasis_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public
