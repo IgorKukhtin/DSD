@@ -10,17 +10,17 @@ inherited GoodsSiteForm: TGoodsSiteForm
   inherited PageControl: TcxPageControl
     Width = 1178
     Height = 518
-    ExplicitWidth = 1165
+    ExplicitWidth = 1178
     ExplicitHeight = 518
     ClientRectBottom = 518
     ClientRectRight = 1178
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1165
+      ExplicitWidth = 1178
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1178
         Height = 518
-        ExplicitWidth = 1165
+        ExplicitWidth = 1178
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -670,7 +670,7 @@ inherited GoodsSiteForm: TGoodsSiteForm
       isShowModal = False
       ActionType = acUpdate
       DataSource = MasterDS
-      DataSetRefresh = spRefreshOneRecord
+      DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object ProtocolOpenMainForm: TdsdOpenForm

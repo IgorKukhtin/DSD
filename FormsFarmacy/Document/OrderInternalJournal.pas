@@ -42,6 +42,8 @@ type
     spPUSHDiscount: TdsdStoredProc;
     spPUSHPartionGoodsDate: TdsdStoredProc;
     actPUSHPartionGoodsDate: TdsdShowPUSHMessage;
+    spPUSHOOC1303: TdsdStoredProc;
+    actPUSHOOC1303: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

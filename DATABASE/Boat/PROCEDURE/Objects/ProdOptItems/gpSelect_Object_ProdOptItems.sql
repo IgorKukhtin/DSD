@@ -51,9 +51,9 @@ RETURNS TABLE (MovementId_OrderClient Integer
                --
              , Sale_summ TFloat, SaleWVAT_summ TFloat
              
-             --
+               -- Кол-во для сборки узла
              , AmountBasis TFloat
-             -- кол опций
+               -- кол опций
              , Amount TFloat
 
              , InsertName TVarChar
@@ -368,7 +368,7 @@ BEGIN
                                , COALESCE (ObjectFloat_DiscountTax.ValueData,0) AS DiscountTax
 
                                  -- Кол-во
-                               , COALESCE (tmpProdOptions.Value, 1) AS Value
+                               , COALESCE (tmpProdOptions.Value, 0) AS Value
 
                                  -- Цена вх. без НДС - Комплектующие - факт
                                , ObjectFloat_EKPrice.ValueData AS EKPrice
@@ -413,7 +413,7 @@ BEGIN
                                , tmpProduct.MovementId_OrderClient
                                , tmpProduct.VATPercent
                                
-                               , COALESCE (ObjectFloat_Count.ValueData,1) AS Amount
+                               , COALESCE (ObjectFloat_Count.ValueData, 0) AS Amount
 
                           FROM Object AS Object_ProdOptItems
                                -- Лодка

@@ -92,6 +92,9 @@ type
     bbUpdateisWeigth: TdxBarButton;
     isWeigth: TcxGridDBColumn;
     NameExternal: TcxGridDBColumn;
+    GoodsKindSubName: TcxGridDBColumn;
+    isGoodsKind: TcxGridDBColumn;
+    GoodsKindSubChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

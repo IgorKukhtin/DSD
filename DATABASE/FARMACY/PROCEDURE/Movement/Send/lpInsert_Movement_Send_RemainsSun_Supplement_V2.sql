@@ -35,6 +35,10 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isClose b
 
              , InvNumberLayout TVarChar
              , LayoutName TVarChar
+             
+             , isHT_SUN_v2 boolean
+             , isHT_SUNAll_v2 boolean
+             
               )
 AS
 $BODY$
@@ -385,7 +389,7 @@ BEGIN
      INSERT INTO _tmpSUN_Send_SupplementAll_V2 (UnitId, GoodsId)
      SELECT tmpSUN_Send.UnitId_to, tmpSUN_Send.GoodsId FROM tmpSUN_Send;
 
-     --raise notice 'Value 05: % %', (select Count(*) from _tmpSUN_Send_Supplement_V2), (select Count(*) from _tmpSUN_Send_SupplementAll_V2);      
+     raise notice 'Value 05: % %', (select Count(*) from _tmpSUN_Send_Supplement_V2), (select Count(*) from _tmpSUN_Send_SupplementAll_V2);      
      
      -- исключаем такие перемещения
      INSERT INTO _tmpUnit_SunExclusion_Supplement_V2 (UnitId_from, UnitId_to)
@@ -1047,6 +1051,10 @@ BEGIN
 
             , Movement_Layout.InvNumber                  AS InvNumberLayout
             , Object_Layout.ValueData                    AS LayoutName
+            
+            , COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) = 0     AS isHT_SUN_v2
+            , COALESCE(_tmpSUN_Send_SupplementAll_V2.GoodsID, 0) = 0  AS isHT_SUNAll_v2
+
 
        FROM _tmpResult_Supplement_V2
 
@@ -1075,6 +1083,12 @@ BEGIN
                                          ON MovementLinkObject_Layout.MovementId = Movement_Layout.Id
                                         AND MovementLinkObject_Layout.DescId = zc_MovementLinkObject_Layout()
             LEFT JOIN Object AS Object_Layout ON Object_Layout.Id = MovementLinkObject_Layout.ObjectId
+
+            LEFT JOIN _tmpSUN_Send_Supplement_V2 ON _tmpSUN_Send_Supplement_V2.GoodsID = _tmpResult_Supplement_V2.GoodsId
+                                                AND _tmpSUN_Send_Supplement_V2.UnitId = _tmpResult_Supplement_V2.UnitId_from  
+
+            LEFT JOIN _tmpSUN_Send_SupplementAll_V2 ON _tmpSUN_Send_SupplementAll_V2.GoodsID = _tmpResult_Supplement_V2.GoodsId
+                                                   AND _tmpSUN_Send_SupplementAll_V2.UnitId = _tmpResult_Supplement_V2.UnitId_from  
             
        ORDER BY Object_Goods.Id
               , Object_Unit_From.ValueData
@@ -1093,4 +1107,4 @@ $BODY$
 
 -- 
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inDriverId:= 0, inUserId:= 3);

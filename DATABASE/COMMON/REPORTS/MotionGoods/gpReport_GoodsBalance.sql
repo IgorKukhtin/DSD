@@ -584,8 +584,10 @@ BEGIN
      , tmpUnitBaza AS (-- Подразделения для расчета "нормы" !!!временно!!!
                         SELECT Object.Id AS UnitId
                         FROM Object
-                        WHERE (Object.Id = 8458   AND inLocationId <> 981821) -- Склад База ГП     + ЦЕХ шприц. мясо
-                           OR (Object.Id = 951601 AND inLocationId =  981821) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо
+                        WHERE (Object.Id = 8458    AND inLocationId <> 981821) -- Склад База ГП     + ЦЕХ шприц. мясо
+                           OR (Object.Id = 951601  AND inLocationId =  981821) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо
+                           OR (Object.Id = 8020714 AND inLocationId <> 981821) -- 
+                           OR (Object.Id = 8020711 AND inLocationId <> 981821) -- 
                       )
      , tmpPriceStart AS (-- Цены Прайс начальные !!!временно * 1.2!!!
                         SELECT lfObjectHistory_PriceListItem.GoodsId

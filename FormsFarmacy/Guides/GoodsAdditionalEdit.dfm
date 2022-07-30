@@ -286,6 +286,46 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDosage'
+        Value = Null
+        Component = edDosage
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVolume'
+        Value = Null
+        Component = edVolume
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsWhoCanId'
+        Value = Null
+        Component = GoodsWhoCanGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsMethodApplId'
+        Value = Null
+        Component = GoodsMethodApplGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSignOriginId'
+        Value = Null
+        Component = GoodsSignOriginGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsRecipe'
         Value = Null
         Component = cbIsRecipe
@@ -373,6 +413,63 @@
         Name = 'QtyPackage'
         Value = Null
         Component = ceQtyPackage
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Dosage'
+        Value = Null
+        Component = edDosage
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Volume'
+        Value = Null
+        Component = edVolume
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsWhoCanId'
+        Value = Null
+        Component = GoodsWhoCanGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsWhoCanName'
+        Value = Null
+        Component = GoodsWhoCanGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsMethodApplId'
+        Value = Null
+        Component = GoodsMethodApplGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsMethodApplName'
+        Value = Null
+        Component = GoodsMethodApplGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSignOriginId'
+        Value = Null
+        Component = GoodsSignOriginGuides
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSignOriginName'
+        Value = Null
+        Component = GoodsSignOriginGuides
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

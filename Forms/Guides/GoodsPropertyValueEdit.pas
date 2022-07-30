@@ -36,7 +36,7 @@ type
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdFormClose1: TdsdFormClose;
     cxLabel3: TcxLabel;
-    dsdGoodsPropertyGuides: TdsdGuides;
+    GuidesGoodsProperty: TdsdGuides;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
@@ -51,7 +51,7 @@ type
     ceArticleGLN: TcxTextEdit;
     cxLabel2: TcxLabel;
     ceGoodsKind: TcxButtonEdit;
-    GoodsKindGuides: TdsdGuides;
+    GuidesGoodsKind: TdsdGuides;
     cxLabel4: TcxLabel;
     ceGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
@@ -64,6 +64,10 @@ type
     cxLabel13: TcxLabel;
     edGoodsBox: TcxButtonEdit;
     GuidesGoodsBox: TdsdGuides;
+    cxLabel14: TcxLabel;
+    edGoodsKindSub: TcxButtonEdit;
+    GuidesGoodsKindSub: TdsdGuides;
+    cbisGoodsKind: TcxCheckBox;
   private
     { Private declarations }
   public

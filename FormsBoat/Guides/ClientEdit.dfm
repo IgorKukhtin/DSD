@@ -37,7 +37,7 @@ object ClientEditForm: TClientEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 310
+    Left = 280
     Top = 457
     Width = 75
     Height = 25
@@ -326,7 +326,7 @@ object ClientEditForm: TClientEditForm
     Width = 183
   end
   object edName2: TcxTextEdit
-    Left = 204
+    Left = 208
     Top = 416
     TabOrder = 46
     Width = 183
@@ -789,6 +789,27 @@ object ClientEditForm: TClientEditForm
         Value = Null
         Component = GuidesPaidKind
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name1'
+        Value = Null
+        Component = edName1
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name2'
+        Value = Null
+        Component = edName2
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name3'
+        Value = Null
+        Component = edName3
         DataType = ftString
         MultiSelectSeparator = ','
       end>

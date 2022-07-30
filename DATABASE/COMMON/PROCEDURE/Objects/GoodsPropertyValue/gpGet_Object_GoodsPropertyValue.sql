@@ -11,7 +11,9 @@ RETURNS TABLE (Id Integer, Name TVarChar, isErased Boolean,
                BarCode TVarChar, Article TVarChar,
                BarCodeGLN TVarChar, ArticleGLN TVarChar, GroupName TVarChar,GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                GoodsId Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar,
-               GoodsBoxId Integer, GoodsBoxName TVarChar
+               GoodsBoxId Integer, GoodsBoxName TVarChar, 
+               GoodsKindSubId Integer, GoodsKindSubName TVarChar,
+               isGoodsKind Boolean
               )
 AS
 $BODY$
@@ -42,6 +44,9 @@ BEGIN
            , '' :: TVarChar   AS GoodsKindName
            , 0  :: Integer    AS GoodsBoxId
            , '' :: TVarChar   AS GoodsBoxName
+           , 0  :: Integer    AS GoodsKindSubId
+           , '' :: TVarChar   AS GoodsKindSubName
+           , FALSE ::Boolean  AS isGoodsKind
 
        /*FROM Object
        WHERE Object.DescId = zc_Object_GoodsPropertyValue()*/;
@@ -67,7 +72,10 @@ BEGIN
            , GoodsKind.Id            AS GoodsKindId
            , GoodsKind.ValueData     AS GoodsKindName
            , GoodsBox.Id             AS GoodsBoxId
-           , GoodsBox.ValueData      AS GoodsBoxName           
+           , GoodsBox.ValueData      AS GoodsBoxName
+           , Object_GoodsKindSub.Id         AS GoodsKindSubId
+           , Object_GoodsKindSub.ValueData  AS GoodsKindSubName  
+           , COALESCE (ObjectBoolean_isGoodsKind.ValueData, FALSE) :: Boolean AS isGoodsKind         
        FROM Object
            LEFT JOIN ObjectFloat AS ObjectFloat_Amount 
                                  ON ObjectFloat_Amount.ObjectId = Object.Id
@@ -118,6 +126,14 @@ BEGIN
                                AND GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
            LEFT JOIN Object AS GoodsBox ON GoodsBox.Id = GoodsPropertyValue_GoodsBox.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsKindSub
+                                ON ObjectLink_GoodsKindSub.ObjectId = Object.Id
+                               AND ObjectLink_GoodsKindSub.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKindSub()
+           LEFT JOIN Object AS Object_GoodsKindSub ON Object_GoodsKindSub.Id = ObjectLink_GoodsKindSub.ChildObjectId
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isGoodsKind
+                                   ON ObjectBoolean_isGoodsKind.ObjectId = Object.Id
+                                  AND ObjectBoolean_isGoodsKind.DescId = zc_ObjectBoolean_GoodsPropertyValue_isGoodsKind()
        WHERE Object.Id = inId;
 
    END IF;
@@ -130,6 +146,7 @@ ALTER FUNCTION gpGet_Object_GoodsPropertyValue(integer, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 29.07.22         *
  14.02.18         * add GoodsBox
  22.06.17         * add AmountDoc
  17.09.15         * add BoxCount

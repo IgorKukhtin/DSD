@@ -1353,7 +1353,7 @@ inherited GoodsForm: TGoodsForm
       isShowModal = False
       ActionType = acUpdate
       DataSource = MasterDS
-      DataSetRefresh = spRefreshOneRecord
+      DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object ProtocolOpenMainForm: TdsdOpenForm

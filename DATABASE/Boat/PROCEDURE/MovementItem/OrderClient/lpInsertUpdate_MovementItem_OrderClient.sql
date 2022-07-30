@@ -25,6 +25,13 @@ BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     -- Проверка
+     IF COALESCE (inOperPriceList, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлена цена продажи для <%>.', lfGet_Object_ValueData_sh (inGoodsId);
+     END IF;
+
+
      -- % скидки для расчета цены со скидкой если элемент не лодка не лодка
      IF (SELECT Object.DescId FROM Object WHERE Object.Id = inGoodsId) <> zc_Object_Product()
      THEN

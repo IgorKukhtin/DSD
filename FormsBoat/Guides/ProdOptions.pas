@@ -87,6 +87,7 @@ type
     NPP: TcxGridDBColumn;
     NPP_pcp: TcxGridDBColumn;
     actChoiceFormProdColor_goods: TOpenChoiceForm;
+    actChoiceFormProdOptions_ñomment: TOpenChoiceForm;
   private
     { Private declarations }
   public

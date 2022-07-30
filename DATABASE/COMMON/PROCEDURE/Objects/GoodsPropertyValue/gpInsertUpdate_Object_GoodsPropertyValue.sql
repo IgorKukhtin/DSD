@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
  INOUT ioId                  Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора>
@@ -20,7 +21,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
     IN inGoodsPropertyId     Integer   ,    -- Классификатор свойств товаров
     IN inGoodsId             Integer   ,    -- Товары
     IN inGoodsKindId         Integer   ,    -- Виды товара
-    IN inGoodsBoxId          Integer   ,    -- Товары (гофроящик)
+    IN inGoodsBoxId          Integer   ,    -- Товары (гофроящик) 
+    IN inGoodsKindSubId      Integer   ,    -- Вид товара (факт расход в накладной)
+    IN inisGoodsKind         Boolean   ,    -- Разрешена отгрузка с таким видом тов.
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -105,6 +108,11 @@ $BODY$
    -- сохранили связь
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_GoodsBox(), ioId, inGoodsBoxId);
 
+   -- сохранили связь
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_GoodsKindSub(), ioId, inGoodsKindSubId);
+   -- сохранили 
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_GoodsPropertyValue_isGoodsKind(), ioId, inisGoodsKind);
+
 
    -- обновили
    PERFORM lpUpdate_Object_GoodsPropertyValue_BarCodeShort (inGoodsPropertyId, ioId, vbUserId);
@@ -126,6 +134,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.07.22         *
  14.02.18         * 
  27.06.17         * del inAmountDoc
  22.06.17         * add inAmountDoc

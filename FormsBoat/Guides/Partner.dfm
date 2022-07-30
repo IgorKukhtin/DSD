@@ -12,7 +12,6 @@ object PartnerForm: TPartnerForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams

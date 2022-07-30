@@ -15,6 +15,11 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, Name TVarChar
              , FormDispensingName TVarChar
              , NumberPlates Integer
              , QtyPackage Integer
+             , Dosage TVarChar
+             , Volume TVarChar
+             , GoodsWhoCanId integer, GoodsWhoCanName TVarChar
+             , GoodsMethodApplId integer, GoodsMethodApplName TVarChar
+             , GoodsSignOriginId  integer, GoodsSignOriginName TVarChar
              , isRecipe boolean
               ) AS
 $BODY$
@@ -40,6 +45,14 @@ BEGIN
            , Object_FormDispensing.ValueData                                          AS FormDispensingName
            , Object_Goods_Main.NumberPlates
            , Object_Goods_Main.QtyPackage
+           , Object_Goods_Main.Dosage 
+           , Object_Goods_Main.Volume
+           , Object_Goods_Main.GoodsWhoCanId
+           , Object_GoodsWhoCan.ValueData                                        AS GoodsWhoCanName
+           , Object_Goods_Main.GoodsMethodApplId
+           , Object_GoodsMethodAppl.ValueData                                    AS GoodsMethodApplName
+           , Object_Goods_Main.GoodsSignOriginId
+           , Object_GoodsSignOrigin.ValueData                                    AS GoodsSignOriginName
            , Object_Goods_Main.isRecipe
 
       FROM Object_Goods_Retail
@@ -47,6 +60,9 @@ BEGIN
            LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
            LEFT JOIN Object AS Object_FormDispensing ON Object_FormDispensing.Id = Object_Goods_Main.FormDispensingId
+           LEFT JOIN Object AS Object_GoodsWhoCan ON Object_GoodsWhoCan.Id = Object_Goods_Main.GoodsWhoCanId
+           LEFT JOIN Object AS Object_GoodsMethodAppl ON Object_GoodsMethodAppl.Id = Object_Goods_Main.GoodsMethodApplId
+           LEFT JOIN Object AS Object_GoodsSignOrigin ON Object_GoodsSignOrigin.Id = Object_Goods_Main.GoodsSignOriginId
            
       WHERE Object_Goods_Retail.Id = inId
       ;

@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Client(
     IN inId          Integer,       -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name1 TVarChar, Name2 TVarChar, Name3 TVarChar
              , Fax TVarChar, Phone TVarChar, Mobile TVarChar
              , IBAN TVarChar, Street TVarChar, Member TVarChar
              , WWW TVarChar, Email TVarChar, CodeDB TVarChar
@@ -35,6 +35,9 @@ BEGIN
               0 :: Integer            AS Id
            , lfGet_ObjectCode(0, zc_Object_Client())   AS Code
            , '' :: TVarChar           AS Name
+           , '' :: TVarChar           AS Name1
+           , '' :: TVarChar           AS Name2
+           , '' :: TVarChar           AS Name3
            , '' :: TVarChar           AS Fax
            , '' :: TVarChar           AS Phone
            , '' :: TVarChar           AS Mobile
@@ -67,6 +70,9 @@ BEGIN
              Object_Client.Id                AS Id
            , Object_Client.ObjectCode        AS Code
            , Object_Client.ValueData         AS Name
+           , '' :: TVarChar                  AS Name1
+           , '' :: TVarChar                  AS Name2
+           , '' :: TVarChar                  AS Name3
            , ObjectString_Fax.ValueData      AS Fax
            , ObjectString_Phone.ValueData    AS Phone
            , ObjectString_Mobile.ValueData   AS Mobile
