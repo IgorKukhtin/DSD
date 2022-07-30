@@ -200,6 +200,26 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 110
           end
+          object ChangePrice: TcxGridDBColumn [11]
+            Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'ChangePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ChangePercent: TcxGridDBColumn [12]
+            Caption = '% '#1057#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1498,6 +1518,24 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ChangePrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ChangePercent'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

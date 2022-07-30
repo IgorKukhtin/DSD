@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_ContractGoods()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ContractGoods(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -11,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ContractGoods(
     IN inisBonusNo              Boolean   , -- нет начисления по бонусам
     IN inisSave                 Boolean   , -- cохранить да/нет
     IN inPrice                  TFloat    , --
+    IN inChangePrice            TFloat    , -- Скидка в цене
+    IN inChangePercent          TFloat    , -- % Скидки
     IN inComment                TVarChar  , -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -23,7 +26,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ContractGoods());
-
+ 
      --проверка если был сохранен а теперь сняли галку то удаляем, если и не был то пропускаем
      IF COALESCE (inisSave,FALSE) = FALSE
      THEN
@@ -42,6 +45,11 @@ BEGIN
          PERFORM lpSetUnErased_MovementItem (inMovementItemId:= ioId, inUserId:= vbUserId);
      END IF;
 
+      --проверка должно біть внесено только 1 значение    или inChangePrice или inChangePercent
+     IF COALESCE (inChangePrice,0) <> 0 AND COALESCE (inChangePercent,0) <> 0
+     THEN
+          RAISE EXCEPTION 'Ошибка.Можно установить только 1 параметр - Процент скидки или Скидка в цене.';
+     END IF;
 
      -- если цена 0 пробуем найти
      IF COALESCE (inPrice,0) = 0
@@ -100,6 +108,8 @@ BEGIN
                                                       , inGoodsKindId  := inGoodsKindId
                                                       , inisBonusNo    := inisBonusNo
                                                       , inPrice        := inPrice
+                                                      , inChangePrice   := inChangePrice
+                                                      , inChangePercent := inChangePercent
                                                       , inComment      := inComment
                                                       , inUserId       := vbUserId
                                                        ) AS tmp;
@@ -111,6 +121,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.07.22         *
  05.07.21         *
 */
 
