@@ -38,6 +38,7 @@ BEGIN
 
    --
    IF COALESCE (ioCIN, '') <> COALESCE ((SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Product_CIN() AND OS.ObjectId = inId), '-')
+      OR LENGTH (COALESCE (TRIM (ioCIN), '')) < 10
    THEN
 
        IF COALESCE (vbModelId,0) <> inModelId OR LENGTH (COALESCE (TRIM (ioCIN), '')) < 10

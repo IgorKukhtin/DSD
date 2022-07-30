@@ -1,4 +1,4 @@
-object ProdOptionsForm: TProdOptionsForm
+﻿object ProdOptionsForm: TProdOptionsForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1087#1094#1080#1080'>'
@@ -378,7 +378,7 @@ object ProdOptionsForm: TProdOptionsForm
         Width = 70
       end
       object Comment: TcxGridDBColumn
-        Caption = '***Material/farbe'
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1281,6 +1281,58 @@ object ProdOptionsForm: TProdOptionsForm
           Component = MasterCDS
           ComponentItem = 'EKPrice'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoiceFormProdOptions_сomment: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdOptions_'#1089'omment'
+      FormName = 'TProdOptions_CommentForm'
+      FormNameParam.Value = 'TProdOptions_CommentForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Comment'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorPatternId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdColorPatternId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorPatternName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdColorPatternName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
