@@ -268,6 +268,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_Box() RETURNS Intege
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsPropertyValue_Box', 'Связь Значения свойств товаров для классификатора с ящиком', zc_Object_GoodsPropertyValue(), zc_Object_Box() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_Box');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsKindSub() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_GoodsKindSub'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsPropertyValue_GoodsKindSub', 'Связь Значения свойств товаров для классификатора с Вид товара (факт расход в накладной)', zc_Object_GoodsPropertyValue(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_GoodsKindSub');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsScaleCeh_From() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsScaleCeh_From'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsScaleCeh_From', 'От кого', zc_Object_GoodsScaleCeh(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsScaleCeh_From');
@@ -336,8 +340,6 @@ SELECT 'zc_ObjectLink_Juridical_RetailReport', 'Торговая сеть(отчет)', zc_Object
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Juridical_PrintKindItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Juridical_PrintKindItem'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
  SELECT 'zc_ObjectLink_Juridical_PrintKindItem', 'Элемент печати', zc_Object_Juridical(), zc_Object_PrintKindItem() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Juridical_PrintKindItem');
-
-
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_LinkGoods_GoodsMain() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_LinkGoods_GoodsMain'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -2833,6 +2835,7 @@ SELECT 'zc_ObjectLink_Goods_GoodsSignOrigin', 'Признак происхождения', zc_Object
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 29.07.22         * zc_ObjectLink_GoodsPropertyValue_GoodsKindSub
  28.07.22                                                                                      * zc_ObjectLink_Goods_GoodsWhoCan, zc_ObjectLink_Goods_GoodsMethodAppl, zc_ObjectLink_Goods_GoodsSignOrigin
  12.07.22         * zc_ObjectLink_OrderCarInfo_Route 
                     zc_ObjectLink_OrderCarInfo_Retail
