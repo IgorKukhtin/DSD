@@ -529,6 +529,46 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 74
           end
+          object Dosage: TcxGridDBColumn
+            Caption = #1044#1086#1079#1080#1088#1086#1074#1082#1072
+            DataBinding.FieldName = 'Dosage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object Volume: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1084
+            DataBinding.FieldName = 'Volume'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object GoodsWhoCanName: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091' '#1084#1086#1078#1085#1086
+            DataBinding.FieldName = 'GoodsWhoCanName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object GoodsMethodApplName: TcxGridDBColumn
+            Caption = #1057#1087#1086#1089#1086#1073' '#1087#1088#1080#1084#1077#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'GoodsMethodApplName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
+          object GoodsSignOriginName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1087#1088#1086#1080#1089#1093#1086#1078#1076#1077#1085#1080#1103
+            DataBinding.FieldName = 'GoodsSignOriginName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 115
+          end
         end
       end
     end
@@ -1313,7 +1353,7 @@ inherited GoodsForm: TGoodsForm
       isShowModal = False
       ActionType = acUpdate
       DataSource = MasterDS
-      DataSetRefresh = spRefreshOneRecord
+      DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object ProtocolOpenMainForm: TdsdOpenForm
@@ -1430,32 +1470,70 @@ inherited GoodsForm: TGoodsForm
           Value = Null
           Component = FormParams
           ComponentItem = 'MakerNameUkr'
+          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
           Name = 'FormDispensingId'
-          Value = Null
+          Value = '0'
           Component = FormParams
           ComponentItem = 'FormDispensingId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'NumberPlates'
-          Value = Null
+          Value = '0'
           Component = FormParams
           ComponentItem = 'NumberPlates'
           MultiSelectSeparator = ','
         end
         item
           Name = 'QtyPackage'
-          Value = Null
+          Value = '0'
           Component = FormParams
           ComponentItem = 'QtyPackage'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'IsRecipe'
+          Name = 'Dosage'
           Value = Null
+          Component = FormParams
+          ComponentItem = 'Dosage'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Volume'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Volume'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsWhoCanId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsWhoCanId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsMethodApplId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsMethodApplId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSignOriginId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsSignOriginId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsRecipe'
+          Value = False
           Component = FormParams
           ComponentItem = 'IsRecipe'
           DataType = ftBoolean
@@ -1463,7 +1541,7 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Name = 'inis_MakerName'
-          Value = Null
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_MakerName'
           DataType = ftBoolean
@@ -1474,11 +1552,12 @@ inherited GoodsForm: TGoodsForm
           Value = Null
           Component = FormParams
           ComponentItem = 'inis_MakerNameUkr'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'inis_FormDispensing'
-          Value = Null
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_FormDispensing'
           DataType = ftBoolean
@@ -1486,7 +1565,7 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Name = 'inis_NumberPlates'
-          Value = Null
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_NumberPlates'
           DataType = ftBoolean
@@ -1494,15 +1573,55 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Name = 'inis_QtyPackage'
-          Value = Null
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_QtyPackage'
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inis_IsRecipe'
+          Name = 'inis_Dosage'
           Value = Null
+          Component = FormParams
+          ComponentItem = 'inis_Dosage'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_Volume'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inis_Volume'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_GoodsWhoCan'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inis_GoodsWhoCan'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_GoodsMethodAppl'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inis_GoodsMethodAppl'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_GoodsSignOrigin'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inis_GoodsSignOrigin'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_IsRecipe'
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_IsRecipe'
           DataType = ftBoolean
@@ -2739,6 +2858,63 @@ inherited GoodsForm: TGoodsForm
         Value = Null
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Dosage'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Volume'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsWhoCanId'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsMethodApplId'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSignOriginId'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_Dosage'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_Volume'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_GoodsWhoCan'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_GoodsMethodAppl'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_GoodsSignOrigin'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 64
@@ -3647,6 +3823,93 @@ inherited GoodsForm: TGoodsForm
         Value = Null
         Component = FormParams
         ComponentItem = 'inis_MakerNameUkr'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDosage'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Dosage'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_Dosage'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inis_Dosage'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVolume'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Volume'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_Volume'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inis_Volume'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsWhoCanId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsWhoCanId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_GoodsWhoCan'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inis_GoodsWhoCan'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsMethodApplId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsMethodApplId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_GoodsMethodAppl'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inis_GoodsMethodAppl'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsSignOriginId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsSignOriginId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_GoodsSignOrigin'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inis_GoodsSignOrigin'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

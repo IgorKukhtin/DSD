@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Goods_ToUpdateSite(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_ToUpdateSite(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (IdMain Integer
+             , Id Integer
              , Code Integer
              , isPublished Boolean
              , Name TVarChar
@@ -18,6 +19,9 @@ RETURNS TABLE (Id Integer
              , NumberPlates Integer
              , QtyPackage Integer
              , isRecipe boolean
+             , isNameUkrSite boolean
+             , isMakerNameSite boolean
+             , isMakerNameUkrSite boolean
              , isErased Boolean
               ) AS
 $BODY$
@@ -41,7 +45,8 @@ BEGIN
                                 UNION ALL 
                                 SELECT 6, 18067779)
    
-      SELECT Object_Goods_Retail.Id
+      SELECT Object_Goods_Main.Id
+           , Object_Goods_Retail.Id
            , Object_Goods_Main.ObjectCode
            , Object_Goods_Main.isPublished
            , Object_Goods_Main.Name
@@ -54,6 +59,10 @@ BEGIN
            , Object_Goods_Main.NumberPlates
            , Object_Goods_Main.QtyPackage
            , Object_Goods_Main.isRecipe
+           , Object_Goods_Main.isNameUkrSite
+           , Object_Goods_Main.isMakerNameSite
+           , Object_Goods_Main.isMakerNameUkrSite
+
            , Object_Goods_Retail.isErased
 
       FROM Object_Goods_Retail

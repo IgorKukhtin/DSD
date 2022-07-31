@@ -1,7 +1,7 @@
 ﻿object GoodsWhoCanEditForm: TGoodsWhoCanEditForm
   Left = 0
   Top = 0
-  Caption = #1060#1086#1088#1084#1072' '#1086#1090#1087#1091#1089#1082#1072
+  Caption = #1050#1086#1084#1091' '#1084#1086#1078#1085#1086
   ClientHeight = 195
   ClientWidth = 386
   Color = clBtnFace

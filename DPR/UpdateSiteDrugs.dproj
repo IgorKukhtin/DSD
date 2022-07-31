@@ -3,7 +3,7 @@
         <ProjectGuid>{AC367920-6DD9-4B98-8587-A57C61ECE708}</ProjectGuid>
         <MainSource>UpdateSiteDrugs.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
         <FrameworkType>VCL</FrameworkType>

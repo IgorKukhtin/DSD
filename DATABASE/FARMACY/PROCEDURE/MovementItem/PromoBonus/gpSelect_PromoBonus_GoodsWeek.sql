@@ -61,10 +61,9 @@ BEGIN
           INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.GoodsId
           INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
           INNER JOIN tmpMaxOrd ON 1 = 1
-     WHERE CASE WHEN mod(date_part('week',  CURRENT_DATE)::TFloat, 2.0) = 0  
+     /*WHERE CASE WHEN mod(date_part('week',  CURRENT_DATE)::TFloat, 2.0) = 0  
                 THEN tmpMaxOrd.MaxOrd / 2 <= MovementItem.Ord 
-                ELSE tmpMaxOrd.MaxOrd / 2 + 1 >= MovementItem.Ord END = TRUE
-     
+                ELSE tmpMaxOrd.MaxOrd / 2 + 1 >= MovementItem.Ord END = TRUE*/
      ;
        
 END;

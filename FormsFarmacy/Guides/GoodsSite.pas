@@ -188,6 +188,11 @@ type
     isNotUploadSites: TcxGridDBColumn;
     dxBarSeparator4: TdxBarSeparator;
     MakerNameUkr: TcxGridDBColumn;
+    Dosage: TcxGridDBColumn;
+    Volume: TcxGridDBColumn;
+    GoodsWhoCanName: TcxGridDBColumn;
+    GoodsMethodApplName: TcxGridDBColumn;
+    GoodsSignOriginName: TcxGridDBColumn;
   private
     { Private declarations }
   public

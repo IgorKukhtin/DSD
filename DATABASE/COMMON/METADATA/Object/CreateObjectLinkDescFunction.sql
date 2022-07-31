@@ -272,8 +272,6 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsKindSub() RETUR
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsPropertyValue_GoodsKindSub', 'Связь Значения свойств товаров для классификатора с Вид товара (факт расход в накладной)', zc_Object_GoodsPropertyValue(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_GoodsKindSub');
 
-
-
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsScaleCeh_From() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsScaleCeh_From'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsScaleCeh_From', 'От кого', zc_Object_GoodsScaleCeh(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsScaleCeh_From');
@@ -342,8 +340,6 @@ SELECT 'zc_ObjectLink_Juridical_RetailReport', 'Торговая сеть(отчет)', zc_Object
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Juridical_PrintKindItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Juridical_PrintKindItem'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
  SELECT 'zc_ObjectLink_Juridical_PrintKindItem', 'Элемент печати', zc_Object_Juridical(), zc_Object_PrintKindItem() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Juridical_PrintKindItem');
-
-
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_LinkGoods_GoodsMain() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_LinkGoods_GoodsMain'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -2824,10 +2820,23 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_UnitSupplementSUN1In() RETURNS In
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Goods_UnitSupplementSUN1In', 'Аптека получатель вне работы дополнения СУН1', zc_Object_Goods(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UnitSupplementSUN1In');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsWhoCan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsWhoCan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_GoodsWhoCan', 'Кому можно', zc_Object_Goods(), zc_Object_GoodsWhoCan() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsWhoCan');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsMethodAppl() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsMethodAppl'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_GoodsMethodAppl', 'Способ применения', zc_Object_Goods(), zc_Object_GoodsMethodAppl() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsMethodAppl');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsSignOrigin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsSignOrigin'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_GoodsSignOrigin', 'Признак происхождения', zc_Object_Goods(), zc_Object_GoodsSignOrigin() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsSignOrigin');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
  29.07.22         * zc_ObjectLink_GoodsPropertyValue_GoodsKindSub
+ 28.07.22                                                                                      * zc_ObjectLink_Goods_GoodsWhoCan, zc_ObjectLink_Goods_GoodsMethodAppl, zc_ObjectLink_Goods_GoodsSignOrigin
  12.07.22         * zc_ObjectLink_OrderCarInfo_Route 
                     zc_ObjectLink_OrderCarInfo_Retail
  07.06.22         * zc_ObjectLink_GoodsByGoodsKind_GoodsSub_Br

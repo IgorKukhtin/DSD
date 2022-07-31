@@ -161,7 +161,7 @@
     Width = 489
     Height = 409
     TabOrder = 18
-    Properties.ActivePage = cxTabSheet3
+    Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 409
     ClientRectRight = 489
@@ -2318,7 +2318,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 80
-    Top = 119
+    Top = 87
   end
   object GuidesProvinceCity: TdsdGuides
     KeyField = 'Id'

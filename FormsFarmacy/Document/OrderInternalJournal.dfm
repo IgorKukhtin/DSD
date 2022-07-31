@@ -395,6 +395,9 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
           Action = actPUSHPartionGoodsDate
         end
         item
+          Action = actPUSHOOC1303
+        end
+        item
           Action = actCalculateExternalZakaz
         end
         item
@@ -458,6 +461,17 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         end>
       Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1087#1088#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1084#1077#1085#1077#1077' 1 '#1075#1086#1076#1072
       Hint = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1087#1088#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1084#1077#1085#1077#1077' 1 '#1075#1086#1076#1072
+    end
+    object actPUSHOOC1303: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHOOC1303
+      StoredProcList = <
+        item
+          StoredProc = spPUSHOOC1303
+        end>
+      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1073#1077#1079' '#1053#1044#1057' '#1073#1086#1083#1100#1096#1077' '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086' '#1076#1086#1087#1091#1089#1090#1080#1084#1086#1081
+      Hint = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1073#1077#1079' '#1053#1044#1057' '#1073#1086#1083#1100#1096#1077' '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086' '#1076#1086#1087#1091#1089#1090#1080#1084#1086#1081
     end
   end
   inherited MasterDS: TDataSource
@@ -853,5 +867,39 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     PackSize = 1
     Left = 554
     Top = 408
+  end
+  object spPUSHOOC1303: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_OOC1303_CalculateOrderInternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 346
+    Top = 416
   end
 end

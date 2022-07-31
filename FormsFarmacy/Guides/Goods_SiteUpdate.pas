@@ -94,6 +94,8 @@ type
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
+    actUpdateAdditional: TdsdInsertUpdateAction;
+    dxBarButton4: TdxBarButton;
   private
   public
   end;

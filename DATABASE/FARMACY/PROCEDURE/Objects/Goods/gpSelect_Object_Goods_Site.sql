@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isResolution_224  boolean
              , isUkrainianTranslation boolean
              , MakerName TVarChar, MakerNameUkr TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
+             , Dosage TVarChar, Volume TVarChar, GoodsWhoCanId integer, GoodsWhoCanName TVarChar, GoodsMethodApplId integer, GoodsMethodApplName TVarChar, GoodsSignOriginId  integer,  GoodsSignOriginName TVarChar
              , isExpDateExcSite boolean, isHideOnTheSite boolean
              , DiscontSiteStart TDateTime, DiscontSiteEnd TDateTime, DiscontAmountSite TFloat, DiscontPercentSite TFloat
              , isNotUploadSites Boolean
@@ -140,6 +141,15 @@ BEGIN
            , Object_Goods_Main.NumberPlates
            , Object_Goods_Main.QtyPackage
            , Object_Goods_Main.isRecipe
+           , Object_Goods_Main.Dosage 
+           , Object_Goods_Main.Volume
+           , Object_Goods_Main.GoodsWhoCanId
+           , Object_GoodsWhoCan.ValueData                                        AS GoodsWhoCanName
+           , Object_Goods_Main.GoodsMethodApplId
+           , Object_GoodsMethodAppl.ValueData                                    AS GoodsMethodApplName
+           , Object_Goods_Main.GoodsSignOriginId
+           , Object_GoodsSignOrigin.ValueData                                    AS GoodsSignOriginName
+
            , Object_Goods_Main.isExpDateExcSite
            , Object_Goods_Main.isHideOnTheSite
            , Object_Goods_Retail.DiscontSiteStart
@@ -160,6 +170,10 @@ BEGIN
            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = Object_Goods_Retail.UserInsertId
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = Object_Goods_Retail.UserUpdateId
            LEFT JOIN Object AS Object_FormDispensing ON Object_FormDispensing.Id = Object_Goods_Main.FormDispensingId
+
+           LEFT JOIN Object AS Object_GoodsWhoCan ON Object_GoodsWhoCan.Id = Object_Goods_Main.GoodsWhoCanId
+           LEFT JOIN Object AS Object_GoodsMethodAppl ON Object_GoodsMethodAppl.Id = Object_Goods_Main.GoodsMethodApplId
+           LEFT JOIN Object AS Object_GoodsSignOrigin ON Object_GoodsSignOrigin.Id = Object_Goods_Main.GoodsSignOriginId
            
            LEFT JOIN tmpNDS ON tmpNDS.Id = Object_Goods_Main.NDSKindId
            LEFT JOIN Object AS Object_GoodsPairSun ON Object_GoodsPairSun.Id = Object_Goods_Retail.GoodsPairSunId

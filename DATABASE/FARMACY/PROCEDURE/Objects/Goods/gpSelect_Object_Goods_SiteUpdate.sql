@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_SiteUpdate(
     IN inisDiffMakerNameUkr  Boolean,       -- 
     IN inSession             TVarChar       -- 
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, RetailId Integer, Code Integer, Name TVarChar
              , isPublishedSite Boolean
              , NameUkr TVarChar , NameUkrSite TVarChar, isNameUkrSite Boolean
              , MakerName TVarChar , MakerNameSite TVarChar, isMakerNameSite Boolean
@@ -33,6 +33,7 @@ BEGIN
      -- Результат
      RETURN QUERY
       SELECT Object_Goods_Main.Id
+           , Object_Goods_Retail.Id
            , Object_Goods_Main.ObjectCode
            , Object_Goods_Main.Name
            , Object_Goods_Main.isPublishedSite
@@ -57,6 +58,9 @@ BEGIN
                   ELSE zc_Color_White() END         AS Color_MakerNameUkr
            , Object_Goods_Main.isErased
       FROM  Object_Goods_Main 
+      
+            LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods_Main.Id
+                                         AND Object_Goods_Retail.RetailId = 4
             
       WHERE COALESCE(Object_Goods_Main.isPublishedSite, False) = TRUE
         AND (COALESCE(Object_Goods_Main.NameUkr, '') <> COALESCE(Object_Goods_Main.NameUkrSite, '') AND inisDiffNameUkr = True OR
@@ -81,4 +85,4 @@ $BODY$
 -- тест
 --
 
-select * from gpSelect_Object_Goods_SiteUpdate(FALSE, TRUE, TRUE, TRUE, '3');      
+select * from gpSelect_Object_Goods_SiteUpdate(FALSE, TRUE, TRUE, TRUE, '3');      :36)

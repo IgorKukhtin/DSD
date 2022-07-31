@@ -1231,7 +1231,13 @@ uses
   Report_Inventory_ProficitReturnOut in '..\..\FormsFarmacy\Report\Report_Inventory_ProficitReturnOut.pas' {Report_Inventory_ProficitReturnOutForm: TParentForm},
   Report_AnalysisBonusesIncomeDialog in '..\..\FormsFarmacy\Report\Report_AnalysisBonusesIncomeDialog.pas' {Report_AnalysisBonusesIncomeDialogForm: TParentForm},
   Report_AnalysisBonusesIncome in '..\..\FormsFarmacy\Report\Report_AnalysisBonusesIncome.pas' {Report_AnalysisBonusesIncomeForm: TParentForm},
-  Goods_SiteUpdate in '..\..\FormsFarmacy\Guides\Goods_SiteUpdate.pas' {Goods_SiteUpdateForm: TParentForm};
+  Goods_SiteUpdate in '..\..\FormsFarmacy\Guides\Goods_SiteUpdate.pas' {Goods_SiteUpdateForm: TParentForm},
+  GoodsMethodApplEdit in '..\..\FormsFarmacy\Guides\GoodsMethodApplEdit.pas' {GoodsMethodApplEditForm: TParentForm},
+  GoodsMethodAppl in '..\..\FormsFarmacy\Guides\GoodsMethodAppl.pas' {GoodsMethodApplForm: TParentForm},
+  GoodsWhoCanEdit in '..\..\FormsFarmacy\Guides\GoodsWhoCanEdit.pas' {GoodsWhoCanEditForm: TParentForm},
+  GoodsWhoCan in '..\..\FormsFarmacy\Guides\GoodsWhoCan.pas' {GoodsWhoCanForm: TParentForm},
+  GoodsSignOriginEdit in '..\..\FormsFarmacy\Guides\GoodsSignOriginEdit.pas' {GoodsSignOriginEditForm: TParentForm},
+  GoodsSignOrigin in '..\..\FormsFarmacy\Guides\GoodsSignOrigin.pas' {GoodsSignOriginForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

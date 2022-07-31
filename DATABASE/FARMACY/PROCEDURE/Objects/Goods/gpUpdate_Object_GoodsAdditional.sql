@@ -1,6 +1,6 @@
 -- Function: gpUpdate_Object_GoodsAdditional()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsAdditional(Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsAdditional(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsAdditional(
     IN inId                  Integer ,    -- ключ объекта <Товар главный>
@@ -9,6 +9,11 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsAdditional(
     IN inFormDispensingId    Integer ,    -- Форма отпуска
     IN inNumberPlates        Integer ,    -- Кол-во пластин в упаковке:
     IN inQtyPackage          Integer ,    -- Кол-во в упаковке:
+    IN inDosage              TVarChar,    -- Дозировка
+    IN inVolume              TVarChar,    -- Объем
+    IN inGoodsWhoCanId       Integer ,    -- Кому можно
+    IN inGoodsMethodApplId   Integer ,    -- Способ применения
+    IN inGoodsSignOriginId   Integer ,    -- Признак происхождения
     IN inIsRecipe            Boolean ,    -- Рецептура
     IN inSession             TVarChar     -- текущий пользователь
 )
@@ -29,7 +34,12 @@ BEGIN
                AND COALESCE(Object_Goods_Main.FormDispensingId, 0)     = COALESCE(inFormDispensingId, 0)  
                AND COALESCE(Object_Goods_Main.NumberPlates, 0)         = COALESCE(inNumberPlates, 0)  
                AND COALESCE(Object_Goods_Main.QtyPackage, 0)           = COALESCE(inQtyPackage, 0)  
-               AND COALESCE(Object_Goods_Main.IsRecipe, False)         = COALESCE(inIsRecipe, FALSE)) 
+               AND COALESCE(Object_Goods_Main.IsRecipe, False)         = COALESCE(inIsRecipe, FALSE)
+               AND COALESCE(Object_Goods_Main.Dosage, '')              = COALESCE(inDosage, '')  
+               AND COALESCE(Object_Goods_Main.Volume, '')              = COALESCE(inVolume, '')  
+               AND COALESCE(Object_Goods_Main.GoodsWhoCanId, 0)        = COALESCE(inGoodsWhoCanId, 0)  
+               AND COALESCE(Object_Goods_Main.GoodsMethodApplId, 0)    = COALESCE(inGoodsMethodApplId, 0)  
+               AND COALESCE(Object_Goods_Main.GoodsSignOriginId, 0)    = COALESCE(inGoodsSignOriginId, 0))  
    THEN
       RETURN;
    END IF;
@@ -41,8 +51,19 @@ BEGIN
    -- сохранили свойство <Производитель>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_MakerUkr(), inId, inMakerNameUkr);
 
+   -- сохранили свойство <Дозировка>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Dosage(), inId, inDosage);
+   -- сохранили свойство <Объем>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Volume(), inId, inVolume);
+
    -- сохранили свойство <Форма отпуска>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_FormDispensing(), inId, inFormDispensingId);
+   -- сохранили свойство <Кому можно>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsWhoCan(), inId, inGoodsWhoCanId);
+   -- сохранили свойство <Способ применения>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsMethodAppl(), inId, inGoodsMethodApplId);
+   -- сохранили свойство <Признак происхождения>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsSignOrigin(), inId, inGoodsSignOriginId);
 
    -- сохранили свойство <Кол-во пластин в упаковке>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_NumberPlates(), inId, inNumberPlates);
@@ -59,6 +80,11 @@ BEGIN
                                 , FormDispensingId   = NULLIF(inFormDispensingId, 0)  
                                 , NumberPlates       = NULLIF(inNumberPlates, 0)    
                                 , QtyPackage         = NULLIF(inQtyPackage, 0)    
+                                , Dosage             = NULLIF(inDosage, '')  
+                                , Volume             = NULLIF(inVolume, '')  
+                                , GoodsWhoCanId      = NULLIF(inGoodsWhoCanId, 0)  
+                                , GoodsMethodApplId  = NULLIF(inGoodsMethodApplId, 0)  
+                                , GoodsSignOriginId  = NULLIF(inGoodsSignOriginId, 0)  
                                 , IsRecipe           = COALESCE(inIsRecipe, FALSE)  
      WHERE Object_Goods_Main.Id = inId;  
    EXCEPTION

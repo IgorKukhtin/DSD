@@ -766,6 +766,21 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_SiteUpdateForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_SiteUpdateForm');
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSignOriginForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsSignOriginForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSignOriginEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsSignOriginEditForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsWhoCanForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsWhoCanForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsWhoCanEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsWhoCanEditForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMethodApplEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsMethodApplEditForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMethodApplForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsMethodApplForm');
+
 {    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
 

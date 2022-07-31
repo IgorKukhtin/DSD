@@ -48,6 +48,24 @@ type
     edMakerNameUkr: TcxTextEdit;
     cxLabel1: TcxLabel;
     cb_MakerNameUkr: TcxCheckBox;
+    cb_Dosage: TcxCheckBox;
+    edDosage: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    cb_Volume: TcxCheckBox;
+    edVolume: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    cb_GoodsWhoCan: TcxCheckBox;
+    ceGoodsWhoCan: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    cb_GoodsMethodAppl: TcxCheckBox;
+    edGoodsMethodAppl: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    cb_GoodsSignOrigin: TcxCheckBox;
+    edGoodsSignOrigin: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    GoodsWhoCanGuides: TdsdGuides;
+    GoodsMethodApplGuides: TdsdGuides;
+    GoodsSignOriginGuides: TdsdGuides;
   private
     { Private declarations }
   public

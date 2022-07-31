@@ -223,6 +223,11 @@ type
     MakerNameUkr: TcxGridDBColumn;
     actGoods_SiteUpdate: TdsdOpenForm;
     dxBarButton20: TdxBarButton;
+    Dosage: TcxGridDBColumn;
+    Volume: TcxGridDBColumn;
+    GoodsWhoCanName: TcxGridDBColumn;
+    GoodsMethodApplName: TcxGridDBColumn;
+    GoodsSignOriginName: TcxGridDBColumn;
   private
     { Private declarations }
   public
