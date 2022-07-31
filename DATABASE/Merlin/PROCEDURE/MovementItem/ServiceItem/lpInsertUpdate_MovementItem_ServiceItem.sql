@@ -19,8 +19,6 @@ AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
-        RAISE EXCEPTION 'Ошибка.Не установлено значение <ццц>.';
-        
      -- проверка - документ должен быть сохранен
      IF COALESCE (inMovementId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
