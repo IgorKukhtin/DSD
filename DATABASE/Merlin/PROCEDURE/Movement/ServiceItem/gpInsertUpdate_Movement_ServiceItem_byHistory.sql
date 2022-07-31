@@ -16,7 +16,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     PERFORM lpInsertUpdate_Movement_ServiceItem_byHistory (inDateStart := tmp.StartDate
+     PERFORM lpInsertUpdate_Movement_ServiceItem_byHistory (inDateStart := NULL
                                                           , inDateEnd   := tmp.EndDate
                                                           , inUnitId    := tmp.UnitId
                                                           , inInfoMoneyId        := tmp.InfoMoneyId
@@ -52,7 +52,7 @@ BEGIN
 
                , ObjectHistoryFloat_ServiceItem_Value.ValueData :: TFloat AS Value
                , ObjectHistoryFloat_ServiceItem_Price.ValueData :: TFloat AS Price
-               , ObjectHistoryFloat_ServiceItem_Area.ValueData             AS Area
+               , ObjectHistoryFloat_ServiceItem_Area.ValueData            AS Area
                , ObjectHistory_ServiceItem.StartDate
                , ObjectHistory_ServiceItem.EndDate
 

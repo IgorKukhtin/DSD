@@ -51,6 +51,10 @@ type
     macInsertUAction: TMultiAction;
     macSetErased: TMultiAction;
     macUpdateAction: TMultiAction;
+    DateStart_before: TcxGridDBColumn;
+    DateEnd_before: TcxGridDBColumn;
+    DateStart_after: TcxGridDBColumn;
+    DateEnd_after: TcxGridDBColumn;
   private
     { Private declarations }
   public

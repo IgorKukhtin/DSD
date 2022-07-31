@@ -32,7 +32,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Статья>.';
      END IF;
 
-     --проверка для ServiceItemAdd
+     -- проверка для ServiceItemAdd
      IF (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId) = zc_Movement_ServiceItemAdd()
      THEN   
          IF NOT EXISTS (SELECT 1 FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate := inDateEnd ::TDateTime
@@ -59,7 +59,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Area(), ioId, inArea);
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_DateEnd(), ioId, inDateEnd);
+     --PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_DateEnd(), ioId, inDateEnd);
+     -- Здесь дата
+     PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_ServiceItem(), (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId), inDateEnd, NULL, inUserId);
+
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioId, inInfoMoneyId);

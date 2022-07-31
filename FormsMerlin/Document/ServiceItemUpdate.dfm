@@ -5,6 +5,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
   ClientHeight = 341
   ClientWidth = 1071
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -177
   ExplicitWidth = 1087
   ExplicitHeight = 380
   PixelsPerInch = 96
@@ -47,6 +48,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
             DataBinding.FieldName = 'OperDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -73,6 +75,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
           object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'UnitCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -120,20 +123,22 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             HeaderAlignmentVert = vaCenter
             Width = 174
           end
-          object DateStart: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1089
-            DataBinding.FieldName = 'DateStart'
+          object DateStart_before: TcxGridDBColumn
+            Caption = '*'#1044#1072#1090#1072' '#1089
+            DataBinding.FieldName = 'DateStart_before'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
             Options.Editing = False
             Width = 70
           end
-          object EndDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1086
-            DataBinding.FieldName = 'DateEnd'
-            PropertiesClassName = 'TcxDateEditProperties'
+          object DateEnd_before: TcxGridDBColumn
+            Caption = '*'#1044#1072#1090#1072' '#1087#1086
+            DataBinding.FieldName = 'DateEnd_before'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
             Width = 70
           end
           object Area_before: TcxGridDBColumn
@@ -142,6 +147,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
@@ -154,6 +160,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
@@ -173,14 +180,34 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             Options.Editing = False
             Width = 80
           end
+          object DateStart: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089
+            DataBinding.FieldName = 'DateStart'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object EndDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086
+            DataBinding.FieldName = 'DateEnd'
+            PropertiesClassName = 'TcxDateEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Width = 70
+          end
           object Area: TcxGridDBColumn
             Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
             DataBinding.FieldName = 'Area'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
             Width = 80
           end
           object Price: TcxGridDBColumn
@@ -189,8 +216,10 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
             Width = 80
           end
           object Amount: TcxGridDBColumn
@@ -202,8 +231,26 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
             Width = 80
+          end
+          object DateStart_after: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1089
+            DataBinding.FieldName = 'DateStart_after'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object DateEnd_after: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1087#1086
+            DataBinding.FieldName = 'DateEnd_after'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
           end
           object Area_after: TcxGridDBColumn
             Caption = '***'#1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
@@ -211,6 +258,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
@@ -223,6 +271,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.  ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
@@ -694,7 +743,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
         MultiSelectSeparator = ','
       end>
     Left = 112
-    Top = 208
+    Top = 216
   end
   inherited BarManager: TdxBarManager
     Left = 144

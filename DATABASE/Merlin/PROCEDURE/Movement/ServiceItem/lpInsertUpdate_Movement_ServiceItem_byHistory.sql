@@ -23,14 +23,54 @@ $BODY$
    DECLARE vbMovementItemId Integer;
 BEGIN
 
+     -- Проверка
+     IF 1 < (SELECT COUNT(*)
+                      FROM Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.isErased   = FALSE
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.ObjectId   = inUnitId
+                           INNER JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
+                                                            AND MILinkObject_InfoMoney.ObjectId       = inInfoMoneyId
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
+                                                            ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_CommentInfoMoney.DescId         = zc_MILinkObject_CommentInfoMoney()
+                                                         --AND MILinkObject_CommentInfoMoney.ObjectId       = inCommentInfoMoneyId
+                      WHERE Movement.DescId    = zc_Movement_ServiceItem()
+                        AND Movement.OperDate  = inDateEnd
+                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                     )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Найдены документы для <%> + <%> + <%>', lfGet_Object_ValueData_sh (inUnitId), lfGet_Object_ValueData_sh (inInfoMoneyId), zfConvert_DateToString (inDateEnd);
+     END IF;
+     
      -- найти документ
-     vbMovementId := (SELECT Movement.Id FROM Movement WHERE Movement.DescId = zc_Movement_ServiceItem() AND Movement.OperDate = inDateStart AND Movement.StatusId <> zc_Enum_Status_Erased());
+     vbMovementId := (SELECT Movement.Id
+                      FROM Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.isErased   = FALSE
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.ObjectId   = inUnitId
+                           INNER JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
+                                                            AND MILinkObject_InfoMoney.ObjectId       = inInfoMoneyId
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
+                                                            ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_CommentInfoMoney.DescId         = zc_MILinkObject_CommentInfoMoney()
+                                                         --AND MILinkObject_CommentInfoMoney.ObjectId       = inCommentInfoMoneyId
+                      WHERE Movement.DescId    = zc_Movement_ServiceItem()
+                        AND Movement.OperDate  = inDateEnd
+                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                     );
      
      -- если не нашли  создаем
      IF COALESCE (vbMovementId, 0) = 0
      THEN
          vbInvNumber := CAST (NEXTVAL ('movement_serviceitem_seq') AS TVarChar);
-         vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_ServiceItem(), vbInvNumber, inDateStart, NULL, inUserId);
+         vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_ServiceItem(), vbInvNumber, inDateEnd, NULL, inUserId);
      END IF;
       
      -- найти строку
@@ -40,10 +80,6 @@ BEGIN
                                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
                                                                AND MILinkObject_InfoMoney.ObjectId       = inInfoMoneyId
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
-                                                               ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_CommentInfoMoney.DescId         = zc_MILinkObject_CommentInfoMoney()
-                                                            --AND MILinkObject_CommentInfoMoney.ObjectId       = inCommentInfoMoneyId
                           WHERE MovementItem.MovementId = vbMovementId
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE

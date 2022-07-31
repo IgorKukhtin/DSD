@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Int
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ServiceItem_onDate(
     IN inOperDate         TDateTime , --
-    IN inUnitId           Integer   , 
+    IN inUnitId           Integer   ,
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
@@ -14,10 +14,16 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
              , UnitGroupNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
-             
+
              , DateStart TDateTime, DateEnd TDateTime
              , Amount TFloat, Price TFloat, Area TFloat
-             
+
+             , DateStart_before TDateTime, DateEnd_before TDateTime
+             , Amount_before TFloat, Price_before TFloat, Area_before TFloat
+
+             , DateStart_after TDateTime, DateEnd_after TDateTime
+             , Amount_after TFloat, Price_after TFloat, Area_after TFloat
+
              , isErased Boolean
               )
 AS
@@ -30,82 +36,94 @@ BEGIN
 
      --
      inOperDate := CASE WHEN inOperDate IS NULL THEN CURRENT_DATE ELSE inOperDate END;
-     
-          -- Результат 
-         RETURN QUERY 
-          WITH 
-          --данные за другие периоды для определения даты начала и предыдущих и след.значений
+
+          -- Результат
+         RETURN QUERY
+          WITH
+          -- данные ВСЕ
           tmpMI_All AS (SELECT tmp.*
                         FROM  (SELECT MovementItem.MovementId
                                     , Movement.OperDate
+                                    , Movement.OperDate AS DateEnd
                                     , Movement.InvNumber
-                                    , MovementItem.Id
+                                    , MovementItem.Id                 AS MovementItemId
                                     , MovementItem.ObjectId           AS UnitId
                                     , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
                                     , MovementItem.Amount
-                                    , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) AS DateEnd
-                                    , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_InfoMoney.ObjectId ORDER BY COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) asc) AS Ord
+                                    , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_InfoMoney.ObjectId ORDER BY COALESCE (Movement.OperDate, zc_DateEnd()) DESC) AS Ord
                                FROM Movement
                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                            AND MovementItem.DescId     = zc_MI_Master()
                                                            AND MovementItem.isErased   = FALSE
                                                            AND (MovementItem.ObjectId = inUnitId OR inUnitId = 0)
-    
+
                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                      ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                     AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-    
-                                    INNER JOIN MovementItemDate AS MIDate_DateEnd
-                                                                ON MIDate_DateEnd.MovementItemId = MovementItem.Id
-                                                               AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()
-                                                               AND COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) > inOperDate
                                WHERE Movement.DescId = zc_Movement_ServiceItem()
-                               AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                                 AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- , zc_Enum_Status_UnComplete()
+                               --AND Movement.OperDate > inOperDate
                               ) AS tmp
-                        WHERE tmp.ord IN (1,2)
-                        ) 
+                       )
 
-         , tmpMI AS (SELECT MovementItem.UnitId
+    , tmpMI_find AS (SELECT MovementItem.UnitId
                           , MovementItem.InfoMoneyId
-                          , MILinkObject_CommentInfoMoney.ObjectId AS CommentInfoMoneyId
-                          , COALESCE (tmp_before.DateEnd + interval '1 day', zc_DateStart()) AS DateStart
-                          , MovementItem.DateEnd 
-                          , MovementItem.Amount 
-                          , COALESCE (MIFloat_Price.ValueData, 0)  AS Price
-                          , COALESCE (MIFloat_Area.ValueData, 0)   AS Area 
-                          , MovementItem.Id
+                          , MovementItem.DateEnd
+                          , MovementItem.Amount
+                          , MovementItem.MovementItemId
                           , MovementItem.MovementId
                           , MovementItem.OperDate
                           , MovementItem.InvNumber
+                          , MovementItem.Ord
+                          , COALESCE (tmp_before.Ord, 0) AS Ord_before
                      FROM tmpMI_All AS MovementItem
-                        LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                          LEFT JOIN tmpMI_All AS tmp_before
+                                              ON tmp_before.UnitId      = MovementItem.UnitId
+                                             AND tmp_before.InfoMoneyId = MovementItem.InfoMoneyId
+                                             -- !!!предыдущий
+                                             AND tmp_before.Ord         = MovementItem.Ord + 1
+                     WHERE MovementItem.DateEnd >= inOperDate
+                       AND COALESCE (tmp_before.DateEnd, zc_DateStart()) < inOperDate
+                    )
+         , tmpMI AS (SELECT tmpMI_find.UnitId
+                          , tmpMI_find.InfoMoneyId
+                          , tmpMI_find.DateEnd
+                          , tmpMI_find.Amount
+                          , tmpMI_find.MovementItemId
+                          , tmpMI_find.MovementId
+                          , tmpMI_find.OperDate
+                          , tmpMI_find.InvNumber
+                          , tmpMI_find.Ord
+                          , tmpMI_find.Ord_before
+                     FROM tmpMI_find
 
-                        LEFT JOIN MovementItemFloat AS MIFloat_Area
-                                                    ON MIFloat_Area.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_Area.DescId = zc_MIFloat_Area()
-
-                        LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
-                                                         ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
-                                                        AND MILinkObject_CommentInfoMoney.DescId = zc_MILinkObject_CommentInfoMoney()
-
-                        LEFT JOIN (SELECT tmpMI_All.* FROM tmpMI_All WHERE tmpMI_All.ord = 2) AS tmp_before
-                                                                                              ON tmp_before.UnitId = MovementItem.UnitId
-                                                                                             AND tmp_before.InfoMoneyId = MovementItem.InfoMoneyId
-                     WHERE MovementItem.Ord = 1
-                     )
-         
-
+                    UNION ALL
+                     SELECT tmpMI_All.UnitId
+                          , tmpMI_All.InfoMoneyId
+                          , NULL AS DateEnd
+                          , 0 AS Amount
+                          , tmpMI_All.MovementItemId
+                          , tmpMI_All.MovementId
+                          , tmpMI_All.OperDate
+                          , tmpMI_All.InvNumber
+                          , 0 AS Ord
+                          , tmpMI_All.Ord AS Ord_before
+                     FROM tmpMI_All
+                          LEFT JOIN tmpMI_find ON tmpMI_find.UnitId      = tmpMI_All.UnitId
+                                              AND tmpMI_find.InfoMoneyId = tmpMI_All.InfoMoneyId
+                     WHERE tmpMI_All.Ord = 1
+                       AND tmpMI_find.UnitId IS NULL
+                    )
+           --
            SELECT tmpMI.MovementId
                 , tmpMI.OperDate
                 , tmpMI.InvNumber
-                , tmpMI.Id                      AS Id
+                , tmpMI.MovementItemId          AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
-                
+
                 , Object_InfoMoney.Id         AS Object_InfoMoneyId
                 , Object_InfoMoney.ObjectCode AS Object_InfoMoneyCode
                 , Object_InfoMoney.ValueData  AS Object_InfoMoneyName
@@ -114,21 +132,82 @@ BEGIN
                 , Object_CommentInfoMoney.ObjectCode AS Object_CommentInfoMoneyCode
                 , Object_CommentInfoMoney.ValueData  AS Object_CommentInfoMoneyName
 
-                , COALESCE (tmpMI.DateStart, zc_DateStart()) :: TDateTime AS DateStart
-                , COALESCE (tmpMI.DateEnd, zc_DateEnd())     :: TDateTime AS DateEnd
-                , tmpMI.Amount               :: TFloat    AS Amount
-                , tmpMI.Price                :: TFloat    AS Price
-                , tmpMI.Area                 :: TFloat    AS Area   
+                , COALESCE (tmp_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) :: TDateTime AS DateStart
+                , COALESCE (tmpMI.DateEnd, zc_DateEnd())                           :: TDateTime AS DateEnd
+                , tmpMI.Amount                           :: TFloat AS Amount
+                , COALESCE (MIFloat_Price.ValueData, 0)  :: TFloat AS Price
+                , COALESCE (MIFloat_Area.ValueData, 0)   :: TFloat AS Area
+
+                , COALESCE (tmp_before_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) :: TDateTime AS DateStart_before
+                , COALESCE (tmp_before.DateEnd, zc_DateEnd())                             :: TDateTime AS DateEnd_before
+                , tmp_before.Amount                             :: TFloat AS Amount_before
+                , COALESCE (MIFloat_Price_before.ValueData, 0)  :: TFloat AS Price_before
+                , COALESCE (MIFloat_Area_before.ValueData, 0)   :: TFloat AS Area_before
+
+                , COALESCE (tmpMI.DateEnd + INTERVAL '1 DAY', NULL) :: TDateTime AS DateStart_after
+                , COALESCE (tmp_after.DateEnd, zc_DateEnd())        :: TDateTime AS DateEnd_after
+                , tmp_after.Amount                             :: TFloat AS Amount_after
+                , COALESCE (MIFloat_Price_after.ValueData, 0)  :: TFloat AS Price_after
+                , COALESCE (MIFloat_Area_after.ValueData, 0)   :: TFloat AS Area_after
 
                 , FALSE isErased
+
            FROM tmpMI
+                LEFT JOIN tmpMI_All AS tmp_before
+                                    ON tmp_before.UnitId      = tmpMI.UnitId
+                                   AND tmp_before.InfoMoneyId = tmpMI.InfoMoneyId
+                                   -- !!!предыдущий
+                                   AND tmp_before.Ord         = tmpMI.Ord_before
+
+                LEFT JOIN tmpMI_All AS tmp_before_before
+                                    ON tmp_before_before.UnitId      = tmpMI.UnitId
+                                   AND tmp_before_before.InfoMoneyId = tmpMI.InfoMoneyId
+                                   -- !!!предыдущий - еще
+                                   AND tmp_before_before.Ord  = tmpMI.Ord_before + 1
+
+                LEFT JOIN tmpMI_All AS tmp_after
+                                    ON tmp_after.UnitId      = tmpMI.UnitId
+                                   AND tmp_after.InfoMoneyId = tmpMI.InfoMoneyId
+                                   -- !!!следующий
+                                   AND tmp_after.Ord  = tmpMI.Ord - 1
+
+
+                LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                            ON MIFloat_Price.MovementItemId = tmpMI.MovementItemId
+                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                           AND tmpMI.Ord > 0
+                LEFT JOIN MovementItemFloat AS MIFloat_Area
+                                            ON MIFloat_Area.MovementItemId = tmpMI.MovementItemId
+                                           AND MIFloat_Area.DescId = zc_MIFloat_Area()
+                                           AND tmpMI.Ord > 0
+
+                LEFT JOIN MovementItemFloat AS MIFloat_Price_before
+                                            ON MIFloat_Price_before.MovementItemId = tmp_before.MovementItemId
+                                           AND MIFloat_Price_before.DescId = zc_MIFloat_Price()
+                LEFT JOIN MovementItemFloat AS MIFloat_Area_before
+                                            ON MIFloat_Area_before.MovementItemId = tmp_before.MovementItemId
+                                           AND MIFloat_Area_before.DescId = zc_MIFloat_Area()
+
+                LEFT JOIN MovementItemFloat AS MIFloat_Price_after
+                                            ON MIFloat_Price_after.MovementItemId = tmp_after.MovementItemId
+                                           AND MIFloat_Price_after.DescId = zc_MIFloat_Price()
+                LEFT JOIN MovementItemFloat AS MIFloat_Area_after
+                                            ON MIFloat_Area_after.MovementItemId = tmp_after.MovementItemId
+                                           AND MIFloat_Area_after.DescId = zc_MIFloat_Area()
+
+                -- пусть будет "любой"
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
+                                                 ON MILinkObject_CommentInfoMoney.MovementItemId = tmpMI.MovementItemId
+                                                AND MILinkObject_CommentInfoMoney.DescId = zc_MILinkObject_CommentInfoMoney()
+
+
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI.UnitId
                 LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpMI.InfoMoneyId
-                LEFT JOIN Object AS Object_CommentInfoMoney ON Object_CommentInfoMoney.Id = tmpMI.CommentInfoMoneyId
+                LEFT JOIN Object AS Object_CommentInfoMoney ON Object_CommentInfoMoney.Id = MILinkObject_CommentInfoMoney.ObjectId
 
                 LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
-                                      AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull() 
+                                      AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
            ;
 
 END;
@@ -142,4 +221,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDAte := '01.06.2022'::TDateTime, inSession:= zfCalc_UserAdmin()) order by 2
+-- SELECT * FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDAte := '01.06.2022'::TDateTime, inUnitId:= 0, inSession:= zfCalc_UserAdmin()) order by 2

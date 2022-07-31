@@ -34,7 +34,7 @@ BEGIN
                               , MovementItem.Amount 
                               , COALESCE (MIFloat_Price.ValueData, 0)  AS Price
                               , COALESCE (MIFloat_Area.ValueData, 0)   AS Area
-                              , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) AS DateEnd
+                              , COALESCE (Movement.OperDate, zc_DateEnd()) AS DateEnd
                           FROM MovementItem
 
                                LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -45,9 +45,10 @@ BEGIN
                                                            ON MIFloat_Area.MovementItemId = MovementItem.Id
                                                           AND MIFloat_Area.DescId = zc_MIFloat_Area()
    
-                               LEFT JOIN MovementItemDate AS MIDate_DateEnd
+                               /*LEFT JOIN MovementItemDate AS MIDate_DateEnd
                                                           ON MIDate_DateEnd.MovementItemId = MovementItem.Id
-                                                         AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()  
+                                                         AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()*/
+                               LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
 
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
