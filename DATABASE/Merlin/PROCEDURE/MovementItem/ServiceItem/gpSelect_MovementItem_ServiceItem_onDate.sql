@@ -101,12 +101,12 @@ BEGIN
                      SELECT tmpMI_All.UnitId
                           , tmpMI_All.InfoMoneyId
                           , NULL AS DateEnd
-                          , 0 AS Amount
-                          , tmpMI_All.MovementItemId
-                          , tmpMI_All.MovementId
-                          , tmpMI_All.OperDate
-                          , tmpMI_All.InvNumber
-                          , 0 AS Ord
+                          , 0    AS Amount
+                          , NULL AS MovementItemId
+                          , NULL AS MovementId
+                          , NULL AS OperDate
+                          , NULL AS InvNumber
+                          , 0    AS Ord
                           , tmpMI_All.Ord AS Ord_before
                      FROM tmpMI_All
                           LEFT JOIN tmpMI_find ON tmpMI_find.UnitId      = tmpMI_All.UnitId
@@ -115,40 +115,40 @@ BEGIN
                        AND tmpMI_find.UnitId IS NULL
                     )
            --
-           SELECT tmpMI.MovementId
-                , tmpMI.OperDate
-                , tmpMI.InvNumber
-                , tmpMI.MovementItemId          AS Id
-                , Object_Unit.Id                AS UnitId
-                , Object_Unit.ObjectCode        AS UnitCode
-                , Object_Unit.ValueData         AS UnitName
+           SELECT tmpMI.MovementId             :: Integer   AS MovementId
+                , tmpMI.OperDate               :: TDateTime AS OperDate
+                , tmpMI.InvNumber              :: TVarChar  AS InvNumber
+                , tmpMI.MovementItemId         :: Integer   AS Id
+                , Object_Unit.Id                            AS UnitId
+                , Object_Unit.ObjectCode                    AS UnitCode
+                , Object_Unit.ValueData                     AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
 
-                , Object_InfoMoney.Id         AS Object_InfoMoneyId
-                , Object_InfoMoney.ObjectCode AS Object_InfoMoneyCode
-                , Object_InfoMoney.ValueData  AS Object_InfoMoneyName
+                , Object_InfoMoney.Id                       AS Object_InfoMoneyId
+                , Object_InfoMoney.ObjectCode               AS Object_InfoMoneyCode
+                , Object_InfoMoney.ValueData                AS Object_InfoMoneyName
 
-                , Object_CommentInfoMoney.Id         AS Object_CommentInfoMoneyId
-                , Object_CommentInfoMoney.ObjectCode AS Object_CommentInfoMoneyCode
-                , Object_CommentInfoMoney.ValueData  AS Object_CommentInfoMoneyName
+                , Object_CommentInfoMoney.Id                AS Object_CommentInfoMoneyId
+                , Object_CommentInfoMoney.ObjectCode        AS Object_CommentInfoMoneyCode
+                , Object_CommentInfoMoney.ValueData         AS Object_CommentInfoMoneyName
 
-                , COALESCE (tmp_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) :: TDateTime AS DateStart
-                , COALESCE (tmpMI.DateEnd, zc_DateEnd())                           :: TDateTime AS DateEnd
+                , CASE WHEN tmpMI.MovementItemId IS NULL THEN NULL ELSE COALESCE (tmp_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) END :: TDateTime AS DateStart
+                , tmpMI.DateEnd                          :: TDateTime AS DateEnd
                 , tmpMI.Amount                           :: TFloat AS Amount
                 , COALESCE (MIFloat_Price.ValueData, 0)  :: TFloat AS Price
                 , COALESCE (MIFloat_Area.ValueData, 0)   :: TFloat AS Area
 
-                , COALESCE (tmp_before_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) :: TDateTime AS DateStart_before
-                , COALESCE (tmp_before.DateEnd, zc_DateEnd())                             :: TDateTime AS DateEnd_before
-                , tmp_before.Amount                             :: TFloat AS Amount_before
-                , COALESCE (MIFloat_Price_before.ValueData, 0)  :: TFloat AS Price_before
-                , COALESCE (MIFloat_Area_before.ValueData, 0)   :: TFloat AS Area_before
+                , CASE WHEN tmp_before.MovementItemId IS NULL THEN NULL ELSE COALESCE (tmp_before_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) END :: TDateTime AS DateStart_before
+                , tmp_before.DateEnd                            :: TDateTime AS DateEnd_before
+                , tmp_before.Amount                             :: TFloat    AS Amount_before
+                , COALESCE (MIFloat_Price_before.ValueData, 0)  :: TFloat    AS Price_before
+                , COALESCE (MIFloat_Area_before.ValueData, 0)   :: TFloat    AS Area_before
 
-                , COALESCE (tmpMI.DateEnd + INTERVAL '1 DAY', NULL) :: TDateTime AS DateStart_after
-                , COALESCE (tmp_after.DateEnd, zc_DateEnd())        :: TDateTime AS DateEnd_after
-                , tmp_after.Amount                             :: TFloat AS Amount_after
-                , COALESCE (MIFloat_Price_after.ValueData, 0)  :: TFloat AS Price_after
-                , COALESCE (MIFloat_Area_after.ValueData, 0)   :: TFloat AS Area_after
+                , CASE WHEN tmp_after.MovementItemId IS NULL THEN NULL ELSE COALESCE (tmpMI.DateEnd + INTERVAL '1 DAY', NULL) END :: TDateTime AS DateStart_after
+                , tmp_after.DateEnd                                 :: TDateTime AS DateEnd_after
+                , tmp_after.Amount                                  :: TFloat    AS Amount_after
+                , COALESCE (MIFloat_Price_after.ValueData, 0)       :: TFloat    AS Price_after
+                , COALESCE (MIFloat_Area_after.ValueData, 0)        :: TFloat    AS Area_after
 
                 , FALSE isErased
 
