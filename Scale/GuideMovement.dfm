@@ -126,7 +126,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrintClick
       end
       object bbViewMI: TSpeedButton
-        Left = 121
+        Left = 158
         Top = 3
         Width = 31
         Height = 29
@@ -280,7 +280,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbEDI_DesadvClick
       end
       object bbSale_Order_all: TSpeedButton
-        Left = 262
+        Left = 278
         Top = 3
         Width = 31
         Height = 29
@@ -304,7 +304,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbSale_Order_allClick
       end
       object bbSale_Order_diff: TSpeedButton
-        Left = 294
+        Left = 310
         Top = 3
         Width = 31
         Height = 29
@@ -323,7 +323,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbSale_Order_diffClick
       end
       object bbPrint_diff: TSpeedButton
-        Left = 377
+        Left = 387
         Top = 3
         Width = 31
         Height = 29
@@ -347,7 +347,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrint_diffClick
       end
       object bbPrint_ReestrKind: TSpeedButton
-        Left = 212
+        Left = 238
         Top = 3
         Width = 31
         Height = 29
@@ -366,7 +366,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrint_ReestrKindClick
       end
       object bbSale_Order_diffTax: TSpeedButton
-        Left = 326
+        Left = 342
         Top = 3
         Width = 31
         Height = 29
@@ -433,7 +433,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrintPackWeight_FozzyClick
       end
       object bbExport_Email: TSpeedButton
-        Left = 166
+        Left = 195
         Top = 3
         Width = 31
         Height = 29
@@ -495,6 +495,24 @@ object GuideMovementForm: TGuideMovementForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbQualityDoc_listClick
+      end
+      object SpeedButton1: TSpeedButton
+        Left = 121
+        Top = 3
+        Width = 31
+        Height = 29
+        Action = actChangeOperDatePartner
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00880000000000
+          000000000000000000000FFFFFFFFFFFFF000FF1111FFF1FFF000FF1FFFFFF1F
+          FF000FFF1FFFFF1FFF000FFFF1FFFF1FFF000FF1FF1FF11FFF000FFF11FFFF1F
+          FF000FFFFFFFFFFFFF0000000000000000000EEEEEEEEEEEEE000E0EEEEEEEEE
+          0E00000000000000000880888088880888088800088888800088}
+        ParentShowHint = False
+        ShowHint = True
       end
     end
     object cxDBGrid: TcxGrid
@@ -614,6 +632,15 @@ object GuideMovementForm: TGuideMovementForm
           Options.Editing = False
           Width = 80
         end
+        object OperDate: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+          DataBinding.FieldName = 'OperDate'
+          GroupSummaryAlignment = taCenter
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object OperDate_parent: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
           DataBinding.FieldName = 'OperDate_parent'
@@ -623,13 +650,13 @@ object GuideMovementForm: TGuideMovementForm
           HeaderAlignmentVert = vaCenter
           Width = 70
         end
-        object OperDate: TcxGridDBColumn
-          Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
-          DataBinding.FieldName = 'OperDate'
-          GroupSummaryAlignment = taCenter
+        object OperDatePartner_parent: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1087#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
+          DataBinding.FieldName = 'OperDatePartner_parent'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
+          HeaderHint = #1044#1072#1090#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1075#1083#1072#1074#1085#1099#1081')'
           Width = 70
         end
         object OperDate_TransportGoods: TcxGridDBColumn
@@ -1356,6 +1383,11 @@ object GuideMovementForm: TGuideMovementForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072'> '#1087#1086' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
       ShortCut = 16462
       OnExecute = actChangeMemberExecute
+    end
+    object actChangeOperDatePartner: TAction
+      Category = 'ScaleLib'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1090#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'> '#1087#1086' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      OnExecute = actChangeOperDatePartnerExecute
     end
   end
   object FormParams: TdsdFormParams

@@ -1,4 +1,3 @@
-
 {******************************************}
 {                                          }
 {             FastReport v4.0              }
@@ -2923,8 +2922,8 @@ end;
 
 procedure TfrxPreviewForm.DesignerBClick(Sender: TObject);
 begin
-  ShowMessage('Нет прав.');
-  exit;
+  //ShowMessage('Нет прав.');
+  //exit;
   //
   FPreview.Edit;
 end;

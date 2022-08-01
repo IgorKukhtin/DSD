@@ -139,6 +139,9 @@ type
     SubjectDocName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     bbQualityDoc_list: TSpeedButton;
+    SpeedButton1: TSpeedButton;
+    actChangeOperDatePartner: TAction;
+    OperDatePartner_parent: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -172,6 +175,7 @@ type
     procedure bbPrintPackWeight_FozzyClick(Sender: TObject);
     procedure bbExport_EmailClick(Sender: TObject);
     procedure bbQualityDoc_listClick(Sender: TObject);
+    procedure actChangeOperDatePartnerExecute(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -198,7 +202,7 @@ var
 
 implementation
 {$R *.dfm}
-uses dmMainScale,UtilScale,UtilPrint,Main,DialogMovementDesc;
+uses dmMainScale,UtilScale,UtilPrint,Main,DialogMovementDesc, DialogDateValue;
 {------------------------------------------------------------------------------}
 function TGuideMovementForm.Execute(var execParamsMovement:TParams;isChoice:Boolean): boolean;
 begin
@@ -434,6 +438,55 @@ begin
      RefreshDataSet;
      if MovementId <> '' then
         CDS.Locate('Id',MovementId,[loCaseInsensitive]);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.actChangeOperDatePartnerExecute(Sender: TObject);
+var execParams:TParams;
+begin
+    execParams:=nil;
+    ParamAddValue(execParams,'inMovementId',ftInteger,CDS.FieldByName('MovementId_parent').AsInteger);
+    ParamAddValue(execParams,'inDescCode',ftString,'zc_MovementDate_OperDatePartner');
+    //
+    if CDS.RecordCount=0 then
+    begin
+         ShowMessage('Ошибка.Документ не выбран.');
+         exit;
+    end;
+    //
+    if CDS.FieldByName('MovementDescId').AsInteger <> zc_Movement_Sale then
+    begin
+         ShowMessage('Ошибка.Изменение даты возможно только для продажи покупателю.');
+         exit;
+    end;
+    //
+    if CDS.FieldByName('MovementId_parent').AsInteger = 0 then
+    begin
+         ShowMessage('Ошибка.Документ <Продажа покупателю> не сохранен.');
+         exit;
+    end;
+    //
+    with DialogDateValueForm do
+    begin
+          LabelDateValue.Caption:='ДАТА Покупателя';
+          ActiveControl:=DateValueEdit;
+          try DateValueEdit.Text:=DateToStr(CDS.FieldByName('OperDatePartner_parent').AsDateTime);
+          except
+               DateValueEdit.Text:=DateToStr(CDS.FieldByName('OperDate_parent').AsDateTime);
+          end;
+          isPartionGoodsDate:=false;
+          if not Execute then begin exit;end;
+     end;
+    //
+    try ParamAddValue(execParams,'inValueData',ftDateTime,StrToDate(DialogDateValueForm.DateValueEdit.Text));
+    except
+        ShowMessage('Ошибка.Неправильное значение даты.');
+    end;
+    //
+    //
+    if DMMainScaleForm.gpUpdate_Scale_MovementDate(execParams)
+    then actRefreshExecute(Self);
+    //
+    execParams.Free;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.actChangeMemberExecute(Sender: TObject);

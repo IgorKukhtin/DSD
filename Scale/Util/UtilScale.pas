@@ -636,6 +636,7 @@ begin
      ParamAdd(Params,'MovementId', ftInteger);
      ParamAdd(Params,'InvNumber',ftString);
      ParamAdd(Params,'OperDate',ftDateTime);
+     ParamAdd(Params,'OperDatePartner',ftDateTime);
      ParamAdd(Params,'MovementDescId',ftInteger);
      ParamAdd(Params,'FromName',ftString);
      ParamAdd(Params,'ToName',ftString);
