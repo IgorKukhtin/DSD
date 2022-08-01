@@ -5,7 +5,6 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
   ClientHeight = 341
   ClientWidth = 1071
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -177
   ExplicitWidth = 1087
   ExplicitHeight = 380
   PixelsPerInch = 96
@@ -488,6 +487,69 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
         end>
       Caption = 'actGetForm'
     end
+    object actOpenFormServiceItemHistory: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'> ('#1076#1086#1082#1091#1084#1077#1085#1090#1099')'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'> ('#1076#1086#1082#1091#1084#1077#1085#1090#1099')'
+      ImageIndex = 29
+      FormName = 'TServiceItemJournalChoiceForm'
+      FormNameParam.Value = 'TServiceItemJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actOpenFormServiceItem: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -798,6 +860,14 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormServiceItemHistory'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -840,6 +910,10 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
     end
     object bbSetErased: TdxBarButton
       Action = macSetErased
+      Category = 0
+    end
+    object bbOpenFormServiceItemHistory: TdxBarButton
+      Action = actOpenFormServiceItemHistory
       Category = 0
     end
   end

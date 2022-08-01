@@ -354,6 +354,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemJournalForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemJournalChoiceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemUpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemUpdateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemEditMIForm'));

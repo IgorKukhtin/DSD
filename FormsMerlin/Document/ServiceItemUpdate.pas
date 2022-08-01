@@ -55,6 +55,8 @@ type
     DateEnd_before: TcxGridDBColumn;
     DateStart_after: TcxGridDBColumn;
     DateEnd_after: TcxGridDBColumn;
+    actOpenFormServiceItemHistory: TdsdOpenForm;
+    bbOpenFormServiceItemHistory: TdxBarButton;
   private
     { Private declarations }
   public
