@@ -93,6 +93,8 @@ type
     N3: TMenuItem;
     actServiceItemUpdate: TdsdOpenForm;
     miServiceItemUpdate: TMenuItem;
+    actServiceItemAddJournal: TdsdOpenForm;
+    N8: TMenuItem;
   private
     { Private declarations }
   public

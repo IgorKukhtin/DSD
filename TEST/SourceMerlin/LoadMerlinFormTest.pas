@@ -344,7 +344,8 @@ end;
 
 procedure TLoadFormTest.LoadServiceItemMovementFormTest;
 begin
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddMovementForm');
 

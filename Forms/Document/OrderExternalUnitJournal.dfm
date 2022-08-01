@@ -1007,6 +1007,51 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
       Hint = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1088#1077#1079#1077#1088#1074' ('#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
       ImageIndex = 71
     end
+    object actOpenFormOrderExternalChild: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1088#1077#1079#1077#1088#1074' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1088#1077#1079#1077#1088#1074' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+      ImageIndex = 24
+      FormName = 'TOrderExternalChildForm'
+      FormNameParam.Value = 'TOrderExternalChildForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1135,6 +1180,14 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormOrderExternalChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1176,6 +1229,10 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
     end
     object bbUpdateMIChild_AmountSecondNull: TdxBarButton
       Action = macUpdateMIChild_AmountSecondNull
+      Category = 0
+    end
+    object bbOpenFormOrderExternalChild: TdxBarButton
+      Action = actOpenFormOrderExternalChild
       Category = 0
     end
   end

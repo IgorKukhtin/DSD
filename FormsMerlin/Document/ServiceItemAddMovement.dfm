@@ -234,7 +234,6 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             DataBinding.FieldName = 'DateStart'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object EndDate: TcxGridDBColumn
@@ -447,6 +446,11 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Value'
+        Value = Null
         MultiSelectSeparator = ','
       end
       item
@@ -1215,7 +1219,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     end
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_ServiceItem'
+    StoredProcName = 'gpInsertUpdate_MovementItem_ServiceItemAdd'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1256,6 +1260,15 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CommentInfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateStart'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DateStart'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1410,7 +1423,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     Top = 201
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ServiceItem'
+    StoredProcName = 'gpGet_Movement_ServiceItemAdd'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1426,7 +1439,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         Name = 'inMovementId_Value'
         Value = Null
         Component = FormParams
-        ComponentItem = 'Id_Value'
+        ComponentItem = 'inMovementId_Value'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

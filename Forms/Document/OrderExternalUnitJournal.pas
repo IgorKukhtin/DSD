@@ -100,6 +100,8 @@ type
     macUpdateMIChild_AmountSecondNull: TMultiAction;
     bbUpdateMIChild_AmountNull: TdxBarButton;
     bbUpdateMIChild_AmountSecondNull: TdxBarButton;
+    actOpenFormOrderExternalChild: TdsdInsertUpdateAction;
+    bbOpenFormOrderExternalChild: TdxBarButton;
   private
     { Private declarations }
   public
