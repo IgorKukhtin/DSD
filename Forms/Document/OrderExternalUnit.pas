@@ -144,6 +144,7 @@ type
     bbReport_Goods: TdxBarButton;
     actOpenFormOrderExternalChild: TdsdInsertUpdateAction;
     bbOpenFormOrderExternalChild: TdxBarButton;
+    cbIsRemains: TcxCheckBox;
   private
     { Private declarations }
   public

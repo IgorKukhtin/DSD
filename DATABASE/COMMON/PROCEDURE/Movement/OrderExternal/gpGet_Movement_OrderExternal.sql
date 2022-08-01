@@ -34,7 +34,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isPrintComment Boolean
              , isPromo Boolean
              , isAuto Boolean
-             , isMask Boolean  -- вернуть обратно False
+             , isMask Boolean  -- вернуть обратно False 
+             , IsRemains Boolean
              , Comment TVarChar
               )
 AS
@@ -125,7 +126,8 @@ BEGIN
              , CAST (FALSE AS Boolean)                          AS isPromo 
              , CAST (TRUE  AS Boolean)                          AS isAuto
              , CAST (FALSE AS Boolean)                          AS isMask
-             , CAST ('' as TVarChar) 		                AS Comment
+             , CAST (FALSE AS Boolean)                          AS IsRemains
+             , CAST ('' as TVarChar) 		                    AS Comment 
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 11 -- филиал Запорожье
@@ -224,6 +226,7 @@ BEGIN
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo 
            , COALESCE (MovementBoolean_isAuto.ValueData, TRUE) AS isAuto
            , CAST (FALSE AS Boolean)                AS isMask
+           , COALESCE (MovementBoolean_Remains.ValueData, FALSE) ::Boolean AS IsRemains
            , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement
@@ -266,6 +269,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Remains
+                                      ON MovementBoolean_Remains.MovementId = Movement.Id
+                                     AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id

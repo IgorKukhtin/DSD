@@ -2,7 +2,7 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 460
   ClientWidth = 1434
-  ExplicitLeft = -331
+  ExplicitLeft = -297
   ExplicitWidth = 1450
   ExplicitHeight = 499
   PixelsPerInch = 96
@@ -655,7 +655,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 894
-      Top = 47
+      Top = 44
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 28
@@ -710,7 +710,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     object cbPrinted: TcxCheckBox
       Left = 894
-      Top = 66
+      Top = 61
       Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 35
@@ -745,7 +745,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     object cbPromo: TcxCheckBox
       Left = 894
-      Top = 87
+      Top = 78
       Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 40
@@ -783,7 +783,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     object cbPrintComment: TcxCheckBox
       Left = 894
-      Top = 108
+      Top = 112
       Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1055#1088#1080#1084'. '#1074' '#1056#1072#1089#1093'. '#1085#1072#1082#1083'.'
       TabOrder = 43
       Width = 227
@@ -848,6 +848,14 @@ inherited OrderExternalForm: TOrderExternalForm
     Properties.ReadOnly = True
     TabOrder = 10
     Width = 168
+  end
+  object cbIsRemains: TcxCheckBox [7]
+    Left = 894
+    Top = 95
+    Caption = #1056#1077#1079#1077#1088#1074' '#1089#1092#1086#1088#1084'. ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 145
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 1123
@@ -2325,6 +2333,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = edCarInfo_Date
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsRemains'
+        Value = Null
+        Component = cbIsRemains
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2869,8 +2884,8 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 528
-    Top = 56
+    Left = 520
+    Top = 24
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -2928,8 +2943,8 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 520
-    Top = 56
+    Left = 608
+    Top = 40
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -3097,8 +3112,8 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 424
-    Top = 64
+    Left = 416
+    Top = 32
   end
   object GuidesMember: TdsdGuides
     KeyField = 'Id'

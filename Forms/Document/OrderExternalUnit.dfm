@@ -665,7 +665,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end>
       Properties.ReadOnly = True
       TabOrder = 25
-      Width = 168
+      Width = 176
     end
     object cxLabel8: TcxLabel
       Left = 472
@@ -686,19 +686,19 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 829
-      Top = 47
+      Top = 40
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 28
       Width = 128
     end
     object cxLabel12: TcxLabel
-      Left = 961
+      Left = 969
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 961
+      Left = 969
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -741,7 +741,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
     object cbPrinted: TcxCheckBox
       Left = 829
-      Top = 66
+      Top = 55
       Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 35
@@ -825,7 +825,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
     object cxLabel21: TcxLabel
       Left = 833
-      Top = 85
+      Top = 86
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
     object cxLabel22: TcxLabel
@@ -862,6 +862,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       ShowHint = True
       TabOrder = 49
       Width = 161
+    end
+    object cbIsRemains: TcxCheckBox
+      Left = 829
+      Top = 70
+      Caption = #1056#1077#1079#1077#1088#1074' '#1089#1092#1086#1088#1084'. ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 50
+      Width = 141
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1757,8 +1765,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Top = 336
   end
   inherited StatusGuides: TdsdGuides
-    Left = 80
-    Top = 48
+    Left = 64
+    Top = 16
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_OrderExternal'
@@ -1802,8 +1810,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 56
+    Top = 24
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderExternal'
@@ -2102,6 +2109,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Component = GuidesStatus_wms
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsRemains'
+        Value = Null
+        Component = cbIsRemains
+        DataType = ftBoolean
+        ParamType = ptResult
         MultiSelectSeparator = ','
       end>
     Left = 216
