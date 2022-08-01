@@ -188,7 +188,8 @@ uses
   CommentMoveMoneyDialog in '..\..\FormsMerlin\Guides\CommentMoveMoneyDialog.pas' {CommentMoveMoneyDialogForm: TParentForm},
   ServiceItemMovement in '..\..\FormsMerlin\Document\ServiceItemMovement.pas' {ServiceItemMovementForm: TParentForm},
   ServiceItemAddJournal in '..\..\FormsMerlin\Document\ServiceItemAddJournal.pas' {ServiceItemAddJournalForm: TParentForm},
-  ServiceItemJournalChoice in '..\..\FormsMerlin\Document\ServiceItemJournalChoice.pas' {ServiceItemJournalChoiceForm: TParentForm};
+  ServiceItemJournalChoice in '..\..\FormsMerlin\Document\ServiceItemJournalChoice.pas' {ServiceItemJournalChoiceForm: TParentForm},
+  ServiceItemAddJournalChoice in '..\..\FormsMerlin\Document\ServiceItemAddJournalChoice.pas' {ServiceItemAddJournalChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
