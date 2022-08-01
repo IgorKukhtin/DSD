@@ -253,7 +253,7 @@ BEGIN
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull() 
 
-                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate := tmpMI.DateEnd ::TDateTime
+                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate := tmpMI.DateStart ::TDateTime
                                                                   , inUnitId := tmpMI.UnitId
                                                                   , inSession := inSession
                                                                    ) AS tmpMI_Main
