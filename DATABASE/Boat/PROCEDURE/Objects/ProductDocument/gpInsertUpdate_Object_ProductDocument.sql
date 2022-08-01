@@ -21,7 +21,7 @@ BEGIN
    IF COALESCE (inProductId, 0) = 0
    THEN
        --RAISE EXCEPTION 'Ошибка! Договор не установлен!';
-        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка! Договор не установлен!'        :: TVarChar
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Лодка не установлена.'            :: TVarChar
                                               , inProcedureName := 'gpInsertUpdate_Object_ProductDocument'   :: TVarChar
                                               , inUserId        := vbUserId
                                               );

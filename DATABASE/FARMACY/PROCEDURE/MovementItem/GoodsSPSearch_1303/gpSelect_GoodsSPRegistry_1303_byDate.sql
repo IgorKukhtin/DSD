@@ -146,11 +146,11 @@ BEGIN
          , tmpMIGoodsSPSearch_1303All.Id                     AS MovementItemId
     FROM tmpMovGoodsSPSearch_1303
 
-         LEFT JOIN tmpMIGoodsSPSearch_1303All ON tmpMIGoodsSPSearch_1303All.MovementId = tmpMovGoodsSPSearch_1303.Id
+         INNER JOIN tmpMIGoodsSPSearch_1303All ON tmpMIGoodsSPSearch_1303All.MovementId = tmpMovGoodsSPSearch_1303.Id
+                                              AND tmpMIGoodsSPSearch_1303All.Ord = 1
 
          LEFT JOIN tmpMovGoodsSPSearch_1303 AS tmpMovGoodsSPSearch_1303Next
                                             ON tmpMovGoodsSPSearch_1303Next.Ord =  tmpMovGoodsSPSearch_1303.Ord + 1
-         
     UNION ALL
     SELECT tmpMIGoodsSP_1303.GoodsId
          , tmpMIGoodsSP_1303.DateStart
@@ -177,7 +177,5 @@ $BODY$
 -- тест
 -- 
 
-SELECT * FROM gpSelect_GoodsSPRegistry_1303_byDate (instartdate := ('01.07.2022')::TDateTime , inenddate := ('30.08.2022')::TDateTime , inSession:= '3')
 
-
-          
+select * from gpSelect_GoodsSPRegistry_1303_byDate(inStartDate := '16.07.2022', inEndDate  := '31.07.2022', inSession := '3')
