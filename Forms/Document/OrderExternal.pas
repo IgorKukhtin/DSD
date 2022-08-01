@@ -163,6 +163,7 @@ type
     actUpdate_MIChild_AmountSecondNull: TdsdExecStoredProc;
     bbUpdate_MIChild_AmountNull: TdxBarButton;
     bbUpdate_MIChild_AmountSecondNull: TdxBarButton;
+    cbIsRemains: TcxCheckBox;
   private
     { Private declarations }
   public
