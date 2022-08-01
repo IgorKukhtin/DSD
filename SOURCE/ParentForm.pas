@@ -817,6 +817,7 @@ initialization
   RegisterClass (TdsdMyIPAction);
   RegisterClass (TdsdVATNumberValidation);
   RegisterClass (TdsdLoadAgilis);
+  RegisterClass (TdsdLoadFile_https);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);
