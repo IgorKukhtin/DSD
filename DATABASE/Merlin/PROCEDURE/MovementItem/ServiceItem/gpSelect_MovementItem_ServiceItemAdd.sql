@@ -27,12 +27,14 @@ RETURNS TABLE (Id Integer
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId Integer;    
+  DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_ServiceItemAdd());
      vbUserId:= lpGetUserBySession (inSession);
-
+     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     
      IF inShowAll = TRUE
      THEN
         -- Показываем ВСЕ
@@ -79,7 +81,7 @@ BEGIN
                            )
 
              , tmpMI_Main AS (SELECT *
-                              FROM gpSelect_MovementItem_ServiceItem_onDate(inOperDate := vbOperDate ::TDateTime, inSession := inSession)
+                              FROM gpSelect_MovementItem_ServiceItem_onDate(inOperDate := vbOperDate ::TDateTime, inUnitId:= 0, inSession := inSession)
                               )
 
            -- результат

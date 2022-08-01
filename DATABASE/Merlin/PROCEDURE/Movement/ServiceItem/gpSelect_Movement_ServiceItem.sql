@@ -14,6 +14,18 @@ RETURNS TABLE (Id Integer, DescId Integer, InvNumber Integer
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime 
              , isAdd Boolean
+             --
+             , MovementItemId Integer
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , UnitGroupNameFull TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
+             
+             , DateStart TDateTime, DateEnd TDateTime
+             , Amount TFloat, Price TFloat, Area TFloat
+             
+             , Amount_before TFloat, Price_before TFloat, Area_before TFloat
+             , Amount_after TFloat, Price_after TFloat, Area_after TFloat
               )
 AS
 $BODY$
@@ -50,6 +62,34 @@ BEGIN
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
            , CASE WHEN Movement.DescId = zc_Movement_ServiceItemAdd() THEN TRUE ELSE FALSE END :: Boolean AS isAdd
+            --
+           , tmpMI.Id                      AS MovementItemId
+           , tmpMI.UnitId
+           , tmpMI.UnitCode
+           , tmpMI.UnitName
+           , tmpMI.UnitGroupNameFull
+           
+           , tmpMI.InfoMoneyId
+           , tmpMI.InfoMoneyCode
+           , tmpMI.InfoMoneyName
+
+           , tmpMI.CommentInfoMoneyId
+           , tmpMI.CommentInfoMoneyCode
+           , tmpMI.CommentInfoMoneyName
+
+           , tmpMI.DateStart :: TDateTime AS DateStart
+           , tmpMI.DateEnd              :: TDateTime AS DateEnd
+           , tmpMI.Amount               :: TFloat    AS Amount
+           , tmpMI.Price                :: TFloat    AS Price
+           , tmpMI.Area                 :: TFloat    AS Area   
+
+           , tmpMI.Amount_before        :: TFloat    AS Amount_before
+           , tmpMI.Price_before         :: TFloat    AS Price_before
+           , tmpMI.Area_before          :: TFloat    AS Area_before
+
+           , tmpMI.Amount_after         :: TFloat    AS Amount_after
+           , tmpMI.Price_after          :: TFloat    AS Price_after
+           , tmpMI.Area_after           :: TFloat    AS Area_after
 
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -68,7 +108,9 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Update
                                          ON MLO_Update.MovementId = Movement.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+            
+            LEFT JOIN gpSelect_MovementItem_ServiceItem(Movement.Id, FALSE, FALSE, inSession) AS tmpMI ON tmpMI.MovementId = Movement.Id 
        ;
 
 

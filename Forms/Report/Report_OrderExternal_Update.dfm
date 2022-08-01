@@ -947,6 +947,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
       Caption = #1055#1086' '#1076#1072#1090#1077' '#1086#1090#1075#1088#1091#1079#1082#1080
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object macUpdateMIChild_AmountNull: TMultiAction [7]
@@ -2829,7 +2830,7 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
         Name = 'inisSub'
         Value = True
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

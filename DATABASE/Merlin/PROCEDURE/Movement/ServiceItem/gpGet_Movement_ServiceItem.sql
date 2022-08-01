@@ -10,9 +10,11 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ServiceItem(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime 
-             , StatusCode Integer, StatusName TVarChar
-             , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime
+             , MovementItemId Integer
+             , UnitId Integer, UnitName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , CommentInfoMoneyId Integer, CommentInfoMoneyName TVarChar
+             , Amount TFloat, Price TFloat, Area TFloat
              )
 AS
 $BODY$
@@ -30,12 +32,18 @@ BEGIN
              0 AS Id
            , CAST (NEXTVAL ('movement_serviceitem_seq') AS TVarChar)  AS InvNumber
            , CURRENT_DATE                          :: TDateTime       AS OperDate
-           , Object_Status.ObjectCode                                 AS StatusCode
-           , Object_Status.ValueData                                  AS StatusName
-           , Object_Insert.ValueData               :: TVarChar        AS InsertName
-           , CURRENT_TIMESTAMP                     :: TDateTime       AS InsertDate
-           , ''                                    :: TVarChar        AS UpdateName
-           , NULL                                  :: TDateTime       AS UpdateDate
+           
+           , 0            AS MovementItemId 
+           , 0            AS UnitId
+           , ''::TVarChar AS UnitName
+           , 0            AS InfoMoneyId
+           , ''::TVarChar AS InfoMoneyName
+           , 0            AS CommentInfoMoneyId
+           , ''::TVarChar AS CommentInfoMoneyName
+ 
+           , 0               :: TFloat    AS Amount
+           , 0               :: TFloat    AS Price
+           , 0               :: TFloat    AS Area 
        FROM Object AS Object_Insert
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = zc_Enum_Status_UnComplete()
        WHERE Object_Insert.Id = vbUserId
@@ -48,31 +56,50 @@ BEGIN
            , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('movement_serviceitem_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
            , CASE WHEN inMovementId = 0 THEN CAST (CURRENT_DATE AS TDateTime) ELSE Movement.OperDate END ::TDateTime AS OperDate   
 
-           , Object_Status.ObjectCode             AS StatusCode
-           , Object_Status.ValueData              AS StatusName
+           , MovementItem.Id                      AS MovementItemId
+           , Object_Unit.Id                       AS UnitId
+           , TRIM (COALESCE (ObjectString_Unit_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
+           
+           , Object_InfoMoney.Id                   AS InfoMoneyId
+           , Object_InfoMoney.ValueData ::TVarChar AS InfoMoneyName
 
-           , Object_Insert.ValueData              AS InsertName
-           , MovementDate_Insert.ValueData        AS InsertDate
-           , Object_Update.ValueData              AS UpdateName
-           , MovementDate_Update.ValueData        AS UpdateDate
+           , Object_CommentInfoMoney.Id            AS CommentInfoMoneyId
+           , Object_CommentInfoMoney.ValueData ::TVarChar AS CommentInfoMoneyName
+
+           , MovementItem.Amount                  ::TFloat AS Amount
+           , COALESCE (MIFloat_Price.ValueData, 0)::TFloat AS Price
+           , COALESCE (MIFloat_Area.ValueData, 0) ::TFloat AS Area
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-            LEFT JOIN MovementDate AS MovementDate_Insert
-                                   ON MovementDate_Insert.MovementId = Movement.Id
-                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-            LEFT JOIN MovementLinkObject AS MLO_Insert
-                                         ON MLO_Insert.MovementId = Movement.Id
-                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
-            LEFT JOIN MovementDate AS MovementDate_Update
-                                   ON MovementDate_Update.MovementId = Movement.Id
-                                  AND MovementDate_Update.DescId = zc_MovementDate_Update()
-            LEFT JOIN MovementLinkObject AS MLO_Update
-                                         ON MLO_Update.MovementId = Movement.Id
-                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+           --ÒÚÓÍË
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                  AND MovementItem.DescId = zc_MI_Master()
+                                  AND MovementItem.isErased = FALSE            
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Area
+                                        ON MIFloat_Area.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Area.DescId = zc_MIFloat_Area()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
+                                             ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_CommentInfoMoney.DescId = zc_MILinkObject_CommentInfoMoney()  
+            LEFT JOIN Object AS Object_CommentInfoMoney ON Object_CommentInfoMoney.Id = MILinkObject_CommentInfoMoney.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
+                                   ON ObjectString_Unit_GroupNameFull.ObjectId = MovementItem.ObjectId
+                                  AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull() 
 
        WHERE Movement.Id = inMovementId_Value;
 
@@ -85,6 +112,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 31.08.22         * add MI
  31.05.22         *
  */
 

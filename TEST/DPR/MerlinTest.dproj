@@ -516,10 +516,6 @@
 				<Form>ServiceItemJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsMerlin\Document\ServiceItemMovement.pas">
-				<Form>ServiceItemMovementForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsMerlin\Report\Report_UnitBalance.pas">
 				<Form>Report_UnitBalanceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -554,6 +550,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsMerlin\Guides\CommentMoveMoneyDialog.pas">
 				<Form>CommentMoveMoneyDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Document\ServiceItemMovement.pas">
+				<Form>ServiceItemMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ServiceItem(
     IN inIsErased         Boolean      , -- 
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (MovementId Integer, Id Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , UnitGroupNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -77,19 +77,20 @@ BEGIN
                            )
 
            -- результат
-           SELECT 0                             AS Id
+           SELECT inMovementId                  AS MovementId
+                , 0                             AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
                 
-                , 0              AS Object_InfoMoneyId
-                , 0              AS Object_InfoMoneyCode
-                , '' ::TVarChar  AS Object_InfoMoneyName
+                , 0              AS InfoMoneyId
+                , 0              AS InfoMoneyCode
+                , '' ::TVarChar  AS InfoMoneyName
 
-                , 0              AS Object_CommentInfoMoneyId
-                , 0              AS Object_CommentInfoMoneyCode
-                , '' ::TVarChar  AS Object_CommentInfoMoneyName
+                , 0              AS CommentInfoMoneyId
+                , 0              AS CommentInfoMoneyCode
+                , '' ::TVarChar  AS CommentInfoMoneyName
 
                 , NULL                       :: TDateTime AS DateStart
                 , NULL                       :: TDateTime AS DateEnd
@@ -118,19 +119,20 @@ BEGIN
 
      UNION ALL
            -- Показываем только строки документа 
-           SELECT tmpMI.Id                      AS Id
+           SELECT inMovementId                  AS MovementId
+                , tmpMI.Id                      AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
                 
-                , Object_InfoMoney.Id           AS Object_InfoMoneyId
-                , Object_InfoMoney.ObjectCode   AS Object_InfoMoneyCode
-                , Object_InfoMoney.ValueData    AS Object_InfoMoneyName
+                , Object_InfoMoney.Id           AS InfoMoneyId
+                , Object_InfoMoney.ObjectCode   AS InfoMoneyCode
+                , Object_InfoMoney.ValueData    AS InfoMoneyName
 
-                , Object_CommentInfoMoney.Id         AS Object_CommentInfoMoneyId
-                , Object_CommentInfoMoney.ObjectCode AS Object_CommentInfoMoneyCode
-                , Object_CommentInfoMoney.ValueData  AS Object_CommentInfoMoneyName
+                , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
+                , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
+                , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
 
                 , NULL                       :: TDateTime AS DateStart
                 , tmpMI.DateEnd              :: TDateTime AS DateEnd
@@ -270,19 +272,20 @@ BEGIN
                            WHERE tmp.Ord = 1
                            )
 
-           SELECT tmpMI.Id                      AS Id
+           SELECT inMovementId                  AS MovementId
+                , tmpMI.Id                      AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
-                , Object_Unit.ValueData         AS UnitName
+                , TRIM (COALESCE (ObjectString_Unit_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
                 
-                , Object_InfoMoney.Id         AS Object_InfoMoneyId
-                , Object_InfoMoney.ObjectCode AS Object_InfoMoneyCode
-                , Object_InfoMoney.ValueData  AS Object_InfoMoneyName
+                , Object_InfoMoney.Id         AS InfoMoneyId
+                , Object_InfoMoney.ObjectCode AS InfoMoneyCode
+                , Object_InfoMoney.ValueData  AS InfoMoneyName
 
-                , Object_CommentInfoMoney.Id         AS Object_CommentInfoMoneyId
-                , Object_CommentInfoMoney.ObjectCode AS Object_CommentInfoMoneyCode
-                , Object_CommentInfoMoney.ValueData  AS Object_CommentInfoMoneyName
+                , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
+                , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
+                , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
 
                 , COALESCE (tmpMI_before.DateStart, zc_DateStart()) :: TDateTime AS DateStart
                 , tmpMI.DateEnd              :: TDateTime AS DateEnd

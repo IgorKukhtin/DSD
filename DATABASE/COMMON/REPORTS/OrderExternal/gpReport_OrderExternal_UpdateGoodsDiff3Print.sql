@@ -60,7 +60,7 @@ BEGIN
 
 
      vbStartDate := (inStartDate::Date ||' 8:00') :: TDateTime;
-     vbEndDate   := ((inStartDate + INTERVAL'4 Day' )::Date||' 7:59') :: TDateTime;
+     vbEndDate   := ((inStartDate + INTERVAL'3 Day' )::Date||' 7:59') :: TDateTime;
 
      -- Результат
      CREATE TEMP TABLE _Result (GoodsId Integer, GoodsKindId Integer, Amount_sh TFloat, AmountWeight TFloat
