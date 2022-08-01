@@ -72,16 +72,24 @@ RETURNS TABLE (OperDate        TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE inGoodsGroupId Integer;
 BEGIN
+     -- !!!временно
+     inGoodsGroupId:= 1832; -- ГП
 
      inIsDate_CarInfo:= TRUE;
      inEndDate:= inStartDate;
+     
 
-
+     -- Результат
      RETURN QUERY
      WITH
-       tmpMovementAll AS (SELECT Movement.*
+       -- Только эти товары
+       tmpGoods AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect)
+       -- Документы - Заказ
+     , tmpMovementAll AS (SELECT Movement.*
                                , MovementLinkObject_To.ObjectId AS ToId
+                               , COALESCE (MovementBoolean_Remains.ValueData, FALSE) AS isRemains
                           FROM (SELECT Movement.*
                                        -- Дата/время отгрузки
                                      , MovementDate_CarInfo.ValueData AS OperDate_CarInfo
@@ -143,6 +151,9 @@ BEGIN
                                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                                          AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                                          AND MovementLinkObject_To.ObjectId   = inToId
+                            LEFT JOIN MovementBoolean AS MovementBoolean_Remains
+                                                      ON MovementBoolean_Remains.MovementId = Movement.Id
+                                                     AND MovementBoolean_Remains.DescId     = zc_MovementBoolean_Remains()
                            )
        -- Взвешивание факт
      , tmpWeighing AS (SELECT tmpMovementAll.Id, MIN (MovementDate_StartWeighing.ValueData) AS StartWeighing, MAX (COALESCE (MovementDate_EndWeighing.ValueData, CURRENT_TIMESTAMP)) AS EndWeighing
@@ -167,6 +178,8 @@ BEGIN
                  WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementAll.Id FROM tmpMovementAll)
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
+                   -- Только эти товары
+                   AND MovementItem.ObjectId   IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
                 )
      , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
                                 FROM MovementItemFloat
@@ -290,15 +303,19 @@ BEGIN
                             , SUM (tmpMI_Child.Amount_all_sh)       AS AmountSh_child     -- Итого
 
                               -- Итого не хватает для резерва, вес
-                            , SUM ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
-                                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
-                                 - COALESCE (tmpMI_Child.Amount_all_Weight, 0)
-                                  ) AS AmountWeight_diff
+                            , SUM (CASE WHEN Movement.isRemains = TRUE
+                                        THEN (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                                            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                            - COALESCE (tmpMI_Child.Amount_all_Weight, 0)
+                                        ELSE 0
+                                   END) AS AmountWeight_diff
 
-                            , SUM ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
-                                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END
-                                 - COALESCE (tmpMI_Child.Amount_all_sh, 0)
-                                  ) AS AmountSh_diff
+                            , SUM (CASE WHEN Movement.isRemains = TRUE
+                                        THEN (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                                            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END
+                                            - COALESCE (tmpMI_Child.Amount_all_sh, 0)
+                                        ELSE 0
+                                   END) AS AmountSh_diff
 
                        FROM tmpMovementAll AS Movement
                             LEFT JOIN tmpWeighing ON tmpWeighing.Id = Movement.Id

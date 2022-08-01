@@ -53,6 +53,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDate TDateTime;
+   DECLARE inGoodsGroupId Integer;
 BEGIN
 
      inIsDate_CarInfo:= TRUE;
@@ -74,9 +75,12 @@ BEGIN
                                ) ON COMMIT DROP;
      --
      WITH
-       -- Заказы
-       tmpMovementAll AS (SELECT Movement.*
+       -- Только эти товары
+       tmpGoods AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect)
+       -- Документы - Заказ
+     , tmpMovementAll AS (SELECT Movement.*
                                , MovementLinkObject_To.ObjectId AS ToId
+                               , COALESCE (MovementBoolean_Remains.ValueData, FALSE) AS isRemains
 
                           FROM (SELECT Movement.*
                                        -- Дата/время отгрузки
@@ -116,6 +120,9 @@ BEGIN
                                                              ON MovementLinkObject_To.MovementId = Movement.Id
                                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                                             AND MovementLinkObject_To.ObjectId   = inToId
+                               LEFT JOIN MovementBoolean AS MovementBoolean_Remains
+                                                         ON MovementBoolean_Remains.MovementId = Movement.Id
+                                                        AND MovementBoolean_Remains.DescId     = zc_MovementBoolean_Remains()
                          )
        -- группа для печати
      , tmpGroupPrint AS (SELECT -- Дата смены
@@ -141,6 +148,8 @@ BEGIN
                  WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementAll.Id FROM tmpMovementAll)
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
+                   -- Только эти товары
+                   AND MovementItem.ObjectId   IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
                 )
      , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
                                 FROM MovementItemFloat
@@ -218,15 +227,19 @@ BEGIN
                             ,  (tmpMI_Child.Amount_all_sh)   AS AmountSh_child     -- Итого
                             
                               -- Итого не хватает для резерва, вес
-                            , ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
-                             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
-                             - COALESCE (tmpMI_Child.Amount_all_Weight, 0)
-                              ) AS AmountWeight_diff
+                            , (CASE WHEN Movement.isRemains = TRUE
+                                        THEN (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                                           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                           - COALESCE (tmpMI_Child.Amount_all_Weight, 0)
+                                        ELSE 0
+                               END) AS AmountWeight_diff
 
-                            , ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
-                             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END
-                             - COALESCE (tmpMI_Child.Amount_all_sh, 0)
-                              ) AS AmountSh_diff
+                            , (CASE WHEN Movement.isRemains = TRUE
+                                        THEN (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                                           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END
+                                           - COALESCE (tmpMI_Child.Amount_all_sh, 0)
+                                        ELSE 0
+                               END) AS AmountSh_diff
 
                               -- мин Остаток начальный для резерва
                             , tmpMI_Child.Amount_remains_min_Weight
