@@ -55,6 +55,8 @@ $BODY$
    DECLARE vbEndDate TDateTime;
    DECLARE inGoodsGroupId Integer;
 BEGIN
+     -- !!!временно
+     inGoodsGroupId:= 1832; -- ГП
 
      inIsDate_CarInfo:= TRUE;
      inEndDate:= inStartDate + INTERVAL'3 Day' ;

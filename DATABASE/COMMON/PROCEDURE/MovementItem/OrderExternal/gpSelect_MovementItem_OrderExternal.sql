@@ -584,7 +584,7 @@ BEGIN
                               AND MovementItem.DescId     = zc_MI_Child()
                               AND MovementItem.isErased   = FALSE
                             GROUP BY MovementItem.ParentId
-                            )
+                           )
              
        SELECT
              0 :: Integer               AS Id

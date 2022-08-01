@@ -47,3 +47,5 @@ END;$BODY$
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.08.2017', inEndDate:= '31.08.2017', inFromId:= 8449, inToId:=8458 , inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ с/к         + Склад База ГП
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.08.2017', inEndDate:= '31.08.2017', inFromId:= 8447, inToId:=8445 , inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный   + Склад МИНУСОВКА
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.09.2017', inEndDate:= '30.09.2017', inFromId:= 981821, inToId:=951601 , inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ шприц. мясо   + ЦЕХ упаковки мясо
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2022', inEndDate:= '05.07.2022', inFromId:= 8020711, inToId:=8020714 , inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ шприц. мясо   + ЦЕХ упаковки мясо
+
