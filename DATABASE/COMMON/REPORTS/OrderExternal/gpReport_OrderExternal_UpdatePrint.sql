@@ -17,7 +17,10 @@ $BODY$
    DECLARE vbEndDate TDateTime;
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
+   DECLARE inGoodsGroupId Integer;
 BEGIN
+     -- !!!временно
+     inGoodsGroupId:= 1832; -- ГП
 
      inIsDate_CarInfo:= TRUE;
      inEndDate:= inStartDate;
@@ -25,6 +28,7 @@ BEGIN
 
      vbStartDate := (inStartDate::Date ||' 8:00') :: TDateTime;
      vbEndDate   := ((inStartDate + INTERVAL'1 Day' )::Date||' 7:59') :: TDateTime;
+
 
      -- Результат
      CREATE TEMP TABLE _Result (RouteId Integer, RetailId Integer, AmountWeight TFloat, AmountWeight_child_one TFloat, AmountWeight_child_sec TFloat, AmountWeight_child TFloat , AmountWeight_diff TFloat
@@ -35,9 +39,12 @@ BEGIN
                                ) ON COMMIT DROP;
      --
      WITH
-       -- Заказы
-       tmpMovementAll AS (SELECT Movement.*
+       -- Только эти товары
+       tmpGoods AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect)
+       -- Документы - Заказ
+     , tmpMovementAll AS (SELECT Movement.*
                                , MovementLinkObject_To.ObjectId AS ToId
+                               , COALESCE (MovementBoolean_Remains.ValueData, FALSE) AS isRemains
 
                           FROM (SELECT Movement.*
                                        -- Дата/время отгрузки
@@ -79,6 +86,9 @@ BEGIN
                                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                                          AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                                          AND MovementLinkObject_To.ObjectId   = inToId
+                            LEFT JOIN MovementBoolean AS MovementBoolean_Remains
+                                                      ON MovementBoolean_Remains.MovementId = Movement.Id
+                                                     AND MovementBoolean_Remains.DescId     = zc_MovementBoolean_Remains()
                            )
        -- группа для печати, каждая смена на отд. старнице
      , tmpGroupPrint AS (SELECT -- Дата смены
@@ -103,6 +113,8 @@ BEGIN
                  WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementAll.Id FROM tmpMovementAll)
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
+                   -- Только эти товары
+                   AND MovementItem.ObjectId   IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
                 )
      , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
                                 FROM MovementItemFloat
@@ -190,6 +202,14 @@ BEGIN
                             ,  SUM (COALESCE (tmpMI_Child.Amount_Weight, 0))       AS AmountWeight_child_one -- с Остатка
                             ,  SUM (COALESCE (tmpMI_Child.AmountSecond_Weight, 0)) AS AmountWeight_child_sec -- с Прихода
                             ,  SUM (COALESCE (tmpMI_Child.Amount_all_Weight, 0))   AS AmountWeight_child     -- Итого
+                            
+                              -- Итого не хватает для резерва, вес
+                            , SUM (CASE WHEN Movement.isRemains = TRUE
+                                        THEN (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                                           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                           - COALESCE (tmpMI_Child.Amount_all_Weight, 0)
+                                        ELSE 0
+                                   END) AS AmountWeight_diff
 
                               --
                             , COUNT (DISTINCT Object_From.Id) AS Count_Partner
@@ -276,7 +296,9 @@ BEGIN
          SELECT tmpMovement.RouteId, tmpMovement.RetailId
               , tmpMovement.AmountWeight
               , tmpMovement.AmountWeight_child_one, tmpMovement.AmountWeight_child_sec, tmpMovement.AmountWeight_child
-              , (COALESCE (tmpMovement.AmountWeight,0) - COALESCE (tmpMovement.AmountWeight_child,0)) :: TFloat AS  AmountWeight_diff
+
+              , tmpMovement.AmountWeight_diff
+
               , tmpMovement.Count_Partner
                 -- Дата заявки
               , tmpMovement.OperDate

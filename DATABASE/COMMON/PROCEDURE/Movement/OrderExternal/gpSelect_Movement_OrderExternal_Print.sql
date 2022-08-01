@@ -616,11 +616,11 @@ BEGIN
              END :: TFloat AS Amount_child
              
            , CASE WHEN vbIsRemains = TRUE
-                   AND COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)
+                   /*AND COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)
                      > CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                                  THEN COALESCE (tmpMI_Child.AmountWeight_all / CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END, 0)
                                  ELSE COALESCE (tmpMI_Child.AmountWeight_all, 0)
-                       END
+                       END*/
                        THEN COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)
                           - CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                                       THEN COALESCE (tmpMI_Child.AmountWeight_all / CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END, 0)
