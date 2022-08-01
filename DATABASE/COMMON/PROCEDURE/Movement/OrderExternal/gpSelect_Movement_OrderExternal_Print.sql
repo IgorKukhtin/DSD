@@ -32,6 +32,7 @@ $BODY$
     DECLARE vbJuridicalId         Integer;
     DECLARE vbOperDate            TDateTime;
     DECLARE vbIsOrderByLine       Boolean;
+    DECLARE vbIsRemains           Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
@@ -53,8 +54,11 @@ BEGIN
           , COALESCE (MovementLinkObject_To.ObjectId, 0)             AS UnitId
           , ObjectLink_Partner_Juridical.ChildObjectId               AS JuridicalId
           , CASE WHEN Movement.AccessKeyId IN (zc_Enum_Process_AccessKey_DocumentKiev(), zc_Enum_Process_AccessKey_DocumentLviv()) THEN TRUE ELSE FALSE END AS isOrderByLine
+          , COALESCE (MovementBoolean_Remains.ValueData, FALSE) ::Boolean AS isRemains
+
             INTO vbDescId, vbStatusId, vbOperDate, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
                , vbGoodsPropertyId, vbGoodsPropertyId_basis, vbContractId, vbRetailId, vbFromId, vbUnitId, vbJuridicalId, vbIsOrderByLine
+               , vbIsRemains
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -85,6 +89,11 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_Remains
+                                    ON MovementBoolean_Remains.MovementId = Movement.Id
+                                   AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
+
      WHERE Movement.Id = inMovementId;
      
 
@@ -228,7 +237,7 @@ BEGIN
                                     AND MovementString.DescId IN (zc_MovementString_InvNumberPartner()
                                                                 , zc_MovementString_Comment())
                                 )
-
+      -- Результат
       SELECT Movement.Id                                AS Id
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , tmpMovement_total.CountOrder ::Integer     AS CountOrder
@@ -541,7 +550,28 @@ BEGIN
                      , MIFloat_Price.ValueData
                      , MIFloat_CountForPrice.ValueData
              )
+          , tmpMI_Child AS (SELECT MovementItem.ParentId
+                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight
+                                 , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount ELSE 0 END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeightSecond
+                                 , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_all
+                            FROM MovementItem
+                                 LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                             ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()  
 
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                      ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                       ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                                      AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId     = zc_MI_Child()
+                              AND MovementItem.isErased   = FALSE
+                            GROUP BY MovementItem.ParentId
+                           )
+       -- Результат
        SELECT
              CASE WHEN vbIsOrderByLine = TRUE THEN row_number() OVER (ORDER BY tmpMI.MovementItemId) ELSE 0 END :: Integer AS LineNum
            , zfFormat_BarCode (zc_BarCodePref_Object(), COALESCE (View_GoodsByGoodsKind.Id, Object_Goods.Id)) AS IdBarCode
@@ -580,6 +610,25 @@ BEGIN
            
            , ObjectFloat_WmsCellNum.ValueData  AS WmsCellNum
            
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                       THEN tmpMI_Child.AmountWeight_all / CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                       ELSE tmpMI_Child.AmountWeight_all
+             END :: TFloat AS Amount_child
+             
+           , CASE WHEN vbIsRemains = TRUE
+                   AND COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)
+                     > CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                 THEN COALESCE (tmpMI_Child.AmountWeight_all / CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END, 0)
+                                 ELSE COALESCE (tmpMI_Child.AmountWeight_all, 0)
+                       END
+                       THEN COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)
+                          - CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                      THEN COALESCE (tmpMI_Child.AmountWeight_all / CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END, 0)
+                                      ELSE COALESCE (tmpMI_Child.AmountWeight_all, 0)
+                            END
+                  ELSE 0
+             END :: TFloat AS Amount_child_diff
+           
        FROM (SELECT tmpMI.MovementItemId
                   , tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -592,12 +641,16 @@ BEGIN
              FROM tmpMI
 
             ) AS tmpMI
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.MovementItemId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id

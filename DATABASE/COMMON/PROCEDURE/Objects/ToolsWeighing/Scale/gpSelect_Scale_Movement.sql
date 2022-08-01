@@ -9,12 +9,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Movement(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
+             , MovementId_parent Integer, OperDate_parent TDateTime, OperDatePartner_parent TDateTime, InvNumber_parent TVarChar
              , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, StartRunPlan TDateTime
              , CarName TVarChar, RouteName TVarChar, PersonalDriverName TVarChar
              , MovementId_Tax Integer, InvNumberPartner_Tax TVarChar, OperDate_Tax TDateTime
-             , StartWeighing TDateTime, EndWeighing TDateTime 
+             , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementDescNumber Integer, MovementDescId Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
              , MovementId_Order Integer, InvNumberOrder TVarChar
@@ -65,7 +65,7 @@ BEGIN
 
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
      /*WITH tmpUserAdmin AS (SELECT ObjectLink_UserRole_View.UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = vbUserId)
         , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND NOT EXISTS (SELECT tmpUserAdmin.UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT tmpUserAdmin.UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
@@ -78,11 +78,12 @@ BEGIN
        SELECT  Movement.Id
              , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
              , Movement.OperDate
-             , Object_Status.ObjectCode          AS StatusCode
-             , Object_Status.ValueData           AS StatusName
+             , Object_Status.ObjectCode                AS StatusCode
+             , Object_Status.ValueData                 AS StatusName
 
-             , Movement_Parent.Id                AS MovementId_parent
-             , Movement_Parent.OperDate          AS OperDate_parent
+             , Movement_Parent.Id                      AS MovementId_parent
+             , Movement_Parent.OperDate                AS OperDate_parent
+             , MovementDate_OperDatePartner.ValueData  AS OperDatePartner_parent
              , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete()
                          THEN Movement_Parent.InvNumber
                     WHEN Movement_Parent.StatusId = zc_Enum_Status_UnComplete()
@@ -96,9 +97,9 @@ BEGIN
              , Movement_TransportGoods.InvNumber     AS InvNumber_TransportGoods
              , Movement_TransportGoods.OperDate      AS OperDate_TransportGoods
 
-             , Movement_Transport.Id            AS MovementId_Transport
-             , Movement_Transport.InvNumber     AS InvNumber_Transport
-             , Movement_Transport.OperDate      AS OperDate_Transport
+             , Movement_Transport.Id                 AS MovementId_Transport
+             , Movement_Transport.InvNumber          AS InvNumber_Transport
+             , Movement_Transport.OperDate           AS OperDate_Transport
              , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRunPlan.ValueData) AS TDateTime) AS StartRunPlan
              , (COALESCE (Object_Car.ValueData, '') || ' ' || COALESCE (Object_CarModel.ValueData, '')) :: TVarChar AS CarName
              , Object_Route.ValueData           AS RouteName
@@ -117,7 +118,7 @@ BEGIN
                END :: TVarChar AS InvNumberPartner_Tax
              , Movement_Tax.OperDate                 AS OperDate_Tax
 
-             , MovementDate_StartWeighing.ValueData  AS StartWeighing  
+             , MovementDate_StartWeighing.ValueData  AS StartWeighing
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
@@ -193,6 +194,10 @@ BEGIN
 
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
                                            ON MovementLinkMovement_TransportGoods.MovementId = Movement_Parent.Id
                                           AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
@@ -204,7 +209,7 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_EndWeighing
                                    ON MovementDate_EndWeighing.MovementId =  Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
-                                  
+
             LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
                                     ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
                                    AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
@@ -244,12 +249,12 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -394,7 +399,7 @@ BEGIN
        ORDER BY COALESCE (MovementDate_EndWeighing.ValueData, MovementDate_StartWeighing.ValueData) DESC
               , MovementDate_StartWeighing.ValueData DESC
       ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
