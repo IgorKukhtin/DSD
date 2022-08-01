@@ -1671,6 +1671,40 @@ type
     property InfoAfterExecute;
   end;
 
+  TdsdLoadFile_https = class(TdsdCustomAction)
+  private
+
+    FURL: TdsdParam;
+    FData: TdsdParam;
+
+    FIdHTTP: TIdHTTP;
+    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+
+    FStream: TStringStream;
+
+  protected
+    function GetURL : String;
+
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // URL
+    property URL: String read GetURL;
+    property URLParam: TdsdParam read FURL write FURL;
+    // Order - заказа
+    property DataParam: TdsdParam read FData write FData;
+
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property QuestionBeforeExecute;
+    property ShortCut;
+    property SecondaryShortCuts;
+    property InfoAfterExecute;
+  end;
+
 procedure Register;
 
 implementation
@@ -1742,6 +1776,7 @@ begin
   RegisterActions('DSDLib', [TdsdMyIPAction], TdsdMyIPAction);
   RegisterActions('DSDLib', [TdsdVATNumberValidation], TdsdVATNumberValidation);
   RegisterActions('DSDLib', [TdsdLoadAgilis], TdsdLoadAgilis);
+  RegisterActions('DSDLib', [TdsdLoadFile_https], TdsdLoadFile_https);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -7752,6 +7787,7 @@ begin
   FreeAndNil(FOrder);
   FreeAndNil(FURL);
 
+  FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
   FreeAndNil(FIdHTTP);
   inherited;
 end;
@@ -7906,6 +7942,77 @@ begin
     end;
   except  on E: Exception do
      ShowMessage('Ошибка получения информации о заказе: ' + E.Message);
+  end;
+
+end;
+
+{ TdsdLoadFile_https }
+
+constructor TdsdLoadFile_https.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FIdHTTP := TIdHTTP.Create;
+  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
+  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
+
+  FStream := TStringStream.Create;
+
+  FURL := TdsdParam.Create(nil);
+  FURL.DataType := ftString;
+  FURL.Value := '';
+
+  FData := TdsdParam.Create(nil);
+  FData.DataType := ftWideString;
+  FData.Value := '';
+
+end;
+
+destructor TdsdLoadFile_https.Destroy;
+begin
+  FreeAndNil(FData);
+  FreeAndNil(FURL);
+
+  FreeAndNil(FStream);
+
+  FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
+  FreeAndNil(FIdHTTP);
+  inherited;
+end;
+
+function TdsdLoadFile_https.GetURL : String;
+begin
+  Result := FURL.Value;
+end;
+
+function TdsdLoadFile_https.LocalExecute: Boolean;
+var jsonObject, jsonItem : TJSONObject; jsonArray : TJSONArray;
+    S, KeyName : String;
+    nCount : Integer; I, J, L : Integer;
+begin
+  Result := False;
+  FData.Value := '';
+
+//  FIdHTTP.Request.ContentType := 'application/json';
+  FIdHTTP.Request.CustomHeaders.Clear;
+  FIdHTTP.Request.CustomHeaders.FoldLines := False;
+
+  try
+    FStream.Clear;
+    FIdHTTP.Get(TIdURI.URLEncode(FURL.Value), FStream);
+    if FIdHTTP.ResponseCode = 200 then
+    begin
+      if FStream.Size > 0 then
+      begin
+        FStream.Position := 0;
+        FData.Value := ConvertConvert(FStream.DataString);
+        Result := True;
+      end;
+    end;
+  except  on E: Exception do
+     ShowMessage('Ошибка получения файла: ' + E.Message);
   end;
 
 end;
