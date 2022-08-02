@@ -102,6 +102,8 @@ type
     DeferredOut: TcxGridDBColumn;
     actPrintOptima: TdsdPrintAction;
     bbPrintOptima: TdxBarButton;
+    MorionCode: TcxGridDBColumn;
+    actSetVisibleAction: TdsdSetVisibleAction;
   private
     { Private declarations }
   public

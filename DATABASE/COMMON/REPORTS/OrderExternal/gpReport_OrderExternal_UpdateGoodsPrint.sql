@@ -271,13 +271,20 @@ BEGIN
                              * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
                               ) AS AmountWeight
                               -- Резервы
-                            ,  (tmpMI_Child.Amount_Weight)       AS AmountWeight_child_one -- с Остатка
-                            ,  (tmpMI_Child.AmountSecond_Weight) AS AmountWeight_child_sec -- с Прихода
-                            ,  (tmpMI_Child.Amount_all_Weight)   AS AmountWeight_child     -- Итого
+                            , (tmpMI_Child.Amount_Weight)       AS AmountWeight_child_one -- с Остатка
+                            , (tmpMI_Child.AmountSecond_Weight) AS AmountWeight_child_sec -- с Прихода
+                            , (tmpMI_Child.Amount_all_Weight)   AS AmountWeight_child     -- Итого
 
-                            ,  (tmpMI_Child.Amount_sh)       AS AmountSh_child_one -- с Остатка
-                            ,  (tmpMI_Child.AmountSecond_sh) AS AmountSh_child_sec -- с Прихода
-                            ,  (tmpMI_Child.Amount_all_sh)   AS AmountSh_child     -- Итого
+                            , (tmpMI_Child.Amount_sh)       AS AmountSh_child_one -- с Остатка
+                            , (tmpMI_Child.AmountSecond_sh) AS AmountSh_child_sec -- с Прихода 
+                            --если пересорт и в резерве кг а в заявке шт, тогда нужно посчитать и резерв в шт
+                            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpMI_Child.Amount_all_sh,0) = 0
+                                   THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                             THEN tmpMI_Child.Amount_all_Weight/ObjectFloat_Weight.ValueData  
+                                             ELSE 0
+                                             END
+                                   ELSE COALESCE (tmpMI_Child.Amount_all_sh,0)
+                              END  AS AmountSh_child     -- Итого
 
                               -- Итого не хватает для резерва, вес
                             , (CASE WHEN Movement.isRemains = TRUE
@@ -290,7 +297,13 @@ BEGIN
                             , (CASE WHEN Movement.isRemains = TRUE
                                         THEN (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
                                            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END
-                                           - COALESCE (tmpMI_Child.Amount_all_sh, 0)
+                                           - COALESCE (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpMI_Child.Amount_all_sh,0) = 0
+                                                            THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                                                      THEN tmpMI_Child.Amount_all_Weight/ObjectFloat_Weight.ValueData 
+                                                                      ELSE 0
+                                                                      END
+                                                            ELSE COALESCE (tmpMI_Child.Amount_all_sh,0)
+                                                       END, 0)
                                         ELSE 0
                                END) AS AmountSh_diff
                               

@@ -95,27 +95,27 @@ BEGIN
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
                 
-                , 0              AS InfoMoneyId
-                , 0              AS InfoMoneyCode
-                , '' ::TVarChar  AS InfoMoneyName
+                , 0              AS Object_InfoMoneyId
+                , 0              AS Object_InfoMoneyCode
+                , '' ::TVarChar  AS Object_InfoMoneyName
 
-                , 0              AS CommentInfoMoneyId
-                , 0              AS CommentInfoMoneyCode
-                , '' ::TVarChar  AS CommentInfoMoneyName
+                , 0              AS Object_CommentInfoMoneyId
+                , 0              AS Object_CommentInfoMoneyCode
+                , '' ::TVarChar  AS Object_CommentInfoMoneyName
 
-                , NULL           :: TDateTime AS DateStart
-                , NULL           :: TDateTime AS DateEnd
-                , 0              :: TFloat    AS Amount
-                , 0              :: TFloat    AS Price
-                , 0              :: TFloat    AS Area 
+                , NULL                       :: TDateTime AS DateStart
+                , NULL                       :: TDateTime AS DateEnd
+                , 0                          :: TFloat    AS Amount
+                , 0                          :: TFloat    AS Price
+                , 0                          :: TFloat    AS Area 
 
-                , NULL           :: TDateTime AS DateStart_Main
-                , NULL           :: TDateTime AS DateEnd_Main
-                , 0              :: TFloat    AS Amount_Main
-                , 0              :: TFloat    AS Price_Main
-                , 0              :: TFloat    AS Area_Main
-                                                    
-                , False          :: Boolean   AS isErased
+                , NULL                       :: TDateTime AS DateStart_Main
+                , NULL                       :: TDateTime AS DateEnd_Main
+                , 0                          :: TFloat    AS Amount_Main
+                , 0                          :: TFloat    AS Price_Main
+                , 0                          :: TFloat    AS Area_Main
+                                                                
+                , False                      :: Boolean   AS isErased
    
            FROM tmpUnit
                 LEFT JOIN tmpMI ON tmpMI.UnitId = tmpUnit.UnitId 
@@ -136,13 +136,13 @@ BEGIN
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
                 
-                , Object_InfoMoney.Id           AS InfoMoneyId
-                , Object_InfoMoney.ObjectCode   AS InfoMoneyCode
-                , Object_InfoMoney.ValueData    AS InfoMoneyName
+                , Object_InfoMoney.Id           AS Object_InfoMoneyId
+                , Object_InfoMoney.ObjectCode   AS Object_InfoMoneyCode
+                , Object_InfoMoney.ValueData    AS Object_InfoMoneyName
 
-                , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
-                , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
-                , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
+                , Object_CommentInfoMoney.Id         AS Object_CommentInfoMoneyId
+                , Object_CommentInfoMoney.ObjectCode AS Object_CommentInfoMoneyCode
+                , Object_CommentInfoMoney.ValueData  AS Object_CommentInfoMoneyName
 
                 , tmpMI.DateStart            :: TDateTime AS DateStart
                 , tmpMI.DateEnd              :: TDateTime AS DateEnd
@@ -223,13 +223,13 @@ BEGIN
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
                 
-                , Object_InfoMoney.Id         AS InfoMoneyId
-                , Object_InfoMoney.ObjectCode AS InfoMoneyCode
-                , Object_InfoMoney.ValueData  AS InfoMoneyName
+                , Object_InfoMoney.Id         AS Object_InfoMoneyId
+                , Object_InfoMoney.ObjectCode AS Object_InfoMoneyCode
+                , Object_InfoMoney.ValueData  AS Object_InfoMoneyName
 
-                , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
-                , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
-                , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
+                , Object_CommentInfoMoney.Id         AS Object_CommentInfoMoneyId
+                , Object_CommentInfoMoney.ObjectCode AS Object_CommentInfoMoneyCode
+                , Object_CommentInfoMoney.ValueData  AS Object_CommentInfoMoneyName
 
                 , tmpMI.DateStart            :: TDateTime AS DateStart
                 , tmpMI.DateEnd              :: TDateTime AS DateEnd
@@ -245,13 +245,15 @@ BEGIN
 
                 , tmpMI.isErased
            FROM tmpMI
-                
+                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI.UnitId
+                LEFT JOIN Object AS Object_CommentInfoMoney ON Object_CommentInfoMoney.Id = tmpMI.CommentInfoMoneyId
+                LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpMI.InfoMoneyId
 
                 LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull() 
 
-                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate := tmpMI.DateStart ::TDateTime
+                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate := tmpMI.DateEnd ::TDateTime
                                                                   , inUnitId := tmpMI.UnitId
                                                                   , inSession := inSession
                                                                    ) AS tmpMI_Main

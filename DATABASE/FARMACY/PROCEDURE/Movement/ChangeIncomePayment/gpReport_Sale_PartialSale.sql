@@ -96,6 +96,24 @@ BEGIN
                                AND MovementItem_Income.DescId     = zc_MI_Master()
                                AND MovementItem_Income.MovementId = Movement.MovementId
                                AND MovementItem_Income.isErased   = FALSE
+                             UNION ALL
+                             SELECT MovementItem_Income.MovementId  AS MovementId
+                                  , MovementItem_Income.Id          AS MovementItemId
+                                  , MovementItem_Income.ObjectId    AS GoodsId
+                                  , MIFloat_Price.ValueData         AS Price
+                                  , MovementItem_Income.Amount      AS AmountInIncome
+                                  , 9526799                         AS FromId
+                                  , 13310756                        AS JuridicalId
+                             FROM MovementItem AS MovementItem_Income
+
+                                    LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                                ON MIFloat_Price.MovementItemId = MovementItem_Income.Id
+                                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                             WHERE MovementItem_Income.MovementId = 28398973
+                               AND MovementItem_Income.DescId     = zc_MI_Master()
+                               AND MovementItem_Income.isErased   = FALSE
+                               AND (13310756 = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                              ),
         tmpContainerRemainsAll AS ( --Остатки по приходу
                              SELECT Object_PartionMovementItem.ObjectCode                             AS MovementItemId
@@ -189,4 +207,4 @@ $BODY$
 -- тест
 -- 
                               
-select * from gpReport_Sale_PartialSale(inStartDate := ('04.03.2022')::TDateTime , inEndDate := ('04.03.2022')::TDateTime , inJuridicalId := 0 , inFromId := 15033411 ,  inSession := '3');
+select * from gpReport_Sale_PartialSale(inStartDate := ('01.07.2022')::TDateTime , inEndDate := ('31.07.2022')::TDateTime , inJuridicalId := 0 , inFromId := 9526799 ,  inSession := '3');

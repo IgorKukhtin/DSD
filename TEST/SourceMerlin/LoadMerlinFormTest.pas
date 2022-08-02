@@ -344,7 +344,11 @@ end;
 
 procedure TLoadFormTest.LoadServiceItemMovementFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddJournalChoiceForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddMovementForm');
 
@@ -352,6 +356,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemJournalChoiceForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemUpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemUpdateForm');

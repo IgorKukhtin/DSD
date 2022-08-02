@@ -90,9 +90,13 @@ type
     miCurrencyJournal: TMenuItem;
     N10: TMenuItem;
     actServiceItemJournal: TdsdOpenForm;
-    N3: TMenuItem;
+    miServiceItemJournal: TMenuItem;
     actServiceItemUpdate: TdsdOpenForm;
     miServiceItemUpdate: TMenuItem;
+    actServiceItemAddJournal: TdsdOpenForm;
+    miServiceItemAddJournal: TMenuItem;
+    actServiceItemAddJournalChoice: TdsdOpenForm;
+    miServiceItemAddJournalChoice: TMenuItem;
   private
     { Private declarations }
   public
