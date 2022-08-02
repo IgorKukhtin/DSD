@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnOut(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ParentId integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MorionCode integer
              , Amount TFloat
              , Price TFloat
              , Summ TFloat
@@ -59,8 +59,9 @@ BEGIN
             tmpIncome AS ( --Остатки по приходу
                            SELECT MovementItem_Income.Id          AS Id
                                 , MovementItem_Income.ObjectId    AS GoodsId
-                                , Object_Goods.ObjectCode         AS GoodsCode
-                                , Object_Goods.ValueData          AS GoodsName
+                                , Object_Goods.ObjectCode  AS GoodsCode
+                                , Object_Goods.Name   AS GoodsName
+                                , Object_Goods.MorionCode
                                 , MIFloat_Price.ValueData         AS Price
                                 , MovementItem_Income.Amount      AS AmountInIncome
                  
@@ -68,7 +69,9 @@ BEGIN
                                 , MIString_PartionGoods.ValueData            AS PartionGoods
                                 , ObjectString_Goods_Maker.ValueData         AS MakerName
                            FROM MovementItem AS MovementItem_Income
-                                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem_Income.ObjectId
+                                 LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem_Income.ObjectId
+                                 LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+
 
                                   LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                                              ON MIDate_ExpirationDate.MovementItemId = MovementItem_Income.Id
@@ -106,6 +109,7 @@ BEGIN
                             , tmpIncome.GoodsId
                             , tmpIncome.GoodsCode
                             , tmpIncome.GoodsName
+                            , tmpIncome.MorionCode
                             , tmpIncome.Price
                             , tmpIncome.AmountInIncome
                             , tmpIncome.ExpirationDate
@@ -152,10 +156,11 @@ BEGIN
                                , MI_ReturnOut.Id
                                , MI_ReturnOut.ParentId
                                , MI_ReturnOut.ObjectId       AS GoodsId
-                               , Object_Goods.ObjectCode     AS GoodsCode
-                               , Object_Goods.ValueData      AS GoodsName
-                               , MI_ReturnOut.Amount         AS Amount
-                               , MIFloat_Price.ValueData     AS Price
+                               , Object_Goods.ObjectCode  AS GoodsCode
+                               , Object_Goods.Name   AS GoodsName
+                               , Object_Goods.MorionCode
+                               , MI_ReturnOut.Amount
+                               , MIFloat_Price.ValueData  AS Price
                                , (((COALESCE (MI_ReturnOut.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
                                , MI_ReturnOut.isErased
                           FROM Movement AS Movement_ReturnOut
@@ -163,7 +168,9 @@ BEGIN
                                                        ON MI_ReturnOut.MovementId = Movement_ReturnOut.Id
                                                       AND (MI_ReturnOut.isErased  = FALSE OR inIsErased = TRUE)
                                                       AND MI_ReturnOut.DescId     = zc_MI_Master()
-                               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_ReturnOut.ObjectId
+                               LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MI_ReturnOut.ObjectId
+                               LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                               
 
                                LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                            ON MIFloat_Price.MovementItemId = MI_ReturnOut.Id
@@ -205,6 +212,7 @@ BEGIN
               , COALESCE(MovementItem_ReturnOut.GoodsId, MovementItem_Income.GoodsId)     AS GoodsId
               , COALESCE(MovementItem_ReturnOut.GoodsCode, MovementItem_Income.GoodsCode) AS GoodsCode
               , COALESCE(MovementItem_ReturnOut.GoodsName, MovementItem_Income.GoodsName) AS GoodsName
+              , COALESCE(MovementItem_ReturnOut.MorionCode, MovementItem_Income.MorionCode) AS MorionCode
               , MovementItem_ReturnOut.Amount                                             AS Amount
               , COALESCE(MovementItem_ReturnOut.Price, MovementItem_Income.Price)         AS Price
               , MovementItem_ReturnOut.AmountSumm                                         AS AmountSumm
@@ -302,7 +310,8 @@ BEGIN
                                , MI_ReturnOut.ParentId
                                , MI_ReturnOut.ObjectId    AS GoodsId
                                , Object_Goods.ObjectCode  AS GoodsCode
-                               , Object_Goods.ValueData   AS GoodsName
+                               , Object_Goods.Name   AS GoodsName
+                               , Object_Goods.MorionCode
                                , MI_ReturnOut.Amount
                                , MIFloat_Price.ValueData  AS Price
                                , (((COALESCE (MI_ReturnOut.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
@@ -312,7 +321,9 @@ BEGIN
                                                        ON MI_ReturnOut.MovementId = Movement_ReturnOut.Id
                                                       AND (MI_ReturnOut.isErased  = FALSE OR inIsErased = TRUE)
                                                       AND MI_ReturnOut.DescId     = zc_MI_Master()
-                               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_ReturnOut.ObjectId
+                               LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MI_ReturnOut.ObjectId
+                               LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                               
                         
                                LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                            ON MIFloat_Price.MovementItemId = MI_ReturnOut.Id
@@ -386,6 +397,7 @@ BEGIN
               , MovementItem.GoodsId
               , MovementItem.GoodsCode
               , MovementItem.GoodsName
+              , MovementItem.MorionCode
               , MovementItem.Amount
               , MovementItem.Price
               , MovementItem.AmountSumm
@@ -437,3 +449,5 @@ $BODY$
 -- SELECT * FROM gpSelect_MovementItem_ReturnOut (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
 --select * from gpSelect_MovementItem_ReturnOut(inMovementId := 885245 , inShowAll := 'TRUE' , inIsErased := 'False' ,  inSession := '3');
 --select * from gpSelect_MovementItem_ReturnOut(inMovementId := 8086637 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_ReturnOut(inMovementId := 27709192 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

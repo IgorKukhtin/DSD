@@ -262,10 +262,10 @@ BEGIN
                               , MovementLinkObject_From_Income.ObjectId :: Integer AS JuridicalId_Income
                               , tmp.MovementDescId
                          FROM tmpMIContainer AS tmp
-                              INNER JOIN MovementItem AS MI_Income ON MI_Income.Id = tmp.MovementItemId_Income
-                              INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = MI_Income.MovementId
+                              LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = tmp.MovementItemId_Income
+                              LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MI_Income.MovementId
                               -- Поставшик, для элемента прихода от поставщика (или NULL)
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_From_Income
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Income
                                                             ON MovementLinkObject_From_Income.MovementId = Movement_Income.Id 
                                                            AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
                          ) 

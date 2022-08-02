@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer
              , ActualAddressId Integer, ActualAddressName TVarChar 
              , AdjustingOurDate TDateTime
              , Comment TVarChar
+             , isShowMorion Boolean
 )
 AS
 $BODY$
@@ -69,6 +70,7 @@ BEGIN
              , CAST('' as TVarChar)                             AS ActualAddressName
              , NULL::TDateTime                                  AS AdjustingOurDate
              , CAST('' as TVarChar)                             AS Comment
+             , False                                            AS isShowMorion
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -103,6 +105,7 @@ BEGIN
            , Movement_ReturnOut_View.ActualAddressName
            , Movement_ReturnOut_View.AdjustingOurDate
            , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
+           , Movement_ReturnOut_View.ToId = 183317 AS isShowMorion
 
        FROM Movement_ReturnOut_View       
            LEFT JOIN MovementString AS MovementString_Comment
@@ -132,3 +135,5 @@ ALTER FUNCTION gpGet_Movement_ReturnOut (Integer, TVarChar) OWNER TO postgres;
 
 -- тест
 -- select * from gpGet_Movement_ReturnOut(inMovementId := 7753659 ,  inSession := '3');
+
+select * from gpGet_Movement_ReturnOut(inMovementId := 28125489 ,  inSession := '3');

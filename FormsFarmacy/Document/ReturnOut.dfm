@@ -136,6 +136,13 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 45
           end
+          object MorionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1084#1086#1088#1080#1086#1085#1072
+            DataBinding.FieldName = 'MorionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
@@ -647,6 +654,7 @@ inherited ReturnOutForm: TReturnOutForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      AfterAction = actSetVisibleAction
       RefreshOnTabSetChanges = True
     end
     object actPrintTTN: TdsdPrintAction [8]
@@ -973,6 +981,20 @@ inherited ReturnOutForm: TReturnOutForm
       Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
       ImageIndex = 52
     end
+    object actSetVisibleAction: TdsdSetVisibleAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetVisibleAction'
+      SetVisibleParams = <
+        item
+          Component = MorionCode
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isShowMorion'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1293,6 +1315,12 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edAdjustingOurDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isShowMorion'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 416
@@ -1509,6 +1537,14 @@ inherited ReturnOutForm: TReturnOutForm
         Value = Null
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isShowMorion'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isShowMorion'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216
