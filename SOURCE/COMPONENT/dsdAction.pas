@@ -7987,6 +7987,38 @@ begin
   Result := FURL.Value;
 end;
 
+function PADR(Src: string; Lg: Integer): string;
+begin
+  Result := Src;
+  while Length(Result) < Lg do
+    Result := Result + ' ';
+end;
+
+function GETS(Src: string): string;
+var i, ii: integer;
+begin
+  Result := '';
+  ii:=0;
+  // нашли последний символ /
+  i:=1;
+  while i <= Length(Src) do begin
+    if Src[i] = '/' then ii:= i;
+    i := i + 1;
+  end;
+  // если нашли
+  if (ii > 0) and (ii < Length(Src))
+  then
+     // переносим
+     for i:= ii+1 to Length(Src) do Result:= Result + Src[i]
+  else begin
+    Result := src;
+    ShowMessage ('Сохранится с таким названием <'+Result+'>. А потом откроется?');
+  end;
+
+  //ShowMessage ('Сохранится с таким названием <'+Result+'>. ок?');
+
+end;
+
 function TdsdLoadFile_https.LocalExecute: Boolean;
 var jsonObject, jsonItem : TJSONObject; jsonArray : TJSONArray;
     S, KeyName : String;
@@ -8007,8 +8039,16 @@ begin
       if FStream.Size > 0 then
       begin
         FStream.Position := 0;
-        FData.Value := ConvertConvert(FStream.DataString);
+        FData.Value := ConvertConvert(PADR(GETS(FURL.Value), 255) + FStream.DataString);
+
+        //FData.Value := FStream.DataString;
         Result := True;
+
+        //FStream.Position := 0;
+        //if Pos('.png', FURL.Value) > 0
+        //then FStream.SaveToFile('test.png')
+        //else FStream.SaveToFile('test.pdf');
+
       end;
     end;
   except  on E: Exception do
