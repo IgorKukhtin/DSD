@@ -15,11 +15,34 @@ DECLARE
   lStartDate TDateTime;
   lDescId Integer;
   lObjectId Integer;
+  vbId_find Integer;
 BEGIN
    -- параметры 
    SELECT EndDate, StartDate, DescId, ObjectId 
           INTO lEndDate, lStartDate, lDescId, lObjectId
    FROM ObjectHistory WHERE Id = inId;
+
+   -- нашли ПЕРВЫЙ ранний элемент, потом поставим ему EndDate = EndDate удаляемого элемента
+   vbId_find:= (SELECT Id FROM ObjectHistory 
+                WHERE ObjectHistory.DescId = lDescId 
+                  AND ObjectHistory.ObjectId = lObjectId
+                  AND ObjectHistory.StartDate < lStartDate
+                ORDER BY ObjectHistory.StartDate DESC
+                LIMIT 1);
+   -- проверка
+   IF COALESCE (vbId_find, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Элемент не найден.';
+   END IF;
+
+
+   -- сохранили протокол - "удаление"
+   PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData, TRUE, TRUE)
+   FROM ObjectHistory
+        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                     ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
+                                    AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+   WHERE ObjectHistory.Id = inId;
 
    -- удаление
    DELETE FROM ObjectHistoryLink WHERE ObjectHistoryId = inId;
@@ -50,16 +73,6 @@ BEGIN
                                AND ObjectHistory.StartDate < lStartDate
                              ORDER BY ObjectHistory.StartDate DESC
                              LIMIT 1);
-
-   -- сохранили протокол - "удаление"
-   PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData, TRUE, TRUE)
-   FROM ObjectHistory
-        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
-                                     ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
-                                    AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-   WHERE ObjectHistory.Id = inId;
-
-
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

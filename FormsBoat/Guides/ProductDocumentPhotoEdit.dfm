@@ -295,7 +295,7 @@
     Left = 12
     Top = 76
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 182
   end
   object cxLabel19: TcxLabel
@@ -597,7 +597,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 272
+    Left = 288
+    Top = 40
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Product'
@@ -708,7 +709,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inProductdocumentdata'
+        Name = 'inProductDocumentData'
         Value = '789C535018D10000F1E01FE1'
         Component = Document
         ComponentItem = 'Data'
@@ -893,7 +894,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inProductPhotodata'
+        Name = 'inProductPhotoData'
         Value = '789C535018D10000F1E01FE1'
         Component = Photo
         ComponentItem = 'Data'
@@ -985,7 +986,6 @@
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1086#1090#1086
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1086#1090#1086
       ImageIndex = 4
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object DocumentRefresh: TdsdDataSetRefresh
@@ -1002,7 +1002,6 @@
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
       ImageIndex = 4
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object PhotoOpenAction: TDocumentOpenAction
@@ -1017,8 +1016,8 @@
       Category = 'DSDLib'
       MoveParams = <>
       Document = Document
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1080
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1080
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 60
     end
     object MultiActionInsertPhoto: TMultiAction
@@ -1045,8 +1044,8 @@
         item
           Action = DocumentRefresh
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 0
     end
     object actDeletePhoto: TdsdExecStoredProc
@@ -1067,7 +1066,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1060#1086#1090#1086
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1060#1086#1090#1086
       ImageIndex = 2
-      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1060#1086#1090#1086'?'
     end
     object actDeleteDocument: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1081,10 +1080,10 @@
         item
           StoredProc = spDocumentSelect
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 2
-      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090'?'
     end
     object spInserUpdateGoods: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1226,6 +1225,7 @@
       Enabled = False
       Hint = '   '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbOpenDocument: TdxBarButton
       Action = DocumentOpenAction

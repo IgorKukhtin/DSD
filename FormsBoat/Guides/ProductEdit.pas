@@ -137,7 +137,7 @@ type
     actLoadAgilis: TdsdLoadAgilis;
     ClientDataSet: TClientDataSet;
     DS: TDataSource;
-    mactLoadAgilis: TMultiAction;
+    mactLoadAgilis_all: TMultiAction;
     mactInsertUpdate_load: TMultiAction;
     actInsertUpdate_load: TdsdExecStoredProc;
     spInsertUpdate_load: TdsdStoredProc;
@@ -145,6 +145,18 @@ type
     edOperPrice_load: TcxCurrencyEdit;
     edTransportSumm_load: TcxCurrencyEdit;
     cxLabel34: TcxLabel;
+    actLoadFile_Doc: TdsdLoadFile_https;
+    actLoadFile_Photo: TdsdLoadFile_https;
+    spInsertUpdate_ProductDocument: TdsdStoredProc;
+    mactLoad_Doc: TMultiAction;
+    actInsertUpdate_Doc: TdsdExecStoredProc;
+    actInsertUpdate_Photo: TdsdExecStoredProc;
+    spInsertUpdate_ProductPhoto: TdsdStoredProc;
+    mactLoad_Photo: TMultiAction;
+    spGet_ProductDocument: TdsdStoredProc;
+    spGet_ProductPhoto: TdsdStoredProc;
+    actGet_ProductPhoto: TdsdExecStoredProc;
+    actGet_ProductDocument: TdsdExecStoredProc;
   private
     { Private declarations }
   public

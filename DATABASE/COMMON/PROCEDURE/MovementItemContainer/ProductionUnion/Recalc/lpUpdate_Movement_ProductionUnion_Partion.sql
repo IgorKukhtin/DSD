@@ -38,53 +38,52 @@ BEGIN
 
      -- определяется документ Инвентаризация, т.к. надо её учесть + распределить "Ковбаси сирокопчені"
      vbMovementId_inv:= (SELECT Movement.Id
-                         FROM
-                        (SELECT Movement.Id
-                         FROM Movement
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                            ON MovementLinkObject_From.MovementId = Movement.Id
-                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                           AND MovementLinkObject_From.ObjectId = inFromId
-                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                     AND MovementItem.isErased = FALSE
-                                                     AND (MovementItem.Amount <> 0 OR inFromId = 8020711) -- ЦЕХ колбаса + деликатесы (Ирна)
-                              INNER JOIN ObjectLink ON ObjectLink.ObjectId = MovementItem.ObjectId
-                                                   AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
-                              INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink.ChildObjectId
-                                                                                AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
-                                                                                                                            , zc_Enum_InfoMoneyDestination_30100() -- Продукция
-                                                                                                                             )
-                         WHERE Movement.OperDate = DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
-                           AND Movement.StatusId <> zc_Enum_Status_Erased()
-                           AND Movement.DescId = zc_Movement_Inventory()
-                           AND (EXTRACT (MONTH FROM Movement.OperDate) < EXTRACT (MONTH FROM CURRENT_DATE)
-                             OR EXTRACT (YEAR FROM Movement.OperDate)  < EXTRACT (YEAR FROM CURRENT_DATE)
-                               )
-                        UNION
-                         SELECT Movement.Id
-                         FROM Movement
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                            ON MovementLinkObject_From.MovementId = Movement.Id
-                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                           AND MovementLinkObject_From.ObjectId = inFromId
-                                                           -- !!!захардкодил!!!
-                                                           -- AND inFromId = 951601 -- ЦЕХ упаковки мясо
-                                                           AND inFromId = 981821 -- ЦЕХ шприц. мясо
-                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                     AND MovementItem.isErased = FALSE
-                                                     AND MovementItem.Amount <> 0
-                              INNER JOIN ObjectLink ON ObjectLink.ObjectId = MovementItem.ObjectId
-                                                   AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
-                              INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink.ChildObjectId
-                                                                                AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
-                         WHERE Movement.OperDate = DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
-                           AND Movement.StatusId <> zc_Enum_Status_Erased()
-                           AND Movement.DescId = zc_Movement_Inventory()
-                           AND (EXTRACT (MONTH FROM Movement.OperDate) < EXTRACT (MONTH FROM CURRENT_DATE)
-                             OR EXTRACT (YEAR FROM Movement.OperDate)  < EXTRACT (YEAR FROM CURRENT_DATE)
-                               )
-                        ) AS Movement
-                         --LIMIT 1
+                         FROM (SELECT Movement.Id
+                               FROM Movement
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                  ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                 AND MovementLinkObject_From.ObjectId = inFromId
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.isErased = FALSE
+                                                           AND (MovementItem.Amount <> 0) -- OR inFromId = 8020711 -- ЦЕХ колбаса + деликатесы (Ирна)
+                                    INNER JOIN ObjectLink ON ObjectLink.ObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                    INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink.ChildObjectId
+                                                                                      AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                                                                                  , zc_Enum_InfoMoneyDestination_30100() -- Продукция
+                                                                                                                                   )
+                               WHERE Movement.OperDate = DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 AND Movement.DescId = zc_Movement_Inventory()
+                                 AND (EXTRACT (MONTH FROM Movement.OperDate) < EXTRACT (MONTH FROM CURRENT_DATE)
+                                   OR EXTRACT (YEAR FROM Movement.OperDate)  < EXTRACT (YEAR FROM CURRENT_DATE)
+                                     )
+                              UNION
+                               SELECT Movement.Id
+                               FROM Movement
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                  ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                 AND MovementLinkObject_From.ObjectId = inFromId
+                                                                 -- !!!захардкодил!!!
+                                                                 -- AND inFromId = 951601 -- ЦЕХ упаковки мясо
+                                                                 AND inFromId = 981821 -- ЦЕХ шприц. мясо
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.isErased = FALSE
+                                                           AND MovementItem.Amount <> 0
+                                    INNER JOIN ObjectLink ON ObjectLink.ObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                    INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink.ChildObjectId
+                                                                                      AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                               WHERE Movement.OperDate = DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 AND Movement.DescId = zc_Movement_Inventory()
+                                 AND (EXTRACT (MONTH FROM Movement.OperDate) < EXTRACT (MONTH FROM CURRENT_DATE)
+                                   OR EXTRACT (YEAR FROM Movement.OperDate)  < EXTRACT (YEAR FROM CURRENT_DATE)
+                                     )
+                              ) AS Movement
+                               --LIMIT 1
                         );
 
 
@@ -103,8 +102,8 @@ BEGIN
 
      -- Приходы ГП с пр-ва на Склад + Упаковка Мяса
      INSERT INTO _tmpItem_GP (MovementId, MovementItemId_gp, GoodsId, OperCount)
-             -- !!!Товары временно захардкодил: Ковбаси сирокопчені!!!
-        WITH tmpGoodsCK AS (SELECT ObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst() AND ObjectLink.ChildObjectId = 340591 AND vbMovementId_inv IS NULL)
+             -- !!!Товары временно захардкодил: Ковбаси сирокопчені!!! - без ЦЕХ колбасный (Ирна)
+        WITH tmpGoodsCK AS (SELECT ObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst() AND ObjectLink.ChildObjectId = 340591 AND vbMovementId_inv IS NULL /*AND inFromId NOT IN (8020711)*/)
            , tmpUnitTo AS (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS tmp)
         SELECT MIContainer.MovementId
              , MIContainer.MovementItemId           AS MovementItemId_gp
@@ -156,10 +155,9 @@ BEGIN
                                     AND MovementItem.ParentId   = _tmpItem_GP.MovementItemId_gp
                                     AND MovementItem.DescId     = zc_MI_Child()
                                     AND MovementItem.isErased   = FALSE
-             INNER JOIN MovementItemBoolean AS MIBoolean_isAuto
-                                            ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
-                                           AND MIBoolean_isAuto.DescId     = zc_MIBoolean_isAuto()
-                                           AND MIBoolean_isAuto.ValueData = TRUE -- !!! только если сформирован пользователем zc_Enum_Process_Auto_PartionDate!!!
+             LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                           ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                          AND MIBoolean_isAuto.DescId     = zc_MIBoolean_isAuto()
              INNER JOIN MovementItemContainer AS MIContainer
                                               ON MIContainer.MovementId = _tmpItem_GP.MovementId
                                              AND MIContainer.MovementItemId = MovementItem.Id
@@ -173,7 +171,12 @@ BEGIN
              LEFT JOIN tmpMIGoods ON tmpMIGoods.GoodsId = _tmpItem_GP.GoodsId
         WHERE (CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- !!!ПФ(ГП)!!!
             OR _tmpItem_GP.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
-              );
+              )
+         AND (MIBoolean_isAuto.ValueData = TRUE -- !!! только если сформирован пользователем zc_Enum_Process_Auto_PartionDate!!!
+         --OR inFromId IN (8020711)             -- !!! ЦЕХ колбасный (Ирна)
+             )
+            ;
+            
 
 
      -- Производство + Остатки партий, их и будем распределять
@@ -514,7 +517,7 @@ END;$BODY$
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2017', inEndDate:= '20.07.2017', inFromId:=8447,   inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный         + Склад База ГП
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.02.2017', inEndDate:= '13.02.2017', inFromId:=951601, inToId:=8439, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ упаковки мясо + Участок мясного сырья
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.03.2017', inEndDate:= '02.03.2017', inFromId:=981821, inToId:=951601, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ шприц. мясо + ЦЕХ упаковки мясо
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '30.05.2022', inEndDate:= '30.05.2022', inFromId:=8020711, inToId:=8020714, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбаса + деликатесы (Ирна) + Склад База ГП (Ирна)
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '04.07.2022', inEndDate:= '04.07.2022', inFromId:=8020711, inToId:=8020714, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбаса + деликатесы (Ирна) + Склад База ГП (Ирна)
 
 
 -- where ContainerId = 628180

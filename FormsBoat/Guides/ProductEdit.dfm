@@ -581,8 +581,8 @@ object ProductEditForm: TProductEditForm
     Top = 485
     Width = 106
     Height = 25
-    Action = mactLoadAgilis
-    TabOrder = 76
+    Action = mactLoadAgilis_all
+    TabOrder = 73
   end
   object cxLabel33: TcxLabel
     Left = 419
@@ -594,7 +594,7 @@ object ProductEditForm: TProductEditForm
     Top = 487
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 78
+    TabOrder = 75
     Width = 79
   end
   object edTransportSumm_load: TcxCurrencyEdit
@@ -795,7 +795,7 @@ object ProductEditForm: TProductEditForm
       ImageIndex = 13
       Status = mtDelete
     end
-    object mactLoadAgilis: TMultiAction
+    object mactLoadAgilis_all: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -809,10 +809,16 @@ object ProductEditForm: TProductEditForm
           Action = actDataSetRefresh
         end
         item
+          Action = mactLoad_Doc
+        end
+        item
+          Action = mactLoad_Photo
+        end
+        item
           Action = actGetCIN
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089' '#1089#1072#1081#1090#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1082#1072#1079#1072' '#1082#1083#1080#1077#1085#1090#1072' '#1089' '#1089#1072#1081#1090#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#1089' '#1089#1072#1081#1090#1072
     end
     object actLoadAgilis: TdsdLoadAgilis
       Category = 'DSDLib'
@@ -860,6 +866,114 @@ object ProductEditForm: TProductEditForm
           StoredProc = spInsertUpdate_load
         end>
       Caption = 'actInsertUpdate_load'
+    end
+    object mactLoad_Doc: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_ProductDocument
+        end
+        item
+          Action = actLoadFile_Doc
+        end
+        item
+          Action = actInsertUpdate_Doc
+        end>
+      Caption = 'mactLoad_Doc'
+    end
+    object actGet_ProductDocument: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_ProductDocument
+      StoredProcList = <
+        item
+          StoredProc = spGet_ProductDocument
+        end>
+      Caption = 'actGet_ProductDocument'
+    end
+    object actLoadFile_Doc: TdsdLoadFile_https
+      Category = 'DSDLib'
+      MoveParams = <>
+      URLParam.Value = 
+        'https://agilis-jettenders.com/constructor-pdf/agilis-configurati' +
+        'on-'
+      URLParam.Component = FormParams
+      URLParam.ComponentItem = 'inUrl_Doc'
+      URLParam.DataType = ftString
+      URLParam.MultiSelectSeparator = ','
+      DataParam.Value = ''
+      DataParam.Component = FormParams
+      DataParam.ComponentItem = 'inDocument'
+      DataParam.DataType = ftWideString
+      DataParam.MultiSelectSeparator = ','
+      Caption = 'actLoadFile_Doc'
+    end
+    object actInsertUpdate_Doc: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_ProductDocument
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_ProductDocument
+        end>
+      Caption = 'actInsertUpdate_Doc'
+    end
+    object mactLoad_Photo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_ProductPhoto
+        end
+        item
+          Action = actLoadFile_Photo
+        end
+        item
+          Action = actInsertUpdate_Photo
+        end>
+      Caption = 'mactLoad_Photo'
+    end
+    object actGet_ProductPhoto: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_ProductPhoto
+      StoredProcList = <
+        item
+          StoredProc = spGet_ProductPhoto
+        end>
+      Caption = 'actGet_ProductPhoto'
+    end
+    object actLoadFile_Photo: TdsdLoadFile_https
+      Category = 'DSDLib'
+      MoveParams = <>
+      URLParam.Value = 
+        'https://agilis-jettenders.com/constructor-images/order-construct' +
+        'or-'
+      URLParam.Component = FormParams
+      URLParam.ComponentItem = 'inUrl_Photo'
+      URLParam.DataType = ftString
+      URLParam.MultiSelectSeparator = ','
+      DataParam.Value = Null
+      DataParam.Component = FormParams
+      DataParam.ComponentItem = 'inPhoto'
+      DataParam.DataType = ftWideString
+      DataParam.MultiSelectSeparator = ','
+      Caption = 'actLoadFile_Photo'
+    end
+    object actInsertUpdate_Photo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_ProductPhoto
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_ProductPhoto
+        end>
+      Caption = 'actInsertUpdate_Photo'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -1104,6 +1218,27 @@ object ProductEditForm: TProductEditForm
         Name = 'inMovementId_Invoice'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocument'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhoto'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUrl_Doc'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUrl_Photo'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 96
@@ -2185,5 +2320,132 @@ object ProductEditForm: TProductEditForm
     PackSize = 1
     Left = 488
     Top = 408
+  end
+  object spInsertUpdate_ProductDocument: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ProductDocument'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductDocumentData'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inDocument'
+        DataType = ftBlob
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 328
+  end
+  object spInsertUpdate_ProductPhoto: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ProductPhoto'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhotoName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductPhotoData'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPhoto'
+        DataType = ftBlob
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 368
+  end
+  object spGet_ProductDocument: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_ProductDocument_https'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outHttps'
+        Component = FormParams
+        ComponentItem = 'inUrl_Doc'
+        DataType = ftBlob
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 272
+  end
+  object spGet_ProductPhoto: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_ProductPhoto_https'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outHttps'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inUrl_Photo'
+        DataType = ftBlob
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 216
   end
 end

@@ -3,13 +3,14 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProductDocument(Integer, TVarChar, Integer, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProductDocument(
- INOUT ioId                        Integer   , -- ключ объекта <Документ артикула>
-    IN inDocumentName              TVarChar  , -- Файл
-    IN inProductId                   Integer   , -- Артикул
-    IN inProductDocumentData         TBlob     , -- Тело документа 	
+ INOUT ioId                        Integer   , -- ключ объекта
+    IN inDocumentName              TVarChar  , -- 
+    IN inProductId                 Integer   , -- 
+    IN inProductDocumentData       TBlob     , -- Файл
     IN inSession                   TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -27,6 +28,23 @@ BEGIN
                                               );
    END IF;
    
+
+   -- если пусто
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (TRIM (inDocumentName), '') = '' 
+   THEN
+       -- попробуем найти
+       ioId:= (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.ChildObjectId = inProductId AND OL.DescId = zc_ObjectLink_ProductDocument_Product());
+       --
+     --inDocumentName:= 'https://agilis-jettenders.com/constructor-pdf/agilis-configuration-4754.pdf';
+       inDocumentName:= 'agilis-configuration-'
+                      || COALESCE ((SELECT Movement.InvNumber FROM MovementLinkObject AS MLO JOIN Movement ON Movement.Id = MLO.MovementId WHERE MLO.ObjectId = inProductId AND MLO.DescId = zc_MovementLinkObject_Product()
+                                   ), '???')
+                      || '.pdf'
+                        ;
+
+   END IF;
+
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ProductDocument(), 0, inDocumentName);
    

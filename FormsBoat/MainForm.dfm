@@ -388,7 +388,7 @@
     object actProdOptPattern: TdsdOpenForm [32]
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1064#1072#1073#1083#1086#1085' '#1054#1087#1094#1080#1081' ('#1051#1086#1076#1082#1072')'
+      Caption = #1064#1072#1073#1083#1086#1085' '#1054#1087#1094#1080#1081
       FormName = 'TProdOptPatternForm'
       FormNameParam.Value = 'TProdOptPatternForm'
       FormNameParam.DataType = ftString
@@ -643,7 +643,7 @@
     object actProduct: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' '#1051#1086#1076#1082#1080
+      Caption = '***'#1051#1086#1076#1082#1072' - '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       FormName = 'TProductForm'
       FormNameParam.Value = 'TProductForm'
       FormNameParam.DataType = ftString
@@ -996,7 +996,7 @@
     object actProdColorItems: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = 'Boat Structure'
+      Caption = '*'#1051#1086#1076#1082#1072' - '#1069#1083#1077#1084#1077#1085#1090#1099' Boat Structure'
       FormName = 'TProdColorItemsForm'
       FormNameParam.Value = 'TProdColorItemsForm'
       FormNameParam.DataType = ftString
@@ -1018,7 +1018,7 @@
     object actProdOptItems: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1069#1083#1077#1084#1077#1085#1090#1099' '#1054#1087#1094#1080#1081
+      Caption = '*'#1051#1086#1076#1082#1072' - '#1069#1083#1077#1084#1077#1085#1090#1099' '#1054#1087#1094#1080#1081
       FormName = 'TProdOptItemsForm'
       FormNameParam.Value = 'TProdOptItemsForm'
       FormNameParam.DataType = ftString
@@ -1196,18 +1196,30 @@
       object miProdEngine: TMenuItem
         Action = actProdEngine
       end
+      object miLine31_: TMenuItem
+        Caption = '-'
+      end
       object miProduct: TMenuItem
         Action = actProduct
       end
-      object miLine31_: TMenuItem
+      object miLine32_: TMenuItem
+        Caption = '-'
+      end
+      object miProdOptions: TMenuItem
+        Action = actProdOptions
+      end
+      object miMaterialOptions: TMenuItem
+        Action = actMaterialOptions
+      end
+      object miProdOptPattern: TMenuItem
+        Action = actProdOptPattern
+      end
+      object miLine33_: TMenuItem
         Caption = '-'
       end
       object miProdColorPattern: TMenuItem
         Action = actProdColorPattern
         Caption = 'Boat Structure'
-      end
-      object miColorPattern: TMenuItem
-        Action = actColorPattern
       end
       object miProdColorGroup: TMenuItem
         Action = actProdColorGroup
@@ -1216,25 +1228,17 @@
         Action = actProdColor
         Caption = 'Farbe'
       end
-      object miProdColorItems: TMenuItem
-        Action = actProdColorItems
-        Caption = #1069#1083#1077#1084#1077#1085#1090#1099' Boat Structure'
+      object miColorPattern: TMenuItem
+        Action = actColorPattern
       end
-      object miLine32_: TMenuItem
+      object miLine34_: TMenuItem
         Caption = '-'
       end
-      object miProdOptPattern: TMenuItem
-        Action = actProdOptPattern
-        Caption = #1064#1072#1073#1083#1086#1085#1099' '#1054#1087#1094#1080#1081
-      end
-      object miProdOptions: TMenuItem
-        Action = actProdOptions
+      object miProdColorItems: TMenuItem
+        Action = actProdColorItems
       end
       object miProdOptItems: TMenuItem
         Action = actProdOptItems
-      end
-      object miMaterialOptions: TMenuItem
-        Action = actMaterialOptions
       end
     end
     object miFinance: TMenuItem [3]

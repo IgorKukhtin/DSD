@@ -123,6 +123,9 @@ BEGIN
                         UNION
                          -- "ЦЕХ колбаса+дел-сы"
                          SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmpSelect
+                        UNION
+                         -- "ЦЕХ колбаса + деликатесы (Ирна)"
+                         SELECT 8020711 AS UnitId
                          )
          -- расходы п/ф ГП в разрезе ParentId - если они ушли на "переработку"
        , tmpMI_WorkProgress_oth AS

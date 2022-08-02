@@ -168,7 +168,7 @@ type
     miBoat: TMenuItem;
     miLine21_: TMenuItem;
     miProdColorItems: TMenuItem;
-    miLine32_: TMenuItem;
+    miLine33_: TMenuItem;
     miProdOptions: TMenuItem;
     miProdOptItems: TMenuItem;
     actProduct: TdsdOpenForm;
@@ -183,7 +183,7 @@ type
     actReceipt: TdsdOpenForm;
     miProduct: TMenuItem;
     miProdGroup: TMenuItem;
-    miLine31_: TMenuItem;
+    miLine32_: TMenuItem;
     miProdColorGroup: TMenuItem;
     miProdColor: TMenuItem;
     miBrand: TMenuItem;
@@ -254,6 +254,8 @@ type
     miReport_Movement_PriceList: TMenuItem;
     actMaterialOptions: TdsdOpenForm;
     miMaterialOptions: TMenuItem;
+    miLine31_: TMenuItem;
+    miLine34_: TMenuItem;
   private
     { Private declarations }
   public
