@@ -414,6 +414,8 @@ BEGIN
             , tmpResult1.CountDiff_B
             , tmpResult1.CountDiff_M
 
+            , CASE WHEN tmpResult1.CountDiff_B > 0.1 AND vbUserId=5 AND 1=0 THEN 25 WHEN tmpResult1.Amount_Order > 0 THEN tmpResult1.CountDiff_B / tmpResult1.Amount_Order * 100 WHEN tmpResult1.CountDiff_B <> 0 THEN 100 ELSE 0 END  :: TFloat AS CountDiff_B_tax
+
             , tmpResult1.WeightDiff_B
             , tmpResult1.WeightDiff_M
        FROM (SELECT tmpResult1.GoodsId

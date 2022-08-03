@@ -284,6 +284,9 @@ BEGIN
 
            , vbIsOrderByLine                            AS isOrderByLine
 
+             -- Розподільчий комплекс
+           , CASE WHEN Object_To.Id = 8459 THEN FALSE ELSE TRUE END :: Boolean AS isPage_1
+
        FROM tmpMovement_total
             LEFT JOIN Movement ON Movement.Id = tmpMovement_total.MovementId
                              
