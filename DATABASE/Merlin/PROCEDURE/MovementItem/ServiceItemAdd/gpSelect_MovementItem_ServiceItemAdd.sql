@@ -1,9 +1,12 @@
 -- Function: gpSelect_MovementItem_ServiceItemAdd()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItemAdd (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItemAdd (Integer, Integer, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ServiceItemAdd(
-    IN inMovementId       Integer      , -- ключ ƒокумента
+    IN inMovementId       Integer      , -- ключ ƒокумента 
+    IN inInfoMoneyId      Integer   ,
     IN inShowAll          Boolean      , --
     IN inIsErased         Boolean      , -- 
     IN inSession          TVarChar       -- сесси€ пользовател€
@@ -15,13 +18,16 @@ RETURNS TABLE (Id Integer
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
              
              , DateStart TDateTime, DateEnd TDateTime
-             , Amount TFloat, Price TFloat, Area TFloat
+             , NumYearStart Integer            --год старт
+             , NumYearEnd  Integer            --год енд
+             , NumStartDate  Integer          --номер мес€ца старт
+             , NumEndDate  Integer            --номер мес€ца енд
+             , MonthNameStart  TVarChar
+             , MonthNameEnd TVarChar
+             , Amount TFloat
              
-             , DateStart_Main TDateTime, DateEnd_Main TDateTime
+             , DateStart_Main TDateTime, DateEnd_Main TDateTime  
              , Amount_Main TFloat, Price_Main TFloat, Area_Main TFloat
-             
-             --, Amount_before TFloat, Price_before TFloat, Area_before TFloat
-             --, Amount_after TFloat, Price_after TFloat, Area_after TFloat 
              
              , isErased Boolean
               )
@@ -43,9 +49,7 @@ BEGIN
                               , MovementItem.ObjectId                  AS UnitId   
                               , MILinkObject_InfoMoney.ObjectId        AS InfoMoneyId
                               , MILinkObject_CommentInfoMoney.ObjectId AS CommentInfoMoneyId
-                              , MovementItem.Amount 
-                              , COALESCE (MIFloat_Price.ValueData, 0)  AS Price
-                              , COALESCE (MIFloat_Area.ValueData, 0)   AS Area    
+                              , MovementItem.Amount    
                               , COALESCE (MIDate_DateStart.ValueData, vbOperDate) AS DateStart 
                               , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) AS DateEnd
                               , MovementItem.isErased
@@ -53,14 +57,6 @@ BEGIN
                                JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = tmpIsErased.isErased
-
-                               LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-
-                               LEFT JOIN MovementItemFloat AS MIFloat_Area
-                                                           ON MIFloat_Area.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_Area.DescId = zc_MIFloat_Area()
 
                                LEFT JOIN MovementItemDate AS MIDate_DateStart
                                                           ON MIDate_DateStart.MovementItemId = MovementItem.Id
@@ -85,7 +81,7 @@ BEGIN
                            )
 
              , tmpMI_Main AS (SELECT *
-                              FROM gpSelect_MovementItem_ServiceItem_onDate(inOperDate := vbOperDate ::TDateTime, inUnitId:= 0, inSession := inSession)
+                              FROM gpSelect_MovementItem_ServiceItem_onDate(inOperDate := vbOperDate ::TDateTime, inUnitId:= 0, inInfoMoneyId:= inInfoMoneyId, inSession := inSession)
                               )
 
            -- результат
@@ -95,25 +91,31 @@ BEGIN
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
                 
-                , 0              AS Object_InfoMoneyId
-                , 0              AS Object_InfoMoneyCode
-                , '' ::TVarChar  AS Object_InfoMoneyName
+                , Object_InfoMoney.Id           AS InfoMoneyId
+                , Object_InfoMoney.ObjectCode   AS InfoMoneyCode
+                , Object_InfoMoney.ValueData    AS InfoMoneyName
 
-                , 0              AS Object_CommentInfoMoneyId
-                , 0              AS Object_CommentInfoMoneyCode
-                , '' ::TVarChar  AS Object_CommentInfoMoneyName
+                , 0              AS CommentInfoMoneyId
+                , 0              AS CommentInfoMoneyCode
+                , '' ::TVarChar  AS CommentInfoMoneyName
 
                 , NULL                       :: TDateTime AS DateStart
-                , NULL                       :: TDateTime AS DateEnd
-                , 0                          :: TFloat    AS Amount
-                , 0                          :: TFloat    AS Price
-                , 0                          :: TFloat    AS Area 
+                , NULL                       :: TDateTime AS DateEnd  
 
-                , NULL                       :: TDateTime AS DateStart_Main
-                , NULL                       :: TDateTime AS DateEnd_Main
-                , 0                          :: TFloat    AS Amount_Main
-                , 0                          :: TFloat    AS Price_Main
-                , 0                          :: TFloat    AS Area_Main
+                , 0  ::Integer  AS NumYearStart            --год старт
+                , 0  ::Integer  AS NumYearEnd              --год енд
+                , 0  ::Integer  AS NumStartDate            --номер мес€ца старт
+                , 0  ::Integer  AS NumEndDate              --номер мес€ца енд
+                , '' ::TVarChar AS MonthNameStart
+                , '' ::TVarChar AS MonthNameEnd 
+
+                , 0                          :: TFloat    AS Amount
+
+                , tmpMI_Main.DateStart       :: TDateTime AS DateStart_Main
+                , tmpMI_Main.DateEnd         :: TDateTime AS DateEnd_Main
+                , tmpMI_Main.Amount          :: TFloat    AS Amount_Main
+                , tmpMI_Main.Price           :: TFloat    AS Price_Main
+                , tmpMI_Main.Area            :: TFloat    AS Area_Main
                                                                 
                 , False                      :: Boolean   AS isErased
    
@@ -125,6 +127,9 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpUnit.UnitId
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull() 
+                LEFT JOIN tmpMI_Main ON tmpMI_Main.UnitId = tmpUnit.UnitId
+                --                    AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId 
+                LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = COALESCE(tmpMI_Main.InfoMoneyId,76878)
 
            WHERE tmpMI.UnitId IS NULL
 
@@ -136,19 +141,24 @@ BEGIN
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
                 
-                , Object_InfoMoney.Id           AS Object_InfoMoneyId
-                , Object_InfoMoney.ObjectCode   AS Object_InfoMoneyCode
-                , Object_InfoMoney.ValueData    AS Object_InfoMoneyName
+                , Object_InfoMoney.Id           AS InfoMoneyId
+                , Object_InfoMoney.ObjectCode   AS InfoMoneyCode
+                , Object_InfoMoney.ValueData    AS InfoMoneyName
 
-                , Object_CommentInfoMoney.Id         AS Object_CommentInfoMoneyId
-                , Object_CommentInfoMoney.ObjectCode AS Object_CommentInfoMoneyCode
-                , Object_CommentInfoMoney.ValueData  AS Object_CommentInfoMoneyName
+                , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
+                , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
+                , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
 
                 , tmpMI.DateStart            :: TDateTime AS DateStart
-                , tmpMI.DateEnd              :: TDateTime AS DateEnd
+                , tmpMI.DateEnd              :: TDateTime AS DateEnd    
+                , EXTRACT (Year FROM tmpMI.DateStart)  ::Integer  AS NumYearStart            --год старт
+                , EXTRACT (Year FROM tmpMI.DateEnd)    ::Integer  AS NumYearEnd              --год енд
+                , EXTRACT (MONTH FROM tmpMI.DateStart) ::Integer  AS NumStartDate            --номер мес€ца старт
+                , EXTRACT (MONTH FROM tmpMI.DateEnd)   ::Integer  AS NumEndDate              --номер мес€ца енд
+                , zfCalc_MonthName (tmpMI.DateStart)   ::TVarChar AS MonthNameStart
+                , zfCalc_MonthName (tmpMI.DateEnd)     ::TVarChar AS MonthNameEnd 
+
                 , tmpMI.Amount               :: TFloat    AS Amount
-                , tmpMI.Price                :: TFloat    AS Price
-                , tmpMI.Area                 :: TFloat    AS Area 
                 
                 , tmpMI_Main.DateStart       :: TDateTime AS DateStart_Main
                 , tmpMI_Main.DateEnd         :: TDateTime AS DateEnd_Main
@@ -167,7 +177,7 @@ BEGIN
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
 
-                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate := tmpMI.DateEnd ::TDateTime
+                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate := tmpMI.DateStart ::TDateTime
                                                                   , inUnitId := tmpMI.UnitId
                                                                   , inSession := inSession
                                                                    ) AS tmpMI_Main
@@ -182,9 +192,7 @@ BEGIN
                               , MovementItem.ObjectId                  AS UnitId   
                               , MILinkObject_InfoMoney.ObjectId        AS InfoMoneyId
                               , MILinkObject_CommentInfoMoney.ObjectId AS CommentInfoMoneyId
-                              , MovementItem.Amount 
-                              , COALESCE (MIFloat_Price.ValueData, 0)  AS Price
-                              , COALESCE (MIFloat_Area.ValueData, 0)   AS Area
+                              , MovementItem.Amount
                               , COALESCE (MIDate_DateStart.ValueData, vbOperDate) AS DateStart 
                               , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) AS DateEnd
                               , MovementItem.isErased
@@ -192,14 +200,6 @@ BEGIN
                                JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = tmpIsErased.isErased
-
-                               LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-
-                               LEFT JOIN MovementItemFloat AS MIFloat_Area
-                                                           ON MIFloat_Area.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_Area.DescId = zc_MIFloat_Area()
    
                                LEFT JOIN MovementItemDate AS MIDate_DateStart
                                                           ON MIDate_DateStart.MovementItemId = MovementItem.Id
@@ -223,19 +223,24 @@ BEGIN
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
                 
-                , Object_InfoMoney.Id         AS Object_InfoMoneyId
-                , Object_InfoMoney.ObjectCode AS Object_InfoMoneyCode
-                , Object_InfoMoney.ValueData  AS Object_InfoMoneyName
+                , Object_InfoMoney.Id         AS InfoMoneyId
+                , Object_InfoMoney.ObjectCode AS InfoMoneyCode
+                , Object_InfoMoney.ValueData  AS InfoMoneyName
 
-                , Object_CommentInfoMoney.Id         AS Object_CommentInfoMoneyId
-                , Object_CommentInfoMoney.ObjectCode AS Object_CommentInfoMoneyCode
-                , Object_CommentInfoMoney.ValueData  AS Object_CommentInfoMoneyName
+                , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
+                , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
+                , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
 
                 , tmpMI.DateStart            :: TDateTime AS DateStart
-                , tmpMI.DateEnd              :: TDateTime AS DateEnd
-                , tmpMI.Amount               :: TFloat    AS Amount
-                , tmpMI.Price                :: TFloat    AS Price
-                , tmpMI.Area                 :: TFloat    AS Area   
+                , tmpMI.DateEnd              :: TDateTime AS DateEnd                                           
+                , EXTRACT (Year FROM tmpMI.DateStart)  ::Integer  AS NumYearStart            --год старт
+                , EXTRACT (Year FROM tmpMI.DateEnd)    ::Integer  AS NumYearEnd              --год енд
+                , EXTRACT (MONTH FROM tmpMI.DateStart) ::Integer  AS NumStartDate            --номер мес€ца старт
+                , EXTRACT (MONTH FROM tmpMI.DateEnd)   ::Integer  AS NumEndDate              --номер мес€ца енд
+                , zfCalc_MonthName (tmpMI.DateStart)   ::TVarChar AS MonthNameStart
+                , zfCalc_MonthName (tmpMI.DateEnd)     ::TVarChar AS MonthNameEnd   
+                
+                , tmpMI.Amount               :: TFloat    AS Amount   
 
                 , tmpMI_Main.DateStart       :: TDateTime AS DateStart_Main
                 , tmpMI_Main.DateEnd         :: TDateTime AS DateEnd_Main
@@ -253,7 +258,7 @@ BEGIN
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull() 
 
-                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate := tmpMI.DateEnd ::TDateTime
+                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate := tmpMI.DateStart ::TDateTime
                                                                   , inUnitId := tmpMI.UnitId
                                                                   , inSession := inSession
                                                                    ) AS tmpMI_Main

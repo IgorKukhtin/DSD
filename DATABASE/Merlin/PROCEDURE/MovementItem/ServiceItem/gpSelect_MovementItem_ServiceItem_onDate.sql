@@ -1,11 +1,13 @@
 -- Function: gpSelect_MovementItem_ServiceItem_onDate()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ServiceItem_onDate(
     IN inOperDate         TDateTime , --
-    IN inUnitId           Integer   ,
+    IN inUnitId           Integer   , 
+    IN inInfoMoneyId      Integer   ,
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
@@ -57,9 +59,10 @@ BEGIN
                                                            AND MovementItem.isErased   = FALSE
                                                            AND (MovementItem.ObjectId = inUnitId OR inUnitId = 0)
 
-                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                                                     ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                                    AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                    INNER JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                                      ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                                     AND (MILinkObject_InfoMoney.ObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
                                WHERE Movement.DescId = zc_Movement_ServiceItem()
                                  AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- , zc_Enum_Status_UnComplete()
                                --AND Movement.OperDate > inOperDate
@@ -221,4 +224,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDAte := '01.06.2022'::TDateTime, inUnitId:= 0, inSession:= zfCalc_UserAdmin()) order by 2
+-- SELECT * FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDAte := '01.06.2022'::TDateTime, inUnitId:= 0, inInfoMoneyId :=0, inSession:= zfCalc_UserAdmin()) order by 2

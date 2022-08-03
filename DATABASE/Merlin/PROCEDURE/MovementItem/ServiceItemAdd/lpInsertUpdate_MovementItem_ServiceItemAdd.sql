@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_ServiceItemAdd()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ServiceItemAdd (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ServiceItemAdd (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ServiceItemAdd(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,8 +12,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ServiceItemAdd(
     IN inDateStart           TDateTime , --
     IN inDateEnd             TDateTime , --
     IN inAmount              TFloat    , -- 
-    IN inPrice               TFloat    , -- 
-    IN inArea                TFloat    , -- 
     IN inUserId              Integer    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -33,6 +32,10 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Статья>.';
      END IF;
 
+     --переопределяем Нач. дата всегда 1 число месяца, конечная  - последнее
+     inDateStart := DATE_TRUNC ('Month',inDateStart);
+     inDateEnd   := DATE_TRUNC ('Month',inDateEnd + INTERVAL '1 Month') - INTERVAL '1 DAY';
+     
      -- проверка для ServiceItemAdd
      IF (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId) = zc_Movement_ServiceItemAdd()
      THEN   
@@ -53,11 +56,6 @@ BEGIN
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inUnitId, inMovementId, inAmount, NULL);
-
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Area(), ioId, inArea);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_DateStart(), ioId, inDateStart); 
@@ -87,4 +85,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_ServiceItem (ioId := 56 , inMovementId := 17 , inUnitId := 446 , inPartionId := 50 , inAmount := 3 , ioCountForPrice := 1 , inOperPrice := 100 ,  inSession := '2');
+--

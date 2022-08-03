@@ -32,10 +32,9 @@ CREATE OR REPLACE VIEW Movement_ServiceItemAdd_View AS
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
 
            , MovementItem.Amount 
-           , COALESCE (MIFloat_Price.ValueData, 0)  AS Price
-           , COALESCE (MIFloat_Area.ValueData, 0)   AS Area    
+  
            , COALESCE (MIDate_DateStart.ValueData, zc_DateStart()) AS DateStart 
-           , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) AS DateEnd
+           , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd())     AS DateEnd
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -59,14 +58,6 @@ CREATE OR REPLACE VIEW Movement_ServiceItemAdd_View AS
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId     = zc_MI_Master() 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
-
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-
-            LEFT JOIN MovementItemFloat AS MIFloat_Area
-                                        ON MIFloat_Area.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Area.DescId = zc_MIFloat_Area()
 
             LEFT JOIN MovementItemDate AS MIDate_DateStart
                                        ON MIDate_DateStart.MovementItemId = MovementItem.Id

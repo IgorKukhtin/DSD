@@ -748,6 +748,17 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfomoneyId'
+          Value = '76878'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyName'
+          Value = '_'#1040#1088#1077#1085#1076#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate

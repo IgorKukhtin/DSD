@@ -24,7 +24,6 @@ object ServiceItemJournalChoiceForm: TServiceItemJournalChoiceForm
     Height = 55
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 645
     object deStart: TcxDateEdit
       Left = 118
       Top = 5
@@ -106,9 +105,6 @@ object ServiceItemJournalChoiceForm: TServiceItemJournalChoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 57
-    ExplicitWidth = 645
-    ExplicitHeight = 382
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -156,6 +152,11 @@ object ServiceItemJournalChoiceForm: TServiceItemJournalChoiceForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -201,6 +202,11 @@ object ServiceItemJournalChoiceForm: TServiceItemJournalChoiceForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
