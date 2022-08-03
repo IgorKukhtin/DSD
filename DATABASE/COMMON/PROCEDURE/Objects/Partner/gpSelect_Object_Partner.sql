@@ -57,7 +57,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                Delivery5 Boolean, Delivery6 Boolean, Delivery7 Boolean,
 
                GUID TVarChar, isGUID Boolean,
-               isIrna Boolean
+               isIrna Boolean,
+               isGoodsBox Boolean
               )
 AS
 $BODY$
@@ -232,7 +233,8 @@ BEGIN
 
          , ObjectString_GUID.ValueData AS GUID
          , CASE WHEN ObjectString_GUID.ValueData <> '' THEN TRUE ELSE FALSE END :: Boolean AS isGUID
-         , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
+         , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)       :: Boolean AS isIrna
+         , COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) :: Boolean AS isGoodsBox
 
      FROM tmpIsErased
          INNER JOIN Object AS Object_Partner
@@ -445,8 +447,12 @@ BEGIN
                                 AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
 
          LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
-                                 ON ObjectBoolean_Guide_Irna.ObjectId = Object_Juridical.Id
+                                 ON ObjectBoolean_Guide_Irna.ObjectId = Object_Partner.Id
                                 AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_GoodsBox
+                                 ON ObjectBoolean_Partner_GoodsBox.ObjectId = Object_Partner.Id
+                                AND ObjectBoolean_Partner_GoodsBox.DescId = zc_ObjectBoolean_Partner_GoodsBox()
 
    WHERE (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
