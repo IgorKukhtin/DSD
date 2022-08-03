@@ -1,11 +1,13 @@
 -- Function: gpGet_Movement_ContractGoods()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_ContractGoods (Integer, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_ContractGoods (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_ContractGoods (Integer, TDateTime, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ContractGoods(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- дата Документа
+    IN inOperDate          TDateTime, -- дата Документа  
+    IN inMask              Boolean  , -- добавить по маске
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate TDateTime
@@ -20,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
              , JuridicalId Integer, JuridicalName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
+             , isMask Boolean --вернуть false
              )
 AS
 $BODY$
@@ -28,6 +31,14 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ContractGoods());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- создаем док по маске
+     IF COALESCE (inMask, False) = True
+     THEN
+     inMovementId := gpInsert_Movement_ContractGoods_Mask (ioId        := inMovementId
+                                                         , inOperDate  := inOperDate
+                                                         , inSession   := inSession); 
+     END IF;
 
 
      IF COALESCE (inMovementId, 0) = 0
@@ -57,9 +68,10 @@ BEGIN
              , 0                                                AS JuridicalId
              , CAST ('' AS TVarChar) 	                        AS JuridicalName
 
-             , CAST ('' AS TVarChar) 		                AS Comment
+             , CAST ('' AS TVarChar) 		                    AS Comment
              , Object_Insert.ValueData                          AS InsertName
-             , CURRENT_TIMESTAMP        ::TDateTime             AS InsertDate
+             , CURRENT_TIMESTAMP        ::TDateTime             AS InsertDate 
+             , CAST (FALSE AS Boolean)                          AS isMask
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert          ON Object_Insert.Id          = vbUserId
@@ -95,6 +107,7 @@ BEGIN
 
            , Object_Insert.ValueData                AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
+           , CAST (FALSE AS Boolean)                AS isMask
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -136,8 +149,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 05.07.21         * 
+ 02.08.22         * 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ContractGoods (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_ContractGoods (inMovementId:= 1, inOperDate:= CURRENT_DATE, inMask:= False , inSession:= '9818')

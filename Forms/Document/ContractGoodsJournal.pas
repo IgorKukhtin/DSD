@@ -56,6 +56,7 @@ type
     actDelete_Movement: TdsdExecStoredProc;
     ContractName: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
+    macInsertMask: TMultiAction;
   private
     { Private declarations }
   public

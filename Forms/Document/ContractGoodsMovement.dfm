@@ -1169,6 +1169,12 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 400
@@ -1205,6 +1211,15 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1337,6 +1352,21 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Value = Null
         Component = edEndDate_contract
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end>
     Left = 216

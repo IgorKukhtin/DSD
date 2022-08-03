@@ -5,7 +5,7 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 892
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -562,6 +562,75 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TContractGoodsMovementForm'
       FormNameParam.Value = 'TContractGoodsMovementForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      FormName = 'TContractGoodsMovementForm'
+      FormNameParam.Value = 'TContractGoodsMovementForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+    end
+    object macInsertMask: TMultiAction [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMask
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TContractGoodsMovementForm'
@@ -587,9 +656,15 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
     end
-    object actPrintGroup: TdsdPrintAction [17]
+    object actPrintGroup: TdsdPrintAction [18]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -637,7 +712,7 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint: TdsdPrintAction [18]
+    object actPrint: TdsdPrintAction [19]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -971,6 +1046,14 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -1034,6 +1117,9 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited bbInsertMask: TdxBarButton
+      Action = macInsertMask
     end
     object bbPrint: TdxBarButton
       Action = actPrint
