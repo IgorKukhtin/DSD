@@ -263,6 +263,7 @@ type
     actGetImportSetting_SMER: TdsdExecStoredProc;
     macStartLoad_SMER: TMultiAction;
     bbStartLoad_SMER: TdxBarButton;
+    Code1C: TcxGridDBColumn;
   private
     { Private declarations }
   public

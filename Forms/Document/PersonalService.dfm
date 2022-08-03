@@ -2,7 +2,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 792
   ClientWidth = 1444
-  ExplicitLeft = -322
+  ExplicitLeft = -567
   ExplicitWidth = 1460
   ExplicitHeight = 831
   PixelsPerInch = 96
@@ -538,14 +538,34 @@ inherited PersonalServiceForm: TPersonalServiceForm
           object INN: TcxGridDBColumn [2]
             Caption = #1048#1053#1053
             DataBinding.FieldName = 'INN'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             VisibleForCustomization = False
             Width = 70
           end
-          object Card: TcxGridDBColumn [3]
+          object Code1C: TcxGridDBColumn [3]
+            Caption = #1050#1086#1076' 1'#1057
+            DataBinding.FieldName = 'Code1C'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Card: TcxGridDBColumn [4]
             Caption = #8470' '#1082#1072#1088#1090'. '#1047#1055' ('#1060'1)'
             DataBinding.FieldName = 'Card'
             HeaderAlignmentHorz = taCenter
@@ -553,7 +573,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 115
           end
-          object CardSecond: TcxGridDBColumn [4]
+          object CardSecond: TcxGridDBColumn [5]
             Caption = #8470' '#1082#1072#1088#1090'. '#1047#1055' ('#1060'2)'
             DataBinding.FieldName = 'CardSecond'
             HeaderAlignmentHorz = taCenter
@@ -561,7 +581,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 115
           end
-          object CardIBAN: TcxGridDBColumn [5]
+          object CardIBAN: TcxGridDBColumn [6]
             Caption = #8470' '#1082#1072#1088#1090'. IBAN '#1047#1055' ('#1060'1)'
             DataBinding.FieldName = 'CardIBAN'
             HeaderAlignmentHorz = taCenter
@@ -569,7 +589,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 115
           end
-          object CardIBANSecond: TcxGridDBColumn [6]
+          object CardIBANSecond: TcxGridDBColumn [7]
             Caption = #8470' '#1082#1072#1088#1090'. IBAN '#1047#1055' ('#1060'2)'
             DataBinding.FieldName = 'CardIBANSecond'
             HeaderAlignmentHorz = taCenter
@@ -577,7 +597,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 115
           end
-          object PersonalCode: TcxGridDBColumn [7]
+          object PersonalCode: TcxGridDBColumn [8]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'PersonalCode'
             Visible = False
@@ -586,7 +606,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 55
           end
-          object PersonalName: TcxGridDBColumn [8]
+          object PersonalName: TcxGridDBColumn [9]
             Caption = #1060#1048#1054' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
@@ -594,7 +614,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 100
           end
-          object PositionName: TcxGridDBColumn [9]
+          object PositionName: TcxGridDBColumn [10]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'PositionName'
             HeaderAlignmentHorz = taCenter
@@ -602,7 +622,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 80
           end
-          object PersonalCode_to: TcxGridDBColumn [10]
+          object PersonalCode_to: TcxGridDBColumn [11]
             Caption = #1050#1086#1076' ('#1082#1086#1084#1091' '#1079#1072#1090#1088#1072#1090#1099')'
             DataBinding.FieldName = 'PersonalCode_to'
             HeaderAlignmentHorz = taCenter
@@ -610,7 +630,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 55
           end
-          object PersonalName_to: TcxGridDBColumn [11]
+          object PersonalName_to: TcxGridDBColumn [12]
             Caption = #1060#1048#1054' ('#1082#1086#1084#1091' '#1079#1072#1090#1088#1072#1090#1099')'
             DataBinding.FieldName = 'PersonalName_to'
             HeaderAlignmentHorz = taCenter
@@ -618,7 +638,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object IsMain: TcxGridDBColumn [12]
+          object IsMain: TcxGridDBColumn [13]
             Caption = #1054#1089#1085#1086#1074'. '#1084#1077#1089#1090#1086' '#1088'.'
             DataBinding.FieldName = 'isMain'
             HeaderAlignmentHorz = taCenter
@@ -626,7 +646,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 60
           end
-          object IsOfficial: TcxGridDBColumn [13]
+          object IsOfficial: TcxGridDBColumn [14]
             Caption = #1054#1092#1086#1088#1084#1083'. '#1086#1092#1080#1094'.'
             DataBinding.FieldName = 'isOfficial'
             HeaderAlignmentHorz = taCenter
@@ -634,7 +654,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 60
           end
-          object DateIn: TcxGridDBColumn [14]
+          object DateIn: TcxGridDBColumn [15]
             Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
             DataBinding.FieldName = 'DateIn'
             HeaderAlignmentHorz = taCenter
@@ -642,7 +662,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 63
           end
-          object DateOut: TcxGridDBColumn [15]
+          object DateOut: TcxGridDBColumn [16]
             Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'DateOut'
             HeaderAlignmentHorz = taCenter
@@ -650,7 +670,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 63
           end
-          object StaffListSummKindName: TcxGridDBColumn [16]
+          object StaffListSummKindName: TcxGridDBColumn [17]
             Caption = #1058#1080#1087#1099' '#1089#1091#1084#1084' '#1076#1083#1103' '#1096#1090#1072#1090#1085#1086#1075#1086' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1103
             DataBinding.FieldName = 'StaffListSummKindName'
             HeaderAlignmentHorz = taCenter
@@ -658,7 +678,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 80
           end
-          object Amount: TcxGridDBColumn [17]
+          object Amount: TcxGridDBColumn [18]
             Caption = #1057#1091#1084#1084#1072' ('#1079#1072#1090#1088#1072#1090#1099')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -669,7 +689,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object TotalSummChild: TcxGridDBColumn [18]
+          object TotalSummChild: TcxGridDBColumn [19]
             Caption = #1048#1090#1086#1075#1086' '#1053#1040#1063#1048#1057#1051#1045#1053#1048#1071' ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'TotalSummChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -679,7 +699,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object Amount_avance: TcxGridDBColumn [19]
+          object Amount_avance: TcxGridDBColumn [20]
             Caption = #1042#1099#1087#1083#1072#1090#1072' '#1072#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
             DataBinding.FieldName = 'Amount_avance'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -690,7 +710,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object SummDiff: TcxGridDBColumn [20]
+          object SummDiff: TcxGridDBColumn [21]
             Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
             DataBinding.FieldName = 'SummDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -701,7 +721,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object AmountToPay: TcxGridDBColumn [21]
+          object AmountToPay: TcxGridDBColumn [22]
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'AmountToPay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -711,7 +731,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object AmountCash: TcxGridDBColumn [22]
+          object AmountCash: TcxGridDBColumn [23]
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
             DataBinding.FieldName = 'AmountCash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -722,7 +742,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object SummService: TcxGridDBColumn [23]
+          object SummService: TcxGridDBColumn [24]
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'SummService'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -732,7 +752,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object SummAdd: TcxGridDBColumn [24]
+          object SummAdd: TcxGridDBColumn [25]
             Caption = #1055#1088#1077#1084#1080#1103
             DataBinding.FieldName = 'SummAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -742,7 +762,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummAddOth: TcxGridDBColumn [25]
+          object SummAddOth: TcxGridDBColumn [26]
             Caption = #1055#1088#1077#1084#1080#1103' ('#1088#1072#1089#1087#1088#1077#1076'.)'
             DataBinding.FieldName = 'SummAddOth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -753,7 +773,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummAddOthRecalc: TcxGridDBColumn [26]
+          object SummAddOthRecalc: TcxGridDBColumn [27]
             Caption = #1055#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.)'
             DataBinding.FieldName = 'SummAddOthRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -764,7 +784,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
             Width = 70
           end
-          object SummMinus: TcxGridDBColumn [27]
+          object SummMinus: TcxGridDBColumn [28]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103
             DataBinding.FieldName = 'SummMinus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -774,7 +794,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object SummCard: TcxGridDBColumn [28]
+          object SummCard: TcxGridDBColumn [29]
             Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 1'#1092'.'
             DataBinding.FieldName = 'SummCard'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -785,7 +805,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummCardRecalc: TcxGridDBColumn [29]
+          object SummCardRecalc: TcxGridDBColumn [30]
             Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 1'#1092'.'
             DataBinding.FieldName = 'SummCardRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -795,7 +815,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummCardSecond: TcxGridDBColumn [30]
+          object SummCardSecond: TcxGridDBColumn [31]
             Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'.'
             DataBinding.FieldName = 'SummCardSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -806,7 +826,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummCardSecondRecalc: TcxGridDBColumn [31]
+          object SummCardSecondRecalc: TcxGridDBColumn [32]
             Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
             DataBinding.FieldName = 'SummCardSecondRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -816,7 +836,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummCardSecondDiff: TcxGridDBColumn [32]
+          object SummCardSecondDiff: TcxGridDBColumn [33]
             Caption = #1082#1086#1087'. '#1082#1086#1088#1088'. '#1082#1072#1088#1090#1072' '#1041#1053' - 2'#1092'.'
             DataBinding.FieldName = 'SummCardSecondDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -829,7 +849,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
               '10-90 '#1082#1086#1087'.'
             Width = 70
           end
-          object SummCardSecondCash: TcxGridDBColumn [33]
+          object SummCardSecondCash: TcxGridDBColumn [34]
             Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
             DataBinding.FieldName = 'SummCardSecondCash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -839,7 +859,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummNalogRet: TcxGridDBColumn [34]
+          object SummNalogRet: TcxGridDBColumn [35]
             Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055
             DataBinding.FieldName = 'SummNalogRet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -849,7 +869,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummNalogRetRecalc: TcxGridDBColumn [35]
+          object SummNalogRetRecalc: TcxGridDBColumn [36]
             Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055' ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummNalogRetRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -860,7 +880,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummChild: TcxGridDBColumn [36]
+          object SummChild: TcxGridDBColumn [37]
             Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077
             DataBinding.FieldName = 'SummChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -871,7 +891,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object DayCount_child: TcxGridDBColumn [37]
+          object DayCount_child: TcxGridDBColumn [38]
             Caption = #1054#1090#1088#1072#1073'. '#1076#1085'. 1 '#1095#1077#1083' ('#1080#1085#1092'.) ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'DayCount_child'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -882,7 +902,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object WorkTimeHoursOne_child: TcxGridDBColumn [38]
+          object WorkTimeHoursOne_child: TcxGridDBColumn [39]
             Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074' 1 '#1095#1077#1083' ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'WorkTimeHoursOne_child'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -893,7 +913,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 80
           end
-          object Price_child: TcxGridDBColumn [39]
+          object Price_child: TcxGridDBColumn [40]
             Caption = #1075#1088#1085'./'#1079#1072' '#1082#1075' '#1048#1051#1048' '#1075#1088#1085'./'#1089#1090#1072#1074#1082#1072' ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'Price_child'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -904,7 +924,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 81
           end
-          object SummFine: TcxGridDBColumn [40]
+          object SummFine: TcxGridDBColumn [41]
             Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
             DataBinding.FieldName = 'SummFine'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -914,7 +934,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object SummFineOth: TcxGridDBColumn [41]
+          object SummFineOth: TcxGridDBColumn [42]
             Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1088#1072#1089#1087#1088'.)'
             DataBinding.FieldName = 'SummFineOth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -926,7 +946,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object SummFineOthRecalc: TcxGridDBColumn [42]
+          object SummFineOthRecalc: TcxGridDBColumn [43]
             Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummFineOthRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -937,7 +957,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
             Width = 75
           end
-          object SummHosp: TcxGridDBColumn [43]
+          object SummHosp: TcxGridDBColumn [44]
             Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'.'
             DataBinding.FieldName = 'SummHosp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -948,7 +968,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077
             Width = 75
           end
-          object SummHospOth: TcxGridDBColumn [44]
+          object SummHospOth: TcxGridDBColumn [45]
             Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1088#1072#1089#1087#1088'.)'
             DataBinding.FieldName = 'SummHospOth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -960,7 +980,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object SummCompensation: TcxGridDBColumn [45]
+          object SummCompensation: TcxGridDBColumn [46]
             Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087'.'
             DataBinding.FieldName = 'SummCompensation'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -972,7 +992,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object SummCompensationRecalc: TcxGridDBColumn [46]
+          object SummCompensationRecalc: TcxGridDBColumn [47]
             Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087'. ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummCompensationRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -983,7 +1003,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082' ('#1074#1074#1086#1076')'
             Width = 75
           end
-          object PriceCompensation: TcxGridDBColumn [47]
+          object PriceCompensation: TcxGridDBColumn [48]
             Caption = #1057#1088'. '#1079#1087' '#1076#1083#1103' '#1088#1072#1089#1095'. '#1082#1086#1084#1087#1077#1085#1089'.'
             DataBinding.FieldName = 'PriceCompensation'
             HeaderAlignmentHorz = taCenter
@@ -992,7 +1012,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummHospOthRecalc: TcxGridDBColumn [48]
+          object SummHospOthRecalc: TcxGridDBColumn [49]
             Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummHospOthRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1003,7 +1023,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
             Width = 75
           end
-          object SummChildRecalc: TcxGridDBColumn [49]
+          object SummChildRecalc: TcxGridDBColumn [50]
             Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077' ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummChildRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1013,7 +1033,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object SummMinusExt: TcxGridDBColumn [50]
+          object SummMinusExt: TcxGridDBColumn [51]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085'. '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'SummMinusExt'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1024,7 +1044,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object SummMinusExtRecalc: TcxGridDBColumn [51]
+          object SummMinusExtRecalc: TcxGridDBColumn [52]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085'. '#1102#1088'.'#1083'. ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummMinusExtRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1034,7 +1054,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object SummSocialIn: TcxGridDBColumn [52]
+          object SummSocialIn: TcxGridDBColumn [53]
             Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1080#1079' '#1079#1087')'
             DataBinding.FieldName = 'SummSocialIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1043,7 +1063,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummSocialAdd: TcxGridDBColumn [53]
+          object SummSocialAdd: TcxGridDBColumn [54]
             Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1076#1086#1087'. '#1082' '#1079#1087')'
             DataBinding.FieldName = 'SummSocialAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1052,7 +1072,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
-          object MemberName: TcxGridDBColumn [54]
+          object MemberName: TcxGridDBColumn [55]
             Caption = #1060#1048#1054' ('#1040#1083#1080#1084#1077#1085#1090#1099')'
             DataBinding.FieldName = 'MemberName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -1067,7 +1087,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object InfoMoneyCode: TcxGridDBColumn [55]
+          object InfoMoneyCode: TcxGridDBColumn [56]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -1076,7 +1096,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 55
           end
-          object InfoMoneyName: TcxGridDBColumn [56]
+          object InfoMoneyName: TcxGridDBColumn [57]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -1085,7 +1105,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 80
           end
-          object isAuto: TcxGridDBColumn [57]
+          object isAuto: TcxGridDBColumn [58]
             Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
             DataBinding.FieldName = 'isAuto'
             HeaderAlignmentHorz = taCenter
@@ -1094,14 +1114,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 38
           end
-          object Comment: TcxGridDBColumn [58]
+          object Comment: TcxGridDBColumn [59]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 125
           end
-          object SummTransportTaxi: TcxGridDBColumn [59]
+          object SummTransportTaxi: TcxGridDBColumn [60]
             Caption = #1058#1072#1082#1089#1080' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
             DataBinding.FieldName = 'SummTransportTaxi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1112,7 +1132,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object PersonalServiceListName: TcxGridDBColumn [60]
+          object PersonalServiceListName: TcxGridDBColumn [61]
             Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1041#1053')'
             DataBinding.FieldName = 'PersonalServiceListName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -1127,7 +1147,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 140
           end
-          object BankOutDate: TcxGridDBColumn [61]
+          object BankOutDate: TcxGridDBColumn [62]
             Caption = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
             DataBinding.FieldName = 'BankOutDate'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -1137,7 +1157,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
             Width = 80
           end
-          object isBankOut: TcxGridDBColumn [62]
+          object isBankOut: TcxGridDBColumn [63]
             Caption = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082
             DataBinding.FieldName = 'isBankOut'
             HeaderAlignmentHorz = taCenter
@@ -1146,7 +1166,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 80
           end
-          object FineSubjectName: TcxGridDBColumn [63]
+          object FineSubjectName: TcxGridDBColumn [64]
             Caption = #1042#1080#1076' '#1085#1072#1088#1091#1096#1077#1085#1080#1081
             DataBinding.FieldName = 'FineSubjectName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -1161,7 +1181,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object UnitFineSubjectName: TcxGridDBColumn [64]
+          object UnitFineSubjectName: TcxGridDBColumn [65]
             Caption = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
             DataBinding.FieldName = 'UnitFineSubjectName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -1177,7 +1197,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
             Width = 70
           end
-          object SummNalog: TcxGridDBColumn [65]
+          object SummNalog: TcxGridDBColumn [66]
             Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
             DataBinding.FieldName = 'SummNalog'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1188,7 +1208,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummNalogRecalc: TcxGridDBColumn [66]
+          object SummNalogRecalc: TcxGridDBColumn [67]
             Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055' ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummNalogRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1198,7 +1218,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummTransportAdd: TcxGridDBColumn [67]
+          object SummTransportAdd: TcxGridDBColumn [68]
             Caption = #1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
             DataBinding.FieldName = 'SummTransportAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1209,7 +1229,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object SummTransportAddLong: TcxGridDBColumn [68]
+          object SummTransportAddLong: TcxGridDBColumn [69]
             Caption = #1044#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
             DataBinding.FieldName = 'SummTransportAddLong'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1220,7 +1240,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object SummTransport: TcxGridDBColumn [69]
+          object SummTransport: TcxGridDBColumn [70]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
             DataBinding.FieldName = 'SummTransport'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1232,7 +1252,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object SummPhone: TcxGridDBColumn [70]
+          object SummPhone: TcxGridDBColumn [71]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1052#1086#1073'.'#1089#1074#1103#1079#1100
             DataBinding.FieldName = 'SummPhone'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1243,7 +1263,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object DayCompensation: TcxGridDBColumn [71]
+          object DayCompensation: TcxGridDBColumn [72]
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085'. '#1082#1086#1084#1087#1077#1085#1089'. '#1086#1090#1087#1091#1089#1082#1072
             DataBinding.FieldName = 'DayCompensation'
             HeaderAlignmentHorz = taCenter
@@ -1252,7 +1272,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 83
           end
-          object DayVacation: TcxGridDBColumn [72]
+          object DayVacation: TcxGridDBColumn [73]
             Caption = #1055#1086#1083#1086#1078#1077#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072
             DataBinding.FieldName = 'DayVacation'
             HeaderAlignmentHorz = taCenter
@@ -1260,7 +1280,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 83
           end
-          object DayWork: TcxGridDBColumn [73]
+          object DayWork: TcxGridDBColumn [74]
             Caption = #1056#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
             DataBinding.FieldName = 'DayWork'
             HeaderAlignmentHorz = taCenter
@@ -1268,7 +1288,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 83
           end
-          object DayHoliday: TcxGridDBColumn [74]
+          object DayHoliday: TcxGridDBColumn [75]
             Caption = #1048#1089#1087'. '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072
             DataBinding.FieldName = 'DayHoliday'
             HeaderAlignmentHorz = taCenter
@@ -1277,7 +1297,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 83
           end
-          object DayAudit: TcxGridDBColumn [75]
+          object DayAudit: TcxGridDBColumn [76]
             Caption = #1044#1086#1087#1083'. '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102', '#1076#1085'.'
             DataBinding.FieldName = 'DayAudit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1289,7 +1309,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummHoliday: TcxGridDBColumn [76]
+          object SummHoliday: TcxGridDBColumn [77]
             Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
             DataBinding.FieldName = 'SummHoliday'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1299,7 +1319,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object SummAuditAdd: TcxGridDBColumn [77]
+          object SummAuditAdd: TcxGridDBColumn [78]
             Caption = #1044#1086#1087#1083'. '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
             DataBinding.FieldName = 'SummAuditAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1310,7 +1330,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
             Width = 70
           end
-          object SummHouseAdd: TcxGridDBColumn [78]
+          object SummHouseAdd: TcxGridDBColumn [79]
             Caption = #1044#1086#1087#1083'. '#1079#1072' '#1078#1080#1083#1100#1077
             DataBinding.FieldName = 'SummHouseAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1321,7 +1341,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1078#1080#1083#1100#1077
             Width = 70
           end
-          object InfoMoneyName_all: TcxGridDBColumn [79]
+          object InfoMoneyName_all: TcxGridDBColumn [80]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False

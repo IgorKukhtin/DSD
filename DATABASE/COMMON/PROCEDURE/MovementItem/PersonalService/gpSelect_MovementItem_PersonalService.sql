@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
-             , INN TVarChar, Card TVarChar, CardSecond TVarChar
+             , INN TVarChar, Code1C TVarChar, Card TVarChar, CardSecond TVarChar
              , CardIBAN TVarChar, CardIBANSecond TVarChar
              , isMain Boolean, isOfficial Boolean, DateOut TDateTime, DateIn TDateTime
              , PersonalCode_to Integer, PersonalName_to TVarChar
@@ -326,6 +326,7 @@ BEGIN
             , Object_Personal.ObjectCode                    AS PersonalCode
             , Object_Personal.ValueData                     AS PersonalName
             , ObjectString_Member_INN.ValueData             AS INN
+            , ObjectString_Code1C.ValueData                 AS Code1C
             , ObjectString_Member_Card.ValueData            AS Card
             , ObjectString_Member_CardSecond.ValueData      AS CardSecond
             , ObjectString_Member_CardIBAN.ValueData        AS CardIBAN
@@ -439,6 +440,10 @@ BEGIN
             , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE) :: Boolean   AS isBankOut
             , MIDate_BankOut.ValueData                          :: TDateTime AS BankOutDate
        FROM tmpAll
+            LEFT JOIN ObjectString AS ObjectString_Code1C
+                                   ON ObjectString_Code1C.ObjectId = tmpAll.PersonalId
+                                  AND ObjectString_Code1C.DescId    = zc_ObjectString_Personal_Code1C()
+
             LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId
        
             LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MovementItemId = tmpAll.MovementItemId

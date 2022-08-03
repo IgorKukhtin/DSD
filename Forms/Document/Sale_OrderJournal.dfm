@@ -15,17 +15,17 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Height = 374
     TabOrder = 3
     ExplicitTop = 76
-    ExplicitWidth = 1479
+    ExplicitWidth = 1370
     ExplicitHeight = 374
     ClientRectBottom = 374
     ClientRectRight = 1370
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1479
+      ExplicitWidth = 1370
       ExplicitHeight = 374
       inherited cxGrid: TcxGrid
         Width = 1370
         Height = 374
-        ExplicitWidth = 1479
+        ExplicitWidth = 1370
         ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -798,7 +798,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   inherited Panel: TPanel
     Width = 1370
     Height = 50
-    ExplicitWidth = 1479
+    ExplicitWidth = 1370
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       Left = 112
@@ -851,7 +851,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitWidth = 1479
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -3807,10 +3806,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           Action = actExport_fileXml
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' xml '#1092#1072#1081#1083'?'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' <'#1052#1103#1089#1085#1072#1103' '#1074#1077#1089#1085#1072'>?'
       InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
-      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' XML'
-      Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' XML'
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' <'#1052#1103#1089#1085#1072#1103' '#1074#1077#1089#1085#1072'>'
+      Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' <'#1052#1103#1089#1085#1072#1103' '#1074#1077#1089#1085#1072'>'
       ImageIndex = 60
     end
   end
