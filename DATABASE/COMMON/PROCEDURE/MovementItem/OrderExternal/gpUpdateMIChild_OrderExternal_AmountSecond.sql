@@ -19,7 +19,7 @@ BEGIN
 
 
       -- сохранили свойство <Был сформирован резерв> - да
-      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Remains(), inMovementId, TRUE);
+      --PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Remains(), inMovementId, TRUE);
 
 
       -- данные из документа
