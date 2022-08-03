@@ -1,10 +1,12 @@
 -- Function: gpGet_Movement_ServiceItemAdd()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_ServiceItemAdd (Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_ServiceItemAdd (Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ServiceItemAdd(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inMovementId_Value  Integer   ,    
+    IN inMovementId_Value  Integer   ,  
+    IN inInfoMoneyId       Integer   ,
     IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -12,7 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime 
              , StatusCode Integer, StatusName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime 
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
              )
 AS
 $BODY$
@@ -36,8 +39,13 @@ BEGIN
            , CURRENT_TIMESTAMP                     :: TDateTime       AS InsertDate
            , ''                                    :: TVarChar        AS UpdateName
            , NULL                                  :: TDateTime       AS UpdateDate
+
+           , Object_InfoMoney.Id         AS InfoMoneyId
+           , Object_InfoMoney.ValueData  AS InfoMoneyName
+
        FROM Object AS Object_Insert
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = zc_Enum_Status_UnComplete()
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = COALESCE (inInfoMoneyId, 76878)   -- _Аренда
        WHERE Object_Insert.Id = vbUserId
       ;
      ELSE
@@ -56,6 +64,8 @@ BEGIN
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
 
+           , Object_InfoMoney.Id         AS InfoMoneyId
+           , Object_InfoMoney.ValueData  AS InfoMoneyName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN MovementDate AS MovementDate_Insert
@@ -74,6 +84,7 @@ BEGIN
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
 
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = COALESCE (inInfoMoneyId, 76878)   -- _Аренда
        WHERE Movement.Id = inMovementId_Value;
 
    END IF;  
@@ -85,6 +96,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.08.22         *
  31.05.22         *
  */
 

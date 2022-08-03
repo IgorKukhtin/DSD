@@ -111,6 +111,11 @@ object ServiceItemAddJournalChoiceForm: TServiceItemAddJournalChoiceForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -156,6 +161,11 @@ object ServiceItemAddJournalChoiceForm: TServiceItemAddJournalChoiceForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -265,9 +275,40 @@ object ServiceItemAddJournalChoiceForm: TServiceItemAddJournalChoiceForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 174
+      end
+      object NumYearStart: TcxGridDBColumn
+        Caption = #1043#1086#1076' '#1089'...'
+        DataBinding.FieldName = 'NumYearStart'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object NumYearEnd: TcxGridDBColumn
+        Caption = #1043#1086#1076' '#1087#1086'...'
+        DataBinding.FieldName = 'NumYearEnd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object MonthNameStart: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094#1072' '#1089'...'
+        DataBinding.FieldName = 'MonthNameStart'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object MonthNameEnd: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094#1072' '#1087#1086'...'
+        DataBinding.FieldName = 'MonthNameEnd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object DateStart: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089
@@ -283,26 +324,6 @@ object ServiceItemAddJournalChoiceForm: TServiceItemAddJournalChoiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
-      end
-      object Area: TcxGridDBColumn
-        Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
-        DataBinding.FieldName = 'Area'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object Price: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.'
-        DataBinding.FieldName = 'Price'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
       end
       object Amount: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100

@@ -17,8 +17,12 @@ RETURNS TABLE (Id Integer, InvNumber Integer
              , UnitGroupNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
-             , DateStart TDateTime, DateEnd TDateTime
-             , Amount TFloat, Price TFloat, Area TFloat
+             , DateStart TDateTime, DateEnd TDateTime  
+             , NumYearStart Integer            --год старт
+             , NumYearEnd  Integer            --год енд
+             , MonthNameStart  TVarChar
+             , MonthNameEnd TVarChar
+             , Amount TFloat
               )
 AS
 $BODY$
@@ -61,11 +65,13 @@ BEGIN
            , Movement.CommentInfoMoneyName
  
            , Movement.DateStart            :: TDateTime
-           , Movement.DateEnd              :: TDateTime
+           , Movement.DateEnd              :: TDateTime   
+           , EXTRACT (Year FROM Movement.DateStart)  ::Integer  AS NumYearStart            --год старт
+           , EXTRACT (Year FROM Movement.DateEnd)    ::Integer  AS NumYearEnd              --год енд
+           , zfCalc_MonthName (Movement.DateStart)   ::TVarChar AS MonthNameStart
+           , zfCalc_MonthName (Movement.DateEnd)     ::TVarChar AS MonthNameEnd   
+                
            , Movement.Amount               :: TFloat   
-           , Movement.Price                :: TFloat   
-           , Movement.Area                 :: TFloat   
-
        FROM Movement_ServiceItemAdd_View AS Movement
             INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
        WHERE Movement.OperDate Between inStartDate AND inEndDate

@@ -107,6 +107,9 @@ type
     edInsertName: TcxButtonEdit;
     actInfoMoneyChoice: TOpenChoiceForm;
     actCommentInfoMoneyChoice: TOpenChoiceForm;
+    cxLabel4: TcxLabel;
+    edInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
   private
   public
   end;
