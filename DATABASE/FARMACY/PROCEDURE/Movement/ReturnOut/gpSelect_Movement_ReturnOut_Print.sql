@@ -74,6 +74,7 @@ BEGIN
             Movement_ReturnOut.Id
           , Movement_ReturnOut.InvNumber
           , Movement_ReturnOut.OperDate
+          , Movement_ReturnOut.toId
           , ObjectHistory_ToDetails.FullName                  AS ToName
           , Movement_ReturnOut.IncomeInvNumber
           , Movement_ReturnOut.IncomeOperDate
@@ -154,8 +155,14 @@ BEGIN
             END AS Summa  
 
           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
+          
+          , Object_Goods.MorionCode
         FROM
             MovementItem_ReturnOut_View AS MI_ReturnOut
+
+            LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MI_ReturnOut.GoodsId
+            LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_Measure
                                        ON ObjectLink_Goods_Measure.ObjectId = MI_ReturnOut.GoodsId
                                       AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
