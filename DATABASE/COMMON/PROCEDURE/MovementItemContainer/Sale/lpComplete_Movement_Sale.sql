@@ -464,6 +464,10 @@ END IF;*/
          RAISE EXCEPTION 'Ошибка.Не Заполнено значение На основании № (возврат).';
      END IF;
      
+
+     -- !!!записали св-во
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GoodsProperty(), inMovementId, zfCalc_GoodsPropertyId (vbContractId, vbJuridicalId_To, vbPartnerId_To));
+
      
      -- Эти параметры прайс-листа нужны для ...
      SELECT lfGet.PriceWithVAT, lfGet.VATPercent INTO vbPriceWithVAT_PriceList, vbVATPercent_PriceList FROM lfGet_Object_PriceList (zc_PriceList_Basis()) AS lfGet;

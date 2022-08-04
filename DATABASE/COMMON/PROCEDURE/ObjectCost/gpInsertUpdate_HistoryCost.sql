@@ -33,6 +33,8 @@ BEGIN
      -- IF inStartDate >= '01.03.2020' THEN RETURN; END IF;
      -- IF inBranchId IN (8379, 3080683) THEN RETURN; END IF;
      -- IF inBranchId IN (0) THEN RETURN; END IF;
+     
+     inItearationCount:=100;
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
@@ -646,6 +648,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (548224, 530876); -- 04.2022
 
+     -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (SELECT Container.Id FROM Container WHERE Container.ParentId = 3112320); -- 07.2022
 
 
      IF inBranchId = 0 -- OR 1 = 1
@@ -1692,4 +1695,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2022', inEndDate:= '28.02.2022', inBranchId:= 0, inItearationCount:= 200, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2022', inEndDate:= '28.03.2022', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2389081) -- ORDER BY ABS (Price) DESC
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.07.2022', inEndDate:= '31.07.2022', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2389081) -- ORDER BY ABS (Price) DESC
