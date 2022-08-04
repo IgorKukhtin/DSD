@@ -1,7 +1,7 @@
 inherited ServiceItemUpdateForm: TServiceItemUpdateForm
   Left = 8
   Top = 8
-  Caption = #1054#1090#1095#1077#1090' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' ('#1080#1089#1090#1086#1088#1080#1103')>'
+  Caption = #1048#1089#1090#1086#1088#1080#1103' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
   ClientHeight = 341
   ClientWidth = 1071
   AddOnFormData.Params = FormParams

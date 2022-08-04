@@ -58,7 +58,7 @@ inherited MainForm: TMainForm
     object actServiceItemAddJournalChoice: TdsdOpenForm [3]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' ('#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103')'
+      Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099' ('#1087#1088#1086#1089#1084#1086#1090#1088')'
       FormName = 'TServiceItemAddJournalChoiceForm'
       FormNameParam.Value = 'TServiceItemAddJournalChoiceForm'
       FormNameParam.DataType = ftString
@@ -92,7 +92,7 @@ inherited MainForm: TMainForm
     object actServiceItemUpdate: TdsdOpenForm [5]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' ('#1082#1086#1088#1088'.)'
+      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' ('#1080#1089#1090#1086#1088#1080#1103')'
       FormName = 'TServiceItemUpdateForm'
       FormNameParam.Value = 'TServiceItemUpdateForm'
       FormNameParam.DataType = ftString
@@ -109,7 +109,7 @@ inherited MainForm: TMainForm
     object actServiceItemAddJournal: TdsdOpenForm [6]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' ('#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103')'
+      Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099
       FormName = 'TServiceItemAddJournalForm'
       FormNameParam.Value = 'TServiceItemAddJournalForm'
       FormNameParam.DataType = ftString
@@ -154,7 +154,7 @@ inherited MainForm: TMainForm
     object actServiceItemJournal: TdsdOpenForm [9]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' ('#1080#1089#1090#1086#1088#1080#1103')'
+      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' ('#1078#1091#1088#1085#1072#1083')'
       FormName = 'TServiceItemJournalForm'
       FormNameParam.Value = 'TServiceItemJournalForm'
       FormNameParam.DataType = ftString

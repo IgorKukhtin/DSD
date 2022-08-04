@@ -5,10 +5,10 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItemAdd (Integer, Integer, 
 
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ServiceItemAdd(
-    IN inMovementId       Integer      , -- ключ ƒокумента 
+    IN inMovementId       Integer      , -- ключ ƒокумента
     IN inInfoMoneyId      Integer   ,
     IN inShowAll          Boolean      , --
-    IN inIsErased         Boolean      , -- 
+    IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer
@@ -16,41 +16,40 @@ RETURNS TABLE (Id Integer
              , UnitGroupNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
-             
+
              , DateStart TDateTime, DateEnd TDateTime
-             , NumYearStart Integer            --год старт
-             , NumYearEnd  Integer            --год енд
-             , NumStartDate  Integer          --номер мес€ца старт
-             , NumEndDate  Integer            --номер мес€ца енд
-             , MonthNameStart  TVarChar
-             , MonthNameEnd TVarChar
+             , MonthNameStart TDateTime, MonthNameEnd   TDateTime
+             , NumYearStart   Integer            --год старт
+             , NumYearEnd     Integer            --год енд
+             , NumStartDate   Integer            --номер мес€ца старт
+             , NumEndDate     Integer            --номер мес€ца енд
              , Amount TFloat
-             
-             , DateStart_Main TDateTime, DateEnd_Main TDateTime  
+
+             , DateStart_Main TDateTime, DateEnd_Main TDateTime
              , Amount_Main TFloat, Price_Main TFloat, Area_Main TFloat
-             
+
              , isErased Boolean
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;    
+  DECLARE vbUserId Integer;
   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_ServiceItemAdd());
      vbUserId:= lpGetUserBySession (inSession);
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
-     
+
      IF inShowAll = TRUE
      THEN
         -- ѕоказываем ¬—≈
-        RETURN QUERY 
+        RETURN QUERY
           WITH tmpMI AS (SELECT MovementItem.Id
-                              , MovementItem.ObjectId                  AS UnitId   
+                              , MovementItem.ObjectId                  AS UnitId
                               , MILinkObject_InfoMoney.ObjectId        AS InfoMoneyId
                               , MILinkObject_CommentInfoMoney.ObjectId AS CommentInfoMoneyId
-                              , MovementItem.Amount    
-                              , COALESCE (MIDate_DateStart.ValueData, vbOperDate) AS DateStart 
+                              , MovementItem.Amount
+                              , COALESCE (MIDate_DateStart.ValueData, vbOperDate) AS DateStart
                               , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) AS DateEnd
                               , MovementItem.isErased
                           FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -60,15 +59,15 @@ BEGIN
 
                                LEFT JOIN MovementItemDate AS MIDate_DateStart
                                                           ON MIDate_DateStart.MovementItemId = MovementItem.Id
-                                                         AND MIDate_DateStart.DescId = zc_MIDate_DateStart() 
+                                                         AND MIDate_DateStart.DescId = zc_MIDate_DateStart()
                                LEFT JOIN MovementItemDate AS MIDate_DateEnd
                                                           ON MIDate_DateEnd.MovementItemId = MovementItem.Id
-                                                         AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()  
+                                                         AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()
 
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                   
+
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
                                                                 ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_CommentInfoMoney.DescId         = zc_MILinkObject_CommentInfoMoney()
@@ -81,16 +80,16 @@ BEGIN
                            )
 
              , tmpMI_Main AS (SELECT *
-                              FROM gpSelect_MovementItem_ServiceItem_onDate(inOperDate := vbOperDate ::TDateTime, inUnitId:= 0, inInfoMoneyId:= inInfoMoneyId, inSession := inSession)
-                              )
-
+                              FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate := vbOperDate ::TDateTime, inUnitId:= 0, inInfoMoneyId:= inInfoMoneyId, inSession := inSession) AS gpSelect
+                              WHERE gpSelect.Amount > 0
+                             )
            -- результат
            SELECT 0                             AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
-                
+
                 , Object_InfoMoney.Id           AS InfoMoneyId
                 , Object_InfoMoney.ObjectCode   AS InfoMoneyCode
                 , Object_InfoMoney.ValueData    AS InfoMoneyName
@@ -99,15 +98,15 @@ BEGIN
                 , 0              AS CommentInfoMoneyCode
                 , '' ::TVarChar  AS CommentInfoMoneyName
 
-                , NULL                       :: TDateTime AS DateStart
-                , NULL                       :: TDateTime AS DateEnd  
+                , tmpMI_Main.DateStart                    :: TDateTime AS DateStart
+                , tmpMI_Main.DateEnd                      :: TDateTime AS DateEnd
+                , tmpMI_Main.DateStart                    :: TDateTime AS MonthNameStart
+                , tmpMI_Main.DateEnd                      :: TDateTime AS MonthNameEnd
 
-                , 0  ::Integer  AS NumYearStart            --год старт
-                , 0  ::Integer  AS NumYearEnd              --год енд
-                , 0  ::Integer  AS NumStartDate            --номер мес€ца старт
-                , 0  ::Integer  AS NumEndDate              --номер мес€ца енд
-                , '' ::TVarChar AS MonthNameStart
-                , '' ::TVarChar AS MonthNameEnd 
+                , (EXTRACT (Year FROM tmpMI_Main.DateStart) - 2000) ::Integer  AS NumYearStart    --год старт
+                , (EXTRACT (Year FROM tmpMI_Main.DateEnd)   - 2000) ::Integer  AS NumYearEnd      --год енд
+                , EXTRACT (MONTH FROM tmpMI_Main.DateStart) ::Integer  AS NumStartDate            --номер мес€ца старт
+                , EXTRACT (MONTH FROM tmpMI_Main.DateEnd)   ::Integer  AS NumEndDate              --номер мес€ца енд
 
                 , 0                          :: TFloat    AS Amount
 
@@ -116,31 +115,32 @@ BEGIN
                 , tmpMI_Main.Amount          :: TFloat    AS Amount_Main
                 , tmpMI_Main.Price           :: TFloat    AS Price_Main
                 , tmpMI_Main.Area            :: TFloat    AS Area_Main
-                                                                
-                , False                      :: Boolean   AS isErased
-   
+
+                , FALSE                      :: Boolean   AS isErased
+
            FROM tmpUnit
-                LEFT JOIN tmpMI ON tmpMI.UnitId = tmpUnit.UnitId 
+                INNER JOIN tmpMI_Main ON tmpMI_Main.UnitId = tmpUnit.UnitId
+                --                    AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId
+
+                LEFT JOIN tmpMI ON tmpMI.UnitId = tmpUnit.UnitId
 
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitId
 
                 LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpUnit.UnitId
-                                      AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull() 
-                LEFT JOIN tmpMI_Main ON tmpMI_Main.UnitId = tmpUnit.UnitId
-                --                    AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId 
+                                      AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
                 LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = COALESCE(tmpMI_Main.InfoMoneyId,76878)
 
            WHERE tmpMI.UnitId IS NULL
 
      UNION ALL
-           -- ѕоказываем только строки документа 
+           -- ѕоказываем только строки документа
            SELECT tmpMI.Id                      AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
-                
+
                 , Object_InfoMoney.Id           AS InfoMoneyId
                 , Object_InfoMoney.ObjectCode   AS InfoMoneyCode
                 , Object_InfoMoney.ValueData    AS InfoMoneyName
@@ -150,16 +150,16 @@ BEGIN
                 , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
 
                 , tmpMI.DateStart            :: TDateTime AS DateStart
-                , tmpMI.DateEnd              :: TDateTime AS DateEnd    
-                , EXTRACT (Year FROM tmpMI.DateStart)  ::Integer  AS NumYearStart            --год старт
-                , EXTRACT (Year FROM tmpMI.DateEnd)    ::Integer  AS NumYearEnd              --год енд
+                , tmpMI.DateEnd              :: TDateTime AS DateEnd
+                , tmpMI.DateStart            :: TDateTime AS MonthNameStart
+                , tmpMI.DateEnd              :: TDateTime AS MonthNameEnd
+                , (EXTRACT (Year FROM tmpMI.DateStart) - 2000) ::Integer  AS NumYearStart            --год старт
+                , (EXTRACT (Year FROM tmpMI.DateEnd)   - 2000) ::Integer  AS NumYearEnd              --год енд
                 , EXTRACT (MONTH FROM tmpMI.DateStart) ::Integer  AS NumStartDate            --номер мес€ца старт
                 , EXTRACT (MONTH FROM tmpMI.DateEnd)   ::Integer  AS NumEndDate              --номер мес€ца енд
-                , zfCalc_MonthName (tmpMI.DateStart)   ::TVarChar AS MonthNameStart
-                , zfCalc_MonthName (tmpMI.DateEnd)     ::TVarChar AS MonthNameEnd 
 
                 , tmpMI.Amount               :: TFloat    AS Amount
-                
+
                 , tmpMI_Main.DateStart       :: TDateTime AS DateStart_Main
                 , tmpMI_Main.DateEnd         :: TDateTime AS DateEnd_Main
                 , tmpMI_Main.Amount          :: TFloat    AS Amount_Main
@@ -185,44 +185,44 @@ BEGIN
                                                                     AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId
           ;
 
-     ELSE 
+     ELSE
          -- –езультат такой - ѕоказываем только строки документа
-         RETURN QUERY 
+         RETURN QUERY
           WITH tmpMI AS (SELECT MovementItem.Id
-                              , MovementItem.ObjectId                  AS UnitId   
+                              , MovementItem.ObjectId                  AS UnitId
                               , MILinkObject_InfoMoney.ObjectId        AS InfoMoneyId
                               , MILinkObject_CommentInfoMoney.ObjectId AS CommentInfoMoneyId
                               , MovementItem.Amount
-                              , COALESCE (MIDate_DateStart.ValueData, vbOperDate) AS DateStart 
+                              , COALESCE (MIDate_DateStart.ValueData, vbOperDate) AS DateStart
                               , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) AS DateEnd
                               , MovementItem.isErased
                           FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = tmpIsErased.isErased
-   
+
                                LEFT JOIN MovementItemDate AS MIDate_DateStart
                                                           ON MIDate_DateStart.MovementItemId = MovementItem.Id
-                                                         AND MIDate_DateStart.DescId = zc_MIDate_DateStart()  
+                                                         AND MIDate_DateStart.DescId = zc_MIDate_DateStart()
                                LEFT JOIN MovementItemDate AS MIDate_DateEnd
                                                           ON MIDate_DateEnd.MovementItemId = MovementItem.Id
-                                                         AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd() 
+                                                         AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()
 
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                   
+
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
                                                                 ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_CommentInfoMoney.DescId         = zc_MILinkObject_CommentInfoMoney()
-                          ) 
+                          )
 
            SELECT tmpMI.Id                      AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
                 , Object_Unit.ValueData         AS UnitName
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
-                
+
                 , Object_InfoMoney.Id         AS InfoMoneyId
                 , Object_InfoMoney.ObjectCode AS InfoMoneyCode
                 , Object_InfoMoney.ValueData  AS InfoMoneyName
@@ -232,15 +232,15 @@ BEGIN
                 , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
 
                 , tmpMI.DateStart            :: TDateTime AS DateStart
-                , tmpMI.DateEnd              :: TDateTime AS DateEnd                                           
-                , EXTRACT (Year FROM tmpMI.DateStart)  ::Integer  AS NumYearStart            --год старт
-                , EXTRACT (Year FROM tmpMI.DateEnd)    ::Integer  AS NumYearEnd              --год енд
+                , tmpMI.DateEnd              :: TDateTime AS DateEnd
+                , tmpMI.DateStart            :: TDateTime AS MonthNameStart
+                , tmpMI.DateEnd              :: TDateTime AS MonthNameEnd
+                , (EXTRACT (Year FROM tmpMI.DateStart) - 2000) ::Integer  AS NumYearStart            --год старт
+                , (EXTRACT (Year FROM tmpMI.DateEnd)   - 2000) ::Integer  AS NumYearEnd              --год енд
                 , EXTRACT (MONTH FROM tmpMI.DateStart) ::Integer  AS NumStartDate            --номер мес€ца старт
                 , EXTRACT (MONTH FROM tmpMI.DateEnd)   ::Integer  AS NumEndDate              --номер мес€ца енд
-                , zfCalc_MonthName (tmpMI.DateStart)   ::TVarChar AS MonthNameStart
-                , zfCalc_MonthName (tmpMI.DateEnd)     ::TVarChar AS MonthNameEnd   
-                
-                , tmpMI.Amount               :: TFloat    AS Amount   
+
+                , tmpMI.Amount               :: TFloat    AS Amount
 
                 , tmpMI_Main.DateStart       :: TDateTime AS DateStart_Main
                 , tmpMI_Main.DateEnd         :: TDateTime AS DateEnd_Main
@@ -256,7 +256,7 @@ BEGIN
 
                 LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
-                                      AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull() 
+                                      AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
 
                 LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate := tmpMI.DateStart ::TDateTime
                                                                   , inUnitId := tmpMI.UnitId
@@ -279,5 +279,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_ServiceItemAdd (inMovementId:= 7, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_MovementItem_ServiceItemAdd (inMovementId:= 7, inShowAll:= TRUE,  inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_ServiceItemAdd (inMovementId:= 7, inInfoMoneyId:= 76878, inShowAll:= TRUE,  inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_ServiceItemAdd (inMovementId:= 7, inInfoMoneyId:= 76878, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
