@@ -1,12 +1,14 @@
 -- Function: gpReport_SaleTare_Gofro()
 
 DROP FUNCTION IF EXISTS gpReport_SaleTare_Gofro (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SaleTare_Gofro (TDateTime, TDateTime, Integer, Integer,Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SaleTare_Gofro(
     IN inStartDate      TDateTime, -- дата начала периода
     IN inEndDate        TDateTime, -- дата окончани€ периода
     IN inUnitId         Integer  , -- подразделение
     IN inGoodsGroupId   Integer  , -- гофротара
+    IN inisDetail       Boolean  ,
     IN inSession        TVarChar   -- сесси€ пользовател€
 )
 RETURNS TABLE(OperDate TDateTime, OperDatePartner TDateTime
@@ -15,7 +17,8 @@ RETURNS TABLE(OperDate TDateTime, OperDatePartner TDateTime
             , isGoodsBox Boolean
             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
             , GoodsGroupNameFull TVarChar
-			, Amount TFloat, BoxCount TFloat
+			, Amount TFloat, BoxCount TFloat, BoxCount_calc TFloat 
+			, MovementId Integer , InvNumber TVarChar
     )
 AS
 $BODY$
@@ -155,9 +158,14 @@ BEGIN
                 , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
                 , SUM (COALESCE (tmpMI.Amount,0))     :: TFloat    AS Amount
-                --, SUM (COALESCE (tmpMI.BoxCount,0))   :: TFloat    AS BoxCount 
-                , SUM (CASE WHEN COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) = TRUE THEN COALESCE (tmpMI.BoxCount,0) ELSE 0 END)   :: TFloat    AS BoxCount 
+                , SUM (COALESCE (tmpMI.BoxCount,0))   :: TFloat    AS BoxCount 
+                , SUM (CASE WHEN COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) = TRUE
+                            THEN COALESCE (tmpMI.BoxCount,0)
+                            ELSE 0 
+                       END)   :: TFloat  AS BoxCount_calc 
                  
+                , CASE WHEN inisDetail = TRUE THEN Movement.Id ELSE 0 END         ::Integer AS MovementId
+                , CASE WHEN inisDetail = TRUE THEN Movement.InvNumber ELSE '' END ::TVarChar AS InvNumber
            FROM tmpMI
                 LEFT JOIN tmpMovement AS Movement ON Movement.Id = tmpMI.MovementId
 
@@ -172,9 +180,7 @@ BEGIN
                 LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_To
                                                 ON MovementLinkObject_To.MovementId = Movement.Id
                                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
-                
+                LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId 
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
@@ -186,13 +192,12 @@ BEGIN
 
                 LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.MovementId = tmpMI.MovementId
                                                AND tmpGoodsPropertyValue.Id = tmpMI.Id
-                                               AND COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) = TRUE 
                 --LEFT JOIN Object AS Object_GoodsBox ON Object_GoodsBox.Id = tmpGoodsPropertyValue.GoodsBoxId
                 
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpGoodsPropertyValue.GoodsBoxId, tmpMI.GoodsId)
                                
            GROUP BY  Movement.OperDate
-                , MovementDate_OperDatePartner.ValueData
+                , MovementDate_OperDatePartner.ValueData                
                 , Object_From.Id
                 , Object_From.ObjectCode
                 , Object_From.ValueData
@@ -204,7 +209,8 @@ BEGIN
                 , Object_Goods.ValueData
                 , ObjectString_Goods_GoodsGroupFull.ValueData
                 , COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE)
-
+                , CASE WHEN inisDetail = TRUE THEN Movement.Id ELSE 0 END
+                , CASE WHEN inisDetail = TRUE THEN Movement.InvNumber ELSE '' END
            ;
 END;
 $BODY$

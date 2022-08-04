@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxCheckBox;
 
 type
   TReport_SaleTare_GofroForm = class(TAncestorReportForm)
@@ -44,10 +45,17 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    BoxCount: TcxGridDBColumn;
-    dxBarButton1: TdxBarButton;
+    BoxCount_calc: TcxGridDBColumn;
+    bbOpenDocument: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    cbDetail: TcxCheckBox;
+    InvNumber: TcxGridDBColumn;
+    actOpenDocument: TdsdOpenForm;
+    spGet_checkopen: TdsdStoredProc;
+    actRefreshDet: TdsdDataSetRefresh;
+    macOpenDocument: TMultiAction;
+    actGet_checkopen: TdsdExecStoredProc;
   private
     { Private declarations }
   public
