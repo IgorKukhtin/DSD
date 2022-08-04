@@ -16,17 +16,17 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
     TabOrder = 3
     ExplicitTop = 75
     ExplicitWidth = 813
-    ExplicitHeight = 465
+    ExplicitHeight = 386
     ClientRectBottom = 386
     ClientRectRight = 813
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 813
-      ExplicitHeight = 465
+      ExplicitHeight = 386
       inherited cxGrid: TcxGrid
         Width = 813
         Height = 386
         ExplicitWidth = 813
-        ExplicitHeight = 465
+        ExplicitHeight = 386
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -105,6 +105,15 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
+          end
+          object isGoodsBox: TcxGridDBColumn
+            Caption = #1054#1090#1075#1088'. '#1074' '#1075#1086#1092#1088#1086
+            DataBinding.FieldName = 'isGoodsBox'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1075#1088#1091#1079#1082#1072' '#1074' '#1075#1086#1092#1088#1086' '#1044#1072'/'#1053#1077#1090
+            Options.Editing = False
+            Width = 74
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1072#1087#1087#1072' ('#1074#1089#1077')'

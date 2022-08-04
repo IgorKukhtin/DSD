@@ -12,9 +12,10 @@ CREATE OR REPLACE FUNCTION gpReport_SaleTare_Gofro(
 RETURNS TABLE(OperDate TDateTime, OperDatePartner TDateTime
             , FromId Integer, FromCode Integer, FromName TVarChar
             , ToId Integer, ToCode Integer, ToName TVarChar
+            , isGoodsBox Boolean
             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
             , GoodsGroupNameFull TVarChar
-			, Amount TFloat, BoxCount TFloat 
+			, Amount TFloat, BoxCount TFloat
     )
 AS
 $BODY$
@@ -93,9 +94,50 @@ BEGIN
    , tmpMovementLinkObject AS (SELECT MovementLinkObject.*
                                FROM MovementLinkObject
                                WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
-                                 AND MovementLinkObject.DescId IN (zc_MovementLinkObject_To(), zc_MovementLinkObject_From())
+                                 AND MovementLinkObject.DescId IN (zc_MovementLinkObject_To()
+                                                                 , zc_MovementLinkObject_From()
+                                                                 , zc_MovementLinkObject_GoodsProperty()
+                                                                 )
                                )
 
+   , tmpMLO_GoodsKind AS (SELECT MovementItemLinkObject.*
+                         FROM MovementItemLinkObject
+                         WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                           AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                         )
+
+  
+   , tmpGoodsPropertyValue AS (SELECT tmpMI.MovementId
+                                    , tmpMI.Id
+                                    , ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId AS GoodsBoxId
+                               FROM tmpMI
+                                     LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_GoodsProperty
+                                                                     ON MovementLinkObject_GoodsProperty.MovementId = tmpMI.MovementId
+                                                                    AND MovementLinkObject_GoodsProperty.DescId = zc_MovementLinkObject_GoodsProperty()
+                                      
+                                     LEFT JOIN tmpMLO_GoodsKind AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = tmpMI.Id
+     
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                           ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId =  MovementLinkObject_GoodsProperty.ObjectId
+                                                          AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+     
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                                                           ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                          AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+                                                          and ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId > 0
+     
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                           ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                          AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                                          AND tmpMI.GoodsId = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                           ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                          AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                                          AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId,0)
+                               )
+       
            --
            SELECT Movement.OperDate   ::TDateTime        AS OperDate
                 , MovementDate_OperDatePartner.ValueData AS OperDatePartner
@@ -104,7 +146,8 @@ BEGIN
                 , Object_From.ValueData               AS FromName
                 , Object_To.Id                        AS ToId
                 , Object_To.ObjectCode                AS ToCode
-                , Object_To.ValueData                 AS ToName 
+                , Object_To.ValueData                 AS ToName  
+                , COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) :: Boolean AS isGoodsBox
 
                 , Object_Goods.Id                     AS GoodsId
                 , Object_Goods.ObjectCode             AS GoodsCode
@@ -112,12 +155,14 @@ BEGIN
                 , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
                 , SUM (COALESCE (tmpMI.Amount,0))     :: TFloat    AS Amount
-                , SUM (COALESCE (tmpMI.BoxCount,0))   :: TFloat    AS BoxCount
+                --, SUM (COALESCE (tmpMI.BoxCount,0))   :: TFloat    AS BoxCount 
+                , SUM (CASE WHEN COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) = TRUE THEN COALESCE (tmpMI.BoxCount,0) ELSE 0 END)   :: TFloat    AS BoxCount 
+                 
            FROM tmpMI
                 LEFT JOIN tmpMovement AS Movement ON Movement.Id = tmpMI.MovementId
 
                 LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
-                                          ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                          ON MovementDate_OperDatePartner.MovementId = Movement.Id
 
                 LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
@@ -129,11 +174,23 @@ BEGIN
                                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                 LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+                
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
-                                      AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                                      AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull() 
+
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_GoodsBox
+                                        ON ObjectBoolean_Partner_GoodsBox.ObjectId = MovementLinkObject_To.ObjectId
+                                       AND ObjectBoolean_Partner_GoodsBox.DescId = zc_ObjectBoolean_Partner_GoodsBox()   
+
+                LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.MovementId = tmpMI.MovementId
+                                               AND tmpGoodsPropertyValue.Id = tmpMI.Id
+                                               AND COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) = TRUE 
+                --LEFT JOIN Object AS Object_GoodsBox ON Object_GoodsBox.Id = tmpGoodsPropertyValue.GoodsBoxId
+                
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpGoodsPropertyValue.GoodsBoxId, tmpMI.GoodsId)
+                               
            GROUP BY  Movement.OperDate
                 , MovementDate_OperDatePartner.ValueData
                 , Object_From.Id
@@ -146,6 +203,7 @@ BEGIN
                 , Object_Goods.ObjectCode
                 , Object_Goods.ValueData
                 , ObjectString_Goods_GoodsGroupFull.ValueData
+                , COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE)
 
            ;
 END;
