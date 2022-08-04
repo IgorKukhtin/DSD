@@ -1099,7 +1099,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ceDeviationsPrice1303'
+        Name = 'DeviationsPrice1303'
         Value = Null
         Component = ceDeviationsPrice1303
         DataType = ftFloat

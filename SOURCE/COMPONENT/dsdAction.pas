@@ -4637,7 +4637,7 @@ end;
 
 function TdsdShowPUSHMessage.LocalExecute: Boolean;
 var
-  i: Integer; MessageType : TPUSHMessageType;
+  i,j: Integer; MessageType : TPUSHMessageType; DataSet : TDataSet;
   ASpecialLighting, ABold : Boolean; ATextColor, AColor : Integer;
 begin
   result := true;
@@ -4650,72 +4650,167 @@ begin
           (Assigned(StoredProcList[i].TabSheet) and
           (StoredProcList[i].TabSheet.PageControl.ActivePage = StoredProcList[i].TabSheet)) then
         begin
-          try
-            StoredProcList[i].StoredProc.Execute;
-            ASpecialLighting := False; ATextColor := clWindowText; AColor := clCream; ABold := False;
-            if not Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage')) then
-            begin
-              raise Exception.Create('Не найден возвращаемый параметр <outShowMessage> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
-              Exit;
-            end;
-            if not StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage').Value then Continue;
-
-            if Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outSpecialLighting')) then
-            begin
-              ASpecialLighting := StoredProcList[i].StoredProc.Params.ParamByName('outSpecialLighting').Value;
-
-              if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outTextColor')) then
-                ATextColor := StoredProcList[i].StoredProc.Params.ParamByName('outTextColor').Value;
-
-              if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outColor')) then
-                AColor := StoredProcList[i].StoredProc.Params.ParamByName('outColor').Value;
-
-              if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outBold')) then
-                ABold := StoredProcList[i].StoredProc.Params.ParamByName('outBold').Value;
-            end;
-
-            if FPUSHMessageType = pmtResult then
-            begin
-              if not Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outPUSHType')) then
+          if StoredProcList[i].StoredProc.OutputType = otDataSet then
+          begin
+              if StoredProcList[i].StoredProc.DataSets.Count < 1 then
               begin
-                raise Exception.Create('Не найден возвращаемый параметр <outPUSHType> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
+                raise Exception.Create('Не указан <DataSet> в StoredProc ' + StoredProcList[i].StoredProc.Name);
                 Exit;
               end;
+              try
+                StoredProcList[i].StoredProc.Execute;
 
-              case StoredProcList[i].StoredProc.Params.ParamByName('outPUSHType').Value of
-                1 : MessageType := pmtWarning;
-                2 : MessageType := pmtError;
-                3 : MessageType := pmtInformation;
-                4 : MessageType := pmtConfirmation;
-                else
+                for J := 0 to StoredProcList[i].StoredProc.DataSets.Count - 1 do
                 begin
-                  raise Exception.Create('Неверный тип PUSH сообщения из функции ' + StoredProcList[i].StoredProc.StoredProcName);
-                  Exit;
+                  DataSet := StoredProcList[i].StoredProc.DataSets.Items[j].DataSet;
+
+                  if DataSet.IsEmpty then Continue;
+
+                  DataSet.First;
+                  while not DataSet.Eof do
+                  begin
+
+                    ASpecialLighting := False; ATextColor := clWindowText; AColor := clCream; ABold := False;
+
+                    if not Assigned(DataSet.Fields.FindField('ShowMessage')) then
+                    begin
+                      raise Exception.Create('Не найден возвращаемый параметр <ShowMessage> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
+                      Exit;
+                    end;
+                    if not DataSet.FieldByName('ShowMessage').Value then Continue;
+
+                    if Assigned(DataSet.Fields.FindField('SpecialLighting')) then
+                    begin
+                      ASpecialLighting := DataSet.FieldByName('SpecialLighting').Value;
+
+                      if ASpecialLighting and Assigned(DataSet.Fields.FindField('TextColor')) then
+                        ATextColor := DataSet.FieldByName('TextColor').AsInteger;
+
+                      if ASpecialLighting and Assigned(DataSet.Fields.FindField('Color')) then
+                        AColor := DataSet.FieldByName('Color').AsInteger;
+
+                      if ASpecialLighting and Assigned(DataSet.Fields.FindField('isBold')) then
+                        ABold := DataSet.FieldByName('isBold').AsBoolean;
+                    end;
+
+                    if FPUSHMessageType = pmtResult then
+                    begin
+                      if not Assigned(DataSet.Fields.FindField('PUSHType')) then
+                      begin
+                        raise Exception.Create('Не найден возвращаемый параметр <PUSHType> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
+                        Exit;
+                      end;
+
+                      case DataSet.FieldByName('PUSHType').AsInteger of
+                        1 : MessageType := pmtWarning;
+                        2 : MessageType := pmtError;
+                        3 : MessageType := pmtInformation;
+                        4 : MessageType := pmtConfirmation;
+                        else
+                        begin
+                          raise Exception.Create('Неверный тип PUSH сообщения из функции ' + StoredProcList[i].StoredProc.StoredProcName);
+                          Exit;
+                        end;
+                      end;
+
+                    end else MessageType := FPUSHMessageType;
+
+                    case MessageType of
+                      pmtWarning : ShowPUSHMessage(DataSet.FieldByName('Text').Value, mtWarning, ASpecialLighting, ATextColor, AColor, ABold);
+                      pmtError : begin
+                                   ShowPUSHMessage(DataSet.FieldByName('Text').Value, mtError, ASpecialLighting, ATextColor, AColor, ABold);
+                                   raise Exception.Create('Выполнение операции прервано...');
+                                   Result := False;
+                                   Exit;
+                                 end;
+                      pmtInformation : ShowPUSHMessage(DataSet.FieldByName('Text').Value, mtInformation, ASpecialLighting, ATextColor, AColor, ABold);
+                      pmtConfirmation : if not ShowPUSHMessage(DataSet.FieldByName('Text').Value +
+                                          IfThen(Pos('?', DataSet.FieldByName('Text').Value) > 0, #13#10#13#10'Продолжить изменение ?...', ''),
+                                          mtConfirmation, ASpecialLighting, ATextColor, AColor, ABold) then
+                                        begin
+                                          raise Exception.Create('Выполнение операции прервано...');
+                                          Result := False;
+                                          exit;
+                                        end;
+                    end;
+
+                    DataSet.Next;
+                  end;
                 end;
+              except
+                on E:Exception do raise Exception.Create('Ошибка вывода ПУШ ' + Self.Name + ': ' + e.Message);
+              end;
+          end else
+          begin
+            try
+              StoredProcList[i].StoredProc.Execute;
+              ASpecialLighting := False; ATextColor := clWindowText; AColor := clCream; ABold := False;
+
+
+              if not Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage')) then
+              begin
+                raise Exception.Create('Не найден возвращаемый параметр <outShowMessage> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
+                Exit;
+              end;
+              if not StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage').Value then Continue;
+
+              if Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outSpecialLighting')) then
+              begin
+                ASpecialLighting := StoredProcList[i].StoredProc.Params.ParamByName('outSpecialLighting').Value;
+
+                if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outTextColor')) then
+                  ATextColor := StoredProcList[i].StoredProc.Params.ParamByName('outTextColor').Value;
+
+                if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outColor')) then
+                  AColor := StoredProcList[i].StoredProc.Params.ParamByName('outColor').Value;
+
+                if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outBold')) then
+                  ABold := StoredProcList[i].StoredProc.Params.ParamByName('outBold').Value;
               end;
 
-            end else MessageType := FPUSHMessageType;
-          except
-            on E:Exception do raise Exception.Create('Ошибка вывода ПУШ ' + Self.Name + ': ' + e.Message);
-          end;
+              if FPUSHMessageType = pmtResult then
+              begin
+                if not Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outPUSHType')) then
+                begin
+                  raise Exception.Create('Не найден возвращаемый параметр <outPUSHType> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
+                  Exit;
+                end;
 
-          case MessageType of
-            pmtWarning : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtWarning, ASpecialLighting, ATextColor, AColor, ABold);
-            pmtError : begin
-                         ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtError, ASpecialLighting, ATextColor, AColor, ABold);
-                         raise Exception.Create('Выполнение операции прервано...');
-                         Result := False;
-                         Exit;
-                       end;
-            pmtInformation : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtInformation, ASpecialLighting, ATextColor, AColor, ABold);
-            pmtConfirmation : if not ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value +
-                                IfThen(Pos('?', StoredProcList[i].StoredProc.Params.ParamByName('outText').Value) > 0, #13#10#13#10'Продолжить изменение ?...', ''),
-                                mtConfirmation, ASpecialLighting, ATextColor, AColor, ABold) then
-                              begin
-                                raise Exception.Create('Выполнение операции прервано...');
-                                Result := False;
-                                exit;
-                              end;
+                case StoredProcList[i].StoredProc.Params.ParamByName('outPUSHType').Value of
+                  1 : MessageType := pmtWarning;
+                  2 : MessageType := pmtError;
+                  3 : MessageType := pmtInformation;
+                  4 : MessageType := pmtConfirmation;
+                  else
+                  begin
+                    raise Exception.Create('Неверный тип PUSH сообщения из функции ' + StoredProcList[i].StoredProc.StoredProcName);
+                    Exit;
+                  end;
+                end;
+
+              end else MessageType := FPUSHMessageType;
+            except
+              on E:Exception do raise Exception.Create('Ошибка вывода ПУШ ' + Self.Name + ': ' + e.Message);
+            end;
+
+            case MessageType of
+              pmtWarning : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtWarning, ASpecialLighting, ATextColor, AColor, ABold);
+              pmtError : begin
+                           ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtError, ASpecialLighting, ATextColor, AColor, ABold);
+                           raise Exception.Create('Выполнение операции прервано...');
+                           Result := False;
+                           Exit;
+                         end;
+              pmtInformation : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtInformation, ASpecialLighting, ATextColor, AColor, ABold);
+              pmtConfirmation : if not ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value +
+                                  IfThen(Pos('?', StoredProcList[i].StoredProc.Params.ParamByName('outText').Value) > 0, #13#10#13#10'Продолжить изменение ?...', ''),
+                                  mtConfirmation, ASpecialLighting, ATextColor, AColor, ABold) then
+                                begin
+                                  raise Exception.Create('Выполнение операции прервано...');
+                                  Result := False;
+                                  exit;
+                                end;
+            end;
           end;
         end;
       end;
