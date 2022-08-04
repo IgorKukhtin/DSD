@@ -337,60 +337,121 @@ begin
           ElementList := SplitString(StringList[i], #9);
           if High(ElementList) < 20 then
             raise Exception.Create('Количество столбцов строке ' + IntToStr(I) + ' файла "' + FileName + '" меньше необходимого.');
-          if PriceWithVAT then
-             Price := gfStrToFloat(ElementList[19])
-          else
-             Price := gfStrToFloat(AnsiReplaceStr(ElementList[20], ' ', '')) / gfStrToFloat(AnsiReplaceStr(ElementList[15], ' ', ''));
-          ElementList[13] := trim(ElementList[13]);
-          if (ElementList[13] = '') or (ElementList[13] = '.  .') then
-             ExpirationDate := OperDate + 365
-          else
-             ExpirationDate := VarToDateTime(ElementList[13]);    // Срок годности
-          // Проверяем задвоенные позиции
-          if Locate('GoodsCode;PartitionGoods;ExpirationDate;Price',
-                      VarArrayOf([ElementList[0], ElementList[10], ExpirationDate, Price]), []) then begin
-             Edit;
-             FieldByName('Amount').AsFloat := FieldByName('Amount').AsFloat + gfStrToFloat(ElementList[15]);    // Количество
-             Post
-          end
-          else begin
-            Append;
-            FieldByName('OKPOFrom').AsString := OkpoFrom;
-            FieldByName('OKPOTo').AsString := OkpoTo;
-            FieldByName('InvNumber').AsString := InvNumber;
-            FieldByName('OperDate').AsDateTime := OperDate;
-            FieldByName('InvTaxNumber').AsString := InvTaxNumber;
-            FieldByName('PaymentDate').Value := PaymentDate;
-            FieldByName('PriceWithVAT').AsBoolean := PriceWithVAT;
-            FieldByName('SyncCode').AsInteger := SyncCode;
-            FieldByName('Remark').AsString := Remark;
 
-            FieldByName('GoodsCode').AsString := ElementList[0];
-            FieldByName('GoodsName').AsString := ElementList[1];
-            FieldByName('MakerCode').AsString := ElementList[2];
-            FieldByName('MakerName').AsString := ElementList[3];
-            FieldByName('CommonCode').AsString := ElementList[4];
-            FieldByName('SertificatNumber').AsString := ElementList[5]; // Номер регистрации
-            if (TRIM(ElementList[6]) = '') or (ElementList[6] = '  .  .  ') then
-              FieldByName('SertificatStart').Clear
+          if (High(ElementList) = 23) and (OkpoFrom = '37068787') then
+          begin
+            if PriceWithVAT then
+               Price := gfStrToFloat(ElementList[21])
             else
-              FieldByName('SertificatStart').asDateTime := VarToDateTime(ElementList[6]);
-            if (TRIM(ElementList[7]) = '') or (ElementList[7] = '  .  .  ') then
-              FieldByName('SertificatEnd').Clear
+               Price := gfStrToFloat(AnsiReplaceStr(ElementList[22], ' ', '')) / gfStrToFloat(AnsiReplaceStr(ElementList[17], ' ', ''));
+            ElementList[15] := trim(ElementList[15]);
+            if (ElementList[15] = '') or (ElementList[15] = '.  .') then
+               ExpirationDate := OperDate + 365
             else
-              FieldByName('SertificatEnd').AsDateTime := VarToDateTime(ElementList[7]);
+               ExpirationDate := VarToDateTime(ElementList[15]);    // Срок годности
+            // Проверяем задвоенные позиции
+            if Locate('GoodsCode;PartitionGoods;ExpirationDate;Price',
+                        VarArrayOf([ElementList[0], ElementList[10], ExpirationDate, Price]), []) then begin
+               Edit;
+               FieldByName('Amount').AsFloat := FieldByName('Amount').AsFloat + gfStrToFloat(ElementList[17]);    // Количество
+               Post
+            end
+            else begin
+              Append;
+              FieldByName('OKPOFrom').AsString := OkpoFrom;
+              FieldByName('OKPOTo').AsString := OkpoTo;
+              FieldByName('InvNumber').AsString := InvNumber;
+              FieldByName('OperDate').AsDateTime := OperDate;
+              FieldByName('InvTaxNumber').AsString := InvTaxNumber;
+              FieldByName('PaymentDate').Value := PaymentDate;
+              FieldByName('PriceWithVAT').AsBoolean := PriceWithVAT;
+              FieldByName('SyncCode').AsInteger := SyncCode;
+              FieldByName('Remark').AsString := Remark;
 
-            FieldByName('VAT').AsInteger := round(gfStrToFloat(ElementList[8]));
-            FieldByName('PartitionGoods').AsString := ElementList[10]; // Номер серии
-            FieldByName('ExpirationDate').AsDateTime := ExpirationDate;    // Срок годности
-            if High(ElementList) < 21 then
-               FieldByName('FEA').AsString := '' // КВЭД
+              FieldByName('GoodsCode').AsString := ElementList[0];
+              FieldByName('GoodsName').AsString := ElementList[1];
+              FieldByName('MakerCode').AsString := ElementList[2];
+              FieldByName('MakerName').AsString := ElementList[3];
+              FieldByName('CommonCode').AsString := ElementList[4];
+              FieldByName('SertificatNumber').AsString := ElementList[5]; // Номер регистрации
+              if (TRIM(ElementList[6]) = '') or (ElementList[6] = '  .  .  ') then
+                FieldByName('SertificatStart').Clear
+              else
+                FieldByName('SertificatStart').asDateTime := VarToDateTime(ElementList[6]);
+              if (TRIM(ElementList[7]) = '') or (ElementList[7] = '  .  .  ') then
+                FieldByName('SertificatEnd').Clear
+              else
+                FieldByName('SertificatEnd').AsDateTime := VarToDateTime(ElementList[7]);
+
+              FieldByName('VAT').AsInteger := round(gfStrToFloat(ElementList[8]));
+              FieldByName('PartitionGoods').AsString := ElementList[10]; // Номер серии
+              FieldByName('ExpirationDate').AsDateTime := ExpirationDate;    // Срок годности
+              if High(ElementList) < 21 then
+                 FieldByName('FEA').AsString := '' // КВЭД
+              else
+                 FieldByName('FEA').AsString := ElementList[23]; // КВЭД
+              FieldByName('MeasureName').AsString := ElementList[16]; // Ед Изм
+              FieldByName('Amount').AsFloat := gfStrToFloat(ReplaceStr(ElementList[17], ' ', ''));    // Количество
+              FieldByName('Price').AsFloat  := Price;    // Цена Отпускная (для аптеки это закупочная)
+              Post;
+            end;
+          end else
+          begin
+            if PriceWithVAT then
+               Price := gfStrToFloat(ElementList[19])
             else
-               FieldByName('FEA').AsString := ElementList[21]; // КВЭД
-            FieldByName('MeasureName').AsString := ElementList[14]; // Ед Изм
-            FieldByName('Amount').AsFloat := gfStrToFloat(ReplaceStr(ElementList[15], ' ', ''));    // Количество
-            FieldByName('Price').AsFloat  := Price;    // Цена Отпускная (для аптеки это закупочная)
-            Post;
+               Price := gfStrToFloat(AnsiReplaceStr(ElementList[20], ' ', '')) / gfStrToFloat(AnsiReplaceStr(ElementList[15], ' ', ''));
+            ElementList[13] := trim(ElementList[13]);
+            if (ElementList[13] = '') or (ElementList[13] = '.  .') then
+               ExpirationDate := OperDate + 365
+            else
+               ExpirationDate := VarToDateTime(ElementList[13]);    // Срок годности
+            // Проверяем задвоенные позиции
+            if Locate('GoodsCode;PartitionGoods;ExpirationDate;Price',
+                        VarArrayOf([ElementList[0], ElementList[10], ExpirationDate, Price]), []) then begin
+               Edit;
+               FieldByName('Amount').AsFloat := FieldByName('Amount').AsFloat + gfStrToFloat(ElementList[15]);    // Количество
+               Post
+            end
+            else begin
+              Append;
+              FieldByName('OKPOFrom').AsString := OkpoFrom;
+              FieldByName('OKPOTo').AsString := OkpoTo;
+              FieldByName('InvNumber').AsString := InvNumber;
+              FieldByName('OperDate').AsDateTime := OperDate;
+              FieldByName('InvTaxNumber').AsString := InvTaxNumber;
+              FieldByName('PaymentDate').Value := PaymentDate;
+              FieldByName('PriceWithVAT').AsBoolean := PriceWithVAT;
+              FieldByName('SyncCode').AsInteger := SyncCode;
+              FieldByName('Remark').AsString := Remark;
+
+              FieldByName('GoodsCode').AsString := ElementList[0];
+              FieldByName('GoodsName').AsString := ElementList[1];
+              FieldByName('MakerCode').AsString := ElementList[2];
+              FieldByName('MakerName').AsString := ElementList[3];
+              FieldByName('CommonCode').AsString := ElementList[4];
+              FieldByName('SertificatNumber').AsString := ElementList[5]; // Номер регистрации
+              if (TRIM(ElementList[6]) = '') or (ElementList[6] = '  .  .  ') then
+                FieldByName('SertificatStart').Clear
+              else
+                FieldByName('SertificatStart').asDateTime := VarToDateTime(ElementList[6]);
+              if (TRIM(ElementList[7]) = '') or (ElementList[7] = '  .  .  ') then
+                FieldByName('SertificatEnd').Clear
+              else
+                FieldByName('SertificatEnd').AsDateTime := VarToDateTime(ElementList[7]);
+
+              FieldByName('VAT').AsInteger := round(gfStrToFloat(ElementList[8]));
+              FieldByName('PartitionGoods').AsString := ElementList[10]; // Номер серии
+              FieldByName('ExpirationDate').AsDateTime := ExpirationDate;    // Срок годности
+              if High(ElementList) < 21 then
+                 FieldByName('FEA').AsString := '' // КВЭД
+              else
+                 FieldByName('FEA').AsString := ElementList[21]; // КВЭД
+              FieldByName('MeasureName').AsString := ElementList[14]; // Ед Изм
+              FieldByName('Amount').AsFloat := gfStrToFloat(ReplaceStr(ElementList[15], ' ', ''));    // Количество
+              FieldByName('Price').AsFloat  := Price;    // Цена Отпускная (для аптеки это закупочная)
+              Post;
+            end;
           end;
         end;
   finally

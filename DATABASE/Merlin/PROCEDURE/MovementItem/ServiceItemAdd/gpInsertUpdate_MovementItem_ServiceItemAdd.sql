@@ -17,6 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ServiceItemAdd(
     IN inAmount              TFloat    , --  
    OUT outDateStart          TDateTime , --
    OUT outDateEnd            TDateTime , --
+   OUT outMonthNameStart     TDateTime
+   OUT outMonthNameEnd       TDateTime
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
@@ -29,9 +31,19 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ServiceItemAdd());
 
-     --дата документа
+     -- дата документа
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
      
+     -- проверка - документ должен быть сохранен
+     IF COALESCE (ioNumYearStart, 0) > 100 OR COALESCE (ioNumYearStart, 0) < 10 THEN
+        RAISE EXCEPTION 'Ошибка.Значение <Год с...> не попадает в диапазон двухзначного числа.';
+     END IF;
+     -- проверка - документ должен быть сохранен
+     IF COALESCE (ioNumYearEnd, 0) > 100 OR COALESCE (ioNumYearEnd, 0) < 10 THEN
+        RAISE EXCEPTION 'Ошибка.Значение <Год по...> не попадает в диапазон двухзначного числа.';
+     END IF;
+
+
      --если не ввели возвращаем тек месяц
      IF COALESCE (ioNumStartDate,0) = 0
      THEN 
@@ -56,9 +68,11 @@ BEGIN
          ioNumYearEnd := ioNumYearStart +1;
      END IF;
 
-     outDateStart:= ('01.'||ioNumStartDate||'.'||ioNumYearStart) ::TDateTime;
-     outDateEnd  := ((('01.'||ioNumEndDate||'.'||ioNumYearEnd) ::TDateTime) + INTERVAL '1 MONTH' -  INTERVAL '1 Day');
+     outDateStart:= ('01.'||ioNumStartDate||'.'||(2000 + ioNumYearStart)) ::TDateTime;
+     outDateEnd  := ((('01.'||ioNumEndDate||'.'||(2000 + ioNumYearEnd)) ::TDateTime) + INTERVAL '1 MONTH' -  INTERVAL '1 Day');
      
+     outMonthNameStart:= outDateStart;
+     outMonthNameEnd  := outDateEnd;
      
      ioId:= lpInsertUpdate_MovementItem_ServiceItemAdd (ioId                 := ioId
                                                       , inMovementId         := inMovementId

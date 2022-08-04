@@ -1098,6 +1098,7 @@ BEGIN
                                                                    ON ObjectFloat_Weight.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
                                                                   AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
+                                        WHERE 1=0
                                        )
 
 
