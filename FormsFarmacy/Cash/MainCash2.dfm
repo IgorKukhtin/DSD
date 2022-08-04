@@ -511,7 +511,7 @@ inherited MainCashForm2: TMainCashForm2
           Width = 89
         end
         object MainColIntenalSPName: TcxGridDBColumn
-          Caption = #1053#1072#1079#1074#1072' ('#1089#1087')'
+          Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072' ('#1057#1055')'
           DataBinding.FieldName = 'IntenalSPName'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
@@ -1114,7 +1114,7 @@ inherited MainCashForm2: TMainCashForm2
           Width = 90
         end
         object MainBrandSPName: TcxGridDBColumn
-          Caption = #1058#1086#1088#1075#1086#1074#1077#1083#1100#1085#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
+          Caption = #1058#1086#1088#1075#1086#1074#1077#1083#1100#1085#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' ('#1057#1055')'
           DataBinding.FieldName = 'BrandSPName'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False

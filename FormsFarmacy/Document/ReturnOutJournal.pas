@@ -73,6 +73,9 @@ type
     macPrintFilter: TMultiAction;
     actDirectoryDialog: TFileDialogAction;
     bbPrintFilter: TdxBarButton;
+    macPrintFilterXLS: TMultiAction;
+    actPrintFilterXLS: TdsdPrintAction;
+    bbPrintFilterXLS: TdxBarButton;
   private
     { Private declarations }
   public
