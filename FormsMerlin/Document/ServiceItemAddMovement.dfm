@@ -68,6 +68,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
@@ -596,6 +597,14 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_MI_Mask'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -688,6 +697,10 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       Action = actReport_Goods
       Category = 0
     end
+    object bbInsert_MI_Mask: TdxBarButton
+      Action = actInsert_MI_Mask
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -765,6 +778,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
@@ -1217,6 +1231,22 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         end>
       isShowModal = True
     end
+    object actInsert_MI_Mask: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_Mask
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_Mask
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1091' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1091' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1271,6 +1301,14 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId_top'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1381,7 +1419,25 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
-    ColumnEnterList = <>
+    ColumnEnterList = <
+      item
+        Column = NumStartDate
+      end
+      item
+        Column = NumYearStart
+      end
+      item
+        Column = NumEndDate
+      end
+      item
+        Column = NumYearEnd
+      end
+      item
+        Column = Amount
+      end
+      item
+        Column = CommentInfoMoneyName
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -1390,6 +1446,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    SearchAsFilter = False
     PropertiesCellList = <>
     Left = 347
     Top = 337
@@ -1454,6 +1511,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         Control = ceStatus
       end
       item
+        Control = ceComment
       end
       item
       end
@@ -1792,5 +1850,30 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       end>
     Left = 312
     Top = 8
+  end
+  object spInsert_MI_Mask: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_ServiceItemAdd_Mask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 136
+    Top = 352
   end
 end

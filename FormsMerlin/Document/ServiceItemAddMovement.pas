@@ -113,6 +113,9 @@ type
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     cbisOne: TcxCheckBox;
+    spInsert_MI_Mask: TdsdStoredProc;
+    actInsert_MI_Mask: TdsdExecStoredProc;
+    bbInsert_MI_Mask: TdxBarButton;
   private
   public
   end;

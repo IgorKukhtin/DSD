@@ -4,12 +4,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ServiceItemAdd (Integer, Int
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ServiceItemAdd (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ServiceItemAdd (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ServiceItemAdd (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ServiceItemAdd (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
  
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ServiceItemAdd(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inUnitId              Integer   , -- отдел 
-    IN inInfoMoneyId         Integer   , -- 
+    IN inInfoMoneyId         Integer   , --
+    IN inInfoMoneyId_top     Integer   , -- 
     IN inCommentInfoMoneyId  Integer   , -- 
  INOUT ioNumStartDate        Integer , --
  INOUT ioNumEndDate          Integer , -- 
@@ -35,16 +37,16 @@ BEGIN
 
      -- дата документа
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
-     
-     -- проверка - документ должен быть сохранен
-     IF COALESCE (ioNumYearStart, 0) > 100 OR COALESCE (ioNumYearStart, 0) < 10 THEN
-        RAISE EXCEPTION 'Ошибка.Значение <Год с...> не попадает в диапазон двухзначного числа.';
+         
+     --если не ввели возвращаем тек год
+     IF COALESCE (ioNumYearStart,0) = 0
+     THEN 
+         ioNumYearStart := EXTRACT (YEAR FROM vbOperDate) - 2000;
      END IF;
-     -- проверка - документ должен быть сохранен
-     IF COALESCE (ioNumYearEnd, 0) > 100 OR COALESCE (ioNumYearEnd, 0) < 10 THEN
-        RAISE EXCEPTION 'Ошибка.Значение <Год по...> не попадает в диапазон двухзначного числа.';
-     END IF;
-
+     IF COALESCE (ioNumYearEnd,0) = 0
+     THEN 
+         ioNumYearEnd := EXTRACT (YEAR FROM vbOperDate) - 2000;
+     END IF; 
 
      --если не ввели возвращаем тек месяц
      IF COALESCE (ioNumStartDate,0) = 0
@@ -54,17 +56,17 @@ BEGIN
      IF COALESCE (ioNumEndDate,0) = 0
      THEN 
          ioNumEndDate := EXTRACT (MONTH FROM vbOperDate);
-     END IF;     
-
-     IF COALESCE (ioNumYearStart,0) = 0
-     THEN 
-         ioNumYearStart := EXTRACT (YEAR FROM vbOperDate);
      END IF;
-     IF COALESCE (ioNumYearEnd,0) = 0
-     THEN 
-         ioNumYearEnd := EXTRACT (YEAR FROM vbOperDate);
-     END IF; 
-     
+
+     -- проверка - документ должен быть сохранен
+     IF COALESCE (ioNumYearStart, 0) > 100 OR COALESCE (ioNumYearStart, 0) < 10 THEN
+        RAISE EXCEPTION 'Ошибка.Значение <Год с...> не попадает в диапазон двухзначного числа.';
+     END IF;
+     -- проверка - документ должен быть сохранен
+     IF COALESCE (ioNumYearEnd, 0) > 100 OR COALESCE (ioNumYearEnd, 0) < 10 THEN
+        RAISE EXCEPTION 'Ошибка.Значение <Год по...> не попадает в диапазон двухзначного числа.';
+     END IF;
+
      ---если галка 1 месяц тогда переопределяем месяц окончания  = месяцу начала 
      IF COALESCE (inisOne,FALSE) = TRUE 
      THEN   
@@ -81,6 +83,11 @@ BEGIN
      
      outMonthNameStart:= outDateStart;
      outMonthNameEnd  := outDateEnd;
+     
+     IF COALESCE (inInfoMoneyId,0) = 0
+     THEN
+         inInfoMoneyId := inInfoMoneyId_top;
+     END IF;
      
      ioId:= lpInsertUpdate_MovementItem_ServiceItemAdd (ioId                 := ioId
                                                       , inMovementId         := inMovementId
