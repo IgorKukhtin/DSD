@@ -4798,6 +4798,10 @@
 				<Form>Report_OrderExternal_MIChild_DetailForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\WeighingPartner_bySale.pas">
+				<Form>WeighingPartner_bySaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

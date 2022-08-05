@@ -1264,7 +1264,79 @@ inherited SaleForm: TSaleForm
         end>
       Caption = 'actPrint_Transport_ReportName'
     end
-    object actPrint_ExpInvoice: TdsdPrintAction [7]
+    object actOpenWeighingPartner_bySale: TdsdOpenForm [7]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1044#1072#1085#1085#1099#1077' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      Hint = #1044#1072#1085#1085#1099#1077' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      ImageIndex = 46
+      FormName = 'TWeighingPartner_bySaleForm'
+      FormNameParam.Value = 'TWeighingPartner_bySaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actPrint_ExpInvoice: TdsdPrintAction [8]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpInvoice
@@ -1303,7 +1375,7 @@ inherited SaleForm: TSaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintTax_Us: TdsdPrintAction [8]
+    object actPrintTax_Us: TdsdPrintAction [9]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -1346,7 +1418,7 @@ inherited SaleForm: TSaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Pack: TdsdPrintAction [9]
+    object actPrint_Pack: TdsdPrintAction [10]
       Category = 'Print_Fozzy'
       MoveParams = <>
       StoredProc = spSelectPrint_Pack
@@ -1380,7 +1452,7 @@ inherited SaleForm: TSaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_PackWeight: TdsdPrintAction [10]
+    object actPrint_PackWeight: TdsdPrintAction [11]
       Category = 'Print_Fozzy'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1417,7 +1489,7 @@ inherited SaleForm: TSaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_ExpSpec: TdsdPrintAction [11]
+    object actPrint_ExpSpec: TdsdPrintAction [12]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpInvoice
@@ -1460,7 +1532,7 @@ inherited SaleForm: TSaleForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actAssetGoodsChoiceForm: TOpenChoiceForm [14]
+    object actAssetGoodsChoiceForm: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1494,7 +1566,7 @@ inherited SaleForm: TSaleForm
         end>
       isShowModal = True
     end
-    object actOpenReportForm: TdsdOpenForm [18]
+    object actOpenReportForm: TdsdOpenForm [19]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1663,7 +1735,7 @@ inherited SaleForm: TSaleForm
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint_Sale: TMultiAction [23]
+    object mactPrint_Sale: TMultiAction [24]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1681,7 +1753,7 @@ inherited SaleForm: TSaleForm
       ImageIndex = 3
       ShortCut = 16464
     end
-    object mactPrint_Tax_Client: TMultiAction [24]
+    object mactPrint_Tax_Client: TMultiAction [25]
       Category = 'Print_Tax'
       MoveParams = <>
       ActionList = <
@@ -1695,7 +1767,7 @@ inherited SaleForm: TSaleForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object mactPrint_Account: TMultiAction [25]
+    object mactPrint_Account: TMultiAction [26]
       Category = 'Print_Account'
       MoveParams = <>
       ActionList = <
@@ -1709,7 +1781,7 @@ inherited SaleForm: TSaleForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actPrintTax_Client: TdsdPrintAction [26]
+    object actPrintTax_Client: TdsdPrintAction [27]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -1752,7 +1824,7 @@ inherited SaleForm: TSaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Account: TdsdPrintAction [27]
+    object actPrint_Account: TdsdPrintAction [28]
       Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1791,7 +1863,7 @@ inherited SaleForm: TSaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_ExpPack: TdsdPrintAction [28]
+    object actPrint_ExpPack: TdsdPrintAction [29]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpPack
@@ -1842,7 +1914,7 @@ inherited SaleForm: TSaleForm
         item
         end>
     end
-    object actPrintSaleOrderTax: TdsdPrintAction [31]
+    object actPrintSaleOrderTax: TdsdPrintAction [32]
       Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint_SaleOrderTax
@@ -1880,7 +1952,7 @@ inherited SaleForm: TSaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actGoodsKindChoice: TOpenChoiceForm [34]
+    object actGoodsKindChoice: TOpenChoiceForm [35]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1907,7 +1979,7 @@ inherited SaleForm: TSaleForm
         end>
       isShowModal = True
     end
-    object actReturnJournalChoiceMasc: TOpenChoiceForm [39]
+    object actReturnJournalChoiceMasc: TOpenChoiceForm [40]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3031,6 +3103,10 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenWeighingPartner_bySale'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -3315,6 +3391,10 @@ inherited SaleForm: TSaleForm
     end
     object bbExport_XML: TdxBarButton
       Action = macExport_XML
+      Category = 0
+    end
+    object bbOpenWeighingPartner_bySale: TdxBarButton
+      Action = actOpenWeighingPartner_bySale
       Category = 0
     end
   end

@@ -17,8 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ServiceItemAdd(
     IN inAmount              TFloat    , --  
    OUT outDateStart          TDateTime , --
    OUT outDateEnd            TDateTime , --
-   OUT outMonthNameStart     TDateTime
-   OUT outMonthNameEnd       TDateTime
+   OUT outMonthNameStart     TDateTime ,
+   OUT outMonthNameEnd       TDateTime ,
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
