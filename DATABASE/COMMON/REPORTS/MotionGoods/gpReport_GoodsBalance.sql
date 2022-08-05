@@ -745,6 +745,7 @@ BEGIN
                                       , SUM (MIContainer.Amount)       AS CountIn
                                  FROM tmpMIContainer_Count_all
                                        INNER JOIN MovementItem ON MovementItem.Id = tmpMIContainer_Count_all.MovementItemId
+                                                              AND MovementItem.Amount <> 0
                                        INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId     = tmpMIContainer_Count_all.MovementId
                                                                                       AND MIContainer.MovementItemId = MovementItem.ParentId
                                                                                       AND MIContainer.DescId       = zc_MIContainer_Count()
