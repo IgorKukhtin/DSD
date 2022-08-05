@@ -69,6 +69,10 @@ type
     actChoiceMemberTake7: TOpenChoiceForm;
     actShowCurPartnerOnMap: TdsdPartnerMapAction;
     bbShowCurPartnerOnMap: TdxBarButton;
+    ProtocolOpenFormContract: TdsdOpenForm;
+    bbProtocolOpenFormContract: TdxBarButton;
+    bbProtocolOpenFormPartner: TdxBarButton;
+    ProtocolOpenFormPartner: TdsdOpenForm;
   private
     { Private declarations }
   public

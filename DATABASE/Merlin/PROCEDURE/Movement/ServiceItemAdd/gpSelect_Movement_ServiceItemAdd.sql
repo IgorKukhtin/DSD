@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, DescId Integer, InvNumber Integer
              , StatusCode Integer, StatusName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime 
-             , isAdd Boolean
+             , isAdd Boolean 
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -50,6 +51,7 @@ BEGIN
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
            , CASE WHEN Movement.DescId = zc_Movement_ServiceItemAdd() THEN TRUE ELSE FALSE END :: Boolean AS isAdd
+           , COALESCE (MovementString_Comment.ValueData,'') ::TVarChar AS Comment
 
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -69,6 +71,10 @@ BEGIN
                                          ON MLO_Update.MovementId = Movement.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
        ;
 

@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ServiceItemAdd (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ServiceItemAdd (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ServiceItemAdd (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ServiceItemAdd (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
  
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ServiceItemAdd(
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
@@ -17,8 +18,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ServiceItemAdd(
     IN inAmount              TFloat    , --  
    OUT outDateStart          TDateTime , --
    OUT outDateEnd            TDateTime , --
-   OUT outMonthNameStart     TDateTime
-   OUT outMonthNameEnd       TDateTime
+   OUT outMonthNameStart     TDateTime ,
+   OUT outMonthNameEnd       TDateTime ,  
+    IN inisOne               Boolean   ,
     IN inSession             TVarChar    -- сесси€ пользовател€
 )                              
 RETURNS RECORD
@@ -61,7 +63,13 @@ BEGIN
      IF COALESCE (ioNumYearEnd,0) = 0
      THEN 
          ioNumYearEnd := EXTRACT (YEAR FROM vbOperDate);
-     END IF;
+     END IF; 
+     
+     ---если галка 1 мес€ц тогда переопредел€ем мес€ц окончани€  = мес€цу начала 
+     IF COALESCE (inisOne,FALSE) = TRUE 
+     THEN   
+         ioNumEndDate := ioNumStartDate;
+     END IF; 
         
      IF (ioNumStartDate > ioNumEndDate) AND (ioNumYearStart = ioNumYearEnd)          -- outDateStart не может же быть позже outEndDate
      THEN 

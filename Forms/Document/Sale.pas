@@ -285,6 +285,8 @@ type
     bbExport_XML: TdxBarButton;
     ExportDS: TDataSource;
     ExportCDS: TClientDataSet;
+    actOpenWeighingPartner_bySale: TdsdOpenForm;
+    bbOpenWeighingPartner_bySale: TdxBarButton;
   private
     { Private declarations }
   public

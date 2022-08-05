@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_WeighingPartner_bySale(
     IN inGoodsKindId      Integer      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
+<<<<<<< HEAD
 RETURNS TABLE (MovementId Integer
              , OperDate TDateTime
              , InvNumber TVarChar
@@ -24,6 +25,38 @@ RETURNS TABLE (MovementId Integer
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
              , MovementPromo TVarChar
              , isbarcode boolean
+=======
+RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
+             , Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsGroupNameFull TVarChar
+             , Amount TFloat, AmountPartner TFloat
+             , RealWeight TFloat, CountTare TFloat, WeightTare TFloat
+             , CountTare1   TFloat
+             , CountTare2   TFloat
+             , CountTare3   TFloat
+             , CountTare4   TFloat
+             , CountTare5   TFloat
+             , CountTare6   TFloat
+             , WeightTare1  TFloat
+             , WeightTare2  TFloat
+             , WeightTare3  TFloat
+             , WeightTare4  TFloat
+             , WeightTare5  TFloat
+             , WeightTare6  TFloat
+             , Count TFloat, HeadCount TFloat, BoxCount TFloat
+             , BoxNumber TFloat, LevelNumber TFloat
+             , ChangePercentAmount TFloat, ChangePercent TFloat
+             , Price TFloat, CountForPrice TFloat
+             , PartionGoodsDate TDateTime
+             , GoodsKindName TVarChar, MeasureName TVarChar
+             , BoxName TVarChar
+             , PriceListName  TVarChar
+             ,  ReasonName TVarChar
+             , InsertDate TDateTime, UpdateDate TDateTime
+             , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
+             , MovementPromo TVarChar--, PricePromo TFloat
+             , isBarCode Boolean
+>>>>>>> origin/master
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )
 AS
@@ -37,12 +70,19 @@ BEGIN
 
 
      inShowAll:= TRUE;
+<<<<<<< HEAD
      RETURN QUERY
 
    WITH -- Взвешивания
    tmpWeighingPartner AS (SELECT Movement.*
                                , MovementDate_StartWeighing.ValueData  AS StartWeighing
                                , MovementDate_EndWeighing.ValueData    AS EndWeighing
+=======
+     RETURN QUERY 
+
+   WITH -- Взвешивания
+   tmpWeighingPartner AS (SELECT Movement.*
+>>>>>>> origin/master
                           FROM Movement
                                LEFT JOIN MovementDate AS MovementDate_StartWeighing
                                                       ON MovementDate_StartWeighing.MovementId =  Movement.Id
@@ -56,18 +96,28 @@ BEGIN
 
  , tmpMovementItem AS (SELECT tmpWeighingPartner.Id AS MovementId
                             , tmpWeighingPartner.InvNumber
+<<<<<<< HEAD
                             , tmpWeighingPartner.OperDate
                             , tmpWeighingPartner.StartWeighing
                             , tmpWeighingPartner.EndWeighing
                             , MovementItem.ObjectId
                             , MovementItem.Amount
+=======
+                            , tmpWeighingPartner.OperDate 
+                            , MovementItem.ObjectId
+                            , MovementItem.Amount 
+>>>>>>> origin/master
                             , MovementItem.Id
                        FROM tmpWeighingPartner
                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpWeighingPartner.Id
                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                    AND MovementItem.isErased   = FALSE
                                                    AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
+<<<<<<< HEAD
                        )
+=======
+                       ) 
+>>>>>>> origin/master
 
  , tmpMILO AS (SELECT MovementItemLinkObject.*
                FROM MovementItemLinkObject
@@ -87,7 +137,11 @@ BEGIN
                                                  , zc_MIDate_StartBegin()
                                                  , zc_MIDate_EndBegin()
                                                   )
+<<<<<<< HEAD
                  )
+=======
+                 ) 
+>>>>>>> origin/master
 
  , tmpMIFloat AS (SELECT MovementItemFloat.*
                   FROM MovementItemFloat
@@ -97,8 +151,11 @@ BEGIN
  , tmpMI AS (SELECT MovementItem.MovementId
                   , MovementItem.InvNumber
                   , MovementItem.OperDate
+<<<<<<< HEAD
                   , MovementItem.StartWeighing
                   , MovementItem.EndWeighing
+=======
+>>>>>>> origin/master
                   , CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END :: Integer AS MovementItemId
                   , MovementItem.ObjectId AS GoodsId
                   , MovementItem.Amount
@@ -131,7 +188,11 @@ BEGIN
                   , COALESCE (MIFloat_ChangePercent.ValueData, 0)       AS ChangePercent
                   , COALESCE (MIFloat_Price.ValueData, 0) 		        AS Price
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) 	    AS CountForPrice
+<<<<<<< HEAD
 
+=======
+           
+>>>>>>> origin/master
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
 
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -274,6 +335,7 @@ BEGIN
                                    AND MILinkObject_Reason.DescId = zc_MILinkObject_Reason()
 
              WHERE COALESCE (MILinkObject_GoodsKind.ObjectId,0) = inGoodsKindId OR inGoodsKindId = 0
+<<<<<<< HEAD
              )
 
 
@@ -285,6 +347,17 @@ BEGIN
            , tmpMI.InvNumber
            , tmpMI.StartWeighing
            , tmpMI.EndWeighing
+=======
+             )           
+             
+ 
+       -- Результат     
+       SELECT
+             
+             tmpMI.MovementId
+           , tmpMI.OperDate
+           , tmpMI.InvNumber
+>>>>>>> origin/master
            , tmpMI.MovementItemId :: Integer  AS Id
            , Object_Goods.Id                  AS GoodsId
            , Object_Goods.ObjectCode          AS GoodsCode
@@ -355,8 +428,11 @@ BEGIN
        FROM (SELECT tmpMI.MovementId
                   , tmpMI.OperDate
                   , tmpMI.InvNumber
+<<<<<<< HEAD
                   , tmpMI.StartWeighing
                   , tmpMI.EndWeighing
+=======
+>>>>>>> origin/master
                   , tmpMI.MovementItemId
                   , tmpMI.GoodsId
                   , SUM (tmpMI.Amount)           AS Amount
@@ -429,12 +505,19 @@ BEGIN
                    , tmpMI.WeightTare3
                    , tmpMI.WeightTare4
                    , tmpMI.WeightTare5
+<<<<<<< HEAD
                    , tmpMI.WeightTare6
                    , tmpMI.MovementId
                    , tmpMI.OperDate
                    , tmpMI.InvNumber
                    , tmpMI.StartWeighing
                    , tmpMI.EndWeighing
+=======
+                   , tmpMI.WeightTare6  
+                   , tmpMI.MovementId
+                   , tmpMI.OperDate
+                   , tmpMI.InvNumber
+>>>>>>> origin/master
             ) AS tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
@@ -449,6 +532,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+<<<<<<< HEAD
 
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI.MovementPromoId
           /*  LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI.MovementPromoId
@@ -456,6 +540,11 @@ BEGIN
                                 AND (tmpMIPromo.GoodsKindId     = Object_GoodsKind.Id
                                   OR tmpMIPromo.GoodsKindId     = 0)
 */
+=======
+  
+            LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI.MovementPromoId 
+
+>>>>>>> origin/master
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -469,12 +558,13 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 04.11.19         *
- 01.12.15         * promo
- 16.10.14                                        * all
- 11.03.14         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.08.22         *
 */
 
 -- тест
+<<<<<<< HEAD
 -- SELECT * FROM gpSelect_MI_WeighingPartner_bySale (inMovementId_sale:= 14764281, inGoodsId:= 1, inGoodsKindId:= 2, inSession:= '2')
+=======
+-- SELECT * FROM gpSelect_MI_WeighingPartner_bySale (inMovementId_sale:= 23059199 , inGoodsId:=7497164, inGoodsKindId:= 0, inSession:= '2'::TVarChar)
+>>>>>>> origin/master

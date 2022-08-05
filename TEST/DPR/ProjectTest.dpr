@@ -1380,7 +1380,8 @@ uses
   OrderExternalChild_BySend in '..\..\Forms\Document\OrderExternalChild_BySend.pas' {OrderExternalChild_BySendForm: TParentForm},
   OrderCarInfo in '..\..\Forms\Guides\OrderCarInfo.pas' {OrderCarInfoForm: TParentForm},
   OrderCarInfoEdit in '..\..\Forms\Guides\OrderCarInfoEdit.pas' {OrderCarInfoEditForm: TParentForm},
-  Report_OrderExternal_MIChild_Detail in '..\..\Forms\Report\Report_OrderExternal_MIChild_Detail.pas' {Report_OrderExternal_MIChild_DetailForm: TParentForm};
+  Report_OrderExternal_MIChild_Detail in '..\..\Forms\Report\Report_OrderExternal_MIChild_Detail.pas' {Report_OrderExternal_MIChild_DetailForm: TParentForm},
+  WeighingPartner_bySale in '..\..\Forms\Document\WeighingPartner_bySale.pas' {WeighingPartner_bySaleForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

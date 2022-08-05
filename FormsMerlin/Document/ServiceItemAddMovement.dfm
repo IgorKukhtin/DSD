@@ -20,30 +20,30 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
   TextHeight = 13
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 75
+    Top = 115
     Width = 1184
-    Height = 391
+    Height = 351
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 917
-    ClientRectBottom = 391
+    ExplicitTop = 75
+    ExplicitHeight = 391
+    ClientRectBottom = 351
     ClientRectRight = 1184
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 917
+      ExplicitHeight = 367
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1184
-        Height = 367
+        Height = 327
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 177
-        ExplicitWidth = 917
+        ExplicitHeight = 367
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -308,11 +308,10 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     Left = 0
     Top = 0
     Width = 1184
-    Height = 49
+    Height = 89
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitWidth = 917
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -340,13 +339,13 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       Caption = #1044#1072#1090#1072
     end
     object cxLabel11: TcxLabel
-      Left = 177
-      Top = 5
+      Left = 9
+      Top = 47
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
-      Left = 177
-      Top = 23
+      Left = 9
+      Top = 65
       Properties.Buttons = <
         item
           Action = actCompleteMovement
@@ -367,12 +366,12 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       Width = 160
     end
     object cxLabel12: TcxLabel
-      Left = 637
+      Left = 472
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 637
+      Left = 472
       Top = 23
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -380,16 +379,16 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 117
+      Width = 157
     end
     object cxLabel13: TcxLabel
-      Left = 760
-      Top = 5
+      Left = 472
+      Top = 47
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 760
-      Top = 23
+      Left = 472
+      Top = 65
       Properties.Buttons = <
         item
           Default = True
@@ -401,12 +400,12 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       Width = 157
     end
     object cxLabel4: TcxLabel
-      Left = 362
+      Left = 194
       Top = 5
       Caption = #1057#1090#1072#1090#1100#1103':'
     end
     object edInfoMoney: TcxButtonEdit
-      Left = 362
+      Left = 194
       Top = 23
       Properties.Buttons = <
         item
@@ -416,6 +415,26 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       Properties.ReadOnly = True
       TabOrder = 11
       Width = 263
+    end
+    object cxLabel16: TcxLabel
+      Left = 194
+      Top = 47
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 194
+      Top = 65
+      TabOrder = 13
+      Width = 263
+    end
+    object cbisOne: TcxCheckBox
+      Left = 658
+      Top = 65
+      Hint = #1055#1086#1083#1085#1086#1089#1090#1100#1102' '#1086#1087#1083#1072#1095#1077#1085
+      Caption = '1 '#1084#1077#1089#1103#1094
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 79
     end
   end
   object FormParams: TdsdFormParams
@@ -1335,6 +1354,14 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         ComponentItem = 'MonthNameEnd'
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbisOne
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 158
@@ -1397,6 +1424,14 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1529,6 +1564,13 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -1617,8 +1659,8 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 231
-    Top = 8
+    Left = 135
+    Top = 16
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ServiceItem'
@@ -1646,7 +1688,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 188
+    Left = 148
     Top = 8
   end
   object spGetTotalSumm: TdsdStoredProc
@@ -1748,7 +1790,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 448
+    Left = 312
     Top = 8
   end
 end

@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , StatusCode Integer, StatusName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime 
-             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar 
+             , Comment TVarChar
              )
 AS
 $BODY$
@@ -42,7 +43,7 @@ BEGIN
 
            , Object_InfoMoney.Id         AS InfoMoneyId
            , Object_InfoMoney.ValueData  AS InfoMoneyName
-
+           , ''                                    ::TVarChar         AS Comment
        FROM Object AS Object_Insert
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = zc_Enum_Status_UnComplete()
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = COALESCE (inInfoMoneyId, 76878)   -- _Аренда
@@ -65,7 +66,9 @@ BEGIN
            , MovementDate_Update.ValueData        AS UpdateDate
 
            , Object_InfoMoney.Id         AS InfoMoneyId
-           , Object_InfoMoney.ValueData  AS InfoMoneyName
+           , Object_InfoMoney.ValueData  AS InfoMoneyName                        
+
+           , COALESCE (MovementString_Comment.ValueData,'') ::TVarChar AS Comment
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN MovementDate AS MovementDate_Insert
@@ -84,7 +87,12 @@ BEGIN
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
 
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = COALESCE (inInfoMoneyId, 76878)   -- _Аренда
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = COALESCE (inInfoMoneyId, 76878)   -- _Аренда 
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
        WHERE Movement.Id = inMovementId_Value;
 
    END IF;  

@@ -110,6 +110,9 @@ type
     cxLabel4: TcxLabel;
     edInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
+    cbisOne: TcxCheckBox;
   private
   public
   end;

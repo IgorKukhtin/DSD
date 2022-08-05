@@ -103,6 +103,7 @@ type
     actCheckDesc: TdsdExecStoredProc;
     actCheckDescAdd: TdsdExecStoredProc;
     mactUpdateAdd: TMultiAction;
+    Comment: TcxGridDBColumn;
   private
   public
   end;
