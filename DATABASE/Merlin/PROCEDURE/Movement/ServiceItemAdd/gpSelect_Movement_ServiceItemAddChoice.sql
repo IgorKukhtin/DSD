@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer
              , NumYearEnd  Integer            --год енд
              , MonthNameStart  TVarChar
              , MonthNameEnd TVarChar
-             , Amount TFloat
+             , Amount TFloat 
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -72,6 +73,7 @@ BEGIN
            , zfCalc_MonthName (Movement.DateEnd)     ::TVarChar AS MonthNameEnd   
                 
            , Movement.Amount               :: TFloat   
+           , Movement.Comment
        FROM Movement_ServiceItemAdd_View AS Movement
             INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
        WHERE Movement.OperDate Between inStartDate AND inEndDate

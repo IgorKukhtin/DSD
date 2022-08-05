@@ -35,7 +35,7 @@ CREATE OR REPLACE VIEW Movement_ServiceItemAdd_View AS
   
            , COALESCE (MIDate_DateStart.ValueData, zc_DateStart()) AS DateStart 
            , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd())     AS DateEnd
-
+           , COALESCE (MovementString_Comment.ValueData,'') ::TVarChar AS Comment
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -79,6 +79,10 @@ CREATE OR REPLACE VIEW Movement_ServiceItemAdd_View AS
             LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
                                    ON ObjectString_Unit_GroupNameFull.ObjectId = MovementItem.ObjectId
                                   AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()  
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
        WHERE Movement.DescId = zc_Movement_ServiceItemAdd()
        ;

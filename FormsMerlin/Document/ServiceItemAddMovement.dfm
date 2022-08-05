@@ -1426,6 +1426,14 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 402
@@ -1554,6 +1562,13 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         Value = ''
         Component = StatusGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
       end>
