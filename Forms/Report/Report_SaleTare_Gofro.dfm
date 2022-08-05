@@ -1,31 +1,31 @@
 inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1090#1072#1088#1099' '#1075#1088#1091#1087#1087#1072' "'#1075#1086#1092#1088#1086'"'
   ClientHeight = 461
-  ClientWidth = 813
+  ClientWidth = 875
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 829
+  ExplicitWidth = 891
   ExplicitHeight = 500
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 75
-    Width = 813
+    Width = 875
     Height = 386
     TabOrder = 3
     ExplicitTop = 75
-    ExplicitWidth = 813
+    ExplicitWidth = 875
     ExplicitHeight = 386
     ClientRectBottom = 386
-    ClientRectRight = 813
+    ClientRectRight = 875
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 813
+      ExplicitWidth = 875
       ExplicitHeight = 386
       inherited cxGrid: TcxGrid
-        Width = 813
+        Width = 875
         Height = 386
-        ExplicitWidth = 813
+        ExplicitWidth = 875
         ExplicitHeight = 386
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -33,6 +33,11 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = BoxCount_calc
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -48,12 +53,17 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = BoxCount
+              Column = BoxCount_calc
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = BoxCount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -77,6 +87,14 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumber'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object FromCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1086#1090' '#1082#1086#1075#1086
@@ -147,8 +165,18 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
             HeaderAlignmentVert = vaCenter
             Width = 83
           end
-          object BoxCount: TcxGridDBColumn
+          object BoxCount_calc: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'BoxCount_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 86
+          end
+          object BoxCount: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086' '#1089#1087#1080#1089#1072#1085#1080#1077
             DataBinding.FieldName = 'BoxCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -162,9 +190,9 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
     end
   end
   inherited Panel: TPanel
-    Width = 813
+    Width = 875
     Height = 49
-    ExplicitWidth = 813
+    ExplicitWidth = 875
     ExplicitHeight = 49
     inherited deStart: TcxDateEdit
       Left = 118
@@ -218,6 +246,13 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
       TabOrder = 7
       Width = 186
     end
+    object cbDetail: TcxCheckBox
+      Left = 649
+      Top = 26
+      Action = actRefreshDet
+      TabOrder = 8
+      Width = 87
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -245,6 +280,20 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
       end>
   end
   inherited ActionList: TActionList
+    object actRefreshDet: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -305,10 +354,84 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = Null
+          Component = cbDetail
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actOpenDocument: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 28
+      FormName = 'TSaleForm'
+      FormNameParam.Value = 'TSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_checkopen
+        end
+        item
+          Action = actOpenDocument
+        end>
+      Caption = 'macOpenDocument'
+      ImageIndex = 28
+    end
+    object actGet_checkopen: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_checkopen
+      StoredProcList = <
+        item
+          StoredProc = spGet_checkopen
+        end>
+      Caption = 'actGet_checkopen'
     end
   end
   inherited MasterDS: TDataSource
@@ -351,6 +474,14 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDetail'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 184
     Top = 224
@@ -390,6 +521,14 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -397,13 +536,9 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object dxBarButton1: TdxBarButton
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    object bbOpenDocument: TdxBarButton
+      Action = macOpenDocument
       Category = 0
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Visible = ivAlways
-      ImageIndex = 28
-      ShortCut = 13
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
@@ -516,5 +651,22 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
       end>
     Left = 472
     Top = 24
+  end
+  object spGet_checkopen: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_checkopen'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 611
+    Top = 218
   end
 end

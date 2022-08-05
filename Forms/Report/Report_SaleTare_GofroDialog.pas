@@ -24,6 +24,7 @@ type
     edGoodsGroup: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     GuidesGoodsGroup: TdsdGuides;
+    cbDetail: TcxCheckBox;
   private
     { Private declarations }
   public

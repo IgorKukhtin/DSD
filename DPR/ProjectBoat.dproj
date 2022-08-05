@@ -75,7 +75,7 @@
 			<UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win64)'!=''">
-			<VerInfo_Build>74</VerInfo_Build>
+			<VerInfo_Build>75</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>1</VerInfo_Release>
 			<Icon_MainIcon>mainicon.ico</Icon_MainIcon>
@@ -84,7 +84,7 @@
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
 			<BT_BuildType>Debug</BT_BuildType>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-			<VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.1.1.74;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.1.1.75;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 		</PropertyGroup>
@@ -110,7 +110,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
-			<VerInfo_Build>74</VerInfo_Build>
+			<VerInfo_Build>75</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>1</VerInfo_Release>
 			<Icon_MainIcon>mainicon.ico</Icon_MainIcon>
@@ -140,7 +140,7 @@
 			<DCC_DebugInformation>0</DCC_DebugInformation>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
-			<VerInfo_Build>74</VerInfo_Build>
+			<VerInfo_Build>75</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>1</VerInfo_Release>
 			<Icon_MainIcon>mainicon.ico</Icon_MainIcon>

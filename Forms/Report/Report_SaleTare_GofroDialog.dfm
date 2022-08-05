@@ -78,6 +78,13 @@ inherited Report_SaleTare_GofroDialogForm: TReport_SaleTare_GofroDialogForm
     TabOrder = 9
     Width = 248
   end
+  object cbDetail: TcxCheckBox [10]
+    Left = 253
+    Top = 8
+    Caption = #1044#1077#1090#1072#1083#1100#1085#1086
+    TabOrder = 10
+    Width = 87
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 64
     Top = 120
@@ -162,6 +169,14 @@ inherited Report_SaleTare_GofroDialogForm: TReport_SaleTare_GofroDialogForm
         Component = GuidesGoodsGroup
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDetail'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
