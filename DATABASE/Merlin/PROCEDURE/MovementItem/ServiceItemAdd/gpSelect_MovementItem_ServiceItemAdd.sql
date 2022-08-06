@@ -28,7 +28,12 @@ RETURNS TABLE (Id Integer
              , DateStart_Main TDateTime, DateEnd_Main TDateTime
              , Amount_Main TFloat, Price_Main TFloat, Area_Main TFloat
 
-             , isErased Boolean
+             , MonthNameStart_before  TDateTime
+             , MonthNameEnd_before TDateTime
+             , Amount_before TFloat
+
+             , isErased Boolean  
+             
               )
 AS
 $BODY$
@@ -82,7 +87,19 @@ BEGIN
              , tmpMI_Main AS (SELECT *
                               FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate := vbOperDate ::TDateTime, inUnitId:= 0, inInfoMoneyId:= inInfoMoneyId, inSession := inSession) AS gpSelect
                               WHERE gpSelect.Amount > 0
-                             )
+                             ) 
+              --предыдущее значение дополнения  для всех отделов
+             , tmp_last AS (SELECT tmp.*
+                            FROM (SELECT tmp_View.*
+                                       , ROW_NUMBER() OVER (PARTITION BY tmp_View.UnitId, tmp_View.InfoMoneyId ORDER BY tmp_View.DateEnd DESC) AS ord
+                                  FROM Movement_ServiceItemAdd_View AS tmp_View
+                                  WHERE tmp_View.DateEnd <= vbOperDate
+                                    AND tmp_View.isErased = FALSE
+                                    AND tmp_View.Id <> inMovementId
+                                  ) AS tmp
+                            WHERE tmp.Ord = 1
+                            )
+
            -- результат
            SELECT 0                             AS Id
                 , Object_Unit.Id                AS UnitId
@@ -116,8 +133,11 @@ BEGIN
                 , tmpMI_Main.Price           :: TFloat    AS Price_Main
                 , tmpMI_Main.Area            :: TFloat    AS Area_Main
 
-                , FALSE                      :: Boolean   AS isErased
+                , tmp_last.DateStart         :: TDateTime AS MonthNameStart_before
+                , tmp_last.DateEnd           :: TDateTime AS MonthNameEnd_before
+                , tmp_last.Amount            :: TFloat    AS Amount_before
 
+                , FALSE                      :: Boolean   AS isErased
            FROM tmpUnit
                 INNER JOIN tmpMI_Main ON tmpMI_Main.UnitId = tmpUnit.UnitId
                 --                    AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId
@@ -131,6 +151,8 @@ BEGIN
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
                 LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = COALESCE(tmpMI_Main.InfoMoneyId,76878)
 
+                LEFT JOIN tmp_last ON tmp_last.UnitId = tmpUnit.UnitId
+                                  AND tmp_last.InfoMoneyId = COALESCE(tmpMI_Main.InfoMoneyId,76878)
            WHERE tmpMI.UnitId IS NULL
 
      UNION ALL
@@ -166,6 +188,10 @@ BEGIN
                 , tmpMI_Main.Price           :: TFloat    AS Price_Main
                 , tmpMI_Main.Area            :: TFloat    AS Area_Main
 
+                , tmp_last.DateStart       :: TDateTime AS MonthNameStart_before
+                , tmp_last.DateEnd         :: TDateTime AS MonthNameEnd_before
+                , tmp_last.Amount          :: TFloat    AS Amount_before
+
                 , tmpMI.isErased
            FROM tmpMI
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI.UnitId
@@ -183,6 +209,9 @@ BEGIN
                                                                    ) AS tmpMI_Main
                                                                      ON tmpMI_Main.UnitId = tmpMI.UnitId
                                                                     AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId
+
+                LEFT JOIN tmp_last ON tmp_last.UnitId = tmpMI.UnitId
+                                  AND tmp_last.InfoMoneyId = tmpMI.InfoMoneyId
           ;
 
      ELSE
@@ -217,6 +246,37 @@ BEGIN
                                                                AND MILinkObject_CommentInfoMoney.DescId         = zc_MILinkObject_CommentInfoMoney()
                           )
 
+              --предыдущее значение дополнения  для всех отделов
+             , tmp_last AS (SELECT tmp.*
+                            FROM (SELECT tmp_View.*
+                                       , ROW_NUMBER() OVER (PARTITION BY tmp_View.UnitId, tmp_View.InfoMoneyId ORDER BY tmp_View.DateEnd DESC) AS ord
+                                  FROM tmpMI
+                                      INNER JOIN Movement_ServiceItemAdd_View AS tmp_View
+                                                                              ON tmp_View.DateEnd <= vbOperDate
+                                                                             AND tmp_View.isErased = FALSE
+                                                                             AND tmp_View.Id <> inMovementId
+                                                                             AND tmp_View.UnitId = tmpMI.UnitId
+                                                                             AND tmp_View.InfoMoneyId = tmpMI.InfoMoneyId
+                                  ) AS tmp
+                            WHERE tmp.Ord = 1
+                            )
+
+             , tmpMI_Main AS (SELECT MovementItem.UnitId
+                                   , MovementItem.InfoMoneyId
+                                   , MovementItem.CommentInfoMoneyId
+                                   , MovementItem.Amount 
+                                   , MovementItem.Price
+                                   , MovementItem.Area
+                                   , MovementItem.DateStart
+                                   , MovementItem.DateEnd
+                               FROM Movement
+                                    INNER JOIN gpSelect_MovementItem_ServiceItem(Movement.Id, FALSE, FALSE, inSession) AS MovementItem
+                                                                                                                       ON MovementItem.MovementId = Movement.Id
+                               WHERE Movement.DescId = zc_Movement_ServiceItem() 
+                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                               )
+
+           --Результат
            SELECT tmpMI.Id                      AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
@@ -248,6 +308,10 @@ BEGIN
                 , tmpMI_Main.Price           :: TFloat    AS Price_Main
                 , tmpMI_Main.Area            :: TFloat    AS Area_Main
 
+                , tmp_last.DateStart       :: TDateTime AS MonthNameStart_before
+                , tmp_last.DateEnd         :: TDateTime AS MonthNameEnd_before
+                , tmp_last.Amount          :: TFloat    AS Amount_before
+
                 , tmpMI.isErased
            FROM tmpMI
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI.UnitId
@@ -258,12 +322,13 @@ BEGIN
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
 
-                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate := tmpMI.DateStart ::TDateTime
-                                                                  , inUnitId := tmpMI.UnitId
-                                                                  , inSession := inSession
-                                                                   ) AS tmpMI_Main
-                                                                     ON tmpMI_Main.UnitId = tmpMI.UnitId
-                                                                    AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId
+                LEFT JOIN tmpMI_Main ON tmpMI_Main.UnitId = tmpMI.UnitId
+                                    AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId
+                                    AND tmpMI_Main.DateStart <= tmpMI.DateStart
+                                    AND tmpMI_Main.DateEnd   >= tmpMI.DateStart
+
+                LEFT JOIN tmp_last ON tmp_last.UnitId = tmpMI.UnitId
+                                  AND tmp_last.InfoMoneyId = tmpMI.InfoMoneyId
            ;
 
      END IF;

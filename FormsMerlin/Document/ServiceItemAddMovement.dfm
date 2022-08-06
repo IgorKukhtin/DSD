@@ -27,15 +27,12 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 75
-    ExplicitHeight = 391
     ClientRectBottom = 351
     ClientRectRight = 1184
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 367
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -43,7 +40,6 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         Height = 327
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 367
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -178,6 +174,52 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             HeaderHint = #1053#1086#1074#1099#1077' '#1091#1089#1083#1086#1074#1080#1103
             Width = 50
           end
+          object DateStart: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1089
+            DataBinding.FieldName = 'DateStart'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1074#1099#1077' '#1091#1089#1083#1086#1074#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
+          object MonthNameStart_before: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089' ('#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'MonthNameStart_before'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm-yy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1089'... '#1055#1088#1077#1076#1099#1076#1091#1097#1077#1077' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077
+            Options.Editing = False
+            Width = 80
+          end
+          object MonthNameEnd_before: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086'  ('#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'MonthNameEnd_before'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm-yy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1086'... '#1055#1088#1077#1076#1099#1076#1091#1097#1077#1077' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077
+            Options.Editing = False
+            Width = 80
+          end
+          object Amount_before: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100'  ('#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'Amount_before'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100' '#1055#1088#1077#1076#1099#1076#1091#1097#1077#1077' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077
+            Options.Editing = False
+            Width = 80
+          end
           object NumYearStart: TcxGridDBColumn
             Caption = #1043#1086#1076' '#1089'...'
             DataBinding.FieldName = 'NumYearStart'
@@ -218,17 +260,6 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             HeaderHint = #1053#1086#1074#1099#1077' '#1091#1089#1083#1086#1074#1080#1103
             Options.Editing = False
             Width = 80
-          end
-          object DateStart: TcxGridDBColumn
-            Caption = '***'#1044#1072#1090#1072' '#1089
-            DataBinding.FieldName = 'DateStart'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1086#1074#1099#1077' '#1091#1089#1083#1086#1074#1080#1103
-            Options.Editing = False
-            Width = 70
           end
           object EndDate: TcxGridDBColumn
             Caption = '***'#1044#1072#1090#1072' '#1087#1086
@@ -621,6 +652,14 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbServiceItemAdd_history'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIProtocol'
         end
         item
@@ -699,6 +738,11 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     end
     object bbInsert_MI_Mask: TdxBarButton
       Action = actInsert_MI_Mask
+      Category = 0
+    end
+    object bbServiceItemAdd_history: TdxBarButton
+      Action = actOpenServiceItemAdd_history
+      Caption = #1048#1089#1090#1086#1088#1080#1103
       Category = 0
     end
   end
@@ -1247,6 +1291,56 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1091' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    object actOpenServiceItemAdd_history: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenServiceItemAdd_history'
+      ImageIndex = 28
+      FormName = 'TServiceItemAddJournal_historyForm'
+      FormNameParam.Value = 'TServiceItemAddJournal_historyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DateStart'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1491,10 +1585,17 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_Value'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 402
-    Top = 232
+    Left = 378
+    Top = 216
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1822,24 +1923,17 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       item
         Name = 'Key'
         Value = ''
-        Component = FormParams
-        ComponentItem = 'InfoMoneyId'
+        Component = GuidesInfoMoney
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = FormParams
-        ComponentItem = 'InfoMoneyName'
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inKindName'
-        Value = Null
-        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

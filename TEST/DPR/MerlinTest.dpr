@@ -189,7 +189,8 @@ uses
   ServiceItemMovement in '..\..\FormsMerlin\Document\ServiceItemMovement.pas' {ServiceItemMovementForm: TParentForm},
   ServiceItemAddJournal in '..\..\FormsMerlin\Document\ServiceItemAddJournal.pas' {ServiceItemAddJournalForm: TParentForm},
   ServiceItemJournalChoice in '..\..\FormsMerlin\Document\ServiceItemJournalChoice.pas' {ServiceItemJournalChoiceForm: TParentForm},
-  ServiceItemAddJournalChoice in '..\..\FormsMerlin\Document\ServiceItemAddJournalChoice.pas' {ServiceItemAddJournalChoiceForm: TParentForm};
+  ServiceItemAddJournalChoice in '..\..\FormsMerlin\Document\ServiceItemAddJournalChoice.pas' {ServiceItemAddJournalChoiceForm: TParentForm},
+  ServiceItemAddJournal_history in '..\..\FormsMerlin\Document\ServiceItemAddJournal_history.pas' {ServiceItemAddJournal_historyForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -116,6 +116,8 @@ type
     spInsert_MI_Mask: TdsdStoredProc;
     actInsert_MI_Mask: TdsdExecStoredProc;
     bbInsert_MI_Mask: TdxBarButton;
+    actOpenServiceItemAdd_history: TdsdOpenForm;
+    bbServiceItemAdd_history: TdxBarButton;
   private
   public
   end;

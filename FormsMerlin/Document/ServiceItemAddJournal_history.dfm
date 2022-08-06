@@ -1,9 +1,9 @@
-object ServiceItemAddJournalForm: TServiceItemAddJournalForm
+object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
+  Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
   ClientHeight = 439
-  ClientWidth = 645
+  ClientWidth = 873
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,56 +14,93 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 645
-    Height = 31
+    Width = 873
+    Height = 32
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 64
       Top = 5
       EditValue = 44562d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 85
+      Width = 82
     end
     object deEnd: TcxDateEdit
-      Left = 310
-      Top = 5
+      Left = 821
+      Top = 11
       EditValue = 44562d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
+      Visible = False
       Width = 85
     end
     object cxLabel1: TcxLabel
       Left = 10
       Top = 6
-      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+      Caption = #1053#1072' '#1076#1072#1090#1091':'
     end
     object cxLabel2: TcxLabel
-      Left = 200
+      Left = 711
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+      Visible = False
+    end
+    object cxLabel4: TcxLabel
+      Left = 440
+      Top = 6
+      Caption = #1057#1090#1072#1090#1100#1103':'
+    end
+    object edInfoMoney: TcxButtonEdit
+      Left = 487
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 263
+    end
+    object cxLabel6: TcxLabel
+      Left = 160
+      Top = 6
+      Caption = #1054#1090#1076#1077#1083':'
+    end
+    object edUnit: TcxButtonEdit
+      Left = 204
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 230
     end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
-    Width = 645
-    Height = 382
+    Top = 58
+    Width = 873
+    Height = 381
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = -30
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -111,6 +148,11 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -156,6 +198,11 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -170,13 +217,6 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object isAdd: TcxGridDBColumn
-        Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-        DataBinding.FieldName = 'isAdd'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
       object Status: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -222,11 +262,129 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 92
+      end
+      object UnitGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'UnitGroupNameFull'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object UnitCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'UnitCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1054#1090#1076#1077#1083
+        DataBinding.FieldName = 'UnitName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object InfoMoneyName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 150
+      end
+      object CommentInfoMoneyName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'CommentInfoMoneyName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 174
+      end
+      object NumYearStart: TcxGridDBColumn
+        Caption = #1043#1086#1076' '#1089'...'
+        DataBinding.FieldName = 'NumYearStart'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object NumYearEnd: TcxGridDBColumn
+        Caption = #1043#1086#1076' '#1087#1086'...'
+        DataBinding.FieldName = 'NumYearEnd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object MonthNameStart: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094#1072' '#1089'...'
+        DataBinding.FieldName = 'MonthNameStart'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object MonthNameEnd: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094#1072' '#1087#1086'...'
+        DataBinding.FieldName = 'MonthNameEnd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object DateStart: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089
+        DataBinding.FieldName = 'DateStart'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object EndDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1086
+        DataBinding.FieldName = 'DateEnd'
+        PropertiesClassName = 'TcxDateEditProperties'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Amount: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085
+        Width = 80
       end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
@@ -236,6 +394,7 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
@@ -245,6 +404,7 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
       object UpdateName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
         DataBinding.FieldName = 'UpdateName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
@@ -254,6 +414,7 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
       object UpdateDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
         DataBinding.FieldName = 'UpdateDate'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
@@ -340,32 +501,7 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
         end
         item
           BeginGroup = True
@@ -436,10 +572,6 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
-      Category = 0
-    end
-    object bbComplete: TdxBarButton
-      Action = actComplete
       Category = 0
     end
     object bbUnComplete: TdxBarButton
@@ -637,17 +769,6 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfomoneyId'
-          Value = '76878'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyName'
-          Value = '_'#1040#1088#1077#1085#1076#1072
-          DataType = ftString
-          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -765,17 +886,6 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
           Value = Null
           Component = deEnd
           DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfomoneyId'
-          Value = '76878'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyName'
-          Value = '_'#1040#1088#1077#1085#1076#1072
-          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1128,7 +1238,7 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ServiceItemAdd'
+    StoredProcName = 'gpSelect_Movement_ServiceItemAdd_history'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1144,18 +1254,18 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndDate'
+        Name = 'inUnitId'
         Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsErased'
+        Name = 'inInfoMoneyId'
         Value = Null
-        Component = actShowErased
-        DataType = ftBoolean
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1263,10 +1373,7 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-        Action = actUpdate
-      end>
+    OnDblClickActionList = <>
     ActionItemList = <
       item
         Action = actUpdate
@@ -1303,6 +1410,12 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
       end
       item
         Component = deEnd
+      end
+      item
+        Component = GuidesInfoMoney
+      end
+      item
+        Component = GuidesUnit
       end>
     Left = 392
     Top = 144
@@ -1346,16 +1459,40 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'Id'
+        Name = 'UnitId'
         Value = Null
-        ParamType = ptInputOutput
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Key'
+        Name = 'UnitName'
         Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -1437,5 +1574,67 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
     PackSize = 1
     Left = 176
     Top = 312
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsService'
+        Value = True
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    Left = 560
+    Top = 8
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 272
   end
 end
