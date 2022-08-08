@@ -438,7 +438,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
 
@@ -3633,7 +3633,12 @@ end;
 
 procedure TLoadFormTest.LoadStickerFormTest;
 begin
-  {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerHeaderForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerHeaderForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerHeaderEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerHeaderEditForm');
+   exit;
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ListForm');
   }

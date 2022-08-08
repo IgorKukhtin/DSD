@@ -1451,6 +1451,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Retail_ClientKind() RETURNS Integer AS 
  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
  SELECT 'zc_ObjectLink_Retail_ClientKind', 'Связь торг.сеть с Категории покупателей', zc_Object_Retail(), zc_Object_ClientKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_ClientKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Retail_StickerHeader() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_StickerHeader'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_Retail_StickerHeader', 'Заголовок для сети', zc_Object_Retail(), zc_Object_ClientKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_StickerHeader');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderType_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderType_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -2835,6 +2839,7 @@ SELECT 'zc_ObjectLink_Goods_GoodsSignOrigin', 'Признак происхождения', zc_Object
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 08.08.22         * zc_ObjectLink_Retail_StickerHeader
  29.07.22         * zc_ObjectLink_GoodsPropertyValue_GoodsKindSub
  28.07.22                                                                                      * zc_ObjectLink_Goods_GoodsWhoCan, zc_ObjectLink_Goods_GoodsMethodAppl, zc_ObjectLink_Goods_GoodsSignOrigin
  12.07.22         * zc_ObjectLink_OrderCarInfo_Route 

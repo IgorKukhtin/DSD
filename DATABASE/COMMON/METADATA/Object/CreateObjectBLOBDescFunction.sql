@@ -62,12 +62,19 @@ INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
 CREATE OR REPLACE FUNCTION zc_objectBlob_FinalSUAProtocol_Assortment() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_FinalSUAProtocol_Assortment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
    SELECT zc_Object_FinalSUAProtocol(), 'zc_objectBlob_FinalSUAProtocol_Assortment','Аптеки ассортимента' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_FinalSUAProtocol_Assortment');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBlob_StickerHeader_Info() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_StickerHeader_Info'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
+   SELECT zc_Object_StickerHeader(), 'zc_ObjectBlob_StickerHeader_Info','Заголовок' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_StickerHeader_Info');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 08.08.22          * zc_ObjectBlob_StickerHeader_Info
  27.03.21                                                                         * zc_objectBlob_FinalSUAProtocol_Recipient, zc_objectBlob_FinalSUAProtocol_Assortment
  27.04.19                                                                         * zc_ObjectBlob_User_Helsi_Key
- 23.10.17         * zc_ObjectBlob_Sticker_Info
+ 23.10.17          * zc_ObjectBlob_Sticker_Info
  26.03.17         * add zc_ObjectBlob_PhotoMobile_Data
  16.01.16         * add zc_ObjectBlob_RouteMember_Description
  27.10.15                                                         * + zc_objectBlob_Goods_Description

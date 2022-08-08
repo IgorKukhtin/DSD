@@ -1381,7 +1381,9 @@ uses
   OrderCarInfo in '..\..\Forms\Guides\OrderCarInfo.pas' {OrderCarInfoForm: TParentForm},
   OrderCarInfoEdit in '..\..\Forms\Guides\OrderCarInfoEdit.pas' {OrderCarInfoEditForm: TParentForm},
   Report_OrderExternal_MIChild_Detail in '..\..\Forms\Report\Report_OrderExternal_MIChild_Detail.pas' {Report_OrderExternal_MIChild_DetailForm: TParentForm},
-  WeighingPartner_bySale in '..\..\Forms\Document\WeighingPartner_bySale.pas' {WeighingPartner_bySaleForm: TParentForm};
+  WeighingPartner_bySale in '..\..\Forms\Document\WeighingPartner_bySale.pas' {WeighingPartner_bySaleForm: TParentForm},
+  StickerHeader in '..\..\Forms\Guides\StickerHeader.pas' {StickerHeaderForm: TParentForm},
+  StickerHeaderEdit in '..\..\Forms\Guides\StickerHeaderEdit.pas' {StickerHeaderEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
