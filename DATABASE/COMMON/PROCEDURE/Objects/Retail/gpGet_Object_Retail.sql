@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PersonalMarketingId Integer, PersonalMarketingName TVarChar
              , PersonalTradeId Integer, PersonalTradeName TVarChar
              , ClientKindId Integer, ClientKindName TVarChar
+             , StickerHeaderId Integer, StickerHeaderName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -46,6 +47,9 @@ BEGIN
 
            , CAST (0 as Integer)     AS ClientKindId 
            , CAST ('' as TVarChar)   AS ClientKindName 
+
+           , 0   :: Integer          AS StickerHeaderId
+           , ''  :: TVarChar         AS StickerHeaderName
            
            , CAST (NULL AS Boolean)  AS isErased;
    ELSE
@@ -70,7 +74,9 @@ BEGIN
            , Object_PersonalTrade.Id             AS PersonalTradeId
            , Object_PersonalTrade.ValueData      AS PersonalTradeName
            , Object_ClientKind.Id                AS ClientKindId
-           , Object_ClientKind.ValueData         AS ClientKindName
+           , Object_ClientKind.ValueData         AS ClientKindName  
+           , Object_StickerHeader.Id             AS StickerHeaderId
+           , Object_StickerHeader.ValueData      AS StickerHeaderName
            , Object_Retail.isErased   AS isErased
 
        FROM OBJECT AS Object_Retail
@@ -115,7 +121,12 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Retail_ClientKind
                              ON ObjectLink_Retail_ClientKind.ObjectId = Object_Retail.Id 
                             AND ObjectLink_Retail_ClientKind.DescId = zc_ObjectLink_Retail_ClientKind()
-        LEFT JOIN Object AS Object_ClientKind ON Object_ClientKind.Id = ObjectLink_Retail_ClientKind.ChildObjectId
+        LEFT JOIN Object AS Object_ClientKind ON Object_ClientKind.Id = ObjectLink_Retail_ClientKind.ChildObjectId   
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_StickerHeader
+                             ON ObjectLink_Retail_StickerHeader.ObjectId = Object_Retail.Id
+                            AND ObjectLink_Retail_StickerHeader.DescId = zc_ObjectLink_Retail_ClientKind()
+        LEFT JOIN Object AS Object_StickerHeader ON Object_StickerHeader.Id = ObjectLink_Retail_StickerHeader.ChildObjectId
        WHERE Object_Retail.Id = inId;
    END IF; 
   

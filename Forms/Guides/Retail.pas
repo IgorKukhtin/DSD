@@ -85,6 +85,13 @@ type
     actUpdate_isWMS: TdsdExecStoredProc;
     bbUpdate_isWMS: TdxBarButton;
     RoundWeight: TcxGridDBColumn;
+    spUpdate_StickerHeader: TdsdStoredProc;
+    macUpdate_StickerHeader: TMultiAction;
+    actOpenChoiceStickerHeader: TOpenChoiceForm;
+    actUpdate_StickerHeader: TdsdExecStoredProc;
+    bbUpdate_StickerHeader: TdxBarButton;
+    StickerHeaderName: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
