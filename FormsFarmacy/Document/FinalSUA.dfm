@@ -416,18 +416,35 @@ inherited FinalSUAForm: TFinalSUAForm
       Top = 46
       Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081'.'
     end
+    object cbOnlyOrder: TcxCheckBox
+      Left = 725
+      Top = 22
+      Caption = #1058#1086#1083#1100#1082#1086' '#1074' '#1079#1072#1082#1072#1079
+      TabOrder = 18
+      Width = 105
+    end
+    object edDateOrder: TcxDateEdit
+      Left = 724
+      Top = 64
+      EditValue = 42132d
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 100
+    end
+    object cxLabel4: TcxLabel
+      Left = 724
+      Top = 46
+      Caption = #1044#1072#1090#1072' '#1074#1089#1090#1072#1074#1082#1080' '#1074' '#1079#1072#1082#1072#1079
+    end
   end
   inherited ActionList: TActionList
     object actRefreshUnit: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spInsertUpdateMovement
+      StoredProc = spGet
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMovement
-        end
-        item
-          StoredProc = spSelect
+          StoredProc = spGet
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -519,6 +536,62 @@ inherited FinalSUAForm: TFinalSUAForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actExecuteDataChoiceDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDataChoiceDialog'
+      FormName = 'TDataChoiceDialogForm'
+      FormNameParam.Value = 'TDataChoiceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DateOrder'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = #1042#1074#1077#1076#1080#1090#1077' '#1044#1072#1090#1091' '#1074#1089#1090#1072#1074#1082#1080' '#1074' '#1079#1072#1082#1072#1079
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_DateOrder: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshUnit
+      BeforeAction = actExecuteDataChoiceDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_DateOrder
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_DateOrder
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1044#1072#1090#1072' '#1074#1089#1090#1072#1074#1082#1080' '#1074' '#1079#1072#1082#1072#1079'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1044#1072#1090#1072' '#1074#1089#1090#1072#1074#1082#1080' '#1074' '#1079#1072#1082#1072#1079'"'
+      ImageIndex = 80
+    end
+    object actUpdate_DateOrderClear: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshUnit
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_DateOrderClear
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_DateOrderClear
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1072#1090#1072' '#1074#1089#1090#1072#1074#1082#1080' '#1074' '#1079#1072#1082#1072#1079'"'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1072#1090#1072' '#1074#1089#1090#1072#1074#1082#1080' '#1074' '#1079#1072#1082#1072#1079'"'
+      ImageIndex = 77
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1072#1090#1072' '#1074#1089#1090#1072#1074#1082#1080' '#1074' '#1079#1072#1082#1072#1079'"?'
     end
   end
   inherited MasterDS: TDataSource
@@ -626,6 +699,14 @@ inherited FinalSUAForm: TFinalSUAForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -678,6 +759,14 @@ inherited FinalSUAForm: TFinalSUAForm
     end
     object dxBarButton2: TdxBarButton
       Action = matExecUpfdate_Multiplicity
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actUpdate_DateOrder
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actUpdate_DateOrderClear
       Category = 0
     end
   end
@@ -743,6 +832,12 @@ inherited FinalSUAForm: TFinalSUAForm
         Name = 'NeedLabel'
         Value = #1042#1074#1077#1076#1080#1090#1077' '#1087#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateOrder'
+        Value = Null
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -862,6 +957,20 @@ inherited FinalSUAForm: TFinalSUAForm
         Component = edCalculation
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOnlyOrder'
+        Value = Null
+        Component = cbOnlyOrder
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateOrder'
+        Value = Null
+        Component = edDateOrder
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 432
     Top = 200
@@ -900,6 +1009,14 @@ inherited FinalSUAForm: TFinalSUAForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyOrder'
+        Value = Null
+        Component = cbOnlyOrder
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -931,6 +1048,7 @@ inherited FinalSUAForm: TFinalSUAForm
         Control = edComment
       end
       item
+        Control = cbOnlyOrder
       end
       item
       end
@@ -1181,6 +1299,51 @@ inherited FinalSUAForm: TFinalSUAForm
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Left = 80
+    Top = 376
+  end
+  object spUpdate_DateOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_FinalSUA_DateOrder'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateOrder'
+        Value = 42132d
+        Component = FormParams
+        ComponentItem = 'DateOrder'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 754
+    Top = 296
+  end
+  object spUpdate_DateOrderClear: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_FinalSUA_DateOrderClear'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 754
     Top = 376
   end
 end

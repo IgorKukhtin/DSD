@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
              , UpdateId Integer, UpdateName TVarChar, UpdateDate TDateTime
-             , Calculation TDateTime
+             , Calculation TDateTime, isOnlyOrder boolean, DateOrder TDateTime
               )
 AS
 $BODY$
@@ -54,6 +54,8 @@ BEGIN
              , NULL  ::TVarChar                                 AS UpdateName
              , Null  :: TDateTime                               AS UpdateDate
              , Null  :: TDateTime                               AS Calculation
+             , False                                            AS isOnlyOrder
+             , Null  :: TDateTime                               AS DateOrder
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
                LEFT JOIN Object AS Object_Unit ON Object_Insert.Id = vbUnitId;
@@ -75,6 +77,8 @@ BEGIN
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
            , MovementDate_Calculation.ValueData   AS Calculation
+           , COALESCE (MovementBoolean_OnlyOrder.ValueData, FALSE)  AS isOnlyOrder
+           , MovementDate_DateOrder.ValueData     AS DateOrder
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -86,6 +90,9 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_OnlyOrder
+                                      ON MovementBoolean_OnlyOrder.MovementId = Movement.Id
+                                     AND MovementBoolean_OnlyOrder.DescId = zc_MovementBoolean_OnlyOrder()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
@@ -106,6 +113,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Calculation
                                    ON MovementDate_Calculation.MovementId = Movement.Id
                                   AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+
+            LEFT JOIN MovementDate AS MovementDate_DateOrder
+                                   ON MovementDate_DateOrder.MovementId = Movement.Id
+                                  AND MovementDate_DateOrder.DescId = zc_MovementDate_Order()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_FinalSUA();
