@@ -464,7 +464,10 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       Top = 65
       Hint = #1055#1086#1083#1085#1086#1089#1090#1100#1102' '#1086#1087#1083#1072#1095#1077#1085
       Caption = '1 '#1084#1077#1089#1103#1094
-      Properties.ReadOnly = True
+      ParentShowHint = False
+      Properties.ReadOnly = False
+      ShowHint = False
+      State = cbsChecked
       TabOrder = 14
       Width = 79
     end

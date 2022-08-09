@@ -170,13 +170,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object isAdd: TcxGridDBColumn
-        Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-        DataBinding.FieldName = 'isAdd'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
       object Status: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -518,19 +511,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertAdd'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateAdd'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -621,7 +601,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Category = 0
     end
     object bbEdit: TdxBarButton
-      Action = mactUpdate
+      Action = actUpdate
       Category = 0
     end
     object bbComplete: TdxBarButton

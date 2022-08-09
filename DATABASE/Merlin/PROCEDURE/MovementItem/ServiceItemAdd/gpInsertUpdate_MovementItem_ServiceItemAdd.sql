@@ -45,7 +45,7 @@ BEGIN
      END IF;
      IF COALESCE (ioNumYearEnd,0) = 0
      THEN 
-         ioNumYearEnd := EXTRACT (YEAR FROM vbOperDate) - 2000;
+         ioNumYearEnd := EXTRACT (YEAR FROM ioNumYearStart) - 2000;
      END IF; 
 
      --если не ввели возвращаем тек месяц
@@ -55,7 +55,7 @@ BEGIN
      END IF;
      IF COALESCE (ioNumEndDate,0) = 0
      THEN 
-         ioNumEndDate := EXTRACT (MONTH FROM vbOperDate);
+         ioNumEndDate := EXTRACT (MONTH FROM ioNumStartDate);
      END IF;
 
      -- проверка - документ должен быть сохранен

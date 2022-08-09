@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, DescId Integer, InvNumber Integer
              , StatusCode Integer, StatusName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime 
-             , isAdd Boolean
+             --, isAdd Boolean
              --
              , MovementItemId Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -45,7 +45,7 @@ BEGIN
                          )
          , tmpMovement AS (SELECT Movement.*
                            FROM tmpStatus
-                               JOIN Movement ON Movement.DescId IN (zc_Movement_ServiceItem(), zc_Movement_ServiceItemAdd())
+                               JOIN Movement ON Movement.DescId IN (zc_Movement_ServiceItem())        --, zc_Movement_ServiceItemAdd()
                                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                             AND Movement.StatusId = tmpStatus.StatusId
                            )
@@ -61,7 +61,7 @@ BEGIN
            , MovementDate_Insert.ValueData        AS InsertDate
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
-           , CASE WHEN Movement.DescId = zc_Movement_ServiceItemAdd() THEN TRUE ELSE FALSE END :: Boolean AS isAdd
+           --, CASE WHEN Movement.DescId = zc_Movement_ServiceItemAdd() THEN TRUE ELSE FALSE END :: Boolean AS isAdd
             --
            , tmpMI.Id                      AS MovementItemId
            , tmpMI.UnitId
