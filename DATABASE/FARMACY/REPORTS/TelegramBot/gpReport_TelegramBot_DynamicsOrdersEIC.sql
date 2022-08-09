@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_TelegramBot_DynamicsOrdersEIC(
 )
 RETURNS TABLE (OperDate TDateTime
              , CountNeBoley Integer
+             , CountNeBoleyMobile Integer
              , CountTabletki Integer
              , CountLiki24 Integer
              , CountAll Integer

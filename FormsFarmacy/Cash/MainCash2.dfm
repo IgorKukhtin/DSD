@@ -8069,6 +8069,13 @@ inherited MainCashForm2: TMainCashForm2
     OutputType = otResult
     Params = <
       item
+        Name = 'inSPKindId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inJSON'
         Value = Null
         DataType = ftWideString

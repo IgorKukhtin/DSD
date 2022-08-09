@@ -81,6 +81,13 @@ type
     cePercentMarkup: TcxCurrencyEdit;
     cePercentPayment: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
+    spSetGoods: TdsdStoredProc;
+    spClearGoods: TdsdStoredProc;
+    actGoodsMain: TOpenChoiceForm;
+    actClearGoods: TdsdExecStoredProc;
+    actSetGoods: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

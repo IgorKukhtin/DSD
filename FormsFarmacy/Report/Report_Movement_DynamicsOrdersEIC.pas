@@ -52,6 +52,8 @@ type
     actRefreshOnMonth: TdsdDataSetRefresh;
     cxGridDBChartSeries10: TcxGridDBChartSeries;
     dxBarButton2: TdxBarButton;
+    CountNeBoleyMobile: TcxGridDBColumn;
+    cxGridDBChartSeries11: TcxGridDBChartSeries;
   private
     { Private declarations }
   public

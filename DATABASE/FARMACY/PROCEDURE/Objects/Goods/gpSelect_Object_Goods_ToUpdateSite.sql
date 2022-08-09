@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Goods_Site()
+-- Function: gpSelect_Object_Goods_ToUpdateSite()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_ToUpdateSite(TVarChar);
 
@@ -18,6 +18,11 @@ RETURNS TABLE (IdMain Integer
              , FormDispensingNameUkr TVarChar
              , NumberPlates Integer
              , QtyPackage Integer
+             
+             , Multiplicity TFloat
+             , isDoesNotShare Boolean
+             , isSP Boolean
+             , isDiscountExternal Boolean
              , isRecipe boolean
              , isNameUkrSite boolean
              , isMakerNameSite boolean
@@ -33,17 +38,27 @@ BEGIN
 
 
    RETURN QUERY
-     WITH tmpFormDispensing AS (SELECT 1 AS IDSite, 18067778 AS ID
-                                UNION ALL 
-                                SELECT 2, 18067781
-                                UNION ALL 
-                                SELECT 3, 18067782
-                                UNION ALL 
-                                SELECT 4, 18067783
-                                UNION ALL 
-                                SELECT 5, 18067780
-                                UNION ALL 
-                                SELECT 6, 18067779)
+     WITH tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
+                         FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
+                         )
+           -- Товары дисконтной программы
+        , tmpGoodsDiscount AS (SELECT ObjectLink_BarCode_Goods.ChildObjectId                AS GoodsId
+                               FROM Object AS Object_BarCode
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                         ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                        AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                           
+                                     LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                          ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                         AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                     LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+                               WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                 AND Object_BarCode.isErased = False
+                                 AND Object_Object.isErased = False
+                               GROUP BY ObjectLink_BarCode_Goods.ChildObjectId 
+                        )
    
       SELECT Object_Goods_Main.Id
            , Object_Goods_Retail.Id
@@ -53,11 +68,18 @@ BEGIN
            , Object_Goods_Main.NameUkr
            , Object_Goods_Main.MakerName
            , Object_Goods_Main.MakerNameUkr
-           , tmpFormDispensing.IDSite                            AS FormDispensingId
+           , Object_Goods_Main.FormDispensingId                  AS FormDispensingId
            , Object_FormDispensing.ValueData                     AS FormDispensingName
            , ObjectString_FormDispensing_NameUkr.ValueData       AS NameUkr
            , Object_Goods_Main.NumberPlates
            , Object_Goods_Main.QtyPackage
+           
+           , Object_Goods_Main.Multiplicity
+           , Object_Goods_Main.isDoesNotShare OR Object_Goods_Main.isAllowDivision    AS isDoesNotShare
+          -- , COALESCE (tmpGoodsSP.isSP, False)::Boolean                               AS isSP
+           , False                                                                    AS isSP
+           , (COALESCE (tmpGoodsDiscount.GoodsId, 0) <> 0 )::Boolean                  AS isDiscountExternal
+
            , Object_Goods_Main.isRecipe
            , Object_Goods_Main.isNameUkrSite
            , Object_Goods_Main.isMakerNameSite
@@ -74,7 +96,8 @@ BEGIN
                                   ON ObjectString_FormDispensing_NameUkr.ObjectId = Object_FormDispensing.Id
                                  AND ObjectString_FormDispensing_NameUkr.DescId = zc_ObjectString_FormDispensing_NameUkr()   
                                  
-           LEFT JOIN tmpFormDispensing ON tmpFormDispensing.ID = Object_Goods_Main.FormDispensingId
+           LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods_Retail.GoodsMainId
+           LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsId = Object_Goods_Retail.Id
            
       WHERE Object_Goods_Retail.RetailId = 4
         AND Object_Goods_Main.isPublished = True

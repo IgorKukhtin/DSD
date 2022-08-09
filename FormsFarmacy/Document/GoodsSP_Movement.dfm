@@ -812,6 +812,55 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
           MultiSelectSeparator = ','
         end>
     end
+    object actGoodsMain: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TIntenalSPForm'
+      FormName = 'TGoodsMainForm'
+      FormNameParam.Value = 'TGoodsMainForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsID'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actClearGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spClearGoods
+      StoredProcList = <
+        item
+          StoredProc = spClearGoods
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084
+      ImageIndex = 52
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084'?'
+    end
+    object actSetGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actGoodsMain
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetGoods
+      StoredProcList = <
+        item
+          StoredProc = spSetGoods
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084
+      ImageIndex = 79
+    end
   end
   inherited MasterDS: TDataSource
     Left = 192
@@ -940,11 +989,23 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     object bbComplete: TdxBarButton
@@ -967,6 +1028,14 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     end
     object bbStartLoadHelsi: TdxBarButton
       Action = macStartLoadHelsi
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actSetGoods
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actClearGoods
       Category = 0
     end
   end
@@ -1062,6 +1131,11 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       end
       item
         Name = 'ImportSettingHelsiId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsID'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -1976,5 +2050,75 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       end>
     Left = 777
     Top = 11
+  end
+  object spSetGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_GoodsSPSearch_1303_Goods'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCol'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Col'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 512
+    Top = 456
+  end
+  object spClearGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_GoodsSPSearch_1303_ClearGoods'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 512
+    Top = 400
   end
 end

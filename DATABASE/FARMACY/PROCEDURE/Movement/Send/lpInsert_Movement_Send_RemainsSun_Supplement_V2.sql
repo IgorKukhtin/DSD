@@ -934,7 +934,16 @@ BEGIN
             LEFT JOIN ObjectFloat AS OF_KoeffSUN ON OF_KoeffSUN.ObjectId = _tmpRemains_all_Supplement_V2.GoodsId
                                                 AND OF_KoeffSUN.DescId    = zc_ObjectFloat_Goods_KoeffSUN_v2()
                                                                             
+            LEFT JOIN _tmpSUN_Send_Supplement_V2 ON _tmpSUN_Send_Supplement_V2.GoodsID = _tmpRemains_all_Supplement_V2.GoodsId
+                                                AND _tmpSUN_Send_Supplement_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId  
+
+            LEFT JOIN _tmpSUN_Send_SupplementAll_V2 ON _tmpSUN_Send_SupplementAll_V2.GoodsID = _tmpRemains_all_Supplement_V2.GoodsId
+                                                   AND _tmpSUN_Send_SupplementAll_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId  
+                                                                                                                            
+
        WHERE _tmpRemains_all_Supplement_V2.Give - _tmpRemains_all_Supplement_V2.AmountUse > 0
+         AND COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) = 0
+         AND COALESCE(_tmpSUN_Send_SupplementAll_V2.GoodsID, 0) = 0
        ORDER BY _tmpRemains_all_Supplement_V2.Give DESC
               , _tmpRemains_all_Supplement_V2.UnitId
               , _tmpRemains_all_Supplement_V2.GoodsId
@@ -1052,8 +1061,8 @@ BEGIN
             , Movement_Layout.InvNumber                  AS InvNumberLayout
             , Object_Layout.ValueData                    AS LayoutName
             
-            , COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) = 0     AS isHT_SUN_v2
-            , COALESCE(_tmpSUN_Send_SupplementAll_V2.GoodsID, 0) = 0  AS isHT_SUNAll_v2
+            , COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) <> 0     AS isHT_SUN_v2
+            , COALESCE(_tmpSUN_Send_SupplementAll_V2.GoodsID, 0) <> 0  AS isHT_SUNAll_v2
 
 
        FROM _tmpResult_Supplement_V2
@@ -1107,4 +1116,4 @@ $BODY$
 
 -- 
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);

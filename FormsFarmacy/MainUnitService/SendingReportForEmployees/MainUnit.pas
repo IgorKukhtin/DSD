@@ -86,6 +86,7 @@ type
     spLog_Send_Telegram: TZStoredProc;
     ObjectId: TcxGridDBColumn;
     TelegramId: TcxGridDBColumn;
+    cxGridDBChartSeries11: TcxGridDBChartSeries;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);

@@ -3,9 +3,12 @@
 --DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (Text, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (Text, TVarChar);
+
+DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (Integer, Text, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Check_RemainsError(
+    IN inSPKindId               Integer   , -- Сщц проект
     IN inJSON                   Text      , -- json     
    OUT outMessageText           Text      , -- вернули, если есть ошибка
     IN inSession                TVarChar    -- сессия пользователя
@@ -18,6 +21,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbIndex Integer;
+   DECLARE vbPriceSamples TFloat;
 
    DECLARE vbDate_6 TDateTime;
    DECLARE vbDate_3 TDateTime;
@@ -36,6 +40,22 @@ BEGIN
     SELECT Date_6, Date_3, Date_1, Date_0
     INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
     FROM lpSelect_PartionDateKind_SetDate ();
+    
+    IF inSPKindId = zc_Enum_SPKind_SP()
+    THEN
+      SELECT COALESCE(ObjectFloat_CashSettings_PriceSamples.ValueData, 0)                          AS PriceSamples
+      INTO vbPriceSamples
+      FROM Object AS Object_CashSettings
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PriceSamples
+                                 ON ObjectFloat_CashSettings_PriceSamples.ObjectId = Object_CashSettings.Id 
+                                AND ObjectFloat_CashSettings_PriceSamples.DescId = zc_ObjectFloat_CashSettings_PriceSamples()
+
+      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+      LIMIT 1;      
+    ELSE
+      vbPriceSamples := 0;
+    END IF;
 
     -- таблица
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer
@@ -50,7 +70,7 @@ BEGIN
     FROM json_populate_recordset(null::_tmpGoods, replace(replace(replace(inJSON, '&quot;', '\"'), CHR(9),''), CHR(10),'')::json);
 
     -- проверим что есть остатки
-    outMessageText:= 'Ошибка.Товара нет в наличии:'||Chr(13)
+    outMessageText:= 'Ошибка.Товара'||CASE WHEN inSPKindId = zc_Enum_SPKind_SP() THEN ' для отпуска по СП' ELSE '' END||' нет в наличии:'||Chr(13)
                                 || (WITH tmpFrom AS (SELECT _tmpGoods.GoodsId, _tmpGoods.NDSKindId, _tmpGoods.PartionDateKindId, _tmpGoods.DivisionPartiesId, SUM (_tmpGoods.Amount) AS Amount 
                                                      FROM _tmpGoods
                                                      GROUP BY _tmpGoods.GoodsId, _tmpGoods.NDSKindId, _tmpGoods.PartionDateKindId, _tmpGoods.DivisionPartiesId)
@@ -61,7 +81,8 @@ BEGIN
                                        , tmpContainerAll AS (SELECT tmpFrom.GoodsId, 
                                                                     Container.Id, 
                                                                     Container.Amount,
-                                                                    COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)                      AS M_Income
+                                                                    COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)                      AS M_Income,
+                                                                    COALESCE (MI_Income_find.Id,MI_Income.Id)                                      AS MI_Income
                                                               FROM (SELECT DISTINCT tmpFrom.GoodsId FROM tmpFrom) tmpFrom
                                                                    INNER JOIN Container ON Container.DescId = zc_Container_Count()
                                                                                        AND Container.WhereObjectId = vbUnitId
@@ -88,7 +109,8 @@ BEGIN
                                                                         OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
                                                                       THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId,
                                                                  ContainerLinkObject_DivisionParties.ObjectId                                   AS DivisionPartiesId,
-                                                                 MovementLinkObject_From.ObjectId                                               AS JuridicalId
+                                                                 MovementLinkObject_From.ObjectId                                               AS JuridicalId,
+                                                                 MIFloat_Price.ValueData                                                        AS Price
                                                            FROM tmpContainerAll AS Container
                                                            
                                                                 LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.GoodsId
@@ -109,6 +131,11 @@ BEGIN
                                                                                               ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
                                                                                              AND ContainerLinkObject_DivisionParties.DescId = zc_ContainerLinkObject_DivisionParties()
                                                                 
+                                                                LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                                                            ON MIFloat_Price.MovementItemId =  Container.MI_Income
+                                                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                                                           
+                                                                WHERE vbPriceSamples = 0 OR vbPriceSamples < COALESCE(MIFloat_Price.ValueData, vbPriceSamples + 0.01) 
                                                               )
                                        , tmpContainerPDAll AS  (SELECT Container.ParentId
                                                                      , Container.Amount
@@ -248,4 +275,4 @@ $BODY$
 
 -- тест
 
-select * from gpGet_Movement_Check_RemainsError(inJSON  := '[{"goodsid":4282,"amount":5,"partiondatekindid":null,"ndskindid":9,"divisionpartiesid":null,"juridicalid":null}]',  inSession := '3');
+select * from gpGet_Movement_Check_RemainsError(inSPKindId := 4823010, inJSON := '[{"goodsid":15982622,"amount":1,"partiondatekindid":null,"ndskindid":9,"divisionpartiesid":null,"juridicalid":null}]' ,  inSession := '3');
