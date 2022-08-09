@@ -65,9 +65,13 @@ BEGIN
 
      IF NOT EXISTS(SELECT Movement.id
                    FROM Movement
+                        LEFT JOIN MovementBoolean AS MovementBoolean_OnlyOrder
+                                                  ON MovementBoolean_OnlyOrder.MovementId = Movement.Id
+                                                 AND MovementBoolean_OnlyOrder.DescId = zc_MovementBoolean_OnlyOrder()
                    WHERE Movement.OperDate = inOperDate - ((date_part('DOW', inOperDate)::Integer - 1)::TVarChar||' DAY')::INTERVAL
                      AND Movement.DescId = zc_Movement_FinalSUA()
                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                     AND COALESCE (MovementBoolean_OnlyOrder.ValueData, FALSE) = FALSE
                    )
      THEN
        RETURN;
@@ -76,9 +80,13 @@ BEGIN
      SELECT Movement.id
      INTO vbMovementId
      FROM Movement
+          LEFT JOIN MovementBoolean AS MovementBoolean_OnlyOrder
+                                    ON MovementBoolean_OnlyOrder.MovementId = Movement.Id
+                                   AND MovementBoolean_OnlyOrder.DescId = zc_MovementBoolean_OnlyOrder()
      WHERE Movement.OperDate = inOperDate - ((date_part('DOW', inOperDate)::Integer - 1)::TVarChar||' DAY')::INTERVAL
        AND Movement.DescId = zc_Movement_FinalSUA()
-       AND Movement.StatusId = zc_Enum_Status_Complete();
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND COALESCE (MovementBoolean_OnlyOrder.ValueData, FALSE) = FALSE;
        
      -- !!!1 - сформировали данные во временные табл!!!
      PERFORM lpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= inOperDate

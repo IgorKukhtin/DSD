@@ -40,7 +40,7 @@ BEGIN
         AND Movement.DescId = zc_Movement_FinalSUA() 
         AND Movement.StatusId <> zc_Enum_Status_Erased();   
     ELSE 
-      vbMovementId := gpInsertUpdate_Movement_FinalSUA(0, CAST (NEXTVAL ('Movement_FinalSUA_seq') AS TVarChar), vbOperDate, '', inSession);
+      vbMovementId := gpInsertUpdate_Movement_FinalSUA(0, CAST (NEXTVAL ('Movement_FinalSUA_seq') AS TVarChar), vbOperDate, '', False, inSession);
     END IF;     
     
     IF EXISTS(SELECT 1

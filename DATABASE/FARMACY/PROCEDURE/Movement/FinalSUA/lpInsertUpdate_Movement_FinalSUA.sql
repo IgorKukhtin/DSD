@@ -1,13 +1,14 @@
 -- Function: lpInsertUpdate_Movement_FinalSUA()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_FinalSUA (Integer, TVarChar, TDateTime, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_FinalSUA (Integer, TVarChar, TDateTime, TVarChar, Boolean, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_FinalSUA(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inComment             TVarChar   , -- Примечание
+    IN inComment             TVarChar  , -- Примечание
+    IN inisOnlyOrder         Boolean   , -- Только в заказ
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -30,6 +31,9 @@ BEGIN
 
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+     -- сохранили <Только в заказ>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_OnlyOrder(), ioId, inisOnlyOrder);
 
     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE

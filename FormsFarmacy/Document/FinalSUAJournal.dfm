@@ -226,6 +226,22 @@ inherited FinalSUAJournalForm: TFinalSUAJournalForm
             Options.Editing = False
             Width = 78
           end
+          object isOnlyOrder: TcxGridDBColumn
+            Caption = #1058#1086#1083#1100#1082#1086' '#1074' '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'isOnlyOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
+          object DateOrder: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1074#1089#1090#1072#1074#1082#1080' '#1074' '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'DateOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
         end
       end
     end

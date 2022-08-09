@@ -45,6 +45,8 @@ type
     Calculation: TcxGridDBColumn;
     actAutoCalculation_SAUA: TdsdOpenForm;
     dxBarButton2: TdxBarButton;
+    isOnlyOrder: TcxGridDBColumn;
+    DateOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_Movement_FinalSUA()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_FinalSUA (Integer, TVarChar, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_FinalSUA (Integer, TVarChar, TDateTime, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_FinalSUA(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inComment             TVarChar  , -- Примечание
+    IN inisOnlyOrder         Boolean   , -- Только в заказ
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -50,6 +51,7 @@ BEGIN
                                              , inInvNumber        := inInvNumber
                                              , inOperDate         := inOperDate
                                              , inComment          := inComment
+                                             , inisOnlyOrder      := inisOnlyOrder
                                              , inUserId           := vbUserId
                                               );
 
