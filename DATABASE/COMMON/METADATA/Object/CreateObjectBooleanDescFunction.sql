@@ -1266,16 +1266,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_SupplementMarkSUN1() RETURNS I
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_SupplementMarkSUN1', 'Дополнение СУН1 маркетинг' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_SupplementMarkSUN1');
 
-
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_StickerHeader_Default() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_StickerHeader_Default'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_StickerHeader(), 'zc_ObjectBoolean_StickerHeader_Default', 'Признак - по умолчанию' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_StickerHeader_Default');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_LeftTheMarket() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_LeftTheMarket'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_LeftTheMarket', 'Ушел с рынка' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_LeftTheMarket');
 
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 09.08.22                                                                                                          * zc_ObjectBoolean_Goods_LeftTheMarket
  08.08.22         * zc_ObjectBoolean_StickerHeader_Default
  03.04.22         * zc_ObjectBoolean_Partner_GoodsBox
  29.07.22         * zc_ObjectBoolean_GoodsPropertyValue_isGoodsKind
