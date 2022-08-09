@@ -1,4 +1,4 @@
-unit Retail;
+unit StickerHeader;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   dxSkinXmas2008Blue, cxCurrencyEdit;
 
 type
-  TRetailForm = class(TParentForm)
+  TStickerHeaderForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -37,7 +37,7 @@ type
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     bbSetErased: TdxBarButton;
@@ -55,43 +55,12 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     actInsert: TdsdInsertUpdateAction;
-    GLNCode: TcxGridDBColumn;
-    GoodsPropertyName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    spUpdateGLNCode: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    GLNCodeCorporate: TcxGridDBColumn;
     actChoiceGoodsProperty: TOpenChoiceForm;
-    OperDateOrder: TcxGridDBColumn;
-    PersonalMarketingName: TcxGridDBColumn;
     actChoicePersonalMarketing: TOpenChoiceForm;
     actChoicePersonalTrade: TOpenChoiceForm;
-    ClientKindName: TcxGridDBColumn;
-    spUpdate_ClientKind_Retail: TdsdStoredProc;
-    spUpdate_ClientKind_Null: TdsdStoredProc;
-    actUpdate_ClientKind_Retail: TdsdExecStoredProc;
-    actUpdate_ClientKind_Null: TdsdExecStoredProc;
-    macUpdate_ClientKind_Null_List: TMultiAction;
-    macUpdate_ClientKind_Null: TMultiAction;
-    macUpdate_ClientKind_Retail_list: TMultiAction;
-    macUpdate_ClientKind_Retai: TMultiAction;
-    bbUpdate_ClientKind_Retai: TdxBarButton;
-    bbUpdate_ClientKind_Null: TdxBarButton;
-    spUpdate_IsOrderMin: TdsdStoredProc;
-    actUpdate_IsOrderMin: TdsdExecStoredProc;
-    bbUpdate_IsOrderMin: TdxBarButton;
-    spUpdate_isWMS: TdsdStoredProc;
-    actUpdate_isWMS: TdsdExecStoredProc;
-    bbUpdate_isWMS: TdxBarButton;
-    RoundWeight: TcxGridDBColumn;
-    spUpdate_StickerHeader: TdsdStoredProc;
-    macUpdate_StickerHeader: TMultiAction;
-    actOpenChoiceStickerHeader: TOpenChoiceForm;
-    actUpdate_StickerHeader: TdsdExecStoredProc;
-    bbUpdate_StickerHeader: TdxBarButton;
-    StickerHeaderName: TcxGridDBColumn;
-    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
@@ -103,6 +72,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TRetailForm);
+  RegisterClass(TStickerHeaderForm);
 
 end.

@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PersonalMarketingId Integer, PersonalMarketingName TVarChar
              , PersonalTradeId Integer, PersonalTradeName TVarChar
              , ClientKindId Integer, ClientKindName TVarChar
+             , StickerHeaderId Integer, StickerHeaderName TVarChar
              , isErased Boolean
               )
 AS
@@ -49,6 +50,8 @@ BEGIN
            , Object_PersonalTrade.ValueData      AS PersonalTradeName
            , Object_ClientKind.Id                AS ClientKindId
            , Object_ClientKind.ValueData         AS ClientKindName
+           , Object_StickerHeader.Id             AS StickerHeaderId
+           , Object_StickerHeader.ValueData      AS StickerHeaderName
            , Object_Retail.isErased              AS isErased
 
        FROM Object AS Object_Retail
@@ -97,7 +100,12 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Retail_ClientKind
                                  ON ObjectLink_Retail_ClientKind.ObjectId = Object_Retail.Id
                                 AND ObjectLink_Retail_ClientKind.DescId = zc_ObjectLink_Retail_ClientKind()
-            LEFT JOIN Object AS Object_ClientKind ON Object_ClientKind.Id = ObjectLink_Retail_ClientKind.ChildObjectId
+            LEFT JOIN Object AS Object_ClientKind ON Object_ClientKind.Id = ObjectLink_Retail_ClientKind.ChildObjectId  
+
+            LEFT JOIN ObjectLink AS ObjectLink_Retail_StickerHeader
+                                 ON ObjectLink_Retail_StickerHeader.ObjectId = Object_Retail.Id
+                                AND ObjectLink_Retail_StickerHeader.DescId = zc_ObjectLink_Retail_ClientKind()
+            LEFT JOIN Object AS Object_StickerHeader ON Object_StickerHeader.Id = ObjectLink_Retail_StickerHeader.ChildObjectId
        WHERE Object_Retail.DescId = zc_Object_Retail()
 
      UNION ALL
@@ -122,7 +130,9 @@ BEGIN
            , 0   :: Integer         AS PersonalTradeId
            , ''  :: TVarChar        AS PersonalTradeName
            , 0   :: Integer         AS ClientKindId
-           , ''  :: TVarChar        AS ClientKindName
+           , ''  :: TVarChar        AS ClientKindName   
+           , 0   :: Integer         AS StickerHeaderId
+           , ''  :: TVarChar        AS StickerHeaderName
            , Object_Unit.isErased   AS isErased
        FROM Object AS Object_Unit
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit.DescId
@@ -137,6 +147,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.08.22         * StickerHeader
  15.04.22         * RoundWeight
  21.05.20         * isWMS
  14.05.19         * ClientKind

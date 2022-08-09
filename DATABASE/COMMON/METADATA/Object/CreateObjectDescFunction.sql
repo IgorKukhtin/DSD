@@ -1006,7 +1006,12 @@ CREATE OR REPLACE FUNCTION zc_Object_OrderCarInfo() RETURNS Integer AS $BODY$BEG
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_OrderCarInfo', 'График отгрузки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_OrderCarInfo');
 
+CREATE OR REPLACE FUNCTION zc_Object_StickerHeader() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_StickerHeader'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_StickerHeader', 'Заголовок для сети' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_StickerHeader');
 
+
+ 
 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1618,6 +1623,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 08.08.22         * zc_Object_StickerHeader
  28.07.22                                                                                        * zc_Object_GoodsWhoCan, zc_Object_GoodsMethodAppl, zc_Object_GoodsSignOrigin
  12.07.22         * zc_Object_OrderCarInfo
  24.06.22                                                                                        * zc_Object_IntenalSP_1303, zc_Object_MakerCountrySP_1303

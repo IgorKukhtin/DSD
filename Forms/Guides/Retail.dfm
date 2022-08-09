@@ -171,6 +171,15 @@ object RetailForm: TRetailForm
         Options.Editing = False
         Width = 86
       end
+      object StickerHeaderName: TcxGridDBColumn
+        Caption = #1047#1072#1075#1086#1083#1086#1074#1086#1082' '#1076#1083#1103' '#1089#1077#1090#1080
+        DataBinding.FieldName = 'StickerHeaderName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1075#1086#1083#1086#1074#1086#1082' '#1076#1083#1103' '#1089#1077#1090#1080' ('#1087#1077#1095#1072#1090#1100' '#1101#1090#1080#1082#1077#1090#1082#1080')'
+        Options.Editing = False
+        Width = 90
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -301,6 +310,14 @@ object RetailForm: TRetailForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbUpdate_StickerHeader'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
@@ -396,6 +413,10 @@ object RetailForm: TRetailForm
     end
     object bbUpdate_isWMS: TdxBarButton
       Action = actUpdate_isWMS
+      Category = 0
+    end
+    object bbUpdate_StickerHeader: TdxBarButton
+      Action = macUpdate_StickerHeader
       Category = 0
     end
   end
@@ -735,6 +756,65 @@ object RetailForm: TRetailForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1056#1072#1079#1088#1077#1096#1077#1085' '#1084#1080#1085'. '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090
       ImageIndex = 76
     end
+    object macUpdate_StickerHeader: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenChoiceStickerHeader
+        end
+        item
+          Action = actUpdate_StickerHeader
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1047#1072#1075#1086#1083#1086#1074#1086#1082' '#1076#1083#1103' '#1089#1077#1090#1080'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1047#1072#1075#1086#1083#1086#1074#1086#1082' '#1076#1083#1103' '#1089#1077#1090#1080'>'
+      ImageIndex = 39
+    end
+    object actOpenChoiceStickerHeader: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenChoiceStickerHeader'
+      FormName = 'TStickerHeaderForm'
+      FormNameParam.Value = 'TStickerHeaderForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'StickerHeaderId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'StickerHeaderName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdate_StickerHeader: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spUpdate_StickerHeader
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_StickerHeader
+        end>
+      Caption = 'actUpdate_StickerHeader'
+      ImageIndex = 39
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Retail'
@@ -981,5 +1061,50 @@ object RetailForm: TRetailForm
     PackSize = 1
     Left = 424
     Top = 248
+  end
+  object spUpdate_StickerHeader: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Retail_StickerHeader'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStickerHeaderId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'StickerHeaderId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStickerHeaderName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StickerHeaderName'
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 248
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'StickerHeaderId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 368
+    Top = 152
   end
 end
