@@ -129,6 +129,11 @@ inherited Report_Movement_DynamicsOrdersEICForm: TReport_Movement_DynamicsOrders
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
+            end
+            item
+              Format = ',0'
+              Kind = skSum
+              Column = CountNeBoleyMobile
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -154,6 +159,14 @@ inherited Report_Movement_DynamicsOrdersEICForm: TReport_Movement_DynamicsOrders
             HeaderHint = #1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1079#1072' '#1076#1077#1085#1100' ('#1096#1090')'
             Options.Editing = False
             Width = 104
+          end
+          object CountNeBoleyMobile: TcxGridDBColumn
+            Caption = #1057#1072#1081#1090' "'#1053#1077' '#1073#1086#1083#1077#1081'" '#1084#1086#1073'.'#1087#1088'.'
+            DataBinding.FieldName = 'CountNeBoleyMobile'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
           end
           object CountTabletki: TcxGridDBColumn
             Caption = #1057#1072#1081#1090' "Tabletki"'
@@ -208,7 +221,6 @@ inherited Report_Movement_DynamicsOrdersEICForm: TReport_Movement_DynamicsOrders
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
         Align = alBottom
         TabOrder = 3
-        ExplicitTop = 246
         object cxGridDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramLine.Active = True
@@ -226,6 +238,10 @@ inherited Report_Movement_DynamicsOrdersEICForm: TReport_Movement_DynamicsOrders
           object cxGridDBChartSeries7: TcxGridDBChartSeries
             DataBinding.FieldName = 'CountNeBoley'
             DisplayText = #1057#1072#1081#1090' "'#1053#1077' '#1073#1086#1083#1077#1081'"'
+          end
+          object cxGridDBChartSeries11: TcxGridDBChartSeries
+            DataBinding.FieldName = 'CountNeBoleyMobile'
+            DisplayText = #1057#1072#1081#1090' "'#1053#1077' '#1073#1086#1083#1077#1081'" '#1084#1086#1073'.'#1087#1088'.'
           end
           object cxGridDBChartSeries8: TcxGridDBChartSeries
             DataBinding.FieldName = 'CountTabletki'

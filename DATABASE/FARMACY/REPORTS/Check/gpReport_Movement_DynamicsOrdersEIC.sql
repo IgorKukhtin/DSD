@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_Movement_DynamicsOrdersEIC(
 )
 RETURNS TABLE (OperDate TDateTime
              , CountNeBoley Integer
+             , CountNeBoleyMobile Integer
              , CountTabletki Integer
              , CountLiki24 Integer
              , CountAll Integer
@@ -28,6 +29,7 @@ BEGIN
                                  , COALESCE(MovementLinkObject_CheckSourceKind.ObjectId, 0)  AS CheckSourceKindId
                                  , MovementFloat_TotalCount.ValueData                        AS TotalCount
                                  , MovementFloat_TotalSumm.ValueData                         AS TotalSumm
+                                 , COALESCE(MovementBoolean_MobileApplication.ValueData, False)::Boolean   AS isMobileApplication
                             FROM (SELECT Movement.*
                                        , MovementLinkObject_Unit.ObjectId                    AS UnitId
                                        , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
@@ -73,6 +75,10 @@ BEGIN
                                                        ON MovementDate_Insert.MovementId = Movement_Check.Id
                                                       AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
                                                             
+                                LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                                          ON MovementBoolean_MobileApplication.MovementId = Movement_Check.Id
+                                                         AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+
                                 LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
                             WHERE COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0
                                OR COALESCE (MovementString_InvNumberOrder.ValueData, '') <> ''
@@ -84,6 +90,7 @@ BEGIN
                         GROUP BY Movement.Id)        
         , tmpMovementDay AS (SELECT tmpMovementProtocol.OperDate
                                   , Movement.CheckSourceKindId
+                                  , Movement.isMobileApplication
                                   , Count(*)                    AS CountCheck
                                   , Sum(Movement.TotalCount)    AS TotalCount
                                   , Sum(Movement.TotalSumm)     AS TotalSumm
@@ -93,7 +100,7 @@ BEGIN
                                   
                              WHERE tmpMovementProtocol.OperDate >= inStartDate 
                                AND tmpMovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
-                             GROUP BY tmpMovementProtocol.OperDate, Movement.CheckSourceKindId) 
+                             GROUP BY tmpMovementProtocol.OperDate, Movement.CheckSourceKindId, Movement.isMobileApplication) 
         , tmpMovementSum AS (SELECT Movement.OperDate
                                   , Sum(Movement.CountCheck)    AS CountCheck
                                   , Sum(Movement.TotalCount)    AS TotalCount
@@ -103,6 +110,7 @@ BEGIN
 
         SELECT Movement.OperDate::TDateTime
              , MovementNeBoley.CountCheck::Integer       AS CountNeBoley
+             , MovementNeBoleyMobile.CountCheck::Integer AS CountNeBoleyMobile
              , MovementTabletki.CountCheck::Integer      AS CountTabletki
              , MovementLiki24.CountCheck::Integer        AS CountLiki24
              , Movement.CountCheck::Integer              AS CountAll
@@ -111,7 +119,13 @@ BEGIN
              LEFT JOIN tmpMovementDay AS MovementNeBoley
                                       ON MovementNeBoley.OperDate = Movement.OperDate
                                      AND MovementNeBoley.CheckSourceKindId = 0  
+                                     AND MovementNeBoley.isMobileApplication = False
              
+             LEFT JOIN tmpMovementDay AS MovementNeBoleyMobile
+                                      ON MovementNeBoleyMobile.OperDate = Movement.OperDate
+                                     AND MovementNeBoleyMobile.CheckSourceKindId = 0  
+                                     AND MovementNeBoleyMobile.isMobileApplication = True
+
              LEFT JOIN tmpMovementDay AS MovementTabletki
                                       ON MovementTabletki.OperDate = Movement.OperDate
                                      AND MovementTabletki.CheckSourceKindId = zc_Enum_CheckSourceKind_Tabletki()  
@@ -138,4 +152,4 @@ $BODY$
 
 -- тест
 
-select * FROM gpReport_Movement_DynamicsOrdersEIC(inStartDate := '11.06.2021', inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := '3');
+select * FROM gpReport_Movement_DynamicsOrdersEIC(inStartDate := '01.03.2022'::TDateTime, inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := '3');

@@ -235,7 +235,7 @@ object MainForm: TMainForm
     Height = 445
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet1
+    Properties.ActivePage = cxTabSheet2
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 441
     ClientRectLeft = 4
@@ -435,6 +435,10 @@ object MainForm: TMainForm
           object cxGridDBChartSeries7: TcxGridDBChartSeries
             DataBinding.FieldName = 'CountNeBoley'
             DisplayText = #1057#1072#1081#1090' "'#1053#1077' '#1073#1086#1083#1077#1081'"'
+          end
+          object cxGridDBChartSeries11: TcxGridDBChartSeries
+            DataBinding.FieldName = 'CountNeBoleyMobile'
+            DisplayText = #1057#1072#1081#1090' "'#1053#1077' '#1073#1086#1083#1077#1081'" '#1084#1086#1073'. '#1087#1088'.'
           end
           object cxGridDBChartSeries8: TcxGridDBChartSeries
             DataBinding.FieldName = 'CountTabletki'

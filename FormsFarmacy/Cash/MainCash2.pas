@@ -3324,6 +3324,7 @@ begin
   // теперь вызов
   with spCheck_RemainsError do
     try
+      ParamByName('inSPKindId').Value := Self.FormParams.ParamByName('SPKindId').Value;
       ParamByName('inJSON').Value := JsonText;
       Execute;
       Result := ParamByName('outMessageText').Value = '';

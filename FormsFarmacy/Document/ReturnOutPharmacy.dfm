@@ -160,15 +160,7 @@ inherited ReturnOutPharmacyForm: TReturnOutPharmacyForm
         DataSummaryItemIndex = 0
       end>
   end
-  inherited PopupMenu: TPopupMenu
-    inherited N2: TMenuItem
-      Visible = False
-    end
-    inherited N3: TMenuItem
-      Visible = False
-    end
-  end
-  inherited spGet: TdsdStoredProc
+  inherited spGet: TdsdStoredProc [10]
     Params = <
       item
         Name = 'inMovementId'
@@ -371,9 +363,17 @@ inherited ReturnOutPharmacyForm: TReturnOutPharmacyForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isShowMorion'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isShowMorion'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
   end
-  inherited spInsertUpdateMovement: TdsdStoredProc
+  inherited spInsertUpdateMovement: TdsdStoredProc [11]
     Params = <
       item
         Name = 'ioId'
@@ -480,34 +480,68 @@ inherited ReturnOutPharmacyForm: TReturnOutPharmacyForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited RefreshAddOn: TRefreshAddOn
+  inherited GuidesFiller: TGuidesFiller [12]
+  end
+  inherited HeaderSaver: THeaderSaver [13]
+  end
+  inherited RefreshAddOn: TRefreshAddOn [14]
     DataSet = 'ClientDataSet'
   end
-  inherited GuidesFrom: TdsdGuides
+  inherited spErasedMIMaster: TdsdStoredProc [15]
+  end
+  inherited spUnErasedMIMaster: TdsdStoredProc [16]
+  end
+  inherited spInsertUpdateMIMaster: TdsdStoredProc [17]
+  end
+  inherited spInsertMaskMIMaster: TdsdStoredProc [18]
+  end
+  inherited spGetTotalSumm: TdsdStoredProc [19]
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher [20]
+  end
+  inherited PrintHeaderCDS: TClientDataSet [21]
+  end
+  inherited PrintItemsCDS: TClientDataSet [22]
+  end
+  inherited PrintItemsSverkaCDS: TClientDataSet [23]
+  end
+  inherited spSelectPrint: TdsdStoredProc [24]
+  end
+  inherited GuidesFrom: TdsdGuides [25]
     DisableGuidesOpen = True
   end
-  inherited GuidesTo: TdsdGuides
+  inherited GuidesTo: TdsdGuides [26]
     DisableGuidesOpen = True
   end
-  inherited GuidesIncome: TdsdGuides
+  inherited NDSKindGuides: TdsdGuides [27]
+  end
+  inherited ContractGuides: TdsdGuides [28]
+  end
+  inherited spIncome_GoodsId: TdsdStoredProc [29]
+  end
+  inherited GuidesIncome: TdsdGuides [30]
     DisableGuidesOpen = True
   end
-  inherited ReturnTypeGuides: TdsdGuides
+  inherited ReturnTypeGuides: TdsdGuides [31]
     DisableGuidesOpen = True
   end
-  inherited GuidesJuridical: TdsdGuides
+  inherited GuidesJuridical: TdsdGuides [32]
     DisableGuidesOpen = True
   end
-  inherited GuidesJuridicalLegalAddress: TdsdGuides
+  inherited spUpdateReturnOut_PartnerData: TdsdStoredProc [33]
+  end
+  inherited GuidesJuridicalLegalAddress: TdsdGuides [34]
     DisableGuidesOpen = True
     Left = 216
     Top = 80
   end
-  inherited GuidesJuridicalActualAddress: TdsdGuides
+  inherited GuidesJuridicalActualAddress: TdsdGuides [35]
     DisableGuidesOpen = True
     Left = 488
   end
-  inherited spUpdate_isDeferred_No: TdsdStoredProc
+  inherited spMovementComplete: TdsdStoredProc [36]
+  end
+  inherited spUpdate_isDeferred_No: TdsdStoredProc [37]
     Params = <
       item
         Name = 'inMovementId'
@@ -532,7 +566,7 @@ inherited ReturnOutPharmacyForm: TReturnOutPharmacyForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited spUpdate_isDeferred_Yes: TdsdStoredProc
+  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [38]
     Params = <
       item
         Name = 'inMovementId'
@@ -556,5 +590,19 @@ inherited ReturnOutPharmacyForm: TReturnOutPharmacyForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
+  end
+  inherited PopupMenu: TPopupMenu [39]
+    inherited N2: TMenuItem
+      Visible = False
+    end
+    inherited N3: TMenuItem
+      Visible = False
+    end
+  end
+  inherited FormParams: TdsdFormParams [40]
+  end
+  inherited StatusGuides: TdsdGuides [41]
+  end
+  inherited spChangeStatus: TdsdStoredProc [42]
   end
 end

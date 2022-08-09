@@ -26,6 +26,8 @@ $BODY$
    DECLARE vbAmount_remains TFloat;
    DECLARE vbDiscountExternalId Integer;
    DECLARE vbisOneSupplier Boolean;
+   DECLARE vbSPKindId Integer; 
+   DECLARE vbPriceSamples TFloat;
 
    DECLARE curRemains refcursor;
    DECLARE curSale refcursor;
@@ -138,7 +140,8 @@ BEGIN
          , COALESCE(ObjectLink_DiscountExternal.ChildObjectId, 0)
          , COALESCE(ObjectBoolean_TwoPackages.ValueData, False) 
          , COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0)
-    INTO vbOperDate, vbUnitId, vbDiscountExternalId, vbisOneSupplier, vbSummChangePercent
+         , COALESCE(MovementLinkObject_SPKind.ObjectId, 0)
+    INTO vbOperDate, vbUnitId, vbDiscountExternalId, vbisOneSupplier, vbSummChangePercent, vbSPKindId
     FROM Movement
 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -160,6 +163,11 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
                                  ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
                                 AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                      ON MovementLinkObject_SPKind.MovementId = Movement.Id
+                                     AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+
     WHERE Movement.Id = inMovementId;
 
     -- Определить
@@ -169,6 +177,22 @@ BEGIN
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId);
 
+    IF vbSPKindId = zc_Enum_SPKind_SP()
+    THEN
+      SELECT COALESCE(ObjectFloat_CashSettings_PriceSamples.ValueData, 0)                          AS PriceSamples
+      INTO vbPriceSamples
+      FROM Object AS Object_CashSettings
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PriceSamples
+                                 ON ObjectFloat_CashSettings_PriceSamples.ObjectId = Object_CashSettings.Id 
+                                AND ObjectFloat_CashSettings_PriceSamples.DescId = zc_ObjectFloat_CashSettings_PriceSamples()
+
+      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+      LIMIT 1;      
+    ELSE
+      vbPriceSamples := 0;
+    END IF;
+    
     -- данные почти все
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_remains'))
     THEN
@@ -282,6 +306,10 @@ BEGIN
                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
             -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
             LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+            
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId =  COALESCE (MI_Income_find.Id,MovementItem.Id)
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
             LEFT OUTER JOIN MovementBoolean AS MovementBoolean_UseNDSKind
                                             ON MovementBoolean_UseNDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MovementItem.MovementId)
@@ -317,6 +345,7 @@ BEGIN
        WHERE COALESCE (PDContainer.id, 0) = 0
          AND (vbDiscountExternalId = 0 OR COALESCE(tmpSupplier.SupplierID, 0) <> 0 AND COALESCE(MovementLinkObject_To.ObjectId, 0) = vbUnitId AND Container.Amount >= 1)
          AND (COALESCE (ItemJuridical.JuridicalId, 0) = 0 OR MovementLinkObject_From.ObjectId = COALESCE (ItemJuridical.JuridicalId, 0))
+         AND (vbPriceSamples = 0 OR vbPriceSamples < COALESCE(MIFloat_Price.ValueData, vbPriceSamples + 0.01))
        ;
          
 /*    IF COALESCE (vbDiscountExternalId, 0) <> 0
