@@ -116,7 +116,8 @@ uses
   GuideAsset in '..\Scale\GuideAsset.pas' {GuideAssetForm},
   GuideMovementTransport in '..\Scale\GuideMovementTransport.pas' {GuideMovementTransportForm},
   GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm},
-  frxPreview in '..\Scale\Util\frxPreview.pas' {frxPreviewForm};
+  frxClass in '..\Scale\Util\frx\frxClass.pas',
+  frxPreview in '..\Scale\Util\frx\frxPreview.pas' {frxPreviewForm};
 
 {$R *.res}
 
@@ -138,8 +139,8 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-         //
+  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+  //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
          //
