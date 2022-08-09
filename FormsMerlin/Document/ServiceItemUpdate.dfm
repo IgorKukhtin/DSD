@@ -308,7 +308,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
     ExplicitWidth = 1071
     inherited deStart: TcxDateEdit
       Left = 78
-      EditValue = 44197d
+      EditValue = 44562d
       Properties.SaveTime = False
       ExplicitLeft = 78
     end
@@ -790,18 +790,14 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
       end
       item
         Name = 'inUnitId'
-        Value = Null
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        Name = 'inInfoMoneyId'
+        Value = 0
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 112

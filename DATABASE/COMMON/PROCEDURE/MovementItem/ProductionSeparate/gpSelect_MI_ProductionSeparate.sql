@@ -21,7 +21,7 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
 
-   vbIsSummIn:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
+   vbIsSummIn:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) OR vbUserId = 343013; -- Нагорная Я.Г.
 
 
    IF inShowAll = TRUE
@@ -259,6 +259,7 @@ BEGIN
            , CASE WHEN MovementItem.Amount <> 0 THEN tmpSummIn.SummIn / MovementItem.Amount ELSE 0 END :: TFloat AS PriceIn
            , tmpSummIn.SummIn :: TFloat                  AS SummIn
            , COALESCE (tmpPriceSeparateHist_kind.ValuePrice, tmpPriceSeparateHist.ValuePrice, 0)  :: TFloat AS PriceIn_hist
+           , (MovementItem.Amount * COALESCE (tmpPriceSeparateHist_kind.ValuePrice, tmpPriceSeparateHist.ValuePrice, 0)):: TFloat AS SummIn_hist
            , MIFloat_LiveWeight.ValueData                AS LiveWeight
            , MIFloat_HeadCount.ValueData 		 AS HeadCount
            , COALESCE (MIBoolean_Calculated.ValueData, FALSE) ::Boolean AS isCalculated
