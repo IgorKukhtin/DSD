@@ -877,6 +877,17 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Options.Editing = False
         Width = 120
       end
+      object NormInDays_gk: TcxGridDBColumn
+        Caption = '***'#1089#1088#1086#1082' '#1074' '#1076#1085#1103#1093
+        DataBinding.FieldName = 'NormInDays_gk'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1076#1083#1103' '#1074#1080#1076#1072' '#1090#1086#1074#1072#1088#1072' - '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1074' '#1076#1085#1103#1093
+        Width = 70
+      end
       object PartionGoodsName: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'PartionGoodsName'

@@ -24,6 +24,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
+             , NormInDays_gk TFloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar
              , MeasureName TVarChar
@@ -577,6 +578,7 @@ BEGIN
                                        , Object_Goods_basis.ValueData         AS GoodsName_basis
                                        , Object_Goods_main.ObjectCode         AS GoodsCode_main
                                        , Object_Goods_main.ValueData          AS GoodsName_main
+                                       , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
                                   FROM Object_GoodsByGoodsKind_View
                                         LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
                                                              ON ObjectLink_GoodsByGoodsKind_GoodsBasis.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -586,6 +588,11 @@ BEGIN
                                                              ON ObjectLink_GoodsByGoodsKind_GoodsMain.ObjectId = Object_GoodsByGoodsKind_View.Id
                                                             AND ObjectLink_GoodsByGoodsKind_GoodsMain.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
                                         LEFT JOIN Object AS Object_Goods_main ON Object_Goods_main.Id = ObjectLink_GoodsByGoodsKind_GoodsMain.ChildObjectId
+
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_GK_NormInDays
+                                                              ON ObjectFloat_GK_NormInDays.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                             AND ObjectFloat_GK_NormInDays.DescId   = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+
                                   WHERE COALESCE (ObjectLink_GoodsByGoodsKind_GoodsBasis.ChildObjectId, 0) <> 0
                                      OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsMain.ChildObjectId, 0) <> 0
                                   )
@@ -607,6 +614,7 @@ BEGIN
         , tmpGoodsByGoodsKindParam.GoodsName_basis
         , tmpGoodsByGoodsKindParam.GoodsCode_main
         , tmpGoodsByGoodsKindParam.GoodsName_main
+        , tmpGoodsByGoodsKindParam.NormInDays_gk  ::TFloat
 
         , CAST (COALESCE(Object_Goods.Id, 0) AS Integer)                 AS GoodsId
         , Object_Goods.ObjectCode        AS GoodsCode
@@ -960,6 +968,7 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 09.08.22         *  NormInDays_gk
  18.12.19         *
  14.11.18         *
  19.10.18         *
