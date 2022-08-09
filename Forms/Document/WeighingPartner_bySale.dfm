@@ -152,7 +152,9 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
               Kind = skSum
               Column = HeadCount
             end>
-          OptionsData.Editing = False
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -164,6 +166,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object OperDate: TcxGridDBColumn
@@ -171,6 +174,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object StartWeighing: TcxGridDBColumn
@@ -195,6 +199,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object GoodsGroupName: TcxGridDBColumn
@@ -203,6 +208,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object GoodsCode: TcxGridDBColumn
@@ -210,6 +216,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object GoodsName: TcxGridDBColumn
@@ -217,6 +224,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object GoodsKindName: TcxGridDBColumn
@@ -224,6 +232,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object MeasureName: TcxGridDBColumn
@@ -239,6 +248,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             DataBinding.FieldName = 'isBarCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object RealWeight: TcxGridDBColumn
@@ -260,6 +270,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object AmountPartner: TcxGridDBColumn
@@ -270,6 +281,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object ChangePercentAmount: TcxGridDBColumn
@@ -292,6 +304,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object BoxName: TcxGridDBColumn
@@ -299,6 +312,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             DataBinding.FieldName = 'BoxName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Count: TcxGridDBColumn
@@ -322,6 +336,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object LevelNumber: TcxGridDBColumn
@@ -332,6 +347,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
           object BoxNumber: TcxGridDBColumn
@@ -342,6 +358,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object Price: TcxGridDBColumn
@@ -353,6 +370,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object CountForPrice: TcxGridDBColumn
@@ -364,6 +382,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object CountTare: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
@@ -373,6 +392,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object WeightTare: TcxGridDBColumn
@@ -383,6 +403,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object CountTare1: TcxGridDBColumn
@@ -395,6 +416,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1103#1097'. '#1074#1080#1076#1072'1'
+            Options.Editing = False
             Width = 70
           end
           object WeightTare1: TcxGridDBColumn
@@ -407,6 +429,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1075#1086' '#1103#1097'. '#1074#1080#1076#1072'1'
+            Options.Editing = False
             Width = 55
           end
           object CountTare2: TcxGridDBColumn
@@ -419,6 +442,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1103#1097'. '#1074#1080#1076#1072'2'
+            Options.Editing = False
             Width = 70
           end
           object WeightTare2: TcxGridDBColumn
@@ -431,6 +455,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1075#1086' '#1103#1097'. '#1074#1080#1076#1072'2'
+            Options.Editing = False
             Width = 55
           end
           object CountTare3: TcxGridDBColumn
@@ -443,6 +468,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1103#1097'. '#1074#1080#1076#1072'3'
+            Options.Editing = False
             Width = 70
           end
           object WeightTare3: TcxGridDBColumn
@@ -455,6 +481,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1075#1086' '#1103#1097'. '#1074#1080#1076#1072'3'
+            Options.Editing = False
             Width = 55
           end
           object CountTare4: TcxGridDBColumn
@@ -467,6 +494,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1103#1097'. '#1074#1080#1076#1072'4'
+            Options.Editing = False
             Width = 70
           end
           object WeightTare4: TcxGridDBColumn
@@ -479,6 +507,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1075#1086' '#1103#1097'. '#1074#1080#1076#1072'4'
+            Options.Editing = False
             Width = 55
           end
           object CountTare5: TcxGridDBColumn
@@ -491,6 +520,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1103#1097'. '#1074#1080#1076#1072'5'
+            Options.Editing = False
             Width = 70
           end
           object WeightTare5: TcxGridDBColumn
@@ -503,6 +533,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1075#1086' '#1103#1097'. '#1074#1080#1076#1072'5'
+            Options.Editing = False
             Width = 55
           end
           object CountTare6: TcxGridDBColumn
@@ -515,6 +546,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1103#1097'. '#1074#1080#1076#1072'6'
+            Options.Editing = False
             Width = 70
           end
           object WeightTare6: TcxGridDBColumn
@@ -527,6 +559,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1075#1086' '#1103#1097'. '#1074#1080#1076#1072'6'
+            Options.Editing = False
             Width = 55
           end
           object PriceListName: TcxGridDBColumn
@@ -535,6 +568,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object PartionGoodsDate: TcxGridDBColumn
@@ -543,6 +577,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object ReasonName_ch2: TcxGridDBColumn
@@ -559,6 +594,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object UpdateDate: TcxGridDBColumn
@@ -567,6 +603,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object ChangePercent: TcxGridDBColumn
@@ -666,6 +703,20 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1089#1077#1082#1091#1085#1076' '#1087#1088#1080' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1080' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
             Options.Editing = False
+            Width = 70
+          end
+          object MovementId: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
         end

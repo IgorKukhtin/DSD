@@ -68,6 +68,9 @@ type
     macUpdate_StorageLineByChild: TMultiAction;
     bbUpdate_StorageLineByChild: TdxBarButton;
     edIsAuto: TcxCheckBox;
+    chSummIn_hist: TcxGridDBColumn;
+    actGridChildToExcel: TdsdGridToExcel;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

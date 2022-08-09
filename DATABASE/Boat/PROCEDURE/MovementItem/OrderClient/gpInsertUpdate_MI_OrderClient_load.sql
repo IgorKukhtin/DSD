@@ -64,13 +64,63 @@ BEGIN
      vbUserId := lpGetUserBySession (inSession);
      
      -- замена
-     IF inValue3 = 'null' THEN inValue3:= ''; END IF;
+     IF inValue3 ILIKE 'null' THEN inValue3:= ''; END IF;
      -- замена
      vbLISSE_MATT:= (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_MaterialOptions()
                                                            AND (Object.ValueData ILIKE 'LISSE\/MATT'
                                                              OR Object.ValueData ILIKE 'LISSE/MATT'
                                                                ));
 
+     -- замена
+     IF (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary' OR inTitle ILIKE 'moldings' OR inTitle ILIKE 'upholstery' OR inTitle ILIKE 'teak' )
+     THEN
+         -- если стандарт
+         IF inValue2 ILIKE 'Basic' THEN inValue2:= ''; END IF;
+         --
+         -- если и ключ кривой
+         IF NOT EXISTS (SELECT 1 FROM Object JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1 WHERE Object.DescId = zc_Object_ProdOptions())
+         THEN
+             -- запомнили
+             inValue12:= inValue1;
+             -- замена
+             IF inValue2 = '' AND (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary')
+             THEN
+                 -- меняем 1 символ
+                 inValue1:= SUBSTRING (inValue1 FROM 1 FOR LENGTH (inValue1) - 1) || 'c0';
+
+             ELSEIF inTitle ILIKE 'moldings'
+             THEN
+                 -- добавляем 2 символа
+                 inValue1:= inValue1 || '_1';
+
+             ELSEIF inTitle ILIKE 'teak'
+             THEN
+                 -- меняем 1 символ
+                 inValue1:= SUBSTRING (inValue1 FROM 1 FOR LENGTH (inValue1) - 1) || '9';
+
+             ELSE
+                 -- меняем 1 символ
+                 IF SUBSTRING (inValue1 FROM LENGTH (inValue1) FOR 1) = '_'
+                 THEN inValue1:= inValue1 || '0'; --!!!временно
+                 ELSE inValue1:= SUBSTRING (inValue1 FROM 1 FOR LENGTH (inValue1) - 1) || '0';
+                 END IF;
+             END IF;
+
+             -- Проверка - Новый ключ
+             IF NOT EXISTS (SELECT 1 FROM Object JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1 WHERE Object.DescId = zc_Object_ProdOptions())
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не найдена опция с Key = <%> + Название = <%>. После замены ключа <%>'
+                                , inValue1
+                                , inTitle
+                                , inValue12
+                                 ;
+             END IF;
+
+         END IF;
+
+     END IF;
+
+     
      /*IF inTitle ILIKE 'hypalon_secondary'
      THEN
          RAISE EXCEPTION 'Ошибка.<%>.', inTitle;
@@ -82,6 +132,13 @@ BEGIN
      THEN inValue2:= 'SILVERTEX®';
           IF inValue1 = 'b280_u_3' THEN inValue1:= 'b280_u_1'; END IF;
 
+--     ELSEIF inTitle ILIKE 'hypalon_secondary' AND inValue1 ILIKE 'b280_hs_b'
+--     THEN inValue1:= 'b280_hs_c0';
+--     ELSEIF inTitle ILIKE 'moldings' AND inValue1 ILIKE 'b280_m'
+--     THEN inValue1:= 'b280_m_1';
+--     ELSEIF inTitle ILIKE 'upholstery' AND inValue1 ILIKE 'b280_u_' AND inValue2 ILIKE 'DIAMANTE'
+--     THEN inValue1:= 'b280_u_4';
+
      --ELSEIF inTitle ILIKE 'upholstery' AND inTitle2 ILIKE 'material_title' AND inValue2 ILIKE 'DIAMANTE'
      --THEN inValue1:= 'b280_u_4';
 
@@ -91,7 +148,7 @@ BEGIN
      --***IF inValue1 = 'b280_t_4' AND inValue2 ILIKE 'BLEACHED' THEN inValue1:= 'b280_t_2'; END IF;
 
      -- замена - временно
-     IF inTitle ILIKE 'upholstery' OR inTitle ILIKE 'teak'
+     IF (inTitle ILIKE 'upholstery' OR inTitle ILIKE 'teak')
         AND NOT EXISTS (SELECT 1
                         FROM Object
                              JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1
@@ -135,7 +192,7 @@ BEGIN
          -- Проверка
          IF COALESCE (inValue1, '') = ''
          THEN
-             RAISE EXCEPTION 'Ошибка.замена для <%>. <%> + <%> + <%> не нашлась', inValue12, inTitle, inValue2, inValue4;
+             RAISE EXCEPTION 'Ошибка-1.замена для <%>. <%> + <%> + <%> не нашлась', inValue12, inTitle, inValue2, inValue4;
          END IF;
 
      END IF;
@@ -183,10 +240,10 @@ BEGIN
          -- Проверка
          IF COALESCE (inValue1, '') = ''
          THEN
-             RAISE EXCEPTION 'Ошибка.замена для <%>. <%> + <%> + <%> не нашлась', inValue12, inTitle, inValue2, inValue4;
+             RAISE EXCEPTION 'Ошибка-2.замена для <%>. <%> + <%> + <%> не нашлась', inValue12, inTitle, inValue2, inValue4;
          END IF;
          
-     ELSEIF inTitle ILIKE 'light' OR inTitle ILIKE 'accessories' OR inTitle ILIKE 'title'
+     ELSEIF (inTitle ILIKE 'light' OR inTitle ILIKE 'accessories' OR inTitle ILIKE 'title')
         -- если нет такого Id_Site + Name
         AND NOT EXISTS (SELECT 1 FROM Object JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1 WHERE Object.DescId = zc_Object_ProdOptions() AND TRIM (Object.ValueData) ILIKE TRIM (inValue2) AND Object.isErased = FALSE)
         --***
@@ -218,7 +275,9 @@ BEGIN
          -- Проверка
          IF COALESCE (inValue1, '') = ''
          THEN
-             RAISE EXCEPTION 'Ошибка.замена для <%>. <%> + <%> + <%> не нашлась', inValue12, inTitle, inValue2, inValue4;
+             RAISE EXCEPTION 'Ошибка-3.замена для <%>. <%> + <%> + <%> не нашлась <%>', inValue12, inTitle, inValue2, inValue4
+             , (SELECT Object.ValueData FROM Object JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue12 WHERE Object.DescId = zc_Object_ProdOptions() AND Object.isErased = FALSE)
+             ;
          END IF;
 
      END IF;
@@ -600,11 +659,11 @@ BEGIN
          THEN
              RAISE EXCEPTION 'Ошибка.Не найдено значение опции с Key = <%>.', inValue1;
          END IF;
-         -- 6.1. Проверка - category_title+inValue3 должен соответствовать MaterialOptionsId
+         -- 6.1. Проверка - category_title+inValue2 должен соответствовать MaterialOptionsId
          IF (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary')
-            AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL JOIN Object ON Object.Id = OL.ChildObjectId AND Object.ValueData ILIKE CASE WHEN COALESCE (inValue3, '') = '' THEN vbLISSE_MATT ELSE inValue3 END AND Object.isErased = FALSE WHERE OL.ObjectId = vbProdOptionsId  AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions())
+            AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL JOIN Object ON Object.Id = OL.ChildObjectId AND Object.ValueData ILIKE CASE WHEN COALESCE (inValue2, '') = '' THEN vbLISSE_MATT ELSE inValue2 END AND Object.isErased = FALSE WHERE OL.ObjectId = vbProdOptionsId  AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions())
             -- !!!если MaterialOptions не пустой!!!
-          --AND COALESCE (inValue3, '') <> ''
+          --AND COALESCE (inValue2, '') <> ''
          THEN
              --***
              -- запомнили
@@ -615,7 +674,7 @@ BEGIN
                                                -- другой MaterialOptions
                                                JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id        = OL.ChildObjectId
                                                                                     -- здесь другое значение
-                                                                                    AND Object_MaterialOptions.ValueData ILIKE CASE WHEN COALESCE (inValue3, '') = '' THEN vbLISSE_MATT ELSE inValue3 END
+                                                                                    AND Object_MaterialOptions.ValueData ILIKE CASE WHEN COALESCE (inValue2, '') = '' THEN vbLISSE_MATT ELSE inValue2 END
                                                                                     AND Object_MaterialOptions.isErased  = FALSE
                                                -- Boat Structure
                                                JOIN ObjectLink AS OL_ProdColorPattern
@@ -643,12 +702,13 @@ BEGIN
              -- 6.1. Проверка
              IF COALESCE (vbProdOptionsId, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Не найдена опция с Key = <%> + MaterialOptions = <%>. Поиск замены для <%>(<%>)', inValue1, CASE WHEN COALESCE (inValue3, '') = '' THEN vbLISSE_MATT ELSE inValue3 END, lfGet_Object_ValueData (inValue12 :: Integer), inValue12;
+                 RAISE EXCEPTION 'Ошибка.Не найдена опция с Key = <%> + MaterialOptions = <%>. Поиск замены для <%>(<%>)', inValue1, CASE WHEN COALESCE (inValue2, '') = '' THEN vbLISSE_MATT ELSE inValue2 END, lfGet_Object_ValueData (inValue12 :: Integer), inValue12;
              END IF;*/
+
              RAISE EXCEPTION 'Ошибка.Для <%><%> категория Опций должна быть = <%> в загрузке установлено = <%>.'
                             , inValue1, lfGet_Object_ValueData_sh (vbProdOptionsId)
                             , lfGet_Object_ValueData_sh ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbProdOptionsId  AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()))
-                            , inValue3
+                            , inValue2
                              ;
          END IF;
          -- 6.1. Проверка - material_title+inValue2 должен соответствовать MaterialOptionsId
@@ -663,7 +723,7 @@ BEGIN
          END IF;
          -- 6.1. Проверка - Name Options должен соответствовать
          IF (inTitle ILIKE 'devices' OR inTitle ILIKE 'light' OR inTitle ILIKE 'accessories' OR inTitle ILIKE 'title')
-            AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbProdOptionsId AND Object.ValueData ILIKE inValue2 AND Object.isErased = FALSE)
+            AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbProdOptionsId AND Object.ValueData ILIKE CASE WHEN inTitle4 ILIKE 'variant_title' THEN inValue4 ELSE inValue2 END AND Object.isErased = FALSE)
          THEN
              --***
              -- !!!временно замена, т.к. другой Name!!!
@@ -693,7 +753,7 @@ BEGIN
              
              RAISE EXCEPTION 'Ошибка.Для <%> назвние Опции должно быть = <%> в загрузке установлено = <%>.'
                             , inValue1, lfGet_Object_ValueData_sh (vbProdOptionsId)
-                            , inValue2
+                            , CASE WHEN inTitle4 ILIKE 'variant_title' THEN inValue4 ELSE inValue2 END
                              ;
          END IF;
 

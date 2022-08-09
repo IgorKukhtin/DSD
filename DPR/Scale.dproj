@@ -282,7 +282,8 @@
 			<DCCReference Include="..\Scale\GuideSubjectDoc.pas">
 				<Form>GuideSubjectDocForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\Scale\Util\frxPreview.pas">
+			<DCCReference Include="..\Scale\Util\frx\frxClass.pas"/>
+			<DCCReference Include="..\Scale\Util\frx\frxPreview.pas">
 				<Form>frxPreviewForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
