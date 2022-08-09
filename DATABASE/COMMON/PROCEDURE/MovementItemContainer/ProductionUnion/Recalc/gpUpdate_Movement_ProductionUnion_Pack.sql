@@ -28,6 +28,11 @@ BEGIN
    END IF;
    
    --IF inStartDate <= '07.07.2022' THEN RETURN; END IF;
+/*
+IF inUnitId NOT IN (951601) -- ЦЕХ упаковки мясо
+THEN
+    RETURN;
+END IF;*/
 
 /*IF inUnitId NOT IN (8451, 951601)
 THEN
