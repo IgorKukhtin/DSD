@@ -163,6 +163,17 @@ BEGIN
                                            ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
                                           AND ObjectFloat_WeightTotal.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
                      )
+
+     , tmpCar_all AS (SELECT DISTINCT tmpTransportGoods.CarId AS CarId FROM tmpTransportGoods UNION SELECT tmpTransportGoods.CarTrailerId AS CarId FROM tmpTransportGoods)
+     , tmpObjectFloat_car AS (SELECT *
+                              FROM ObjectFloat
+                              WHERE ObjectFloat.ObjectId IN (SELECT DISTINCT tmpCar_all.CarId FROM tmpCar_all)
+                             )
+     , tmpObjectString_car AS (SELECT *
+                              FROM ObjectString
+                              WHERE ObjectString.ObjectId IN (SELECT DISTINCT tmpCar_all.CarId FROM tmpCar_all)
+                             )
+
      , tmpCar_param AS (SELECT tmp.CarId
                              , CASE WHEN COALESCE (ObjectFloat_Length.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Length.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Length
                              , CASE WHEN COALESCE (ObjectFloat_Width.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Width.ValueData AS NUMERIC (16,0))   ::TVarChar END :: TVarChar  AS Width 
@@ -170,24 +181,24 @@ BEGIN
                              , COALESCE (ObjectFloat_Weight.ValueData, 0) AS Weight
                              , COALESCE (ObjectFloat_Year.ValueData, 0)   AS Year
                              , ObjectString_VIN.ValueData                 AS VIN
-                        FROM (SELECT DISTINCT tmpTransportGoods.CarId AS CarId FROM tmpTransportGoods UNION SELECT DISTINCT tmpTransportGoods.CarTrailerId AS CarId FROM tmpTransportGoods) AS tmp
+                        FROM tmpCar_all AS tmp
                              ---
-                             LEFT JOIN ObjectFloat AS ObjectFloat_Length
+                             LEFT JOIN tmpObjectFloat_car AS ObjectFloat_Length
                                                    ON ObjectFloat_Length.ObjectId = tmp.CarId
                                                   AND ObjectFloat_Length.DescId IN (zc_ObjectFloat_Car_Length(),zc_ObjectFloat_CarExternal_Length())
-                             LEFT JOIN ObjectFloat AS ObjectFloat_Width
+                             LEFT JOIN tmpObjectFloat_car AS ObjectFloat_Width
                                                    ON ObjectFloat_Width.ObjectId = tmp.CarId
                                                   AND ObjectFloat_Width.DescId IN (zc_ObjectFloat_Car_Width(),zc_ObjectFloat_CarExternal_Width())
-                             LEFT JOIN ObjectFloat AS ObjectFloat_Height
+                             LEFT JOIN tmpObjectFloat_car AS ObjectFloat_Height
                                                    ON ObjectFloat_Height.ObjectId = tmp.CarId
                                                   AND ObjectFloat_Height.DescId IN (zc_ObjectFloat_Car_Height(), zc_ObjectFloat_CarExternal_Height())
-                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                             LEFT JOIN tmpObjectFloat_car AS ObjectFloat_Weight
                                                    ON ObjectFloat_Weight.ObjectId = tmp.CarId
                                                   AND ObjectFloat_Weight.DescId IN (zc_ObjectFloat_Car_Weight(), zc_ObjectFloat_CarExternal_Weight())
-                             LEFT JOIN ObjectFloat AS ObjectFloat_Year
+                             LEFT JOIN tmpObjectFloat_car AS ObjectFloat_Year
                                                    ON ObjectFloat_Year.ObjectId = tmp.CarId
                                                   AND ObjectFloat_Year.DescId IN (zc_ObjectFloat_Car_Year(), zc_ObjectFloat_CarExternal_Year())
-                             LEFT JOIN ObjectString AS ObjectString_VIN
+                             LEFT JOIN tmpObjectString_car AS ObjectString_VIN
                                                     ON ObjectString_VIN.ObjectId = tmp.CarId
                                                    AND ObjectString_VIN.DescId IN (zc_ObjectString_Car_VIN(), zc_ObjectString_CarExternal_VIN())
                         )
@@ -263,21 +274,50 @@ BEGIN
                   ELSE '' -- 'м.ƒнiпро'
                   END  :: TVarChar   AS PlaceOf
 
-          , tmpCar_param.Length :: TVarChar  AS Length
-          , tmpCar_param.Width  :: TVarChar  AS Width 
-          , tmpCar_param.Height :: TVarChar  AS Height
-          , CASE WHEN (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) = 0 THEN 0 ELSE (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) END :: TFloat AS Weight_car
-          , CASE WHEN (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) = 0 THEN 0
-                 ELSE CAST ((((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)
-                      + (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0))) AS NUMERIC (16,0)) :: TFloat END :: TFloat AS Weight_all
+        --, tmpCar_param.Length :: TVarChar  AS Length
+        --, tmpCar_param.Width  :: TVarChar  AS Width 
+        --, tmpCar_param.Height :: TVarChar  AS Height
+          , (select tmpCar_param.Length from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS Length
+          , (select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS Width 
+          , (select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS Height
+
+          , CASE WHEN COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId), 0)
+                    + COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId), 0)
+                    = 0
+                      THEN 0
+                      ELSE COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId), 0)
+                         + COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId), 0)
+            END :: TFloat AS Weight_car
+
+          , CASE WHEN COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId), 0)
+                    + COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId), 0)
+                    = 0
+                      THEN 0
+                 ELSE 
+                      CAST ((((COALESCE (tmpTransportGoods.TotalWeightBox, 0)
+                             + COALESCE (MovementFloat_TotalCountKg.ValueData, 0)
+                             + COALESCE (tmpPackage.TotalWeightPackage,0)
+                              ) / 1)
+                      + COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId), 0)
+                      + COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId), 0)
+                      ) AS NUMERIC (16,0)) :: TFloat END :: TFloat AS Weight_all
+
           , ( ( ((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)
-                      + (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)))/1000) :: TFloat AS Weight_all_t --в тоннах
+                      + (COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId), 0)
+                       + COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId), 0)
+                        ))/1000) :: TFloat AS Weight_all_t --в тоннах
+
           , CASE WHEN tmpCar_param.Year > 0 THEN CAST (tmpCar_param.Year AS Integer) :: TVarChar ELSE '' END ::TVarChar AS Year
-          , tmpCar_param.VIN  ::TVarChar AS VIN
+
+        --, tmpCar_param.VIN  ::TVarChar AS VIN
+          , (select tmpCar_param.VIN  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS VIN 
  
-          , tmpCarTrailer_param.Length :: TVarChar  AS Length_tr
-          , tmpCarTrailer_param.Width  :: TVarChar  AS Width_tr
-          , tmpCarTrailer_param.Height :: TVarChar  AS Height_tr
+       -- , tmpCarTrailer_param.Length :: TVarChar  AS Length_tr
+       -- , tmpCarTrailer_param.Width  :: TVarChar  AS Width_tr
+       -- , tmpCarTrailer_param.Height :: TVarChar  AS Height_tr
+          , (select tmpCar_param.Length from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: TVarChar  AS Length_tr
+          , (select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: TVarChar  AS Width_tr
+          , (select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: TVarChar  AS Height_tr
           
        FROM Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
@@ -372,8 +412,8 @@ BEGIN
 
             LEFT JOIN tmpPackage ON 1=1
 
-            LEFT JOIN tmpCar_param ON tmpCar_param.CarId = tmpTransportGoods.CarId
-            LEFT JOIN tmpCar_param AS tmpCarTrailer_param ON tmpCarTrailer_param.CarId = tmpTransportGoods.CarTrailerId
+            LEFT JOIN tmpCar_param ON tmpCar_param.CarId = tmpTransportGoods.CarId AND 1=0
+            LEFT JOIN tmpCar_param AS tmpCarTrailer_param ON tmpCarTrailer_param.CarId = tmpTransportGoods.CarTrailerId AND 1=0
        WHERE Movement.Id = inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;

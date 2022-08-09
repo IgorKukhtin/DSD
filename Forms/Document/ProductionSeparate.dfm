@@ -2,8 +2,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
   ClientHeight = 678
   ClientWidth = 913
+  ExplicitTop = -190
   ExplicitWidth = 929
-  ExplicitHeight = 716
+  ExplicitHeight = 717
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,17 +13,17 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Height = 556
     TabOrder = 2
     ExplicitTop = 122
-    ExplicitWidth = 903
+    ExplicitWidth = 913
     ExplicitHeight = 556
     ClientRectBottom = 556
     ClientRectRight = 913
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 903
+      ExplicitWidth = 913
       ExplicitHeight = 532
       inherited cxGrid: TcxGrid
         Width = 913
         Height = 224
-        ExplicitWidth = 903
+        ExplicitWidth = 913
         ExplicitHeight = 224
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -192,7 +193,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Top = 229
         Width = 913
         ExplicitTop = 229
-        ExplicitWidth = 903
+        ExplicitWidth = 913
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -214,6 +215,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Format = ',0.####'
               Kind = skSum
               Column = chSummIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSummIn_hist
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -235,6 +241,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Format = ',0.####'
               Kind = skSum
               Column = chSummIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSummIn_hist
             end>
           Styles.Content = nil
           object CholdGoodsGroupNameFull: TcxGridDBColumn [0]
@@ -332,7 +343,18 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 55
           end
-          object ChildLiveWeight: TcxGridDBColumn [10]
+          object chSummIn_hist: TcxGridDBColumn [10]
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' ('#1080#1089#1090#1086#1088#1080#1103')'
+            DataBinding.FieldName = 'SummIn_hist'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ChildLiveWeight: TcxGridDBColumn [11]
             Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
             DataBinding.FieldName = 'LiveWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -343,7 +365,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object ChildHeadCount: TcxGridDBColumn [11]
+          object ChildHeadCount: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -353,7 +375,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object ChildPartionGoods: TcxGridDBColumn [12]
+          object ChildPartionGoods: TcxGridDBColumn [13]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -362,7 +384,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 80
           end
-          object chIsCalculated: TcxGridDBColumn [13]
+          object chIsCalculated: TcxGridDBColumn [14]
             Caption = #1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'isCalculated'
             HeaderAlignmentHorz = taCenter
@@ -381,14 +403,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Top = 224
         Width = 913
         ExplicitTop = 224
-        ExplicitWidth = 903
+        ExplicitWidth = 913
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 913
     Height = 96
-    ExplicitWidth = 903
+    ExplicitWidth = 913
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit
       ExplicitHeight = 22
@@ -424,6 +446,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' - 1 '#1074' Excel'
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -698,6 +723,16 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Hint = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1088#1072#1089#1093#1086#1076' '#1087#1086' '#1083#1080#1085#1080#1103#1084' '#1087#1088'-'#1074#1072' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080#1093#1086#1076
       ImageIndex = 42
     end
+    object actGridChildToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Grid = cxGridChild
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' - 2 '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   inherited MasterCDS: TClientDataSet
     Left = 656
@@ -846,6 +881,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -866,6 +909,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     end
     object bbUpdate_StorageLineByChild: TdxBarButton
       Action = macUpdate_StorageLineByChild
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actGridChildToExcel
       Category = 0
     end
   end
@@ -900,7 +947,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1203,14 +1250,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inLiveWeight'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1406,8 +1453,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 751
-    Top = 96
+    Left = 767
+    Top = 176
   end
   object spSelectPrintCeh: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionSeparate_Ceh_Print'
@@ -1488,7 +1535,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'ioisCalculated'
-        Value = 'False'
+        Value = False
         Component = ChildCDS
         ComponentItem = 'isCalculated'
         DataType = ftBoolean

@@ -49,6 +49,7 @@ type
     OperDate: TcxGridDBColumn;
     StartWeighing: TcxGridDBColumn;
     EndWeighing: TcxGridDBColumn;
+    MovementId: TcxGridDBColumn;
   private
     { Private declarations }
   public

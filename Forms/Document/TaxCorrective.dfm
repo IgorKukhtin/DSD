@@ -3,14 +3,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1116
   ExplicitWidth = 1132
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 163
     Width = 1116
     Height = 505
-    Properties.ActivePage = cxTabSheet1
     ExplicitTop = 163
     ExplicitWidth = 1116
     ExplicitHeight = 505
@@ -941,9 +940,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end>
       RefreshOnTabSetChanges = True
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
-    end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
         item
@@ -957,6 +953,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spUpdateMI_NPP
       StoredProcList = <
@@ -968,7 +965,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
       TabSheet = tsMain
-      Enabled = False
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrintTaxCorrective_Us
