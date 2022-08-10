@@ -974,6 +974,8 @@ type
     N359: TMenuItem;
     actReport_AnalysisBonusesIncome: TdsdOpenForm;
     N360: TMenuItem;
+    actReport_RestTermGoods: TdsdOpenForm;
+    N361: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

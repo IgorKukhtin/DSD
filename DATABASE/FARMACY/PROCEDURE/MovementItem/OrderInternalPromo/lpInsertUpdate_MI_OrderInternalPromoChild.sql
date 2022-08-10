@@ -21,6 +21,17 @@ $BODY$
 BEGIN
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
+    
+    IF EXISTS(SELECT 1
+              FROM MovementItem
+              WHERE MovementItem.MovementId = inMovementId
+                AND MovementItem.DescId = zc_MI_Child()
+                AND MovementItem.ParentId = inParentId
+                AND MovementItem.ObjectId = inUnitId
+                AND MovementItem.ID <> COALESCE (ioId, 0))
+    THEN
+         RAISE EXCEPTION 'Ошибка. Распределение по строке и подразделению уже создано...';
+    END IF;
 
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inUnitId, inMovementId, inAmount, inParentId);

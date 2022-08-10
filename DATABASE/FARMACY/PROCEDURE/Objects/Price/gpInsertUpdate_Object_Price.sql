@@ -94,6 +94,14 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Кол-во дней для периода должно быть не более 7.';     
     END IF;         
 
+    -- проверили 
+    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
+       AND COALESCE(inMCSValue, 0) = 0 AND COALESCE (ioMCSNotRecalc, False) = True
+    THEN
+        RAISE EXCEPTION 'Внимание!%Нельзя ставить ноль на спецкотроль НТЗ (автоНТЗ).%Если препарат вам не нужен в ассортименте - зайдите в Прайс-лист текущий (НТЗ) и поставьте галку в колонку "Убить код" .', Chr(13), Chr(13);
+    END IF;
+    
     -- проверили корректность цены
     IF COALESCE (inMCSValue_min, 0) > COALESCE (inMCSValue, 0)
     THEN

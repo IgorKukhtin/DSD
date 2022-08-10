@@ -205,6 +205,8 @@ type
     actUpdate_Sent: TdsdExecStoredProc;
     deDateSent: TcxDateEdit;
     cxLabel9: TcxLabel;
+    MovementItemChildProtocolOpenForm: TdsdOpenForm;
+    dxBarButton5: TdxBarButton;
   private
     { Private declarations }
   public

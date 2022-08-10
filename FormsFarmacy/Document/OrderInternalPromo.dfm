@@ -553,8 +553,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Control = cxGrid1
       end
       object cxGridExport: TcxGrid
-        Left = 646
-        Top = 76
+        Left = 582
+        Top = 52
         Width = 370
         Height = 218
         TabOrder = 3
@@ -2043,6 +2043,36 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end>
       Caption = 'actUpdate_Sent'
     end
+    object MovementItemChildProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailDCS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailDCS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderInternalPromo'
@@ -2252,6 +2282,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2391,6 +2425,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
     object dxBarButton4: TdxBarButton
       Action = actSMTPSend
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = MovementItemChildProtocolOpenForm
       Category = 0
     end
   end

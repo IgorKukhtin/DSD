@@ -1237,7 +1237,8 @@ uses
   GoodsWhoCanEdit in '..\..\FormsFarmacy\Guides\GoodsWhoCanEdit.pas' {GoodsWhoCanEditForm: TParentForm},
   GoodsWhoCan in '..\..\FormsFarmacy\Guides\GoodsWhoCan.pas' {GoodsWhoCanForm: TParentForm},
   GoodsSignOriginEdit in '..\..\FormsFarmacy\Guides\GoodsSignOriginEdit.pas' {GoodsSignOriginEditForm: TParentForm},
-  GoodsSignOrigin in '..\..\FormsFarmacy\Guides\GoodsSignOrigin.pas' {GoodsSignOriginForm: TParentForm};
+  GoodsSignOrigin in '..\..\FormsFarmacy\Guides\GoodsSignOrigin.pas' {GoodsSignOriginForm: TParentForm},
+  Report_RestTermGoods in '..\..\FormsFarmacy\Report\Report_RestTermGoods.pas' {Report_RestTermGoodsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
