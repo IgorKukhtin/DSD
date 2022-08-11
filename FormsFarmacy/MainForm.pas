@@ -934,7 +934,6 @@ type
     acTReport_NotPaySumIncome: TdsdOpenForm;
     N346: TMenuItem;
     actGoodsSP_1303: TdsdOpenForm;
-    actGoodsSP13031: TMenuItem;
     N13032: TMenuItem;
     actNewUser: TdsdOpenForm;
     N148: TMenuItem;

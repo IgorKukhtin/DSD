@@ -42,6 +42,7 @@ type
     cbisV1: TcxCheckBox;
     cbisV2: TcxCheckBox;
     cbisV4: TcxCheckBox;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public

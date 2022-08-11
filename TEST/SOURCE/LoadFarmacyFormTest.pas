@@ -2307,10 +2307,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PauseDistribListDiffForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_PauseDistribListDiffForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SUN_LockDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SUN_LockDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SUN_LockDialogForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_LimitSUN_EditForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_LimitSUN_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_LimitSUN_EditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForOrderInternalPromoForm'));

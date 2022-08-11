@@ -569,6 +569,22 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 115
           end
+          object isLeftTheMarket: TcxGridDBColumn
+            Caption = #1059#1096#1077#1083' '#1089' '#1088#1099#1085#1082#1072
+            DataBinding.FieldName = 'isLeftTheMarket'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object DateLeftTheMarket: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1091#1093#1086#1076#1072' '#1089' '#1088#1099#1085#1082#1072
+            DataBinding.FieldName = 'DateLeftTheMarket'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
