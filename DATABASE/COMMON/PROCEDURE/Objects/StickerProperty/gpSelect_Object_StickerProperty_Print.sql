@@ -2,12 +2,16 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print(Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print(Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StickerProperty_Print(
     IN inObjectId          Integer  , -- ключ Этикетки
+    IN inRetailId          Integer  , -- ключ Этикетки
     IN inIsJPG             Boolean  , --
     IN inIsLength          Boolean  , --
+    IN inIs70_70           Boolean  , -- 
 
     IN inIsStartEnd        Boolean  , -- 1 - печатать дату нач/конечн произв-ва на этикетке
     IN inIsTare            Boolean  , -- 2 - печатать для ТАРЫ
@@ -43,7 +47,11 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerTagName   TVarChar
              , StickerSortName  TVarChar
              , StickerNormName  TVarChar
-             , Info Text
+               --
+             , Info               Text
+               --
+             , StickerHeader_Info Text
+               --
              , Info_add TVarChar
 
              , isJPG             Boolean
@@ -79,6 +87,12 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- тест
+     IF COALESCE (inRetailId, 0) = 0
+     THEN
+         inRetailId:= 310855; -- Варус
+     END IF;
 
      -- проверка
      -- IF inIsTare = TRUE AND inIsPartion = TRUE
@@ -444,10 +458,10 @@ BEGIN
                                -- , 'СКЛАД:'
                                , tmpLanguageParam.Value1 ||': '
                               || ObjectBlob_Info.ValueData
-                              
+
                             --|| CASE WHEN Object_StickerSkin.ValueData ILIKE '%без оболонки%' THEN ' ' || Object_StickerSkin.ValueData || CHR (13) ELSE '' END
                               || CASE WHEN Object_StickerSkin.ValueData ILIKE '%без оболонки%' THEN ' ' || Object_StickerSkin.ValueData || '.' ELSE '' END
-                              
+
                               -- || 'УМОВИ ТА ТЕРМІН ЗБЕРІГАННЯ:' || COALESCE (Object_StickerPack.ValueData, '') || ':'
                         || '' || tmpLanguageParam.Value2 ||': ' || COALESCE (Object_StickerPack.ValueData, '') || ': '
                               || CASE WHEN ObjectFloat_Value1.ValueData > 0 THEN
@@ -478,13 +492,13 @@ BEGIN
                                  END
 
                               -- вуглеводи не більше
-                              || CASE WHEN Sticker_Value1.ValueData <> 0 AND Sticker_Value6.ValueData = 0 --  з них насичені (жири) 
+                              || CASE WHEN Sticker_Value1.ValueData <> 0 AND Sticker_Value6.ValueData = 0 --  з них насичені (жири)
                                            THEN tmpLanguageParam.Value15  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value1.ValueData, 0)) || tmpLanguageParam.Value16 ||', '
                                       ELSE ''
                                  END
 /*
                               -- білки OR білки не менше
-                              || CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
+                              || CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири)
                                            THEN SUBSTRING (tmpLanguageParam.Value9 FROM 1 FOR 5) || ' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10 ||', '
                                       WHEN Sticker_Value2.ValueData <> 0
                                            THEN tmpLanguageParam.Value9  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10 ||', '
@@ -492,7 +506,7 @@ BEGIN
                                  END
 */
                               -- жири OR жири не більше
-                              || CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
+                              || CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири)
                                            THEN SUBSTRING (tmpLanguageParam.Value11 FROM 1 FOR 4) || ' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12 ||''
                                       WHEN Sticker_Value3.ValueData > 0
                                            THEN tmpLanguageParam.Value11 ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12 ||''
@@ -504,23 +518,23 @@ BEGIN
                                       ELSE ''
                                  END
                               -- вуглеводи
-                              || CASE WHEN Sticker_Value1.ValueData <> 0 AND Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
+                              || CASE WHEN Sticker_Value1.ValueData <> 0 AND Sticker_Value6.ValueData > 0 --  з них насичені (жири)
                                            THEN ', вуглеводи' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value1.ValueData, 0)) || tmpLanguageParam.Value16
                                       ELSE ''
                                  END
-                              --  цукри 
+                              --  цукри
                               || CASE WHEN Sticker_Value6.ValueData > 0
                                            THEN ' з них цукри' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value7.ValueData, 0)) || tmpLanguageParam.Value12
                                       ELSE ''
                                  END
                               -- білки OR білки не менше
-                              || CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
+                              || CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири)
                                            THEN ', ' || SUBSTRING (tmpLanguageParam.Value9 FROM 1 FOR 5) || ' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10
                                       WHEN Sticker_Value2.ValueData <> 0
                                            THEN ', ' || tmpLanguageParam.Value9  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10
                                       ELSE ''
                                  END
-                              --  сіль  
+                              --  сіль
                               || CASE WHEN Sticker_Value6.ValueData > 0
                                            THEN ', сіль' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value8.ValueData, 0)) || tmpLanguageParam.Value12
                                       ELSE ''
@@ -538,7 +552,12 @@ BEGIN
 
                                , inIsLength
                                , FALSE -- теперь НЕ используется
+                               , inIs70_70
                                 ) AS Info
+
+              --
+            , ObjectBlob_StickerHeader_Info.ValueData :: Text AS StickerHeader_Info
+              --
             , CASE WHEN ObjectBoolean_StickerProperty_CK.ValueData = TRUE
                         THEN 'НА ПОВЕРХНІ ОБОЛОНКИ ДОПУСКАЄТЬСЯ БІЛИЙ НАЛІТ СОЛІ'
                    ELSE ''
@@ -571,6 +590,13 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
                                   ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
                                  AND ObjectLink_StickerProperty_Sticker.DescId = zc_ObjectLink_StickerProperty_Sticker()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Retail_StickerHeader
+                                  ON ObjectLink_Retail_StickerHeader.ObjectId = inRetailId
+                                 AND ObjectLink_Retail_StickerHeader.DescId   = zc_ObjectLink_Retail_StickerHeader()
+             LEFT JOIN ObjectBlob AS ObjectBlob_StickerHeader_Info
+                                  ON ObjectBlob_StickerHeader_Info.ObjectId = ObjectLink_Retail_StickerHeader.ChildObjectId
+                                 AND ObjectBlob_StickerHeader_Info.DescId   = zc_ObjectBlob_StickerHeader_Info()
 
              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_GoodsKind
                                   ON ObjectLink_StickerProperty_GoodsKind.ObjectId = Object_StickerProperty.Id
@@ -727,4 +753,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 1371309, inIsJPG:= TRUE, inIsLength:= FALSE, inIsStartEnd:= FALSE, inIsTare:= FALSE, inIsPartion:= FALSE, inIsGoodsName:= FALSE, inDateStart:= '01.01.2016', inDateTare:= '01.01.2016', inDatePack:= '01.01.2016', inDateProduction:= '01.01.2016', inNumPack:= 1, inNumTech:= 1, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 1371309, inRetailId:= 0, inIsJPG:= TRUE, inIsLength:= FALSE, inIs70_70:= TRUE, inIsStartEnd:= FALSE, inIsTare:= FALSE, inIsPartion:= FALSE, inIsGoodsName:= FALSE, inDateStart:= '01.01.2016', inDateTare:= '01.01.2016', inDatePack:= '01.01.2016', inDateProduction:= '01.01.2016', inNumPack:= 1, inNumTech:= 1, inSession:= zfCalc_UserAdmin());

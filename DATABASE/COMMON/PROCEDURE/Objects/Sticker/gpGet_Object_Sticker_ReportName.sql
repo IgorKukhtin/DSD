@@ -1,18 +1,21 @@
 -- Function: gpGet_Object_Sticker_ReportName()
 
-DROP FUNCTION IF EXISTS gpGet_Object_Sticker_ReportName (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Object_Sticker_ReportName (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Sticker_ReportName (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Sticker_ReportName (
     IN inObjectId           Integer  , -- ключ Свойства этикетки
+    IN inIs70_70            Boolean  , -- 
     IN inSession            TVarChar   -- сессия пользователя
 )
 RETURNS TVarChar
 AS
 $BODY$
+   DECLARE vbUserId          Integer;
    DECLARE vbStickerFileName TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_...());
+     vbUserId:= lpGetUserBySession (inSession);
 
 
      -- поиск ШАБЛОНА
@@ -72,7 +75,9 @@ BEGIN
      END IF;
 
      -- Результат
-     RETURN (vbStickerFileName || '.Sticker');
+     RETURN (vbStickerFileName
+          || CASE WHEN inIs70_70 = TRUE /*AND vbUserId=5*/ THEN '_70_70' ELSE '' END
+          || '.Sticker');
 
 END;
 $BODY$
@@ -85,4 +90,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Sticker_ReportName (inObjectId:= 1196566, inSession:= '5'); -- все
+-- SELECT * FROM gpGet_Object_Sticker_ReportName (inObjectId:= 1371321, inIs70_70:= TRUE, inSession:= '5'); -- все

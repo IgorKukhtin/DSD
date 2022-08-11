@@ -2,8 +2,8 @@ object StickerHeaderEditForm: TStickerHeaderEditForm
   Left = 0
   Top = 0
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1047#1072#1075#1086#1083#1086#1074#1086#1082' '#1076#1083#1103' '#1089#1077#1090#1080'>'
-  ClientHeight = 268
-  ClientWidth = 341
+  ClientHeight = 359
+  ClientWidth = 686
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,19 +17,19 @@ object StickerHeaderEditForm: TStickerHeaderEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 10
-    Top = 76
+    Left = 73
+    Top = 31
     TabOrder = 0
     Width = 311
   end
   object cxLabel1: TcxLabel
-    Left = 10
-    Top = 57
+    Left = 73
+    Top = 8
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 64
-    Top = 226
+    Left = 216
+    Top = 320
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object StickerHeaderEditForm: TStickerHeaderEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 216
-    Top = 226
+    Left = 368
+    Top = 320
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -52,32 +52,31 @@ object StickerHeaderEditForm: TStickerHeaderEditForm
     Caption = #1050#1086#1076
   end
   object edCode: TcxCurrencyEdit
-    Left = 10
-    Top = 30
+    Left = 8
+    Top = 31
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 129
+    Width = 41
   end
   object cbDefault: TcxCheckBox
-    Left = 216
-    Top = 30
-    Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
-    Caption = #1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+    Left = 408
+    Top = 31
+    Caption = #1044#1083#1103' '#1074#1089#1077#1093
     TabOrder = 6
     Width = 105
   end
   object cxLabel3: TcxLabel
-    Left = 10
-    Top = 105
+    Left = 8
+    Top = 65
     Caption = #1047#1072#1075#1086#1083#1086#1074#1086#1082
   end
   object ceInfo: TcxMemo
-    Left = 10
-    Top = 127
+    Left = 8
+    Top = 88
     TabOrder = 8
-    Height = 73
-    Width = 311
+    Height = 218
+    Width = 657
   end
   object ActionList: TActionList
     Left = 256

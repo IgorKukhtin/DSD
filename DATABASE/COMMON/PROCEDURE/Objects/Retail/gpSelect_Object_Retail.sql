@@ -104,7 +104,7 @@ BEGIN
 
             LEFT JOIN ObjectLink AS ObjectLink_Retail_StickerHeader
                                  ON ObjectLink_Retail_StickerHeader.ObjectId = Object_Retail.Id
-                                AND ObjectLink_Retail_StickerHeader.DescId = zc_ObjectLink_Retail_ClientKind()
+                                AND ObjectLink_Retail_StickerHeader.DescId = zc_ObjectLink_Retail_StickerHeader()
             LEFT JOIN Object AS Object_StickerHeader ON Object_StickerHeader.Id = ObjectLink_Retail_StickerHeader.ChildObjectId
        WHERE Object_Retail.DescId = zc_Object_Retail()
 

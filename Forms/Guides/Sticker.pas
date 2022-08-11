@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, ExternalLoad;
+  dxSkinXmas2008Blue, ExternalLoad, dsdGuides;
 
 type
   TStickerForm = class(TParentForm)
@@ -181,6 +181,9 @@ type
     colisCK: TcxGridDBColumn;
     bbUpdate_StickerProperty_CK: TdxBarButton;
     actUpdate_StickerProperty_CK: TdsdExecStoredProc;
+    cb70_70: TcxCheckBox;
+    ceRetail: TcxButtonEdit;
+    RetailGuides: TdsdGuides;
 
   private
     { Private declarations }
