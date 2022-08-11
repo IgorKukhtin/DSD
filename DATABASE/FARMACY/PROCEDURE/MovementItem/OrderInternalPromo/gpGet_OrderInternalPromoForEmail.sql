@@ -31,13 +31,13 @@ BEGIN
    FROM Movement
    WHERE Movement.ID = inMovementId;
    
-   vbMail := CASE WHEN inJuridicalId = 59611  THEN 'Druzhkevich@optimapharm.ua,EHlopotova@optimapharm.ua'
-                  WHEN inJuridicalId = 59610 THEN 'centr2_cc@badm.biz'
-                  WHEN inJuridicalId = 59612 THEN 'volitskayairina@ventaltd.com.ua'
-                  WHEN inJuridicalId = 183353 THEN 'n.ivanova@fitolek.com'
-                  WHEN inJuridicalId = 410822 THEN 'zakaz@ametrin.com.ua'
-                  WHEN inJuridicalId = 183319 THEN 'elhovskiy.a@dolphi.com.ua' 
-                  WHEN inJuridicalId = 183332 THEN 'Ruslana.Danilova@uf.ua' 
+   vbMail := CASE WHEN inJuridicalId = 59611  THEN 'Druzhkevich@optimapharm.ua,EHlopotova@optimapharm.ua'  -- СП "Оптима-Фарм, ЛТД"
+                  WHEN inJuridicalId = 59610 THEN 'centr2_cc@badm.biz'                                     -- БаДМ
+                  WHEN inJuridicalId = 59612 THEN 'volitskayairina@ventaltd.com.ua'                        -- Вента
+                  WHEN inJuridicalId = 183353 THEN 'n.ivanova@fitolek.com'                                 -- Фито-лек
+                  WHEN inJuridicalId = 410822 THEN 'zakaz@ametrin.com.ua'                                  -- Аметрин 
+                  WHEN inJuridicalId = 183319 THEN 'elhovskiy.a@dolphi.com.ua'                             -- Долфи Украина
+                  WHEN inJuridicalId = 183332 THEN 'Ruslana.Danilova@uf.ua'                                -- Медцентр М.Т.К.
                   ELSE '' END;          
    
     -- проверка

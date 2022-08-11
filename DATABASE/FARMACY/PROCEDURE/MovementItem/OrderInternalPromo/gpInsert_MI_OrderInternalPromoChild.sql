@@ -373,10 +373,10 @@ BEGIN
                               , COALESCE (tmpCalc.AmountIn, 0) + COALESCE (tmpDataAddToM.Amount, 0) AS AmountIn
                               , DD.AmountManual :: TFloat
                          FROM tmpData_all AS DD
-                              FULL JOIN tmpDataAddToM ON tmpDataAddToM.Id = DD.Id
+                              FULL JOIN tmpDataAddToM ON COALESCE(tmpDataAddToM.Id, 0) = COALESCE(DD.Id, 0)
                                                      AND tmpDataAddToM.ParentId = DD.ParentId
                                                      AND tmpDataAddToM.UnitId = DD.UnitId
-                              LEFT JOIN tmpCalc ON tmpCalc.Id = COALESCE (DD.Id, tmpDataAddToM.Id)
+                              LEFT JOIN tmpCalc ON COALESCE(tmpCalc.Id, 0) = COALESCE (DD.Id, tmpDataAddToM.Id, 0)
                                                AND tmpCalc.ParentId = COALESCE (DD.ParentId, tmpDataAddToM.ParentId)
                                                AND tmpCalc.UnitId = COALESCE (DD.UnitId, tmpDataAddToM.UnitId)
 
@@ -398,7 +398,7 @@ BEGIN
                     , DD.AmountIn
                     , DD.AmountManual
                FROM tmpDD AS DD
-             UNION
+               UNION ALL
                SELECT tmpMI_Child.Id
                     , tmpMI_Child.ParentId
                     , tmpMI_Child.UnitId
@@ -414,10 +414,14 @@ BEGIN
 
                     LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpMI_Master.GoodsId
                                           AND tmpContainer.UnitId = tmpMI_Child.UnitId
+                                          
+                    LEFT JOIN tmpDD ON COALESCE(tmpDD.Id, 0) = tmpMI_Child.Id
+                                   AND tmpDD.ParentId = tmpMI_Child.ParentId
+                                   AND tmpDD.UnitId = tmpMI_Child.UnitId
 
                WHERE COALESCE (tmpMI_Child.AmountManual, 0) <> 0
+                 AND COALESCE (tmpDD.ParentId, 0) = 0
                ) AS DD;
-
 
           -- Дополнение по аптекам согласно N
           INSERT INTO tmpData (Id, ParentId, UnitId, AmountOut, Remains, AmountIn, AmountManual)
@@ -637,7 +641,7 @@ BEGIN
                                                      , inUserId       := vbUserId
                                                      )
     FROM tmpData;
-
+    
      -- удаляем строки чайлд, которые нам не нужны
      UPDATE MovementItem
      SET isErased = TRUE
@@ -648,6 +652,7 @@ BEGIN
                                     LEFT JOIN tmpData ON tmpData.Id = tmpMI_Child.Id
                                                      AND COALESCE (tmpData.Id,0) <> 0
                                WHERE tmpData.Id IS NULL);
+
 
 END;
 $BODY$
@@ -662,3 +667,5 @@ $BODY$
 */
 
 -- select * from gpInsert_MI_OrderInternalPromoChild(inMovementId := 25768416 , inUnitCodeList := '13,14,15,74,11,29,34,57,104,20,22,30,56,101,75,18,17,82,103,91,93,96,95,100,10,25,33,66,92,47,51,44,60,59,61,69,2,4,5,83,87,88,102' ,  inSession := '3');
+
+--select * from gpInsert_MI_OrderInternalPromoChild(inMovementId := 28909930 , inUnitCodeList := '13,14,15,74,11,29,34,57,104,20,22,30,56,101,75,18,17,82,103,91,93,96,95,100,10,25,33,66,92,47,51,44,60,59,61,69,2,4,5,83,87,88,102' ,  inSession := '3');

@@ -2052,7 +2052,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     Top = 11
   end
   object spSetGoods: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_GoodsSPSearch_1303_Goods'
+    StoredProcName = 'gpUpdate_MI_GoodsSP_Goods'
     DataSets = <
       item
       end>
@@ -2081,21 +2081,13 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         ComponentItem = 'GoodsID'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCol'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Col'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 512
     Top = 456
   end
   object spClearGoods: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_GoodsSPSearch_1303_ClearGoods'
+    StoredProcName = 'gpUpdate_MI_GoodsSP_ClearGoods'
     DataSets = <
       item
       end>

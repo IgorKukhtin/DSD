@@ -251,4 +251,3 @@ $BODY$
 -- тест
 -- SELECT * FROM gpUpdate_Object_Price_MCSAuto()
 --select * from gpUpdate_Object_Price_MCSAuto(inMCSValue := 4 ::TFloat , inGoodsId := 652, inDays := 3 ::TFloat,  inSession := '3'::TVarChar);
-
