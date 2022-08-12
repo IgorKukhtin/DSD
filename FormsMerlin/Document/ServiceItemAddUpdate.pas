@@ -104,6 +104,8 @@ type
     actCheckDescAdd: TdsdExecStoredProc;
     mactUpdateAdd: TMultiAction;
     Comment: TcxGridDBColumn;
+    actOpenServiceItemAdd_history: TdsdOpenForm;
+    bbOpenServiceItemAdd_history: TdxBarButton;
   private
   public
   end;

@@ -38,12 +38,11 @@ type
     actGetForm: TdsdExecStoredProc;
     bbOpenFormClient: TdxBarButton;
     FormParams: TdsdFormParams;
-    actOpenFormServiceItem: TdsdOpenForm;
     bbOpenFormPartner: TdxBarButton;
     actRefreshEmpty: TdsdDataSetRefresh;
     actSetErased: TdsdUpdateErased;
     actUpdateAction: TdsdInsertUpdateAction;
-    actInsertUAction: TdsdInsertUpdateAction;
+    actInsertAction: TdsdInsertUpdateAction;
     spErasedMIMaster: TdsdStoredProc;
     bbInsertUAction: TdxBarButton;
     bbUpdateAction: TdxBarButton;
@@ -57,6 +56,7 @@ type
     DateEnd_after: TcxGridDBColumn;
     actOpenFormServiceItemHistory: TdsdOpenForm;
     bbOpenFormServiceItemHistory: TdxBarButton;
+    actUpdateAction_old: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public

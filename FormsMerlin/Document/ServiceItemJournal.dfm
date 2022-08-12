@@ -548,6 +548,14 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenServiceItem_history'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdatebyHistory'
         end
         item
@@ -652,6 +660,10 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     end
     object bbUpdateAdd: TdxBarButton
       Action = mactUpdateAdd
+      Category = 0
+    end
+    object bbOpenServiceItem_history: TdxBarButton
+      Action = actOpenServiceItem_history
       Category = 0
     end
   end
@@ -1069,6 +1081,57 @@ object ServiceItemJournalForm: TServiceItemJournalForm
           StoredProc = spMovementSetErased
         end>
       Caption = 'spErased'
+    end
+    object actOpenServiceItem_history: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
+      ImageIndex = 28
+      FormName = 'TServiceItemJournal_historyForm'
+      FormNameParam.Value = 'TServiceItemJournal_historyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'DateStart'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actSimpleCompleteList: TMultiAction
       Category = 'DSDLib'

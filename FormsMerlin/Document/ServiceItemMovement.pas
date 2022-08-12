@@ -43,6 +43,8 @@ type
     cePrice: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     ceAmount: TcxCurrencyEdit;
+    ceStartDate: TcxDateEdit;
+    cxLabel7: TcxLabel;
   private
     { Private declarations }
   public

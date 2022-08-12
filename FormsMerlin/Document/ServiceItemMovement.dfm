@@ -25,12 +25,12 @@
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object cxLabel1: TcxLabel [3]
-    Left = 141
+    Left = 237
     Top = 5
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object ceOperDate: TcxDateEdit [4]
-    Left = 141
+    Left = 237
     Top = 25
     EditValue = 44575d
     Properties.SaveTime = False
@@ -141,6 +141,21 @@
     Properties.UseDisplayFormatWhenEditing = True
     TabOrder = 17
     Width = 105
+  end
+  object ceStartDate: TcxDateEdit [18]
+    Left = 141
+    Top = 25
+    EditValue = 44575d
+    Properties.ReadOnly = True
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 18
+    Width = 84
+  end
+  object cxLabel7: TcxLabel [19]
+    Left = 141
+    Top = 5
+    Caption = #1044#1072#1090#1072' c :'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 136
@@ -298,6 +313,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'StartDate'
+        Value = Null
+        Component = ceStartDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'UnitId'
         Value = Null
         Component = GuidesUnit
@@ -361,14 +383,6 @@
         Value = 0.000000000000000000
         Component = ceAmount
         DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'UnitId'
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
