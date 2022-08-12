@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSPHelsi_From_Antibiotics (Integer, TVarChar, TVarChar, TFloat, TVarChar, TVarChar, TVarChar
                                                             , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
-                                                            , TVarChar, TVarChar);
+                                                            , TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSPHelsi_From_Antibiotics(
     IN inMovementId          Integer   ,    -- 
@@ -28,6 +28,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSPHelsi_From_Antibiotics(
     IN inProgramId           TVarChar  ,    -- ID учасника програми (0)
     IN inNumeratorUnit       TVarChar  ,    -- Одиниця виміру сили дії (12)
     IN inDenumeratorUnit     TVarChar  ,    -- Одиниця виміру сутності (10)
+    
+    IN inName                TVarChar  ,    -- Название (15)
 
     IN inSession             TVarChar       -- текущий пользователь
 )
@@ -160,8 +162,10 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_NumeratorUnitSP(), vbId, TRIM(inNumeratorUnit));
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_DenumeratorUnitSP(), vbId, TRIM(inDenumeratorUnit));
-    
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_DenumeratorUnitSP(), vbId, TRIM(inDenumeratorUnit));    
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Name(), vbId, TRIM(inName));
+
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_IntenalSP(), vbId, vbIntenalSPId);
     -- сохранили связь с <>
@@ -171,8 +175,7 @@ BEGIN
 
 
     -- сохранили протокол
-    PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, vbIsInsert);
-    
+    PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, vbIsInsert);    
    
 END;
 $BODY$
