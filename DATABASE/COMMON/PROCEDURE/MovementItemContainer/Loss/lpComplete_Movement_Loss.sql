@@ -506,6 +506,7 @@ BEGIN
                                                         THEN lpInsertFind_Object_PartionGoods (inValue:= _tmpItem.PartionGoods)
 
                                                     WHEN vbIsPartionDate_Unit = TRUE
+                                                     AND _tmpItem.PartionGoodsDate <> zc_DateEnd()
                                                      AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                            , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                                         THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate
