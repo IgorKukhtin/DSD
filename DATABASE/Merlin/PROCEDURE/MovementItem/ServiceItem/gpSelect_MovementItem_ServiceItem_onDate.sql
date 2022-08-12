@@ -1,7 +1,7 @@
 -- Function: gpSelect_MovementItem_ServiceItem_onDate()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, TVarChar);
---DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ServiceItem_onDate(

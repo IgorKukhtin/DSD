@@ -412,7 +412,7 @@ object BanCommentSendForm: TBanCommentSendForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'CommentSendName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

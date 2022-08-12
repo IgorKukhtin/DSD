@@ -72,17 +72,35 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountSP(), ioId, inCountSP);
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceOptSP(), ioId, inPriceOptSP);
+    IF inPriceOptSP IS NOT NULL
+    THEN
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceOptSP(), ioId, inPriceOptSP);
+    END IF;
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceRetSP(), ioId, inPriceRetSP);
+    IF inPriceRetSP IS NOT NULL
+    THEN
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceRetSP(), ioId, inPriceRetSP);
+    END IF;
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DailyNormSP(), ioId, inDailyNormSP);
+    IF inDailyNormSP IS NOT NULL
+    THEN
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DailyNormSP(), ioId, inDailyNormSP);
+    END IF;
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DailyCompensationSP(), ioId, inDailyCompensationSP);
+    IF inDailyCompensationSP IS NOT NULL
+    THEN
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DailyCompensationSP(), ioId, inDailyCompensationSP);
+    END IF;
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSP(), ioId, inPriceSP);
+    IF inPriceSP IS NOT NULL
+    THEN
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSP(), ioId, inPriceSP);
+    END IF;
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PaymentSP(), ioId, inPaymentSP);
+    IF inPaymentSP IS NOT NULL
+    THEN
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PaymentSP(), ioId, inPaymentSP);
+    END IF;
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_GroupSP(), ioId, inGroupSP);
 

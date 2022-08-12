@@ -658,7 +658,7 @@ object StickerForm: TStickerForm
       Width = 83
     end
     object deDatePack: TcxDateEdit
-      Left = 647
+      Left = 656
       Top = 5
       EditValue = 43101d
       Properties.ReadOnly = False
@@ -673,7 +673,7 @@ object StickerForm: TStickerForm
       Caption = #1044#1072#1090#1072' '#1089' ...'
     end
     object cxLabel2: TcxLabel
-      Left = 581
+      Left = 586
       Top = 8
       Caption = #1059#1055#1040#1050#1054#1042#1050#1040':'
     end
@@ -691,14 +691,14 @@ object StickerForm: TStickerForm
       Width = 155
     end
     object cbTare: TcxCheckBox
-      Left = 183
+      Left = 168
       Top = 5
       Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1076#1083#1103' '#1058#1040#1056#1067
       TabOrder = 6
       Width = 125
     end
     object cbGoodsName: TcxCheckBox
-      Left = 183
+      Left = 168
       Top = 28
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
@@ -707,11 +707,11 @@ object StickerForm: TStickerForm
       Width = 111
     end
     object cbPartion: TcxCheckBox
-      Left = 444
-      Top = 5
+      Left = 464
+      Top = 8
       Caption = #1055#1040#1056#1058#1048#1071' '#1076#1083#1103' '#1090#1072#1088#1099
       TabOrder = 8
-      Width = 118
+      Width = 117
     end
     object ceNumPack: TcxCurrencyEdit
       Left = 859
@@ -725,13 +725,13 @@ object StickerForm: TStickerForm
       Width = 33
     end
     object cxLabel4: TcxLabel
-      Left = 556
+      Left = 565
       Top = 31
       Hint = #1044#1072#1090#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
       Caption = #1042#1048#1043#1054#1058#1054#1042#1051#1045#1053#1053#1071':'
     end
     object deDateProduction: TcxDateEdit
-      Left = 647
+      Left = 656
       Top = 28
       EditValue = 43101d
       Properties.ReadOnly = False
@@ -756,14 +756,33 @@ object StickerForm: TStickerForm
       TabOrder = 13
       Width = 33
     end
+    object cb70_70: TcxCheckBox
+      Left = 396
+      Top = 8
+      Caption = '70 x 70'
+      TabOrder = 14
+      Width = 61
+    end
+    object ceRetail: TcxButtonEdit
+      Left = 398
+      Top = 28
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Width = 159
+    end
   end
   object cxLabel3: TcxLabel
-    Left = 328
+    Left = 302
     Top = 8
     Caption = #1044#1072#1090#1072' '#1076#1083#1103' '#1090#1072#1088#1099':'
   end
   object deDateTare: TcxDateEdit
-    Left = 328
+    Left = 302
     Top = 28
     EditValue = 43101d
     Properties.ReadOnly = False
@@ -2803,6 +2822,14 @@ object StickerForm: TStickerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIs70_70'
+        Value = Null
+        Component = cb70_70
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'gpGet_Object_Sticker_ReportName'
         Value = Null
         Component = FormParams
@@ -2837,6 +2864,14 @@ object StickerForm: TStickerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRetailId'
+        Value = Null
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsJPG'
         Value = False
         DataType = ftBoolean
@@ -2846,6 +2881,14 @@ object StickerForm: TStickerForm
       item
         Name = 'inIsLength'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIs70_70'
+        Value = Null
+        Component = cb70_70
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3001,6 +3044,14 @@ object StickerForm: TStickerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRetailId'
+        Value = Null
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsJPG'
         Value = True
         DataType = ftBoolean
@@ -3010,6 +3061,14 @@ object StickerForm: TStickerForm
       item
         Name = 'inIsLength'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIs70_70'
+        Value = Null
+        Component = cb70_70
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3115,6 +3174,14 @@ object StickerForm: TStickerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRetailId'
+        Value = Null
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsJPG'
         Value = True
         DataType = ftBoolean
@@ -3124,6 +3191,14 @@ object StickerForm: TStickerForm
       item
         Name = 'inIsLength'
         Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIs70_70'
+        Value = Null
+        Component = cb70_70
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3237,5 +3312,35 @@ object StickerForm: TStickerForm
     PackSize = 1
     Left = 443
     Top = 518
+  end
+  object RetailGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 496
+    Top = 29
   end
 end

@@ -52,7 +52,7 @@ BEGIN
                                                                 AND (MILinkObject_InfoMoney.ObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
 
                            WHERE Movement.DescId = zc_Movement_ServiceItem()
-                             AND (Movement.OperDate BETWEEN inStartDate AND inEndDate OR inIsAll = TRUE)
+                           --AND (Movement.OperDate BETWEEN inStartDate AND inEndDate OR inIsAll = TRUE)
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                            )
 
@@ -139,4 +139,4 @@ $BODY$
  */
 
 -- тест
---     SELECT * FROM gpSelect_Movement_ServiceItemChoice (inStartDate:= '01.01.2021', inEndDate:= '01.02.2023', inIsAll:= TRUE, inUnitId := 52753 , inInfoMoneyId := 76878 , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ServiceItemChoice (inStartDate:= '01.01.2021', inEndDate:= '01.02.2023', inIsAll:= TRUE, inUnitId := 52753 , inInfoMoneyId := 76878 , inSession:= zfCalc_UserAdmin())

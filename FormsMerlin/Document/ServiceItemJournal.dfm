@@ -620,6 +620,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = actGridToExcel

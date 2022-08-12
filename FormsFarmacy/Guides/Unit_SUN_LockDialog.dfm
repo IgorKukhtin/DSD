@@ -57,13 +57,13 @@ object Unit_SUN_LockDialogForm: TUnit_SUN_LockDialogForm
   end
   object cxLabel2: TcxLabel
     Left = 8
-    Top = 28
-    Caption = '2)'#1090#1086#1074#1072#1088#1099' "'#1079#1072#1082#1088#1099#1090' '#1082#1086#1076'" (0='#1085#1077#1090', 1='#1076#1072')'
+    Top = 24
+    Caption = '2) '#1090#1086#1074#1072#1088#1099' "'#1079#1072#1082#1088#1099#1090' '#1082#1086#1076'" (0='#1085#1077#1090', 1='#1076#1072')'
   end
   object cxLabel3: TcxLabel
     Left = 8
-    Top = 51
-    Caption = '3)'#1090#1086#1074#1072#1088#1099' "'#1091#1073#1080#1090' '#1082#1086#1076' (0='#1085#1077#1090', 1='#1076#1072')'
+    Top = 43
+    Caption = '3) '#1090#1086#1074#1072#1088#1099' "'#1091#1073#1080#1090' '#1082#1086#1076' (0='#1085#1077#1090', 1='#1076#1072')'
   end
   object cxLabel4: TcxLabel
     Left = 8
@@ -122,6 +122,11 @@ object Unit_SUN_LockDialogForm: TUnit_SUN_LockDialogForm
     State = cbsChecked
     TabOrder = 13
     Width = 73
+  end
+  object cxLabel6: TcxLabel
+    Left = 8
+    Top = 61
+    Caption = '4) '#1090#1086#1074#1072#1088#1099' "'#1084#1072#1088#1082#1077#1090#1080#1085#1075' (0='#1085#1077#1090', 1='#1076#1072')'
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 215

@@ -1141,12 +1141,15 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AnalysisBonusesIncomeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RestTermGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RestTermGoodsForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AnalysisBonusesIncomeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AnalysisBonusesIncomeDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AnalysisBonusesIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AnalysisBonusesIncomeForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Inventory_ProficitReturnOutForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Inventory_ProficitReturnOutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Inventory_ProficitReturnOutForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeDublyDialogForm'));
@@ -2304,10 +2307,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PauseDistribListDiffForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_PauseDistribListDiffForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SUN_LockDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SUN_LockDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SUN_LockDialogForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_LimitSUN_EditForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_LimitSUN_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_LimitSUN_EditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForOrderInternalPromoForm'));

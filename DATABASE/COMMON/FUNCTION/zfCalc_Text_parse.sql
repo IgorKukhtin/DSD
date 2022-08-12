@@ -6,7 +6,8 @@ DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Text, Boolean);
 DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Text, Boolean, Boolean);
 DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Text, Boolean, Boolean);
 DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Integer, Text, Boolean, Boolean);
-DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Integer, Integer, Text, Boolean, Boolean);
+-- DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Integer, Integer, Text, Boolean, Boolean);
+DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Integer, Integer, Text, Boolean, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION zfCalc_Text_parse(
     IN inStickerFileId Integer,
@@ -15,7 +16,8 @@ CREATE OR REPLACE FUNCTION zfCalc_Text_parse(
     IN inAddLine       Integer, -- Был Ли перевод в несколько строк для Level1 или Level2, тогда по следующим строкам НУЖЕН сдвиг
     IN inValue         Text,
     IN inIsLength      Boolean,
-    IN inIsLimit       Boolean  -- т.к. Раньше УМОВИ ... были в 8-ой строке, НУЖЕН был сдвиг вниз, т.е. в Info добавлялись пустые строки
+    IN inIsLimit       Boolean, -- т.к. Раньше УМОВИ ... были в 8-ой строке, НУЖЕН был сдвиг вниз, т.е. в Info добавлялись пустые строки
+    IN inIs70_70       Boolean   -- 
 )
 RETURNS Text
 AS
@@ -41,16 +43,36 @@ $BODY$
    
 BEGIN
 
-       SELECT CASE WHEN ObjectFloat_Width1.ValueData > 0  THEN ObjectFloat_Width1.ValueData  :: Integer ELSE 1000 END AS Width1
-            , CASE WHEN ObjectFloat_Width2.ValueData > 0  THEN ObjectFloat_Width2.ValueData  :: Integer ELSE 1000 END AS Width2
-            , CASE WHEN ObjectFloat_Width3.ValueData > 0  THEN ObjectFloat_Width3.ValueData  :: Integer ELSE 1000 END AS Width3
-            , CASE WHEN ObjectFloat_Width4.ValueData > 0  THEN ObjectFloat_Width4.ValueData  :: Integer ELSE 1000 END AS Width4
-            , CASE WHEN ObjectFloat_Width5.ValueData > 0  THEN ObjectFloat_Width5.ValueData  :: Integer ELSE 1000 END AS Width5
-            , CASE WHEN ObjectFloat_Width6.ValueData > 0  THEN ObjectFloat_Width6.ValueData  :: Integer ELSE 1000 END AS Width6
-            , CASE WHEN ObjectFloat_Width7.ValueData > 0  THEN ObjectFloat_Width7.ValueData  :: Integer ELSE 1000 END AS Width7
-            , CASE WHEN ObjectFloat_Width8.ValueData > 0  THEN ObjectFloat_Width8.ValueData  :: Integer ELSE 1000 END AS Width8
-            , CASE WHEN ObjectFloat_Width9.ValueData > 0  THEN ObjectFloat_Width9.ValueData  :: Integer ELSE 1000 END AS Width9
-            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer ELSE 1000 END AS Width10
+       SELECT CASE WHEN ObjectFloat_Width1.ValueData > 0  THEN ObjectFloat_Width1.ValueData  :: Integer ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width1
+            , CASE WHEN ObjectFloat_Width2.ValueData > 0  THEN ObjectFloat_Width2.ValueData  :: Integer ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width2
+            , CASE WHEN ObjectFloat_Width3.ValueData > 0  THEN ObjectFloat_Width3.ValueData  :: Integer ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width3
+            , CASE WHEN ObjectFloat_Width4.ValueData > 0  THEN ObjectFloat_Width4.ValueData  :: Integer ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width4
+            , CASE WHEN ObjectFloat_Width5.ValueData > 0  THEN ObjectFloat_Width5.ValueData  :: Integer ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width5
+            , CASE WHEN ObjectFloat_Width6.ValueData > 0  THEN ObjectFloat_Width6.ValueData  :: Integer ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width6
+            , CASE WHEN ObjectFloat_Width7.ValueData > 0  THEN ObjectFloat_Width7.ValueData  :: Integer ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width7
+            , CASE WHEN ObjectFloat_Width8.ValueData > 0  THEN ObjectFloat_Width8.ValueData  :: Integer ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width8
+            , CASE WHEN ObjectFloat_Width9.ValueData > 0  THEN ObjectFloat_Width9.ValueData  :: Integer ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width9
+            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width10
               INTO vbLen1
                  , vbLen2
                  , vbLen3
@@ -291,4 +313,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM zfCalc_Text_parse (inStickerFileId:= 0, inTradeMarkId:= 1, inAddLeft:= 0, inAddLine:= 0, inValue:= 'asdsadasdasdasdasdasdasdasdasdasd', inIsLength:= TRUE, inIsLimit:= TRUE)
+-- SELECT * FROM zfCalc_Text_parse (inStickerFileId:= 0, inTradeMarkId:= 1, inAddLeft:= 0, inAddLine:= 0, inValue:= 'asdsadasdasdasdasdasdasdasdasdasd', inIsLength:= TRUE, inIsLimit:= TRUE, inIs70_70:= TRUE)

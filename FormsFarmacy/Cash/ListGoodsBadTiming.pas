@@ -90,8 +90,8 @@ procedure TListGoodsBadTimingForm.actCheckSummExecute(Sender: TObject);
 begin
   inherited;
 
-  if FormParams.ParamByName('Marketing').Value >= 0 then
-    raise Exception.Create('Погашение чеками можно только на сумму штрафа...');
+//  if FormParams.ParamByName('Marketing').Value >= 0 then
+//    raise Exception.Create('Погашение чеками можно только на сумму штрафа...');
 
 end;
 

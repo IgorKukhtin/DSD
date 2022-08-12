@@ -15,6 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , Calculation TDateTime
+             , isOnlyOrder Boolean, DateOrder TDateTime
+             
               )
 
 AS
@@ -66,6 +68,8 @@ BEGIN
            , MovementDate_Update.ValueData        AS UpdateDate
 
            , MovementDate_Calculation.ValueData   AS Calculation
+           , COALESCE (MovementBoolean_OnlyOrder.ValueData, FALSE)  AS isOnlyOrder
+           , MovementDate_DateOrder.ValueData     AS DateOrder
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -83,6 +87,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_OnlyOrder
+                                      ON MovementBoolean_OnlyOrder.MovementId = Movement.Id
+                                     AND MovementBoolean_OnlyOrder.DescId = zc_MovementBoolean_OnlyOrder()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
@@ -103,6 +111,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Calculation
                                    ON MovementDate_Calculation.MovementId = Movement.Id
                                   AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+            LEFT JOIN MovementDate AS MovementDate_DateOrder
+                                   ON MovementDate_DateOrder.MovementId = Movement.Id
+                                  AND MovementDate_DateOrder.DescId = zc_MovementDate_Order()
        ;
 
 END;
@@ -117,4 +128,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Movement_FinalSUA (inStartDate:= '01.01.2021', inEndDate:= '01.03.2021', inIsErased := FALSE, inSession:= '3')
+SELECT * FROM gpSelect_Movement_FinalSUA (inStartDate:= '01.01.2022', inEndDate:= '01.10.2022', inIsErased := FALSE, inSession:= '3')

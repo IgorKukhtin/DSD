@@ -204,7 +204,7 @@ BEGIN
                   ) :: TVarChar;
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isOnlyTimingSUN)
+     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa, isOnlyTimingSUN)
         SELECT OB.ObjectId
              , COALESCE (OF_KoeffInSUN.ValueData, 0)  AS KoeffInSUN
              , COALESCE (OF_KoeffOutSUN.ValueData, 0) AS KoeffOutSUN
@@ -218,6 +218,8 @@ BEGIN
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 3 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseGd
                -- TRUE = НЕТ товаров "убит код"
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 5 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_ClosePL
+               -- TRUE = НЕТ товаров "маркетинг"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 7 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseMa
              , COALESCE (OB_OnlyTimingSUN.ValueData, FALSE)                               AS isOnlyTimingSUN
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectFloat   AS OF_KoeffInSUN    ON OF_KoeffInSUN.ObjectId    = OB.ObjectId AND OF_KoeffInSUN.DescId    = zc_ObjectFloat_Unit_KoeffInSUN()
@@ -1119,6 +1121,20 @@ BEGIN
              INNER JOIN _tmpRemains ON _tmpRemains.UnitId       = MIContainer.WhereObjectId_analyzer
                                    AND _tmpRemains.GoodsId      = MIContainer.ObjectId_analyzer
                                    AND _tmpRemains.AmountResult <= 0 -- !!!нужна только когда нет Автозаказа!!!
+             INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MIContainer.WhereObjectId_analyzer
+             LEFT JOIN MovementBoolean AS MB_NotMCS
+                                       ON MB_NotMCS.MovementId = MIContainer.MovementId
+                                      AND MB_NotMCS.DescId     = zc_MovementBoolean_NotMCS()
+                                      AND MB_NotMCS.ValueData  = TRUE
+             LEFT JOIN MovementBoolean AS MB_CorrectMarketing
+                                       ON MB_CorrectMarketing.MovementId = MIContainer.MovementId
+                                      AND MB_CorrectMarketing.DescId     = zc_MovementBoolean_CorrectMarketing()
+                                      AND MB_CorrectMarketing.ValueData  = TRUE
+        WHERE
+          -- !!!не учитывать если галка "не для СУН"
+              (MB_NotMCS.MovementId IS NULL OR _tmpUnit_SUN.isLock_CheckMSC = FALSE)        
+          -- !!!не учитывать если галка "Корректировка суммы маркетинга в ЗП"
+          AND (MB_CorrectMarketing.MovementId IS NULL OR _tmpUnit_SUN.isLock_CheckMa = FALSE)        
         GROUP BY MIContainer.ObjectId_analyzer
                , MIContainer.WhereObjectId_analyzer
         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0

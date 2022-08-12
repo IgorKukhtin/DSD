@@ -46,7 +46,7 @@ BEGIN
          , tmpMovement AS (SELECT Movement.*
                            FROM tmpStatus
                                JOIN Movement ON Movement.DescId IN (zc_Movement_ServiceItem())        --, zc_Movement_ServiceItemAdd()
-                                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                          --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                             AND Movement.StatusId = tmpStatus.StatusId
                            )
 
@@ -77,7 +77,7 @@ BEGIN
            , tmpMI.CommentInfoMoneyCode
            , tmpMI.CommentInfoMoneyName
 
-           , tmpMI.DateStart :: TDateTime AS DateStart
+           , tmpMI.DateStart            :: TDateTime AS DateStart
            , tmpMI.DateEnd              :: TDateTime AS DateEnd
            , tmpMI.Amount               :: TFloat    AS Amount
            , tmpMI.Price                :: TFloat    AS Price
@@ -111,6 +111,7 @@ BEGIN
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
             
             LEFT JOIN gpSelect_MovementItem_ServiceItem(Movement.Id, FALSE, FALSE, inSession) AS tmpMI ON tmpMI.MovementId = Movement.Id 
+       WHERE tmpMI.DateStart BETWEEN inStartDate AND inEndDate
        ;
 
 

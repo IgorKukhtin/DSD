@@ -38,24 +38,24 @@ BEGIN
      -- дата документа
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
          
-     --если не ввели возвращаем тек год
+     -- если не ввели возвращаем тек год
      IF COALESCE (ioNumYearStart,0) = 0
      THEN 
          ioNumYearStart := EXTRACT (YEAR FROM vbOperDate) - 2000;
      END IF;
      IF COALESCE (ioNumYearEnd,0) = 0
      THEN 
-         ioNumYearEnd := EXTRACT (YEAR FROM ioNumYearStart) - 2000;
+         ioNumYearEnd := ioNumYearStart;
      END IF; 
 
-     --если не ввели возвращаем тек мес€ц
+     -- если не ввели возвращаем тек мес€ц
      IF COALESCE (ioNumStartDate,0) = 0
      THEN 
          ioNumStartDate := EXTRACT (MONTH FROM vbOperDate);
      END IF;
      IF COALESCE (ioNumEndDate,0) = 0
      THEN 
-         ioNumEndDate := EXTRACT (MONTH FROM ioNumStartDate);
+         ioNumEndDate := ioNumStartDate;
      END IF;
 
      -- проверка - документ должен быть сохранен

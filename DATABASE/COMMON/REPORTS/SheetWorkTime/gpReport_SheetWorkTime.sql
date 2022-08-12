@@ -61,7 +61,9 @@ BEGIN
             , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
             , MovementLinkObject_Unit.ObjectId              AS UnitId
             , COALESCE (ObjectBoolean_NoSheetCalc.ValueData, FALSE) ::Boolean AS isNoSheetCalc
-            , CASE WHEN inUnitId = 8451
+            , CASE WHEN -- ЦЕХ упаковки
+                        -- inUnitId = 8451
+                        MovementLinkObject_Unit.ObjectId = 8451
                         THEN CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE COALESCE (MIObject_WorkTimeKind.ObjectId, 0) END
                    ELSE 0
               END AS WorkTimeKindId_key

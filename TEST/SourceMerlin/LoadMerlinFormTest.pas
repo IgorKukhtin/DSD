@@ -344,30 +344,36 @@ end;
 
 procedure TLoadFormTest.LoadServiceItemMovementFormTest;
 begin
+  //1.1.
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemJournalForm');
+  //1.2.
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemMovementForm');
 
+  //1.3.
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemUpdateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemUpdateForm');
+  // Переделать на TServiceItemMovementForm?
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemEditMIForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemEditMIForm');
+  //1.4.
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemJournal_historyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemJournal_historyForm');
+
+  //2.1.
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddJournalForm');
+  //2.2.
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddMovementForm');
+  //2.3.
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddUpdateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddUpdateForm');
+  //2.4.
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddJournal_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddJournal_historyForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddJournalChoiceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddJournalChoiceForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemAddMovementForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TServiceItemAddMovementForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemMovementForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TServiceItemMovementForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TServiceItemJournalForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemJournalChoiceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TServiceItemJournalChoiceForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemUpdateForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TServiceItemUpdateForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemEditMIForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TServiceItemEditMIForm');
 end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;

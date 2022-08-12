@@ -21,7 +21,7 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementDate (MovementDateDesc.Id, inMovementId, inValueData)
      FROM (SELECT inDescCode AS DescCode WHERE TRIM (inDescCode) <> '') AS tmp
-          LEFT JOIN MovementDateDesc ON MovementItemDateDesc.Code ILIKE tmp.DescCode;
+          LEFT JOIN MovementDateDesc ON MovementDateDesc.Code ILIKE tmp.DescCode;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);

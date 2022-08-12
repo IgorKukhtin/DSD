@@ -228,6 +228,8 @@ type
     GoodsWhoCanName: TcxGridDBColumn;
     GoodsMethodApplName: TcxGridDBColumn;
     GoodsSignOriginName: TcxGridDBColumn;
+    isLeftTheMarket: TcxGridDBColumn;
+    DateLeftTheMarket: TcxGridDBColumn;
   private
     { Private declarations }
   public

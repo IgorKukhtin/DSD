@@ -175,9 +175,13 @@ BEGIN
 
      IF NOT EXISTS(SELECT Movement.id
                    FROM Movement
+                        LEFT JOIN MovementBoolean AS MovementBoolean_OnlyOrder
+                                                  ON MovementBoolean_OnlyOrder.MovementId = Movement.Id
+                                                 AND MovementBoolean_OnlyOrder.DescId = zc_MovementBoolean_OnlyOrder()
                    WHERE Movement.OperDate = vbOperDate
                      AND Movement.DescId = zc_Movement_FinalSUA()
                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                     AND COALESCE (MovementBoolean_OnlyOrder.ValueData, FALSE) = FALSE
                    )
      THEN
        RETURN;
@@ -186,9 +190,13 @@ BEGIN
      SELECT Movement.id
      INTO vbMovementId
      FROM Movement
+          LEFT JOIN MovementBoolean AS MovementBoolean_OnlyOrder
+                                    ON MovementBoolean_OnlyOrder.MovementId = Movement.Id
+                                   AND MovementBoolean_OnlyOrder.DescId = zc_MovementBoolean_OnlyOrder()
      WHERE Movement.OperDate = vbOperDate
        AND Movement.DescId = zc_Movement_FinalSUA()
-       AND Movement.StatusId = zc_Enum_Status_Complete();
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND COALESCE (MovementBoolean_OnlyOrder.ValueData, FALSE) = FALSE;
 
      -- все Товары для схемы SUN SUA
      DELETE FROM _tmpGoods_SUN_SUA;

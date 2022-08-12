@@ -71,6 +71,16 @@ type
     gpUpdate_MI_FinalSUA_Need: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
     Price: TcxGridDBColumn;
+    cbOnlyOrder: TcxCheckBox;
+    edDateOrder: TcxDateEdit;
+    cxLabel4: TcxLabel;
+    spUpdate_DateOrder: TdsdStoredProc;
+    spUpdate_DateOrderClear: TdsdStoredProc;
+    actExecuteDataChoiceDialog: TExecuteDialog;
+    actUpdate_DateOrder: TdsdExecStoredProc;
+    actUpdate_DateOrderClear: TdsdExecStoredProc;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

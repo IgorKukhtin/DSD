@@ -5268,6 +5268,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_RestTermGoods: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1086#1074#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TReport_RestTermGoodsForm'
+      FormNameParam.Value = 'TReport_RestTermGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5418,9 +5429,6 @@
         object miReport_SummSP: TMenuItem
           Action = actReport_SummSP
         end
-        object miGoodsSPJournal: TMenuItem
-          Action = actGoodsSPJournal
-        end
         object N341: TMenuItem
           Action = actReport_RemainingInsulins
         end
@@ -5451,7 +5459,7 @@
         object N70: TMenuItem
           Action = actInvoice
         end
-        object actGoodsSP13031: TMenuItem
+        object miGoodsSPJournal: TMenuItem
           Action = actGoodsSPJournal
         end
         object N13032: TMenuItem
@@ -6734,6 +6742,9 @@
         end
         object N360: TMenuItem
           Action = actReport_AnalysisBonusesIncome
+        end
+        object N361: TMenuItem
+          Action = actReport_RestTermGoods
         end
       end
       object miTaxUnit: TMenuItem [3]

@@ -1,3 +1,4 @@
+
 {******************************************}
 {                                          }
 {             FastReport v4.0              }
@@ -288,6 +289,7 @@ type
     procedure FindBClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure DesignerBClick(Sender: TObject);
+    procedure DesignerBClick2(Sender: TObject);
     procedure NewPageBClick(Sender: TObject);
     procedure DelPageBClick(Sender: TObject);
     procedure CancelBClick(Sender: TObject);
@@ -2922,10 +2924,11 @@ end;
 
 procedure TfrxPreviewForm.DesignerBClick(Sender: TObject);
 begin
-  //ShowMessage('Нет прав.');
-  //exit;
-  //
   FPreview.Edit;
+end;
+procedure TfrxPreviewForm.DesignerBClick2(Sender: TObject);
+begin
+ ShowMessage('Ошибка.Нет прав для корректировки.')
 end;
 
 procedure TfrxPreviewForm.FormCloseQuery(Sender: TObject;
@@ -2961,9 +2964,6 @@ end;
 
 procedure TfrxPreviewForm.ExportMIClick(Sender: TObject);
 begin
-  ShowMessage('Нет прав.');
-  exit;
-  //
   FPreview.Export(TfrxCustomExportFilter(frxExportFilters[TMenuItem(Sender).Tag].Filter));
   Enabled := True;
 end;

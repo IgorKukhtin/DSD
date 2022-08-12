@@ -109,4 +109,4 @@ $BODY$
  */
 
 -- тест
--- select * from gpGet_Movement_ServiceItemAdd(inMovementId := 0 , inMovementId_Value := 0 , inOperDate := ('01.06.2022')::TDateTime ,  inSession := '5');
+-- select * from gpGet_Movement_ServiceItemAdd(inMovementId := 0 , inMovementId_Value := 0 , inInfoMoneyId:=1, inOperDate := ('01.06.2022')::TDateTime ,  inSession := '5');

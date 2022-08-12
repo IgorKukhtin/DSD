@@ -35,14 +35,14 @@ BEGIN
 
                  -- Avion
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Avion40110917())
-                      THEN COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
+                      THEN COALESCE (REPLACE (Object_JuridicalBasis.ValueData, '"', ''), 'Alan')
                  || '_' || Movement.InvNumber
                  || '_' || COALESCE (Object_Juridical.ValueData, 'Юр_лицо') || ' №' || COALESCE (ObjectString_RoomNumber.ValueData, '0')
 
 
                  -- Vez+Brusn
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Brusn34604386())
-                      THEN COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
+                      THEN COALESCE (REPLACE (Object_JuridicalBasis.ValueData, '"', ''), 'Alan')
                  || '_' || Movement.InvNumber
                  || '_' || COALESCE (Object_Retail.ValueData, 'Торговая сеть') || ' №' || CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Brusn34604386()
                                                                                                     THEN Object_Partner.Id :: TVarChar -- COALESCE (ObjectString_RoomNumber.ValueData, '0')
@@ -50,7 +50,7 @@ BEGIN
                                                                                           END
                  -- Dakort
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Dakort39135074())
-                      THEN COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
+                      THEN COALESCE (REPLACE (Object_JuridicalBasis.ValueData, '"', ''), 'Alan')
                  || '_' || Movement.InvNumber
                  --|| '_' || COALESCE (Object_Retail.ValueData, 'Торговая сеть') || ' №' || CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Brusn34604386()
                  --                                                                                   THEN Object_Partner.Id :: TVarChar -- COALESCE (ObjectString_RoomNumber.ValueData, '0')

@@ -30,7 +30,7 @@ BEGIN
          FROM Object
                INNER JOIN ObjectBlob ON ObjectId = Object.Id
          WHERE Object.DescId    = zc_Object_Form()
-           AND Object.ValueData LIKE '%.Sticker%'
+           AND Object.ValueData LIKE ('%' || CASE WHEN inReportName ILIKE '%_70_70%' THEN '_70_70' ELSE '' END|| '.Sticker%')
          ORDER BY Object.Id
          LIMIT 1
         ;

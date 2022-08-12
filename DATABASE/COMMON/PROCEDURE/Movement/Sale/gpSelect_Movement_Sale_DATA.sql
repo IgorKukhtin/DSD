@@ -115,6 +115,13 @@ end if;
                                  WHERE ObjectLink_Juridical.ChildObjectId > 0
                                    AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
                                    AND ObjectLink_Branch.ChildObjectId IN (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
+
+                                UNION
+                                 SELECT Object_Juridical.Id AS JuridicalId
+                                 FROM Object AS Object_Juridical
+                                 WHERE Object_Juridical.Id IN (7314357) -- Ã'ﬂ—Õ¿ ¬≈—Õ¿  “Œ–√≤¬≈À‹Õ»… ¡”ƒ»ÕŒ  “Œ¬ 
+                                   AND Object_Juridical.DescId = zc_Object_Juridical()
+                                   AND vbIsZp = TRUE
                                 )
         , tmpMovement_all AS (SELECT Movement.Id
                                , Movement.OperDate

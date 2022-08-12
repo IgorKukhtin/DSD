@@ -244,9 +244,14 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_Message() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_Message', 'Дата время сообщения' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Message');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_Order() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Order'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_Order', 'Дата вставки в заказ' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Order');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 09.08.22                                                                                                        * zc_MovementDate_Order
  30.06.22                                                                                                        * zc_MovementDate_Message
  15.06.22                                                                                                        * zc_MovementDate_Coming
  14.06.22         * zc_MovementDate_CarInfo

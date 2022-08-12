@@ -71,7 +71,7 @@ BEGIN
     FROM tmpCalculation
     LIMIT 1;
 
-    vbMovementId := gpInsertUpdate_Movement_FinalSUA(0, CAST (NEXTVAL ('Movement_FinalSUA_seq') AS TVarChar), vbOperDate, vbUnitName, inSession);
+    vbMovementId := gpInsertUpdate_Movement_FinalSUA(0, CAST (NEXTVAL ('Movement_FinalSUA_seq') AS TVarChar), vbOperDate, vbUnitName, False, inSession);
 
     PERFORM lpInsertUpdate_MI_FinalSUA (ioId                 := 0
                                       , inMovementId         := vbMovementId

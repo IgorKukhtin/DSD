@@ -833,10 +833,19 @@ BEGIN
                           LEFT JOIN MovementDate AS MovementDate_Calculation
                                                  ON MovementDate_Calculation.MovementId = Movement.Id
                                                 AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+                          LEFT JOIN MovementDate AS MovementDate_DateOrder
+                                                 ON MovementDate_DateOrder.MovementId = Movement.Id
+                                                AND MovementDate_DateOrder.DescId = zc_MovementDate_Order()
+
+                          LEFT JOIN MovementBoolean AS MovementBoolean_OnlyOrder
+                                                    ON MovementBoolean_OnlyOrder.MovementId = Movement.Id
+                                                   AND MovementBoolean_OnlyOrder.DescId = zc_MovementBoolean_OnlyOrder()
+
                      WHERE Movement.OperDate = vbOperDate - ((date_part('DOW', vbOperDate)::Integer - 1)::TVarChar||' DAY')::INTERVAL
                        AND Movement.DescId = zc_Movement_FinalSUA()
                        AND Movement.StatusId = zc_Enum_Status_Complete()
-                       AND MovementDate_Calculation.ValueData = vbOperDate
+                       AND (COALESCE (MovementBoolean_OnlyOrder.ValueData, FALSE) = TRUE OR MovementDate_Calculation.ValueData IS NOT NULL) 
+                       AND COALESCE(MovementDate_DateOrder.ValueData, MovementDate_Calculation.ValueData) = vbOperDate
                      )
     -- строки финальный СУН
    , tmpFinalSUAList AS (SELECT MovementItem.ObjectId                                              AS GoodsId
@@ -2791,10 +2800,19 @@ BEGIN
                           LEFT JOIN MovementDate AS MovementDate_Calculation
                                                  ON MovementDate_Calculation.MovementId = Movement.Id
                                                 AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+                          LEFT JOIN MovementDate AS MovementDate_DateOrder
+                                                 ON MovementDate_DateOrder.MovementId = Movement.Id
+                                                AND MovementDate_DateOrder.DescId = zc_MovementDate_Order()
+
+                          LEFT JOIN MovementBoolean AS MovementBoolean_OnlyOrder
+                                                    ON MovementBoolean_OnlyOrder.MovementId = Movement.Id
+                                                   AND MovementBoolean_OnlyOrder.DescId = zc_MovementBoolean_OnlyOrder()
+
                      WHERE Movement.OperDate = vbOperDate - ((date_part('DOW', vbOperDate)::Integer - 1)::TVarChar||' DAY')::INTERVAL
                        AND Movement.DescId = zc_Movement_FinalSUA()
                        AND Movement.StatusId = zc_Enum_Status_Complete()
-                       AND MovementDate_Calculation.ValueData = vbOperDate
+                       AND (COALESCE (MovementBoolean_OnlyOrder.ValueData, FALSE) = TRUE OR MovementDate_Calculation.ValueData IS NOT NULL) 
+                       AND COALESCE(MovementDate_DateOrder.ValueData, MovementDate_Calculation.ValueData) = vbOperDate
                      )
     -- строки финальный СУН
    , tmpFinalSUAList AS (SELECT MovementItem.ObjectId                                              AS GoodsId
@@ -4644,10 +4662,19 @@ BEGIN
                           LEFT JOIN MovementDate AS MovementDate_Calculation
                                                  ON MovementDate_Calculation.MovementId = Movement.Id
                                                 AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+                          LEFT JOIN MovementDate AS MovementDate_DateOrder
+                                                 ON MovementDate_DateOrder.MovementId = Movement.Id
+                                                AND MovementDate_DateOrder.DescId = zc_MovementDate_Order()
+
+                          LEFT JOIN MovementBoolean AS MovementBoolean_OnlyOrder
+                                                    ON MovementBoolean_OnlyOrder.MovementId = Movement.Id
+                                                   AND MovementBoolean_OnlyOrder.DescId = zc_MovementBoolean_OnlyOrder()
+
                      WHERE Movement.OperDate = vbOperDate - ((date_part('DOW', vbOperDate)::Integer - 1)::TVarChar||' DAY')::INTERVAL
                        AND Movement.DescId = zc_Movement_FinalSUA()
                        AND Movement.StatusId = zc_Enum_Status_Complete()
-                       AND MovementDate_Calculation.ValueData = vbOperDate
+                       AND (COALESCE (MovementBoolean_OnlyOrder.ValueData, FALSE) = TRUE OR MovementDate_Calculation.ValueData IS NOT NULL) 
+                       AND COALESCE(MovementDate_DateOrder.ValueData, MovementDate_Calculation.ValueData) = vbOperDate
                      )
     -- строки финальный СУН
    , tmpFinalSUAList AS (SELECT MovementItem.ObjectId                                              AS GoodsId

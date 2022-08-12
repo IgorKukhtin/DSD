@@ -3,7 +3,7 @@ object StickerHeaderForm: TStickerHeaderForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1047#1072#1075#1086#1083#1086#1074#1086#1082' '#1076#1083#1103' '#1089#1077#1090#1080'>'
   ClientHeight = 390
-  ClientWidth = 628
+  ClientWidth = 723
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,14 +13,13 @@ object StickerHeaderForm: TStickerHeaderForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 628
+    Width = 723
     Height = 364
     Align = alClient
     TabOrder = 0
@@ -39,17 +38,16 @@ object StickerHeaderForm: TStickerHeaderForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
+      OptionsView.CellAutoHeight = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object isDefault: TcxGridDBColumn
-        Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+        Caption = #1044#1083#1103' '#1074#1089#1077#1093
         DataBinding.FieldName = 'isDefault'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080' < 6 '#1084#1077#1089'.'
         Options.Editing = False
         Width = 102
       end
@@ -74,6 +72,7 @@ object StickerHeaderForm: TStickerHeaderForm
         DataBinding.FieldName = 'Info'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 232
       end
       object isErased: TcxGridDBColumn
@@ -170,11 +169,11 @@ object StickerHeaderForm: TStickerHeaderForm
           ItemName = 'bbSetUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -184,7 +183,7 @@ object StickerHeaderForm: TStickerHeaderForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbChoice'
         end
         item
           Visible = True
@@ -199,9 +198,12 @@ object StickerHeaderForm: TStickerHeaderForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'bbChoice'
+          ItemName = 'bbToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -246,6 +248,7 @@ object StickerHeaderForm: TStickerHeaderForm
       Category = 0
       Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides

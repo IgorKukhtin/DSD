@@ -85,7 +85,7 @@ BEGIN
                            )
 
              , tmpMI_Main AS (SELECT *
-                              FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate := vbOperDate ::TDateTime, inUnitId:= 0, inInfoMoneyId:= inInfoMoneyId, inSession := inSession) AS gpSelect
+                              FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate := vbOperDate, inUnitId:= 0, inInfoMoneyId:= inInfoMoneyId, inSession := inSession) AS gpSelect
                               WHERE gpSelect.Amount > 0
                              ) 
               --предыдущее значение дополнения  для всех отделов
@@ -203,9 +203,10 @@ BEGIN
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
 
-                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate := tmpMI.DateStart ::TDateTime
-                                                                  , inUnitId := tmpMI.UnitId
-                                                                  , inSession := inSession
+                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate   := tmpMI.DateStart
+                                                                  , inUnitId     := tmpMI.UnitId
+                                                                  , inInfoMoneyId:= inInfoMoneyId
+                                                                  , inSession    := inSession
                                                                    ) AS tmpMI_Main
                                                                      ON tmpMI_Main.UnitId = tmpMI.UnitId
                                                                     AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId

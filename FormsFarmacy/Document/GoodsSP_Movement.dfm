@@ -44,6 +44,9 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
           object GoodsCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0;-0; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -53,10 +56,17 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
           object GoodsName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsMainGrid
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 253
           end
           object ColSP: TcxGridDBColumn [2]
@@ -283,6 +293,14 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'ID '#1091#1095#1072#1089#1085#1080#1082#1072' '#1087#1088#1086#1075#1088#1072#1084#1080
             Width = 65
+          end
+          object NameSP: TcxGridDBColumn [26]
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1088#1077#1077#1089#1090#1088#1077
+            DataBinding.FieldName = 'NameSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 130
           end
           inherited colIsErased: TcxGridDBColumn
             GroupSummaryAlignment = taCenter
@@ -860,6 +878,40 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084
       ImageIndex = 79
+    end
+    object actGoodsMainGrid: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TIntenalSPForm'
+      FormName = 'TGoodsMainForm'
+      FormNameParam.Value = 'TGoodsMainForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -2052,7 +2104,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     Top = 11
   end
   object spSetGoods: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_GoodsSPSearch_1303_Goods'
+    StoredProcName = 'gpUpdate_MI_GoodsSP_Goods'
     DataSets = <
       item
       end>
@@ -2081,21 +2133,13 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         ComponentItem = 'GoodsID'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCol'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Col'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 512
     Top = 456
   end
   object spClearGoods: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_GoodsSPSearch_1303_ClearGoods'
+    StoredProcName = 'gpUpdate_MI_GoodsSP_ClearGoods'
     DataSets = <
       item
       end>

@@ -287,6 +287,7 @@ BEGIN
 
                   LEFT JOIN tmpLastPriceListItem ON tmpLastPriceListItem.GoodsId = MovementItem.ObjectId
                   LEFT JOIN tmpLastPriceListItem3 ON tmpLastPriceListItem3.GoodsId = MovementItem.ObjectId
+            WHERE COALESCE(MIFloat_Price.ValueData, 0) > 0
             );
             
     -- Данные по диапазонам
@@ -348,7 +349,8 @@ BEGIN
                   WHERE MovementItem.MovementId = '|| vbMovementId::Text ||'
                     AND MovementItem.ObjectId = '|| vbCompetitorId::Text ||'
                     AND MovementItem.DescId     = zc_MI_Child()
-                    AND MovementItem.isErased  = false) AS T1
+                    AND MovementItem.isErased   = false
+                    AND MovementItem.Amount     > 0) AS T1
            WHERE _tmpGoods.Id = T1.ParentId';
         EXECUTE vbQueryText;
         
@@ -363,7 +365,8 @@ BEGIN
                     WHERE MovementItem.MovementId = '|| vbMovementPrevId::Text ||'
                       AND MovementItem.ObjectId = '|| vbCompetitorId::Text ||'
                       AND MovementItem.DescId     = zc_MI_Child()
-                      AND MovementItem.isErased  = false) AS T1
+                      AND MovementItem.isErased   = false
+                      AND MovementItem.Amount     > 0) AS T1
              WHERE _tmpGoods.PrevId = T1.ParentId';
           EXECUTE vbQueryText;        
         END IF;
