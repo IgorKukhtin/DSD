@@ -196,7 +196,7 @@ BEGIN
                      )
           , tmpMIChild AS (SELECT  MovementItem.ParentId    AS ParentId
                                  , SUM(MovementItem.Amount) AS Amount
-                                 , SUM(MIFloat_DayCount.ValueData)         AS DayCount
+                                 , MAX( COALESCE (MIFloat_DayCount.ValueData, 0))         AS DayCount
                                  , SUM(MIFloat_WorkTimeHoursOne.ValueData) AS WorkTimeHoursOne
                                  , SUM(MIFloat_Price.ValueData)            AS Price
                                  , STRING_AGG (DISTINCT Object_StaffListSummKind.ValueData, ';') AS StaffListSummKindName
