@@ -169,6 +169,7 @@ BEGIN
      IF vbMovementDescId = zc_Movement_Sale() -- AND vbUserId = 5
      THEN
          -- нашли
+         --vbGoodsPropertyId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = inMovementId AND MLO.DescId = zc_MovementLinkObject_GoodsProperty());
          vbGoodsPropertyId:= (SELECT zfCalc_GoodsPropertyId ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
                                                            , (SELECT OL_Juridical.ChildObjectId FROM MovementLinkObject AS MLO LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical() WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
                                                            , (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
@@ -1299,7 +1300,9 @@ BEGIN
           FROM (SELECT MAX (tmp.MovementItemId)      AS MovementItemId_find
                      , tmp.GoodsId
                      , tmp.GoodsKindId
-                     , tmp.BoxId
+                       -- т.к. отключил
+                     , MAX (tmp.BoxId) AS BoxId
+                       --
                      , tmp.AssetId
                      , tmp.PartionGoodsDate
                      , tmp.PartionGoods
@@ -1461,6 +1464,8 @@ BEGIN
                                                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
                                                            AND vbMovementDescId = zc_Movement_Sale()
+                                                           -- !!!отключил
+                                                           AND 1=0
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
@@ -1553,7 +1558,7 @@ BEGIN
                      ) AS tmp
                 GROUP BY tmp.GoodsId
                        , tmp.GoodsKindId
-                       , tmp.BoxId
+                     --, tmp.BoxId
                        , tmp.AssetId
                        , tmp.PartionGoodsDate
                        , tmp.PartionGoods

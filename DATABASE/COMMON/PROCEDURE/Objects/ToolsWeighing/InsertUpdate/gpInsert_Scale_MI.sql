@@ -64,6 +64,7 @@ $BODY$
    DECLARE vbRetailId  Integer;
    DECLARE vbToId      Integer;
    DECLARE vbUnitId    Integer;
+   DECLARE vbGoodsPropertyId Integer;
 
    DECLARE vbWeightTotal   TFloat;
    DECLARE vbWeightPack    TFloat;
@@ -357,7 +358,40 @@ BEGIN
                        END;
 
      -- определили
-     vbBoxId:= CASE WHEN inBoxCode > 0 THEN (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBoxCode AND Object.DescId = zc_Object_Box()) ELSE 0 END;
+     -- vbBoxId:= CASE WHEN inBoxCode > 0 THEN (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBoxCode AND Object.DescId = zc_Object_Box()) ELSE 0 END;
+     --
+     IF NOT EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.DescId = inMovementId AND MLO.DescId = zc_MovementLinkObject_GoodsProperty() AND MLO.ObjectId > 0)
+     THEN
+         -- нашли
+         vbGoodsPropertyId:= zfCalc_GoodsPropertyId ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                   , (SELECT OL_Juridical.ChildObjectId FROM MovementLinkObject AS MLO LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical() WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                                   , (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                                    );
+         -- !!!записали св-во
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GoodsProperty(), inMovementId, vbGoodsPropertyId);
+
+     ELSE
+         vbGoodsPropertyId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = inMovementId AND MLO.DescId = zc_MovementLinkObject_GoodsProperty());
+     END IF;
+     -- определили
+     vbBoxId:= (SELECT ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
+                FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                           ON ObjectLink_GoodsPropertyValue_Goods.ObjectId      = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_Goods.DescId        = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                          AND ObjectLink_GoodsPropertyValue_Goods.ChildObjectId = inGoodsId
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                           ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId      = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId        = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                          AND ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId = inGoodsKindId
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                                           ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+                WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = vbGoodsPropertyId
+                  AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId        = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+               );
+                              
+     
      -- определили Вес 1 ед. продукции + упаковка AND Вес упаковки для 1-ой ед. продукции
      SELECT ObjectFloat_WeightPackage.ValueData, ObjectFloat_WeightTotal.ValueData
           , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0 AND ObjectFloat_WeightPackage.ValueData <> 0 AND ObjectFloat_WeightTotal.ValueData > ObjectFloat_WeightPackage.ValueData
@@ -585,7 +619,7 @@ BEGIN
                                                                                            ELSE inCount
                                                                                       END
                                                            , inHeadCount           := inHeadCount
-                                                           , inBoxCount            := inBoxCount
+                                                           , inBoxCount            := CASE WHEN inIsBarCode = TRUE THEN 1 ELSE 0 END -- inBoxCount
                                                            , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
                                                            , inLevelNumber         := 0
                                                            , inPrice               := CASE -- для isSticker = TRUE
@@ -666,7 +700,10 @@ BEGIN
                                                                                            ELSE inPriceListId
                                                                                       END
     
-                                                           , inBoxId               := vbBoxId
+                                                           , inBoxId               := CASE WHEN inIsBarCode = TRUE AND vbBoxId > 0 THEN vbBoxId
+                                                                                           WHEN inIsBarCode = TRUE THEN CASE WHEN inBoxCode > 0 THEN (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBoxCode AND Object.DescId = zc_Object_Box()) ELSE 0 END
+                                                                                           ELSE 0
+                                                                                      END
                                                            , inMovementId_Promo    := COALESCE (inMovementId_Promo, 0)
                                                            , inIsBarCode           := CASE WHEN vbUserId = 5 THEN TRUE ELSE inIsBarCode END
                                                            , inSession             := inSession

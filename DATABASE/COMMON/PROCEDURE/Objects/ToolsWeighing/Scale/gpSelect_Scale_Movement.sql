@@ -195,8 +195,8 @@ BEGIN
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
-                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement_Parent.Id
+                                  AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
                                            ON MovementLinkMovement_TransportGoods.MovementId = Movement_Parent.Id
