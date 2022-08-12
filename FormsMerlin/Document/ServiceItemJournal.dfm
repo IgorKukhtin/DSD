@@ -218,6 +218,27 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         HeaderHint = ' '#9#1044#1072#1090#1072', '#1076#1086' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1091#1089#1083#1086#1074#1080#1077
         Width = 94
       end
+      object MonthStart: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1089' ...'
+        DataBinding.FieldName = 'DateStart'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'mmmm-yy'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 84
+      end
+      object MonthEnd: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1076#1086' ...'
+        DataBinding.FieldName = 'OperDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'mmmm-yy'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = ' '#9#1044#1072#1090#1072', '#1076#1086' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1091#1089#1083#1086#1074#1080#1077
+        Options.Editing = False
+        Width = 94
+      end
       object UnitGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'UnitGroupNameFull'
