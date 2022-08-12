@@ -227,14 +227,14 @@ BEGIN
         INNER JOIN tmpPrice AS Object_Price
                             ON Object_Price.GoodsId = tmp_ResultSet.GoodsId
                            AND Object_Price.UnitId = inUnitId 
-        INNER JOIN (SELECT tmp_ResultSet.GoodsId
-                         , (SUM(tmp_ResultSet.Sold) / COUNT(*))::TFloat AS SoldAVE
-                         , MAX(tmp_ResultSet.Sold)::TFloat              AS SoldMax
-                    FROM tmp_ResultSet
-                    WHERE tmp_ResultSet.Sold <> 0
-                    GROUP BY tmp_ResultSet.GoodsId) AS tmpAVE
+        LEFT JOIN (SELECT tmp_ResultSet.GoodsId
+                        , (SUM(tmp_ResultSet.Sold) / COUNT(*))::TFloat AS SoldAVE
+                        , MAX(tmp_ResultSet.Sold)::TFloat              AS SoldMax
+                   FROM tmp_ResultSet
+                   WHERE tmp_ResultSet.Sold <> 0
+                   GROUP BY tmp_ResultSet.GoodsId) AS tmpAVE
                                                     ON tmpAVE.GoodsId = tmp_ResultSet.GoodsId
-    WHERE tmp_ResultSet.Sold <= (tmpAVE.SoldAVE * 2)::TFloat
+    WHERE tmp_ResultSet.Sold <= (COALESCE(tmpAVE.SoldAVE, 0) * 2)::TFloat
     GROUP BY
         tmp_ResultSet.GoodsId,
         Object_Price.MCSValue,
@@ -242,7 +242,7 @@ BEGIN
         Object_Price.isTop,
         Object_Price.PercentMarkup,
         Object_Price.Fix
-    HAVING  COALESCE(MAX(Sold),0)::TFloat <> COALESCE(Object_Price.MCSValue,0);
+    HAVING COALESCE(MAX(Sold),0)::TFloat <> COALESCE(Object_Price.MCSValue,0);
 
     -- !!!¬–≈Ã≈ÕÕŒ ‰Îˇ “≈—“¿!!!
     /*IF inSession = zfCalc_UserAdmin()
@@ -267,4 +267,4 @@ ALTER FUNCTION gpRecalcMCS(Integer, Integer, Integer, TVarChar, Boolean) OWNER T
  04.07.16         * add PercentMarkup
  29.08.15                                                         *
  */
-----select * from gpRecalcMCS(inUnitId := 3457773 , inPeriod := 40 , inDay := 6 ,  inSession := '3')
+----select * from gpRecalcMCS(inUnitId := 3457773 , inPeriod := 40 , inDay := 6 ,  inSession := '3') 

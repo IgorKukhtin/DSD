@@ -5429,9 +5429,6 @@
         object miReport_SummSP: TMenuItem
           Action = actReport_SummSP
         end
-        object miGoodsSPJournal: TMenuItem
-          Action = actGoodsSPJournal
-        end
         object N341: TMenuItem
           Action = actReport_RemainingInsulins
         end
@@ -5462,7 +5459,7 @@
         object N70: TMenuItem
           Action = actInvoice
         end
-        object actGoodsSP13031: TMenuItem
+        object miGoodsSPJournal: TMenuItem
           Action = actGoodsSPJournal
         end
         object N13032: TMenuItem

@@ -30,7 +30,7 @@ BEGIN
     END IF;    
 
     IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
-                  WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 11041603)
+                  WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId in (59582, 393039, 1915124))
        AND vbUserId <> 3
     THEN
         RAISE EXCEPTION 'Ошибка. У вас нет прав выполнять эту операцию.';     

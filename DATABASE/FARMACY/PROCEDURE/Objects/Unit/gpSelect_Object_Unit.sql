@@ -771,8 +771,8 @@ BEGIN
                                  AND ObjectLink_Unit_Juridical.ObjectId <> 389328
                                  AND Object_Unit.ValueData NOT ILIKE '%ЗАКРЫТА%'
                                  AND Object_Unit.ValueData NOT ILIKE '%Зачинена%'
-                                 AND Object_Unit.isErased = False)
-                                 AND COALESCE(ObjectLink_Unit_Parent.ChildObjectId, 0) <> 0;
+                                 AND Object_Unit.isErased = False
+                                 AND COALESCE(ObjectLink_Unit_Parent.ChildObjectId, 0) <> 0);
   
 END;
 $BODY$
