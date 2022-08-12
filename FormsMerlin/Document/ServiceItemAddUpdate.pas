@@ -1,4 +1,4 @@
-unit ServiceItemJournalChoice;
+unit ServiceItemAddUpdate;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dsdGuides, cxButtonEdit, cxCheckBox;
 
 type
-  TServiceItemJournalChoiceForm = class(TParentForm)
+  TServiceItemAddUpdateForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -91,7 +91,6 @@ type
     ExecuteDialog: TExecuteDialog;
     actRefreshStart: TdsdDataSetRefresh;
     PeriodChoice1: TPeriodChoice;
-    spInsertUpdatebyHistory: TdsdStoredProc;
     bbInsertUpdatebyHistory: TdxBarButton;
     actInsertUpdatebyHistory: TdsdExecStoredProc;
     actInsertAdd: TdsdInsertUpdateAction;
@@ -104,13 +103,7 @@ type
     actCheckDesc: TdsdExecStoredProc;
     actCheckDescAdd: TdsdExecStoredProc;
     mactUpdateAdd: TMultiAction;
-    cxLabel3: TcxLabel;
-    edUnit: TcxButtonEdit;
-    cxLabel4: TcxLabel;
-    edInfoMoney: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
-    GuidesInfoMoney: TdsdGuides;
-    cbAllMonth: TcxCheckBox;
+    Comment: TcxGridDBColumn;
   private
   public
   end;
@@ -120,6 +113,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TServiceItemJournalChoiceForm);
+  RegisterClass(TServiceItemAddUpdateForm);
 
 end.

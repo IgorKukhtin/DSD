@@ -3070,6 +3070,7 @@ object StickerForm: TStickerForm
         Value = Null
         Component = cb70_70
         DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -3199,6 +3200,7 @@ object StickerForm: TStickerForm
         Value = Null
         Component = cb70_70
         DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

@@ -39,9 +39,10 @@ BEGIN
      -- проверка для ServiceItemAdd
      IF (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId) = zc_Movement_ServiceItemAdd()
      THEN   
-         IF NOT EXISTS (SELECT 1 FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate := inDateStart ::TDateTime
-                                                                              , inUnitId   := inUnitId
-                                                                              , inSession  := inUserId  ::TVarChar
+         IF NOT EXISTS (SELECT 1 FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate   := inDateStart ::TDateTime
+                                                                              , inUnitId     := inUnitId
+                                                                              , inInfoMoneyId:= inInfoMoneyId
+                                                                              , inSession    := inUserId  ::TVarChar
                                                                                ) AS tmpMI_Main 
                         WHERE tmpMI_Main.InfoMoneyId = inInfoMoneyId
                         )

@@ -21,75 +21,29 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actCashJournal_out: TdsdOpenForm [1]
+    object actServiceJournal: TdsdOpenForm [1]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1050#1072#1089#1089#1072', '#1088#1072#1089#1093#1086#1076
-      FormName = 'TCashOutJournalForm'
-      FormNameParam.Value = 'TCashOutJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inKindName'
-          Value = 'zc_Enum_InfoMoney_Out'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKindName_text'
-          Value = #1056#1040#1057#1061#1054#1044
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actReport_UnitBalance: TdsdOpenForm [2]
-      Category = #1054#1090#1095#1077#1090#1099
-      MoveParams = <>
-      Caption = #1041#1072#1083#1072#1085#1089' '#1087#1086' '#1054#1090#1076#1077#1083#1072#1084
-      FormName = 'TReport_UnitBalanceForm'
-      FormNameParam.Value = 'TReport_UnitBalanceForm'
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1072#1088#1077#1085#1076#1099
+      FormName = 'TServiceJournalForm'
+      FormNameParam.Value = 'TServiceJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actServiceItemAddJournalChoice: TdsdOpenForm [3]
+    object actServiceItemJournal: TdsdOpenForm [2]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099' ('#1087#1088#1086#1089#1084#1086#1090#1088')'
-      FormName = 'TServiceItemAddJournalChoiceForm'
-      FormNameParam.Value = 'TServiceItemAddJournalChoiceForm'
+      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' ('#1078#1091#1088#1085#1072#1083')'
+      FormName = 'TServiceItemJournalForm'
+      FormNameParam.Value = 'TServiceItemJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actCashChildJournal_out: TdsdOpenForm [4]
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1050#1072#1089#1089#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072', '#1088#1072#1089#1093#1086#1076
-      FormName = 'TCashChildJournalForm'
-      FormNameParam.Value = 'TCashChildJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inKindName'
-          Value = 'zc_Enum_InfoMoney_Out'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKindName_text'
-          Value = #1056#1040#1057#1061#1054#1044
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actServiceItemUpdate: TdsdOpenForm [5]
+    object actServiceItemUpdate: TdsdOpenForm [3]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' ('#1080#1089#1090#1086#1088#1080#1103')'
@@ -106,7 +60,7 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actServiceItemAddJournal: TdsdOpenForm [6]
+    object actServiceItemAddJournal: TdsdOpenForm [4]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099
@@ -117,52 +71,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actCashChildJournal_in: TdsdOpenForm [7]
+    object actServiceItemAddUpdate: TdsdOpenForm [5]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1050#1072#1089#1089#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072', '#1087#1088#1080#1093#1086#1076
-      FormName = 'TCashChildJournalForm'
-      FormNameParam.Value = 'TCashChildJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inKindName'
-          Value = 'zc_Enum_InfoMoney_In'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKindName_text'
-          Value = #1055#1056#1048#1061#1054#1044
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actCurrencyJournal: TdsdOpenForm [8]
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1050#1091#1088#1089#1099' '#1074#1072#1083#1102#1090' ('#1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072')'
-      FormName = 'TCurrencyJournalForm'
-      FormNameParam.Value = 'TCurrencyJournalForm'
+      Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099' ('#1087#1088#1086#1089#1084#1086#1090#1088')'
+      FormName = 'TServiceItemAddUpdateForm'
+      FormNameParam.Value = 'TServiceItemAddUpdateForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actServiceItemJournal: TdsdOpenForm [9]
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' ('#1078#1091#1088#1085#1072#1083')'
-      FormName = 'TServiceItemJournalForm'
-      FormNameParam.Value = 'TServiceItemJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actCashJournal_in: TdsdOpenForm [10]
+    object actCashJournal_in: TdsdOpenForm [6]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076
@@ -185,6 +105,86 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actCashJournal_out: TdsdOpenForm [7]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1050#1072#1089#1089#1072', '#1088#1072#1089#1093#1086#1076
+      FormName = 'TCashOutJournalForm'
+      FormNameParam.Value = 'TCashOutJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inKindName'
+          Value = 'zc_Enum_InfoMoney_Out'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName_text'
+          Value = #1056#1040#1057#1061#1054#1044
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReport_UnitBalance: TdsdOpenForm [8]
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1041#1072#1083#1072#1085#1089' '#1087#1086' '#1054#1090#1076#1077#1083#1072#1084
+      FormName = 'TReport_UnitBalanceForm'
+      FormNameParam.Value = 'TReport_UnitBalanceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCashChildJournal_in: TdsdOpenForm [9]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1050#1072#1089#1089#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072', '#1087#1088#1080#1093#1086#1076
+      FormName = 'TCashChildJournalForm'
+      FormNameParam.Value = 'TCashChildJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inKindName'
+          Value = 'zc_Enum_InfoMoney_In'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName_text'
+          Value = #1055#1056#1048#1061#1054#1044
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actCashChildJournal_out: TdsdOpenForm [10]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1050#1072#1089#1089#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072', '#1088#1072#1089#1093#1086#1076
+      FormName = 'TCashChildJournalForm'
+      FormNameParam.Value = 'TCashChildJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inKindName'
+          Value = 'zc_Enum_InfoMoney_Out'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName_text'
+          Value = #1056#1040#1057#1061#1054#1044
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actCashSendJournal: TdsdOpenForm [11]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
@@ -196,23 +196,23 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Goods: TdsdOpenForm [12]
-      Category = #1054#1090#1095#1077#1090#1099
+    object actCurrencyJournal: TdsdOpenForm [12]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
-      FormName = 'TReport_GoodsForm'
-      FormNameParam.Value = 'TReport_GoodsForm'
+      Caption = #1050#1091#1088#1089#1099' '#1074#1072#1083#1102#1090' ('#1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072')'
+      FormName = 'TCurrencyJournalForm'
+      FormNameParam.Value = 'TCurrencyJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actServiceJournal: TdsdOpenForm [13]
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+    object actReport_Goods: TdsdOpenForm [13]
+      Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1072#1088#1077#1085#1076#1099
-      FormName = 'TServiceJournalForm'
-      FormNameParam.Value = 'TServiceJournalForm'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -558,8 +558,8 @@ inherited MainForm: TMainForm
       object miServiceItemAddJournal: TMenuItem
         Action = actServiceItemAddJournal
       end
-      object miServiceItemAddJournalChoice: TMenuItem
-        Action = actServiceItemAddJournalChoice
+      object miServiceItemAddUpdate: TMenuItem
+        Action = actServiceItemAddUpdate
       end
       object N5: TMenuItem
         Caption = '-'

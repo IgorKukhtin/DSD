@@ -560,12 +560,12 @@
 				<Form>ServiceItemAddJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsMerlin\Document\ServiceItemJournalChoice.pas">
-				<Form>ServiceItemJournalChoiceForm</Form>
+			<DCCReference Include="..\..\FormsMerlin\Document\ServiceItemJournal_history.pas">
+				<Form>ServiceItemJournal_historyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsMerlin\Document\ServiceItemAddJournalChoice.pas">
-				<Form>ServiceItemAddJournalChoiceForm</Form>
+			<DCCReference Include="..\..\FormsMerlin\Document\ServiceItemAddUpdate.pas">
+				<Form>ServiceItemAddUpdateForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsMerlin\Document\ServiceItemAddJournal_history.pas">

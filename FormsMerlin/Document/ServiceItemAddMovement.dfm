@@ -64,7 +64,6 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.IncSearch = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
@@ -1297,7 +1296,8 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     object actOpenServiceItemAdd_history: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'actOpenServiceItemAdd_history'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
       ImageIndex = 28
       FormName = 'TServiceItemAddJournal_historyForm'
       FormNameParam.Value = 'TServiceItemAddJournal_historyForm'
@@ -1543,7 +1543,6 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
-    SearchAsFilter = False
     PropertiesCellList = <>
     Left = 347
     Top = 337

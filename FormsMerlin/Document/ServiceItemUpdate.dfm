@@ -490,11 +490,11 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
     object actOpenFormServiceItemHistory: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'> ('#1076#1086#1082#1091#1084#1077#1085#1090#1099')'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'> ('#1076#1086#1082#1091#1084#1077#1085#1090#1099')'
-      ImageIndex = 29
-      FormName = 'TServiceItemJournalChoiceForm'
-      FormNameParam.Value = 'TServiceItemJournalChoiceForm'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
+      ImageIndex = 28
+      FormName = 'TServiceItemJournal_historyForm'
+      FormNameParam.Value = 'TServiceItemJournal_historyForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -555,7 +555,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
-      ImageIndex = 28
+      ImageIndex = 26
       FormName = 'TServiceItemMovementForm'
       FormNameParam.Value = 'TServiceItemMovementForm'
       FormNameParam.DataType = ftString
