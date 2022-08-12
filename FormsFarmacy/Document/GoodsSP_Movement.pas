@@ -88,6 +88,8 @@ type
     actSetGoods: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
+    actGoodsMainGrid: TOpenChoiceForm;
+    NameSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

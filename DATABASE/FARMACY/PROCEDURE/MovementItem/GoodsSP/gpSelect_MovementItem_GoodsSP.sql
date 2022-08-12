@@ -40,6 +40,7 @@ RETURNS TABLE (Id            Integer
              , BrandSPName   TVarChar
              , KindOutSPId   Integer 
              , KindOutSPName TVarChar
+             , NameSP        TVarChar
              , isErased      Boolean
              )
 AS
@@ -100,6 +101,8 @@ BEGIN
 
              , COALESCE (Object_KindOutSP.Id ,0)          ::Integer  AS KindOutSPId
              , COALESCE (Object_KindOutSP.ValueData,'')   ::TVarChar AS KindOutSPName
+
+             , MIString_Name.ValueData                               AS NameSP
 
              , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
 
@@ -180,6 +183,10 @@ BEGIN
                                           ON MIString_NumeratorUnitSP.MovementItemId = MovementItem.Id
                                          AND MIString_NumeratorUnitSP.DescId = zc_MIString_NumeratorUnitSP()
 
+             LEFT JOIN MovementItemString AS MIString_Name
+                                          ON MIString_Name.MovementItemId = MovementItem.Id
+                                         AND MIString_Name.DescId = zc_MIString_Name()
+
              LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                               ON MI_IntenalSP.MovementItemId = MovementItem.Id
                                              AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
@@ -237,6 +244,8 @@ BEGIN
 
              , COALESCE(Object_KindOutSP.Id ,0)           ::Integer  AS KindOutSPId
              , COALESCE(Object_KindOutSP.ValueData,'')    ::TVarChar AS KindOutSPName
+             
+             , MIString_Name.ValueData                               AS NameSP
 
              , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
 
@@ -312,6 +321,10 @@ BEGIN
                                           ON MIString_NumeratorUnitSP.MovementItemId = MovementItem.Id
                                          AND MIString_NumeratorUnitSP.DescId = zc_MIString_NumeratorUnitSP()
 
+             LEFT JOIN MovementItemString AS MIString_Name
+                                          ON MIString_Name.MovementItemId = MovementItem.Id
+                                         AND MIString_Name.DescId = zc_MIString_Name()
+
             LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                              ON MI_IntenalSP.MovementItemId = MovementItem.Id
                                             AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
@@ -346,4 +359,4 @@ $BODY$
 */
 
 --реяр
--- SELECT * FROM gpSelect_MovementItem_GoodsSP (inMovementId:= 0, inShowAll:= true, inIsErased:= FALSE, inSession:= '3')
+-- SELECT * FROM gpSelect_MovementItem_GoodsSP (inMovementId:= 28396300, inShowAll:= False, inIsErased:= FALSE, inSession:= '3')
