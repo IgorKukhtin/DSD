@@ -1,14 +1,16 @@
 -- Function: gpInsertUpdate_Object_TradeMark(Integer, Integer, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_TradeMark (Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_TradeMark (Integer, Integer, TVarChar, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_TradeMark (Integer, Integer, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_TradeMark (Integer, Integer, TVarChar, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_TradeMark(
  INOUT ioId                  Integer,       -- Ключ объекта <маршрут>
     IN inCode                Integer,       -- свойство <Код маршрута>
     IN inName                TVarChar,      -- свойство <Наименование маршрута>
-    IN inColorReport         TFloat  ,     -- Цвет текста в "отчет по отгрузке"
-    IN inColorBgReport       TFloat  ,     -- Цвет фона в "отчет по отгрузке"
+    IN inColorReport         TFloat  ,      -- Цвет текста в "отчет по отгрузке"
+    IN inColorBgReport       TFloat  ,      -- Цвет фона в "отчет по отгрузке" 
+    IN inRetailId            Integer ,      --
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
@@ -53,6 +55,9 @@ BEGIN
           PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_TradeMark_ColorBgReport(), ioId, Null);
    END IF;
 
+   -- сохранили связь с <торг сеть>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_TradeMark_Retail(), ioId, inRetailId);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -67,6 +72,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.08.22         * zc_ObjectLink_TradeMark_Retail
  05.12.16         * 
  06.09.13                          *
 
