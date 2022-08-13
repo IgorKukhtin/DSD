@@ -36,8 +36,8 @@ BEGIN
          LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
                                           ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
                                          AND MILinkObject_CommentInfoMoney.DescId         = zc_MILinkObject_CommentInfoMoney()   
-     WHERE MovementItem.DescId = zc_MI_Master()
-       AND MovementItem.Id = inId
+     WHERE MovementItem.DescId     = zc_MI_Master()
+       AND MovementItem.Id         = inId
        AND MovementItem.MovementId = inMovementId
          ;
 END;

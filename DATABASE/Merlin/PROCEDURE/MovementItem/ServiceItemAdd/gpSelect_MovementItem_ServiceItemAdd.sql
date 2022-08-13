@@ -247,20 +247,21 @@ BEGIN
                                                                AND MILinkObject_CommentInfoMoney.DescId         = zc_MILinkObject_CommentInfoMoney()
                           )
 
-              --предыдущее значение дополнения  для всех отделов
+               -- предыдущее значение дополнения  для всех отделов
              , tmp_last AS (SELECT tmp.*
-                            FROM (SELECT tmp_View.*
-                                       , ROW_NUMBER() OVER (PARTITION BY tmp_View.UnitId, tmp_View.InfoMoneyId ORDER BY tmp_View.DateEnd DESC) AS ord
+                            FROM (SELECT tmpMI.Id AS Id_master
+                                       , tmp_View.*
+                                       , ROW_NUMBER() OVER (PARTITION BY tmp_View.UnitId, tmp_View.InfoMoneyId ORDER BY tmp_View.OperDate DESC) AS ord
                                   FROM tmpMI
-                                      INNER JOIN Movement_ServiceItemAdd_View AS tmp_View
-                                                                              ON tmp_View.DateEnd <= vbOperDate
-                                                                             AND tmp_View.isErased = FALSE
-                                                                             AND tmp_View.Id <> inMovementId
-                                                                             AND tmp_View.UnitId = tmpMI.UnitId
-                                                                             AND tmp_View.InfoMoneyId = tmpMI.InfoMoneyId
+                                       INNER JOIN Movement_ServiceItemAdd_View AS tmp_View
+                                                                               ON tmp_View.UnitId      = tmpMI.UnitId
+                                                                              AND tmp_View.InfoMoneyId = tmpMI.InfoMoneyId
+                                                                              AND tmp_View.isErased    = FALSE
+                                                                              AND tmp_View.Id          <> inMovementId
+                                                                              AND tmpMI.DateStart BETWEEN tmp_View.DateStart AND tmp_View.DateEnd
                                   ) AS tmp
                             WHERE tmp.Ord = 1
-                            )
+                           )
 
              , tmpMI_Main AS (SELECT MovementItem.UnitId
                                    , MovementItem.InfoMoneyId
@@ -328,8 +329,7 @@ BEGIN
                                     AND tmpMI_Main.DateStart <= tmpMI.DateStart
                                     AND tmpMI_Main.DateEnd   >= tmpMI.DateStart
 
-                LEFT JOIN tmp_last ON tmp_last.UnitId = tmpMI.UnitId
-                                  AND tmp_last.InfoMoneyId = tmpMI.InfoMoneyId
+                LEFT JOIN tmp_last ON tmp_last.Id_master = tmpMI.Id
            ;
 
      END IF;

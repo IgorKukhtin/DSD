@@ -8,7 +8,7 @@ CREATE OR REPLACE VIEW Movement_ServiceItemAdd_View AS
            , Movement.DescId
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
-		   , Movement.StatusId
+           , Movement.StatusId
            , Object_Status.ObjectCode             AS StatusCode
            , Object_Status.ValueData              AS StatusName
            , Object_Insert.ValueData              AS InsertName
@@ -33,7 +33,7 @@ CREATE OR REPLACE VIEW Movement_ServiceItemAdd_View AS
 
            , MovementItem.Amount 
   
-           , COALESCE (MIDate_DateStart.ValueData, zc_DateStart()) AS DateStart 
+           , COALESCE (MIDate_DateStart.ValueData, zc_DateStart()) AS DateStart
            , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd())     AS DateEnd
            , COALESCE (MovementString_Comment.ValueData,'') ::TVarChar AS Comment
        FROM Movement
