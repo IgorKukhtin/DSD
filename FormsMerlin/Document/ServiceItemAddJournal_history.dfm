@@ -24,7 +24,6 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
     Height = 32
     Align = alTop
     TabOrder = 1
-    ExplicitLeft = 32
     object deStart: TcxDateEdit
       Left = 821
       Top = -2
@@ -506,33 +505,12 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
           ItemName = 'bbStatic'
         end
         item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
           Visible = True
           ItemName = 'bbShowErased'
         end
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
         end
         item
           Visible = True
@@ -588,6 +566,7 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = actGridToExcel
