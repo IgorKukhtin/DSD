@@ -40,7 +40,7 @@ BEGIN
                                  , MovementItem.Amount
                                  , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
                                  , MovementItem.Id AS MovementItemId
-                                 , ROW_Number () OVER (ORDER BY Movement.OperDate Asc) AS Ord
+                                 , ROW_NUMBER() OVER (ORDER BY Movement.OperDate ASC) AS Ord
                            FROM Movement
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.DescId     = zc_MI_Master()

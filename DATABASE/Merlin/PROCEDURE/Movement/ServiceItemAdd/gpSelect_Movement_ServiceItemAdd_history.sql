@@ -35,9 +35,9 @@ BEGIN
      RETURN QUERY
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                          UNION
-                          SELECT zc_Enum_Status_UnComplete() AS StatusId
-                         --UNION
-                         -- SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                          SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inIsErased = TRUE
+                         UNION
+                          SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
        SELECT
              Movement.MovementId AS Id

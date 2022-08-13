@@ -1,5 +1,6 @@
 -- Function: gpSelect_MovementItem_ServiceItem_onDate()
 
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem (Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Integer, Integer, TVarChar);
