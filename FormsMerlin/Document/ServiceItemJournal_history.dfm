@@ -1219,7 +1219,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ServiceItemChoice'
+    StoredProcName = 'gpSelect_Movement_ServiceItem_history'
     DataSet = ClientDataSet
     DataSets = <
       item

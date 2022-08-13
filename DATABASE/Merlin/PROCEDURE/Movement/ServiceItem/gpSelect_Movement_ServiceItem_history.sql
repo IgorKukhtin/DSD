@@ -1,8 +1,9 @@
--- Function: gpSelect_Movement_ServiceItemChoice()
+-- Function: gpSelect_Movement_ServiceItem_history()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ServiceItemChoice (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ServiceItem_history (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_ServiceItemChoice(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_ServiceItem_history(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inIsAll             Boolean ,
@@ -139,4 +140,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ServiceItemChoice (inStartDate:= '01.01.2021', inEndDate:= '01.02.2023', inIsAll:= TRUE, inUnitId := 52753 , inInfoMoneyId := 76878 , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ServiceItem_history (inStartDate:= '01.01.2021', inEndDate:= '01.02.2023', inIsAll:= TRUE, inUnitId := 52753 , inInfoMoneyId := 76878 , inSession:= zfCalc_UserAdmin())

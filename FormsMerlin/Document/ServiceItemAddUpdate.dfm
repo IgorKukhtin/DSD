@@ -1338,7 +1338,7 @@ object ServiceItemAddUpdateForm: TServiceItemAddUpdateForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ServiceItemAddChoice'
+    StoredProcName = 'gpSelect_Movement_ServiceItemAdd_update'
     DataSet = ClientDataSet
     DataSets = <
       item

@@ -4,7 +4,7 @@ DROP VIEW IF EXISTS Movement_ServiceItemAdd_View;
 CREATE OR REPLACE VIEW Movement_ServiceItemAdd_View AS
 
        SELECT
-             Movement.Id
+             Movement.Id AS MovementId
            , Movement.DescId
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate

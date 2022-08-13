@@ -32,8 +32,8 @@ RETURNS TABLE (Id Integer
              , MonthNameEnd_before TDateTime
              , Amount_before TFloat
 
-             , isErased Boolean  
-             
+             , isErased Boolean
+
               )
 AS
 $BODY$
@@ -71,7 +71,7 @@ BEGIN
 
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                               AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
 
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
                                                                 ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
@@ -82,25 +82,29 @@ BEGIN
                            FROM Object AS Object_Unit
                            WHERE Object_Unit.DescId = zc_Object_Unit()
                              AND Object_Unit.isErased = FALSE
-                           )
-
+                          )
+               -- Базовые условия - на дату vbOperDate
              , tmpMI_Main AS (SELECT *
                               FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate := vbOperDate, inUnitId:= 0, inInfoMoneyId:= inInfoMoneyId, inSession := inSession) AS gpSelect
                               WHERE gpSelect.Amount > 0
-                             ) 
-              --предыдущее значение дополнения  для всех отделов
+                             )
+               -- поиск предыдущего дополнения
              , tmp_last AS (SELECT tmp.*
-                            FROM (SELECT tmp_View.*
-                                       , ROW_NUMBER() OVER (PARTITION BY tmp_View.UnitId, tmp_View.InfoMoneyId ORDER BY tmp_View.DateEnd DESC) AS ord
-                                  FROM Movement_ServiceItemAdd_View AS tmp_View
-                                  WHERE tmp_View.DateEnd <= vbOperDate
-                                    AND tmp_View.isErased = FALSE
-                                    AND tmp_View.Id <> inMovementId
+                            FROM (SELECT tmpMI.Id AS MovementItemId_find
+                                       , tmp_View.*
+                                       , ROW_NUMBER() OVER (PARTITION BY tmp_View.UnitId, tmp_View.InfoMoneyId ORDER BY tmp_View.OperDate DESC, tmp_View.MovementId DESC) AS ord
+                                  FROM tmpMI
+                                       INNER JOIN Movement_ServiceItemAdd_View AS tmp_View
+                                                                               ON tmp_View.UnitId      = tmpMI.UnitId
+                                                                              AND tmp_View.InfoMoneyId = tmpMI.InfoMoneyId
+                                                                              AND tmp_View.isErased    = FALSE
+                                                                              AND tmpMI.DateStart BETWEEN tmp_View.DateStart AND tmp_View.DateEnd
+                                                                              AND tmp_View.OperDate    < vbOperDate
                                   ) AS tmp
                             WHERE tmp.Ord = 1
-                            )
+                           )
 
-           -- результат
+           -- Результат
            SELECT 0                             AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
@@ -133,11 +137,12 @@ BEGIN
                 , tmpMI_Main.Price           :: TFloat    AS Price_Main
                 , tmpMI_Main.Area            :: TFloat    AS Area_Main
 
-                , tmp_last.DateStart         :: TDateTime AS MonthNameStart_before
-                , tmp_last.DateEnd           :: TDateTime AS MonthNameEnd_before
-                , tmp_last.Amount            :: TFloat    AS Amount_before
+                , NULL            :: TDateTime AS MonthNameStart_before
+                , NULL            :: TDateTime AS MonthNameEnd_before
+                , NULL            :: TFloat    AS Amount_before
 
-                , FALSE                      :: Boolean   AS isErased
+                , FALSE           :: Boolean   AS isErased
+
            FROM tmpUnit
                 INNER JOIN tmpMI_Main ON tmpMI_Main.UnitId = tmpUnit.UnitId
                 --                    AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId
@@ -151,12 +156,10 @@ BEGIN
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
                 LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = COALESCE(tmpMI_Main.InfoMoneyId,76878)
 
-                LEFT JOIN tmp_last ON tmp_last.UnitId = tmpUnit.UnitId
-                                  AND tmp_last.InfoMoneyId = COALESCE(tmpMI_Main.InfoMoneyId,76878)
            WHERE tmpMI.UnitId IS NULL
 
-     UNION ALL
-           -- Показываем только строки документа
+         UNION ALL
+           -- текушие элементы документа
            SELECT tmpMI.Id                      AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
@@ -203,20 +206,20 @@ BEGIN
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
 
+                -- Базовые условия - на дату
                 LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate   := tmpMI.DateStart
                                                                   , inUnitId     := tmpMI.UnitId
-                                                                  , inInfoMoneyId:= inInfoMoneyId
+                                                                  , inInfoMoneyId:= tmpMI.InfoMoneyId
                                                                   , inSession    := inSession
                                                                    ) AS tmpMI_Main
-                                                                     ON tmpMI_Main.UnitId = tmpMI.UnitId
-                                                                    AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId
+                                                                     ON tmpMI.DateStart BETWEEN tmpMI_Main.DateStart AND tmpMI_Main.DateEnd
+                                                                    AND tmpMI_Main.Amount > 0
 
-                LEFT JOIN tmp_last ON tmp_last.UnitId = tmpMI.UnitId
-                                  AND tmp_last.InfoMoneyId = tmpMI.InfoMoneyId
+                LEFT JOIN tmp_last ON tmp_last.MovementItemId_find = tmpMI.Id
           ;
 
      ELSE
-         -- Результат такой - Показываем только строки документа
+         -- Результат - только текущие элементы документа
          RETURN QUERY
           WITH tmpMI AS (SELECT MovementItem.Id
                               , MovementItem.ObjectId                  AS UnitId
@@ -226,59 +229,43 @@ BEGIN
                               , COALESCE (MIDate_DateStart.ValueData, vbOperDate) AS DateStart
                               , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) AS DateEnd
                               , MovementItem.isErased
-                          FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                               JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                AND MovementItem.DescId     = zc_MI_Master()
-                                                AND MovementItem.isErased   = tmpIsErased.isErased
+                         FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                              JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                               AND MovementItem.DescId     = zc_MI_Master()
+                                               AND MovementItem.isErased   = tmpIsErased.isErased
 
-                               LEFT JOIN MovementItemDate AS MIDate_DateStart
-                                                          ON MIDate_DateStart.MovementItemId = MovementItem.Id
-                                                         AND MIDate_DateStart.DescId = zc_MIDate_DateStart()
-                               LEFT JOIN MovementItemDate AS MIDate_DateEnd
-                                                          ON MIDate_DateEnd.MovementItemId = MovementItem.Id
-                                                         AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()
+                              LEFT JOIN MovementItemDate AS MIDate_DateStart
+                                                         ON MIDate_DateStart.MovementItemId = MovementItem.Id
+                                                        AND MIDate_DateStart.DescId = zc_MIDate_DateStart()
+                              LEFT JOIN MovementItemDate AS MIDate_DateEnd
+                                                         ON MIDate_DateEnd.MovementItemId = MovementItem.Id
+                                                        AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()
 
-                               LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                                                ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
 
-                               LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
-                                                                ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_CommentInfoMoney.DescId         = zc_MILinkObject_CommentInfoMoney()
-                          )
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
+                                                               ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_CommentInfoMoney.DescId         = zc_MILinkObject_CommentInfoMoney()
+                        )
 
-               -- предыдущее значение дополнения  для всех отделов
+               -- поиск предыдущего дополнения
              , tmp_last AS (SELECT tmp.*
-                            FROM (SELECT tmpMI.Id AS Id_master
+                            FROM (SELECT tmpMI.Id AS MovementItemId_find
                                        , tmp_View.*
-                                       , ROW_NUMBER() OVER (PARTITION BY tmp_View.UnitId, tmp_View.InfoMoneyId ORDER BY tmp_View.OperDate DESC) AS ord
+                                       , ROW_NUMBER() OVER (PARTITION BY tmp_View.UnitId, tmp_View.InfoMoneyId ORDER BY tmp_View.OperDate DESC, tmp_View.MovementId DESC) AS ord
                                   FROM tmpMI
                                        INNER JOIN Movement_ServiceItemAdd_View AS tmp_View
                                                                                ON tmp_View.UnitId      = tmpMI.UnitId
                                                                               AND tmp_View.InfoMoneyId = tmpMI.InfoMoneyId
                                                                               AND tmp_View.isErased    = FALSE
-                                                                              AND tmp_View.Id          <> inMovementId
                                                                               AND tmpMI.DateStart BETWEEN tmp_View.DateStart AND tmp_View.DateEnd
+                                                                              AND tmp_View.OperDate    < vbOperDate
                                   ) AS tmp
                             WHERE tmp.Ord = 1
                            )
-
-             , tmpMI_Main AS (SELECT MovementItem.UnitId
-                                   , MovementItem.InfoMoneyId
-                                   , MovementItem.CommentInfoMoneyId
-                                   , MovementItem.Amount 
-                                   , MovementItem.Price
-                                   , MovementItem.Area
-                                   , MovementItem.DateStart
-                                   , MovementItem.DateEnd
-                               FROM Movement
-                                    INNER JOIN gpSelect_MovementItem_ServiceItem(Movement.Id, FALSE, FALSE, inSession) AS MovementItem
-                                                                                                                       ON MovementItem.MovementId = Movement.Id
-                               WHERE Movement.DescId = zc_Movement_ServiceItem() 
-                                 AND Movement.StatusId = zc_Enum_Status_Complete()
-                               )
-
-           --Результат
+           -- Результат
            SELECT tmpMI.Id                      AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
@@ -324,12 +311,16 @@ BEGIN
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
 
-                LEFT JOIN tmpMI_Main ON tmpMI_Main.UnitId = tmpMI.UnitId
-                                    AND tmpMI_Main.InfoMoneyId = tmpMI.InfoMoneyId
-                                    AND tmpMI_Main.DateStart <= tmpMI.DateStart
-                                    AND tmpMI_Main.DateEnd   >= tmpMI.DateStart
+                -- Базовые условия - на дату
+                LEFT JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate   := tmpMI.DateStart
+                                                                  , inUnitId     := tmpMI.UnitId
+                                                                  , inInfoMoneyId:= tmpMI.InfoMoneyId
+                                                                  , inSession    := inSession
+                                                                   ) AS tmpMI_Main
+                                                                     ON tmpMI.DateStart BETWEEN tmpMI_Main.DateStart AND tmpMI_Main.DateEnd
+                                                                    AND tmpMI_Main.Amount > 0
 
-                LEFT JOIN tmp_last ON tmp_last.Id_master = tmpMI.Id
+                LEFT JOIN tmp_last ON tmp_last.MovementItemId_find = tmpMI.Id
            ;
 
      END IF;

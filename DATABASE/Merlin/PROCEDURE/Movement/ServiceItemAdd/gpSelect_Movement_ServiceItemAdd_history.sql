@@ -40,7 +40,7 @@ BEGIN
                          -- SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
        SELECT
-             Movement.Id
+             Movement.MovementId AS Id
            , Movement.InvNumber
            , Movement.OperDate
            , Movement.StatusCode
