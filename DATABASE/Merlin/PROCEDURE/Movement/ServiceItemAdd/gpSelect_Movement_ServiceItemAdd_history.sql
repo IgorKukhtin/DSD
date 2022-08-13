@@ -18,10 +18,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
              , DateStart TDateTime, DateEnd TDateTime  
-             , NumYearStart Integer            --год старт
-             , NumYearEnd  Integer            --год енд
-             , MonthNameStart  TVarChar
-             , MonthNameEnd TVarChar
+             , MonthNameStart  TDateTime
+             , MonthNameEnd    TDateTime
              , Amount TFloat 
              , Comment TVarChar
               )
@@ -65,22 +63,19 @@ BEGIN
            , Movement.CommentInfoMoneyCode
            , Movement.CommentInfoMoneyName
  
-           , Movement.DateStart            :: TDateTime
-           , Movement.DateEnd              :: TDateTime   
-           , EXTRACT (Year FROM Movement.DateStart)  ::Integer  AS NumYearStart            --год старт
-           , EXTRACT (Year FROM Movement.DateEnd)    ::Integer  AS NumYearEnd              --год енд
-           , zfCalc_MonthName (Movement.DateStart)   ::TVarChar AS MonthNameStart
-           , zfCalc_MonthName (Movement.DateEnd)     ::TVarChar AS MonthNameEnd   
+           , Movement.DateStart   :: TDateTime
+           , Movement.DateEnd     :: TDateTime   
+           , Movement.DateStart   :: TDateTime    AS MonthNameStart
+           , Movement.DateEnd     :: TDateTime    AS MonthNameEnd   
                 
            , Movement.Amount               :: TFloat   
            , Movement.Comment
        FROM Movement_ServiceItemAdd_View AS Movement
             INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-       WHERE Movement.DateStart <= inStartDate
-         AND Movement.DateEnd   >= inStartDate
-         AND Movement.isErased = False
-         AND Movement.UnitId = inUnitId
+       WHERE Movement.UnitId = inUnitId
          AND Movement.InfoMoneyId = inInfoMoneyId
+         AND Movement.isErased = FALSE
+       --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          
        ;
 
