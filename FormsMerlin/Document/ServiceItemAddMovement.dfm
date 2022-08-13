@@ -1824,12 +1824,8 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     Top = 16
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_ServiceItem'
-    DataSet = MasterCDS
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end>
+    StoredProcName = 'gpUpdate_Status_ServiceItemAdd'
+    DataSets = <>
     OutputType = otResult
     Params = <
       item
