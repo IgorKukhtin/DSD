@@ -52,13 +52,13 @@ object TradeMarkForm: TTradeMarkForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Width = 45
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 286
+        Width = 217
       end
       object Text1: TcxGridDBColumn
         Caption = #1062#1074#1077#1090' '#1090#1077#1082#1089#1090#1072
@@ -67,7 +67,7 @@ object TradeMarkForm: TTradeMarkForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1074#1077#1090' '#1090#1077#1082#1089#1090#1072' '#1074' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077'"'
         Options.Editing = False
-        Width = 100
+        Width = 96
       end
       object Text2: TcxGridDBColumn
         Caption = #1062#1074#1077#1090' '#1092#1086#1085#1072
@@ -76,7 +76,7 @@ object TradeMarkForm: TTradeMarkForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1074#1077#1090' '#1092#1086#1085#1072' '#1074' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077'"'
         Options.Editing = False
-        Width = 100
+        Width = 96
       end
       object ColorBgReport: TcxGridDBColumn
         DataBinding.FieldName = 'ColorBgReport'
@@ -89,6 +89,14 @@ object TradeMarkForm: TTradeMarkForm
         Visible = False
         VisibleForCustomization = False
         Width = 20
+      end
+      object RetailName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+        DataBinding.FieldName = 'RetailName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 84
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -470,6 +478,7 @@ object TradeMarkForm: TTradeMarkForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Text1
@@ -484,6 +493,7 @@ object TradeMarkForm: TTradeMarkForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 160
     Top = 216

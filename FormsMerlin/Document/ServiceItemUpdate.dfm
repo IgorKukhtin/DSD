@@ -140,6 +140,28 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             Options.Editing = False
             Width = 70
           end
+          object MonthStart_before: TcxGridDBColumn
+            Caption = '*'#1052#1077#1089#1103#1094' '#1089
+            DataBinding.FieldName = 'DateStart_before'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm-yy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object MonthEnd_before: TcxGridDBColumn
+            Caption = '*'#1052#1077#1089#1103#1094' '#1087#1086
+            DataBinding.FieldName = 'DateEnd_before'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm-yy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
           object Area_before: TcxGridDBColumn
             Caption = '*'#1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
             DataBinding.FieldName = 'Area_before'
@@ -197,6 +219,28 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
             Width = 70
           end
+          object MonthStart: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1089
+            DataBinding.FieldName = 'DateStart'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm-yy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object MonthDate: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1087#1086
+            DataBinding.FieldName = 'DateEnd'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm-yy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
           object Area: TcxGridDBColumn
             Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
             DataBinding.FieldName = 'Area'
@@ -245,6 +289,28 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
           object DateEnd_after: TcxGridDBColumn
             Caption = '***'#1044#1072#1090#1072' '#1087#1086
             DataBinding.FieldName = 'DateEnd_after'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object MonthStart_after: TcxGridDBColumn
+            Caption = '***'#1052#1077#1089#1103#1094' '#1089
+            DataBinding.FieldName = 'DateStart_after'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm-yy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object MonthEnd_after: TcxGridDBColumn
+            Caption = '***'#1052#1077#1089#1103#1094' '#1087#1086
+            DataBinding.FieldName = 'DateEnd_after'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm-yy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
@@ -550,42 +616,6 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
         end>
       isShowModal = False
     end
-    object actOpenFormServiceItem: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
-      ImageIndex = 26
-      FormName = 'TServiceItemMovementForm'
-      FormNameParam.Value = 'TServiceItemMovementForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Id_Value'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
     object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
@@ -601,14 +631,14 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
-    object actInsertUAction: TdsdInsertUpdateAction
+    object actInsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 0
-      FormName = 'TServiceItemEditMIForm'
-      FormNameParam.Value = 'TServiceItemEditMIForm'
+      FormName = 'TServiceItemMovementForm'
+      FormNameParam.Value = 'TServiceItemMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -619,39 +649,18 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MovementId'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitId'
+          Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'UnitId'
+          ComponentItem = 'MovementId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InfoMoneyId'
+          Name = 'inOperDate'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StartDate'
-          Value = Null
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = Null
-          Component = deStart
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -660,7 +669,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
       DataSource = MasterDS
       IdFieldName = 'Id'
     end
-    object actUpdateAction: TdsdInsertUpdateAction
+    object actUpdateAction_old: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
@@ -681,7 +690,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
         end
         item
           Name = 'MovementId'
-          Value = '0'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId'
           ParamType = ptInput
@@ -697,7 +706,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
         end
         item
           Name = 'InfoMoneyId'
-          Value = False
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
           ParamType = ptInput
@@ -717,6 +726,47 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'DateEnd'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      ActionType = acUpdate
+      DataSource = MasterDS
+      IdFieldName = 'Id'
+    end
+    object actUpdateAction: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077
+      ImageIndex = 1
+      FormName = 'TServiceItemMovementForm'
+      FormNameParam.Value = 'TServiceItemMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -759,7 +809,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertUAction
+          Action = actInsertAction
         end
         item
           Action = actRefresh
@@ -848,10 +898,6 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormClient'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -886,8 +932,11 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
       Category = 0
     end
     object bbOpenFormClient: TdxBarButton
-      Action = actOpenFormServiceItem
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
       Category = 0
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
+      Visible = ivAlways
+      ImageIndex = 26
     end
     object bbOpenFormPartner: TdxBarButton
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'

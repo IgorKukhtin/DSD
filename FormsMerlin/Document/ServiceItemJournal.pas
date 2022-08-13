@@ -104,6 +104,8 @@ type
     actCheckDesc: TdsdExecStoredProc;
     actCheckDescAdd: TdsdExecStoredProc;
     mactUpdateAdd: TMultiAction;
+    actOpenServiceItem_history: TdsdOpenForm;
+    bbOpenServiceItem_history: TdxBarButton;
   private
   public
   end;

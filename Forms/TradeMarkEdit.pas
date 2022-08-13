@@ -43,6 +43,9 @@ type
     edColorBgReport: TcxButtonEdit;
     ColorReportGuides: TdsdGuides;
     ColorBgReportGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    ceRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
   private
     { Private declarations }
   public

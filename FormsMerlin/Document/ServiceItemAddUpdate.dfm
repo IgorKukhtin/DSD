@@ -574,6 +574,14 @@ object ServiceItemAddUpdateForm: TServiceItemAddUpdateForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenServiceItemAdd_history'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -654,6 +662,10 @@ object ServiceItemAddUpdateForm: TServiceItemAddUpdateForm
     end
     object bbUpdateAdd: TdxBarButton
       Action = mactUpdateAdd
+      Category = 0
+    end
+    object bbOpenServiceItemAdd_history: TdxBarButton
+      Action = actOpenServiceItemAdd_history
       Category = 0
     end
   end
@@ -1272,6 +1284,57 @@ object ServiceItemAddUpdateForm: TServiceItemAddUpdateForm
           StoredProc = spCheckDesc
         end>
       Caption = 'actCheckDesc'
+    end
+    object actOpenServiceItemAdd_history: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
+      ImageIndex = 28
+      FormName = 'TServiceItemAddJournal_historyForm'
+      FormNameParam.Value = 'TServiceItemAddJournal_historyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'DateStart'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spSelect: TdsdStoredProc
