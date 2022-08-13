@@ -24,7 +24,6 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
     Height = 55
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 698
     object deStart: TcxDateEdit
       Left = 118
       Top = 5
@@ -94,7 +93,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
       Width = 333
     end
     object cbAllMonth: TcxCheckBox
-      Left = 209
+      Left = 211
       Top = 30
       Caption = #1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
       Enabled = False
@@ -112,7 +111,6 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 698
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
