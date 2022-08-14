@@ -1117,6 +1117,14 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_ServiceItem'
+          Component = FormParams
+          ComponentItem = 'inMovementDescCode'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1504,6 +1512,13 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
         Value = Null
         Component = cbAllMonth
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDescCode'
+        Value = 'zc_Movement_ServiceItem'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

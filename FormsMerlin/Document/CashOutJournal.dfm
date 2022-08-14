@@ -26,7 +26,6 @@ object CashOutJournalForm: TCashOutJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 869
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -90,7 +89,6 @@ object CashOutJournalForm: TCashOutJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 869
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1147,6 +1145,7 @@ object CashOutJournalForm: TCashOutJournalForm
       Caption = 'actUpdateCommentInfoMoney'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 24
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object actCompleteList: TMultiAction
@@ -1365,6 +1364,15 @@ object CashOutJournalForm: TCashOutJournalForm
           Value = Null
           Component = GuidesCash
           ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_Cash'
+          Component = FormParams
+          ComponentItem = 'inMovementDescCode'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1820,6 +1828,13 @@ object CashOutJournalForm: TCashOutJournalForm
       item
         Name = 'ImportSettingId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDescCode'
+        Value = 'zc_Movement_Cash'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 400

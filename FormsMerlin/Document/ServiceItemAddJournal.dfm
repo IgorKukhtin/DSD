@@ -15,6 +15,7 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -1028,6 +1029,14 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_ServiceItemAdd'
+          Component = FormParams
+          ComponentItem = 'inMovementDescCode'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1354,6 +1363,13 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
       item
         Name = 'Key'
         Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDescCode'
+        Value = 'zc_Movement_ServiceItemAdd'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

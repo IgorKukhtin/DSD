@@ -29,7 +29,13 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TServiceJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_Service'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actServiceItemJournal: TdsdOpenForm [2]
@@ -40,7 +46,13 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TServiceItemJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_ServiceItem'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actServiceItemUpdate: TdsdOpenForm [3]
@@ -57,6 +69,12 @@ inherited MainForm: TMainForm
           Value = Null
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_ServiceItem'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -68,7 +86,13 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TServiceItemAddJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_ServiceItemAdd'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actServiceItemAddUpdate: TdsdOpenForm [5]
@@ -79,7 +103,13 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TServiceItemAddUpdateForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_ServiceItemAdd'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actCashJournal_in: TdsdOpenForm [6]
@@ -100,6 +130,12 @@ inherited MainForm: TMainForm
         item
           Name = 'inKindName_text'
           Value = #1055#1056#1048#1061#1054#1044
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_Cash'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -123,6 +159,12 @@ inherited MainForm: TMainForm
         item
           Name = 'inKindName_text'
           Value = #1056#1040#1057#1061#1054#1044
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_Cash'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -159,6 +201,12 @@ inherited MainForm: TMainForm
           Value = #1055#1056#1048#1061#1054#1044
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_Cash'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -182,6 +230,12 @@ inherited MainForm: TMainForm
           Value = #1056#1040#1057#1061#1054#1044
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_Cash'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -193,7 +247,13 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TCashSendJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_CashSend'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actCurrencyJournal: TdsdOpenForm [12]
@@ -204,7 +264,13 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TCurrencyJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_Currency'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actReport_Goods: TdsdOpenForm [13]

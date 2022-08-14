@@ -4,6 +4,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   ClientWidth = 814
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 830
   ExplicitHeight = 443
   PixelsPerInch = 96
@@ -222,6 +223,14 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementDescCode'
+          Value = 'zc_Movement_Currency'
+          Component = FormParams
+          ComponentItem = 'inMovementDescCode'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -457,6 +466,19 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
       item
         Name = 'ImportSettingDopId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = 'zc_Movement_Currency'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDescCode'
+        Value = 'zc_Movement_Currency'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 384

@@ -137,6 +137,13 @@ object Movement_PeriodDialogCashForm: TMovement_PeriodDialogCashForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDescCode'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 127
     Top = 158
@@ -174,6 +181,15 @@ object Movement_PeriodDialogCashForm: TMovement_PeriodDialogCashForm
         Value = 42005d
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDescCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementDescCode'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

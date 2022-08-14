@@ -1,13 +1,15 @@
 -- Function: gpGetDate_MovementJournal()
 
 DROP FUNCTION IF EXISTS gpGetDate_MovementJournal (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGetDate_MovementJournal (TDateTime, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGetDate_MovementJournal(
-    IN inStartDate      TDateTime,  --
-    IN inEndDate        TDateTime,  --
-   OUT outStartDate     TDateTime,  -- 
-   OUT outEndDate       TDateTime,  --
-    IN inSession        TVarChar    -- сессия пользователя
+    IN inStartDate        TDateTime,  --
+    IN inEndDate          TDateTime,  --
+   OUT outStartDate       TDateTime,  -- 
+   OUT outEndDate         TDateTime,  --
+    IN inMovementDescCode TVarChar,
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -34,6 +36,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.08.22         * add inMovementDescCode
  14.05.18         *
 
 */

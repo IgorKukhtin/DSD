@@ -103,6 +103,13 @@ object Movement_PeriodDialogForm: TMovement_PeriodDialogForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDescCode'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 23
     Top = 102
@@ -140,6 +147,15 @@ object Movement_PeriodDialogForm: TMovement_PeriodDialogForm
         Value = 42005d
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDescCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementDescCode'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
