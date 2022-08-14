@@ -128,7 +128,7 @@ BEGIN
                        AND tmpMI_find.UnitId IS NULL
                     )
            --
-           SELECT tmpMI.MovementId             :: Integer   AS MovementId
+           SELECT CASE WHEN tmpMI.MovementId > 0 THEN tmpMI.MovementId ELSE tmp_before.MovementId END :: Integer AS MovementId
                 , tmpMI.OperDate               :: TDateTime AS OperDate
                 , tmpMI.InvNumber              :: TVarChar  AS InvNumber
                 , tmpMI.MovementItemId         :: Integer   AS Id

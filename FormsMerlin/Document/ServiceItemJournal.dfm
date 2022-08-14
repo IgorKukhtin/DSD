@@ -893,6 +893,8 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         item
           Name = 'inMovementId_Value'
           Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end
         item

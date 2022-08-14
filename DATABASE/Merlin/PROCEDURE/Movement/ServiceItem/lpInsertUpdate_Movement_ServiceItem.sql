@@ -6,21 +6,20 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ServiceItem (Integer, TVarChar, 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ServiceItem(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
     IN inInvNumber            TVarChar  , -- Номер документа
-    IN inOperDate             TDateTime , -- Дата документа   
-    IN inUnitId               Integer   , -- отдел 
-    IN inInfoMoneyId          Integer   , -- 
-    IN inCommentInfoMoneyId   Integer   , -- 
-    IN inAmount               TFloat    , -- 
-    IN inPrice                TFloat    , -- 
-    IN inArea                 TFloat    , -- 
+    IN inOperDate             TDateTime , -- Дата документа
+    IN inUnitId               Integer   , -- отдел
+    IN inInfoMoneyId          Integer   , --
+    IN inCommentInfoMoneyId   Integer   , --
+    IN inAmount               TFloat    , --
+    IN inPrice                TFloat    , --
+    IN inArea                 TFloat    , --
     IN inUserId               Integer     -- Пользователь
-)                              
+)
 RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbMovementItemId Integer;
 BEGIN
-
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -33,21 +32,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Статья>.';
      END IF;
 
-     -- проверка для ServiceItemAdd
-     IF (SELECT Movement.DescId FROM Movement WHERE Movement.Id = ioId) = zc_Movement_ServiceItemAdd()
-     THEN   
-         IF NOT EXISTS (SELECT 1 FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate := inDateEnd ::TDateTime
-                                                                              , inUnitId   := inUnitId
-                                                                              , inSession  := inUserId  ::TVarChar
-                                                                               ) AS tmpMI_Main 
-                        WHERE tmpMI_Main.InfoMoneyId = inInfoMoneyId
-                        )
-         THEN   
-              RAISE EXCEPTION 'Ошибка.Не найдено Основное условие аренды для <%> <%>', lfGet_Object_TreeNameFull (inUnitId  ,zc_ObjectLink_Unit_Parent()), lfGet_Object_ValueData (inInfoMoneyId); 
-         END IF;
-     END IF;
-  
-     
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ServiceItem(), inInvNumber, inOperDate, NULL, inUserId);
 
@@ -67,12 +52,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
          END IF;
      END IF;
-     
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);  
+
 
      -- определяем <Элемент документа>
-     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
+     vbMovementItemId:= (SELECT MovementItem.Id FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master());
 
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inUnitId, ioId, inAmount, NULL);
@@ -105,10 +88,11 @@ BEGIN
              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
          END IF;
      END IF;
-     
+
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
-
+     
+     
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
