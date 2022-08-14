@@ -1,6 +1,12 @@
 -- Function: gpSelect_MovementItem_ServiceItem_onDate()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ServiceItem (Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS gpMovementItem_ServiceItem_SetUnErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_ServiceItem_SetErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ServiceItem (Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_ServiceItem (Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Integer, Integer, TVarChar);
@@ -20,12 +26,15 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
 
              , DateStart TDateTime, DateEnd TDateTime
              , Amount TFloat, Price TFloat, Area TFloat
+             , Month_diff Integer
 
              , DateStart_before TDateTime, DateEnd_before TDateTime
              , Amount_before TFloat, Price_before TFloat, Area_before TFloat
+             , Month_diff_before Integer
 
              , DateStart_after TDateTime, DateEnd_after TDateTime
              , Amount_after TFloat, Price_after TFloat, Area_after TFloat
+             , Month_diff_after Integer
 
              , isErased Boolean
               )
@@ -141,18 +150,21 @@ BEGIN
                 , tmpMI.Amount                           :: TFloat AS Amount
                 , COALESCE (MIFloat_Price.ValueData, 0)  :: TFloat AS Price
                 , COALESCE (MIFloat_Area.ValueData, 0)   :: TFloat AS Area
+                , zfCalc_Month_diff (tmp_before.DateEnd + INTERVAL '1 DAY', tmpMI.DateEnd) :: Integer AS Month_diff
 
                 , CASE WHEN tmp_before.MovementItemId IS NULL THEN NULL ELSE COALESCE (tmp_before_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) END :: TDateTime AS DateStart_before
                 , tmp_before.DateEnd                            :: TDateTime AS DateEnd_before
                 , tmp_before.Amount                             :: TFloat    AS Amount_before
                 , COALESCE (MIFloat_Price_before.ValueData, 0)  :: TFloat    AS Price_before
                 , COALESCE (MIFloat_Area_before.ValueData, 0)   :: TFloat    AS Area_before
+                , zfCalc_Month_diff (tmp_before_before.DateEnd + INTERVAL '1 DAY', tmp_before.DateEnd) :: Integer AS Month_diff_before
 
                 , CASE WHEN tmp_after.MovementItemId IS NULL THEN NULL ELSE COALESCE (tmpMI.DateEnd + INTERVAL '1 DAY', NULL) END :: TDateTime AS DateStart_after
                 , tmp_after.DateEnd                                 :: TDateTime AS DateEnd_after
                 , tmp_after.Amount                                  :: TFloat    AS Amount_after
                 , COALESCE (MIFloat_Price_after.ValueData, 0)       :: TFloat    AS Price_after
                 , COALESCE (MIFloat_Area_after.ValueData, 0)        :: TFloat    AS Area_after
+                , zfCalc_Month_diff (tmpMI.DateEnd + INTERVAL '1 DAY', tmp_after.DateEnd) :: Integer AS Month_diff_after
 
                 , FALSE isErased
 

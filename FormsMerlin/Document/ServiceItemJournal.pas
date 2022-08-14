@@ -47,7 +47,7 @@ type
     cxGrid: TcxGrid;
     Status: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
+    DateEnd: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -106,6 +106,7 @@ type
     mactUpdateAdd: TMultiAction;
     actOpenServiceItem_history: TdsdOpenForm;
     bbOpenServiceItem_history: TdxBarButton;
+    Month_diff: TcxGridDBColumn;
   private
   public
   end;

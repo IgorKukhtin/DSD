@@ -47,7 +47,7 @@ type
     cxGrid: TcxGrid;
     Status: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
+    DateEnd: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -111,6 +111,9 @@ type
     GuidesUnit: TdsdGuides;
     GuidesInfoMoney: TdsdGuides;
     cbAllMonth: TcxCheckBox;
+    Month_diff: TcxGridDBColumn;
+    MonthStart: TcxGridDBColumn;
+    MonthEnd: TcxGridDBColumn;
   private
   public
   end;

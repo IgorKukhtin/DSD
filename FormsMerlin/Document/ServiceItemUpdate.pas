@@ -57,6 +57,9 @@ type
     actOpenFormServiceItemHistory: TdsdOpenForm;
     bbOpenFormServiceItemHistory: TdxBarButton;
     actUpdateAction_old: TdsdInsertUpdateAction;
+    Month_diff: TcxGridDBColumn;
+    Month_diff_before: TcxGridDBColumn;
+    Month_diff_after: TcxGridDBColumn;
   private
     { Private declarations }
   public
