@@ -1432,12 +1432,6 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
-        Component = deStart
-      end
-      item
-        Component = deEnd
       end>
     Left = 392
     Top = 144

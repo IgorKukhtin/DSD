@@ -29,14 +29,11 @@ type
   TServiceItemUpdateForm = class(TAncestorReportForm)
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
-    actPrint: TdsdPrintAction;
     FormParams: TdsdFormParams;
     actUpdateAction: TdsdInsertUpdateAction;
     actInsertAction: TdsdInsertUpdateAction;
     bbInsertUAction: TdxBarButton;
     bbUpdateAction: TdxBarButton;
-    macInsertUAction: TMultiAction;
-    macUpdateAction: TMultiAction;
     DateStart_before: TcxGridDBColumn;
     DateEnd_before: TcxGridDBColumn;
     DateStart_after: TcxGridDBColumn;

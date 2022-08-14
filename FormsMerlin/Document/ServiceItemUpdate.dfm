@@ -470,11 +470,11 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
       ExplicitLeft = 78
     end
     inherited deEnd: TcxDateEdit
-      Left = 958
+      Left = 962
       EditValue = 44197d
       Properties.SaveTime = False
       Visible = False
-      ExplicitLeft = 958
+      ExplicitLeft = 962
     end
     inherited cxLabel1: TcxLabel
       Left = 25
@@ -493,78 +493,6 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
     Top = 144
   end
   inherited ActionList: TActionList
-    object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'MovementDescName_order;OperDate;ObjectByName;InvNumber'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitGroupName'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'LocationName'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupId'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isSumm_branch'
-          Value = Null
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
     object actOpenFormServiceItemHistory: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -633,6 +561,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ImageIndex = 0
       FormName = 'TServiceItemMovementForm'
       FormNameParam.Value = 'TServiceItemMovementForm'
       FormNameParam.DataType = ftString
@@ -641,7 +570,6 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
         item
           Name = 'Id'
           Value = Null
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -649,20 +577,18 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDate'
+          Component = deStart
           DataType = ftDateTime
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
+      DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object actUpdateAction: TdsdInsertUpdateAction
@@ -670,6 +596,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077
+      ImageIndex = 1
       FormName = 'TServiceItemMovementForm'
       FormNameParam.Value = 'TServiceItemMovementForm'
       FormNameParam.DataType = ftString
@@ -680,7 +607,6 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -688,50 +614,20 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
           Value = '0'
           Component = MasterCDS
           ComponentItem = 'MovementId'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDate'
+          Component = deStart
           DataType = ftDateTime
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
       DataSource = MasterDS
+      DataSetRefresh = actRefresh
       IdFieldName = 'Id'
-    end
-    object macUpdateAction: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdateAction
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      ImageIndex = 1
-    end
-    object macInsertUAction: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actInsertAction
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      ImageIndex = 0
     end
   end
   inherited MasterDS: TDataSource
@@ -833,11 +729,11 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
         end>
     end
     object bbInsertUAction: TdxBarButton
-      Action = macInsertUAction
+      Action = actInsertAction
       Category = 0
     end
     object bbUpdateAction: TdxBarButton
-      Action = macUpdateAction
+      Action = actUpdateAction
       Category = 0
     end
     object bbOpenFormServiceItemHistory: TdxBarButton
@@ -856,15 +752,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
-        Component = PeriodChoice
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
+        Component = deStart
       end>
     Left = 168
     Top = 144

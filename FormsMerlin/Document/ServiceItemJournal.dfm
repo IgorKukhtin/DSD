@@ -747,12 +747,19 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Category = 0
     end
     object bbInsertAdd: TdxBarButton
-      Action = actInsertAdd
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+      Visible = ivAlways
+      ImageIndex = 0
+      ShortCut = 45
     end
     object bbUpdateAdd: TdxBarButton
-      Action = mactUpdateAdd
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+      Visible = ivAlways
+      ImageIndex = 1
     end
     object bbOpenServiceItem_history: TdxBarButton
       Action = actOpenServiceItem_history
@@ -834,46 +841,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertAdd: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TServiceItemAddMovementForm'
-      FormNameParam.Value = 'TServiceItemAddMovementForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Id_Value'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 44562d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -895,12 +862,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
@@ -945,51 +906,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         end>
       isShowModal = False
     end
-    object actUpdateAdd: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TServiceItemAddMovementForm'
-      FormNameParam.Value = 'TServiceItemAddMovementForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Id_Value'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 44562d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1013,12 +929,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
@@ -1389,26 +1299,11 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       QuestionBeforeExecute = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1048#1089#1090#1086#1088#1080#1080'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
     end
-    object mactUpdateAdd: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actCheckDescAdd
-        end
-        item
-          Action = actUpdateAdd
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      ImageIndex = 1
-    end
     object mactUpdate: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actCheckDesc
         end
         item
           Action = actUpdate
@@ -1416,28 +1311,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ImageIndex = 1
-    end
-    object actCheckDescAdd: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spCheckDescAdd
-      StoredProcList = <
-        item
-          StoredProc = spCheckDescAdd
-        end>
-      Caption = 'actCheckDescAdd'
-    end
-    object actCheckDesc: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spCheckDesc
-      StoredProcList = <
-        item
-          StoredProc = spCheckDesc
-        end>
-      Caption = 'actCheckDesc'
     end
   end
   object spSelect: TdsdStoredProc
@@ -1610,12 +1483,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
-        Component = deStart
-      end
-      item
-        Component = deEnd
       end>
     Left = 392
     Top = 144
@@ -1697,10 +1564,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     PackSize = 1
     Left = 233
     Top = 346
-  end
-  object PeriodChoice1: TPeriodChoice
-    Left = 768
-    Top = 48
   end
   object spInsertUpdatebyHistory: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ServiceItem_byHistory'

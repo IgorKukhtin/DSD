@@ -110,7 +110,6 @@ BEGIN
        SELECT
              tmpMI.MovementId                           AS Id
            , tmpMI.MovementDescId                       AS DescId
--- , (select count(*) from tmpMI_before) :: Integer
            , zfConvert_StringToNumber (tmpMI.InvNumber) AS InvNumber
            , tmpMI.DateEnd                              AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
@@ -221,7 +220,8 @@ BEGIN
                                         ON MIFloat_Area_after.MovementItemId = tmpMI_after.MovementItemId
                                        AND MIFloat_Area_after.DescId = zc_MIFloat_Area()
 
-       WHERE COALESCE (tmpMI_before.DateEnd + INTERVAL '1 DAY', tmpMI.DateEnd) BETWEEN inStartDate AND inEndDate
+       WHERE COALESCE (tmpMI_before.DateEnd_find + INTERVAL '1 DAY', tmpMI.DateEnd) BETWEEN inStartDate AND inEndDate
+       -- WHERE tmpMI.MovementId = 291971
       ;
 
 
