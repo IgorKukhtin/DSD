@@ -364,7 +364,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Width = 80
       end
       object MonthStart_before: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1089'...'
+        Caption = '*'#1052#1077#1089#1103#1094' '#1089'...'
         DataBinding.FieldName = 'DateStart_before'
         PropertiesClassName = 'TcxDateEditProperties'
         Properties.DisplayFormat = 'yy - mmmm'
@@ -376,7 +376,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Width = 70
       end
       object MonthEnd_before: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1076#1086'...'
+        Caption = '*'#1052#1077#1089#1103#1094' '#1076#1086'...'
         DataBinding.FieldName = 'DateEnd_before'
         PropertiesClassName = 'TcxDateEditProperties'
         Properties.DisplayFormat = 'yy - mmmm'
@@ -463,7 +463,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Width = 80
       end
       object MonthStart_after: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1089'...'
+        Caption = '***'#1052#1077#1089#1103#1094' '#1089'...'
         DataBinding.FieldName = 'DateStart_after'
         PropertiesClassName = 'TcxDateEditProperties'
         Properties.DisplayFormat = 'yy - mmmm'
@@ -475,7 +475,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Width = 70
       end
       object MonthEnd_after: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1076#1086'...'
+        Caption = '***'#1052#1077#1089#1103#1094' '#1076#1086'...'
         DataBinding.FieldName = 'DateEnd_after'
         PropertiesClassName = 'TcxDateEditProperties'
         Properties.DisplayFormat = 'yy - mmmm'
