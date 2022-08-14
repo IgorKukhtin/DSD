@@ -130,7 +130,7 @@ BEGIN
                                         ON MIFloat_Area.MovementItemId = Movement.MovementItemId
                                        AND MIFloat_Area.DescId = zc_MIFloat_Area() 
 
-            LEFT JOIN tmpMovement AS tmpStartDate ON tmpStartDate.Ord+1 = Movement.Ord
+            LEFT JOIN tmpMovement AS tmpStartDate ON tmpStartDate.Ord + 1 = Movement.Ord
        ;
 
 

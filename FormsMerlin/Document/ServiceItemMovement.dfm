@@ -237,17 +237,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inArea'
+        Name = 'inPrice'
         Value = Null
-        Component = ceArea
+        Component = cePrice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
+        Name = 'inArea'
         Value = Null
-        Component = cePrice
+        Component = ceArea
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -358,9 +358,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Area'
-        Value = Null
-        Component = ceArea
+        Name = 'Amount'
+        Value = 0.000000000000000000
+        Component = ceAmount
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -372,9 +372,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Amount'
-        Value = 0.000000000000000000
-        Component = ceAmount
+        Name = 'Area'
+        Value = Null
+        Component = ceArea
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
