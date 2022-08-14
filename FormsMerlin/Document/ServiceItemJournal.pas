@@ -107,6 +107,10 @@ type
     actOpenServiceItem_history: TdsdOpenForm;
     bbOpenServiceItem_history: TdxBarButton;
     Month_diff: TcxGridDBColumn;
+    MonthStart_before: TcxGridDBColumn;
+    MonthEnd_before: TcxGridDBColumn;
+    MonthStart_after: TcxGridDBColumn;
+    MonthEnd_after: TcxGridDBColumn;
   private
   public
   end;

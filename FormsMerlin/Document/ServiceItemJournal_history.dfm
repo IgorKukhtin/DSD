@@ -280,6 +280,26 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
         Options.Editing = False
         Width = 55
       end
+      object MonthStart: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1089'...'
+        DataBinding.FieldName = 'DateStart'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'yy - mmmm'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object MonthEnd: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1076#1086'...'
+        DataBinding.FieldName = 'DateEnd'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'yy - mmmm'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object DateStart: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089' ...'
         DataBinding.FieldName = 'DateStart'
@@ -299,83 +319,17 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
         HeaderHint = #1044#1072#1090#1072', '#1076#1086' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1091#1089#1083#1086#1074#1080#1077
         Width = 94
       end
-      object MonthStart: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1089'...'
-        DataBinding.FieldName = 'DateStart'
-        PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'mmmm-yy'
+      object Amount: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085
         Width = 80
-      end
-      object MonthEnd: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1076#1086'...'
-        DataBinding.FieldName = 'DateEnd'
-        PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'mmmm-yy'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object UnitGroupNameFull: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'UnitGroupNameFull'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 120
-      end
-      object UnitCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'UnitCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 50
-      end
-      object UnitName: TcxGridDBColumn
-        Caption = #1054#1090#1076#1077#1083
-        DataBinding.FieldName = 'UnitName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object InfoMoneyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103
-        DataBinding.FieldName = 'InfoMoneyName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 150
-      end
-      object CommentInfoMoneyName: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'CommentInfoMoneyName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 174
       end
       object Area: TcxGridDBColumn
         Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
@@ -397,16 +351,62 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object Amount: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
-        DataBinding.FieldName = 'Amount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      object CommentInfoMoneyName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'CommentInfoMoneyName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085
+        Width = 174
+      end
+      object UnitGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'UnitGroupNameFull'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object UnitCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'UnitCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1054#1090#1076#1077#1083
+        DataBinding.FieldName = 'UnitName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object InfoMoneyName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object InsertName: TcxGridDBColumn
@@ -537,30 +537,6 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -609,6 +585,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = actGridToExcel
