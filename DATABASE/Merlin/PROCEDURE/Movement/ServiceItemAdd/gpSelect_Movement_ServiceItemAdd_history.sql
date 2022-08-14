@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_ServiceItemAdd_history()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ServiceItemAdd_history (TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ServiceItemAdd_history (TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ServiceItemAdd_history(
     IN inStartDate         TDateTime , --
     IN inUnitId            Integer , --
     IN inInfoMoneyId       Integer ,
+    IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer
@@ -91,4 +93,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ServiceItemAdd_history (inStartDate:= '30.01.2015', inUnitId:= 0, inInfoMoneyId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ServiceItemAdd_history (inStartDate:= '30.01.2015', inUnitId:= 0, inInfoMoneyId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
