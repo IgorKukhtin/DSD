@@ -163,6 +163,11 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
           Format = ',0.####'
           Kind = skSum
           Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Month_diff
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -213,6 +218,11 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
           Format = ',0.####'
           Kind = skSum
           Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Month_diff
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -259,22 +269,55 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
         HeaderAlignmentVert = vaCenter
         Width = 102
       end
+      object Month_diff: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089'.'
+        DataBinding.FieldName = 'Month_diff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object DateStart: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089' ...'
         DataBinding.FieldName = 'DateStart'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1072#1090#1072', '#1089' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1091#1089#1083#1086#1074#1080#1077
         Options.Editing = False
         Width = 70
       end
-      object OperDate: TcxGridDBColumn
+      object DateEnd: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086' ...'
-        DataBinding.FieldName = 'OperDate'
+        DataBinding.FieldName = 'DateEnd'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1072#1090#1072', '#1076#1086' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1091#1089#1083#1086#1074#1080#1077
         Width = 94
+      end
+      object MonthStart: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1089'...'
+        DataBinding.FieldName = 'DateStart'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'mmmm-yy'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object MonthEnd: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1076#1086'...'
+        DataBinding.FieldName = 'DateEnd'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'mmmm-yy'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object UnitGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072

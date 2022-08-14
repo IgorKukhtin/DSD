@@ -24,7 +24,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 645
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -65,7 +64,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 645
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -113,6 +111,11 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Month_diff
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -158,6 +161,11 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Month_diff
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -213,17 +221,27 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Options.Editing = False
         Width = 70
       end
-      object OperDate: TcxGridDBColumn
+      object DateEnd: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086' ...'
-        DataBinding.FieldName = 'OperDate'
+        DataBinding.FieldName = 'DateEnd'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = ' '#9#1044#1072#1090#1072', '#1076#1086' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1091#1089#1083#1086#1074#1080#1077
         Width = 94
       end
+      object Month_diff: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089'.'
+        DataBinding.FieldName = 'Month_diff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object MonthStart: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1089' ...'
+        Caption = #1052#1077#1089#1103#1094' '#1089'...'
         DataBinding.FieldName = 'DateStart'
         PropertiesClassName = 'TcxDateEditProperties'
         Properties.DisplayFormat = 'mmmm-yy'
@@ -233,13 +251,12 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Width = 84
       end
       object MonthEnd: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1076#1086' ...'
-        DataBinding.FieldName = 'OperDate'
+        Caption = #1052#1077#1089#1103#1094' '#1076#1086'...'
+        DataBinding.FieldName = 'DateEnd'
         PropertiesClassName = 'TcxDateEditProperties'
         Properties.DisplayFormat = 'mmmm-yy'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = ' '#9#1044#1072#1090#1072', '#1076#1086' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1091#1089#1083#1086#1074#1080#1077
         Options.Editing = False
         Width = 94
       end

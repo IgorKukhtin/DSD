@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, DescId Integer, InvNumber Integer
 
              , Amount TFloat, Price TFloat, Area TFloat
              , DateStart TDateTime, DateEnd TDateTime
+             , Month_diff Integer
 
              , Amount_before TFloat, Price_before TFloat, Area_before TFloat
              , DateStart_before TDateTime, DateEnd_before TDateTime
@@ -133,6 +134,8 @@ BEGIN
            , MIFloat_Area.ValueData       :: TFloat    AS Area
            , COALESCE (tmpMI_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) :: TDateTime AS DateStart
            , tmpMI.DateEnd                :: TDateTime AS DateEnd
+
+           , zfCalc_Month_diff (tmpMI_before.DateEnd + INTERVAL '1 DAY', tmpMI.DateEnd) :: Integer AS Month_diff
 
            , tmpMI_before.Amount            :: TFloat    AS Amount_before
            , MIFloat_Price_before.ValueData :: TFloat    AS Price_before

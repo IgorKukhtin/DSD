@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ServiceItem_history(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, DescId Integer, InvNumber Integer
-             , OperDate TDateTime
+             , DateEnd TDateTime
              , StatusCode Integer, StatusName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime 
@@ -24,6 +24,8 @@ RETURNS TABLE (Id Integer, DescId Integer, InvNumber Integer
              
              , DateStart TDateTime--, DateEnd TDateTime
              , Amount TFloat, Price TFloat, Area TFloat
+
+             , Month_diff Integer
              )
 AS
 $BODY$
@@ -61,7 +63,7 @@ BEGIN
              Movement.Id
            , Movement.DescId
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
-           , Movement.OperDate
+           , Movement.OperDate                    AS DateEnd
            , Object_Status.ObjectCode             AS StatusCode
            , Object_Status.ValueData              AS StatusName
            , Object_Insert.ValueData              AS InsertName
@@ -86,6 +88,9 @@ BEGIN
            , Movement.Amount                       :: TFloat    AS Amount
            , COALESCE (MIFloat_Price.ValueData, 0) :: TFloat AS Price
            , COALESCE (MIFloat_Area.ValueData, 0)  :: TFloat AS Area        
+
+           , zfCalc_Month_diff (tmpStartDate.OperDate + INTERVAL '1 DAY', Movement.OperDate) :: Integer AS Month_diff
+
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
