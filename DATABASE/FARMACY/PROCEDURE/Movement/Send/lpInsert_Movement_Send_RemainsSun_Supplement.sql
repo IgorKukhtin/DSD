@@ -101,7 +101,7 @@ BEGIN
      -- все Подразделения для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpUnit_SUN_Supplement (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean, isSUN_Supplement_Priority Boolean, SalesRatio TFloat) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpUnit_SUN_Supplement (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean, isSUN_Supplement_Priority Boolean, SalesRatio TFloat, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean, isLock_CheckMa Boolean) ON COMMIT DROP;
      END IF;
 
      -- Выкладки
@@ -201,7 +201,7 @@ BEGIN
      DELETE FROM _tmpUnit_SunExclusion_Supplement;
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1, isSUN_Supplement_in, isSUN_Supplement_out, isSUN_Supplement_Priority, SalesRatio)
+     INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1, isSUN_Supplement_in, isSUN_Supplement_out, isSUN_Supplement_Priority, SalesRatio, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa)
         SELECT Object_Unit.Id
              , COALESCE (NULLIF(OF_DeySupplSun1.ValueData, 0), 30)::Integer              AS DeySupplSun1
              , COALESCE (NULLIF(OF_MonthSupplSun1.ValueData, 0), 8)::Integer             AS MonthSupplSun1
@@ -215,6 +215,14 @@ BEGIN
                          (inOperDate::Date - (inOperDate::Date - (COALESCE (NULLIF(OF_MonthSupplSun1.ValueData, 0), 8)::Integer::TVarChar||' MONTH')::INTERVAL)::Date)
                     THEN (inOperDate::Date - (inOperDate::Date - (COALESCE (NULLIF(OF_MonthSupplSun1.ValueData, 0), 8)::Integer::TVarChar||' MONTH')::INTERVAL)::Date)::TFloat / (CURRENT_DATE - ObjectDate_FirstCheck.ValueData::Date)::TFloat
                     ELSE 1 END     
+               -- TRUE = НЕ подключать чек "не для НТЗ"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 1 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLockSale
+               -- TRUE = НЕТ товаров "закрыт код"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 3 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseGd
+               -- TRUE = НЕТ товаров "убит код"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 5 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_ClosePL
+               -- TRUE = НЕТ товаров "маркетинг"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 7 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseMa
         FROM Object AS Object_Unit
              LEFT JOIN ObjectFloat   AS OF_DeySupplSun1  ON OF_DeySupplSun1.ObjectId  = Object_Unit.Id AND OF_DeySupplSun1.DescId     = zc_ObjectFloat_Unit_DeySupplSun1()
              LEFT JOIN ObjectFloat   AS OF_MonthSupplSun1 ON OF_MonthSupplSun1.ObjectId = Object_Unit.Id AND OF_MonthSupplSun1.DescId = zc_ObjectFloat_Unit_MonthSupplSun1()
@@ -234,6 +242,7 @@ BEGIN
              LEFT JOIN ObjectDate AS ObjectDate_FirstCheck
                                   ON ObjectDate_FirstCheck.ObjectId = Object_Unit.Id
                                  AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
+             LEFT JOIN ObjectString  AS OS_LL  ON OS_LL.ObjectId  = Object_Unit.Id AND OS_LL.DescId  = zc_ObjectString_Unit_SUN_v1_Lock()
                                     
              -- !!!только для этого водителя!!!
              /*INNER JOIN ObjectLink AS ObjectLink_Unit_Driver
@@ -718,29 +727,51 @@ BEGIN
           -- Продажи
         , tmpSalesDay AS (SELECT _tmpUnit_SUN_Supplement.UnitId
                                , _tmpGoods_SUN_Supplement.GoodsId
-                               , SUM (COALESCE (AnalysisContainerItem.AmountCheck, 0)) AS AmountSalesDay
-                          FROM  _tmpGoods_SUN_Supplement
-                               INNER JOIN _tmpUnit_SUN_Supplement ON 1 = 1
-
-                               INNER JOIN AnalysisContainerItem ON AnalysisContainerItem.GoodsId = _tmpGoods_SUN_Supplement.GoodsId
-                                                               AND AnalysisContainerItem.UnitID = _tmpUnit_SUN_Supplement.UnitId
-                          WHERE AnalysisContainerItem.OperDate >= CURRENT_DATE - (_tmpUnit_SUN_Supplement.DeySupplSun1::TVarChar ||' DAY') :: INTERVAL
-                            AND AnalysisContainerItem.AmountCheck <> 0
+                               , SUM (COALESCE (-1 * MIContainer.Amount, 0) ) AS AmountSalesDay
+                          FROM MovementItemContainer AS MIContainer
+                               INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = MIContainer.ObjectId_analyzer
+                               INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = MIContainer.WhereObjectId_analyzer
+                               LEFT JOIN MovementBoolean AS MB_NotMCS
+                                                         ON MB_NotMCS.MovementId = MIContainer.MovementId
+                                                        AND MB_NotMCS.DescId     = zc_MovementBoolean_NotMCS()
+                                                        AND MB_NotMCS.ValueData  = TRUE
+                               LEFT JOIN MovementBoolean AS MB_CorrectMarketing
+                                                         ON MB_CorrectMarketing.MovementId = MIContainer.MovementId
+                                                        AND MB_CorrectMarketing.DescId     = zc_MovementBoolean_CorrectMarketing()
+                                                        AND MB_CorrectMarketing.ValueData  = TRUE
+                          WHERE MIContainer.OperDate >= CURRENT_DATE - (_tmpUnit_SUN_Supplement.DeySupplSun1::TVarChar ||' DAY') :: INTERVAL
+                            AND MIContainer.DescId         = zc_MIContainer_Count()
+                            AND MIContainer.MovementDescId = zc_Movement_Check()
+                            -- !!!не учитывать если галка "не для СУН"
+                            AND (MB_NotMCS.MovementId IS NULL OR _tmpUnit_SUN_Supplement.isLock_CheckMSC = FALSE)
+                            -- !!!не учитывать если галка "Корректировка суммы маркетинга в ЗП"
+                            AND (MB_CorrectMarketing.MovementId IS NULL OR _tmpUnit_SUN_Supplement.isLock_CheckMa = FALSE)        
                           GROUP BY _tmpUnit_SUN_Supplement.UnitId
                                  , _tmpGoods_SUN_Supplement.GoodsId
                       )
         , tmpSalesMonth AS (SELECT _tmpUnit_SUN_Supplement.UnitId
                                  , _tmpGoods_SUN_Supplement.GoodsId
-                                 , SUM (COALESCE (AnalysisContainerItem.AmountCheck, 0)) * _tmpUnit_SUN_Supplement.SalesRatio AS AmountSalesMonth
-                            FROM  _tmpGoods_SUN_Supplement
-                                 INNER JOIN _tmpUnit_SUN_Supplement ON 1 = 1
-
-                                 INNER JOIN AnalysisContainerItem ON AnalysisContainerItem.GoodsId = _tmpGoods_SUN_Supplement.GoodsId
-                                                                 AND AnalysisContainerItem.UnitID = _tmpUnit_SUN_Supplement.UnitId
-                            WHERE AnalysisContainerItem.OperDate >= CURRENT_DATE - (CASE WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE
-                                                                                         THEN _tmpUnit_SUN_Supplement.MonthSupplSun1
-                                                                                         ELSE _tmpUnit_SUN_Supplement.MonthSupplSun1 END::TVarChar ||' MONTH') :: INTERVAL
-                              AND AnalysisContainerItem.AmountCheck <> 0
+                                 , SUM (COALESCE (-1 * MIContainer.Amount, 0)) * _tmpUnit_SUN_Supplement.SalesRatio AS AmountSalesMonth
+                            FROM MovementItemContainer AS MIContainer
+                                 INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = MIContainer.ObjectId_analyzer
+                                 INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = MIContainer.WhereObjectId_analyzer
+                                 LEFT JOIN MovementBoolean AS MB_NotMCS
+                                                           ON MB_NotMCS.MovementId = MIContainer.MovementId
+                                                          AND MB_NotMCS.DescId     = zc_MovementBoolean_NotMCS()
+                                                          AND MB_NotMCS.ValueData  = TRUE
+                                 LEFT JOIN MovementBoolean AS MB_CorrectMarketing
+                                                           ON MB_CorrectMarketing.MovementId = MIContainer.MovementId
+                                                          AND MB_CorrectMarketing.DescId     = zc_MovementBoolean_CorrectMarketing()
+                                                          AND MB_CorrectMarketing.ValueData  = TRUE
+                            WHERE MIContainer.OperDate >= CURRENT_DATE - (CASE WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE
+                                                                               THEN _tmpUnit_SUN_Supplement.MonthSupplSun1
+                                                                               ELSE _tmpUnit_SUN_Supplement.MonthSupplSun1 END::TVarChar ||' MONTH') :: INTERVAL
+                              AND MIContainer.DescId         = zc_MIContainer_Count()
+                              AND MIContainer.MovementDescId = zc_Movement_Check()
+                              -- !!!не учитывать если галка "не для СУН"
+                              AND (MB_NotMCS.MovementId IS NULL OR _tmpUnit_SUN_Supplement.isLock_CheckMSC = FALSE)
+                              -- !!!не учитывать если галка "Корректировка суммы маркетинга в ЗП"
+                              AND (MB_CorrectMarketing.MovementId IS NULL OR _tmpUnit_SUN_Supplement.isLock_CheckMa = FALSE)   
                             GROUP BY _tmpUnit_SUN_Supplement.UnitId
                                    , _tmpGoods_SUN_Supplement.GoodsId
                                    , _tmpUnit_SUN_Supplement.SalesRatio
@@ -1565,4 +1596,4 @@ $BODY$
 
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);

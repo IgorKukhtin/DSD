@@ -5590,7 +5590,6 @@ inherited MainCashForm2: TMainCashForm2
       MoveParams = <>
       ActionList = <
         item
-          Action = actExecLoadVIPOrder
         end
         item
           Action = actSelectCheck
@@ -6510,6 +6509,321 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object actEnterBuyerForSite: TAction
+      Caption = #1042#1074#1086#1076' '#1096#1090#1088#1080#1093#1082#1086#1076' '#1082#1072#1088#1090#1099' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+      ShortCut = 16454
+      OnExecute = actEnterBuyerForSiteExecute
+    end
+    object actOpenCheckBuyerForSite: TOpenChoiceForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenCheckBuyerForSite'
+      FormName = 'TCheckBuyerForSiteForm'
+      FormNameParam.Value = 'TCheckBuyerForSiteForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CheckId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BuyerForSiteId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BayerName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashMemberId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManagerId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashMember'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManagerName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountExternalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountExternalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountCardNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountCardNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ConfirmedKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ConfirmedKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BayerPhone'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BayerPhone'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberOrder'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ConfirmedKindClientName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ConfirmedKindClientName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartnerMedicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartnerMedicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Ambulance'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Ambulance'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicSP'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MedicSP'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberSP'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberSP'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDateSP'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'OperDateSP'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPTax'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'SPTax'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SPKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SPKindName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ManualDiscount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManualDiscount'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeID'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoCodeID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeGUID'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoCodeGUID'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeChangePercent'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'PromoCodeChangePercent'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberSPId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MemberSPID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SiteDiscount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SiteDiscount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionDateKindId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartionDateKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LoyaltyChangeSumma'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LoyaltyChangeSumma'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SummCard'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'SummCard'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isBanAdd'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isBanAdd'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDiscountCommit'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isDiscountCommit'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAutoVIPforSales'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isAutoVIPforSales'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MobileDiscount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MobileDiscount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actLoadBuyerForSite: TMultiAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenCheckBuyerForSite
+        end
+        item
+          Action = actSelectCheck
+        end
+        item
+          Action = actSelectLocalVIPCheck
+        end
+        item
+          Action = actRefreshLite
+        end
+        item
+          Action = actUpdateRemains
+        end
+        item
+          Action = actCalcTotalSumm
+        end
+        item
+          Action = actSetFocus
+        end>
+      Caption = 'Site'
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6700,6 +7014,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N13031: TMenuItem
       Action = actRecipeNumber1303
+    end
+    object N63: TMenuItem
+      Action = actEnterBuyerForSite
     end
     object N15: TMenuItem
       Caption = #1051#1080#1089#1090' '#1086#1090#1082#1072#1079#1072
@@ -10438,5 +10755,285 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 792
     Top = 168
+  end
+  object spSelectChechBuyerForSite: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_CheckLoadBuyerForSite'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBuyerForSiteId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BayerName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashMemberId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ManagerId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashMember'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ManagerName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountExternalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscountExternalId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountExternalName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscountExternalName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountCardNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscountCardNumber'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ConfirmedKindName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ConfirmedKindName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerPhone'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BayerPhone'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberOrder'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvNumberOrder'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ConfirmedKindClientName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ConfirmedKindClientName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartnerMedicalId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartnerMedicalName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Ambulance'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Ambulance'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MedicSP'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberSP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvNumberSP'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateSP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperDateSP'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SPTax'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'SPTax'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SPKindId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SPKindId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SPKindName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SPKindName'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ManualDiscount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ManualDiscount'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoCodeID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PromoCodeID'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PromoName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoCodeGUID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PromoCodeGUID'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoCodeChangePercent'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'PromoCodeChangePercent'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberSPId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MemberSPID'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SiteDiscount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SiteDiscount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionDateKindId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartionDateKindId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltyChangeSumma'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'LoyaltyChangeSumma'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummCard'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'SummCard'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBanAdd'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isBanAdd'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDiscountCommit'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isDiscountCommit'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAutoVIPforSales'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isAutoVIPforSales'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MobileDiscount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MobileDiscount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    AutoWidth = True
+    Left = 232
+    Top = 216
   end
 end

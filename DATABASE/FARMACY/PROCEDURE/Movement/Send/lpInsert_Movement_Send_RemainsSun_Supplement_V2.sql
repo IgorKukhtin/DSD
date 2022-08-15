@@ -93,7 +93,7 @@ BEGIN
      -- все Подразделения для схемы SUN Supplement_V2
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SUN_Supplement_V2'))
      THEN
-       CREATE TEMP TABLE _tmpUnit_SUN_Supplement_V2 (UnitId Integer, DeySupplOut Integer, DeySupplIn Integer, isSUN_Supplement_V2_in Boolean, isSUN_Supplement_V2_out Boolean, isSUN_Supplement_V2_Priority Boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpUnit_SUN_Supplement_V2 (UnitId Integer, DeySupplOut Integer, DeySupplIn Integer, isSUN_Supplement_V2_in Boolean, isSUN_Supplement_V2_out Boolean, isSUN_Supplement_V2_Priority Boolean, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean, isLock_CheckMa Boolean) ON COMMIT DROP;
      END IF;
 
      -- Выкладки
@@ -180,12 +180,20 @@ BEGIN
      DELETE FROM _tmpUnit_SunExclusion_Supplement_V2;
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN_Supplement_V2 (UnitId, DeySupplOut, DeySupplIn, isSUN_Supplement_V2_in, isSUN_Supplement_V2_out)
+     INSERT INTO _tmpUnit_SUN_Supplement_V2 (UnitId, DeySupplOut, DeySupplIn, isSUN_Supplement_V2_in, isSUN_Supplement_V2_out, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa)
         SELECT OB.ObjectId
              , vbDeySupplOut            AS DeySupplOut  -- 120
              , vbDeySupplIn             AS DeySupplIn   -- 60
              , COALESCE (ObjectBoolean_SUN_v2_Supplement_V2_in.ValueData, FALSE)  :: Boolean   AS isSUN_Supplement_V2_in
              , COALESCE (ObjectBoolean_SUN_v2_Supplement_V2_out.ValueData, FALSE) :: Boolean   AS isSUN_Supplement_V2_out             
+               -- TRUE = НЕ подключать чек "не для НТЗ"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 1 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLockSale
+               -- TRUE = НЕТ товаров "закрыт код"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 3 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseGd
+               -- TRUE = НЕТ товаров "убит код"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 5 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_ClosePL
+               -- TRUE = НЕТ товаров "маркетинг"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 7 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseMa
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectString  AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
              LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_V2_in
@@ -194,6 +202,7 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_V2_out
                                      ON ObjectBoolean_SUN_v2_Supplement_V2_out.ObjectId = OB.ObjectId
                                     AND ObjectBoolean_SUN_v2_Supplement_V2_out.DescId = zc_ObjectBoolean_Unit_SUN_v2_Supplement_out()                                    
+             LEFT JOIN ObjectString  AS OS_LL  ON OS_LL.ObjectId  = OB.ObjectId AND OS_LL.DescId  = zc_ObjectString_Unit_SUN_v2_Lock()
         WHERE OB.ValueData = TRUE AND OB.DescId in (zc_ObjectBoolean_Unit_SUN_v2_Supplement_in(), zc_ObjectBoolean_Unit_SUN_v2_Supplement_out())
           -- если указан день недели - проверим его
           AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
@@ -631,18 +640,29 @@ BEGIN
                         )
           -- Продажи
         , tmpSalesDay AS (SELECT _tmpUnit_SUN_Supplement_V2.UnitId
-                               , AnalysisContainerItem.GoodsId
-                               , SUM (COALESCE (AnalysisContainerItem.AmountCheck, 0)) AS AmountSalesDay
-                          FROM _tmpUnit_SUN_Supplement_V2
-
-                               INNER JOIN AnalysisContainerItem ON AnalysisContainerItem.UnitID = _tmpUnit_SUN_Supplement_V2.UnitId
-                               
-                          WHERE AnalysisContainerItem.OperDate >= CURRENT_DATE - (CASE WHEN _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_out = TRUE
+                               , MIContainer.ObjectId_analyzer                AS GoodsId 
+                               , SUM (COALESCE (-1 * MIContainer.Amount, 0) ) AS AmountSalesDay
+                          FROM MovementItemContainer AS MIContainer
+                               INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId = MIContainer.WhereObjectId_analyzer
+                               LEFT JOIN MovementBoolean AS MB_NotMCS
+                                                         ON MB_NotMCS.MovementId = MIContainer.MovementId
+                                                        AND MB_NotMCS.DescId     = zc_MovementBoolean_NotMCS()
+                                                        AND MB_NotMCS.ValueData  = TRUE
+                               LEFT JOIN MovementBoolean AS MB_CorrectMarketing
+                                                         ON MB_CorrectMarketing.MovementId = MIContainer.MovementId
+                                                        AND MB_CorrectMarketing.DescId     = zc_MovementBoolean_CorrectMarketing()
+                                                        AND MB_CorrectMarketing.ValueData  = TRUE
+                          WHERE MIContainer.OperDate >= CURRENT_DATE - (CASE WHEN _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_out = TRUE
                                                                                        THEN _tmpUnit_SUN_Supplement_V2.DeySupplOut 
                                                                                        ELSE _tmpUnit_SUN_Supplement_V2.DeySupplIn END::TVarChar ||' DAY') :: INTERVAL
-                            AND AnalysisContainerItem.AmountCheck <> 0
+                            AND MIContainer.DescId         = zc_MIContainer_Count()
+                            AND MIContainer.MovementDescId = zc_Movement_Check()
+                            -- !!!не учитывать если галка "не для СУН"
+                            AND (MB_NotMCS.MovementId IS NULL OR _tmpUnit_SUN_Supplement_V2.isLock_CheckMSC = FALSE)
+                            -- !!!не учитывать если галка "Корректировка суммы маркетинга в ЗП"
+                            AND (MB_CorrectMarketing.MovementId IS NULL OR _tmpUnit_SUN_Supplement_V2.isLock_CheckMa = FALSE)        
                           GROUP BY _tmpUnit_SUN_Supplement_V2.UnitId
-                                 , AnalysisContainerItem.GoodsId
+                                 , MIContainer.ObjectId_analyzer
                       )
         , tmpPrice AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
                             , OL_Price_Goods.ChildObjectId      AS GoodsId

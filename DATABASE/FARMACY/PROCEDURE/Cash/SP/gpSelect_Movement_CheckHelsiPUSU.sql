@@ -113,6 +113,7 @@ WITH -- Товары соц-проект
 
                           WHERE Movement.DescId = zc_Movement_GoodsSP()
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                            AND COALESCE (MLO_MedicalProgramSP.ObjectId, 0) <> 20079831
                          )
 
       SELECT ROW_NUMBER() OVER (ORDER BY Movement.OperDate)::Integer AS Ord
@@ -162,6 +163,10 @@ WITH -- Товары соц-проект
                                          ON MovementLinkObject_SPKind.MovementId = Movement.Id
                                         AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
 
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicalProgramSP
+                                        ON MovementLinkObject_MedicalProgramSP.MovementId = Movement.Id
+                                       AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+ 
            INNER JOIN Object AS Object_Helsi_IdSP
                              ON Object_Helsi_IdSP.DescId = zc_Object_SPKind()
                             AND Object_Helsi_IdSP.ObjectCode  = 1
@@ -236,6 +241,7 @@ WITH -- Товары соц-проект
         AND MovementItem.Amount > 0
         AND MovementItem.IsErased = False
         AND COALESCE(MovementBoolean_PaperRecipeSP.ValueData, False) = False
+        AND COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 0) <> 20079831
       ORDER BY Movement.OperDate;
 
 END;

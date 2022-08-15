@@ -28,6 +28,7 @@ BEGIN
          , p.Remains
     FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', inGoodsId::TVarChar, zfCalc_UserSite()) AS p
     WHERE COALESCE(p.Remains, 0) > 0
+      AND COALESCE(p.Price_unit, 0) > 0
     ORDER BY p.Price_unit, p.Remains DESC
     LIMIT 3
     ;

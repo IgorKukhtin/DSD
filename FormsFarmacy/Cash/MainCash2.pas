@@ -622,6 +622,11 @@ type
     actChoiceGoodsFromRemains_1303: TdsdOpenForm;
     N13033: TMenuItem;
     MainBrandSPName: TcxGridDBColumn;
+    actEnterBuyerForSite: TAction;
+    N63: TMenuItem;
+    spSelectChechBuyerForSite: TdsdStoredProc;
+    actLoadBuyerForSite: TMultiAction;
+    actOpenCheckBuyerForSite: TOpenChoiceForm;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -785,6 +790,7 @@ type
       Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
     procedure actDownloadFarmacyExecute(Sender: TObject);
+    procedure actEnterBuyerForSiteExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -1025,7 +1031,8 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   EnterLoyaltySaveMoney, ChoosingPresent, ChoosingRelatedProduct,
   LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection,
   LikiDniproReceipt, EnterRecipeNumber1303, LikiDniproReceiptDialog, Clipbrd,
-  TestingUser, ChoiceMedicalProgramSP, SimpleGauge, ListGoodsKeyword;
+  TestingUser, ChoiceMedicalProgramSP, SimpleGauge, ListGoodsKeyword,
+  EnterBuyerForSite;
 
 const
   StatusUnCompleteCode = 1;
@@ -2312,6 +2319,18 @@ begin
       ReleaseMutex(MutexVip);
     end;
   End;
+end;
+
+procedure TMainCashForm2.actEnterBuyerForSiteExecute(Sender: TObject);
+  var nBuyerForSiteId : Integer;
+begin
+  nBuyerForSiteId := 0;
+  if not InputEnterBuyerForSite(nBuyerForSiteId) then Exit;
+
+  actOpenCheckBuyerForSite.GuiParams.ParamByName('BuyerForSiteId').Value := nBuyerForSiteId;
+  if actLoadBuyerForSite.Execute and ((FormParams.ParamByName('CheckId').Value <> 0)
+    or (FormParams.ParamByName('ManagerName').AsString <> '')) then
+    LoadVIPCheck;
 end;
 
 procedure TMainCashForm2.actExecuteLoadVIPExecute(Sender: TObject);
