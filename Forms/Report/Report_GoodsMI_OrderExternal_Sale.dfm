@@ -1,29 +1,29 @@
 inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_SaleForm
   Caption = #1054#1090#1095#1077#1090' <'#1047#1072#1103#1074#1082#1072' / '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
-  ClientHeight = 387
+  ClientHeight = 377
   ClientWidth = 1092
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1108
-  ExplicitHeight = 426
+  ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
     Width = 1092
-    Height = 296
+    Height = 286
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1092
     ExplicitHeight = 296
-    ClientRectBottom = 296
+    ClientRectBottom = 286
     ClientRectRight = 1092
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1092
       ExplicitHeight = 296
       inherited cxGrid: TcxGrid
         Width = 1092
-        Height = 296
+        Height = 286
         ExplicitWidth = 1092
         ExplicitHeight = 296
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -695,16 +695,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object TotalAmount_Weight: TcxGridDBColumn
-            Caption = #1047#1072#1082#1072#1079' + '#1044#1086#1079#1072#1082#1072#1079' '#1080#1090#1086#1075', '#1082#1075
-            DataBinding.FieldName = 'TotalAmount_Weight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 85
           end
           object AmountSale_Weight: TcxGridDBColumn
             Caption = #1054#1090#1075#1088#1091#1079#1082#1072', '#1074#1077#1089' ('#1089#1082#1083#1072#1076')'
