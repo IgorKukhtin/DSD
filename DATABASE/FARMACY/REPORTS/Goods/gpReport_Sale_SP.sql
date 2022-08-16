@@ -858,15 +858,27 @@ BEGIN
            , tmpMovDetails.AccounterName
            , tmpMovDetails.INN
            , tmpMovDetails.NumberVAT
-           , tmpMovDetails.BankAccount
+           , CASE WHEN tmpMovDetails.JuridicalId = 2886776 
+                  THEN 'UA083077700000026008711126473'  
+                  WHEN tmpMovDetails.JuridicalId = 472115  
+                  THEN 'UA443077700000026006711126475' 
+                  ELSE tmpMovDetails.BankAccount END ::TVarChar
            , tmpMovDetails.Phone
            , tmpMovDetails.MainName
            , tmpMovDetails.Reestr
            , tmpMovDetails.Decision
            , tmpMovDetails.DecisionDate
            , tmpMovDetails.License
-           , tmpMovDetails.BankName ::TVarChar
-           , tmpMovDetails.MFO      ::TVarChar
+           , CASE WHEN tmpMovDetails.JuridicalId = 2886776 
+                  THEN '¿“ "¿_¡¿Õ "'  
+                  WHEN tmpMovDetails.JuridicalId = 472115  
+                  THEN '¿“ "¿-¡¿Õ "' 
+                  ELSE tmpMovDetails.BankName END ::TVarChar
+           , CASE WHEN tmpMovDetails.JuridicalId = 2886776 
+                  THEN '370770'  
+                  WHEN tmpMovDetails.JuridicalId = 472115  
+                  THEN '370770' 
+                  ELSE tmpMovDetails.MFO END      ::TVarChar
 
            , Object_PartnerMedicalJuridical.ValueData AS PartnerMedical_JuridicalName
            , tmpMovDetails.PartnerMedical_FullName
@@ -999,8 +1011,8 @@ BEGIN
                                          AND MovementLinkObject_Category1303.DescId = zc_MovementLinkObject_Category1303()
              LEFT JOIN Object AS Object_Category1303 ON Object_Category1303.Id = MovementLinkObject_Category1303.ObjectId
             
-             LEFT JOIN tmpGoodsSPRegistry_1303 ON tmpGoodsSPRegistry_1303.DateStart <= tmpData.OperDate
-                                              AND tmpGoodsSPRegistry_1303.DateEnd > tmpData.OperDate
+             LEFT JOIN tmpGoodsSPRegistry_1303 ON tmpGoodsSPRegistry_1303.DateStart <= date_trunc('DAY', tmpData.OperDate)
+                                              AND tmpGoodsSPRegistry_1303.DateEnd >= date_trunc('DAY', tmpData.OperDate)
                                               AND tmpGoodsSPRegistry_1303.GoodsId = tmpGoodsMain.GoodsMainId
 
              LEFT JOIN tmpMILinkObject AS MI_IntenalSP_1303
@@ -1059,5 +1071,6 @@ $BODY$
 
 -- ÚÂÒÚ
 
-SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.05.2022', inEndDate:= '05.05.2022', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inNDSKindId := 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.05.2022', inEndDate:= '05.05.2022', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inNDSKindId := 0, inSession:= zfCalc_UserAdmin());
 
+select * from gpReport_Sale_SP(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('12.08.2022')::TDateTime , inJuridicalId := 2886776 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 9 ,  inSession := '3');

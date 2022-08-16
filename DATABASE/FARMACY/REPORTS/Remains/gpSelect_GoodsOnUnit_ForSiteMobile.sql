@@ -131,6 +131,27 @@ BEGIN
         vbIndex := vbIndex + 1;
     END LOOP;
 
+    -- если нет подразделений
+    IF NOT EXISTS (SELECT 1 FROM _tmpUnitMinPrice_List)
+    THEN
+        INSERT INTO _tmpUnitMinPrice_List (UnitId, AreaId)
+           SELECT tmp.Id
+                , COALESCE (OL_Unit_Area.ChildObjectId, zc_Area_Basis()) AS AreaId
+           FROM (SELECT * FROM gpSelect_Object_Unit_Active (inNotUnitId := 0, inSession := inSession)) AS tmp
+                INNER JOIN ObjectLink AS OL_Unit_Juridical
+                                      ON OL_Unit_Juridical.ObjectId = tmp.Id
+                                     AND OL_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+                INNER JOIN ObjectLink AS OL_Juridical_Retail
+                                      ON OL_Juridical_Retail.ObjectId = OL_Unit_Juridical.ChildObjectId
+                                     AND OL_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                                     AND OL_Juridical_Retail.ChildObjectId = 4
+                INNER JOIN ObjectLink AS OL_Unit_Area
+                                      ON OL_Unit_Area.ObjectId = tmp.Id
+                                     AND OL_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
+          ;
+
+    END IF;
+
     -- парсим товары
     IF COALESCE(inGoodsId_list, '') <> ''
     THEN
@@ -790,8 +811,7 @@ $BODY$
 -- тест
 
 
-SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('16240371,8156016,377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', 
-                                                                                                   '6307 ', zfCalc_UserSite()) AS p
+SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '6307 ', zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  LEFT JOIN OBJECT AS OBJECT_Goods ON OBJECT_Goods.ID = p.Id;
  

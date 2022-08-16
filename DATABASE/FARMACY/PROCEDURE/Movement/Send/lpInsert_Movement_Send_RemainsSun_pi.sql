@@ -179,7 +179,7 @@ BEGIN
 
 
      -- все Подразделения для схемы SUN-v4
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL)
+     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa)
         SELECT OB.ObjectId AS UnitId
              , 0           AS KoeffInSUN
              , 0           AS KoeffOutSUN
@@ -195,6 +195,8 @@ BEGIN
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 3 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseGd
                -- TRUE = НЕТ товаров "убит код"
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 5 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_ClosePL
+               -- TRUE = НЕТ товаров "маркетинг"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 7 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseMa
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectString  AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN_pi()
              LEFT JOIN ObjectFloat   AS OF_T1  ON OF_T1.ObjectId  = OB.ObjectId AND OF_T1.DescId  = zc_ObjectFloat_Unit_T1_SUN_v4()
@@ -474,11 +476,17 @@ BEGIN
                                              ON MB_NotMCS.MovementId = MIContainer.MovementId
                                             AND MB_NotMCS.DescId     = zc_MovementBoolean_NotMCS()
                                             AND MB_NotMCS.ValueData  = TRUE
+                   LEFT JOIN MovementBoolean AS MB_CorrectMarketing
+                                             ON MB_CorrectMarketing.MovementId = MIContainer.MovementId
+                                            AND MB_CorrectMarketing.DescId     = zc_MovementBoolean_CorrectMarketing()
+                                            AND MB_CorrectMarketing.ValueData  = TRUE
               WHERE MIContainer.DescId         = zc_MIContainer_Count()
                 AND MIContainer.MovementDescId = zc_Movement_Check()
                 AND MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((vbPeriod_t_max :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate
                 -- !!!не учитывать если галка "не для СУН"
                 AND (MB_NotMCS.MovementId IS NULL OR _tmpUnit_SUN.isLock_CheckMSC = FALSE)
+                -- !!!не учитывать если галка "Корректировка суммы маркетинга в ЗП"
+                AND (MB_CorrectMarketing.MovementId IS NULL OR _tmpUnit_SUN.isLock_CheckMa = FALSE)        
               GROUP BY MIContainer.ObjectId_analyzer
                      , MIContainer.WhereObjectId_analyzer
               HAVING SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) <> 0

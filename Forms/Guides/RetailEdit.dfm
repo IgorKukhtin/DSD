@@ -309,6 +309,14 @@ object RetailEditForm: TRetailEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRoundWeight'
+        Value = Null
+        Component = ceRoundWeight
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 56
@@ -436,6 +444,13 @@ object RetailEditForm: TRetailEditForm
         Value = Null
         Component = GuidesClientKind
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RoundWeight'
+        Value = Null
+        Component = ceRoundWeight
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

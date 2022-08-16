@@ -3006,6 +3006,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TExpressVIPConfirmForm'));
   TdsdFormStorageFactory.GetStorage.Load('TExpressVIPConfirmForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckBuyerForSiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckBuyerForSiteForm');
 end;
 
 procedure TLoadFormTest.LoadCheckLiki24FormTest;

@@ -27,6 +27,13 @@ BEGIN
    BEGIN
      UPDATE Object_Goods_Main SET isLeftTheMarket = inisLeftTheMarket
                                 , DateLeftTheMarket = CASE WHEN inisLeftTheMarket = TRUE THEN CURRENT_DATE ELSE DateLeftTheMarket END
+                                , DateAddToOrder = CASE WHEN inisLeftTheMarket = FALSE AND date_part('isodow', CURRENT_DATE)::Integer = 5
+                                                        THEN CURRENT_DATE + INTERVAL '3 DAY'
+                                                        WHEN inisLeftTheMarket = FALSE AND date_part('isodow', CURRENT_DATE)::Integer = 6
+                                                        THEN CURRENT_DATE + INTERVAL '2 DAY'
+                                                        WHEN inisLeftTheMarket = FALSE
+                                                        THEN CURRENT_DATE + INTERVAL '1 DAY'
+                                                        ELSE DateAddToOrder END
      WHERE Object_Goods_Main.ID = inGoodsMainId;  
    EXCEPTION
       WHEN others THEN 
