@@ -169,4 +169,3 @@ $BODY$
 
 -- тест
 -- 
-select * from gpComplete_Movement_Service(inMovementId := 30545 ,  inSession := '5');

@@ -602,6 +602,18 @@ BEGIN
 
     END IF;    
 
+    -- Изменение признака ушел с рвка
+    BEGIN
+      IF date_part('isodow', CURRENT_DATE)::Integer in (1, 2, 3, 4, 7) AND date_part('HOUR',  CURRENT_TIME)::Integer = 23 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 25 
+      THEN
+         PERFORM * FROM gpSelect_Update_LeftTheMarket (inSession);    
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Update_LeftTheMarket', True, text_var1::TVarChar, vbUserId);
+    END;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

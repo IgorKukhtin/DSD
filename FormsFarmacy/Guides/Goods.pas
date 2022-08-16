@@ -230,6 +230,7 @@ type
     GoodsSignOriginName: TcxGridDBColumn;
     isLeftTheMarket: TcxGridDBColumn;
     DateLeftTheMarket: TcxGridDBColumn;
+    DateAddToOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1607,40 +1607,13 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
-      end
-      item
-      end
-      item
-        Control = ceStatus
-      end
-      item
-        Control = ceComment
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
         Control = edInvNumber
       end
       item
         Control = edOperDate
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
+        Control = ceComment
       end>
     GetStoredProc = spGet
     Left = 264

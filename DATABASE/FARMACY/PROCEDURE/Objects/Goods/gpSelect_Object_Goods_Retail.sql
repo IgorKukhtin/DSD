@@ -38,7 +38,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isUkrainianTranslation boolean
              , MakerName TVarChar, MakerNameUkr TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
              , Dosage TVarChar, Volume TVarChar, GoodsWhoCanId integer, GoodsWhoCanName TVarChar, GoodsMethodApplId integer, GoodsMethodApplName TVarChar, GoodsSignOriginId  integer,  GoodsSignOriginName TVarChar
-             , isLeftTheMarket boolean, DateLeftTheMarket TDateTime
+             , isLeftTheMarket boolean, DateLeftTheMarket TDateTime, DateAddToOrder TDateTime
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -342,6 +342,7 @@ BEGIN
 
            , Object_Goods_Main.isLeftTheMarket
            , Object_Goods_Main.DateLeftTheMarket
+           , Object_Goods_Main.DateAddToOrder
 
       FROM Object_Goods_Retail
 

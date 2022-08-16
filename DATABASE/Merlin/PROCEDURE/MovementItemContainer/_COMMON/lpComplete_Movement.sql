@@ -36,7 +36,7 @@ BEGIN
   -- 1.1. Проверка
   IF COALESCE (vbDescId, -1) <> COALESCE (inDescId, -2)
   THEN
-      RAISE EXCEPTION 'Ошибка.Вид документа не определен.<%><%>', vbDescId, inDescId;
+      RAISE EXCEPTION 'Ошибка.Вид документа не определен.<%><%><%><%>', vbDescId, inDescId, inMovementId, (SELECT lfGet_Object_ValueData_sh (StatusId) FROM Movement WHERE Id = inMovementId);
   END IF;
   -- 1.2. Проверка
   PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate

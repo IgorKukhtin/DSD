@@ -13,8 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inAmount               TFloat    , -- Сумма
     IN inUnitId               Integer   , -- отдел 
     IN inParent_InfoMoneyId   Integer   , -- Статьи  группа
-    IN inInfoMoneyName        TVarChar   , -- Статьи 
-    IN inCommentInfoMoney     TVarChar   , -- Примечание
+    IN inInfoMoneyName        TVarChar  , -- Статьи 
+    IN inCommentInfoMoney     TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -91,14 +91,13 @@ BEGIN
      ioId:= lpInsertUpdate_Movement_Service (ioId                   := ioId
                                            , inInvNumber            := inInvNumber
                                            , inOperDate             := inOperDate
-                                           , inServiceDate          := DATE_TRUNC ('Month', inServiceDate) ::TDateTime   --inServiceDate
+                                           , inServiceDate          := DATE_TRUNC ('MONTH', inServiceDate) ::TDateTime   --inServiceDate
                                            , inAmount               := inAmount
                                            , inUnitId               := inUnitId
-                                           , inInfoMoneyNameId          := vbInfoMoneyId
+                                           , inInfoMoneyId          := vbInfoMoneyId
                                            , inCommentInfoMoneyId   := vbCommentInfoMoneyId
                                            , inUserId               := vbUserId
                                             );
-                                                
 
      -- 5.3. проводим Документ
      IF 1=1 -- vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Service())

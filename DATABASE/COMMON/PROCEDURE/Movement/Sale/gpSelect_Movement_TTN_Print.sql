@@ -25,8 +25,13 @@ $BODY$
     DECLARE vbExtraChargesPercent TFloat;
     DECLARE vbPaidKindId Integer;
     DECLARE vbContractId Integer;
+    
+    DECLARE vbJuricalId_car Integer;
+    DECLARE vbOperDate_find TDateTime;
+    DECLARE vbFromId_find Integer;
+    DECLARE vbToId_find Integer;
 
-   DECLARE vbOperDate_Begin1 TDateTime;
+    DECLARE vbOperDate_Begin1 TDateTime;
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -34,6 +39,20 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     
+     vbJuricalId_car:= 
+      (WITH tmpTransport AS (SELECT MovementChildId FROM MovementLinkMovement  WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_TransportGoods())
+          , tmpTransportGoods AS (SELECT * 
+                                  FROM gpGet_Movement_TransportGoods (inMovementId       := (SELECT MovementChildId FROM tmpTransport)
+                                                                    , inMovementId_Sale  := inMovementId
+                                                                    , inOperDate         := NULL
+                                                                    , inSession          := inSession
+                                                                     )
+                                  WHERE EXISTS (SELECT MovementChildId FROM tmpTransport)
+                                 )
+       SELECT tmpTransportGoods.JuricalId_car FROM tmpTransportGoods
+      );
 
 
      -- параметры из документа
@@ -47,7 +66,18 @@ BEGIN
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)     AS GoodsPropertyId_basis
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
+          
+          , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDate_find
+
+          , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN zc_Juridical_Basis() ELSE COALESCE (View_Contract.JuridicalBasisId, Object_From.Id) END AS FromId_find
+
+          , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN zc_Juridical_Basis() ELSE COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id) END AS ToId_find
+
+
             INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
+               , vbOperDate_find
+               , vbFromId_find
+               , vbToId_find
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -64,6 +94,9 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                       AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -76,9 +109,21 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_JuridicalBasis_GoodsProperty
                                ON ObjectLink_JuridicalBasis_GoodsProperty.ObjectId = zc_Juridical_Basis()
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()*/
+
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId -- MovementLinkObject_Contract.ObjectId
+
      WHERE Movement.Id = inMovementId
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
+
+--   RAISE EXCEPTION 'Ошибка.<%>', vbJuricalId_car;
 
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
@@ -203,6 +248,28 @@ BEGIN
                                                    AND ObjectString_VIN.DescId IN (zc_ObjectString_Car_VIN(), zc_ObjectString_CarExternal_VIN())
                         )
 
+            , t1 AS (SELECT *
+                     FROM ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
+                          WHERE OH_JuridicalDetails_From.JuridicalId = vbFromId_find
+                          AND vbOperDate_find >= OH_JuridicalDetails_From.StartDate
+                          AND vbOperDate_find <  OH_JuridicalDetails_From.EndDate
+                  )
+
+            , t2 AS (SELECT *
+                     FROM ObjectHistory_JuridicalDetails_ViewByDate
+                   AS OH_JuridicalDetails_To
+                   WHERE  OH_JuridicalDetails_To.JuridicalId = vbToId_find
+                  AND vbOperDate_find >= OH_JuridicalDetails_To.StartDate
+                  AND vbOperDate_find <  OH_JuridicalDetails_To.EndDate
+                  )
+
+            , t3 AS (SELECT *
+                     FROM ObjectHistory_JuridicalDetails_ViewByDate
+                   AS OH_JuridicalDetails_car
+                   WHERE OH_JuridicalDetails_car.JuridicalId = vbJuricalId_car
+                  AND vbOperDate_find >= OH_JuridicalDetails_car.StartDate
+                  AND vbOperDate_find <  OH_JuridicalDetails_car.EndDate
+                  )
        --          
        SELECT 
              Movement.InvNumber                         AS InvNumber_Sale
@@ -307,7 +374,8 @@ BEGIN
                        + COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId), 0)
                         ))/1000) :: TFloat AS Weight_all_t --в тоннах
 
-          , CASE WHEN tmpCar_param.Year > 0 THEN CAST (tmpCar_param.Year AS Integer) :: TVarChar ELSE '' END ::TVarChar AS Year
+          , CASE WHEN (select tmpCar_param.Year from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) > 0
+                     THEN  (select tmpCar_param.Year :: Integer from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar ELSE '' END ::TVarChar AS Year
 
         --, tmpCar_param.VIN  ::TVarChar AS VIN
           , (select tmpCar_param.VIN  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS VIN 
@@ -388,32 +456,34 @@ BEGIN
             /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())*/
-            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = vbContractId -- MovementLinkObject_Contract.ObjectId
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate
+            -- LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = vbContractId -- MovementLinkObject_Contract.ObjectId
+
+            LEFT JOIN t1
                    AS OH_JuridicalDetails_From
-                   ON OH_JuridicalDetails_From.JuridicalId = CASE WHEN vbDescId = zc_Movement_SendOnPrice() THEN zc_Juridical_Basis() ELSE COALESCE (View_Contract.JuridicalBasisId, Object_From.Id) END
-                  AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
-                  AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
+                   ON OH_JuridicalDetails_From.JuridicalId = vbFromId_find
+                  AND vbOperDate_find >= OH_JuridicalDetails_From.StartDate
+                  AND vbOperDate_find <  OH_JuridicalDetails_From.EndDate
 
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+            /*LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id 
-                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()*/
+            LEFT JOIN t2
                    AS OH_JuridicalDetails_To
-                   ON OH_JuridicalDetails_To.JuridicalId = CASE WHEN vbDescId = zc_Movement_SendOnPrice() THEN zc_Juridical_Basis() ELSE COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id) END   -- CASE WHEN zc_Juridical_Basis() --
-                  AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
-                  AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
+                   ON OH_JuridicalDetails_To.JuridicalId = vbToId_find
+                  AND vbOperDate_find >= OH_JuridicalDetails_To.StartDate
+                  AND vbOperDate_find <  OH_JuridicalDetails_To.EndDate
 
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate
+            LEFT JOIN t3
                    AS OH_JuridicalDetails_car
-                   ON OH_JuridicalDetails_car.JuridicalId = tmpTransportGoods.JuricalId_car
-                  AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_car.StartDate
-                  AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_car.EndDate
+                   ON OH_JuridicalDetails_car.JuridicalId = vbJuricalId_car
+                  AND vbOperDate_find >= OH_JuridicalDetails_car.StartDate
+                  AND vbOperDate_find <  OH_JuridicalDetails_car.EndDate
 
             LEFT JOIN tmpPackage ON 1=1
 
-            LEFT JOIN tmpCar_param ON tmpCar_param.CarId = tmpTransportGoods.CarId AND 1=0
-            LEFT JOIN tmpCar_param AS tmpCarTrailer_param ON tmpCarTrailer_param.CarId = tmpTransportGoods.CarTrailerId AND 1=0
+            -- LEFT JOIN tmpCar_param ON tmpCar_param.CarId = tmpTransportGoods.CarId AND 1=0
+            -- LEFT JOIN tmpCar_param AS tmpCarTrailer_param ON tmpCarTrailer_param.CarId = tmpTransportGoods.CarTrailerId AND 1=0
+
        WHERE Movement.Id = inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;

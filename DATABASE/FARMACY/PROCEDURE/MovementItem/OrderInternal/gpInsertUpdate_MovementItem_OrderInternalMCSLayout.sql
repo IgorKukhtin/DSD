@@ -166,6 +166,7 @@ BEGIN
                                                 ELSE 0
                                            END ::TFloat AS MCSValue_min
                                          , COALESCE(tmpLayoutAll.Amount, 0) AS Layout
+                                         , ObjectLink_Price_Unit.ObjectId
                                     FROM ObjectLink AS ObjectLink_Price_Unit
                                          LEFT JOIN ObjectBoolean AS MCS_isClose
                                                                  ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -189,15 +190,45 @@ BEGIN
                                     WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                       AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                                       AND (COALESCE(MCS_isClose.ValueData,False) = False OR COALESCE(tmpLayoutAll.Amount,0) > 0) 
-                                      AND (COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0)) > 0
                                    )
+             , tmpLeftTheMarket AS (SELECT Object_Goods_Retail.Id                                     AS GoodsId
+                                         , tmpPriceAll.UnitId                                         AS UnitId      
+                                         , COALESCE (ObjectHistoryFloat_MCSDay.ValueData, 0):: TFloat AS MCSDay
+                                         , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Retail.Id ORDER BY ObjectHistory_Price.Id DESC) AS Ord
+                                    FROM Object_Goods_Main
+                                    
+                                         INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods_Main.Id
+                                                                       AND Object_Goods_Retail.RetailId = vbObjectId
+                                                                       
+                                         INNER JOIN tmpPriceAll ON tmpPriceAll.GoodsId = Object_Goods_Retail.Id
+                                         
+                                         INNER JOIN ObjectHistory AS ObjectHistory_Price
+                                                                  ON ObjectHistory_Price.ObjectId = tmpPriceAll.ObjectId
+                                                                 AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                                                                 AND ObjectHistory_Price.StartDate <= Object_Goods_Main.DateLeftTheMarket - INTERVAL '45 day'
+                                                                 AND ObjectHistory_Price.EndDate > Object_Goods_Main.DateLeftTheMarket - INTERVAL '45 day'
+                                                                 
+                                         INNER JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDay
+                                                                       ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
+                                                                      AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay()
+                                    
+                                    WHERE Object_Goods_Main.isLeftTheMarket = FALSE
+                                      AND Object_Goods_Main.DateAddToOrder = CURRENT_DATE
+                                      AND COALESCE (ObjectHistoryFloat_MCSDay.ValueData, 0) >= 3)
              , tmpPrice AS (SELECT tmpPriceAll.UnitId
                                  , tmpPriceAll.GoodsId
                                  , tmpPriceAll.Price
-                                 , tmpPriceAll.MCSValue
+                                 , CASE WHEN COALESCE (tmpPriceAll.MCSValue, 0) < COALESCE (tmpLeftTheMarket.MCSDay, 0) THEN tmpLeftTheMarket.MCSDay ELSE tmpPriceAll.MCSValue END MCSValue
                                  , tmpPriceAll.MCSValue_min
                                  , tmpPriceAll.Layout
                             FROM tmpPriceAll
+                            
+                                 LEFT JOIN tmpLeftTheMarket ON tmpLeftTheMarket.GoodsId = tmpPriceAll.GoodsId
+                                                           AND tmpLeftTheMarket.UnitId = tmpPriceAll.UnitId
+                                                           AND tmpLeftTheMarket.Ord = 1
+                                                           
+                            WHERE CASE WHEN COALESCE (tmpPriceAll.MCSValue, 0) < COALESCE (tmpLeftTheMarket.MCSDay, 0) THEN tmpLeftTheMarket.MCSDay ELSE tmpPriceAll.MCSValue END > 0 
+                               OR COALESCE(tmpPriceAll.Layout, 0) > 0
                             UNION ALL
                             SELECT inUnitId   AS UnitId
                                  , tmpLayoutAll.GoodsId

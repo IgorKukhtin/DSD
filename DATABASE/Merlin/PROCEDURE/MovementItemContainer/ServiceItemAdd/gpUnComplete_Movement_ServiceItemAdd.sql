@@ -23,7 +23,14 @@ BEGIN
 
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
-                                  , inUserId     := vbUserId);
+                                  , inUserId     := vbUserId
+                                   );
+
+     -- Восстанавливаем данные в начислениях
+     PERFORM lpUpdate_Movement_Service_restore (inMovementId_sia:= inMovementId
+                                              , inUserId         := vbUserId
+                                               );
+
 
 END;
 $BODY$

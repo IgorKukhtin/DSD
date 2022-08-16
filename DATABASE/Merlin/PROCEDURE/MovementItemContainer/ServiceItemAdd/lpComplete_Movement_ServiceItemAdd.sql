@@ -7,28 +7,137 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_ServiceItemAdd(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbAccountId_ServiceItem   Integer;
-  DECLARE vbAccountId_Debts  Integer;
-  DECLARE vbAccountId_Profit Integer;
-  DECLARE vbProfitLossId     Integer;
 BEGIN
 
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpMovement_Service')
+     THEN
+         DELETE FROM _tmpMovement_Service;
+     ELSE
+         -- таблица - документы начисления
+         CREATE TEMP TABLE _tmpMovement_Service (OperDate TDateTime, UnitId Integer, InfoMoneyId Integer, CommentInfoMoneyId Integer, Amount TFloat, MovementId_service Integer) ON COMMIT DROP;
+     END IF;
 
-    -- Создаем временнве таблицы
-    --PERFORM lpComplete_Movement_ServiceItemAdd_CreateTemp();
 
-    -- !!!обязательно!!! очистили таблицу проводок
+     -- документы начисления
+     INSERT INTO _tmpMovement_Service (OperDate, UnitId, InfoMoneyId, CommentInfoMoneyId, Amount, MovementId_service)
+           WITH -- Дополнения к условиям
+                tmpMI AS (SELECT MIDate_DateStart.ValueData AS StartDate
+                               , MIDate_DateEnd.ValueData   AS EndDate
+                               , MovementItem.ObjectId                   AS UnitId
+                               , MILinkObject_InfoMoney.ObjectId         AS InfoMoneyId
+                               , MILinkObject_CommentInfoMoney.ObjectId  AS CommentInfoMoneyId
+                               , MovementItem.Amount                     AS Amount
+                          FROM Movement
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+                               INNER JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
+                                                                ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_CommentInfoMoney.DescId = zc_MILinkObject_CommentInfoMoney()
+                               LEFT JOIN MovementItemDate AS MIDate_DateStart
+                                                          ON MIDate_DateStart.MovementItemId = MovementItem.Id
+                                                         AND MIDate_DateStart.DescId = zc_MIDate_DateStart()
+                               LEFT JOIN MovementItemDate AS MIDate_DateEnd
+                                                          ON MIDate_DateEnd.MovementItemId = MovementItem.Id
+                                                         AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()
+                          WHERE Movement.Id = inMovementId
+                         )
+         -- список по месяцам
+       , tmpListDate AS (SELECT GENERATE_SERIES ((SELECT MIN (tmpMI.StartDate) FROM tmpMI)
+                                               , (SELECT MAX (tmpMI.EndDate)   FROM tmpMI)
+                                               , '1 MONTH' :: INTERVAL
+                                                ) AS OperDate
+                        )
+        -- находим существующие Начисления
+      , tmpMovement_Service AS (SELECT Movement.Id                     AS MovementId
+                                     , Movement.OperDate               AS OperDate
+                                     , MovementItem.ObjectId           AS UnitId
+                                     , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
+                                FROM Movement
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                                      ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
+                                     INNER JOIN tmpListDate ON tmpListDate.OperDate = Movement.OperDate
+                                     INNER JOIN tmpMI ON tmpMI.UnitId      = MovementItem.ObjectId
+                                                     AND tmpMI.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+                                                     AND tmpListDate.OperDate BETWEEN tmpMI.StartDate AND tmpMI.EndDate
 
-    -- 4.1. предварительно сохранили данные
+                                WHERE Movement.DescId   = zc_Movement_Service()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                               )
+           -- Список Начислений
+           SELECT tmpListDate.OperDate
+                , tmpMI.UnitId
+                , tmpMI.InfoMoneyId
+                , tmpMI.CommentInfoMoneyId
+                , tmpMI.Amount
+                , COALESCE (tmpMovement_Service.MovementId, 0) AS MovementId_service
+           FROM tmpListDate
+                INNER JOIN tmpMI ON tmpListDate.OperDate BETWEEN tmpMI.StartDate AND tmpMI.EndDate
+                LEFT JOIN tmpMovement_Service ON tmpMovement_Service.OperDate    = tmpListDate.OperDate
+                                             AND tmpMovement_Service.UnitId      = tmpMI.UnitId
+                                             AND tmpMovement_Service.InfoMoneyId = tmpMI.InfoMoneyId
+           ORDER BY tmpListDate.OperDate;
 
-    -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
-    --PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 
-    -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
-    PERFORM lpComplete_Movement (inMovementId := inMovementId
-                               , inDescId     := zc_Movement_ServiceItemAdd()
-                               , inUserId     := inUserId
-                                );
+     -- проверка
+     IF EXISTS (SELECT 1 FROM _tmpMovement_Service WHERE _tmpMovement_Service.MovementId_service = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не найдены начисления для <%> <%> за <%>.Нельзя провести дополнение.Всего не найдено = <%>.'
+                       , lfGet_Object_ValueData_sh ((SELECT tmp.UnitId FROM _tmpMovement_Service AS tmp WHERE tmp.MovementId_service = 0 ORDER BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId, tmp.CommentInfoMoneyId, tmp.Amount LIMIT 1))
+                       , lfGet_Object_ValueData_sh ((SELECT tmp.InfoMoneyId FROM _tmpMovement_Service AS tmp WHERE tmp.MovementId_service = 0 ORDER BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId, tmp.CommentInfoMoneyId, tmp.Amount LIMIT 1))
+                       , zfConvert_DateToString ((SELECT tmp.OperDate FROM _tmpMovement_Service AS tmp WHERE tmp.MovementId_service = 0 ORDER BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId, tmp.CommentInfoMoneyId, tmp.Amount LIMIT 1))
+                       , (SELECT COUNT(*) FROM _tmpMovement_Service AS tmp WHERE tmp.MovementId_service = 0)
+                        ;
+     END IF;
+
+
+
+     -- Заливаем данные в начисления
+     PERFORM gpInsertUpdate_Movement_Service (ioId                := tmpMovement.MovementId_service
+                                            , inInvNumber         := tmpMovement.InvNumber_service
+                                            , inOperDate          := tmpMovement.OperDate
+                                            , inServiceDate       := tmpMovement.OperDate
+                                            , inAmount            := tmpMovement.Amount
+                                            , inUnitId            := tmpMovement.UnitId
+                                            , inParent_InfoMoneyId:= tmpMovement.ParentId_InfoMoney
+                                            , inInfoMoneyName     := tmpMovement.InfoMoneyName
+                                            , inCommentInfoMoney  := tmpMovement.CommentInfoMoney
+                                            , inSession           := inUserId :: TVarChar
+                                             ) AS MovementId
+     FROM (
+           -- Список Начислений
+           SELECT _tmpMovement_Service.MovementId_service
+                , _tmpMovement_Service.OperDate
+                , _tmpMovement_Service.UnitId
+                , _tmpMovement_Service.Amount
+                , Object_InfoMoney.ValueData        AS InfoMoneyName
+                , Object_CommentInfoMoney.ValueData AS CommentInfoMoney
+                , ObjectLink_Parent.ChildObjectId   AS ParentId_InfoMoney
+                , Movement.InvNumber                AS InvNumber_service
+           FROM _tmpMovement_Service
+                LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = _tmpMovement_Service.InfoMoneyId
+                LEFT JOIN ObjectLink AS ObjectLink_Parent
+                                     ON ObjectLink_Parent.ObjectId = Object_InfoMoney.Id
+                                    AND ObjectLink_Parent.DescId   = zc_ObjectLink_InfoMoney_Parent()
+                LEFT JOIN Object AS Object_CommentInfoMoney ON Object_CommentInfoMoney.Id = _tmpMovement_Service.CommentInfoMoneyId
+                INNER JOIN Movement ON Movement.Id = _tmpMovement_Service.MovementId_service
+           ORDER BY _tmpMovement_Service.OperDate
+          ) AS tmpMovement
+    ;
+
+
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_ServiceItemAdd()
+                                , inUserId     := inUserId
+                                 );
 
 END;
 $BODY$

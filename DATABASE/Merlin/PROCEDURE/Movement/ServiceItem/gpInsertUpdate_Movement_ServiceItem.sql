@@ -52,7 +52,7 @@ BEGIN
      IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = ioId AND Movement.StatusId = zc_Enum_Status_Complete())
      THEN
          -- Распровели
-         PERFORM lpUnComplete_Movement (ioId, vbUserId);
+         PERFORM gpUnComplete_Movement_ServiceItem (ioId, inSession);
      END IF;
 
      -- сохранили <Документ>
@@ -65,7 +65,7 @@ BEGIN
                                                , inAmount             := inAmount
                                                , inPrice              := inPrice
                                                , inArea               := inArea
-                                               , inUserId               := vbUserId
+                                               , inUserId             := vbUserId
                                                 );
                                                 
 

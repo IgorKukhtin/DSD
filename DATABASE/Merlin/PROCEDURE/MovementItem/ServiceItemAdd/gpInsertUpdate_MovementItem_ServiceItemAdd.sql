@@ -120,7 +120,7 @@ BEGIN
          -- Проверка EndDate - попадает в диапазон базовых условий
          IF ((('01.'||ioNumEndDate||'.'||(2000 + ioNumYearEnd)) ::TDateTime) + INTERVAL '1 MONTH' -  INTERVAL '1 Day') > vbDateEnd_base
          THEN
-            RAISE EXCEPTION 'Ошибка.Начальная дата = <%> не может быть раньше начальной даты в базовом условии = <%>.'
+            RAISE EXCEPTION 'Ошибка.Конечная дата = <%> не может быть позже конечной даты в базовом условии = <%>.'
                           , zfConvert_DateToString (('01.'||ioNumEndDate||'.'||(2000 + ioNumYearEnd)) ::TDateTime + INTERVAL '1 MONTH' -  INTERVAL '1 Day')
                           , zfConvert_DateToString (vbDateEnd_base)
                            ;
@@ -131,7 +131,8 @@ BEGIN
      -- если за 1 месяц тогда переопределяем месяц окончания  = месяцу начала
      IF inIsOne = TRUE
      THEN
-         ioNumEndDate := ioNumStartDate;
+         ioNumEndDate:= ioNumStartDate;
+         ioNumYearEnd:= ioNumYearStart;
      END IF;
 
      IF (ioNumStartDate > ioNumEndDate) AND (ioNumYearStart = ioNumYearEnd)          -- outDateStart не может же быть позже outEndDate
