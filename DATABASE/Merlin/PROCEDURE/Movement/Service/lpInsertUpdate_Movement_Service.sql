@@ -20,6 +20,9 @@ $BODY$
    DECLARE vbMovementItemId Integer;
 BEGIN
 
+     if COALESCE (ioId, 0) = 0 then RAISE EXCEPTION 'Ошибка.insert. <%> <%> <%>', lfGet_Object_ValueData_sh (inUnitId), lfGet_Object_ValueData_sh (inInfoMoneyId), zfConvert_DateToString (inOperDate); END IF;
+     if inOperDate <> (select OperDate from Movement where Id = ioId) then RAISE EXCEPTION 'Ошибка.OperDate. <%> <%> <%>  old = <%>', lfGet_Object_ValueData_sh (inUnitId), lfGet_Object_ValueData_sh (inInfoMoneyId), zfConvert_DateToString (inOperDate), zfConvert_DateToString ((select OperDate from Movement where Id = ioId)); END IF;
+
     -- проверка
      IF COALESCE (inInfoMoneyId, 0) = 0
      THEN

@@ -47,7 +47,9 @@ BEGIN
                         WHERE tmpMI_Main.InfoMoneyId = inInfoMoneyId
                         )
          THEN   
-              RAISE EXCEPTION 'Ошибка.Не найдено Основное условие аренды для <%> <%>', lfGet_Object_TreeNameFull (inUnitId  ,zc_ObjectLink_Unit_Parent()), lfGet_Object_ValueData (inInfoMoneyId); 
+              RAISE EXCEPTION 'Ошибка.Не найдено Основное условие аренды для <%> <%>'
+                            , lfGet_Object_TreeNameFull (inUnitId  ,zc_ObjectLink_Unit_Parent())
+                            , lfGet_Object_ValueData (inInfoMoneyId); 
          END IF;
      END IF;
      

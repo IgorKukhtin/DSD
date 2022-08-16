@@ -23,6 +23,8 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     -- if COALESCE (ioId, 0) = 0 then RAISE EXCEPTION 'Ошибка.insert. <%> <%> <%>', lfGet_Object_ValueData_sh (inUnitId), lfGet_Object_ValueData_sh (inInfoMoneyId), zfConvert_DateToString (inOperDate); END IF;
+
      -- проверка - свойство должно быть установлено
      IF COALESCE (inUnitId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Отдел>.';

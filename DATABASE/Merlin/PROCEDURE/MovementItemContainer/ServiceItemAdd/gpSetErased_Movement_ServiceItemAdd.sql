@@ -25,6 +25,10 @@ BEGIN
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
 
+     -- ¬осстанавливаем данные в начислени€х
+     PERFORM lpUpdate_Movement_Service_restore (inMovementId_sia:= inMovementId
+                                              , inUserId         := vbUserId
+                                               );
 
 
 END;
