@@ -13,13 +13,15 @@ BEGIN
      THEN
          DELETE FROM _tmpMovement_Service;
      ELSE
-         -- таблица - документы
+         -- таблица - документы начисления
          CREATE TEMP TABLE _tmpMovement_Service (OperDate TDateTime, UnitId Integer, InfoMoneyId Integer, CommentInfoMoneyId Integer, Amount TFloat, MovementId_service Integer) ON COMMIT DROP;
      END IF;
 
 
+     -- документы начисления
      INSERT INTO _tmpMovement_Service (OperDate, UnitId, InfoMoneyId, CommentInfoMoneyId, Amount, MovementId_service)
-           WITH tmpMI AS (SELECT MIDate_DateStart.ValueData AS StartDate
+           WITH -- Дополнения к условиям
+                tmpMI AS (SELECT MIDate_DateStart.ValueData AS StartDate
                                , MIDate_DateEnd.ValueData   AS EndDate
                                , MovementItem.ObjectId                   AS UnitId
                                , MILinkObject_InfoMoney.ObjectId         AS InfoMoneyId
@@ -43,12 +45,13 @@ BEGIN
                                                          AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()
                           WHERE Movement.Id = inMovementId
                          )
+         -- список по месяцам
        , tmpListDate AS (SELECT GENERATE_SERIES ((SELECT MIN (tmpMI.StartDate) FROM tmpMI)
                                                , (SELECT MAX (tmpMI.EndDate)   FROM tmpMI)
                                                , '1 MONTH' :: INTERVAL
                                                 ) AS OperDate
                         )
-        -- находим существующие
+        -- находим существующие Начисления
       , tmpMovement_Service AS (SELECT Movement.Id                     AS MovementId
                                      , Movement.OperDate               AS OperDate
                                      , MovementItem.ObjectId           AS UnitId
@@ -68,7 +71,7 @@ BEGIN
                                 WHERE Movement.DescId   = zc_Movement_Service()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                                )
-           -- Список Начилений
+           -- Список Начислений
            SELECT tmpListDate.OperDate
                 , tmpMI.UnitId
                 , tmpMI.InfoMoneyId
