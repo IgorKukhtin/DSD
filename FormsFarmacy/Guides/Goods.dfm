@@ -585,6 +585,14 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 80
           end
+          object DateAddToOrder: TcxGridDBColumn
+            Caption = #1042' '#1079#1072#1082#1072#1079' '#1087#1086#1089#1083#1077' '#1087#1086#1103#1074#1083#1077#1085#1080#1077' '#1085#1072' '#1088#1099#1085#1082#1077
+            DataBinding.FieldName = 'DateAddToOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 96
+          end
         end
       end
     end
