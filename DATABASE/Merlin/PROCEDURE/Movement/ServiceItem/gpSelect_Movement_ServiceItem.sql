@@ -220,7 +220,8 @@ BEGIN
                                         ON MIFloat_Area_after.MovementItemId = tmpMI_after.MovementItemId
                                        AND MIFloat_Area_after.DescId = zc_MIFloat_Area()
 
-       WHERE COALESCE (tmpMI_before.DateEnd_find + INTERVAL '1 DAY', tmpMI.DateEnd) BETWEEN inStartDate AND inEndDate
+     --WHERE COALESCE (tmpMI_before.DateEnd_find + INTERVAL '1 DAY', tmpMI.DateEnd) BETWEEN inStartDate AND inEndDate
+       WHERE tmpMI.DateEnd BETWEEN inStartDate AND inEndDate
        -- WHERE tmpMI.MovementId = 291971
       ;
 

@@ -38,7 +38,7 @@ BEGIN
              vbCommentInfoMoneyId := gpInsertUpdate_Object_CommentInfoMoney (ioId   := 0
                                                                            , inCode := 0
                                                                            , inName := TRIM (inCommentInfoMoney)::TVarChar
-                                                                           , inInfoMoneyNameKindId := 0
+                                                                           , inInfoMoneyKindId := 0
                                                                            , inSession := inSession
                                                                             );
              -- сохранили
