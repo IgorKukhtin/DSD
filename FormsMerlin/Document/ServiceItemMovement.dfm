@@ -231,14 +231,7 @@
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inArea'
-        Value = Null
-        Component = ceArea
+        Component = ceAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -252,19 +245,19 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inArea'
+        Value = Null
+        Component = ceArea
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inCommentInfoMoney'
         Value = 0
         Component = edCommentInfoMoney
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ffff'
-        Value = Null
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -306,16 +299,16 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperDate'
-        Value = 0d
-        Component = ceOperDate
+        Name = 'StartDate'
+        Value = Null
+        Component = ceStartDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
-        Name = 'StartDate'
-        Value = Null
-        Component = ceStartDate
+        Name = 'EndDate'
+        Value = 0d
+        Component = ceOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -324,6 +317,14 @@
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -337,14 +338,6 @@
         Name = 'infomoneyname'
         Value = ''
         Component = GuidesInfoMoney
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = Null
-        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -365,9 +358,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Area'
-        Value = Null
-        Component = ceArea
+        Name = 'Amount'
+        Value = 0.000000000000000000
+        Component = ceAmount
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -379,32 +372,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Amount'
-        Value = 0.000000000000000000
-        Component = ceAmount
+        Name = 'Area'
+        Value = Null
+        Component = ceArea
         DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'InfoMoneyId'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 304

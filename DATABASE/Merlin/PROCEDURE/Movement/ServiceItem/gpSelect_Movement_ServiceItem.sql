@@ -71,15 +71,18 @@ BEGIN
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+-- where MovementItem.ObjectId = 52809
                     )
   , tmpMI_before AS (SELECT tmpMI.UnitId
                           , tmpMI.InfoMoneyId
+                          , tmpMI.DateEnd
+                            --
                           , tmpMI_f.MovementId
-                          , tmpMI_f.DateEnd
+                          , tmpMI_f.DateEnd AS DateEnd_find
                           , tmpMI_f.MovementItemId
                           , tmpMI_f.Amount
                             -- № п/п
-                          , ROW_NUMBER() OVER (PARTITION BY tmpMI.UnitId, tmpMI.InfoMoneyId ORDER BY COALESCE (tmpMI_f.DateEnd, zc_DateEnd()) DESC) AS Ord
+                          , ROW_NUMBER() OVER (PARTITION BY tmpMI.UnitId, tmpMI.InfoMoneyId, tmpMI.DateEnd ORDER BY COALESCE (tmpMI_f.DateEnd, zc_DateEnd()) DESC) AS Ord
                      FROM tmpMI
                           -- поиск "предыдущих"
                           LEFT JOIN tmpMI AS tmpMI_f ON tmpMI_f.UnitId       = tmpMI.UnitId
@@ -90,11 +93,13 @@ BEGIN
    , tmpMI_after AS (SELECT tmpMI.UnitId
                           , tmpMI.InfoMoneyId
                           , tmpMI_f.MovementId
-                          , tmpMI_f.DateEnd
+                          , tmpMI.DateEnd
+                            --
+                          , tmpMI_f.DateEnd AS DateEnd_find
                           , tmpMI_f.MovementItemId
                           , tmpMI_f.Amount
                             -- № п/п
-                          , ROW_NUMBER() OVER (PARTITION BY tmpMI.UnitId, tmpMI.InfoMoneyId ORDER BY COALESCE (tmpMI_f.DateEnd, zc_DateEnd()) ASC) AS Ord
+                          , ROW_NUMBER() OVER (PARTITION BY tmpMI.UnitId, tmpMI.InfoMoneyId, tmpMI.DateEnd ORDER BY COALESCE (tmpMI_f.DateEnd, zc_DateEnd()) ASC) AS Ord
                      FROM tmpMI
                           LEFT JOIN tmpMI AS tmpMI_f ON tmpMI_f.UnitId       = tmpMI.UnitId
                                                     AND tmpMI_f.InfoMoneyId  = tmpMI.InfoMoneyId
@@ -132,22 +137,22 @@ BEGIN
            , tmpMI.Amount                 :: TFloat    AS Amount
            , MIFloat_Price.ValueData      :: TFloat    AS Price
            , MIFloat_Area.ValueData       :: TFloat    AS Area
-           , COALESCE (tmpMI_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) :: TDateTime AS DateStart
+           , COALESCE (tmpMI_before.DateEnd_find + INTERVAL '1 DAY', NULL) :: TDateTime AS DateStart
            , tmpMI.DateEnd                :: TDateTime AS DateEnd
 
-           , zfCalc_Month_diff (tmpMI_before.DateEnd + INTERVAL '1 DAY', tmpMI.DateEnd) :: Integer AS Month_diff
+           , zfCalc_Month_diff (tmpMI_before.DateEnd_find + INTERVAL '1 DAY', tmpMI.DateEnd) :: Integer AS Month_diff
 
            , tmpMI_before.Amount            :: TFloat    AS Amount_before
            , MIFloat_Price_before.ValueData :: TFloat    AS Price_before
            , MIFloat_Area_before.ValueData  :: TFloat    AS Area_before
-           , CASE WHEN tmpMI_before.DateEnd IS NULL THEN NULL ELSE COALESCE (tmpMI_before_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) END :: TDateTime AS DateStart_before
-           , tmpMI_before.DateEnd           :: TDateTime AS DateEnd_before
+           , CASE WHEN tmpMI_before.DateEnd_find IS NULL THEN NULL ELSE COALESCE (tmpMI_before_before.DateEnd_find + INTERVAL '1 DAY', NULL) END :: TDateTime AS DateStart_before
+           , tmpMI_before.DateEnd_find      :: TDateTime AS DateEnd_before
 
            , tmpMI_after.Amount             :: TFloat    AS Amount_after
            , MIFloat_Price_after.ValueData  :: TFloat    AS Price_after
            , MIFloat_Area_after.ValueData   :: TFloat    AS Area_after
-           , CASE WHEN tmpMI_after.DateEnd IS NULL THEN NULL ELSE tmpMI.DateEnd + INTERVAL '1 DAY' END :: TDateTime AS DateStart_after
-           , tmpMI_after.DateEnd           :: TDateTime AS DateEnd_after
+           , CASE WHEN tmpMI_after.DateEnd_find IS NULL THEN NULL ELSE tmpMI.DateEnd + INTERVAL '1 DAY' END :: TDateTime AS DateStart_after
+           , tmpMI_after.DateEnd_find       :: TDateTime AS DateEnd_after
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMI.StatusId
@@ -189,13 +194,16 @@ BEGIN
 
             LEFT JOIN tmpMI_before ON tmpMI_before.UnitId      = tmpMI.UnitId
                                   AND tmpMI_before.InfoMoneyId = tmpMI.InfoMoneyId
+                                  AND tmpMI_before.DateEnd     = tmpMI.DateEnd
                                   AND tmpMI_before.Ord         = 1
             LEFT JOIN tmpMI_before AS tmpMI_before_before
                                    ON tmpMI_before_before.UnitId      = tmpMI.UnitId
                                   AND tmpMI_before_before.InfoMoneyId = tmpMI.InfoMoneyId
+                                  AND tmpMI_before_before.DateEnd     = tmpMI.DateEnd
                                   AND tmpMI_before_before.Ord         = 2
             LEFT JOIN tmpMI_after ON tmpMI_after.UnitId      = tmpMI.UnitId
                                  AND tmpMI_after.InfoMoneyId = tmpMI.InfoMoneyId
+                                 AND tmpMI_after.DateEnd     = tmpMI.DateEnd
                                  AND tmpMI_after.Ord         = 1
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price_before
@@ -212,7 +220,8 @@ BEGIN
                                         ON MIFloat_Area_after.MovementItemId = tmpMI_after.MovementItemId
                                        AND MIFloat_Area_after.DescId = zc_MIFloat_Area()
 
-       WHERE COALESCE (tmpMI_before.DateEnd + INTERVAL '1 DAY', tmpMI.DateEnd) BETWEEN inStartDate AND inEndDate
+       WHERE COALESCE (tmpMI_before.DateEnd_find + INTERVAL '1 DAY', tmpMI.DateEnd) BETWEEN inStartDate AND inEndDate
+       -- WHERE tmpMI.MovementId = 291971
       ;
 
 
@@ -227,4 +236,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ServiceItem (inStartDate:= '30.01.2015', inEndDate:= '01.01.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT DateStart, DateEnd, * FROM gpSelect_Movement_ServiceItem (inStartDate:= '01.01.2021', inEndDate:= '01.01.2022', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

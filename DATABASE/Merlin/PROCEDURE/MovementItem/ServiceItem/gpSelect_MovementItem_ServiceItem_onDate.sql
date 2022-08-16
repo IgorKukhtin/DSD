@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ServiceItem_onDate(
     IN inInfoMoneyId      Integer   ,
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
+RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber Integer
              , Id Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , UnitGroupNameFull TVarChar
@@ -127,11 +127,11 @@ BEGIN
                      WHERE tmpMI_All.Ord = 1
                        AND tmpMI_find.UnitId IS NULL
                     )
-           --
-           SELECT tmpMI.MovementId             :: Integer   AS MovementId
+           -- Результат
+           SELECT CASE WHEN tmpMI.MovementId > 0 THEN tmpMI.MovementId ELSE tmp_before.MovementId END :: Integer AS MovementId
                 , tmpMI.OperDate               :: TDateTime AS OperDate
-                , tmpMI.InvNumber              :: TVarChar  AS InvNumber
-                , tmpMI.MovementItemId         :: Integer   AS Id
+                , zfConvert_StringToNumber (tmpMI.InvNumber)AS InvNumber
+                , CASE WHEN tmpMI.MovementId > 0 THEN tmpMI.MovementId ELSE tmp_before.MovementId END :: Integer AS Id
                 , Object_Unit.Id                            AS UnitId
                 , Object_Unit.ObjectCode                    AS UnitCode
                 , Object_Unit.ValueData                     AS UnitName

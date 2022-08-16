@@ -524,10 +524,6 @@
 				<Form>ServiceItemUpdateForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsMerlin\Document\ServiceItemEditMI.pas">
-				<Form>ServiceItemEditMIForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsMerlin\Document\Movement_PeriodDialogCash.pas">
 				<Form>Movement_PeriodDialogCashForm</Form>
 				<DesignClass>TParentForm</DesignClass>

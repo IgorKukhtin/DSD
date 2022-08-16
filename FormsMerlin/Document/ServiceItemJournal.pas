@@ -90,23 +90,21 @@ type
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
     actRefreshStart: TdsdDataSetRefresh;
-    PeriodChoice1: TPeriodChoice;
     spInsertUpdatebyHistory: TdsdStoredProc;
     bbInsertUpdatebyHistory: TdxBarButton;
     actInsertUpdatebyHistory: TdsdExecStoredProc;
-    actInsertAdd: TdsdInsertUpdateAction;
-    actUpdateAdd: TdsdInsertUpdateAction;
     bbInsertAdd: TdxBarButton;
     bbUpdateAdd: TdxBarButton;
     spCheckDesc: TdsdStoredProc;
     spCheckDescAdd: TdsdStoredProc;
     mactUpdate: TMultiAction;
-    actCheckDesc: TdsdExecStoredProc;
-    actCheckDescAdd: TdsdExecStoredProc;
-    mactUpdateAdd: TMultiAction;
     actOpenServiceItem_history: TdsdOpenForm;
     bbOpenServiceItem_history: TdxBarButton;
     Month_diff: TcxGridDBColumn;
+    MonthStart_before: TcxGridDBColumn;
+    MonthEnd_before: TcxGridDBColumn;
+    MonthStart_after: TcxGridDBColumn;
+    MonthEnd_after: TcxGridDBColumn;
   private
   public
   end;

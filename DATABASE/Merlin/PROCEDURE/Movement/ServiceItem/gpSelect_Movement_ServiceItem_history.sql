@@ -73,7 +73,7 @@ BEGIN
             --
            , Object_Unit.Id                AS UnitId
            , Object_Unit.ObjectCode        AS UnitCode
-           , TRIM (COALESCE (ObjectString_Unit_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
+           , Object_Unit.ValueData         AS UnitName
            , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
            
            , Object_InfoMoney.Id         AS InfoMoneyId
@@ -84,7 +84,7 @@ BEGIN
            , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
 
-           , COALESCE (tmpStartDate.OperDate + INTERVAL '1 DAY', zc_DateStart()) :: TDateTime AS DateStart
+           , COALESCE (tmpStartDate.OperDate + INTERVAL '1 DAY', NULL) :: TDateTime AS DateStart
            , Movement.Amount                       :: TFloat    AS Amount
            , COALESCE (MIFloat_Price.ValueData, 0) :: TFloat AS Price
            , COALESCE (MIFloat_Area.ValueData, 0)  :: TFloat AS Area        
@@ -130,7 +130,7 @@ BEGIN
                                         ON MIFloat_Area.MovementItemId = Movement.MovementItemId
                                        AND MIFloat_Area.DescId = zc_MIFloat_Area() 
 
-            LEFT JOIN tmpMovement AS tmpStartDate ON tmpStartDate.Ord+1 = Movement.Ord
+            LEFT JOIN tmpMovement AS tmpStartDate ON tmpStartDate.Ord + 1 = Movement.Ord
        ;
 
 

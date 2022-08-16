@@ -354,9 +354,6 @@ begin
   //1.3.
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemUpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemUpdateForm');
-  // Переделать на TServiceItemMovementForm?
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemEditMIForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TServiceItemEditMIForm');
   //1.4.
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemJournal_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemJournal_historyForm');

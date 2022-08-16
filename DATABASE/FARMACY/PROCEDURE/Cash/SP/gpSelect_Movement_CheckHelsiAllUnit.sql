@@ -123,10 +123,15 @@ WITH -- Товары соц-проект
                                                  AND Object_Helsi_IdSP.ObjectCode  = 1
                                                  AND Object_Helsi_IdSP.Id  = MovementLinkObject_SPKind.ObjectId
 
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicalProgramSP
+                                                             ON MovementLinkObject_MedicalProgramSP.MovementId = Movement.Id
+                                                            AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+                                                            
                            WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                              AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                              AND Movement.DescId = zc_Movement_Check()
                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 0) <> 20079831
                            ), 
            tmpMovementLinkObject AS (SELECT * FROM MovementLinkObject 
                                      WHERE MovementLinkObject.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)), 
@@ -268,4 +273,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_CheckHelsiAllUnit (inStartDate:= '19.07.2021', inSession:= '3')
 
-select * from gpSelect_Movement_CheckHelsiAllUnit(inStartDate := ('24.05.2022')::TDateTime, inEndDate := ('24.05.2022')::TDateTime,  inSession := '183242');
+select * from gpSelect_Movement_CheckHelsiAllUnit(inStartDate := ('11.08.2022')::TDateTime, inEndDate := ('12.08.2022')::TDateTime,  inSession := '183242');

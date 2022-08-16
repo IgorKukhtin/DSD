@@ -179,7 +179,6 @@ uses
   ServiceItemJournal in '..\..\FormsMerlin\Document\ServiceItemJournal.pas' {ServiceItemJournalForm: TParentForm},
   Report_UnitBalance in '..\..\FormsMerlin\Report\Report_UnitBalance.pas' {Report_UnitBalanceForm: TParentForm},
   ServiceItemUpdate in '..\..\FormsMerlin\Document\ServiceItemUpdate.pas' {ServiceItemUpdateForm: TParentForm},
-  ServiceItemEditMI in '..\..\FormsMerlin\Document\ServiceItemEditMI.pas' {ServiceItemEditMIForm: TParentForm},
   Movement_PeriodDialogCash in '..\..\FormsMerlin\Document\Movement_PeriodDialogCash.pas' {Movement_PeriodDialogCashForm: TParentForm},
   CashInJournal in '..\..\FormsMerlin\Document\CashInJournal.pas' {CashInJournalForm: TParentForm},
   CashOutJournal in '..\..\FormsMerlin\Document\CashOutJournal.pas' {CashOutJournalForm: TParentForm},

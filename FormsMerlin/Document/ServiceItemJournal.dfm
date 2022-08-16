@@ -213,12 +213,47 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 102
       end
+      object Month_diff: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089'.'
+        DataBinding.FieldName = 'Month_diff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+        Options.Editing = False
+        Width = 55
+      end
+      object MonthStart: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1089'...'
+        DataBinding.FieldName = 'DateStart'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'yy - mmmm'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+        Options.Editing = False
+        Width = 84
+      end
+      object MonthEnd: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1076#1086'...'
+        DataBinding.FieldName = 'DateEnd'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'yy - mmmm'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+        Options.Editing = False
+        Width = 94
+      end
       object DateStart: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089' ...'
         DataBinding.FieldName = 'DateStart'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
         Options.Editing = False
         Width = 70
       end
@@ -228,37 +263,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 94
-      end
-      object Month_diff: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089'.'
-        DataBinding.FieldName = 'Month_diff'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 0
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object MonthStart: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1089'...'
-        DataBinding.FieldName = 'DateStart'
-        PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'mmmm-yy'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 84
-      end
-      object MonthEnd: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1076#1086'...'
-        DataBinding.FieldName = 'DateEnd'
-        PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'mmmm-yy'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
+        HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
         Width = 94
       end
       object UnitGroupNameFull: TcxGridDBColumn
@@ -328,7 +333,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083'., '#1075#1088#1085' ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
         Options.Editing = False
         Width = 80
       end
@@ -341,7 +346,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
         Options.Editing = False
         Width = 80
       end
@@ -354,9 +359,33 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
         Options.Editing = False
         Width = 80
+      end
+      object MonthStart_before: TcxGridDBColumn
+        Caption = '*'#1052#1077#1089#1103#1094' '#1089'...'
+        DataBinding.FieldName = 'DateStart_before'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'yy - mmmm'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+        Options.Editing = False
+        Width = 70
+      end
+      object MonthEnd_before: TcxGridDBColumn
+        Caption = '*'#1052#1077#1089#1103#1094' '#1076#1086'...'
+        DataBinding.FieldName = 'DateEnd_before'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'yy - mmmm'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+        Options.Editing = False
+        Width = 70
       end
       object Amount: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
@@ -367,7 +396,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085
+        HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
         Width = 80
       end
       object Area: TcxGridDBColumn
@@ -379,6 +408,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
         Width = 80
       end
       object Price: TcxGridDBColumn
@@ -390,6 +420,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
         Width = 80
       end
       object Amount_after: TcxGridDBColumn
@@ -401,7 +432,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085' ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
         Options.Editing = False
         Width = 80
       end
@@ -414,7 +445,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
         Options.Editing = False
         Width = 80
       end
@@ -427,9 +458,33 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.  ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
         Options.Editing = False
         Width = 80
+      end
+      object MonthStart_after: TcxGridDBColumn
+        Caption = '***'#1052#1077#1089#1103#1094' '#1089'...'
+        DataBinding.FieldName = 'DateStart_after'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'yy - mmmm'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+        Options.Editing = False
+        Width = 70
+      end
+      object MonthEnd_after: TcxGridDBColumn
+        Caption = '***'#1052#1077#1089#1103#1094' '#1076#1086'...'
+        DataBinding.FieldName = 'DateEnd_after'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'yy - mmmm'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+        Options.Editing = False
+        Width = 70
       end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -547,6 +602,10 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -555,10 +614,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -606,18 +661,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         item
           Visible = True
           ItemName = 'bbInsertUpdatebyHistory'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
         end
         item
           Visible = True
@@ -704,12 +747,19 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Category = 0
     end
     object bbInsertAdd: TdxBarButton
-      Action = actInsertAdd
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+      Visible = ivAlways
+      ImageIndex = 0
+      ShortCut = 45
     end
     object bbUpdateAdd: TdxBarButton
-      Action = mactUpdateAdd
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+      Visible = ivAlways
+      ImageIndex = 1
     end
     object bbOpenServiceItem_history: TdxBarButton
       Action = actOpenServiceItem_history
@@ -791,46 +841,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertAdd: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TServiceItemAddMovementForm'
-      FormNameParam.Value = 'TServiceItemAddMovementForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Id_Value'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 44562d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -850,12 +860,8 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         item
           Name = 'inMovementId_Value'
           Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
+          Component = ClientDataSet
+          ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end
         item
@@ -900,51 +906,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         end>
       isShowModal = False
     end
-    object actUpdateAdd: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TServiceItemAddMovementForm'
-      FormNameParam.Value = 'TServiceItemAddMovementForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Id_Value'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 44562d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -968,12 +929,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
@@ -1331,6 +1286,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     object actInsertUpdatebyHistory: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdatebyHistory
       StoredProcList = <
@@ -1343,26 +1299,11 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       QuestionBeforeExecute = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1048#1089#1090#1086#1088#1080#1080'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
     end
-    object mactUpdateAdd: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actCheckDescAdd
-        end
-        item
-          Action = actUpdateAdd
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-      ImageIndex = 1
-    end
     object mactUpdate: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actCheckDesc
         end
         item
           Action = actUpdate
@@ -1370,28 +1311,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ImageIndex = 1
-    end
-    object actCheckDescAdd: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spCheckDescAdd
-      StoredProcList = <
-        item
-          StoredProc = spCheckDescAdd
-        end>
-      Caption = 'actCheckDescAdd'
-    end
-    object actCheckDesc: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spCheckDesc
-      StoredProcList = <
-        item
-          StoredProc = spCheckDesc
-        end>
-      Caption = 'actCheckDesc'
     end
   end
   object spSelect: TdsdStoredProc
@@ -1564,12 +1483,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
-        Component = deStart
-      end
-      item
-        Component = deEnd
       end>
     Left = 392
     Top = 144
@@ -1651,10 +1564,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     PackSize = 1
     Left = 233
     Top = 346
-  end
-  object PeriodChoice1: TPeriodChoice
-    Left = 768
-    Top = 48
   end
   object spInsertUpdatebyHistory: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ServiceItem_byHistory'
