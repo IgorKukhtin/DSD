@@ -118,7 +118,6 @@ type
     Amount_Weight_Dozakaz_M: TcxGridDBColumn;
     OperDate_CarInfo: TcxGridDBColumn;
     OperDate_CarInfo_date: TcxGridDBColumn;
-    TotalAmount_Weight: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
   private
     { Private declarations }
