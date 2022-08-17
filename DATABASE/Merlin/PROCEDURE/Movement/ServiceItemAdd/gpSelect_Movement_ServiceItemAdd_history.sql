@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ServiceItemAdd_history (TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ServiceItemAdd_history (TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ServiceItemAdd_history (TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ServiceItemAdd_history(
     IN inStartDate         TDateTime , --
     IN inUnitId            Integer , --
     IN inInfoMoneyId       Integer ,
     IN inIsErased          Boolean ,
+    IN inIsAll             Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer
@@ -77,7 +79,7 @@ BEGIN
        WHERE Movement.UnitId = inUnitId
          AND Movement.InfoMoneyId = inInfoMoneyId
          AND Movement.isErased = FALSE
-       --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+         AND ((inStartDate BETWEEN Movement.DateStart AND Movement.DateEnd) OR inIsAll = TRUE)
          
        ;
 
@@ -93,4 +95,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ServiceItemAdd_history (inStartDate:= '30.01.2015', inUnitId:= 0, inInfoMoneyId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ServiceItemAdd_history (inStartDate:= '30.01.2015', inUnitId:= 0, inInfoMoneyId:= 0, inIsErased:= FALSE, inIsAll:= FALSE, inSession:= zfCalc_UserAdmin())

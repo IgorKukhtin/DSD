@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer
              , StatusCode Integer, StatusName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar, UnitName_Full TVarChar
              , UnitGroupNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
@@ -82,6 +82,7 @@ BEGIN
            , Movement.UnitId
            , Movement.UnitCode
            , Movement.UnitName
+           , TRIM (COALESCE (Movement.UnitGroupNameFull,'')||' '|| Movement.UnitName) ::TVarChar AS UnitName_Full
            , Movement.UnitGroupNameFull
 
            , Movement.InfoMoneyId

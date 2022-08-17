@@ -109,7 +109,7 @@ type
     cxLabel6: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
-    cbAllMonth: TcxCheckBox;
+    cbAll: TcxCheckBox;
   private
   public
   end;

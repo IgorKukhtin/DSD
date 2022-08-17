@@ -3,7 +3,7 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
   Top = 0
   Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
   ClientHeight = 439
-  ClientWidth = 873
+  ClientWidth = 881
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,20 +20,22 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 873
+    Width = 881
     Height = 32
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 873
     object deStart: TcxDateEdit
-      Left = 821
-      Top = -2
+      Left = 56
+      Top = 5
       EditValue = 44562d
+      Properties.AssignedValues.EditFormat = True
+      Properties.DisplayFormat = 'mmmm-yy'
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
-      Visible = False
-      Width = 82
+      Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 821
@@ -47,10 +49,9 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
       Width = 85
     end
     object cxLabel1: TcxLabel
-      Left = 766
-      Top = -1
-      Caption = #1053#1072' '#1076#1072#1090#1091':'
-      Visible = False
+      Left = 8
+      Top = 6
+      Caption = #1055#1077#1088#1080#1086#1076':'
     end
     object cxLabel2: TcxLabel
       Left = 743
@@ -59,12 +60,12 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
       Visible = False
     end
     object cxLabel4: TcxLabel
-      Left = 440
+      Left = 561
       Top = 6
       Caption = #1057#1090#1072#1090#1100#1103':'
     end
     object edInfoMoney: TcxButtonEdit
-      Left = 487
+      Left = 612
       Top = 5
       Properties.Buttons = <
         item
@@ -73,15 +74,15 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 263
+      Width = 255
     end
     object cxLabel6: TcxLabel
-      Left = 160
+      Left = 240
       Top = 6
       Caption = #1054#1090#1076#1077#1083':'
     end
     object edUnit: TcxButtonEdit
-      Left = 204
+      Left = 284
       Top = 5
       Properties.Buttons = <
         item
@@ -90,14 +91,12 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 230
+      Width = 270
     end
-    object cbAllMonth: TcxCheckBox
-      Left = 37
+    object cbAll: TcxCheckBox
+      Left = 147
       Top = 5
       Caption = #1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
-      Enabled = False
-      State = cbsChecked
       TabOrder = 8
       Width = 87
     end
@@ -105,12 +104,13 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 58
-    Width = 873
+    Width = 881
     Height = 381
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 873
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1266,6 +1266,14 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAll'
+        Value = Null
+        Component = cbAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 128
@@ -1414,6 +1422,9 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
       end
       item
         Component = GuidesUnit
+      end
+      item
+        Component = cbAll
       end>
     Left = 392
     Top = 144
@@ -1611,7 +1622,7 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 560
+    Left = 648
     Top = 8
   end
   object GuidesUnit: TdsdGuides
@@ -1640,6 +1651,6 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 272
+    Left = 360
   end
 end
