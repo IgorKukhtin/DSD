@@ -1,6 +1,6 @@
 -- Function: gpGetDate_MovementJournal()
 
-DROP FUNCTION IF EXISTS gpGetDate_MovementJournal (TDateTime, TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGetDate_MovementJournal (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGetDate_MovementJournal (TDateTime, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGetDate_MovementJournal(
@@ -20,13 +20,23 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     SELECT DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 MONTH') :: TDateTime
-         , CURRENT_DATE :: TDateTime
-     INTO outStartDate, outEndDate;
+     IF EXISTS (SELECT 1 FROM MovementDesc WHERE MovementDesc.Code ILIKE inMovementDescCode AND MovementDesc.Id = zc_Movement_Cash())
+     THEN
+         -- 1 ƒень
+         SELECT CURRENT_DATE :: TDateTime
+              , CURRENT_DATE :: TDateTime
+         INTO outStartDate
+            , outEndDate
+             ;
+     ELSE
+         -- 1 ћес€ц + ....
+         SELECT DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 MONTH') :: TDateTime
+              , CURRENT_DATE :: TDateTime
+         INTO outStartDate
+            , outEndDate
+             ;
+     END IF;
 
-     /*SELECT DATE_TRUNC ('MONTH', inStartDate) :: TDateTime
-         , (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') :: TDateTime
-       INTO outStartDate, outEndDate;*/
      
 END;
 $BODY$
@@ -42,4 +52,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGetDate_MovementJournal ('07.04.2018', '07.05.2018', inSession:= '2')
+-- SELECT * FROM gpGetDate_MovementJournal ('07.04.2018', '07.05.2018', inMovementDescCode := 'zc_Movement_Cash', inSession:= '2')

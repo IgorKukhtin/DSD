@@ -16,6 +16,10 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     --
+     RAISE EXCEPTION 'Ошибка.Нет прав.';
+
+     --
      PERFORM lpInsertUpdate_Movement_ServiceItem_byHistory (inDateStart := NULL
                                                           , inDateEnd   := tmp.EndDate
                                                           , inUnitId    := tmp.UnitId

@@ -15,6 +15,12 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
 
+     -- Проверка
+     IF inOperDate > CURRENT_DATE
+     THEN
+        RAISE EXCEPTION 'Ошибка.Дата документа = <%> не может быть позже <%>.', zfConvert_DateToString (inOperDate), zfConvert_DateToString (CURRENT_DATE);
+     END IF;
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 

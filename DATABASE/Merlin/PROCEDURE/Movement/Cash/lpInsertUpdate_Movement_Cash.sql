@@ -24,18 +24,24 @@ $BODY$
    DECLARE vbMovementItemId Integer;
 BEGIN
 
-     -- проверка
+     -- Проверка
+     IF inOperDate > CURRENT_DATE
+     THEN
+        RAISE EXCEPTION 'Ошибка.Дата документа = <%> не может быть позже <%>.', zfConvert_DateToString (inOperDate), zfConvert_DateToString (CURRENT_DATE);
+     END IF;
+
+     -- Проверка
      IF COALESCE (inAmount, 0) = 0
      THEN
         RAISE EXCEPTION 'Ошибка.<Сумма> не введена.';
      END IF;
-     -- проверка
+     -- Проверка
      IF COALESCE (inInfoMoneyId, 0) = 0
      THEN
         RAISE EXCEPTION 'Ошибка.<Статья> не выбрана.';
      END IF;
 
-     -- проверка
+     -- Проверка
      IF COALESCE (inUnitId, 0) = 0 AND EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inInfoMoneyId AND OB.DescId = zc_ObjectBoolean_InfoMoney_Service() AND OB.ValueData = TRUE)
      THEN
         RAISE EXCEPTION 'Ошибка.<Отдел> не выбран.';

@@ -24,37 +24,43 @@ BEGIN
      -- !замена!
      IF inAmountIn = 0 THEN inAmountIn:= inAmountOut; END IF;
 
-    -- проверка
+     -- Проверка
+     IF inOperDate > CURRENT_DATE
+     THEN
+        RAISE EXCEPTION 'Ошибка.Дата документа = <%> не может быть позже <%>.', zfConvert_DateToString (inOperDate), zfConvert_DateToString (CURRENT_DATE);
+     END IF;
+
+     -- Проверка
      IF COALESCE (inCashId_from, 0) = 0
      THEN
         RAISE EXCEPTION 'Ошибка.<Касса расход> не введена.';
      END IF;
-    -- проверка
+     -- Проверка
      IF COALESCE (inCashId_to, 0) = 0
      THEN
         RAISE EXCEPTION 'Ошибка.<Касса приход> не введена.';
      END IF;
-    -- проверка
+     -- Проверка
      IF COALESCE (inAmountOut, 0) <= 0
      THEN
         RAISE EXCEPTION 'Ошибка.<Сумма расход> не введена.';
      END IF;
-    -- проверка
+     -- Проверка
      IF COALESCE (inAmountIn, 0) <= 0
      THEN
         RAISE EXCEPTION 'Ошибка.<Сумма приход> не введена.';
      END IF;
-    -- проверка
+     -- Проверка
      IF NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inCashId_from AND OL.ChildObjectId > 0 AND OL.DescId = zc_ObjectLink_Cash_Currency())
      THEN
         RAISE EXCEPTION 'Ошибка.<Валюта Касса расход> не введена = %.', lfGet_Object_ValueData_sh (inCashId_from);
      END IF;
-    -- проверка
+     -- Проверка
      IF NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inCashId_to AND OL.ChildObjectId > 0 AND OL.DescId = zc_ObjectLink_Cash_Currency())
      THEN
         RAISE EXCEPTION 'Ошибка.<Валюта Касса приход> не введена = %.', lfGet_Object_ValueData_sh (inCashId_to);
      END IF;
-     -- проверка
+     -- Проверка
      IF  (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inCashId_from AND OL.DescId = zc_ObjectLink_Cash_Currency())
        = (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inCashId_to   AND OL.DescId = zc_ObjectLink_Cash_Currency())
        AND COALESCE (inAmountOut, 0) <> COALESCE (inAmountIn, 0)
