@@ -5590,6 +5590,7 @@ inherited MainCashForm2: TMainCashForm2
       MoveParams = <>
       ActionList = <
         item
+          Action = actExecLoadVIPOrder
         end
         item
           Action = actSelectCheck

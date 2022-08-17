@@ -975,6 +975,8 @@ type
     N360: TMenuItem;
     actReport_RestTermGoods: TdsdOpenForm;
     N361: TMenuItem;
+    actReport_Goods_LeftTheMarket: TdsdOpenForm;
+    N362: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
