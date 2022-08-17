@@ -118,6 +118,8 @@ type
     bbInsert_MI_Mask: TdxBarButton;
     actOpenServiceItemAdd_history: TdsdOpenForm;
     bbServiceItemAdd_history: TdxBarButton;
+    actOpenServiceItem_history: TdsdOpenForm;
+    bbOpenServiceItem_history: TdxBarButton;
   private
   public
   end;

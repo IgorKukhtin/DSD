@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ServiceItemAdd(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar, UnitName_Full TVarChar
              , UnitGroupNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
@@ -108,7 +108,8 @@ BEGIN
            SELECT 0                             AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
-                , Object_Unit.ValueData         AS UnitName
+                , Object_Unit.ValueData         AS UnitName 
+                , TRIM (COALESCE (ObjectString_Unit_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName_Full
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
 
                 , Object_InfoMoney.Id           AS InfoMoneyId
@@ -163,7 +164,8 @@ BEGIN
            SELECT tmpMI.Id                      AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
-                , Object_Unit.ValueData         AS UnitName
+                , Object_Unit.ValueData         AS UnitName  
+                , TRIM (COALESCE (ObjectString_Unit_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName_Full
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
 
                 , Object_InfoMoney.Id           AS InfoMoneyId
@@ -270,6 +272,7 @@ BEGIN
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
                 , Object_Unit.ValueData         AS UnitName
+                , TRIM (COALESCE (ObjectString_Unit_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName_Full
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
 
                 , Object_InfoMoney.Id         AS InfoMoneyId

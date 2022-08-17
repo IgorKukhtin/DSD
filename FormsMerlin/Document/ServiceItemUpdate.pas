@@ -43,6 +43,8 @@ type
     Month_diff: TcxGridDBColumn;
     Month_diff_before: TcxGridDBColumn;
     Month_diff_after: TcxGridDBColumn;
+    actOpenServiceItemAdd_history: TdsdOpenForm;
+    bbOpenServiceItemAdd_history: TdxBarButton;
   private
     { Private declarations }
   public

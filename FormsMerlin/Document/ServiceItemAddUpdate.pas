@@ -106,6 +106,8 @@ type
     Comment: TcxGridDBColumn;
     actOpenServiceItemAdd_history: TdsdOpenForm;
     bbOpenServiceItemAdd_history: TdxBarButton;
+    actOpenServiceItem_history: TdsdOpenForm;
+    bbOpenServiceItem_history: TdxBarButton;
   private
   public
   end;

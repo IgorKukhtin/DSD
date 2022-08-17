@@ -105,6 +105,8 @@ type
     MonthEnd_before: TcxGridDBColumn;
     MonthStart_after: TcxGridDBColumn;
     MonthEnd_after: TcxGridDBColumn;
+    actOpenServiceItemAdd_history: TdsdOpenForm;
+    bbOpenServiceItemAdd_history: TdxBarButton;
   private
   public
   end;

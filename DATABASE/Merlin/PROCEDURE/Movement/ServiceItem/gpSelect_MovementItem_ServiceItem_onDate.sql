@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ServiceItem_onDate(
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber Integer
              , Id Integer
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar, UnitName_Full TVarChar
              , UnitGroupNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
@@ -135,6 +135,7 @@ BEGIN
                 , Object_Unit.Id                            AS UnitId
                 , Object_Unit.ObjectCode                    AS UnitCode
                 , Object_Unit.ValueData                     AS UnitName
+                , TRIM (COALESCE (ObjectString_Unit_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName_Full
                 , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
 
                 , Object_InfoMoney.Id                       AS Object_InfoMoneyId
