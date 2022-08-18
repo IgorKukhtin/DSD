@@ -284,7 +284,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
         Caption = #1052#1077#1089#1103#1094' '#1089'...'
         DataBinding.FieldName = 'DateStart'
         PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'yy - mmmm'
+        Properties.DisplayFormat = 'mmmm yyyy'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -294,7 +294,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
         Caption = #1052#1077#1089#1103#1094' '#1076#1086'...'
         DataBinding.FieldName = 'DateEnd'
         PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'yy - mmmm'
+        Properties.DisplayFormat = 'mmmm yyyy'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

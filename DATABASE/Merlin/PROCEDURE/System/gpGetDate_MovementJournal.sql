@@ -20,7 +20,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF EXISTS (SELECT 1 FROM MovementDesc WHERE MovementDesc.Code ILIKE inMovementDescCode AND MovementDesc.Id = zc_Movement_Cash())
+     IF EXISTS (SELECT 1
+                FROM MovementDesc
+                WHERE MovementDesc.Code ILIKE inMovementDescCode
+                  AND MovementDesc.Id IN (zc_Movement_Cash(), zc_Movement_CashSend())
+               )
      THEN
          -- 1 День
          SELECT CURRENT_DATE :: TDateTime

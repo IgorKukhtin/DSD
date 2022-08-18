@@ -24,15 +24,15 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber Integer
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
 
-             , DateStart TDateTime, DateEnd TDateTime
+             , DateStart TDateTime, DateStart_month TDateTime, DateEnd TDateTime, DateEnd_month TDateTime
              , Amount TFloat, Price TFloat, Area TFloat
              , Month_diff Integer
 
-             , DateStart_before TDateTime, DateEnd_before TDateTime
+             , DateStart_before TDateTime, DateStart_before_month TDateTime, DateEnd_before TDateTime, DateEnd_before_month TDateTime
              , Amount_before TFloat, Price_before TFloat, Area_before TFloat
              , Month_diff_before Integer
 
-             , DateStart_after TDateTime, DateEnd_after TDateTime
+             , DateStart_after TDateTime, DateStart_after_month TDateTime, DateEnd_after TDateTime, DateEnd_after_month TDateTime
              , Amount_after TFloat, Price_after TFloat, Area_after TFloat
              , Month_diff_after Integer
 
@@ -146,22 +146,31 @@ BEGIN
                 , Object_CommentInfoMoney.ObjectCode        AS Object_CommentInfoMoneyCode
                 , Object_CommentInfoMoney.ValueData         AS Object_CommentInfoMoneyName
 
-                , CASE WHEN tmpMI.MovementItemId IS NULL THEN NULL ELSE COALESCE (tmp_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) END :: TDateTime AS DateStart
+                , CASE WHEN tmpMI.MovementItemId IS NULL THEN NULL ELSE COALESCE (tmp_before.DateEnd + INTERVAL '1 DAY', NULL) END :: TDateTime AS DateStart
+                , CASE WHEN tmpMI.MovementItemId IS NULL THEN NULL ELSE COALESCE (zfCalc_Month_start (tmp_before.DateEnd + INTERVAL '1 DAY'), NULL) END :: TDateTime AS DateStart_month_month
                 , tmpMI.DateEnd                          :: TDateTime AS DateEnd
+                , zfCalc_Month_end (tmpMI.DateEnd)       :: TDateTime AS DateEnd_month
+
                 , tmpMI.Amount                           :: TFloat AS Amount
                 , COALESCE (MIFloat_Price.ValueData, 0)  :: TFloat AS Price
                 , COALESCE (MIFloat_Area.ValueData, 0)   :: TFloat AS Area
                 , zfCalc_Month_diff (tmp_before.DateEnd + INTERVAL '1 DAY', tmpMI.DateEnd) :: Integer AS Month_diff
 
-                , CASE WHEN tmp_before.MovementItemId IS NULL THEN NULL ELSE COALESCE (tmp_before_before.DateEnd + INTERVAL '1 DAY', zc_DateStart()) END :: TDateTime AS DateStart_before
+                , CASE WHEN tmp_before.MovementItemId IS NULL THEN NULL ELSE COALESCE (tmp_before_before.DateEnd + INTERVAL '1 DAY', NULL) END :: TDateTime AS DateStart_before
+                , CASE WHEN tmp_before.MovementItemId IS NULL THEN NULL ELSE COALESCE (zfCalc_Month_start (tmp_before_before.DateEnd + INTERVAL '1 DAY'), NULL) END :: TDateTime AS DateStart_before_month
                 , tmp_before.DateEnd                            :: TDateTime AS DateEnd_before
+                , zfCalc_Month_end (tmp_before.DateEnd)         :: TDateTime AS DateEnd_before_month
+
                 , tmp_before.Amount                             :: TFloat    AS Amount_before
                 , COALESCE (MIFloat_Price_before.ValueData, 0)  :: TFloat    AS Price_before
                 , COALESCE (MIFloat_Area_before.ValueData, 0)   :: TFloat    AS Area_before
                 , zfCalc_Month_diff (tmp_before_before.DateEnd + INTERVAL '1 DAY', tmp_before.DateEnd) :: Integer AS Month_diff_before
 
                 , CASE WHEN tmp_after.MovementItemId IS NULL THEN NULL ELSE COALESCE (tmpMI.DateEnd + INTERVAL '1 DAY', NULL) END :: TDateTime AS DateStart_after
+                , CASE WHEN tmp_after.MovementItemId IS NULL THEN NULL ELSE COALESCE (zfCalc_Month_start (tmpMI.DateEnd + INTERVAL '1 DAY'), NULL) END :: TDateTime AS DateStart_after_month
                 , tmp_after.DateEnd                                 :: TDateTime AS DateEnd_after
+                , zfCalc_Month_end (tmp_after.DateEnd)              :: TDateTime AS DateEnd_after_month
+
                 , tmp_after.Amount                                  :: TFloat    AS Amount_after
                 , COALESCE (MIFloat_Price_after.ValueData, 0)       :: TFloat    AS Price_after
                 , COALESCE (MIFloat_Area_after.ValueData, 0)        :: TFloat    AS Area_after

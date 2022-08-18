@@ -15,6 +15,9 @@ AS
 $BODY$  
 BEGIN
 
+if inMovementDescId <> zc_Movement_ServiceItem()
+then
+
      -- Проверка - период
      IF inOperDate < CURRENT_DATE - INTERVAL '3 DAY'
         -- AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin())
@@ -28,6 +31,7 @@ BEGIN
                         ;
      END IF;
 
+
      -- Проверка - Пользователь
      IF NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE)
         AND COALESCE (inUserId, -1) <> COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Insert()), -2)
@@ -38,6 +42,8 @@ BEGIN
                        , lfGet_Object_ValueData (inUserId)
                         ;
      END IF;
+
+end if;
 
  
 END;

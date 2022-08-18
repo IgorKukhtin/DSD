@@ -22,14 +22,14 @@ RETURNS TABLE (Id Integer, DescId Integer, InvNumber Integer
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
 
              , Amount TFloat, Price TFloat, Area TFloat
-             , DateStart TDateTime, DateEnd TDateTime
+             , DateStart TDateTime, DateStart_month TDateTime, DateEnd TDateTime, DateEnd_month TDateTime
              , Month_diff Integer
 
              , Amount_before TFloat, Price_before TFloat, Area_before TFloat
-             , DateStart_before TDateTime, DateEnd_before TDateTime
+             , DateStart_before TDateTime, DateStart_before_month TDateTime, DateEnd_before TDateTime, DateEnd_before_month TDateTime
 
              , Amount_after TFloat, Price_after TFloat, Area_after TFloat
-             , DateStart_after TDateTime, DateEnd_after TDateTime
+             , DateStart_after TDateTime, DateStart_after_month TDateTime, DateEnd_after TDateTime, DateEnd_after_month TDateTime
               )
 AS
 $BODY$
@@ -138,22 +138,31 @@ BEGIN
            , tmpMI.Amount                 :: TFloat    AS Amount
            , MIFloat_Price.ValueData      :: TFloat    AS Price
            , MIFloat_Area.ValueData       :: TFloat    AS Area
+
            , COALESCE (tmpMI_before.DateEnd_find + INTERVAL '1 DAY', NULL) :: TDateTime AS DateStart
+           , COALESCE (zfCalc_Month_start (tmpMI_before.DateEnd_find + INTERVAL '1 DAY'), NULL) :: TDateTime AS DateStart_month
            , tmpMI.DateEnd                :: TDateTime AS DateEnd
+           , zfCalc_Month_end (tmpMI.DateEnd) :: TDateTime AS DateEnd_month
 
            , zfCalc_Month_diff (tmpMI_before.DateEnd_find + INTERVAL '1 DAY', tmpMI.DateEnd) :: Integer AS Month_diff
 
            , tmpMI_before.Amount            :: TFloat    AS Amount_before
            , MIFloat_Price_before.ValueData :: TFloat    AS Price_before
            , MIFloat_Area_before.ValueData  :: TFloat    AS Area_before
+
            , CASE WHEN tmpMI_before.DateEnd_find IS NULL THEN NULL ELSE COALESCE (tmpMI_before_before.DateEnd_find + INTERVAL '1 DAY', NULL) END :: TDateTime AS DateStart_before
+           , CASE WHEN tmpMI_before.DateEnd_find IS NULL THEN NULL ELSE COALESCE (zfCalc_Month_start (tmpMI_before_before.DateEnd_find + INTERVAL '1 DAY'), NULL) END :: TDateTime AS DateStart_before_month
            , tmpMI_before.DateEnd_find      :: TDateTime AS DateEnd_before
+           , zfCalc_Month_end (tmpMI_before.DateEnd_find) :: TDateTime AS DateEnd_before_month
 
            , tmpMI_after.Amount             :: TFloat    AS Amount_after
            , MIFloat_Price_after.ValueData  :: TFloat    AS Price_after
            , MIFloat_Area_after.ValueData   :: TFloat    AS Area_after
-           , CASE WHEN tmpMI_after.DateEnd_find IS NULL THEN NULL ELSE tmpMI.DateEnd + INTERVAL '1 DAY' END :: TDateTime AS DateStart_after
+
+           , CASE WHEN tmpMI_after.DateEnd_find IS NULL THEN NULL ELSE zfCalc_Month_start (tmpMI.DateEnd + INTERVAL '1 DAY') END :: TDateTime AS DateStart_after
+           , CASE WHEN tmpMI_after.DateEnd_find IS NULL THEN NULL ELSE tmpMI.DateEnd + INTERVAL '1 DAY' END :: TDateTime AS DateStart_after_month
            , tmpMI_after.DateEnd_find       :: TDateTime AS DateEnd_after
+           , zfCalc_Month_end (tmpMI_after.DateEnd_find) :: TDateTime AS DateEnd_after_month
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMI.StatusId
