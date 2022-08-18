@@ -552,6 +552,164 @@ inherited ServiceJournalForm: TServiceJournalForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object macInsert_byServiceItemAdd: TMultiAction
+      Category = 'Insert'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_byServiceItemAdd
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1054#1073#1085#1086#1074#1080#1090#1100'/'#1076#1086#1073#1072#1074#1080#1090#1100' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1059#1089#1083#1086#1074#1080#1103#1084 +
+        ' '#1072#1088#1077#1085#1076#1099'?'
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100'/'#1076#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1059#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100'/'#1076#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1059#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099
+      ImageIndex = 48
+    end
+    object actInsert_byServiceItemAdd: TdsdExecStoredProc
+      Category = 'Insert'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_byServiceItemAdd
+      StoredProcList = <
+        item
+          StoredProc = spInsert_byServiceItemAdd
+        end>
+      Caption = 'actInsert_byServiceItem'
+      ImageIndex = 48
+    end
+    object actOpenServiceItem_history: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
+      ImageIndex = 28
+      FormName = 'TServiceItemJournal_historyForm'
+      FormNameParam.Value = 'TServiceItemJournal_historyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ServiceDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName_Full'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenServiceItemAdd_history: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
+      ImageIndex = 28
+      FormName = 'TServiceItemAddJournal_historyForm'
+      FormNameParam.Value = 'TServiceItemAddJournal_historyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ServiceDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName_Full'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actInsert_byServiceItem: TdsdExecStoredProc
+      Category = 'Insert'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_byServiceItem
+      StoredProcList = <
+        item
+          StoredProc = spInsert_byServiceItem
+        end>
+      Caption = 'actInsert_byServiceItem'
+      ImageIndex = 47
+    end
+    object macInsert_byServiceItem: TMultiAction
+      Category = 'Insert'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_byServiceItem
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1054#1073#1085#1086#1074#1080#1090#1100'/'#1076#1086#1073#1072#1074#1080#1090#1100' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'?'
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100'/'#1076#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1059#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100'/'#1076#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099
+      ImageIndex = 47
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -593,7 +751,8 @@ inherited ServiceJournalForm: TServiceJournalForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Top = 131
+    Left = 272
+    Top = 195
   end
   inherited BarManager: TdxBarManager
     Left = 128
@@ -666,6 +825,34 @@ inherited ServiceJournalForm: TServiceJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenServiceItem_history'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenServiceItemAdd_history'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_byServiceItem'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_byServiceItemAdd'
         end
         item
           Visible = True
@@ -749,6 +936,22 @@ inherited ServiceJournalForm: TServiceJournalForm
       Action = macStartLoad
       Category = 0
     end
+    object bbOpenServiceItem_history: TdxBarButton
+      Action = actOpenServiceItem_history
+      Category = 0
+    end
+    object bbOpenServiceItemAdd_history: TdxBarButton
+      Action = actOpenServiceItemAdd_history
+      Category = 0
+    end
+    object bbInsert_byServiceItem: TdxBarButton
+      Action = macInsert_byServiceItem
+      Category = 0
+    end
+    object bbInsert_byServiceItemAdd: TdxBarButton
+      Action = macInsert_byServiceItemAdd
+      Category = 0
+    end
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Service'
@@ -804,8 +1007,8 @@ inherited ServiceJournalForm: TServiceJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Service'
-    Left = 376
-    Top = 152
+    Left = 456
+    Top = 136
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -878,5 +1081,55 @@ inherited ServiceJournalForm: TServiceJournalForm
     Params = <>
     Left = 572
     Top = 209
+  end
+  object spInsert_byServiceItem: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Service_byServiceItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 368
+    Top = 240
+  end
+  object spInsert_byServiceItemAdd: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Service_byServiceItemAdd'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 44562d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 44562d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 240
   end
 end

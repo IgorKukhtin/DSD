@@ -53,6 +53,18 @@ type
     bbmacStartLoad: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     UnitGroupNameFull: TcxGridDBColumn;
+    actOpenServiceItem_history: TdsdOpenForm;
+    actOpenServiceItemAdd_history: TdsdOpenForm;
+    bbOpenServiceItem_history: TdxBarButton;
+    bbOpenServiceItemAdd_history: TdxBarButton;
+    spInsert_byServiceItem: TdsdStoredProc;
+    actInsert_byServiceItem: TdsdExecStoredProc;
+    macInsert_byServiceItem: TMultiAction;
+    spInsert_byServiceItemAdd: TdsdStoredProc;
+    actInsert_byServiceItemAdd: TdsdExecStoredProc;
+    macInsert_byServiceItemAdd: TMultiAction;
+    bbInsert_byServiceItem: TdxBarButton;
+    bbInsert_byServiceItemAdd: TdxBarButton;
   private
     { Private declarations }
   public
