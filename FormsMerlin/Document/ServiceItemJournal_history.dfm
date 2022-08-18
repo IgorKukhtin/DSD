@@ -368,6 +368,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
       object UnitGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'UnitGroupNameFull'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -376,6 +377,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
       object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'UnitCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -391,6 +393,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -405,6 +408,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80

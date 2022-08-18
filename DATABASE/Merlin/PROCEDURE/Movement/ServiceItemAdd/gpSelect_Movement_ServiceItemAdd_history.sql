@@ -69,8 +69,8 @@ BEGIN
  
            , Movement.DateStart   :: TDateTime
            , Movement.DateEnd     :: TDateTime   
-           , Movement.DateStart   :: TDateTime    AS MonthNameStart
-           , Movement.DateEnd     :: TDateTime    AS MonthNameEnd   
+           , zfCalc_Month_start (Movement.DateStart) AS MonthNameStart
+           , zfCalc_Month_end (Movement.DateEnd)     AS MonthNameEnd   
                 
            , Movement.Amount               :: TFloat   
            , Movement.Comment

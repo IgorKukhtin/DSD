@@ -93,23 +93,23 @@ BEGIN
            , Movement.CommentInfoMoneyCode
            , Movement.CommentInfoMoneyName
 
-           , Movement.DateStart            :: TDateTime
-           , Movement.DateEnd              :: TDateTime
-           , Movement.DateStart            :: TDateTime AS MonthNameStart
-           , Movement.DateEnd              :: TDateTime AS MonthNameEnd
+           , Movement.DateStart         :: TDateTime AS DateStart
+           , Movement.DateEnd           :: TDateTime AS DateEnd
+           , zfCalc_Month_start (Movement.DateStart) AS MonthNameStart
+           , zfCalc_Month_end (Movement.DateEnd)     AS MonthNameEnd
 
            , Movement.Amount               :: TFloat
            , Movement.Comment
 
-           , tmpMI_Main.DateStart       :: TDateTime AS DateStart_Main
-           , tmpMI_Main.DateEnd         :: TDateTime AS DateEnd_Main
-           , tmpMI_Main.Amount          :: TFloat    AS Amount_Main
-           , tmpMI_Main.Price           :: TFloat    AS Price_Main
-           , tmpMI_Main.Area            :: TFloat    AS Area_Main
-
-           , tmp_last.DateStart       :: TDateTime AS MonthNameStart_before
-           , tmp_last.DateEnd         :: TDateTime AS MonthNameEnd_before
-           , tmp_last.Amount          :: TFloat    AS Amount_before
+           , zfCalc_Month_start (tmpMI_Main.DateStart) AS DateStart_Main
+           , zfCalc_Month_end (tmpMI_Main.DateEnd)     AS DateEnd_Main
+           , tmpMI_Main.Amount               :: TFloat AS Amount_Main
+           , tmpMI_Main.Price                :: TFloat AS Price_Main
+           , tmpMI_Main.Area                 :: TFloat AS Area_Main
+                                                       
+           , zfCalc_Month_start (tmp_last.DateStart)   AS MonthNameStart_before
+           , zfCalc_Month_end (tmp_last.DateEnd)       AS MonthNameEnd_before
+           , tmp_last.Amount                 :: TFloat AS Amount_before
 
        FROM tmpMI AS Movement
             -- Базовые условия - на дату

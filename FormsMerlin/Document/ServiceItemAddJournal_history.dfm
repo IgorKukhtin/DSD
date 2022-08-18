@@ -24,18 +24,17 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
     Height = 32
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 873
     object deStart: TcxDateEdit
-      Left = 56
+      Left = 61
       Top = 5
       EditValue = 44562d
       Properties.AssignedValues.EditFormat = True
-      Properties.DisplayFormat = 'mmmm-yy'
+      Properties.DisplayFormat = 'mmmm yyyy'
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 85
+      Width = 131
     end
     object deEnd: TcxDateEdit
       Left = 821
@@ -49,9 +48,9 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
       Width = 85
     end
     object cxLabel1: TcxLabel
-      Left = 8
+      Left = 16
       Top = 6
-      Caption = #1055#1077#1088#1080#1086#1076':'
+      Caption = #1052#1077#1089#1103#1094' :'
     end
     object cxLabel2: TcxLabel
       Left = 743
@@ -60,12 +59,12 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
       Visible = False
     end
     object cxLabel4: TcxLabel
-      Left = 561
+      Left = 625
       Top = 6
       Caption = #1057#1090#1072#1090#1100#1103':'
     end
     object edInfoMoney: TcxButtonEdit
-      Left = 612
+      Left = 672
       Top = 5
       Properties.Buttons = <
         item
@@ -74,15 +73,15 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 255
+      Width = 195
     end
     object cxLabel6: TcxLabel
-      Left = 240
+      Left = 288
       Top = 6
       Caption = #1054#1090#1076#1077#1083':'
     end
     object edUnit: TcxButtonEdit
-      Left = 284
+      Left = 335
       Top = 5
       Properties.Buttons = <
         item
@@ -91,10 +90,10 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 270
+      Width = 268
     end
     object cbAll: TcxCheckBox
-      Left = 147
+      Left = 195
       Top = 5
       Caption = #1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
       TabOrder = 8
@@ -110,7 +109,6 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 873
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -277,6 +275,7 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
       object UnitGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'UnitGroupNameFull'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -285,6 +284,7 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
       object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'UnitCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -300,6 +300,7 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
@@ -348,7 +349,7 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         Caption = #1052#1077#1089#1103#1094' '#1089'...'
         DataBinding.FieldName = 'MonthNameStart'
         PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'mmmm-yy'
+        Properties.DisplayFormat = 'mmmm yyyy'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -358,7 +359,7 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         Caption = #1052#1077#1089#1103#1094' '#1087#1086'...'
         DataBinding.FieldName = 'MonthNameEnd'
         PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'mmmm-yy'
+        Properties.DisplayFormat = 'mmmm yyyy'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1623,7 +1624,7 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         MultiSelectSeparator = ','
       end>
     Left = 648
-    Top = 8
+    Top = 88
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
