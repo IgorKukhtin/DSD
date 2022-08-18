@@ -33,6 +33,7 @@ BEGIN
 
      -- Доступ
      vbUser_isAll:= lpCheckUser_isAll (vbUserId);
+     
 
      -- Проверка - Если Корректировка подтверждена
      IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)

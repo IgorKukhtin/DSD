@@ -38,12 +38,9 @@ type
     ExecuteDialog: TExecuteDialog;
     JuridicalName: TcxGridDBColumn;
     MasterInvNumber: TcxGridDBColumn;
-    actPUSHDiscount: TdsdShowPUSHMessage;
-    spPUSHDiscount: TdsdStoredProc;
-    spPUSHPartionGoodsDate: TdsdStoredProc;
-    actPUSHPartionGoodsDate: TdsdShowPUSHMessage;
-    spPUSHOOC1303: TdsdStoredProc;
-    actPUSHOOC1303: TdsdShowPUSHMessage;
+    actPUSHCalculate: TdsdShowPUSHMessage;
+    spPUSHCalculate: TdsdStoredProc;
+    PUSHCalculateCDS: TClientDataSet;
   private
     { Private declarations }
   public

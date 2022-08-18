@@ -27,6 +27,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbUnitId Integer;
+   DECLARE vbisShowAll Boolean;
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -40,6 +41,8 @@ BEGIN
         vbUnitKey := '0';
      END IF;
      vbUnitId := vbUnitKey::Integer;
+     
+     vbisShowAll := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
 
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -60,7 +63,7 @@ BEGIN
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                   ON MovementLinkObject_To.MovementId = Movement_Income.Id
                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                 AND MovementLinkObject_To.ObjectId = vbUnitId
+                                                                 AND (MovementLinkObject_To.ObjectId = vbUnitId OR vbisShowAll = TRUE)
 
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                  ON MovementLinkObject_From.MovementId = Movement_Income.Id
@@ -197,4 +200,6 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_IncomePharmacy (inStartDate:= '01.08.2021', inEndDate:= '20.08.2021', inIsErased := FALSE, inSession:= '3')
 
-select * from gpSelect_Movement_IncomePharmacy(instartdate := ('22.10.2021')::TDateTime , inenddate := ('05.11.2021')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_Movement_IncomePharmacy(instartdate := ('01.05.2022')::TDateTime , inenddate := ('31.05.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+
+

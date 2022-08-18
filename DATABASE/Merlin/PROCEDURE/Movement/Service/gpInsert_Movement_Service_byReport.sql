@@ -11,11 +11,14 @@ CREATE OR REPLACE FUNCTION gpInsert_Movement_Service_byReport(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId           Integer;
+  DECLARE vbUserId Integer;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
+
+   --
+   RAISE EXCEPTION 'Ошибка.Нет прав.';
 
    --создание документов начисления по группе подразделений
    PERFORM lpInsertUpdate_Movement_Service (ioId                   := 0

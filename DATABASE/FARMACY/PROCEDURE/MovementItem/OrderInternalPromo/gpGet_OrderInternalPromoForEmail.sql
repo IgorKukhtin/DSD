@@ -30,6 +30,8 @@ BEGIN
    INTO vbInvNumber
    FROM Movement
    WHERE Movement.ID = inMovementId;
+
+   -- Юр. лица надо добавлять и в gpSelect_MovementItem_OrderInternalPromo_ExportJuridical
    
    vbMail := CASE WHEN inJuridicalId = 59611  THEN 'Druzhkevich@optimapharm.ua,EHlopotova@optimapharm.ua'  -- СП "Оптима-Фарм, ЛТД"
                   WHEN inJuridicalId = 59610 THEN 'centr2_cc@badm.biz'                                     -- БаДМ

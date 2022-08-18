@@ -35,12 +35,15 @@ BEGIN
   -- 1.3. ПРОВЕРКА - Закрытый период + проверка пользователя
   IF vbStatusId_old = zc_Enum_Status_Complete()
   THEN 
-       PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
-                                 , inMovementId    := inMovementId
-                                 , inMovementDescId:= vbDescId
-                                 , inAccessKeyId   := vbAccessKeyId
-                                 , inUserId        := inUserId
-                                  );
+      IF inUserId > 0 OR vbOperDate < '01.02.2022'
+      THEN
+          PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
+                                    , inMovementId    := inMovementId
+                                    , inMovementDescId:= vbDescId
+                                    , inAccessKeyId   := vbAccessKeyId
+                                    , inUserId        := inUserId
+                                     );
+      END IF;
   END IF;
 
 
@@ -51,9 +54,9 @@ BEGIN
 
   -- 4. сохранили протокол
   IF inMovementId <> 0
-     -- AND inUserId <> 5
+     -- AND ABS (inUserId) <> 5
   THEN
-      PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+      PERFORM lpInsert_MovementProtocol (inMovementId, ABS (inUserId), FALSE);
   END IF;
 
 END;

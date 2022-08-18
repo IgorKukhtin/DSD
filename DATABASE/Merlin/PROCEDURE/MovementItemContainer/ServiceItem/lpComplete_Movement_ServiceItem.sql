@@ -64,7 +64,7 @@ BEGIN
                                             , inParent_InfoMoneyId:= tmpMovement.ParentId_InfoMoney
                                             , inInfoMoneyName     := tmpMovement.InfoMoneyName
                                             , inCommentInfoMoney  := tmpMovement.CommentInfoMoney
-                                            , inSession           := inUserId :: TVarChar
+                                            , inSession           := (-1 * inUserId) :: TVarChar
                                              )
       FROM (WITH -- Базовое условие
                  tmpMI AS (SELECT DATE_TRUNC ('MONTH', Movement.OperDate) AS EndDate
@@ -147,6 +147,7 @@ BEGIN
                  LEFT JOIN tmpMovement_Service ON tmpMovement_Service.OperDate    = tmpListDate.OperDate
                                               AND tmpMovement_Service.UnitId      = tmpMI.UnitId
                                               AND tmpMovement_Service.InfoMoneyId = tmpMI.InfoMoneyId
+            WHERE tmpListDate.OperDate >= '01.02.2022'
             ORDER BY tmpListDate.OperDate
            ) AS tmpMovement
     ;

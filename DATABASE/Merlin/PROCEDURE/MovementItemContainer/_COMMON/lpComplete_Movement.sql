@@ -38,20 +38,25 @@ BEGIN
   THEN
       RAISE EXCEPTION 'Ошибка.Вид документа не определен.<%><%><%><%>', vbDescId, inDescId, inMovementId, (SELECT lfGet_Object_ValueData_sh (StatusId) FROM Movement WHERE Id = inMovementId);
   END IF;
-  -- 1.2. Проверка
-  PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
-                            , inMovementId    := inMovementId
-                            , inMovementDescId:= vbDescId
-                            , inAccessKeyId   := vbAccessKeyId
-                            , inUserId        := inUserId
-                             );
+  
+  IF inUserId > 0 OR vbOperDate < '01.02.2022'
+  THEN
+      -- 1.2. Проверка
+      PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
+                                , inMovementId    := inMovementId
+                                , inMovementDescId:= vbDescId
+                                , inAccessKeyId   := vbAccessKeyId
+                                , inUserId        := inUserId
+                                 );
+  END IF;
 
 
   -- сохранили протокол
-  IF 1=1 -- AND inUserId <> 5
+  IF 1=1 -- AND ABS (inUserId) <> 5
   THEN
-      PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+      PERFORM lpInsert_MovementProtocol (inMovementId, ABS (inUserId), FALSE);
   END IF;
+
 
 END;
 $BODY$

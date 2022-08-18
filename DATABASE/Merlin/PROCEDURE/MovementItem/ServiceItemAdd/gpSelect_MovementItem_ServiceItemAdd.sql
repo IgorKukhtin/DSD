@@ -285,8 +285,8 @@ BEGIN
 
                 , tmpMI.DateStart            :: TDateTime AS DateStart
                 , tmpMI.DateEnd              :: TDateTime AS DateEnd
-                , tmpMI.DateStart            :: TDateTime AS MonthNameStart
-                , tmpMI.DateEnd              :: TDateTime AS MonthNameEnd
+                , zfCalc_Month_start (tmpMI.DateStart)    AS MonthNameStart
+                , zfCalc_Month_end (tmpMI.DateEnd)        AS MonthNameEnd
                 , (EXTRACT (Year FROM tmpMI.DateStart) - 2000) ::Integer  AS NumYearStart            --год старт
                 , (EXTRACT (Year FROM tmpMI.DateEnd)   - 2000) ::Integer  AS NumYearEnd              --год енд
                 , EXTRACT (MONTH FROM tmpMI.DateStart) ::Integer  AS NumStartDate            --номер месяца старт
@@ -294,15 +294,15 @@ BEGIN
 
                 , tmpMI.Amount               :: TFloat    AS Amount
 
-                , tmpMI_Main.DateStart       :: TDateTime AS DateStart_Main
-                , tmpMI_Main.DateEnd         :: TDateTime AS DateEnd_Main
-                , tmpMI_Main.Amount          :: TFloat    AS Amount_Main
-                , tmpMI_Main.Price           :: TFloat    AS Price_Main
-                , tmpMI_Main.Area            :: TFloat    AS Area_Main
+                , zfCalc_Month_start (tmpMI_Main.DateStart) AS DateStart_Main
+                , zfCalc_Month_end (tmpMI_Main.DateEnd)     AS DateEnd_Main
+                , tmpMI_Main.Amount          :: TFloat      AS Amount_Main
+                , tmpMI_Main.Price           :: TFloat      AS Price_Main
+                , tmpMI_Main.Area                :: TFloat  AS Area_Main
 
-                , tmp_last.DateStart       :: TDateTime AS MonthNameStart_before
-                , tmp_last.DateEnd         :: TDateTime AS MonthNameEnd_before
-                , tmp_last.Amount          :: TFloat    AS Amount_before
+                , zfCalc_Month_start (tmp_last.DateStart)   AS MonthNameStart_before
+                , zfCalc_Month_end (tmp_last.DateEnd)       AS MonthNameEnd_before
+                , tmp_last.Amount              :: TFloat    AS Amount_before
 
                 , tmpMI.isErased
            FROM tmpMI

@@ -488,6 +488,9 @@ type
          var AAllow: Boolean);
     procedure onBeforeOpen(DataSet: TDataSet);
     procedure onAfterClose(DataSet: TDataSet);
+    procedure onCustomDrawHeader900(
+      Sender: TcxGridTableView; ACanvas: TcxCanvas;
+      AViewInfo: TcxGridColumnHeaderViewInfo; var ADone: Boolean);
     procedure SetView(const Value: TcxGridTableView); override;
     procedure FocusedItemChanged(Sender: TcxCustomGridTableView;
                                  APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
@@ -3827,6 +3830,8 @@ begin
              if Column is TcxGridDBColumn then
                 TcxGridDBColumn(Column).DataBinding.FieldName := TcxGridDBColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
              if Caption = '' then Options.Editing := False;
+             if Assigned(Styles.Header) and (Styles.Header.Font.Orientation = 900) then
+               OnCustomDrawHeader := onCustomDrawHeader900
            end;
 
            if Assigned(TemplateColorRule) then
@@ -3906,6 +3911,18 @@ begin
     finally
       View.EndUpdate;
     end;
+end;
+
+procedure TCrossDBViewAddOn.onCustomDrawHeader900(
+  Sender: TcxGridTableView; ACanvas: TcxCanvas;
+  AViewInfo: TcxGridColumnHeaderViewInfo; var ADone: Boolean);
+begin
+
+  ACanvas.FillRect(AViewInfo.Bounds);
+
+  ACanvas.TextOut(MAX(AViewInfo.Bounds.Left + 2, AViewInfo.Bounds.Left +
+    (AViewInfo.Bounds.Right - AViewInfo.Bounds.Left - ACanvas.TextHeight(AViewInfo.Column.Caption)) div 2), AViewInfo.Bounds.Bottom - 2, AViewInfo.Column.Caption);
+  ADone := True;
 end;
 
 procedure TCrossDBViewAddOn.onEditing(Sender: TcxCustomGridTableView;

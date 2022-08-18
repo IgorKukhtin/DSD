@@ -183,7 +183,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             Caption = #1052#1077#1089#1103#1094' '#1089'...'
             DataBinding.FieldName = 'MonthNameStart'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'mmmm-yy'
+            Properties.DisplayFormat = 'mmmm yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1086#1074#1099#1077' '#1091#1089#1083#1086#1074#1080#1103
@@ -194,7 +194,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             Caption = #1052#1077#1089#1103#1094' '#1087#1086'...'
             DataBinding.FieldName = 'MonthNameEnd'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'mmmm-yy'
+            Properties.DisplayFormat = 'mmmm yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1086#1074#1099#1077' '#1091#1089#1083#1086#1074#1080#1103
@@ -266,7 +266,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             Caption = '+ '#1052#1077#1089#1103#1094' '#1089'...'
             DataBinding.FieldName = 'DateStart_Main'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'mmmm-yy'
+            Properties.DisplayFormat = 'mmmm yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1041#1072#1079#1086#1074#1099#1077' '#1091#1089#1083#1086#1074#1080#1103
@@ -277,7 +277,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             Caption = '+ '#1052#1077#1089#1103#1094' '#1087#1086'...'
             DataBinding.FieldName = 'DateEnd_Main'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'mmmm-yy'
+            Properties.DisplayFormat = 'mmmm yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1041#1072#1079#1086#1074#1099#1077' '#1091#1089#1083#1086#1074#1080#1103
@@ -301,7 +301,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             Caption = '***'#1052#1077#1089#1103#1094' '#1089'...'
             DataBinding.FieldName = 'MonthNameStart_before'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'mmmm-yy'
+            Properties.DisplayFormat = 'mmmm yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1091#1089#1083#1086#1074#1080#1103' ('#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077')'
@@ -312,7 +312,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             Caption = '***'#1052#1077#1089#1103#1094' '#1087#1086'...'
             DataBinding.FieldName = 'MonthNameEnd_before'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'mmmm-yy'
+            Properties.DisplayFormat = 'mmmm yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1091#1089#1083#1086#1074#1080#1103' ('#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077')'

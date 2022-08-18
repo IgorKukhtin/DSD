@@ -15,15 +15,22 @@ AS
 $BODY$  
 BEGIN
 
+if inMovementDescId <> zc_Movement_ServiceItem()
+then
+
      -- Проверка - период
      IF inOperDate < CURRENT_DATE - INTERVAL '3 DAY'
         -- AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin())
      THEN
-         RAISE EXCEPTION 'Ошибка.Для пользователя <%> изменения в документе возможны с <%>.'
+         RAISE EXCEPTION 'Ошибка.Для пользователя <%> изменения в документе возможны с <%>.Дата документа = <%>.(<%>)(<%>)'
                        , lfGet_Object_ValueData_sh (inUserId)
                        , zfConvert_DateToString (CURRENT_DATE - INTERVAL '3 DAY')
+                       , zfConvert_DateToString (inOperDate)
+                       , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
+                       , inMovementId
                         ;
      END IF;
+
 
      -- Проверка - Пользователь
      IF NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE)
@@ -35,6 +42,8 @@ BEGIN
                        , lfGet_Object_ValueData (inUserId)
                         ;
      END IF;
+
+end if;
 
  
 END;

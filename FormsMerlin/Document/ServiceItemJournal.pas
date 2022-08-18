@@ -101,12 +101,15 @@ type
     actOpenServiceItem_history: TdsdOpenForm;
     bbOpenServiceItem_history: TdxBarButton;
     Month_diff: TcxGridDBColumn;
-    MonthStart_before: TcxGridDBColumn;
-    MonthEnd_before: TcxGridDBColumn;
-    MonthStart_after: TcxGridDBColumn;
-    MonthEnd_after: TcxGridDBColumn;
+    DateStart_before_month: TcxGridDBColumn;
+    DateEnd_before_month: TcxGridDBColumn;
+    DateStart_after_month: TcxGridDBColumn;
+    DateEnd_after_month: TcxGridDBColumn;
     actOpenServiceItemAdd_history: TdsdOpenForm;
     bbOpenServiceItemAdd_history: TdxBarButton;
+    edSearchUnitName: TcxTextEdit;
+    lbSearchName: TcxLabel;
+    FieldFilter_UnitName: TdsdFieldFilter;
   private
   public
   end;

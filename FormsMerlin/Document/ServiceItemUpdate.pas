@@ -45,6 +45,9 @@ type
     Month_diff_after: TcxGridDBColumn;
     actOpenServiceItemAdd_history: TdsdOpenForm;
     bbOpenServiceItemAdd_history: TdxBarButton;
+    edSearchUnitName: TcxTextEdit;
+    lbSearchName: TcxLabel;
+    FieldFilter_UnitName: TdsdFieldFilter;
   private
     { Private declarations }
   public

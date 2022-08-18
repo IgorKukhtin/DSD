@@ -615,11 +615,17 @@ inherited MainForm: TMainForm
       object miServiceJournal: TMenuItem
         Action = actServiceJournal
       end
+      object N3: TMenuItem
+        Caption = '-'
+      end
       object miServiceItemJournal: TMenuItem
         Action = actServiceItemJournal
       end
       object miServiceItemUpdate: TMenuItem
         Action = actServiceItemUpdate
+      end
+      object N8: TMenuItem
+        Caption = '-'
       end
       object miServiceItemAddJournal: TMenuItem
         Action = actServiceItemAddJournal

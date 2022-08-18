@@ -389,13 +389,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actPUSHDiscount
-        end
-        item
-          Action = actPUSHPartionGoodsDate
-        end
-        item
-          Action = actPUSHOOC1303
+          Action = actPUSHCalculate
         end
         item
           Action = actCalculateExternalZakaz
@@ -440,38 +434,16 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actPUSHDiscount: TdsdShowPUSHMessage
+    object actPUSHCalculate: TdsdShowPUSHMessage
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spPUSHDiscount
+      StoredProc = spPUSHCalculate
       StoredProcList = <
         item
-          StoredProc = spPUSHDiscount
+          StoredProc = spPUSHCalculate
         end>
-      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1072#1084
-      Hint = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1072#1084
-    end
-    object actPUSHPartionGoodsDate: TdsdShowPUSHMessage
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spPUSHPartionGoodsDate
-      StoredProcList = <
-        item
-          StoredProc = spPUSHPartionGoodsDate
-        end>
-      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1087#1088#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1084#1077#1085#1077#1077' 1 '#1075#1086#1076#1072
-      Hint = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1087#1088#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1084#1077#1085#1077#1077' 1 '#1075#1086#1076#1072
-    end
-    object actPUSHOOC1303: TdsdShowPUSHMessage
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spPUSHOOC1303
-      StoredProcList = <
-        item
-          StoredProc = spPUSHOOC1303
-        end>
-      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1073#1077#1079' '#1053#1044#1057' '#1073#1086#1083#1100#1096#1077' '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086' '#1076#1086#1087#1091#1089#1090#1080#1084#1086#1081
-      Hint = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1073#1077#1079' '#1053#1044#1057' '#1073#1086#1083#1100#1096#1077' '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086' '#1076#1086#1087#1091#1089#1090#1080#1084#1086#1081
+      Caption = #1055#1091#1096' '#1087#1077#1088#1077#1076' '#1088#1072#1089#1095#1077#1090#1086#1084
+      Hint = #1055#1091#1096' '#1087#1077#1088#1077#1076' '#1088#1072#1089#1095#1077#1090#1086#1084
     end
   end
   inherited MasterDS: TDataSource
@@ -800,10 +772,13 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Left = 712
     Top = 360
   end
-  object spPUSHDiscount: TdsdStoredProc
-    StoredProcName = 'gpSelect_ShowPUSH_Discount_CalculateOrderInternal'
-    DataSets = <>
-    OutputType = otResult
+  object spPUSHCalculate: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_Calculate_OrderInternal'
+    DataSet = PUSHCalculateCDS
+    DataSets = <
+      item
+        DataSet = PUSHCalculateCDS
+      end>
     Params = <
       item
         Name = 'inMovementID'
@@ -811,95 +786,17 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outShowMessage'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPUSHType'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outText'
-        Value = Null
-        DataType = ftWideString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 554
     Top = 352
   end
-  object spPUSHPartionGoodsDate: TdsdStoredProc
-    StoredProcName = 'gpSelect_ShowPUSH_PartionGoodsDate_CalculateOrderInternal'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementID'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outShowMessage'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPUSHType'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outText'
-        Value = Null
-        DataType = ftWideString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 554
-    Top = 408
-  end
-  object spPUSHOOC1303: TdsdStoredProc
-    StoredProcName = 'gpSelect_ShowPUSH_OOC1303_CalculateOrderInternal'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementID'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outShowMessage'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPUSHType'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outText'
-        Value = Null
-        DataType = ftWideString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 346
-    Top = 416
+  object PUSHCalculateCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 552
+    Top = 411
   end
 end

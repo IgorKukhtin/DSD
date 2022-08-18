@@ -20,13 +20,20 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUserId_sign Integer;
    DECLARE vbUser_isAll Boolean;
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbCommentInfoMoneyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service());
-     vbUserId:= lpGetUserBySession (inSession);
+     IF zfConvert_StringToNumber (inSession) < 0
+     THEN
+         vbUserId     := -1 * zfConvert_StringToNumber (inSession);
+         vbUserId_sign:= zfConvert_StringToNumber (inSession); 
+     ELSE
+         vbUserId     := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service());
+         vbUserId_sign:= vbUserId;
+     END IF;
 
      -- Доступ
      vbUser_isAll:= lpCheckUser_isAll (vbUserId);
@@ -84,7 +91,7 @@ BEGIN
      IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = ioId AND Movement.StatusId = zc_Enum_Status_Complete())
      THEN
          -- Распровели
-         PERFORM lpUnComplete_Movement (ioId, vbUserId);
+         PERFORM lpUnComplete_Movement (ioId, vbUserId_sign);
      END IF;
 
      -- сохранили <Документ>
@@ -103,7 +110,7 @@ BEGIN
      IF 1=1 -- vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Service())
      THEN
           PERFORM lpComplete_Movement_Service (inMovementId := ioId
-                                             , inUserId     := vbUserId
+                                             , inUserId     := vbUserId_sign
                                               );
      END IF;
 
