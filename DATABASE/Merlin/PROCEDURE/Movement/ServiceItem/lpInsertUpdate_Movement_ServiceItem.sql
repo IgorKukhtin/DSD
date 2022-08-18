@@ -26,10 +26,10 @@ BEGIN
      -- if COALESCE (ioId, 0) = 0 then RAISE EXCEPTION 'Ошибка.insert. <%> <%> <%>', lfGet_Object_ValueData_sh (inUnitId), lfGet_Object_ValueData_sh (inInfoMoneyId), zfConvert_DateToString (inOperDate); END IF;
 
      -- Проверка
-     IF inOperDate > CURRENT_DATE
+     /*IF inOperDate > CURRENT_DATE
      THEN
         RAISE EXCEPTION 'Ошибка.Дата документа = <%> не может быть позже <%>.', zfConvert_DateToString (inOperDate), zfConvert_DateToString (CURRENT_DATE);
-     END IF;
+     END IF;*/
 
      -- проверка - свойство должно быть установлено
      IF COALESCE (inUnitId, 0) = 0 THEN

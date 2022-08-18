@@ -5,6 +5,7 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
   ClientHeight = 341
   ClientWidth = 1071
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -177
   ExplicitWidth = 1087
   ExplicitHeight = 380
   PixelsPerInch = 96
@@ -166,6 +167,99 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             HeaderAlignmentVert = vaCenter
             Width = 174
           end
+          object Amount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 80
+          end
+          object Area: TcxGridDBColumn
+            Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
+            DataBinding.FieldName = 'Area'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 80
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.'
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 80
+          end
+          object MonthStart: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1089
+            DataBinding.FieldName = 'DateStart'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm - yyyy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 80
+          end
+          object MonthDate: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1087#1086
+            DataBinding.FieldName = 'DateEnd'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm - yyyy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 80
+          end
+          object DateStart: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089
+            DataBinding.FieldName = 'DateStart'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object EndDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086
+            DataBinding.FieldName = 'DateEnd'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Width = 70
+          end
+          object Month_diff: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089'.'
+            DataBinding.FieldName = 'Month_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 55
+          end
           object Amount_before: TcxGridDBColumn
             Caption = '*'#1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
             DataBinding.FieldName = 'Amount_before'
@@ -222,23 +316,23 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             Caption = '*'#1052#1077#1089#1103#1094' '#1089
             DataBinding.FieldName = 'DateStart_before'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'yy - mmmm'
+            Properties.DisplayFormat = 'mmmm - yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object MonthEnd_before: TcxGridDBColumn
             Caption = '*'#1052#1077#1089#1103#1094' '#1087#1086
             DataBinding.FieldName = 'DateEnd_before'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'yy - mmmm'
+            Properties.DisplayFormat = 'mmmm - yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object DateStart_before: TcxGridDBColumn
             Caption = '*'#1044#1072#1090#1072' '#1089
@@ -258,99 +352,6 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
             Options.Editing = False
-            Width = 70
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
-            Options.Editing = False
-            Width = 80
-          end
-          object Area: TcxGridDBColumn
-            Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
-            DataBinding.FieldName = 'Area'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
-            Options.Editing = False
-            Width = 80
-          end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.'
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
-            Options.Editing = False
-            Width = 80
-          end
-          object Month_diff: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089'.'
-            DataBinding.FieldName = 'Month_diff'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
-            Options.Editing = False
-            Width = 55
-          end
-          object MonthStart: TcxGridDBColumn
-            Caption = #1052#1077#1089#1103#1094' '#1089
-            DataBinding.FieldName = 'DateStart'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'yy - mmmm'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
-            Options.Editing = False
-            Width = 70
-          end
-          object MonthDate: TcxGridDBColumn
-            Caption = #1052#1077#1089#1103#1094' '#1087#1086
-            DataBinding.FieldName = 'DateEnd'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'yy - mmmm'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
-            Options.Editing = False
-            Width = 70
-          end
-          object DateStart: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1089
-            DataBinding.FieldName = 'DateStart'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
-            Options.Editing = False
-            Width = 70
-          end
-          object EndDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1086
-            DataBinding.FieldName = 'DateEnd'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
             Width = 70
           end
           object Amount_after: TcxGridDBColumn
@@ -409,23 +410,23 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
             Caption = '***'#1052#1077#1089#1103#1094' '#1089
             DataBinding.FieldName = 'DateStart_after'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'yy - mmmm'
+            Properties.DisplayFormat = 'mmmm - yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object MonthEnd_after: TcxGridDBColumn
             Caption = '***'#1052#1077#1089#1103#1094' '#1087#1086
             DataBinding.FieldName = 'DateEnd_after'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'yy - mmmm'
+            Properties.DisplayFormat = 'mmmm - yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object DateStart_after: TcxGridDBColumn
             Caption = '***'#1044#1072#1090#1072' '#1089
