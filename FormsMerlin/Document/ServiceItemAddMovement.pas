@@ -120,6 +120,10 @@ type
     bbServiceItemAdd_history: TdxBarButton;
     actOpenServiceItem_history: TdsdOpenForm;
     bbOpenServiceItem_history: TdxBarButton;
+    Panel1: TPanel;
+    FieldFilter_UnitName: TdsdFieldFilter;
+    lbSearchName: TcxLabel;
+    edSearchUnitName: TcxTextEdit;
   private
   public
   end;

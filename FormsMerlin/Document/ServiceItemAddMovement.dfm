@@ -20,26 +20,30 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
   TextHeight = 13
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 115
+    Top = 148
     Width = 1184
-    Height = 351
+    Height = 318
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 351
+    ExplicitTop = 115
+    ExplicitHeight = 351
+    ClientRectBottom = 318
     ClientRectRight = 1184
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 327
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1184
-        Height = 327
+        Height = 294
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 327
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -462,13 +466,44 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       Left = 658
       Top = 65
       Hint = #1055#1086#1083#1085#1086#1089#1090#1100#1102' '#1086#1087#1083#1072#1095#1077#1085
-      Caption = '1 '#1084#1077#1089#1103#1094
+      Caption = #1076#1086#1073#1072#1074#1080#1090#1100' '#1079#1072' 1 '#1084#1077#1089#1103#1094
       ParentShowHint = False
       Properties.ReadOnly = False
       ShowHint = False
       State = cbsChecked
       TabOrder = 14
-      Width = 79
+      Width = 135
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 89
+    Width = 1184
+    Height = 33
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 6
+    ExplicitTop = 92
+    object lbSearchName: TcxLabel
+      Left = 4
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' '#1054#1090#1076#1077#1083' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchUnitName: TcxTextEdit
+      Left = 113
+      Top = 5
+      TabOrder = 1
+      DesignSize = (
+        126
+        21)
+      Width = 126
     end
   end
   object FormParams: TdsdFormParams
@@ -1310,7 +1345,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
-      ImageIndex = 28
+      ImageIndex = 48
       FormName = 'TServiceItemAddJournal_historyForm'
       FormNameParam.Value = 'TServiceItemAddJournal_historyForm'
       FormNameParam.DataType = ftString
@@ -1361,7 +1396,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
-      ImageIndex = 28
+      ImageIndex = 47
       FormName = 'TServiceItemJournal_historyForm'
       FormNameParam.Value = 'TServiceItemJournal_historyForm'
       FormNameParam.DataType = ftString
@@ -2003,5 +2038,13 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     PackSize = 1
     Left = 136
     Top = 352
+  end
+  object FieldFilter_UnitName: TdsdFieldFilter
+    TextEdit = edSearchUnitName
+    DataSet = MasterCDS
+    Column = UnitName
+    CheckBoxList = <>
+    Left = 736
+    Top = 232
   end
 end

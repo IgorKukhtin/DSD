@@ -329,7 +329,6 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 174
@@ -1623,8 +1622,8 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 648
-    Top = 88
+    Left = 632
+    Top = 160
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
