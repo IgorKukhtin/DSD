@@ -301,15 +301,15 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashBalanceDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CashBalanceDialogtForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashBalanceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CashBalanceForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitRentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitRentForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitRentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitRentDialogForm');
+exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashBalanceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CashBalanceDialogtForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashBalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CashBalanceForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitBalanceDialogtForm');

@@ -37,36 +37,39 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 139
-    Top = 31
+    Left = 255
+    Top = 23
     EditValue = 42736d
     Properties.ShowTime = False
     TabOrder = 2
+    Visible = False
     Width = 90
   end
   object deStart: TcxDateEdit
-    Left = 26
-    Top = 31
+    Left = 8
+    Top = 23
     EditValue = 42736d
     Properties.AssignedValues.DisplayFormat = True
     Properties.ShowTime = False
     TabOrder = 3
+    Visible = False
     Width = 90
   end
   object cxLabel6: TcxLabel
     Left = 26
-    Top = 65
+    Top = 59
     Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
   end
   object cxLabel7: TcxLabel
-    Left = 139
+    Left = 229
     Top = 8
     Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    Visible = False
   end
   object cxLabel14: TcxLabel
     Left = 26
-    Top = 90
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    Top = 88
+    Caption = #1060#1080#1088#1084#1072'/'#1047#1076#1072#1085#1080#1077'/'#1069#1090#1072#1078':'
   end
   object ceUnit: TcxButtonEdit
     Left = 26
@@ -81,15 +84,17 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
     Width = 287
   end
   object cbAllMonth: TcxCheckBox
-    Left = 248
-    Top = 31
+    Left = 137
+    Top = 23
     Caption = #1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+    Enabled = False
+    State = cbsChecked
     TabOrder = 8
     Width = 91
   end
   object edinServiceDate: TcxDateEdit
     Left = 139
-    Top = 64
+    Top = 58
     EditValue = 44197d
     Properties.DisplayFormat = 'mmmm yyyy'
     Properties.SaveTime = False
@@ -98,7 +103,7 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
     Width = 89
   end
   object cxLabel3: TcxLabel
-    Left = 26
+    Left = 8
     Top = 8
     Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     Visible = False
@@ -123,7 +128,8 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 331
+    Left = 75
+    Top = 32
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 319
@@ -237,24 +243,18 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 97
-    Top = 100
+    Left = 209
+    Top = 52
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoneyTreeForm'
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoneyTreeForm'
+    FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
-      item
-        Name = 'iniService'
-        Value = True
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'Key'
         Value = ''
@@ -271,16 +271,9 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ParentId'
-        Value = ''
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ParentName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
+        Name = 'inIsService'
+        Value = True
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 208

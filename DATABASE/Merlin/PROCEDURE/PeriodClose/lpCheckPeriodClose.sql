@@ -15,6 +15,7 @@ AS
 $BODY$  
 BEGIN
 
+-- временно
 if inMovementDescId <> zc_Movement_ServiceItem()
 then
 

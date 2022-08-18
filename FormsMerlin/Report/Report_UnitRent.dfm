@@ -17,48 +17,52 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     BevelOuter = bvNone
     TabOrder = 0
     object edDateStart: TcxDateEdit
-      Left = 60
+      Left = 730
       Top = 6
       EditValue = 43831d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
+      Visible = False
       Width = 89
     end
     object cxLabel2: TcxLabel
-      Left = 7
-      Top = 7
+      Left = 712
+      Top = 10
       Caption = #1044#1072#1090#1072' '#1089' :'
+      Visible = False
     end
     object cxLabel1: TcxLabel
-      Left = 157
+      Left = 37
       Top = 7
       Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
     end
     object edServiceDate: TcxDateEdit
-      Left = 259
+      Left = 144
       Top = 6
       EditValue = 44197d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 3
-      Width = 89
+      Width = 107
     end
     object cbAllMonth: TcxCheckBox
-      Left = 167
-      Top = 33
+      Left = 37
+      Top = 30
       Caption = #1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+      Enabled = False
+      State = cbsChecked
       TabOrder = 4
       Width = 87
     end
     object cxLabel5: TcxLabel
-      Left = 315
+      Left = 274
       Top = 34
       Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076':'
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 442
+      Left = 403
       Top = 33
       Properties.Buttons = <
         item
@@ -71,25 +75,27 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     end
   end
   object deEnd: TcxDateEdit [1]
-    Left = 58
+    Left = 730
     Top = 33
     EditValue = 43831d
     Properties.ShowTime = False
     TabOrder = 2
+    Visible = False
     Width = 90
   end
   object cxLabel7: TcxLabel [2]
-    Left = 4
+    Left = 705
     Top = 34
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
+    Visible = False
   end
   object cxLabel6: TcxLabel [3]
-    Left = 353
-    Top = 7
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    Left = 288
+    Top = 8
+    Caption = #1060#1080#1088#1084#1072'/'#1047#1076#1072#1085#1080#1077'/'#1069#1090#1072#1078':'
   end
   object edUnit: TcxButtonEdit [4]
-    Left = 442
+    Left = 403
     Top = 6
     Properties.Buttons = <
       item
@@ -319,6 +325,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     object actInsert_Movement_Service: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsert_Movement_Service
       StoredProcList = <
@@ -859,6 +866,10 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         item
           Visible = True
           ItemName = 'bbInsertUpdate_Object_Position_All'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -878,6 +889,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExel: TdxBarButton
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1151,18 +1163,12 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoneyTreeForm'
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoneyTreeForm'
+    FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
-      item
-        Name = 'iniService'
-        Value = True
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'Key'
         Value = ''
@@ -1179,16 +1185,9 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ParentId'
-        Value = ''
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ParentName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
+        Name = 'inIsService'
+        Value = True
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 608

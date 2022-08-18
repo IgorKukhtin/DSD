@@ -118,7 +118,7 @@ BEGIN
                                                               , inInfoMoneyId:= Movement.InfoMoneyId
                                                               , inSession    := inSession
                                                                ) AS tmpMI_Main
-                                                                 ON Movement.DateStart BETWEEN tmpMI_Main.DateStart AND tmpMI_Main.DateEnd
+                                                                 ON Movement.DateStart BETWEEN COALESCE (tmpMI_Main.DateStart, zc_DateStart()) AND tmpMI_Main.DateEnd
                                                                 AND tmpMI_Main.Amount > 0
 
             LEFT JOIN tmp_last ON tmp_last.UnitId = Movement.UnitId

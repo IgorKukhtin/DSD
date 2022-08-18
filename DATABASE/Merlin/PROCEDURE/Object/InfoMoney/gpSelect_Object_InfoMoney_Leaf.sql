@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , ParentId Integer, ParentName TVarChar
              , GroupNameFull TVarChar
              , isUserAll Boolean, isService Boolean, isLeaf Boolean
+             , NPP Integer
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
 )
@@ -41,12 +42,16 @@ BEGIN
         , tmp.isService
         , tmp.isLeaf
 
+        , tmp.NPP
+
         , tmp.InsertName
         , tmp.InsertDate
         , tmp.UpdateName
         , tmp.UpdateDate
+
    FROM gpSelect_Object_InfoMoney (inIsShowAll, inSession) AS tmp
    WHERE tmp.Id NOT IN (SELECT DISTINCT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_InfoMoney_Parent())
+   ORDER BY tmp.NPP
   ;
   
 END;$BODY$
@@ -60,4 +65,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_InfoMoney_Parent (TRUE, FALSE,FALSE, 'zc_Enum_InfoMoney_In'::TVarChar, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_InfoMoney_Leaf (TRUE, FALSE, 'zc_Enum_InfoMoney_In'::TVarChar, zfCalc_UserAdmin())

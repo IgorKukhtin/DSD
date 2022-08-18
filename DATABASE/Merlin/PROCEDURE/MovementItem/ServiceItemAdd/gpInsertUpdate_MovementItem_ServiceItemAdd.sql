@@ -44,7 +44,7 @@ BEGIN
      SELECT gpSelect.DateStart, gpSelect.DateEnd, gpSelect.Amount, CASE WHEN inCommentInfoMoneyId > 0 THEN inCommentInfoMoneyId ELSE gpSelect.CommentInfoMoneyId END
             INTO vbDateStart_base, vbDateEnd_base, vbAmount_base, inCommentInfoMoneyId
      FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate:= vbOperDate, inUnitId:= inUnitId, inInfoMoneyId :=inInfoMoneyId, inSession:= inSession) AS gpSelect
-     WHERE vbOperDate BETWEEN gpSelect.DateStart AND gpSelect.DateEnd
+     WHERE vbOperDate BETWEEN COALESCE (gpSelect.DateStart, zc_DateStart()) AND gpSelect.DateEnd
     ;
      -- проверка
      IF COALESCE (vbAmount_base, 0) = 0 THEN
