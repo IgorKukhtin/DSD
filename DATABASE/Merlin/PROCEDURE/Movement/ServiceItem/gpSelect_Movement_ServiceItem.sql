@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ServiceItem(
 )
 RETURNS TABLE (Id Integer, DescId Integer, InvNumber Integer
              , OperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar
+             , StatusId Integer, StatusCode Integer, StatusName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              --, isAdd Boolean
@@ -112,6 +112,7 @@ BEGIN
            , tmpMI.MovementDescId                       AS DescId
            , zfConvert_StringToNumber (tmpMI.InvNumber) AS InvNumber
            , tmpMI.DateEnd                              AS OperDate
+           , Object_Status.Id                           AS StatusId
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
            , Object_Insert.ValueData                    AS InsertName

@@ -39,7 +39,7 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , AmountSumm1 TFloat, AmountSumm2 TFloat, AmountSummTotal TFloat, AmountSumm_Dozakaz TFloat
              , Amount_Weight1 TFloat, Amount_Sh1 TFloat
              , Amount_Weight2 TFloat, Amount_Sh2 TFloat
-             , Amount_Weight_Itog TFloat, Amount_Sh_Itog TFloat, TotalAmount_Weight TFloat
+             , Amount_Weight_Itog TFloat, Amount_Sh_Itog TFloat--, TotalAmount_Weight TFloat
              , Amount_Weight_Dozakaz TFloat, Amount_Sh_Dozakaz TFloat
              , Amount_Order TFloat, Amount_Dozakaz TFloat
              , Amount_WeightSK TFloat
@@ -1061,7 +1061,7 @@ BEGIN
            , tmpMovement.Amount_Sh2              ::TFloat       AS Amount_Sh2
            , (COALESCE (tmpMovement.Amount_Weight_Itog,0) + COALESCE (tmpMovement.Amount_Weight_Dozakaz,0) ) ::TFloat AS Amount_Weight_Itog  --заказ1 + заказ2 + дозаказ вес
            , (COALESCE (tmpMovement.Amount_Sh_Itog,0) + COALESCE (tmpMovement.Amount_Sh_Dozakaz,0))          ::TFloat AS Amount_Sh_Itog      --заказ1 + заказ2 + дозаказ шт
-           , tmpMovement.TotalAmount_Weight      ::TFloat       AS TotalAmount_Weight
+           --, tmpMovement.TotalAmount_Weight      ::TFloat       AS TotalAmount_Weight
 
            , tmpMovement.Amount_Weight_Dozakaz   ::TFloat       AS Amount_Weight_Dozakaz
            , tmpMovement.Amount_Sh_Dozakaz       ::TFloat       AS Amount_Sh_Dozakaz
