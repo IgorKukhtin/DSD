@@ -5279,6 +5279,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Goods_LeftTheMarket: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1052#1086#1085#1080#1090#1086#1088#1080#1085#1075' '#1090#1086#1074#1072#1088#1072' ('#1087#1086#1103#1074#1083#1077#1085#1080#1077'/'#1080#1089#1095#1077#1079#1085#1086#1074#1077#1085#1080#1077')'
+      FormName = 'TReport_Goods_LeftTheMarketForm'
+      FormNameParam.Value = 'TReport_Goods_LeftTheMarketForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6115,6 +6126,9 @@
       object N357: TMenuItem
         Action = actReport_Check_OrderFine
         Caption = #1064#1090#1088#1072#1092#1099' '#1079#1072' '#1079#1072#1076#1077#1088#1078#1082#1091' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1086#1074' '#1089' '#1089#1072#1081#1090#1072' '#1058#1072#1073#1083#1077#1090#1086#1082
+      end
+      object N362: TMenuItem
+        Action = actReport_Goods_LeftTheMarket
       end
     end
     object N36: TMenuItem [5]

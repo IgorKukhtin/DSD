@@ -1239,7 +1239,8 @@ uses
   GoodsSignOriginEdit in '..\..\FormsFarmacy\Guides\GoodsSignOriginEdit.pas' {GoodsSignOriginEditForm: TParentForm},
   GoodsSignOrigin in '..\..\FormsFarmacy\Guides\GoodsSignOrigin.pas' {GoodsSignOriginForm: TParentForm},
   Report_RestTermGoods in '..\..\FormsFarmacy\Report\Report_RestTermGoods.pas' {Report_RestTermGoodsForm: TParentForm},
-  CheckBuyerForSite in '..\..\FormsFarmacy\Document\CheckBuyerForSite.pas' {CheckBuyerForSiteForm: TParentForm};
+  CheckBuyerForSite in '..\..\FormsFarmacy\Document\CheckBuyerForSite.pas' {CheckBuyerForSiteForm: TParentForm},
+  Report_Goods_LeftTheMarket in '..\..\FormsFarmacy\Report\Report_Goods_LeftTheMarket.pas' {Report_Goods_LeftTheMarketForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
