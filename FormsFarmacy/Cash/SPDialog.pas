@@ -77,7 +77,8 @@ type
   public
      function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
        var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
-       var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String; AHelsiPartialPrescription, AHelsiSkipDispenseSign : Boolean;
+       var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String;
+       var AHelsiPartialPrescription, AHelsiSkipDispenseSign : Boolean;
        var AisPaperRecipeSP : Boolean): boolean;
      function CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   end;
@@ -149,15 +150,6 @@ begin
     Result := True;
   end else
   begin
-
-    if spGet_Movement_InvNumberSP.Execute = '' then
-    begin
-      if spGet_Movement_InvNumberSP.ParamByName('outIsExists').Value then
-      begin
-        ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
-        Exit;
-      end;
-    end else Exit;
 
     if MainCash2.MainCashForm.UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
     begin
@@ -325,7 +317,8 @@ end;
 
 function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
   var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
-  var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String; AHelsiPartialPrescription, AHelsiSkipDispenseSign : Boolean;
+  var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String;
+  var AHelsiPartialPrescription, AHelsiSkipDispenseSign : Boolean;
   var AisPaperRecipeSP : Boolean): boolean;
 Begin
       FHelsiID := ''; FHelsiIDList := ''; FHelsiName := '';  AHelsiProgramId := ''; AHelsiProgramName := ''; AHelsiPartialPrescription := False; AisPaperRecipeSP := False;

@@ -4725,7 +4725,7 @@ begin
                                  end;
                       pmtInformation : ShowPUSHMessage(DataSet.FieldByName('Text').Value, mtInformation, ASpecialLighting, ATextColor, AColor, ABold);
                       pmtConfirmation : if not ShowPUSHMessage(DataSet.FieldByName('Text').Value +
-                                          IfThen(Pos('?', DataSet.FieldByName('Text').Value) > 0, #13#10#13#10'Продолжить изменение ?...', ''),
+                                          IfThen(Pos('?', DataSet.FieldByName('Text').Value) = 0, #13#10#13#10'Продолжить изменение ?...', ''),
                                           mtConfirmation, ASpecialLighting, ATextColor, AColor, ABold) then
                                         begin
                                           raise Exception.Create('Выполнение операции прервано...');
@@ -4803,7 +4803,7 @@ begin
                          end;
               pmtInformation : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtInformation, ASpecialLighting, ATextColor, AColor, ABold);
               pmtConfirmation : if not ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value +
-                                  IfThen(Pos('?', StoredProcList[i].StoredProc.Params.ParamByName('outText').Value) > 0, #13#10#13#10'Продолжить изменение ?...', ''),
+                                  IfThen(Pos('?', StoredProcList[i].StoredProc.Params.ParamByName('outText').Value) = 0, #13#10#13#10'Продолжить изменение ?...', ''),
                                   mtConfirmation, ASpecialLighting, ATextColor, AColor, ABold) then
                                 begin
                                   raise Exception.Create('Выполнение операции прервано...');

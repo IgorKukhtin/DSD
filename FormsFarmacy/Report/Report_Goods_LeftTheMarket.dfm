@@ -53,6 +53,28 @@ object Report_Goods_LeftTheMarketForm: TReport_Goods_LeftTheMarketForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+    object cxCheckBox1: TcxCheckBox
+      Left = 432
+      Top = 5
+      Caption = #1059#1096#1077#1083' '#1089' '#1088#1099#1085#1082#1072
+      Enabled = False
+      State = cbsChecked
+      StyleDisabled.BorderColor = clBtnShadow
+      StyleDisabled.Color = clRed
+      StyleDisabled.TextColor = clWindow
+      TabOrder = 4
+      Width = 105
+    end
+    object cxCheckBox2: TcxCheckBox
+      Left = 600
+      Top = 5
+      Caption = #1053#1072' '#1088#1099#1085#1082#1077
+      Enabled = False
+      StyleDisabled.Color = clLime
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 5
+      Width = 89
+    end
   end
   object cxGrid: TcxGrid
     Left = 0

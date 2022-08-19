@@ -16,6 +16,7 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   OldCreateOrder = False
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
+  AddOnFormData.ClosePUSHMessage = actPUSHClose
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -623,5 +624,230 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
       end>
     Left = 263
     Top = 349
+  end
+  object spUpdateGoodsAdditional: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_GoodsAdditionalFilter'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMakerName'
+        Value = ''
+        Component = edMakerName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_MakerName'
+        Value = False
+        Component = cb_MakerName
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFormDispensingId'
+        Value = '0'
+        Component = FormDispensingGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_FormDispensing'
+        Value = False
+        Component = cb_FormDispensing
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumberPlates'
+        Value = '0'
+        Component = edNumberPlates
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_NumberPlates'
+        Value = False
+        Component = cb_NumberPlates
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inQtyPackage'
+        Value = '0'
+        Component = ceQtyPackage
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_QtyPackage'
+        Value = False
+        Component = cb_QtyPackage
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRecipe'
+        Value = False
+        Component = cbIsRecipe
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_IsRecipe'
+        Value = False
+        Component = cb_IsRecipe
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMakerNameUkr'
+        Value = ''
+        Component = edMakerNameUkr
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_MakerNameUkr'
+        Value = False
+        Component = cb_MakerNameUkr
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDosage'
+        Value = ''
+        Component = edDosage
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_Dosage'
+        Value = False
+        Component = cb_Dosage
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVolume'
+        Value = ''
+        Component = edVolume
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_Volume'
+        Value = False
+        Component = cb_Volume
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsWhoCanId'
+        Value = '0'
+        Component = GoodsWhoCanGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_GoodsWhoCan'
+        Value = False
+        Component = cb_GoodsWhoCan
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsMethodApplId'
+        Value = '0'
+        Component = GoodsMethodApplGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_GoodsMethodAppl'
+        Value = False
+        Component = cb_GoodsMethodAppl
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsSignOriginId'
+        Value = '0'
+        Component = GoodsSignOriginGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_GoodsSignOrigin'
+        Value = False
+        Component = cb_GoodsSignOrigin
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 144
+    Top = 192
+  end
+  object ActionList1: TActionList
+    Left = 288
+    Top = 128
+    object actPUSHClose: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateGoodsAdditional
+      StoredProcList = <
+        item
+          StoredProc = spUpdateGoodsAdditional
+        end
+        item
+        end
+        item
+        end>
+      Caption = 'actPUSHInfo'
+    end
   end
 end

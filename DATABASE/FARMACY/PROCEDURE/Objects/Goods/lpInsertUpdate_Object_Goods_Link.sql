@@ -40,12 +40,14 @@ BEGIN
             -- Если есть связь на другой товар убоераем
             IF EXISTS(SELECT 1 FROM Object_Goods_Juridical
                       WHERE Object_Goods_Juridical.GoodsMainId = inGoodsMainId
+                        AND Object_Goods_Juridical.JuridicalId = inObjectId
                         AND Object_Goods_Juridical.Id <> inGoodsId)
             THEN
               UPDATE Object_Goods_Juridical SET GoodsMainId = NULL
                                               , UserUpdateId = inUserId
                                               , DateUpdate   = CURRENT_TIMESTAMP
               WHERE Object_Goods_Juridical.GoodsMainId = inGoodsMainId
+                AND Object_Goods_Juridical.JuridicalId = inObjectId
                 AND Object_Goods_Juridical.Id <> inGoodsId;
             END IF;
 
@@ -80,12 +82,14 @@ BEGIN
             -- Если есть связь на другой товар убоераем
             IF EXISTS(SELECT 1 FROM Object_Goods_Retail
                       WHERE Object_Goods_Retail.GoodsMainId = inGoodsMainId
+                        AND Object_Goods_Retail.RetailId = inObjectId
                         AND Object_Goods_Retail.Id <> inGoodsId)
             THEN
               UPDATE Object_Goods_Retail SET GoodsMainId = NULL
                                               , UserUpdateId = inUserId
                                               , DateUpdate   = CURRENT_TIMESTAMP
               WHERE Object_Goods_Retail.GoodsMainId = inGoodsMainId
+                AND Object_Goods_Retail.RetailId = inObjectId
                 AND Object_Goods_Retail.Id <> inGoodsId;
             END IF;
 

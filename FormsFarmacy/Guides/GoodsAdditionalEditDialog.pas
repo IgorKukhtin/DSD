@@ -20,7 +20,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, Vcl.ActnList, dsdAction;
 
 type
   TGoodsAdditionalEditDialogForm = class(TParentForm)
@@ -66,6 +66,9 @@ type
     GoodsWhoCanGuides: TdsdGuides;
     GoodsMethodApplGuides: TdsdGuides;
     GoodsSignOriginGuides: TdsdGuides;
+    spUpdateGoodsAdditional: TdsdStoredProc;
+    ActionList1: TActionList;
+    actPUSHClose: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

@@ -406,7 +406,7 @@ begin
   DataSetList := TList.Create;
   try
     // Выводим PUSH сообщение
-    if Assigned(AddOnFormData.ClosePUSHMessage) then
+    if Assigned(AddOnFormData.ClosePUSHMessage) and (not (fsModal in Self.FormState) or (ModalResult in [mrOk, mrYes])) then
       AddOnFormData.ClosePUSHMessage.Execute;
 
     // Если данная форма не одиночка, то при закрытии надо проверить единственная она или нет

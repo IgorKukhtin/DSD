@@ -1,28 +1,28 @@
 inherited ReturnOutJournalForm: TReturnOutJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 469
-  ClientWidth = 807
+  ClientWidth = 831
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 823
+  ExplicitWidth = 847
   ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 807
+    Width = 831
     Height = 412
     TabOrder = 3
-    ExplicitWidth = 807
+    ExplicitWidth = 831
     ExplicitHeight = 412
     ClientRectBottom = 412
-    ClientRectRight = 807
+    ClientRectRight = 831
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 807
+      ExplicitWidth = 831
       ExplicitHeight = 412
       inherited cxGrid: TcxGrid
-        Width = 807
+        Width = 831
         Height = 412
-        ExplicitWidth = 807
+        ExplicitWidth = 831
         ExplicitHeight = 412
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -321,8 +321,8 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 807
-    ExplicitWidth = 807
+    Width = 831
+    ExplicitWidth = 831
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -1004,6 +1004,31 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074#1089#1077#1093' '#1074#1086#1079#1074#1088#1072#1090#1085#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1074' XLS'
       ImageIndex = 22
     end
+    object actUpdate_isDeferred_Revert: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_Revert
+        end>
+      Caption = 'actUpdate_isDeferred_Revert'
+    end
+    object mactUpdate_isDeferred_Revert: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isDeferred_Revert
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1083#1086#1078#1077#1085'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1083#1086#1078#1077#1085'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1083#1086#1078#1077#1085'"'
+      ImageIndex = 79
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1103,6 +1128,14 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         item
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbtUpdate_isDeferred_Revert'
         end
         item
           Visible = True
@@ -1230,6 +1263,10 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     end
     object bbPrintFilterXLS: TdxBarButton
       Action = macPrintFilterXLS
+      Category = 0
+    end
+    object bbtUpdate_isDeferred_Revert: TdxBarButton
+      Action = mactUpdate_isDeferred_Revert
       Category = 0
     end
   end
@@ -1580,5 +1617,31 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     PackSize = 1
     Left = 490
     Top = 272
+  end
+  object spUpdate_isDeferred_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnOut_Deferred_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = True
+        Component = MasterCDS
+        ComponentItem = 'isDeferred'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 307
   end
 end

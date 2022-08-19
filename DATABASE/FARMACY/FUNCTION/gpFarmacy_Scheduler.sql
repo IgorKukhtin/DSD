@@ -52,7 +52,7 @@ BEGIN
                        where ObjectLink_LinkGoods_Main_jur.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
                        group by ObjectLink_LinkGoods_Child_jur.ChildObjectId) AS tmpLink
       WHERE Object_Goods_Juridical.ID = tmpLink.GoodsId
-        AND COALESCE (Object_Goods_Juridical.GoodsMainId, 0) = 0;
+        AND COALESCE (Object_Goods_Juridical.GoodsMainId, 0) <> COALESCE(tmpLink.GoodsMainId, 0);
     EXCEPTION
        WHEN others THEN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;

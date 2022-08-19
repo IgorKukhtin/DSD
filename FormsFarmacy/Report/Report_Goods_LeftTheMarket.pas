@@ -71,6 +71,8 @@ type
     HeaderDataSet: TClientDataSet;
     StyleRepository: TcxStyleRepository;
     cxStyleHeader: TcxStyle;
+    cxCheckBox1: TcxCheckBox;
+    cxCheckBox2: TcxCheckBox;
   private
   public
   end;

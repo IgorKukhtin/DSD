@@ -76,6 +76,10 @@ type
     macPrintFilterXLS: TMultiAction;
     actPrintFilterXLS: TdsdPrintAction;
     bbPrintFilterXLS: TdxBarButton;
+    spUpdate_isDeferred_Revert: TdsdStoredProc;
+    actUpdate_isDeferred_Revert: TdsdExecStoredProc;
+    mactUpdate_isDeferred_Revert: TMultiAction;
+    bbtUpdate_isDeferred_Revert: TdxBarButton;
   private
     { Private declarations }
   public
