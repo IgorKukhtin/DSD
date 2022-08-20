@@ -89,6 +89,7 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TDocument)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdFormParams)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdGuides)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TCheckListBoxAddOn)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TEDI)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TPeriodChoice)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TADOQueryAction)), Proc);
@@ -175,6 +176,10 @@ begin
             Begin
               Proc('Enabled');
             End;
+            if (Component is TCheckListBoxAddOn) then
+            begin
+              Proc('KeyList');
+            end;
             if (Component is TcxGridDBTableView) then
             begin
               with Component as TcxGridDBTableView do

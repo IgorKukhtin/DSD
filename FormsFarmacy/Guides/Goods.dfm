@@ -1535,10 +1535,11 @@ inherited GoodsForm: TGoodsForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsWhoCanId'
+          Name = 'GoodsWhoCanList'
           Value = Null
           Component = FormParams
-          ComponentItem = 'GoodsWhoCanId'
+          ComponentItem = 'GoodsWhoCanList'
+          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
@@ -2896,8 +2897,9 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsWhoCanId'
+        Name = 'GoodsWhoCanList'
         Value = '0'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -3888,10 +3890,11 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsWhoCanId'
+        Name = 'inGoodsWhoCanList'
         Value = Null
         Component = FormParams
-        ComponentItem = 'GoodsWhoCanId'
+        ComponentItem = 'GoodsWhoCanList'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

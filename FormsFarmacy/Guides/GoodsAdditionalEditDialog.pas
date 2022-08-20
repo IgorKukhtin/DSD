@@ -20,7 +20,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, Vcl.ActnList, dsdAction;
+  cxCurrencyEdit, Vcl.ActnList, dsdAction, Data.DB, Datasnap.DBClient,
+  cxCheckListBox;
 
 type
   TGoodsAdditionalEditDialogForm = class(TParentForm)
@@ -55,7 +56,6 @@ type
     edVolume: TcxTextEdit;
     cxLabel5: TcxLabel;
     cb_GoodsWhoCan: TcxCheckBox;
-    ceGoodsWhoCan: TcxButtonEdit;
     cxLabel6: TcxLabel;
     cb_GoodsMethodAppl: TcxCheckBox;
     edGoodsMethodAppl: TcxButtonEdit;
@@ -63,12 +63,17 @@ type
     cb_GoodsSignOrigin: TcxCheckBox;
     edGoodsSignOrigin: TcxButtonEdit;
     cxLabel9: TcxLabel;
-    GoodsWhoCanGuides: TdsdGuides;
     GoodsMethodApplGuides: TdsdGuides;
     GoodsSignOriginGuides: TdsdGuides;
-    spUpdateGoodsAdditional: TdsdStoredProc;
+    spShowPUSH: TdsdStoredProc;
     ActionList1: TActionList;
     actPUSHClose: TdsdShowPUSHMessage;
+    actSetDefaultParams: TdsdSetDefaultParams;
+    actRefresh: TdsdDataSetRefresh;
+    cblGoodsWhoCan: TcxCheckListBox;
+    WhoCanGuidesCDS: TClientDataSet;
+    spSelect_GoodsWhoCan: TdsdStoredProc;
+    CheckListBoxAddOnWhoCanGuides: TCheckListBoxAddOn;
   private
     { Private declarations }
   public

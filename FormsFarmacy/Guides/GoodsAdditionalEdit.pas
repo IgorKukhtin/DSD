@@ -8,7 +8,7 @@ uses
   cxPropertiesStore, dsdAddOn, dsdGuides, dsdDB, dsdAction, System.Classes,
   Vcl.ActnList, cxMaskEdit, cxButtonEdit, cxCurrencyEdit, Vcl.StdCtrls,
   cxButtons, cxLabel, Vcl.Controls, cxTextEdit, cxCheckBox, dxSkinsCore,
-  dxSkinsDefaultPainters, cxDBEdit;
+  dxSkinsDefaultPainters, cxDBEdit, cxCheckListBox, Data.DB, Datasnap.DBClient;
 
 type
   TGoodsAdditionalEditForm = class(TAncestorEditDialogForm)
@@ -35,15 +35,17 @@ type
     cxLabel5: TcxLabel;
     edVolume: TcxTextEdit;
     cxLabel6: TcxLabel;
-    ceGoodsWhoCan: TcxButtonEdit;
-    cxLabel8: TcxLabel;
     edGoodsMethodAppl: TcxButtonEdit;
     cxLabel9: TcxLabel;
     edGoodsSignOrigin: TcxButtonEdit;
     cxLabel10: TcxLabel;
     GoodsSignOriginGuides: TdsdGuides;
     GoodsMethodApplGuides: TdsdGuides;
-    GoodsWhoCanGuides: TdsdGuides;
+    cblGoodsWhoCan: TcxCheckListBox;
+    cxLabel8: TcxLabel;
+    CheckListBoxAddOnWhoCanGuides: TCheckListBoxAddOn;
+    WhoCanGuidesCDS: TClientDataSet;
+    spSelect_GoodsWhoCan: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -75,7 +75,7 @@ uses
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
   GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage,
   cxEditRepositoryItems, cxStyles, dsdPivotGrid, dsdExportToXLSAction,
-  dsdTranslator, dsdExportToXMLAction, StrUtils;
+  dsdTranslator, dsdExportToXMLAction, StrUtils, cxCheckListBox;
 
 {$R *.dfm}
 
@@ -748,6 +748,7 @@ initialization
   RegisterClass (TcxEditRepository);
   RegisterClass (TcxStyleRepository);
   RegisterClass (TcxEditStyle);
+  RegisterClass (TcxCheckListBox);
 
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBarStatic);
@@ -849,6 +850,7 @@ initialization
   RegisterClass (TEnterMoveNext);
   RegisterClass (TChartAddOn);
   RegisterClass (TCheckerboardAddOn);
+  RegisterClass (TCheckListBoxAddOn);
 
 
 // ƒÀﬂ “≈—“¿

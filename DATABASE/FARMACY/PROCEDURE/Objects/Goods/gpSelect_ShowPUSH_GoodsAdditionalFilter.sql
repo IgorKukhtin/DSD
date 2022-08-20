@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_ShowPUSH_GoodsAdditionalFilter(Integer, TVarChar, Boolean, Integer, Boolean, Integer, Boolean, Integer, Boolean, Boolean, Boolean, 
                                                                 TVarChar, Boolean, TVarChar, Boolean, TVarChar, Boolean, 
-                                                                Integer, Boolean, Integer, Boolean, Integer, Boolean, TVarChar);
+                                                                TVarChar, Boolean, Integer, Boolean, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ShowPUSH_GoodsAdditionalFilter(
     IN inId                  Integer ,    -- ключ объекта <Товар главный>
@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ShowPUSH_GoodsAdditionalFilter(
     IN inis_Dosage           Boolean ,    -- 
     IN inVolume              TVarChar,    -- Объем
     IN inis_Volume           Boolean ,    -- 
-    IN inGoodsWhoCanId       Integer ,    -- Кому можно
+    IN inGoodsWhoCanList     TVarChar,    -- Кому можно
     IN inis_GoodsWhoCan      Boolean ,    -- 
     IN inGoodsMethodApplId   Integer ,    -- Способ применения
     IN inis_GoodsMethodAppl  Boolean ,    -- 
@@ -80,4 +80,4 @@ LANGUAGE plpgsql VOLATILE;
 
 -- 
 
-select * from gpSelect_ShowPUSH_GoodsAdditionalFilter(inId := 0 , inMakerName := '' , inis_MakerName := 'False' , inFormDispensingId := 0 , inis_FormDispensing := 'False' , inNumberPlates := 0 , inis_NumberPlates := 'False' , inQtyPackage := 0 , inis_QtyPackage := 'False' , inIsRecipe := 'False' , inis_IsRecipe := 'False' , inMakerNameUkr := '' , inis_MakerNameUkr := 'True' , inDosage := '' , inis_Dosage := 'False' , inVolume := '' , inis_Volume := 'False' , inGoodsWhoCanId := 0 , inis_GoodsWhoCan := 'False' , inGoodsMethodApplId := 0 , inis_GoodsMethodAppl := 'False' , inGoodsSignOriginId := 0 , inis_GoodsSignOrigin := 'False' ,  inSession := '3');
+select * from gpUpdate_Object_GoodsAdditionalFilter(inId := 55119 , inMakerName := '' , inis_MakerName := 'False' , inFormDispensingId := 0 , inis_FormDispensing := 'False' , inNumberPlates := 0 , inis_NumberPlates := 'False' , inQtyPackage := 0 , inis_QtyPackage := 'False' , inIsRecipe := 'False' , inis_IsRecipe := 'False' , inMakerNameUkr := '' , inis_MakerNameUkr := 'False' , inDosage := '' , inis_Dosage := 'False' , inVolume := '' , inis_Volume := 'False' , inGoodsWhoCanList := '' , inis_GoodsWhoCan := 'True' , inGoodsMethodApplId := 0 , inis_GoodsMethodAppl := 'False' , inGoodsSignOriginId := 0 , inis_GoodsSignOrigin := 'False' ,  inSession := '3');

@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isResolution_224  boolean
              , isUkrainianTranslation boolean
              , MakerName TVarChar, MakerNameUkr TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
-             , Dosage TVarChar, Volume TVarChar, GoodsWhoCanId integer, GoodsWhoCanName TVarChar, GoodsMethodApplId integer, GoodsMethodApplName TVarChar, GoodsSignOriginId  integer,  GoodsSignOriginName TVarChar
+             , Dosage TVarChar, Volume TVarChar, GoodsWhoCanName TVarChar, GoodsMethodApplId integer, GoodsMethodApplName TVarChar, GoodsSignOriginId  integer,  GoodsSignOriginName TVarChar
              , isExpDateExcSite boolean, isHideOnTheSite boolean
              , DiscontSiteStart TDateTime, DiscontSiteEnd TDateTime, DiscontAmountSite TFloat, DiscontPercentSite TFloat
              , isNotUploadSites Boolean
@@ -95,6 +95,22 @@ BEGIN
                                               AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                     WHERE Object_NDSKind.DescId = zc_Object_NDSKind()
                     )
+      , tmpGoodsWhoCan AS (SELECT Object_GoodsWhoCan.Id                       AS Id
+                                , Object_GoodsWhoCan.ValueData                AS Name
+                           FROM OBJECT AS Object_GoodsWhoCan
+                           WHERE Object_GoodsWhoCan.DescId = zc_Object_GoodsWhoCan())
+      , tmpGoodsMainWhoCanAll AS (SELECT Object_Goods_Main.Id
+                                       , tmpGoodsWhoCan.Id      AS  GoodsWhoCanId
+                                       , tmpGoodsWhoCan.Name 
+                                  FROM Object_Goods_Main
+                                       INNER JOIN tmpGoodsWhoCan ON ','||Object_Goods_Main.GoodsWhoCanList||',' LIKE '%,'||(tmpGoodsWhoCan.ID::TVarChar)||',%'
+                                  WHERE COALESCE(Object_Goods_Main.GoodsWhoCanList, '') <> ''
+                                  )
+      , tmpGoodsMainWhoCan AS (SELECT Object_Goods_Main.Id
+                                    , string_agg(Object_Goods_Main.Name, ', ' order by Object_Goods_Main.GoodsWhoCanId)::TVarChar AS GoodsWhoCanName
+                               FROM tmpGoodsMainWhoCanAll AS Object_Goods_Main
+                               GROUP BY Object_Goods_Main.Id
+                               )
 
       SELECT Object_Goods_Retail.Id
            , Object_Goods_Retail.GoodsMainId
@@ -143,8 +159,7 @@ BEGIN
            , Object_Goods_Main.isRecipe
            , Object_Goods_Main.Dosage 
            , Object_Goods_Main.Volume
-           , Object_Goods_Main.GoodsWhoCanId
-           , Object_GoodsWhoCan.ValueData                                        AS GoodsWhoCanName
+           , tmpGoodsMainWhoCan.GoodsWhoCanName                                        AS GoodsWhoCanName
            , Object_Goods_Main.GoodsMethodApplId
            , Object_GoodsMethodAppl.ValueData                                    AS GoodsMethodApplName
            , Object_Goods_Main.GoodsSignOriginId
@@ -184,6 +199,8 @@ BEGIN
 
            -- определяем штрих-код производителя
            LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Retail.GoodsMainId
+
+           LEFT JOIN tmpGoodsMainWhoCan ON tmpGoodsMainWhoCan.ID = Object_Goods_Retail.GoodsMainId
 
       WHERE Object_Goods_Retail.RetailId = vbObjectId
       ;

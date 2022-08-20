@@ -11,7 +11,7 @@ uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTable
      VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData, cxPC,
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, GMMarkerVCL, SHDocVw, ExtCtrls,
      Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL, cxCheckBox, cxImage,
-     cxGridChartView, cxGridDBChartView, cxDropDownEdit
+     cxGridChartView, cxGridDBChartView, cxDropDownEdit, cxCheckListBox
      {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 const
@@ -1492,11 +1492,45 @@ type
     property PriorAction: TCustomAction read FPriorAction write FPriorAction;
   end;
 
+  TCheckListBoxAddOn = class(TComponent)
+  private
+    FCheckListBox: TcxCheckListBox;
+
+    FIdParam: TdsdParam;
+    FNameParam: TdsdParam;
+
+    FAfterOpen: TDataSetNotifyEvent;
+    FDataSet: TDataSet;
+
+    FKeyList : String;
+
+    function GetKeyList: String;
+    procedure SetKeyList(const Value: String);
+    procedure OnAfterOpen(ADataSet: TDataSet);
+    procedure SetDataSet(const Value: TDataSet);
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    // ID записсей
+    property KeyList: String read GetKeyList write SetKeyList;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  published
+    // Панель для размещения
+    property CheckListBox: TcxCheckListBox read FCheckListBox write FCheckListBox;
+    // Дата сет с данными
+    property DataSet: TDataSet read FDataSet write SetDataSet;
+    // ID данных
+    property IdParam: TdsdParam  read FIdParam write FIdParam;
+    // Name строк
+    property NameParam: TdsdParam  read FNameParam write FNameParam;
+  end;
+
   procedure Register;
 
 implementation
 
-uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, ADODB,
+uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, ADODB, RegularExpressions,
      dxCore, cxFilter, cxClasses, cxLookAndFeelPainters,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
      cxGeometry, dxBar, cxButtonEdit, cxDBEdit, cxCurrencyEdit,
@@ -1530,7 +1564,8 @@ begin
     THeaderExit,
     TEnterMoveNext,
     TChartAddOn,
-    TCheckerboardAddOn
+    TCheckerboardAddOn,
+    TCheckListBoxAddOn
   ]);
 
   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
@@ -7916,6 +7951,125 @@ begin
     FFocusID := nFocus;
     FTimerProcess := FTimerProcess or 4;
     FTimer.Enabled := True;
+  end;
+end;
+
+{TCheckListBoxAddOn}
+
+constructor TCheckListBoxAddOn.Create(AOwner: TComponent);
+begin
+  inherited;
+  FIdParam := TdsdParam.Create(nil);
+  FIdParam.DataType := ftString;
+  FIdParam.Value := '';
+  FNameParam := TdsdParam.Create(nil);
+  FNameParam.DataType := ftString;
+  FNameParam.Value := '';
+  FKeyList := '';
+end;
+
+destructor TCheckListBoxAddOn.Destroy;
+  var I : Integer;
+begin
+  FNameParam.Free;
+  FIdParam.Free;
+  inherited;
+end;
+
+
+procedure TCheckListBoxAddOn.Notification(AComponent: TComponent;
+  Operation: TOperation);
+  var I, J : Integer;
+begin
+  inherited;
+
+  if csDestroying in ComponentState then
+     exit;
+
+  if csDesigning in ComponentState then
+     if Operation = opRemove then begin
+        if AComponent = FCheckListBox then
+           FCheckListBox := nil
+        else if AComponent = FDataSet then
+           FDataSet := nil;
+     end;
+end;
+
+procedure TCheckListBoxAddOn.SetDataSet(const Value: TDataSet);
+  var I : Integer;
+begin
+
+  if Assigned(FDataSet) and not (csDesigning  in ComponentState) then
+  begin
+    FDataSet.AfterOpen := FAfterOpen;
+  end;
+
+  FDataSet := Value;
+  if csDesigning  in ComponentState then Exit;
+  if Assigned(FDataSet) then
+  begin
+    FAfterOpen := FDataSet.AfterOpen;
+    FDataSet.AfterOpen := OnAfterOpen;
+  end;
+end;
+
+procedure TCheckListBoxAddOn.OnAfterOpen(ADataSet: TDataSet);
+begin
+  if Assigned(FAfterOpen) then
+     FAfterOpen(ADataSet);
+
+  if Assigned(FCheckListBox) then FCheckListBox.Items.Clear;
+
+  ADataSet.First;
+  while not ADataSet.Eof do
+  begin
+    with FCheckListBox.Items.Add do
+    begin
+      Tag := ADataSet.FieldByName(FIdParam.Value).AsInteger;
+      Text := ADataSet.FieldByName(FNameParam.Value).AsString;
+    end;
+
+    ADataSet.Next;
+  end;
+
+  if FKeyList <> '' then SetKeyList(FKeyList);
+end;
+
+function TCheckListBoxAddOn.GetKeyList: String;
+  var I : Integer;
+begin
+  Result := '';
+
+  if Assigned(FCheckListBox) then
+  begin
+    for I := 0 to FCheckListBox.Items.Count - 1 do
+      if FCheckListBox.Items.Items[I].Checked then
+      begin
+        if Result <> '' then Result := Result + ',';
+        Result := Result + IntToStr(FCheckListBox.Items.Items[I].Tag);
+      end;
+  end;
+
+  FKeyList := Result;
+end;
+
+procedure TCheckListBoxAddOn.SetKeyList(const Value: String);
+  var I, J : Integer; Res : TArray<string>;
+begin
+  FKeyList := Value;
+  if Assigned(FCheckListBox) then
+  begin
+
+    for I := 0 to FCheckListBox.Items.Count - 1 do
+    if FCheckListBox.Items.Items[I].Checked then FCheckListBox.Items.Items[I].Checked := False;
+
+    if Value = '' then Exit;
+
+    Res := TRegEx.Split(Value, ',');
+    for I := 0 to High(Res) do
+       for J := 0 to FCheckListBox.Items.Count - 1 do
+         if IntToStr(FCheckListBox.Items.Items[J].Tag) = Res[I] then FCheckListBox.Items.Items[J].Checked := True;
+
   end;
 end;
 

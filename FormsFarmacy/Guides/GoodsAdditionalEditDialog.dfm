@@ -4,8 +4,8 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-  ClientHeight = 466
-  ClientWidth = 479
+  ClientHeight = 401
+  ClientWidth = 852
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,14 +14,15 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   AddOnFormData.ClosePUSHMessage = actPUSHClose
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 92
-    Top = 423
+    Left = 265
+    Top = 359
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -30,8 +31,8 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 313
-    Top = 423
+    Left = 529
+    Top = 359
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -39,7 +40,7 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
     TabOrder = 1
   end
   object cb_MakerName: TcxCheckBox
-    Left = 381
+    Left = 346
     Top = 22
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
@@ -49,8 +50,8 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
     Width = 73
   end
   object cb_FormDispensing: TcxCheckBox
-    Left = 381
-    Top = 98
+    Left = 346
+    Top = 102
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
@@ -59,8 +60,8 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
     Width = 73
   end
   object cb_NumberPlates: TcxCheckBox
-    Left = 381
-    Top = 135
+    Left = 346
+    Top = 139
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
@@ -69,8 +70,8 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
     Width = 73
   end
   object cb_QtyPackage: TcxCheckBox
-    Left = 381
-    Top = 172
+    Left = 346
+    Top = 180
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
@@ -96,7 +97,7 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object edNumberPlates: TcxCurrencyEdit
     Left = 7
-    Top = 135
+    Top = 139
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 8
@@ -104,32 +105,32 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object cxLabel3: TcxLabel
     Left = 7
-    Top = 118
+    Top = 122
     Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1089#1090#1080#1085' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077':'
   end
   object cxLabel7: TcxLabel
-    Left = 8
-    Top = 155
+    Left = 7
+    Top = 163
     Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077':'
   end
   object ceQtyPackage: TcxCurrencyEdit
-    Left = 8
-    Top = 172
+    Left = 7
+    Top = 180
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 11
     Width = 109
   end
   object cbIsRecipe: TcxCheckBox
-    Left = 8
-    Top = 389
+    Left = 426
+    Top = 172
     Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1072
     TabOrder = 12
     Width = 96
   end
   object edFormDispensing: TcxButtonEdit
     Left = 8
-    Top = 98
+    Top = 102
     Properties.Buttons = <
       item
         Default = True
@@ -141,12 +142,12 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object cxLabel14: TcxLabel
     Left = 7
-    Top = 81
+    Top = 85
     Caption = #1060#1086#1088#1084#1072' '#1086#1090#1087#1091#1089#1082#1072
   end
   object cb_IsRecipe: TcxCheckBox
-    Left = 381
-    Top = 389
+    Left = 763
+    Top = 164
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
@@ -156,18 +157,18 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
   end
   object edMakerNameUkr: TcxTextEdit
     Left = 8
-    Top = 61
+    Top = 62
     TabOrder = 16
     Width = 332
   end
   object cxLabel1: TcxLabel
     Left = 8
-    Top = 43
+    Top = 44
     Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' '#1059#1082#1088'. '#1085#1072#1079#1074#1072#1085#1080#1077
   end
   object cb_MakerNameUkr: TcxCheckBox
-    Left = 381
-    Top = 61
+    Left = 346
+    Top = 62
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
@@ -176,8 +177,8 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
     Width = 73
   end
   object cb_Dosage: TcxCheckBox
-    Left = 381
-    Top = 212
+    Left = 762
+    Top = 22
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
@@ -186,19 +187,19 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
     Width = 73
   end
   object edDosage: TcxTextEdit
-    Left = 8
-    Top = 212
+    Left = 424
+    Top = 22
     TabOrder = 20
     Width = 332
   end
   object cxLabel4: TcxLabel
-    Left = 8
-    Top = 194
+    Left = 424
+    Top = 4
     Caption = #1044#1086#1079#1080#1088#1086#1074#1082#1072
   end
   object cb_Volume: TcxCheckBox
-    Left = 381
-    Top = 250
+    Left = 762
+    Top = 62
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
@@ -207,19 +208,19 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
     Width = 73
   end
   object edVolume: TcxTextEdit
-    Left = 8
-    Top = 250
+    Left = 424
+    Top = 62
     TabOrder = 23
     Width = 332
   end
   object cxLabel5: TcxLabel
-    Left = 8
-    Top = 233
+    Left = 424
+    Top = 44
     Caption = #1054#1073#1098#1077#1084
   end
   object cb_GoodsWhoCan: TcxCheckBox
-    Left = 381
-    Top = 288
+    Left = 346
+    Top = 228
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
@@ -227,77 +228,75 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
     TabOrder = 25
     Width = 73
   end
-  object ceGoodsWhoCan: TcxButtonEdit
-    Left = 8
-    Top = 288
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 26
-    Width = 332
-  end
   object cxLabel6: TcxLabel
     Left = 8
-    Top = 270
+    Top = 207
     Caption = #1050#1086#1084#1091' '#1084#1086#1078#1085#1086
   end
   object cb_GoodsMethodAppl: TcxCheckBox
-    Left = 380
-    Top = 326
+    Left = 763
+    Top = 102
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 28
+    TabOrder = 27
     Width = 73
   end
   object edGoodsMethodAppl: TcxButtonEdit
-    Left = 7
-    Top = 326
+    Left = 425
+    Top = 102
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 29
+    TabOrder = 28
     Width = 332
   end
   object cxLabel8: TcxLabel
-    Left = 7
-    Top = 308
+    Left = 425
+    Top = 84
     Caption = #1057#1087#1086#1089#1086#1073' '#1087#1088#1080#1084#1077#1085#1077#1085#1080#1103
   end
   object cb_GoodsSignOrigin: TcxCheckBox
-    Left = 381
-    Top = 364
+    Left = 763
+    Top = 139
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 31
+    TabOrder = 30
     Width = 73
   end
   object edGoodsSignOrigin: TcxButtonEdit
-    Left = 8
-    Top = 364
+    Left = 425
+    Top = 139
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 32
+    TabOrder = 31
     Width = 332
   end
   object cxLabel9: TcxLabel
-    Left = 8
-    Top = 346
+    Left = 425
+    Top = 121
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1087#1088#1086#1080#1089#1093#1086#1078#1076#1077#1085#1080#1103
   end
+  object cblGoodsWhoCan: TcxCheckListBox
+    Left = 8
+    Top = 228
+    Width = 332
+    Height = 109
+    Columns = 2
+    Items = <>
+    TabOrder = 33
+  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 289
-    Top = 165
+    Left = 641
+    Top = 125
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -367,10 +366,11 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsWhoCanId'
+        Name = 'GoodsWhoCanList'
         Value = Null
-        Component = GoodsWhoCanGuides
-        ComponentItem = 'Key'
+        Component = CheckListBoxAddOnWhoCanGuides
+        ComponentItem = 'KeyList'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -538,36 +538,8 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 95
-    Top = 85
-  end
-  object GoodsWhoCanGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceGoodsWhoCan
-    Key = '0'
-    FormNameParam.Value = 'TGoodsWhoCanForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsWhoCanForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = GoodsWhoCanGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GoodsWhoCanGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 135
-    Top = 277
+    Left = 199
+    Top = 77
   end
   object GoodsMethodApplGuides: TdsdGuides
     KeyField = 'Id'
@@ -594,8 +566,8 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 199
-    Top = 309
+    Left = 471
+    Top = 77
   end
   object GoodsSignOriginGuides: TdsdGuides
     KeyField = 'Id'
@@ -622,10 +594,10 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 263
-    Top = 349
+    Left = 527
+    Top = 133
   end
-  object spUpdateGoodsAdditional: TdsdStoredProc
+  object spShowPUSH: TdsdStoredProc
     StoredProcName = 'gpSelect_ShowPUSH_GoodsAdditionalFilter'
     DataSets = <>
     OutputType = otResult
@@ -764,10 +736,11 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsWhoCanId'
+        Name = 'inGoodsWhoCanList'
         Value = '0'
-        Component = GoodsWhoCanGuides
-        ComponentItem = 'Key'
+        Component = CheckListBoxAddOnWhoCanGuides
+        ComponentItem = 'KeyList'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -829,8 +802,8 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 144
-    Top = 192
+    Left = 648
+    Top = 64
   end
   object ActionList1: TActionList
     Left = 288
@@ -838,10 +811,10 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
     object actPUSHClose: TdsdShowPUSHMessage
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spUpdateGoodsAdditional
+      StoredProc = spShowPUSH
       StoredProcList = <
         item
-          StoredProc = spUpdateGoodsAdditional
+          StoredProc = spShowPUSH
         end
         item
         end
@@ -849,5 +822,122 @@ object GoodsAdditionalEditDialogForm: TGoodsAdditionalEditDialogForm
         end>
       Caption = 'actPUSHInfo'
     end
+    object actSetDefaultParams: TdsdSetDefaultParams
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetDefaultParams'
+      DefaultParams = <
+        item
+          Param.Value = Null
+          Param.Component = cb_MakerName
+          Param.MultiSelectSeparator = ','
+          Value = 'False'
+        end
+        item
+          Param.Value = Null
+          Param.Component = cb_MakerNameUkr
+          Param.MultiSelectSeparator = ','
+          Value = 'False'
+        end
+        item
+          Param.Value = Null
+          Param.Component = cb_FormDispensing
+          Param.MultiSelectSeparator = ','
+          Value = 'False'
+        end
+        item
+          Param.Value = Null
+          Param.Component = cb_NumberPlates
+          Param.MultiSelectSeparator = ','
+          Value = 'False'
+        end
+        item
+          Param.Value = Null
+          Param.Component = cb_QtyPackage
+          Param.MultiSelectSeparator = ','
+          Value = 'False'
+        end
+        item
+          Param.Value = Null
+          Param.Component = cb_Dosage
+          Param.MultiSelectSeparator = ','
+          Value = 'False'
+        end
+        item
+          Param.Value = Null
+          Param.Component = cb_Volume
+          Param.MultiSelectSeparator = ','
+          Value = 'False'
+        end
+        item
+          Param.Value = Null
+          Param.Component = cb_GoodsWhoCan
+          Param.MultiSelectSeparator = ','
+          Value = 'False'
+        end
+        item
+          Param.Value = Null
+          Param.Component = cb_GoodsMethodAppl
+          Param.MultiSelectSeparator = ','
+          Value = 'False'
+        end
+        item
+          Param.Value = Null
+          Param.Component = cb_GoodsSignOrigin
+          Param.MultiSelectSeparator = ','
+          Value = 'False'
+        end
+        item
+          Param.Value = Null
+          Param.Component = cb_IsRecipe
+          Param.MultiSelectSeparator = ','
+          Value = 'False'
+        end>
+    end
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'Refresh'
+      MoveParams = <>
+      BeforeAction = actSetDefaultParams
+      StoredProc = spSelect_GoodsWhoCan
+      StoredProcList = <
+        item
+          StoredProc = spSelect_GoodsWhoCan
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+  end
+  object WhoCanGuidesCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 264
+    Top = 288
+  end
+  object spSelect_GoodsWhoCan: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GoodsWhoCan_Active'
+    DataSet = WhoCanGuidesCDS
+    DataSets = <
+      item
+        DataSet = WhoCanGuidesCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 264
+    Top = 232
+  end
+  object CheckListBoxAddOnWhoCanGuides: TCheckListBoxAddOn
+    CheckListBox = cblGoodsWhoCan
+    DataSet = WhoCanGuidesCDS
+    IdParam.Value = 'Id'
+    IdParam.DataType = ftString
+    IdParam.MultiSelectSeparator = ','
+    NameParam.Value = 'Name'
+    NameParam.DataType = ftString
+    NameParam.MultiSelectSeparator = ','
+    Left = 104
+    Top = 256
   end
 end
