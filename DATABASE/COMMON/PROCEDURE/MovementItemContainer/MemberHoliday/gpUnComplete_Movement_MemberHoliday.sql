@@ -17,9 +17,32 @@ BEGIN
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
+                                  
+     IF NOT EXISTS (SELECT 1
+                    FROM Movement
+                         INNER JOIN MovementDate AS MovementDate_BeginDateStart
+                                                 ON MovementDate_BeginDateStart.MovementId = Movement.Id
+                                                AND MovementDate_BeginDateStart.DescId = zc_MovementDate_BeginDateStart()
+                                                AND MovementDate_BeginDateStart.ValueData  = (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_BeginDateStart())
+             
+                         INNER JOIN MovementDate AS MovementDate_BeginDateEnd
+                                                 ON MovementDate_BeginDateEnd.MovementId = Movement.Id
+                                                AND MovementDate_BeginDateEnd.DescId     = zc_MovementDate_BeginDateEnd()
+                                                AND MovementDate_BeginDateEnd.ValueData  = (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_BeginDateEnd())
+                    WHERE Movement.DescId = zc_Movement_MemberHoliday()
+                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                   )
+     THEN
+         -- при распроведении или удалении - в табеле автоматом  удаляется WorkTimeKind
+         PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, TRUE, inSession);
+     END IF;
 
-     --при распроведении или удалении - в табеле автоматом  удаляется WorkTimeKind
-     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, TRUE, inSession);
+IF vbUserId = 5
+THEN
+    RAISE EXCEPTION 'Ошибка.test Admin';
+END IF;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
