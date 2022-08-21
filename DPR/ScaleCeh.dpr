@@ -119,6 +119,8 @@ begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
 
+  gc_ProgramName := 'ScaleCeh.exe';
+
   TdsdApplication.Create;
   //global Initialize
   gpInitialize_Ini;

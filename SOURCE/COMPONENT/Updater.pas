@@ -391,6 +391,12 @@ begin
     //and(((BaseVersionInfo.VerLow shl 16) shr 16) <= 115)
     //then
     //else
+        if (gc_ProgramName = 'Scale.exe') or (gc_ProgramName = 'ScaleCeh.exe')
+        then begin
+            ShowMessage('Ожидайте сообщения.Будет установлена новая версия программы.');
+            UpdateProgram;
+        end
+        else
         if MessageDlg('Обнаружена новая версия программы! Обновить', mtInformation, mbOKCancel, 0) = mrOk then
            UpdateProgram;
 

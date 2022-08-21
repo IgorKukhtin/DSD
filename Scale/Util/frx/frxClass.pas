@@ -13429,7 +13429,7 @@ var
 begin
   // если есть такой параметр, тогда блокируем корректировку
   if Variables['isLockDesignerB'] <> null
-  then if Variables['isLockDesignerB'] = 'true' then fLockDesignerB:= true;
+  then if AnsiUpperCase(Variables['isLockDesignerB']) = AnsiUpperCase('True') then fLockDesignerB:= true;
   //
   //
   FPreviewForm := nil;

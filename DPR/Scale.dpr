@@ -125,6 +125,8 @@ begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
 
+  gc_ProgramName := 'Scale.exe';
+
   TdsdApplication.Create;
   //
   //global Initialize
