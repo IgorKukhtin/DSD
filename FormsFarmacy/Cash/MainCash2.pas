@@ -6753,6 +6753,50 @@ begin
     end;
   //
 
+  if (SPKindId = UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger) and (HelsiPartialPrescription = False) then
+  begin
+    WaitForSingleObject(MutexDBF, INFINITE);
+    try
+      FLocalDataBaseHead.Open;
+      FLocalDataBaseHead.First;
+      while not FLocalDataBaseHead.Eof do
+      begin
+        if Trim(FLocalDataBaseHead.FieldByName('INVNUMSP').AsString) = InvNumberSP
+        then
+        begin
+          ShowMessage
+            ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
+          NewCheck(false);
+          exit;
+        end;
+        FLocalDataBaseHead.Next;
+      end;
+    finally
+      FLocalDataBaseHead.Close;
+      ReleaseMutex(MutexDBF);
+    end;
+
+    if not gc_User.Local then
+    begin
+      spGet_Movement_InvNumberSP.ParamByName('inSPKindId').Value := SPKindId;
+      spGet_Movement_InvNumberSP.ParamByName('inInvNumberSP').Value := InvNumberSP;
+      if spGet_Movement_InvNumberSP.Execute = '' then
+      begin
+        if spGet_Movement_InvNumberSP.ParamByName('outIsExists').Value then
+        begin
+          ShowMessage
+            ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
+          NewCheck(false);
+          exit;
+        end;
+      end
+      else begin
+        NewCheck(false);
+        exit;
+      end;
+    end;
+  end;
+
   if SPKindId = UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger then
   begin
     spAvailabilityCheckMedicalProgram.ParamByName('inSPKindId').Value := UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger;
@@ -7019,6 +7063,50 @@ begin
         spUpdate_User_KeyExpireDate.Execute;
         FUpdateKey_expireDate := True;
       except
+      end;
+    end;
+  end;
+
+  if PartialPrescription = False then
+  begin
+    WaitForSingleObject(MutexDBF, INFINITE);
+    try
+      FLocalDataBaseHead.Open;
+      FLocalDataBaseHead.First;
+      while not FLocalDataBaseHead.Eof do
+      begin
+        if Trim(FLocalDataBaseHead.FieldByName('INVNUMSP').AsString) = InvNumberSP
+        then
+        begin
+          ShowMessage
+            ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
+          NewCheck(false);
+          exit;
+        end;
+        FLocalDataBaseHead.Next;
+      end;
+    finally
+      FLocalDataBaseHead.Close;
+      ReleaseMutex(MutexDBF);
+    end;
+
+    if not gc_User.Local then
+    begin
+      spGet_Movement_InvNumberSP.ParamByName('inSPKindId').Value := UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger;
+      spGet_Movement_InvNumberSP.ParamByName('inInvNumberSP').Value := InvNumberSP;
+      if spGet_Movement_InvNumberSP.Execute = '' then
+      begin
+        if spGet_Movement_InvNumberSP.ParamByName('outIsExists').Value then
+        begin
+          ShowMessage
+            ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
+          NewCheck(false);
+          exit;
+        end;
+      end
+      else begin
+        NewCheck(false);
+        exit;
       end;
     end;
   end;

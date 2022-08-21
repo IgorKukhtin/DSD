@@ -1040,7 +1040,7 @@ BEGIN
 
    END IF;
    
-   IF inNumberPUSH in (1, 10) AND vbUserId IN (3, 4183126)
+   IF inNumberPUSH in (1, 10) AND vbUserId IN (3, 4183126) AND date_part('isodow', CURRENT_DATE)::Integer in (1)
    THEN
       SELECT string_agg(T1.Code||' - '||T1.Name, CHR(13)) FROM gpSelect_Object_HelsiUser (True, '3') AS T1
       INTO vbText

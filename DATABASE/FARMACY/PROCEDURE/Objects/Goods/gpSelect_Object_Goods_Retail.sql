@@ -37,7 +37,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isOnlySP boolean
              , isUkrainianTranslation boolean
              , MakerName TVarChar, MakerNameUkr TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
-             , Dosage TVarChar, Volume TVarChar, GoodsWhoCanId integer, GoodsWhoCanName TVarChar, GoodsMethodApplId integer, GoodsMethodApplName TVarChar, GoodsSignOriginId  integer,  GoodsSignOriginName TVarChar
+             , Dosage TVarChar, Volume TVarChar, GoodsWhoCanName TVarChar, GoodsMethodApplId integer, GoodsMethodApplName TVarChar, GoodsSignOriginId  integer,  GoodsSignOriginName TVarChar
              , isLeftTheMarket boolean, DateLeftTheMarket TDateTime, DateAddToOrder TDateTime
               ) AS
 $BODY$
@@ -62,131 +62,6 @@ BEGIN
 
    vbAreaDneprId := (SELECT Object.Id FROM Object WHERE Object.Descid = zc_Object_Area() AND Object.ValueData LIKE 'Днепр');
 
-/*
-   -- !!!для Админа!!!
-   IF (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-   THEN
-   RETURN QUERY
--- Маркетинговый контракт
-  WITH  GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
-                                      , ObjectLink_Goods_Object.ChildObjectId AS ObjectId
-                         --   , tmp.ChangePercent
-                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
-                                    INNER JOIN ObjectLink AS ObjectLink_Child
-                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
-                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
-                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
-                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                       --  AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-                         )
-     , tmpLoadPriceList AS (SELECT DISTINCT LoadPriceListItem.GoodsId AS MainGoodsId
-                            FROM LoadPriceList
-                                 INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
-                            WHERE LoadPriceList.OperDate >= CURRENT_DATE AND LoadPriceList.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
-                            )
-
-   SELECT
-             Object_Goods_View.Id
-           , Object_Goods_View.GoodsCodeInt
---           , ObjectString.ValueData                           AS GoodsCode
-           , zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode
-           , Object_Goods_View.GoodsName
-           , Object_Goods_View.isErased
-           , Object_Goods_View.GoodsGroupId
-           , Object_Goods_View.GoodsGroupName
-           , Object_Goods_View.MeasureId
-           , Object_Goods_View.MeasureName
-           , Object_Goods_View.NDSKindId
-           , Object_Goods_View.NDSKindName
-           , Object_Goods_View.NDS
-           , Object_Goods_View.MinimumLot
-           , Object_Goods_View.isClose
-           , Object_Goods_View.isTOP
-           , Object_Goods_View.isFirst
-           , Object_Goods_View.isSecond
-           , COALESCE (Object_Goods_View.isPublished,False) :: Boolean  AS isPublished
-           , Object_Goods_View.isSP
-           -- , CASE WHEN Object_Goods_View.isPublished = FALSE THEN NULL ELSE Object_Goods_View.isPublished END :: Boolean AS isPublished
-           , Object_Goods_View.PercentMarkup
-           , Object_Goods_View.Price
-           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN zc_Color_Yelow() WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc  --16380671   10965163
-           , Object_Retail.ObjectCode AS RetailCode
-           , Object_Retail.ValueData  AS RetailName
-           , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
-           , CASE WHEN COALESCE(tmpLoadPriceList.MainGoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isMarketToday
-
-           , COALESCE(Object_Insert.ValueData, '')         ::TVarChar  AS InsertName
-           , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
-           , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
-           , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
-           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
-           , COALESCE (ObjectBoolean_Goods_SUN_v3.ValueData, False) ::Boolean AS isSUN_v3
-           , COALESCE (ObjectFloat_Goods_KoeffSUN_v3.ValueData,0)   :: TFloat AS KoeffSUN_v3
-           , COALESCE (ObjectFloat_Goods_KoeffSUN_v1.ValueData,0)   :: TFloat AS KoeffSUN_v1
-           , COALESCE (ObjectFloat_Goods_KoeffSUN_v2.ValueData,0)   :: TFloat AS KoeffSUN_v2
-           , COALESCE (ObjectFloat_Goods_KoeffSUN_v4.ValueData,0)   :: TFloat AS KoeffSUN_v4
-           , Object_Goods_Main.isResolution_224                                  AS isResolution_224
-           , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
-
-    FROM Object AS Object_Retail
-         INNER JOIN Object_Goods_View ON Object_Goods_View.ObjectId = Object_Retail.Id
-         LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id
-                             AND GoodsPromo.ObjectId = Object_Goods_View.ObjectId
-         LEFT JOIN ObjectDate AS ObjectDate_Insert
-                              ON ObjectDate_Insert.ObjectId = Object_Goods_View.Id
-                             AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
-         LEFT JOIN ObjectLink AS ObjectLink_Insert
-                              ON ObjectLink_Insert.ObjectId = Object_Goods_View.Id
-                             AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
-
-         LEFT JOIN ObjectDate AS ObjectDate_Update
-                              ON ObjectDate_Update.ObjectId = Object_Goods_View.Id
-                             AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
-         LEFT JOIN ObjectLink AS ObjectLink_Update
-                              ON ObjectLink_Update.ObjectId = Object_Goods_View.Id
-                             AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
-         LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
-
-         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_KoeffSUN_v3
-                                ON ObjectFloat_Goods_KoeffSUN_v3.ObjectId = Object_Goods_View.Id
-                               AND ObjectFloat_Goods_KoeffSUN_v3.DescId = zc_ObjectFloat_Goods_KoeffSUN_v3()
-
-         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_KoeffSUN_v1
-                                ON ObjectFloat_Goods_KoeffSUN_v1.ObjectId = Object_Goods_View.Id
-                               AND ObjectFloat_Goods_KoeffSUN_v1.DescId = zc_ObjectFloat_Goods_KoeffSUN_v1()
-         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_KoeffSUN_v2
-                                ON ObjectFloat_Goods_KoeffSUN_v2.ObjectId = Object_Goods_View.Id
-                               AND ObjectFloat_Goods_KoeffSUN_v2.DescId = zc_ObjectFloat_Goods_KoeffSUN_v2()
-         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_KoeffSUN_v4
-                                ON ObjectFloat_Goods_KoeffSUN_v4.ObjectId = Object_Goods_View.Id
-                               AND ObjectFloat_Goods_KoeffSUN_v4.DescId = zc_ObjectFloat_Goods_KoeffSUN_v4()
-
-         LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SUN_v3
-                                 ON ObjectBoolean_Goods_SUN_v3.ObjectId = Object_Goods_View.Id
-                                AND ObjectBoolean_Goods_SUN_v3.DescId = zc_ObjectBoolean_Goods_SUN_v3()
-        -- условия хранения
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep
-                             ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
-                            AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-        LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
-
-        LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
-    WHERE Object_Retail.DescId = zc_Object_Retail()
-
-;
-
-   ELSE
-
-   -- для остальных...
-*/
 
    RETURN QUERY
      -- Маркетинговый контракт
@@ -246,15 +121,32 @@ BEGIN
       , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
                        FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
                        )
-      ,  tmpNDS AS (SELECT Object_NDSKind.Id
-                         , Object_NDSKind.ValueData                        AS NDSKindName
-                         , ObjectFloat_NDSKind_NDS.ValueData               AS NDS
-                    FROM Object AS Object_NDSKind
-                         LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                               ON ObjectFloat_NDSKind_NDS.ObjectId = Object_NDSKind.Id
-                                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-                    WHERE Object_NDSKind.DescId = zc_Object_NDSKind()
-                    )
+      , tmpNDS AS (SELECT Object_NDSKind.Id
+                        , Object_NDSKind.ValueData                        AS NDSKindName
+                        , ObjectFloat_NDSKind_NDS.ValueData               AS NDS
+                   FROM Object AS Object_NDSKind
+                        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                              ON ObjectFloat_NDSKind_NDS.ObjectId = Object_NDSKind.Id
+                                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                   WHERE Object_NDSKind.DescId = zc_Object_NDSKind()
+                   )
+      , tmpGoodsWhoCan AS (SELECT Object_GoodsWhoCan.Id                       AS Id
+                                , Object_GoodsWhoCan.ValueData                AS Name
+                           FROM OBJECT AS Object_GoodsWhoCan
+                           WHERE Object_GoodsWhoCan.DescId = zc_Object_GoodsWhoCan())
+      , tmpGoodsMainWhoCanAll AS (SELECT Object_Goods_Main.Id
+                                       , tmpGoodsWhoCan.Id      AS  GoodsWhoCanId
+                                       , tmpGoodsWhoCan.Name 
+                                  FROM Object_Goods_Main
+                                       INNER JOIN tmpGoodsWhoCan ON ','||Object_Goods_Main.GoodsWhoCanList||',' LIKE '%,'||(tmpGoodsWhoCan.ID::TVarChar)||',%'
+                                  WHERE COALESCE(Object_Goods_Main.GoodsWhoCanList, '') <> ''
+                                  )
+      , tmpGoodsMainWhoCan AS (SELECT Object_Goods_Main.Id
+                                    , string_agg(Object_Goods_Main.Name, ', ' order by Object_Goods_Main.GoodsWhoCanId)::TVarChar AS GoodsWhoCanName
+                               FROM tmpGoodsMainWhoCanAll AS Object_Goods_Main
+                               GROUP BY Object_Goods_Main.Id
+                               )
+
 
       SELECT Object_Goods_Retail.Id
            , Object_Goods_Retail.GoodsMainId
@@ -333,8 +225,7 @@ BEGIN
            
            , Object_Goods_Main.Dosage 
            , Object_Goods_Main.Volume
-           , Object_Goods_Main.GoodsWhoCanId
-           , Object_GoodsWhoCan.ValueData                                        AS GoodsWhoCanName
+           , tmpGoodsMainWhoCan.GoodsWhoCanName                                        AS GoodsWhoCanName
            , Object_Goods_Main.GoodsMethodApplId
            , Object_GoodsMethodAppl.ValueData                                    AS GoodsMethodApplName
            , Object_Goods_Main.GoodsSignOriginId
@@ -355,7 +246,6 @@ BEGIN
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = Object_Goods_Retail.UserUpdateId
            LEFT JOIN Object AS Object_FormDispensing ON Object_FormDispensing.Id = Object_Goods_Main.FormDispensingId
 
-           LEFT JOIN Object AS Object_GoodsWhoCan ON Object_GoodsWhoCan.Id = Object_Goods_Main.GoodsWhoCanId
            LEFT JOIN Object AS Object_GoodsMethodAppl ON Object_GoodsMethodAppl.Id = Object_Goods_Main.GoodsMethodApplId
            LEFT JOIN Object AS Object_GoodsSignOrigin ON Object_GoodsSignOrigin.Id = Object_Goods_Main.GoodsSignOriginId
            
@@ -370,6 +260,8 @@ BEGIN
            LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Retail.GoodsMainId
 
            LEFT JOIN tmpPricelistItems ON tmpPricelistItems.GoodsMainId = Object_Goods_Retail.GoodsMainId
+           
+           LEFT JOIN tmpGoodsMainWhoCan ON tmpGoodsMainWhoCan.ID = Object_Goods_Retail.GoodsMainId
 
       WHERE Object_Goods_Retail.RetailId = vbObjectId
       ;

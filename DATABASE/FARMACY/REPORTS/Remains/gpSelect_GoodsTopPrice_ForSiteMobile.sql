@@ -27,7 +27,7 @@ BEGIN
          , p.Price_unit_sale
          , p.Remains
     FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', inGoodsId::TVarChar, zfCalc_UserSite()) AS p
-    WHERE COALESCE(p.Remains, 0) > 0
+    WHERE COALESCE(p.Remains, 0) >= 1
       AND COALESCE(p.Price_unit, 0) > 0
     ORDER BY p.Price_unit, p.Remains DESC
     LIMIT 3
@@ -45,4 +45,4 @@ $BODY$
 
 -- тест
 
-SELECT p.* FROM gpSelect_GoodsTopPrice_ForSiteMobile (6307, zfCalc_UserSite()) AS p
+SELECT p.* FROM gpSelect_GoodsTopPrice_ForSiteMobile (26671, zfCalc_UserSite()) AS p

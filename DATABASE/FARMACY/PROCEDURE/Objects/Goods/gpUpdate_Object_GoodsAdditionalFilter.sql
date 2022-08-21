@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsAdditionalFilter(Integer, TVarChar, Boolean, Integer, Boolean, Integer, Boolean, Integer, Boolean, Boolean, Boolean, 
                                                               TVarChar, Boolean, TVarChar, Boolean, TVarChar, Boolean, 
-                                                              Integer, Boolean, Integer, Boolean, Integer, Boolean, TVarChar);
+                                                              TVarChar, Boolean, Integer, Boolean, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsAdditionalFilter(
     IN inId                  Integer ,    -- ключ объекта <Товар главный>
@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsAdditionalFilter(
     IN inis_Dosage           Boolean ,    -- 
     IN inVolume              TVarChar,    -- Объем
     IN inis_Volume           Boolean ,    -- 
-    IN inGoodsWhoCanId       Integer ,    -- Кому можно
+    IN inGoodsWhoCanList     TVarChar ,   -- Кому можно
     IN inis_GoodsWhoCan      Boolean ,    -- 
     IN inGoodsMethodApplId   Integer ,    -- Способ применения
     IN inis_GoodsMethodAppl  Boolean ,    -- 
@@ -51,7 +51,7 @@ BEGIN
         , CASE WHEN inis_IsRecipe = TRUE         THEN inIsRecipe          ELSE COALESCE(Object_Goods_Main.IsRecipe, False) END        
         , CASE WHEN inis_Dosage = TRUE           THEN inDosage            ELSE COALESCE(Object_Goods_Main.Dosage, '') END
         , CASE WHEN inis_Volume = TRUE           THEN inVolume            ELSE COALESCE(Object_Goods_Main.Volume, '') END
-        , CASE WHEN inis_GoodsWhoCan = TRUE      THEN inGoodsWhoCanId     ELSE COALESCE(Object_Goods_Main.GoodsWhoCanId, 0) END
+        , CASE WHEN inis_GoodsWhoCan = TRUE      THEN inGoodsWhoCanList   ELSE COALESCE(Object_Goods_Main.GoodsWhoCanList, '') END
         , CASE WHEN inis_GoodsMethodAppl = TRUE  THEN inGoodsMethodApplId ELSE COALESCE(Object_Goods_Main.GoodsMethodApplId, 0) END
         , CASE WHEN inis_GoodsSignOrigin = TRUE  THEN inGoodsSignOriginId ELSE COALESCE(Object_Goods_Main.GoodsSignOriginId, 0) END
    INTO inMakerName
@@ -62,7 +62,7 @@ BEGIN
       , inIsRecipe
       , inDosage
       , inVolume
-      , inGoodsWhoCanId
+      , inGoodsWhoCanList
       , inGoodsMethodApplId
       , inGoodsSignOriginId
    FROM Object_Goods_Main
@@ -80,7 +80,7 @@ BEGIN
                AND COALESCE(Object_Goods_Main.IsRecipe, False)         = COALESCE(inIsRecipe, FALSE)
                AND COALESCE(Object_Goods_Main.Dosage, '')              = COALESCE(inDosage, '')  
                AND COALESCE(Object_Goods_Main.Volume, '')              = COALESCE(inVolume, '')  
-               AND COALESCE(Object_Goods_Main.GoodsWhoCanId, 0)        = COALESCE(inGoodsWhoCanId, 0)  
+               AND COALESCE(Object_Goods_Main.GoodsWhoCanList, '')     = COALESCE(inGoodsWhoCanList, '')  
                AND COALESCE(Object_Goods_Main.GoodsMethodApplId, 0)    = COALESCE(inGoodsMethodApplId, 0)  
                AND COALESCE(Object_Goods_Main.GoodsSignOriginId, 0)    = COALESCE(inGoodsSignOriginId, 0))  
    THEN
@@ -98,12 +98,12 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Dosage(), inId, inDosage);
    -- сохранили свойство <Объем>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Volume(), inId, inVolume);
+   -- сохранили свойство <Кому можно>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GoodsWhoCan(), inId, inGoodsWhoCanList);
 
    -- сохранили свойство <Форма отпуска>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_FormDispensing(), inId, inFormDispensingId);
 
-   -- сохранили свойство <Кому можно>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsWhoCan(), inId, inGoodsWhoCanId);
    -- сохранили свойство <Способ применения>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsMethodAppl(), inId, inGoodsMethodApplId);
    -- сохранили свойство <Признак происхождения>
@@ -126,7 +126,7 @@ BEGIN
                                 , QtyPackage         = NULLIF(inQtyPackage, 0)    
                                 , Dosage             = NULLIF(inDosage, '')  
                                 , Volume             = NULLIF(inVolume, '')  
-                                , GoodsWhoCanId      = NULLIF(inGoodsWhoCanId, 0)  
+                                , GoodsWhoCanList    = NULLIF(inGoodsWhoCanList, '')  
                                 , GoodsMethodApplId  = NULLIF(inGoodsMethodApplId, 0)  
                                 , GoodsSignOriginId  = NULLIF(inGoodsSignOriginId, 0)  
                                 , IsRecipe           = COALESCE(inIsRecipe, FALSE)  

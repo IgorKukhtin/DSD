@@ -146,9 +146,9 @@
 			<AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<VerInfo_Keys>CompanyName=;FileVersion=1.2.8.93;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileVersion=1.2.8.95;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
 			<Debugger_RunParams>/skipcheckconnect</Debugger_RunParams>
-			<VerInfo_Build>93</VerInfo_Build>
+			<VerInfo_Build>95</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>

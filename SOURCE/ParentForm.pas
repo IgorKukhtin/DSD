@@ -75,7 +75,7 @@ uses
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
   GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage,
   cxEditRepositoryItems, cxStyles, dsdPivotGrid, dsdExportToXLSAction,
-  dsdTranslator, dsdExportToXMLAction, StrUtils;
+  dsdTranslator, dsdExportToXMLAction, StrUtils, cxCheckListBox;
 
 {$R *.dfm}
 
@@ -406,7 +406,7 @@ begin
   DataSetList := TList.Create;
   try
     // Выводим PUSH сообщение
-    if Assigned(AddOnFormData.ClosePUSHMessage) then
+    if Assigned(AddOnFormData.ClosePUSHMessage) and (not (fsModal in Self.FormState) or (ModalResult in [mrOk, mrYes])) then
       AddOnFormData.ClosePUSHMessage.Execute;
 
     // Если данная форма не одиночка, то при закрытии надо проверить единственная она или нет
@@ -748,6 +748,7 @@ initialization
   RegisterClass (TcxEditRepository);
   RegisterClass (TcxStyleRepository);
   RegisterClass (TcxEditStyle);
+  RegisterClass (TcxCheckListBox);
 
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBarStatic);
@@ -849,6 +850,7 @@ initialization
   RegisterClass (TEnterMoveNext);
   RegisterClass (TChartAddOn);
   RegisterClass (TCheckerboardAddOn);
+  RegisterClass (TCheckListBoxAddOn);
 
 
 // ДЛЯ ТЕСТА

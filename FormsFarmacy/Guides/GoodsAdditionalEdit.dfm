@@ -1,24 +1,24 @@
 ﻿inherited GoodsAdditionalEditForm: TGoodsAdditionalEditForm
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1058#1086#1074#1072#1088'>'
-  ClientHeight = 366
+  ClientHeight = 405
   ClientWidth = 689
   ExplicitWidth = 695
-  ExplicitHeight = 395
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 96
-    Top = 324
+    Top = 364
     TabOrder = 5
     ExplicitLeft = 96
-    ExplicitTop = 324
+    ExplicitTop = 364
   end
   inherited bbCancel: TcxButton
     Left = 498
-    Top = 324
+    Top = 364
     TabOrder = 6
     ExplicitLeft = 498
-    ExplicitTop = 324
+    ExplicitTop = 364
   end
   object edName: TcxTextEdit [2]
     Left = 9
@@ -91,8 +91,8 @@
     Width = 109
   end
   object cbIsRecipe: TcxCheckBox [12]
-    Left = 8
-    Top = 299
+    Left = 349
+    Top = 307
     Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1072
     TabOrder = 12
     Width = 96
@@ -160,8 +160,8 @@
     Top = 167
     Caption = #1054#1073#1098#1077#1084
   end
-  object ceGoodsWhoCan: TcxButtonEdit [23]
-    Left = 8
+  object edGoodsMethodAppl: TcxButtonEdit [23]
+    Left = 349
     Top = 228
     Properties.Buttons = <
       item
@@ -171,14 +171,14 @@
     TabOrder = 23
     Width = 332
   end
-  object cxLabel8: TcxLabel [24]
-    Left = 8
-    Top = 210
-    Caption = #1050#1086#1084#1091' '#1084#1086#1078#1085#1086
-  end
-  object edGoodsMethodAppl: TcxButtonEdit [25]
+  object cxLabel9: TcxLabel [24]
     Left = 349
-    Top = 228
+    Top = 210
+    Caption = #1057#1087#1086#1089#1086#1073' '#1087#1088#1080#1084#1077#1085#1077#1085#1080#1103
+  end
+  object edGoodsSignOrigin: TcxButtonEdit [25]
+    Left = 349
+    Top = 280
     Properties.Buttons = <
       item
         Default = True
@@ -187,26 +187,24 @@
     TabOrder = 25
     Width = 332
   end
-  object cxLabel9: TcxLabel [26]
+  object cxLabel10: TcxLabel [26]
     Left = 349
-    Top = 210
-    Caption = #1057#1087#1086#1089#1086#1073' '#1087#1088#1080#1084#1077#1085#1077#1085#1080#1103
-  end
-  object edGoodsSignOrigin: TcxButtonEdit [27]
-    Left = 8
-    Top = 272
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 27
-    Width = 332
-  end
-  object cxLabel10: TcxLabel [28]
-    Left = 8
-    Top = 254
+    Top = 262
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1087#1088#1086#1080#1089#1093#1086#1078#1076#1077#1085#1080#1103
+  end
+  object cblGoodsWhoCan: TcxCheckListBox [27]
+    Left = 8
+    Top = 228
+    Width = 332
+    Height = 109
+    Columns = 2
+    Items = <>
+    TabOrder = 27
+  end
+  object cxLabel8: TcxLabel [28]
+    Left = 8
+    Top = 210
+    Caption = #1050#1086#1084#1091' '#1084#1086#1078#1085#1086
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -219,6 +217,16 @@
   inherited ActionList: TActionList
     Left = 175
     Top = 88
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProc = spSelect_GoodsWhoCan
+      StoredProcList = <
+        item
+          StoredProc = spSelect_GoodsWhoCan
+        end
+        item
+          StoredProc = spGet
+        end>
+    end
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -302,15 +310,16 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsWhoCanId'
+        Name = 'inGoodsWhoCanList'
         Value = Null
-        Component = GoodsWhoCanGuides
-        ComponentItem = 'Key'
+        Component = CheckListBoxAddOnWhoCanGuides
+        ComponentItem = 'KeyList'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsMethodApplId'
+        Name = 'inGoodsMethodApplId'
         Value = Null
         Component = GoodsMethodApplGuides
         ComponentItem = 'Key'
@@ -318,7 +327,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsSignOriginId'
+        Name = 'inGoodsSignOriginId'
         Value = Null
         Component = GoodsSignOriginGuides
         ComponentItem = 'Key'
@@ -430,17 +439,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsWhoCanId'
+        Name = 'GoodsWhoCanList'
         Value = Null
-        Component = GoodsWhoCanGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsWhoCanName'
-        Value = Null
-        Component = GoodsWhoCanGuides
-        ComponentItem = 'TextValue'
+        Component = CheckListBoxAddOnWhoCanGuides
+        ComponentItem = 'KeyList'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -568,8 +570,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 247
-    Top = 261
+    Left = 527
+    Top = 269
   end
   object GoodsMethodApplGuides: TdsdGuides
     KeyField = 'Id'
@@ -599,32 +601,34 @@
     Left = 535
     Top = 213
   end
-  object GoodsWhoCanGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceGoodsWhoCan
-    Key = '0'
-    FormNameParam.Value = 'TGoodsWhoCanForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsWhoCanForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
+  object CheckListBoxAddOnWhoCanGuides: TCheckListBoxAddOn
+    CheckListBox = cblGoodsWhoCan
+    DataSet = WhoCanGuidesCDS
+    IdParam.Value = 'Id'
+    IdParam.DataType = ftString
+    IdParam.MultiSelectSeparator = ','
+    NameParam.Value = 'Name'
+    NameParam.DataType = ftString
+    NameParam.MultiSelectSeparator = ','
+    Left = 104
+    Top = 256
+  end
+  object WhoCanGuidesCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 264
+    Top = 288
+  end
+  object spSelect_GoodsWhoCan: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GoodsWhoCan_Active'
+    DataSet = WhoCanGuidesCDS
+    DataSets = <
       item
-        Name = 'Key'
-        Value = '0'
-        Component = GoodsWhoCanGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GoodsWhoCanGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
+        DataSet = WhoCanGuidesCDS
       end>
-    Left = 183
-    Top = 213
+    Params = <>
+    PackSize = 1
+    Left = 264
+    Top = 232
   end
 end

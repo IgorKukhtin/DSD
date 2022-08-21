@@ -1458,10 +1458,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_Volume() RETURNS Integer AS $BO
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Goods_Volume', zc_Object_Goods(), 'Объем' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Volume');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_GoodsWhoCan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_GoodsWhoCan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Goods_GoodsWhoCan', zc_Object_Goods(), 'Кому можно' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_GoodsWhoCan');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 20.08.22                                                                                                         * zc_ObjectString_Goods_GoodsWhoCan
  28.07.22                                                                                                         * zc_ObjectString_GoodsWhoCan_NameUkr, zc_ObjectString_GoodsMethodAppl_NameUkr
  18.07.22                                                                                                         * zc_ObjectString_FormDispensing_NameUkr, zc_ObjectString_Goods_MakerUkr
  24.06.22                                                                                                         * zc_ObjectString_Education_NameUkr, zc_ObjectString_Member_NameUkr

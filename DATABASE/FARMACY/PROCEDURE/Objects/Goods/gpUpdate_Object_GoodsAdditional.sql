@@ -1,6 +1,6 @@
 -- Function: gpUpdate_Object_GoodsAdditional()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsAdditional(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsAdditional(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsAdditional(
     IN inId                  Integer ,    -- ключ объекта <Товар главный>
@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsAdditional(
     IN inQtyPackage          Integer ,    -- Кол-во в упаковке:
     IN inDosage              TVarChar,    -- Дозировка
     IN inVolume              TVarChar,    -- Объем
-    IN inGoodsWhoCanId       Integer ,    -- Кому можно
+    IN inGoodsWhoCanList     TVarChar ,   -- Кому можно
     IN inGoodsMethodApplId   Integer ,    -- Способ применения
     IN inGoodsSignOriginId   Integer ,    -- Признак происхождения
     IN inIsRecipe            Boolean ,    -- Рецептура
@@ -37,7 +37,7 @@ BEGIN
                AND COALESCE(Object_Goods_Main.IsRecipe, False)         = COALESCE(inIsRecipe, FALSE)
                AND COALESCE(Object_Goods_Main.Dosage, '')              = COALESCE(inDosage, '')  
                AND COALESCE(Object_Goods_Main.Volume, '')              = COALESCE(inVolume, '')  
-               AND COALESCE(Object_Goods_Main.GoodsWhoCanId, 0)        = COALESCE(inGoodsWhoCanId, 0)  
+               AND COALESCE(Object_Goods_Main.GoodsWhoCanList, '')     = COALESCE(inGoodsWhoCanList, '')  
                AND COALESCE(Object_Goods_Main.GoodsMethodApplId, 0)    = COALESCE(inGoodsMethodApplId, 0)  
                AND COALESCE(Object_Goods_Main.GoodsSignOriginId, 0)    = COALESCE(inGoodsSignOriginId, 0))  
    THEN
@@ -55,11 +55,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Dosage(), inId, inDosage);
    -- сохранили свойство <Объем>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Volume(), inId, inVolume);
+   -- сохранили свойство <Кому можно>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GoodsWhoCan(), inId, inGoodsWhoCanList);
 
    -- сохранили свойство <Форма отпуска>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_FormDispensing(), inId, inFormDispensingId);
-   -- сохранили свойство <Кому можно>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsWhoCan(), inId, inGoodsWhoCanId);
    -- сохранили свойство <Способ применения>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsMethodAppl(), inId, inGoodsMethodApplId);
    -- сохранили свойство <Признак происхождения>
@@ -82,7 +82,7 @@ BEGIN
                                 , QtyPackage         = NULLIF(inQtyPackage, 0)    
                                 , Dosage             = NULLIF(inDosage, '')  
                                 , Volume             = NULLIF(inVolume, '')  
-                                , GoodsWhoCanId      = NULLIF(inGoodsWhoCanId, 0)  
+                                , GoodsWhoCanList    = NULLIF(inGoodsWhoCanList, '')  
                                 , GoodsMethodApplId  = NULLIF(inGoodsMethodApplId, 0)  
                                 , GoodsSignOriginId  = NULLIF(inGoodsSignOriginId, 0)  
                                 , IsRecipe           = COALESCE(inIsRecipe, FALSE)  
@@ -110,4 +110,6 @@ LANGUAGE plpgsql VOLATILE;
 -- тест
 --
 
--- select * from gpUpdate_Object_GoodsAdditional(inId := 24168 , inMakerName := '1111' , inFormDispensingId := 18067783 , inNumberPlates := 1 , inQtyPackage := 1 , inIsRecipe := 'False' ,  inSession := '3');
+-- 
+
+select * from gpUpdate_Object_GoodsAdditional(inId := 55119 , inMakerName := 'Альфапластик' , inMakerNameUkr := '' , inFormDispensingId := 18067783 , inNumberPlates := 1 , inQtyPackage := 1 , inDosage := '' , inVolume := '' , inGoodsWhoCanList := '20316673,20316674' , inGoodsMethodApplId := 0 , inGoodsSignOriginId := 0 , inIsRecipe := 'False' ,  inSession := '3');

@@ -868,6 +868,9 @@ begin
         else
            Result := (Component as TCustomGuides).Key;
      end;
+     if Component is TCheckListBoxAddOn then begin
+        Result := (Component as TCheckListBoxAddOn).KeyList;
+     end;
      if Component is TcxCheckBox then
         Result := BoolToStr((Component as TcxCheckBox).Checked, true);
      if Component is TcxDateEdit then begin
@@ -1175,7 +1178,11 @@ begin
                 FValue := 0;
              (Component as TCustomGuides).Key := FValue;
           end;
-
+     if Component is TCheckListBoxAddOn then
+     begin
+        if VarIsNull(FValue) then FValue := '';
+        (Component as TCheckListBoxAddOn).KeyList := FValue;
+     end;
      if Component is TdsdProperties—hange then
         (Component as TdsdProperties—hange).IndexProperties := FValue;
      if Component is TcxGridDBTableView then
