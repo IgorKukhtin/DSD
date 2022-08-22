@@ -5290,6 +5290,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actUkraineAlarm: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1090#1088#1077#1074#1086#1075
+      FormName = 'TUkraineAlarmForm'
+      FormNameParam.Value = 'TUkraineAlarmForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6863,6 +6874,9 @@
         end
         object N345: TMenuItem
           Action = actReport_LoginProtocol
+        end
+        object N363: TMenuItem
+          Action = actUkraineAlarm
         end
       end
       object N10: TMenuItem [33]

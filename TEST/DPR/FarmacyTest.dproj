@@ -4498,6 +4498,10 @@
 				<Form>Report_Goods_LeftTheMarketForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\System\UkraineAlarm.pas">
+				<Form>UkraineAlarmForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

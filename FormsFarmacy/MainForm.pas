@@ -977,6 +977,8 @@ type
     N361: TMenuItem;
     actReport_Goods_LeftTheMarket: TdsdOpenForm;
     N362: TMenuItem;
+    actUkraineAlarm: TdsdOpenForm;
+    N363: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
