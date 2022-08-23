@@ -42,6 +42,7 @@ END IF;
              OR DATE_TRUNC ('MONTH', inStartDate) < (DATE_TRUNC ('MONTH', CURRENT_DATE))
                 -- или Суббота
              OR EXTRACT (DOW FROM CURRENT_DATE) = 6
+                -- или
              OR EXTRACT (DAY FROM CURRENT_DATE) <= 15
            --OR 1=1
                 ;
