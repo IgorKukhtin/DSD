@@ -1240,7 +1240,8 @@ uses
   GoodsSignOrigin in '..\..\FormsFarmacy\Guides\GoodsSignOrigin.pas' {GoodsSignOriginForm: TParentForm},
   Report_RestTermGoods in '..\..\FormsFarmacy\Report\Report_RestTermGoods.pas' {Report_RestTermGoodsForm: TParentForm},
   CheckBuyerForSite in '..\..\FormsFarmacy\Document\CheckBuyerForSite.pas' {CheckBuyerForSiteForm: TParentForm},
-  Report_Goods_LeftTheMarket in '..\..\FormsFarmacy\Report\Report_Goods_LeftTheMarket.pas' {Report_Goods_LeftTheMarketForm: TParentForm};
+  Report_Goods_LeftTheMarket in '..\..\FormsFarmacy\Report\Report_Goods_LeftTheMarket.pas' {Report_Goods_LeftTheMarketForm: TParentForm},
+  UkraineAlarm in '..\..\FormsFarmacy\System\UkraineAlarm.pas' {UkraineAlarmForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

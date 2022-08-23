@@ -3467,6 +3467,9 @@ end;
 
 procedure TLoadFormTest.LoadSystemFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUkraineAlarmForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUkraineAlarmForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataChoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataChoiceDialogForm');
 
