@@ -1528,7 +1528,10 @@ end if;
                                        -- !!!временно!!!
                                   THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20504) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + Продукция
 
-                             ELSE lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := CASE WHEN vbUnitId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Unit() AND ObjectCode IN (32031 -- Склад Возвратов
+                             ELSE lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := CASE WHEN vbUnitId = 8465 -- Кухня
+                                                                                                        THEN (SELECT lfSelect.ProfitLossGroupId FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect WHERE lfSelect.UnitId = vbUnitId)
+
+                                                                                                   WHEN vbUnitId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Unit() AND ObjectCode IN (32031 -- Склад Возвратов
                                                                                                                                                                                             , 32032 -- Склад Брак
                                                                                                                                                                                             , 32033 -- Склад УТИЛЬ
                                                                                                                                                                                             , 22122 -- Склад возвратов ф.Запорожье
@@ -1540,7 +1543,10 @@ end if;
                                                                                                         THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLossGroup() AND ObjectCode = 10000) -- Результат основной деятельности
                                                                                                    ELSE vbProfitLossGroupId
                                                                                               END
-                                                                , inProfitLossDirectionId  := CASE WHEN vbUnitId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Unit() AND ObjectCode IN (32031 -- Склад Возвратов
+                                                                , inProfitLossDirectionId  := CASE WHEN vbUnitId = 8465 -- Кухня
+                                                                                                        THEN (SELECT lfSelect.ProfitLossDirectionId FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect WHERE lfSelect.UnitId = vbUnitId)
+
+                                                                                                   WHEN vbUnitId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Unit() AND ObjectCode IN (32031 -- Склад Возвратов
                                                                                                                                                                                             , 32032 -- Склад Брак
                                                                                                                                                                                             , 32033 -- Склад УТИЛЬ
                                                                                                                                                                                             , 22122 -- Склад возвратов ф.Запорожье

@@ -32,6 +32,9 @@ AS
 $BODY$
 BEGIN
 
+-- update Movement set OperDate = '19.07.2022' WHERE Id = 23221889 ;
+
+
     RETURN QUERY
 
     WITH tmpMovement_TaxCorrective AS
@@ -239,7 +242,8 @@ BEGIN
                , tmpMovement.DocumentTaxKindId
                , tmpMovement.PartnerId
                , tmpMovement.MovementId_ReturnIn
-               , MAX (tmpMovement.MovementId_TaxCorrective) AS MovementId_TaxCorrective
+               , MAX (tmpMovement.MovementId_TaxCorrective)     AS MovementId_TaxCorrective
+               , MAX (tmpMovement.MovementId_TaxCorrective_err) AS MovementId_TaxCorrective_err
                , tmpMovement.GoodsId
                , tmpMovement.GoodsKindId   
                , tmpMovement.Price
@@ -266,6 +270,7 @@ BEGIN
                        END AS PartnerId
                      , 0 AS MovementId_ReturnIn
                      , 0 AS MovementId_TaxCorrective
+                     , 0 AS MovementId_TaxCorrective_err
                      , MovementItem.ObjectId                         AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
                      -- , MIFloat_Price.ValueData                       AS Price
@@ -403,6 +408,7 @@ BEGIN
                        END AS PartnerId
                      , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Corrective() OR MovementLO_DocumentTaxKind.ObjectId IS NULL THEN Movement.Id ELSE 0 END AS MovementId_ReturnIn
                      , 0 AS MovementId_TaxCorrective
+                     , 0 AS MovementId_TaxCorrective_err
                      , MovementItem.ObjectId                         AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
                      -- , MIFloat_Price.ValueData                      AS Price
@@ -555,6 +561,7 @@ BEGIN
                        END AS PartnerId
                      , 0 AS MovementId_ReturnIn
                      , 0 AS MovementId_TaxCorrective
+                     , 0 AS MovementId_TaxCorrective_err
                      , MovementItem.ObjectId               AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
                      , MIFloat_Price.ValueData             AS Price
@@ -641,6 +648,7 @@ BEGIN
                        END AS PartnerId
                      , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Corrective() THEN Movement.Id ELSE 0 END AS MovementId_ReturnIn
                      , 0 AS MovementId_TaxCorrective
+                     , 0 AS MovementId_TaxCorrective_err
                      , MovementItem.ObjectId               AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
                      , MIFloat_Price.ValueData             AS Price
@@ -728,6 +736,7 @@ BEGIN
                      , COALESCE (MovementLinkObject_Partner.ObjectId, 0) AS PartnerId
                      , Movement.Id                                       AS MovementId_ReturnIn
                      , 0 AS MovementId_TaxCorrective
+                     , 0 AS MovementId_TaxCorrective_err
                      , MovementItem.ObjectId   AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                      , MIFloat_Price.ValueData AS Price
@@ -820,6 +829,7 @@ BEGIN
                                  THEN Movement.Id
                             ELSE Movement.Id
                        END AS MovementId_TaxCorrective
+                     , CASE WHEN Movement.OperDate < Movement_DocumentChild.OperDate THEN Movement.Id ELSE 0 END AS MovementId_TaxCorrective_err
                      , MovementItem.ObjectId   AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                      , MIFloat_Price.ValueData AS Price
@@ -872,6 +882,12 @@ BEGIN
                                                   ON MovementLinkObject_Branch.MovementId = Movement.Id
                                                  AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
 
+                     -- íàëîãîâàÿ Íàêëàäíàÿ
+                     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                                    ON MovementLinkMovement_Child.MovementId = Movement.Id
+                                                   AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+                     LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_Child.MovementChildId
+
                 WHERE Movement.DescId = zc_Movement_TaxCorrective()
                   AND Movement.StatusId = zc_Enum_Status_Complete() 
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -890,6 +906,7 @@ BEGIN
                                    THEN Movement.Id
                               ELSE Movement.Id
                          END
+                       , CASE WHEN Movement.OperDate < Movement_DocumentChild.OperDate THEN Movement.Id ELSE 0 END
                        , MovementItem.ObjectId
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
@@ -914,7 +931,7 @@ BEGIN
          LEFT JOIN MovementString AS MovementString_InvNumberPartner_ReturnIn
                                   ON MovementString_InvNumberPartner_ReturnIn.MovementId =  Movement_ReturnIn.Id
                                  AND MovementString_InvNumberPartner_ReturnIn.DescId = zc_MovementString_InvNumberPartner()
-         LEFT JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = tmpGroupMovement.MovementId_TaxCorrective
+         LEFT JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = CASE WHEN tmpGroupMovement.MovementId_TaxCorrective_err > 0 THEN tmpGroupMovement.MovementId_TaxCorrective_err ELSE tmpGroupMovement.MovementId_TaxCorrective END
          LEFT JOIN MovementString AS MovementString_InvNumberPartner_TaxCorrective
                                   ON MovementString_InvNumberPartner_TaxCorrective.MovementId = Movement_TaxCorrective.Id
                                  AND MovementString_InvNumberPartner_TaxCorrective.DescId = zc_MovementString_InvNumberPartner()
@@ -952,7 +969,8 @@ BEGIN
                                      AND MovementLO_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
                                      AND MovementLO_DocumentTaxKind.ObjectId   = zc_Enum_DocumentTaxKind_Prepay()
 
-    WHERE ((tmpGroupMovement.Amount_ReturnIn <> tmpGroupMovement.Amount_TaxCorrective
+    WHERE 
+     ((tmpGroupMovement.Amount_ReturnIn <> tmpGroupMovement.Amount_TaxCorrective
         OR (inDocumentTaxKindId <> 0
             AND (tmpGroupMovement.Amount_ReturnIn <> 0 OR tmpGroupMovement.Amount_TaxCorrective <> 0)
            ))
@@ -961,11 +979,14 @@ BEGIN
 
        OR (Movement_TaxCorrective.OperDate < Movement_DocumentChild.OperDate)
    ;
+
+
+--    update Movement set OperDate = '20.07.2022' WHERE Id = 23221889 ;
             
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_CheckTaxCorrective (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -982,3 +1003,4 @@ ALTER FUNCTION gpReport_CheckTaxCorrective (TDateTime, TDateTime, Integer, TVarC
 
 -- òåñò
 -- SELECT * FROM gpReport_CheckTaxCorrective (inStartDate:= '01.01.2019', inEndDate:= '01.01.2019', inDocumentTaxKindId:= 0, inSession:= zfCalc_UserAdmin());
+--- SELECT * FROM gpReport_CheckTaxCorrective22(inStartDate := ('19.07.2022')::TDateTime , inEndDate := ('21.07.2022')::TDateTime , inDocumentTaxKindID := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

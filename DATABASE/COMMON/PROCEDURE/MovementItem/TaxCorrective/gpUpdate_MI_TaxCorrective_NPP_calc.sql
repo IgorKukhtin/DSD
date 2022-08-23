@@ -69,6 +69,12 @@ BEGIN
      ;
 
 
+     -- Проверка
+     IF COALESCE (vbMovementId_tax, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <№ налоговой>.';
+     END IF;
+
      -- !!!Проверка - Можно ли МЕНЯТЬ!!!
      IF -- если был сформирован № п/п
         EXISTS (SELECT 1
@@ -323,6 +329,7 @@ BEGIN
                                                                                                         , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
                                                                                                         , zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                                         , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                                        , zc_Enum_DocumentTaxKind_Prepay()
                                                                                                          )
                   WHERE MovementLinkMovement_Child.MovementChildId = vbMovementId_tax
                     AND MovementLinkMovement_Child.DescId          = zc_MovementLinkMovement_Child()
@@ -592,7 +599,7 @@ BEGIN
                                                                                    --, zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                                        zc_Enum_DocumentTaxKind_Goods()
                                                                                      , zc_Enum_DocumentTaxKind_Change()
-                                                                                     , zc_Enum_DocumentTaxKind_Prepay()
+                                                                                   --, zc_Enum_DocumentTaxKind_Prepay()
                                                                                       )
                                                                THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum, 0)
 
@@ -618,7 +625,7 @@ BEGIN
                                                                                                                    --, zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                                                                        zc_Enum_DocumentTaxKind_Goods()
                                                                                                                      , zc_Enum_DocumentTaxKind_Change()
-                                                                                                                     , zc_Enum_DocumentTaxKind_Prepay()
+                                                                                                                   --, zc_Enum_DocumentTaxKind_Prepay()
                                                                                                                       )
                                                                                                THEN tmpMI_tax1.Price
                                                                                           ELSE tmpMI_Corr_curr_all.Price
@@ -630,7 +637,7 @@ BEGIN
                                                                                                                    --, zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                                                                        zc_Enum_DocumentTaxKind_Goods()
                                                                                                                      , zc_Enum_DocumentTaxKind_Change()
-                                                                                                                     , zc_Enum_DocumentTaxKind_Prepay()
+                                                                                                                   --, zc_Enum_DocumentTaxKind_Prepay()
                                                                                                                       )
                                                                                                THEN tmpMI_tax2.Price
                                                                                           ELSE tmpMI_Corr_curr_all.Price
@@ -644,7 +651,7 @@ BEGIN
                                                                              --, zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                                  zc_Enum_DocumentTaxKind_Goods()
                                                                                , zc_Enum_DocumentTaxKind_Change()
-                                                                               , zc_Enum_DocumentTaxKind_Prepay()
+                                                                             --, zc_Enum_DocumentTaxKind_Prepay()
                                                                                 )
                        LEFT JOIN tmpMI_Corr_sum_2 ON tmpMI_Corr_sum_2.GoodsId     = tmpMI_Corr_curr_all.GoodsId
                                                  AND tmpMI_Corr_sum_2.Price       = tmpMI_Corr_curr_all.Price
@@ -654,7 +661,7 @@ BEGIN
                                                                              --, zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                                  zc_Enum_DocumentTaxKind_Goods()
                                                                                , zc_Enum_DocumentTaxKind_Change()
-                                                                               , zc_Enum_DocumentTaxKind_Prepay()
+                                                                             --, zc_Enum_DocumentTaxKind_Prepay()
                                                                                 )
                  )
               -- Результат
@@ -668,7 +675,7 @@ BEGIN
                                                        --, zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                            zc_Enum_DocumentTaxKind_Goods()
                                                          , zc_Enum_DocumentTaxKind_Change()
-                                                         , zc_Enum_DocumentTaxKind_Prepay()
+                                                       --, zc_Enum_DocumentTaxKind_Prepay()
                                                           )
                                    THEN tmpMI_Corr_curr.NPP                     -- № п/п в налоговом документе
                               ELSE COALESCE (tmpMI_Corr_all1.NPP_calc_original  -- № п/п в последней корр
@@ -682,7 +689,7 @@ BEGIN
                                                        --, zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                            zc_Enum_DocumentTaxKind_Goods()
                                                          , zc_Enum_DocumentTaxKind_Change()
-                                                         , zc_Enum_DocumentTaxKind_Prepay()
+                                                       --, zc_Enum_DocumentTaxKind_Prepay()
                                                           )
                                    THEN tmpMI_Corr_curr.AmountTax_calc -- кол-во в налоговой
 
@@ -697,7 +704,7 @@ BEGIN
                                                        --, zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                            zc_Enum_DocumentTaxKind_Goods()
                                                          , zc_Enum_DocumentTaxKind_Change()
-                                                         , zc_Enum_DocumentTaxKind_Prepay()
+                                                       --, zc_Enum_DocumentTaxKind_Prepay()
                                                           )
                                    THEN 0
 
@@ -828,6 +835,12 @@ BEGIN
      END IF; -- сохранили - !!!с расчетом №п/п!!!
 
 
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM _tmpRes WHERE _tmpRes.NPPTax_calc IS NULL)
+     THEN
+         RAISE EXCEPTION 'Ошибка.<%>.', (SELECT COUNT(*) FROM _tmpRes WHERE _tmpRes.NPPTax_calc IS NULL);
+     END IF;
+
      -- РЕЗУЛЬТАТ - сохранили ВСЕ что расчитали для № п/п
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPPTax_calc(),      _tmpRes.MovementItemId, _tmpRes.NPPTax_calc)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc()
@@ -844,7 +857,7 @@ BEGIN
                                                     
                                                     WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                                               , zc_Enum_DocumentTaxKind_Prepay()
+                                                                             --, zc_Enum_DocumentTaxKind_Prepay()
                                                                                 )
                                                     THEN ABS (_tmpRes.Amount) -- !!!подставили что ввели, а не из Налоговой!!!
                                                     ELSE _tmpRes.AmountTax_calc
@@ -868,7 +881,7 @@ BEGIN
 
                                                     WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                                               , zc_Enum_DocumentTaxKind_Prepay()
+                                                                             --, zc_Enum_DocumentTaxKind_Prepay()
                                                                                 )
                                                          THEN _tmpRes.NPP_calc
 
@@ -897,7 +910,7 @@ BEGIN
                                              , _tmpRes.MovementItemId
                                              , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                                               , zc_Enum_DocumentTaxKind_Prepay()
+                                                                             --, zc_Enum_DocumentTaxKind_Prepay()
                                                                                 )
                                                     THEN _tmpRes.PriceTax_calc
                                                     ELSE 0

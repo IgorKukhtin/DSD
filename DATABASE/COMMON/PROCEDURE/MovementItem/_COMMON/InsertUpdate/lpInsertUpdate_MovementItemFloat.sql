@@ -14,10 +14,13 @@ BEGIN
      -- проверка - inValueData
      IF inValueData IS NULL
      THEN
-         RAISE EXCEPTION 'Ошибка-1.Не определено числовое значение Id=<%> ParentId=<%> MovementId=<%> InvNumber=<%>.', inMovementItemId
-                                                                                                                     , (SELECT MovementItem.ParentId   FROM MovementItem WHERE MovementItem.Id = inMovementItemId)
-                                                                                                                     , (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inMovementItemId)
-                                                                                                                     , (SELECT Movement.InvNumber      FROM Movement     WHERE Movement.Id = (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inMovementItemId));
+         RAISE EXCEPTION 'Ошибка-1.Не определено числовое значение Id=<%> ParentId=<%> MovementId=<%> InvNumber=<%> DescId=<%>.'
+                       , inMovementItemId
+                       , (SELECT MovementItem.ParentId   FROM MovementItem WHERE MovementItem.Id = inMovementItemId)
+                       , (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inMovementItemId)
+                       , (SELECT Movement.InvNumber      FROM Movement     WHERE Movement.Id = (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inMovementItemId))
+                       , (SELECT MovementItemFloatDesc.Code FROM MovementItemFloatDesc WHERE MovementItemFloatDesc.Id = inDescId)
+                        ;
      END IF;
 
      -- изменить <свойство>
