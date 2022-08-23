@@ -211,6 +211,11 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
           Format = ',0.####'
           Kind = skSum
           Column = Amount
+        end
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = UnitName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -300,7 +305,6 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100

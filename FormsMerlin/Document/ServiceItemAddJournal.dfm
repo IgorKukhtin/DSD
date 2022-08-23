@@ -157,6 +157,11 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
+        end
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = InvNumber
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList

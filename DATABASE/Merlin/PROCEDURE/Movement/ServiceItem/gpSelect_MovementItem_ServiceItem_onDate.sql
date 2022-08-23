@@ -36,7 +36,9 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber Integer
              , Amount_after TFloat, Price_after TFloat, Area_after TFloat
              , Month_diff_after Integer
 
-             , isErased Boolean
+             , isErased Boolean 
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
               )
 AS
 $BODY$
@@ -178,6 +180,10 @@ BEGIN
 
                 , FALSE isErased
 
+                , Object_Insert.ValueData                    AS InsertName
+                , MovementDate_Insert.ValueData              AS InsertDate
+                , Object_Update.ValueData                    AS UpdateName
+                , MovementDate_Update.ValueData              AS UpdateDate
            FROM tmpMI
                 LEFT JOIN tmpMI_All AS tmp_before
                                     ON tmp_before.UnitId      = tmpMI.UnitId
@@ -234,6 +240,22 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
+
+                LEFT JOIN MovementDate AS MovementDate_Insert
+                                       ON MovementDate_Insert.MovementId = tmpMI.MovementId
+                                      AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                LEFT JOIN MovementLinkObject AS MLO_Insert
+                                             ON MLO_Insert.MovementId = tmpMI.MovementId
+                                            AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+
+                LEFT JOIN MovementDate AS MovementDate_Update
+                                       ON MovementDate_Update.MovementId = tmpMI.MovementId
+                                      AND MovementDate_Update.DescId = zc_MovementDate_Update()
+                LEFT JOIN MovementLinkObject AS MLO_Update
+                                             ON MLO_Update.MovementId = tmpMI.MovementId
+                                            AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+                LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
            ;
 
 END;
