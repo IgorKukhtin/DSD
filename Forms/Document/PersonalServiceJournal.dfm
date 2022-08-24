@@ -5,7 +5,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1237
-  ExplicitHeight = 743
+  ExplicitHeight = 744
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2129,8 +2129,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 967
-    Top = 32
+    Left = 863
+    Top = 8
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

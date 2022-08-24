@@ -1383,7 +1383,9 @@ uses
   Report_OrderExternal_MIChild_Detail in '..\..\Forms\Report\Report_OrderExternal_MIChild_Detail.pas' {Report_OrderExternal_MIChild_DetailForm: TParentForm},
   WeighingPartner_bySale in '..\..\Forms\Document\WeighingPartner_bySale.pas' {WeighingPartner_bySaleForm: TParentForm},
   StickerHeader in '..\..\Forms\Guides\StickerHeader.pas' {StickerHeaderForm: TParentForm},
-  StickerHeaderEdit in '..\..\Forms\Guides\StickerHeaderEdit.pas' {StickerHeaderEditForm: TParentForm};
+  StickerHeaderEdit in '..\..\Forms\Guides\StickerHeaderEdit.pas' {StickerHeaderEditForm: TParentForm},
+  PersonalTransport in '..\..\Forms\Document\PersonalTransport.pas' {PersonalTransportForm: TParentForm},
+  PersonalTransportJournal in '..\..\Forms\Document\PersonalTransportJournal.pas' {PersonalTransportJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

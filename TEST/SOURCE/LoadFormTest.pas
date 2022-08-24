@@ -138,6 +138,7 @@ type
     procedure LoadPersonalRateFormTest;
     procedure LoadPersonalServiceFormTest;
     procedure LoadPersonalServiceListFormTest;
+    procedure LoadPersonalTRansportFormTest;
     procedure LoadPartnerMapFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadPriceCorrectiveFormTest;
@@ -858,6 +859,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalChoiceForm');
 
+end;
+
+procedure TLoadFormTest.LoadPersonalTransportFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalTransportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalTransportForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalTransportJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalTransportJournalForm');
 end;
 
  procedure TLoadFormTest.LoadOrderCarInfoFormTest;
