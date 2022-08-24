@@ -65,6 +65,9 @@ type
     macInsert_byServiceItemAdd: TMultiAction;
     bbInsert_byServiceItem: TdxBarButton;
     bbInsert_byServiceItemAdd: TdxBarButton;
+    lbSearchName: TcxLabel;
+    edSearchUnitName: TcxTextEdit;
+    FieldFilter_UnitName: TdsdFieldFilter;
   private
     { Private declarations }
   public
