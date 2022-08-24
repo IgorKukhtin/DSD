@@ -123,7 +123,6 @@ type
     IlliquidAssetsRepayment: TcxGridDBBandedColumn;
     TestingAttempts: TcxGridDBBandedColumn;
     PenaltyExam: TcxGridDBBandedColumn;
-    ApplicationAward: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

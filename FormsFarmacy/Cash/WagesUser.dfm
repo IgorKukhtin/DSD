@@ -407,6 +407,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Style = []
           Style.IsFontAssigned = True
           TabOrder = 22
+          Visible = False
           Width = 156
         end
         object cxLabel32: TcxLabel
@@ -420,6 +421,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Name = 'Tahoma'
           Style.Font.Style = []
           Style.IsFontAssigned = True
+          Visible = False
         end
       end
     end
