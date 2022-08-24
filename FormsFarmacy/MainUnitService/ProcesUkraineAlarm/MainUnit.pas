@@ -125,8 +125,8 @@ end;
 procedure TMainForm.GetAlerts(AregionId: Integer);
 var
   jValue : TJSONValue;
-  JSONA: TJSONArray;
-  i, regionId : Integer;
+  JSONA, JSONAA: TJSONArray;
+  i, j, regionId : Integer;
   TimeZone: TTimeZoneInformation;
 begin
 
@@ -151,19 +151,23 @@ begin
     GetTimeZoneInformation(TimeZone);
     try
       JSONA := FRESTResponse.JSONValue.GetValue<TJSONArray>;
-      jValue := JSONA.Items[0];
-      JSONA := jValue.FindValue('activeAlerts').GetValue<TJSONArray>;
       for I := 0 to JSONA.Count - 1 do
       begin
         jValue := JSONA.Items[I];
-        if TryStrToInt(jValue.FindValue('regionId').Value, regionId) then
+        JSONAA := jValue.FindValue('activeAlerts').GetValue<TJSONArray>;
+        for J := 0 to JSONAA.Count - 1 do
         begin
-          UkraineAlarmCDS.Append;
-          UkraineAlarmCDS.FieldByName('regionId').AsInteger := regionId;
-          UkraineAlarmCDS.FieldByName('startDate').AsDateTime := IncMinute(gfXSStrToDate(jValue.FindValue('lastUpdate').Value), 180);
-          UkraineAlarmCDS.FieldByName('endDate').AsVariant := Null;
-          UkraineAlarmCDS.FieldByName('alertType').AsString := jValue.FindValue('type').Value;
-          UkraineAlarmCDS.Post;
+          jValue := JSONAA.Items[J];
+          if TryStrToInt(jValue.FindValue('regionId').Value, regionId)  and
+             not UkraineAlarmCDS.Locate('regionId;startDate', VarArrayOf([regionId, IncMinute(gfXSStrToDate(jValue.FindValue('lastUpdate').Value), 180)]), []) then
+          begin
+            UkraineAlarmCDS.Append;
+            UkraineAlarmCDS.FieldByName('regionId').AsInteger := regionId;
+            UkraineAlarmCDS.FieldByName('startDate').AsDateTime := IncMinute(gfXSStrToDate(jValue.FindValue('lastUpdate').Value), 180);
+            UkraineAlarmCDS.FieldByName('endDate').AsVariant := Null;
+            UkraineAlarmCDS.FieldByName('alertType').AsString := jValue.FindValue('type').Value;
+            UkraineAlarmCDS.Post;
+          end;
         end;
       end;
     except

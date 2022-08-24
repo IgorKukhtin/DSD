@@ -627,6 +627,9 @@ type
     spSelectChechBuyerForSite: TdsdStoredProc;
     actLoadBuyerForSite: TMultiAction;
     actOpenCheckBuyerForSite: TOpenChoiceForm;
+    TimerActiveAlerts: TTimer;
+    spActiveAlerts: TdsdStoredProc;
+    lblActiveAlerts: TcxLabel;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -791,6 +794,7 @@ type
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
     procedure actDownloadFarmacyExecute(Sender: TObject);
     procedure actEnterBuyerForSiteExecute(Sender: TObject);
+    procedure TimerActiveAlertsTimer(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -841,6 +845,10 @@ type
     aDistributionPromoId : array of Integer;
     aDistributionPromoAmount : array of Currency;
     aDistributionPromoSum : array of Currency;
+
+    FActiveAlerts : String;
+    FActiveAlertsDate : TDateTime;
+    FHint: THintWindow;
 
     procedure SetBlinkVIP(isRefresh: Boolean);
     procedure SetBlinkCheck(isRefresh: Boolean);
@@ -1813,6 +1821,7 @@ begin
   cbMorionFilter.Enabled := True;
   cbMorionFilter.Checked := False;
   pnlInfo.Visible := False;
+
 
   MainGridDBTableView.DataController.Filter.Clear;
   CheckGridDBTableView.DataController.Filter.Clear;
@@ -11146,6 +11155,7 @@ begin
   actOverdueJournal.Enabled := UnitConfigCDS.FieldByName('DividePartionDate').AsBoolean;
   actOverdueJournal.Visible := UnitConfigCDS.FieldByName('DividePartionDate').AsBoolean;
   SaveUnitConfig;
+  TimerActiveAlerts.Enabled := True;
 end;
 
 // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
@@ -13233,6 +13243,69 @@ begin
   // ShowMessage('Во время проведения чека возникла ошибка:'+#13+
   // ThreadErrorMessage+#13#13+
   // 'Проверьте состояние чека и, при необходимости, проведите чек вручную.');
+end;
+
+procedure TMainCashForm2.TimerActiveAlertsTimer(Sender: TObject);
+   var Mes: TMessage; APoint : TPoint;
+begin
+  TimerActiveAlerts.Enabled := False;
+  if Assigned(FHint) then FreeAndNil(FHint);
+  try
+    if gc_User.Local then
+    begin
+      FActiveAlerts := '';
+      lblActiveAlerts.Style.Color := clLime;
+      lblActiveAlerts.Caption := '';
+      lblActiveAlerts.Hint := 'Тревоги нет';
+    end else
+    begin
+      spActiveAlerts.ParamByName('outActiveAlerts').Value := '';
+      spActiveAlerts.ParamByName('outstartDate').Value := Null;
+      spActiveAlerts.Execute;
+
+      if FActiveAlerts <> spActiveAlerts.ParamByName('outActiveAlerts').Value then
+      begin
+        if spActiveAlerts.ParamByName('outActiveAlerts').Value <> '' then
+        begin
+          FActiveAlertsDate := spActiveAlerts.ParamByName('outstartDate').Value;
+          if FActiveAlerts = '' then
+          begin
+            lblActiveAlerts.Style.Color := clRed;
+            lblActiveAlerts.Hint := '!! !! !! Увага! Оголошено тривогу, всім пройти в укриття !! !! !!'#13#13 + FormatDateTime('HH:NN', FActiveAlertsDate);
+            lblActiveAlerts.Caption := '!!!';
+
+            APoint := lblActiveAlerts.ClientToScreen(Point(0, btnVIP.ClientHeight));
+            FHint := THintWindow.Create(Self);
+            FHint.Canvas.Font.Size := FHint.Font.Size * 3 div 2;
+            FHint.Canvas.Font.Style := FHint.Font.Style + [fsBold];
+            FHint.ActivateHint(TRect.Create(APoint.X, APoint.Y, APoint.X + 400, APoint.Y + 100),  lblActiveAlerts.Hint);
+
+            Application.Hint := lblActiveAlerts.Hint;
+            Application.ActivateHint(APoint);
+            Application.Hint := '';
+          end;
+          FActiveAlerts := spActiveAlerts.ParamByName('outActiveAlerts').Value;
+        end else
+        begin
+          FActiveAlerts := '';
+
+          lblActiveAlerts.Style.Color := clLime;
+          lblActiveAlerts.Caption := '';
+          lblActiveAlerts.Hint := 'Тревоги нет';
+
+          APoint := lblActiveAlerts.ClientToScreen(Point(0, btnVIP.ClientHeight));
+          FHint := THintWindow.Create(Self);
+          FHint.Canvas.Font.Size := FHint.Font.Size * 3 div 2;
+          FHint.Canvas.Font.Style := FHint.Font.Style + [fsBold];
+          FHint.ActivateHint(TRect.Create(APoint.X, APoint.Y, APoint.X + 400, APoint.Y + 100),  'Увага! ВІДБІЙ ТРИВОГИ'#13#13 + FormatDateTime('HH:NN', Now));
+        end;
+
+      end;
+
+    end;
+  finally
+    TimerActiveAlerts.Enabled := True;
+  end;
 end;
 
 procedure TMainCashForm2.TimerAnalogFilterTimer(Sender: TObject);

@@ -12,6 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDate TDateTime;
+   DECLARE vbAlarmInterval Integer;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
@@ -24,18 +25,11 @@ BEGIN
 
   -- raise notice 'Value 05: % % %', inMovementId, inCheckSourceKindId, inSession;
   
-  IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) OR
+  /*IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) OR
     NOT EXISTS(SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_CashierPharmacy()) 
   THEN
     RETURN 0;
-  END IF;
-  
-  
-  IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) OR
-    NOT EXISTS(SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_CashierPharmacy()) 
-  THEN
-    RETURN 0;
-  END IF;
+  END IF;*/
 
   IF EXISTS(SELECT Movement.Id
             FROM Movement  
@@ -77,7 +71,8 @@ BEGIN
                               ON ObjectDate_SundayEnd.ObjectId = Object_Unit.Id
                              AND ObjectDate_SundayEnd.DescId = zc_ObjectDate_Unit_SundayEnd()
  
-    WHERE MovementLinkObject.MovementId = inMovementId;
+    WHERE MovementLinkObject.MovementId = inMovementId
+      AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
   ELSEIF date_part('isodow', CURRENT_DATE)::Integer = 6
   THEN
     SELECT CASE WHEN COALESCE(ObjectDate_SaturdayStart.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_SaturdayStart.ValueData ELSE Null END ::TDateTime AS SaturdayStart
@@ -94,7 +89,8 @@ BEGIN
                               ON ObjectDate_SaturdayEnd.ObjectId = Object_Unit.Id
                              AND ObjectDate_SaturdayEnd.DescId = zc_ObjectDate_Unit_SaturdayEnd()
  
-    WHERE MovementLinkObject.MovementId = inMovementId;  
+    WHERE MovementLinkObject.MovementId = inMovementId
+      AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();  
   ELSE
     SELECT CASE WHEN COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_MondayStart.ValueData ELSE Null END ::TDateTime AS MondayStart
          , CASE WHEN COALESCE(ObjectDate_MondayEnd.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_MondayEnd.ValueData - INTERVAL '31 MINUTE' ELSE Null END ::TDateTime AS MondayEnd
@@ -110,7 +106,8 @@ BEGIN
                               ON ObjectDate_MondayEnd.ObjectId = Object_Unit.Id
                              AND ObjectDate_MondayEnd.DescId = zc_ObjectDate_Unit_MondayEnd()
  
-    WHERE MovementLinkObject.MovementId = inMovementId;  
+    WHERE MovementLinkObject.MovementId = inMovementId
+      AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();  
   END IF;  
 
   --raise notice 'Value 05: % % %', vbStartDate, vbEndDate, inSession;
@@ -119,7 +116,7 @@ BEGIN
   THEN
     RETURN 0;
   END IF;
-   
+  
   IF NOT EXISTS(SELECT * FROM MovementDate 
                 WHERE MovementDate.DescId = zc_MovementDate_Message()
                   AND MovementDate.MovementId = inMovementId)
@@ -130,21 +127,39 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
     
-  ELSEIF (SELECT MovementDate.ValueData FROM MovementDate 
-          WHERE MovementDate.DescId = zc_MovementDate_Message()
-            AND MovementDate.MovementId = inMovementId) < CURRENT_TIMESTAMP - INTERVAL '31 MINUTE'
-  THEN 
-    --Меняем признак Начислить штраф
-    PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_AccruedFine(), inMovementId, TRUE);
+  ELSE
+
+    SELECT zfGet_UkraineAlarm_Interval(MovementLinkObject.ObjectId, MovementDate_Message.ValueData, inSession) + 31
+    INTO vbAlarmInterval
+    FROM MovementLinkObject 
     
-    -- сохранили протокол
-    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);  
+         INNER JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject.ObjectId
+    
+         INNER JOIN MovementDate AS MovementDate_Message
+                                 ON MovementDate_Message.MovementId = MovementLinkObject.MovementId
+                                AND MovementDate_Message.DescId = zc_MovementDate_Message()
+ 
+    WHERE MovementLinkObject.MovementId = inMovementId
+      AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit(); 
+   
+  
+    IF (SELECT MovementDate.ValueData FROM MovementDate 
+          WHERE MovementDate.DescId = zc_MovementDate_Message()
+            AND MovementDate.MovementId = inMovementId) < CURRENT_TIMESTAMP - (vbAlarmInterval::TVArChar||' MINUTE')::INTERVAL
+    THEN 
+      --Меняем признак Начислить штраф
+      PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_AccruedFine(), inMovementId, TRUE);
+      
+      -- сохранили протокол
+      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);  
+            
+    END IF;
   END IF;
 
   -- !!!ВРЕМЕННО для ТЕСТА!!!
   IF inSession = zfCalc_UserAdmin()
   THEN
-      RAISE EXCEPTION 'Тест прошел успешно для % % %', inMovementId, inCheckSourceKindId, inSession;
+      RAISE EXCEPTION 'Тест прошел успешно для % % % % % %', inMovementId, inCheckSourceKindId, vbStartDate, vbEndDate, vbAlarmInterval, inSession;
   END IF;
               
   RETURN 1;
@@ -160,4 +175,6 @@ LANGUAGE PLPGSQL VOLATILE;
  15.04.21                                                                    *
 */
 
--- тест SELECT * FROM gpUpdate_Movement_Check_DateMessage(inMovementId := 28578239 , inCheckSourceKindId := zc_Enum_CheckSourceKind_Tabletki(), inSession := '3');
+-- тест 
+
+SELECT * FROM gpUpdate_Movement_Check_DateMessage(inMovementId := 29071709  , inCheckSourceKindId := zc_Enum_CheckSourceKind_Tabletki(), inSession := '3');

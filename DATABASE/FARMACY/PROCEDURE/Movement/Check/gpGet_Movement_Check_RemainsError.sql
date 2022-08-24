@@ -70,7 +70,7 @@ BEGIN
     FROM json_populate_recordset(null::_tmpGoods, replace(replace(replace(inJSON, '&quot;', '\"'), CHR(9),''), CHR(10),'')::json);
 
     -- проверим что есть остатки
-    outMessageText:= 'Ошибка.Товара'||CASE WHEN inSPKindId = zc_Enum_SPKind_SP() THEN ' для отпуска по СП' ELSE '' END||' нет в наличии:'||Chr(13)
+    outMessageText:= 'Ошибка.Товара'||CASE WHEN inSPKindId = zc_Enum_SPKind_SP() THEN ' для отпуска по СП нет в наличии или на остатке является СЭМПЛОВЫМ' ELSE ' нет в наличии' END||':'||Chr(13)
                                 || (WITH tmpFrom AS (SELECT _tmpGoods.GoodsId, _tmpGoods.NDSKindId, _tmpGoods.PartionDateKindId, _tmpGoods.DivisionPartiesId, SUM (_tmpGoods.Amount) AS Amount 
                                                      FROM _tmpGoods
                                                      GROUP BY _tmpGoods.GoodsId, _tmpGoods.NDSKindId, _tmpGoods.PartionDateKindId, _tmpGoods.DivisionPartiesId)

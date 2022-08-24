@@ -86,7 +86,7 @@
         <DCC_DcuOutput>..\DCU</DCC_DcuOutput>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <BT_BuildType>Debug</BT_BuildType>
-        <Icon_MainIcon>C:\Users\Oleg\Downloads\Untitled-2.ico</Icon_MainIcon>
+        <Icon_MainIcon>UkraineAlarm.ico</Icon_MainIcon>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">

@@ -1274,11 +1274,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_LeftTheMarket() RETURNS Intege
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_LeftTheMarket', 'Ушел с рынка' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_LeftTheMarket');
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_ShowActiveAlerts() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ShowActiveAlerts'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_ShowActiveAlerts', 'Показывать оповещение по активным тревогам' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ShowActiveAlerts');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 24.08.22                                                                                                          * zc_ObjectBoolean_Unit_ShowActiveAlerts
  09.08.22                                                                                                          * zc_ObjectBoolean_Goods_LeftTheMarket
  08.08.22         * zc_ObjectBoolean_StickerHeader_Default
  03.04.22         * zc_ObjectBoolean_Partner_GoodsBox
