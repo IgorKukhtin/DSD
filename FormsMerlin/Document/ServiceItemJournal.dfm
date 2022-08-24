@@ -138,6 +138,36 @@ object ServiceItemJournalForm: TServiceItemJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = Month_diff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Area
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_after
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Area_after
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_before
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Area_before
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -193,6 +223,36 @@ object ServiceItemJournalForm: TServiceItemJournalForm
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = UnitName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Area
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_after
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Area_after
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_before
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Area_before
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList

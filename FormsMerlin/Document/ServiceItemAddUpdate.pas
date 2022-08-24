@@ -111,6 +111,9 @@ type
     lbSearchName: TcxLabel;
     edSearchUnitName: TcxTextEdit;
     FieldFilter_UnitName: TdsdFieldFilter;
+    Month_diff: TcxGridDBColumn;
+    Month_diff_Main: TcxGridDBColumn;
+    Month_diff_before: TcxGridDBColumn;
   private
   public
   end;
