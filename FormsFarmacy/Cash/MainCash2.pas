@@ -627,6 +627,9 @@ type
     spSelectChechBuyerForSite: TdsdStoredProc;
     actLoadBuyerForSite: TMultiAction;
     actOpenCheckBuyerForSite: TOpenChoiceForm;
+    TimerActiveAlerts: TTimer;
+    spActiveAlerts: TdsdStoredProc;
+    lblActiveAlerts: TcxLabel;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -791,6 +794,7 @@ type
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
     procedure actDownloadFarmacyExecute(Sender: TObject);
     procedure actEnterBuyerForSiteExecute(Sender: TObject);
+    procedure TimerActiveAlertsTimer(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -841,6 +845,13 @@ type
     aDistributionPromoId : array of Integer;
     aDistributionPromoAmount : array of Currency;
     aDistributionPromoSum : array of Currency;
+
+    FActiveAlerts : String;
+    FActiveAlertsDate : TDateTime;
+    FHint: THintWindow;
+
+    FBuyerForSite : string;
+
 
     procedure SetBlinkVIP(isRefresh: Boolean);
     procedure SetBlinkCheck(isRefresh: Boolean);
@@ -1814,6 +1825,7 @@ begin
   cbMorionFilter.Checked := False;
   pnlInfo.Visible := False;
 
+
   MainGridDBTableView.DataController.Filter.Clear;
   CheckGridDBTableView.DataController.Filter.Clear;
   ExpirationDateView.DataController.Filter.Clear;
@@ -2324,8 +2336,7 @@ end;
 procedure TMainCashForm2.actEnterBuyerForSiteExecute(Sender: TObject);
   var nBuyerForSiteId : Integer;
 begin
-  nBuyerForSiteId := 0;
-  if not InputEnterBuyerForSite(nBuyerForSiteId) then Exit;
+  if not InputEnterBuyerForSite(nBuyerForSiteId, FBuyerForSite) then Exit;
 
   actOpenCheckBuyerForSite.GuiParams.ParamByName('BuyerForSiteId').Value := nBuyerForSiteId;
   if actLoadBuyerForSite.Execute and ((FormParams.ParamByName('CheckId').Value <> 0)
@@ -3343,7 +3354,9 @@ begin
   // теперь вызов
   with spCheck_RemainsError do
     try
-      ParamByName('inSPKindId').Value := Self.FormParams.ParamByName('SPKindId').Value;
+      if (FormParams.ParamByName('HelsiPartialPrescription').Value = False) then
+        ParamByName('inSPKindId').Value := Self.FormParams.ParamByName('SPKindId').Value
+      else ParamByName('inSPKindId').Value := 0;
       ParamByName('inJSON').Value := JsonText;
       Execute;
       Result := ParamByName('outMessageText').Value = '';
@@ -8401,6 +8414,7 @@ begin
   fPrint := False;
   FStepSecond := False;
   FError_Blink := 0;
+  FBuyerForSite := '';
   //
   edDays.Value := 7;
   PanelMCSAuto.Visible := false;
@@ -8600,6 +8614,55 @@ begin
   ShowMessage('Деление медикамента c ценой менее ' + UnitConfigCDS.FieldByName
     ('ShareFromPrice').AsString + ' грн. заблокировано!');
   Result := false;
+end;
+
+function GoodsToJSON(AId : Integer; AAmount : Currency; APartionDateKindId, ANdsKindId, ADivisionPartiesId : Variant) : String;
+  var JsonArray: TJSONArray;
+      JSONObject: TJSONObject;
+
+  procedure AddParamToJSON(AName: string; AValue: Variant; ADataType: TFieldType);
+    var intValue: integer; n : Double;
+  begin
+    try
+      if AValue = NULL then
+        JSONObject.AddPair(LowerCase(AName), TJSONNull.Create)
+      else if ADataType = ftDateTime then
+        JSONObject.AddPair(LowerCase(AName), FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', AValue))
+      else if ADataType = ftFloat then
+      begin
+        if TryStrToFloat(AValue, n) then
+          JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(n))
+        else
+          JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
+      end else if ADataType = ftInteger then
+      begin
+        if TryStrToInt(AValue, intValue) then
+          JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(intValue))
+        else
+          JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
+      end
+      else
+        JSONObject.AddPair(LowerCase(AName), TJSONString.Create(AValue));
+    except
+      on E:Exception do raise Exception.Create('Ошибка добавления <' + AName + '> в Json: ' + e.Message);
+    end;
+  end;
+
+  begin
+    JSONArray := TJSONArray.Create();
+    try
+
+      JSONObject := TJSONObject.Create;
+      AddParamToJSON('GoodsId', AId, ftInteger);
+      AddParamToJSON('Amount', AAmount, ftFloat);
+      AddParamToJSON('PartionDateKindId', APartionDateKindId, ftInteger);
+      AddParamToJSON('NdsKindId', ANdsKindId, ftInteger);
+      AddParamToJSON('DivisionPartiesId', ADivisionPartiesId, ftInteger);
+      JsonArray.AddElement(JSONObject);
+      Result := JSONArray.ToString;
+    finally
+      JSONArray.Free;
+    end;
 end;
 
 procedure TMainCashForm2.InsertUpdateBillCheckItems(AJuridicalId : Integer = 0; AJuridicalName : String = '');
@@ -9139,6 +9202,28 @@ begin
       ShowMessage('Ошибка.Товар <' + RemainsCDS.FieldByName('GoodsName').AsString + '> предназначен для программы "Доступні ліки"!');
       exit;
     end;
+
+    if not gc_User.Local and (nAmount > 0) and
+      (Self.FormParams.ParamByName('SPKindId').Value = 4823009) and
+      (FormParams.ParamByName('HelsiPartialPrescription').Value = False) then
+    begin
+      with spCheck_RemainsError do
+        try
+          ParamByName('inSPKindId').Value := Self.FormParams.ParamByName('SPKindId').Value;
+          ParamByName('inJSON').Value := GoodsToJSON(RemainsCDS.FieldByName('Id').AsInteger, nAmount +
+             IfThen(not CheckCDS.IsEmpty and (RemainsCDS.FieldByName('Id').AsInteger = CheckCDS.FieldByName('GoodsId').AsInteger), CheckCDS.FieldByName('Amount').asCurrency, 0),
+             RemainsCDS.FindField('PartionDateKindId').AsVariant, RemainsCDS.FindField('NDSKindId').AsVariant, RemainsCDS.FindField('DivisionPartiesID').AsVariant);
+          Execute;
+          if ParamByName('outMessageText').Value <> '' then
+          begin
+            ShowMessage('Ошибка.' + ParamByName('outMessageText').Value);
+            exit;
+
+          end;
+        except
+        end;
+    end;
+
 
     //
     // потому что криво, надо правильно определить ТОВАР + цена БЕЗ скидки
@@ -11146,6 +11231,10 @@ begin
   actOverdueJournal.Enabled := UnitConfigCDS.FieldByName('DividePartionDate').AsBoolean;
   actOverdueJournal.Visible := UnitConfigCDS.FieldByName('DividePartionDate').AsBoolean;
   SaveUnitConfig;
+  if not UnitConfigCDS.FieldByName('isShowActiveAlerts').AsBoolean then
+  begin
+    lblActiveAlerts.Visible := False;
+  end else TimerActiveAlerts.Enabled := True;
 end;
 
 // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
@@ -13235,6 +13324,74 @@ begin
   // 'Проверьте состояние чека и, при необходимости, проведите чек вручную.');
 end;
 
+procedure TMainCashForm2.TimerActiveAlertsTimer(Sender: TObject);
+   var Mes: TMessage; APoint : TPoint;
+begin
+  TimerActiveAlerts.Enabled := False;
+  if Assigned(FHint) then FreeAndNil(FHint);
+  try
+    if gc_User.Local then
+    begin
+      FActiveAlerts := '';
+      lblActiveAlerts.Style.Color := clLime;
+      lblActiveAlerts.Caption := '';
+      lblActiveAlerts.Hint := 'Тревоги нет';
+    end else
+    begin
+      spActiveAlerts.ParamByName('outActiveAlerts').Value := '';
+      spActiveAlerts.ParamByName('outstartDate').Value := Null;
+      spActiveAlerts.Execute;
+
+      if FActiveAlerts <> spActiveAlerts.ParamByName('outActiveAlerts').Value then
+      begin
+        if spActiveAlerts.ParamByName('outActiveAlerts').Value <> '' then
+        begin
+          FActiveAlertsDate := spActiveAlerts.ParamByName('outstartDate').Value;
+          if FActiveAlerts = '' then
+          begin
+            lblActiveAlerts.Style.Color := clRed;
+            lblActiveAlerts.Hint := '!! !! !! Увага! Оголошено тривогу, всім пройти в укриття !! !! !!'#13#13 + FormatDateTime('HH:NN', FActiveAlertsDate);
+            lblActiveAlerts.Caption := '!!!';
+
+            APoint := lblActiveAlerts.ClientToScreen(Point(0, btnVIP.ClientHeight));
+            FHint := THintWindow.Create(Self);
+            FHint.Canvas.Font.Size := FHint.Font.Size * 3 div 2;
+            FHint.Canvas.Font.Style := FHint.Font.Style + [fsBold];
+            FHint.ActivateHint(TRect.Create(APoint.X, APoint.Y, APoint.X + 400, APoint.Y + 100),  lblActiveAlerts.Hint);
+
+            Application.Hint := lblActiveAlerts.Hint;
+            Application.ActivateHint(APoint);
+            Application.Hint := '';
+          end;
+          FActiveAlerts := spActiveAlerts.ParamByName('outActiveAlerts').Value;
+        end else
+        begin
+          FActiveAlerts := '';
+
+          lblActiveAlerts.Style.Color := clLime;
+          lblActiveAlerts.Caption := '';
+          lblActiveAlerts.Hint := 'Тревоги нет';
+
+          APoint := lblActiveAlerts.ClientToScreen(Point(0, btnVIP.ClientHeight));
+          FHint := THintWindow.Create(Self);
+          FHint.Canvas.Font.Size := FHint.Font.Size * 3 div 2;
+          FHint.Canvas.Font.Style := FHint.Font.Style + [fsBold];
+          FHint.ActivateHint(TRect.Create(APoint.X, APoint.Y, APoint.X + 400, APoint.Y + 100),  'Увага! ВІДБІЙ ТРИВОГИ'#13#13 + FormatDateTime('HH:NN', Now));
+        end;
+
+      end;
+
+    end;
+  finally
+    if not UnitConfigCDS.FieldByName('isShowActiveAlerts').AsBoolean then
+    begin
+      TimerActiveAlerts.Enabled := False;
+      lblActiveAlerts.Visible := False;
+      FActiveAlerts := '';
+    end else TimerActiveAlerts.Enabled := True;
+  end;
+end;
+
 procedure TMainCashForm2.TimerAnalogFilterTimer(Sender: TObject);
 begin
   TimerAnalogFilter.Enabled := false;
@@ -13793,6 +13950,19 @@ begin
     actOpenLayoutFile.Visible := actOpenLayoutFile.Enabled;
     actAddGoodsSupplement.Enabled := UnitConfigCDS.FieldByName('isSupplementAddCash').AsBoolean;
     actAddGoodsSupplement.Visible := actAddGoodsSupplement.Enabled;
+
+    if not UnitConfigCDS.FieldByName('isShowActiveAlerts').AsBoolean then
+    begin
+      TimerActiveAlerts.Enabled := False;
+      lblActiveAlerts.Visible := False;
+      FActiveAlerts := '';
+    end else
+    begin
+      TimerActiveAlerts.Enabled := True;
+      lblActiveAlerts.Visible := True;
+      FActiveAlerts := '';
+    end;
+
   finally
     ReleaseMutex(MutexUnitConfig);
   end;

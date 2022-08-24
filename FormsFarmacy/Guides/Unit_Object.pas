@@ -484,6 +484,11 @@ type
     dxBarButton36: TdxBarButton;
     actShowActive: TBooleanStoredProcAction;
     bbShowActive: TdxBarButton;
+    isShowActiveAlerts: TcxGridDBColumn;
+    mactUpdate_isShowActiveAlerts: TMultiAction;
+    actUpdate_isShowActiveAlerts: TdsdExecStoredProc;
+    spUpdate_isShowActiveAlerts: TdsdStoredProc;
+    dxBarButton37: TdxBarButton;
   private
     { Private declarations }
   public

@@ -21,13 +21,15 @@ RETURNS TABLE (Id Integer, InvNumber Integer
              , DateStart TDateTime, DateEnd TDateTime
              , MonthNameStart  TDateTime
              , MonthNameEnd TDateTime
+             , Month_diff Integer
              , Amount TFloat
              , Comment TVarChar
 
-             , DateStart_Main TDateTime, DateEnd_Main TDateTime
+             , DateStart_Main TDateTime, DateEnd_Main TDateTime, Month_diff_Main Integer
              , Amount_Main TFloat, Price_Main TFloat, Area_Main TFloat
              , MonthNameStart_before  TDateTime
              , MonthNameEnd_before TDateTime
+             , Month_diff_before Integer
              , Amount_before TFloat
               )
 AS
@@ -97,18 +99,21 @@ BEGIN
            , Movement.DateEnd           :: TDateTime AS DateEnd
            , zfCalc_Month_start (Movement.DateStart) AS MonthNameStart
            , zfCalc_Month_end (Movement.DateEnd)     AS MonthNameEnd
+           , zfCalc_Month_diff (Movement.DateStart, Movement.DateEnd) :: Integer AS Month_diff
 
            , Movement.Amount               :: TFloat
            , Movement.Comment
 
            , zfCalc_Month_start (tmpMI_Main.DateStart) AS DateStart_Main
            , zfCalc_Month_end (tmpMI_Main.DateEnd)     AS DateEnd_Main
+           , zfCalc_Month_diff (tmpMI_Main.DateStart, tmpMI_Main.DateEnd) :: Integer AS Month_diff_Main
            , tmpMI_Main.Amount               :: TFloat AS Amount_Main
            , tmpMI_Main.Price                :: TFloat AS Price_Main
            , tmpMI_Main.Area                 :: TFloat AS Area_Main
                                                        
            , zfCalc_Month_start (tmp_last.DateStart)   AS MonthNameStart_before
            , zfCalc_Month_end (tmp_last.DateEnd)       AS MonthNameEnd_before
+           , zfCalc_Month_diff (tmp_last.DateStart, tmp_last.DateEnd) :: Integer AS Month_diff_before
            , tmp_last.Amount                 :: TFloat AS Amount_before
 
        FROM tmpMI AS Movement

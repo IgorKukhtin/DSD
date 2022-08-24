@@ -191,9 +191,9 @@ BEGIN
                                       AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                                       AND (COALESCE(MCS_isClose.ValueData,False) = False OR COALESCE(tmpLayoutAll.Amount,0) > 0) 
                                    )
-             , tmpLeftTheMarket AS (SELECT Object_Goods_Retail.Id                                     AS GoodsId
-                                         , tmpPriceAll.UnitId                                         AS UnitId      
-                                         , COALESCE (ObjectHistoryFloat_MCSDay.ValueData, 0):: TFloat AS MCSDay
+             , tmpLeftTheMarket AS (SELECT Object_Goods_Retail.Id                                       AS GoodsId
+                                         , tmpPriceAll.UnitId                                           AS UnitId      
+                                         , COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0):: TFloat AS MCSValue
                                          , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Retail.Id ORDER BY ObjectHistory_Price.Id DESC) AS Ord
                                     FROM Object_Goods_Main
                                     
@@ -208,17 +208,17 @@ BEGIN
                                                                  AND ObjectHistory_Price.StartDate <= Object_Goods_Main.DateLeftTheMarket - INTERVAL '45 day'
                                                                  AND ObjectHistory_Price.EndDate > Object_Goods_Main.DateLeftTheMarket - INTERVAL '45 day'
                                                                  
-                                         INNER JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDay
-                                                                       ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
-                                                                      AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay()
+                                         INNER JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSValue
+                                                                       ON ObjectHistoryFloat_MCSValue.ObjectHistoryId = ObjectHistory_Price.Id
+                                                                      AND ObjectHistoryFloat_MCSValue.DescId = zc_ObjectHistoryFloat_Price_MCSValue()
                                     
                                     WHERE Object_Goods_Main.isLeftTheMarket = FALSE
                                       AND Object_Goods_Main.DateAddToOrder = CURRENT_DATE
-                                      AND COALESCE (ObjectHistoryFloat_MCSDay.ValueData, 0) >= 3)
+                                      AND COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0) >= 3)
              , tmpPrice AS (SELECT tmpPriceAll.UnitId
                                  , tmpPriceAll.GoodsId
                                  , tmpPriceAll.Price
-                                 , CASE WHEN COALESCE (tmpPriceAll.MCSValue, 0) < COALESCE (tmpLeftTheMarket.MCSDay, 0) THEN tmpLeftTheMarket.MCSDay ELSE tmpPriceAll.MCSValue END MCSValue
+                                 , CASE WHEN COALESCE (tmpPriceAll.MCSValue, 0) < COALESCE (tmpLeftTheMarket.MCSValue, 0) THEN tmpLeftTheMarket.MCSValue ELSE tmpPriceAll.MCSValue END MCSValue
                                  , tmpPriceAll.MCSValue_min
                                  , tmpPriceAll.Layout
                             FROM tmpPriceAll
@@ -227,7 +227,7 @@ BEGIN
                                                            AND tmpLeftTheMarket.UnitId = tmpPriceAll.UnitId
                                                            AND tmpLeftTheMarket.Ord = 1
                                                            
-                            WHERE CASE WHEN COALESCE (tmpPriceAll.MCSValue, 0) < COALESCE (tmpLeftTheMarket.MCSDay, 0) THEN tmpLeftTheMarket.MCSDay ELSE tmpPriceAll.MCSValue END > 0 
+                            WHERE CASE WHEN COALESCE (tmpPriceAll.MCSValue, 0) < COALESCE (tmpLeftTheMarket.MCSValue, 0) THEN tmpLeftTheMarket.MCSValue ELSE tmpPriceAll.MCSValue END > 0 
                                OR COALESCE(tmpPriceAll.Layout, 0) > 0
                             UNION ALL
                             SELECT inUnitId   AS UnitId

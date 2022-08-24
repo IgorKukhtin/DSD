@@ -101,7 +101,6 @@ inherited WagesForm: TWagesForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = ApplicationAward
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -336,19 +335,6 @@ inherited WagesForm: TWagesForm
             Position.ColIndex = 8
             Position.RowIndex = 0
           end
-          object ApplicationAward: TcxGridDBBandedColumn
-            Caption = #1055#1088#1077#1084#1080#1103' '#1079#1072' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
-            DataBinding.FieldName = 'ApplicationAward'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 42
-            Position.BandIndex = 1
-            Position.ColIndex = 9
-            Position.RowIndex = 0
-          end
           object AmountCard: TcxGridDBBandedColumn
             Caption = #1053#1072' '#1082#1072#1088#1090#1091
             DataBinding.FieldName = 'AmountCard'
@@ -358,7 +344,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Width = 46
             Position.BandIndex = 1
-            Position.ColIndex = 10
+            Position.ColIndex = 9
             Position.RowIndex = 0
           end
           object AmountHand: TcxGridDBBandedColumn
@@ -371,7 +357,7 @@ inherited WagesForm: TWagesForm
             Options.Editing = False
             Width = 49
             Position.BandIndex = 1
-            Position.ColIndex = 11
+            Position.ColIndex = 10
             Position.RowIndex = 0
           end
           object isIssuedBy: TcxGridDBBandedColumn
@@ -381,7 +367,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Width = 47
             Position.BandIndex = 1
-            Position.ColIndex = 12
+            Position.ColIndex = 11
             Position.RowIndex = 0
           end
           object DateIssuedBy: TcxGridDBBandedColumn
@@ -392,7 +378,7 @@ inherited WagesForm: TWagesForm
             Options.Editing = False
             Width = 74
             Position.BandIndex = 1
-            Position.ColIndex = 13
+            Position.ColIndex = 12
             Position.RowIndex = 0
           end
           object Color_Calc: TcxGridDBBandedColumn

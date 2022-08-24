@@ -97,93 +97,19 @@ object ServiceItemAddUpdateForm: TServiceItemAddUpdateForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Month_diff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Month_diff_before
         end>
       DataController.Summary.FooterSummaryItems = <
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = 'C'#1090#1088#1086#1082': ,0'
-          Kind = skCount
-        end
         item
           Format = ',0.####'
           Kind = skSum
@@ -193,6 +119,16 @@ object ServiceItemAddUpdateForm: TServiceItemAddUpdateForm
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = UnitName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Month_diff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Month_diff_before
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -347,6 +283,17 @@ object ServiceItemAddUpdateForm: TServiceItemAddUpdateForm
         Options.Editing = False
         Width = 80
       end
+      object Month_diff: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089'.'
+        DataBinding.FieldName = 'Month_diff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object DateStart: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089'...'
         DataBinding.FieldName = 'DateStart'
@@ -428,6 +375,18 @@ object ServiceItemAddUpdateForm: TServiceItemAddUpdateForm
         Options.Editing = False
         Width = 80
       end
+      object Month_diff_Main: TcxGridDBColumn
+        Caption = '+ '#1050#1086#1083'-'#1074#1086' '#1084#1077#1089'.'
+        DataBinding.FieldName = 'Month_diff_Main'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1041#1072#1079#1086#1074#1099#1077' '#1091#1089#1083#1086#1074#1080#1103
+        Options.Editing = False
+        Width = 70
+      end
       object Amount_before: TcxGridDBColumn
         Caption = '***'#1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
         DataBinding.FieldName = 'Amount_before'
@@ -462,6 +421,18 @@ object ServiceItemAddUpdateForm: TServiceItemAddUpdateForm
         HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1091#1089#1083#1086#1074#1080#1103' ('#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077')'
         Options.Editing = False
         Width = 80
+      end
+      object Month_diff_before: TcxGridDBColumn
+        Caption = '***'#1050#1086#1083'-'#1074#1086' '#1084#1077#1089'.'
+        DataBinding.FieldName = 'Month_diff_before'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1091#1089#1083#1086#1074#1080#1103' ('#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077')'
+        Options.Editing = False
+        Width = 70
       end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'

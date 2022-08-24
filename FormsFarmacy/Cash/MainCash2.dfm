@@ -1375,6 +1375,24 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
         TabOrder = 13
       end
+      object lblActiveAlerts: TcxLabel
+        Left = 627
+        Top = 21
+        Hint = #1058#1088#1077#1074#1086#1075#1080' '#1085#1077#1090
+        AutoSize = False
+        ParentColor = False
+        ParentShowHint = False
+        ShowHint = True
+        Style.BorderStyle = ebsFlat
+        Style.Color = clLime
+        Style.Shadow = False
+        Properties.Alignment.Horz = taCenter
+        Properties.Alignment.Vert = taVCenter
+        Height = 22
+        Width = 46
+        AnchorX = 650
+        AnchorY = 32
+      end
     end
     object pnlExpirationDateFilter: TPanel
       Left = 0
@@ -11036,5 +11054,33 @@ inherited MainCashForm2: TMainCashForm2
     AutoWidth = True
     Left = 232
     Top = 216
+  end
+  object TimerActiveAlerts: TTimer
+    Enabled = False
+    Interval = 10000
+    OnTimer = TimerActiveAlertsTimer
+    Left = 808
+    Top = 104
+  end
+  object spActiveAlerts: TdsdStoredProc
+    StoredProcName = 'gpGet_Cash_ActiveAlerts'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outActiveAlerts'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outstartDate'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 152
   end
 end

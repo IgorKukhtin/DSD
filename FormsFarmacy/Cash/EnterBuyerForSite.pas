@@ -28,7 +28,7 @@ type
     { Public declarations }
   end;
 
-function InputEnterBuyerForSite(var ABuyerForSiteId : Integer) : boolean;
+function InputEnterBuyerForSite(var ABuyerForSiteId : Integer; var ABuyerForSite : String) : boolean;
 
 implementation
 
@@ -74,13 +74,18 @@ begin
   FBuyerForSiteId := 0;
 end;
 
-function InputEnterBuyerForSite(var ABuyerForSiteId : Integer) : boolean;
+function InputEnterBuyerForSite(var ABuyerForSiteId : Integer; var ABuyerForSite : String) : boolean;
   var EnterBuyerForSiteForm : TEnterBuyerForSiteForm;
 begin
   EnterBuyerForSiteForm := TEnterBuyerForSiteForm.Create(Screen.ActiveControl);
   try
+    EnterBuyerForSiteForm.edMaskNumber.Text := ABuyerForSite;
     Result := EnterBuyerForSiteForm.ShowModal = mrOk;
-    if Result then ABuyerForSiteId := EnterBuyerForSiteForm.FBuyerForSiteId;
+    if Result then
+    begin
+      ABuyerForSite := EnterBuyerForSiteForm.edMaskNumber.Text;
+      ABuyerForSiteId := EnterBuyerForSiteForm.FBuyerForSiteId;
+    end;
   finally
     EnterBuyerForSiteForm.Free;
   end;

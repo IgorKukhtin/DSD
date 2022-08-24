@@ -203,6 +203,27 @@ inherited ServiceJournalForm: TServiceJournalForm
     inherited deEnd: TcxDateEdit
       EditValue = 44562d
     end
+    object lbSearchName: TcxLabel
+      Left = 422
+      Top = 4
+      Caption = #1055#1086#1080#1089#1082' '#1054#1090#1076#1077#1083' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchUnitName: TcxTextEdit
+      Left = 531
+      Top = 5
+      TabOrder = 5
+      DesignSize = (
+        126
+        21)
+      Width = 126
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1131,5 +1152,13 @@ inherited ServiceJournalForm: TServiceJournalForm
     PackSize = 1
     Left = 464
     Top = 240
+  end
+  object FieldFilter_UnitName: TdsdFieldFilter
+    TextEdit = edSearchUnitName
+    DataSet = MasterCDS
+    Column = UnitName
+    CheckBoxList = <>
+    Left = 720
+    Top = 88
   end
 end

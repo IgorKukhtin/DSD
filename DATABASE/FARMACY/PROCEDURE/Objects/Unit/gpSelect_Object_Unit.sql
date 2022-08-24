@@ -71,7 +71,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isBlockCommentSendTP Boolean, isOnlyTimingSUN Boolean
              , PharmacyManager TVarChar, PharmacyManagerPhone TVarChar
              , TelegramId TVarChar, isErrorRROToVIP Boolean, isShowMessageSite Boolean, isSupplementAddCash Boolean, isSupplementAdd30Cash Boolean
-             , isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean
+             , isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean
 ) AS
 $BODY$
 BEGIN
@@ -290,6 +290,7 @@ BEGIN
 
       , COALESCE (ObjectBoolean_ExpressVIPConfirm.ValueData, FALSE):: Boolean            AS isExpressVIPConfirm
       , COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE):: Boolean         AS isShowPlanEmployeeUser
+      , COALESCE (ObjectBoolean_ShowActiveAlerts.ValueData, FALSE):: Boolean             AS isShowActiveAlerts
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -688,6 +689,9 @@ BEGIN
                                 ON ObjectBoolean_ShowPlanEmployeeUser.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ShowPlanEmployeeUser.DescId = zc_ObjectBoolean_Unit_ShowPlanEmployeeUser()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowActiveAlerts
+                                ON ObjectBoolean_ShowActiveAlerts.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ShowActiveAlerts.DescId = zc_ObjectBoolean_Unit_ShowActiveAlerts()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id

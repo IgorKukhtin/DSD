@@ -65,7 +65,8 @@ type
     Token : String;
 
     FCount : Integer;
-
+    FListAlerts : String;
+    FTempListAlerts : String;
 
   public
     { Public declarations }
@@ -125,8 +126,8 @@ end;
 procedure TMainForm.GetAlerts(AregionId: Integer);
 var
   jValue : TJSONValue;
-  JSONA: TJSONArray;
-  i, regionId : Integer;
+  JSONA, JSONAA: TJSONArray;
+  i, j, regionId : Integer;
   TimeZone: TTimeZoneInformation;
 begin
 
@@ -151,19 +152,24 @@ begin
     GetTimeZoneInformation(TimeZone);
     try
       JSONA := FRESTResponse.JSONValue.GetValue<TJSONArray>;
-      jValue := JSONA.Items[0];
-      JSONA := jValue.FindValue('activeAlerts').GetValue<TJSONArray>;
       for I := 0 to JSONA.Count - 1 do
       begin
         jValue := JSONA.Items[I];
-        if TryStrToInt(jValue.FindValue('regionId').Value, regionId) then
+        JSONAA := jValue.FindValue('activeAlerts').GetValue<TJSONArray>;
+        for J := 0 to JSONAA.Count - 1 do
         begin
-          UkraineAlarmCDS.Append;
-          UkraineAlarmCDS.FieldByName('regionId').AsInteger := regionId;
-          UkraineAlarmCDS.FieldByName('startDate').AsDateTime := IncMinute(gfXSStrToDate(jValue.FindValue('lastUpdate').Value), 180);
-          UkraineAlarmCDS.FieldByName('endDate').AsVariant := Null;
-          UkraineAlarmCDS.FieldByName('alertType').AsString := jValue.FindValue('type').Value;
-          UkraineAlarmCDS.Post;
+          jValue := JSONAA.Items[J];
+          if TryStrToInt(jValue.FindValue('regionId').Value, regionId)  and
+             not UkraineAlarmCDS.Locate('regionId;startDate', VarArrayOf([regionId, IncMinute(gfXSStrToDate(jValue.FindValue('lastUpdate').Value), 180)]), []) then
+          begin
+            FTempListAlerts := FTempListAlerts + jValue.FindValue('lastUpdate').Value;
+            UkraineAlarmCDS.Append;
+            UkraineAlarmCDS.FieldByName('regionId').AsInteger := regionId;
+            UkraineAlarmCDS.FieldByName('startDate').AsDateTime := IncMinute(gfXSStrToDate(jValue.FindValue('lastUpdate').Value), 180);
+            UkraineAlarmCDS.FieldByName('endDate').AsVariant := Null;
+            UkraineAlarmCDS.FieldByName('alertType').AsString := jValue.FindValue('type').Value;
+            UkraineAlarmCDS.Post;
+          end;
         end;
       end;
     except
@@ -182,9 +188,17 @@ begin
   UkraineAlarmCDS.Close;
   UkraineAlarmCDS.CreateDataSet;
 
+  FListAlerts := '';
+  FTempListAlerts := '';
+
+
   GetAlerts(332);
   GetAlerts(351);
   GetAlerts(300);
+
+  if (FListAlerts <> FTempListAlerts) and (FListAlerts <> '') then FCount := 100;
+  FListAlerts := FTempListAlerts;
+
 end;
 
 procedure TMainForm.GetHistory(AregionId: Integer);
@@ -332,6 +346,8 @@ begin
   end;
 
   FCount := 0;
+  FListAlerts := '';
+  FTempListAlerts := '';
 
   ZConnection1.LibraryLocation := ExtractFilePath(Application.ExeName) + 'libpq.dll';
 
@@ -372,14 +388,17 @@ begin
     if FCount < 20 then
     begin
       btnGetAlertsClick(Sender);
+      btnProcesAlertsClick(Sender);
       Inc(FCount);
-    end else
+    end;
+
+    if FCount >= 20 then
     begin
       btnGetHistoryClick(Sender);
+      btnProcesAlertsClick(Sender);
       FCount := 0;
     end;
 
-    btnProcesAlertsClick(Sender);
 
   finally
     timer1.Enabled := True;
