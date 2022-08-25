@@ -27,16 +27,21 @@ BEGIN
                         , UserId    = vbUserId
                         , CloseDate = inCloseDate
                         , Period    = '0 DAY' :: INTERVAL
-   WHERE Id = inId;
+   WHERE PeriodClose.Id = inId;
   
    -- Ведение протокола
    INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
       SELECT vbUserId, CURRENT_TIMESTAMP, vbUserId
            , '<XML>'
+          || '<Field FieldName = "Ключ" FieldValue = "'       || COALESCE (PeriodClose.Id :: TVarChar, '') || '"/>'
+          || '<Field FieldName = "Код" FieldValue = "'        || COALESCE (PeriodClose.Code :: TVarChar, '') || '"/>'
+          || '<Field FieldName = "Название" FieldValue = "'   || COALESCE (PeriodClose.Name, '') || '"/>'
           || '<Field FieldName = "Период закрыт до" FieldValue = "' || zfConvert_DateToString (inCloseDate) || '"/>'
           || '</XML>' AS ProtocolData
            , TRUE AS isInsert
-            ;
+      FROM PeriodClose
+      WHERE PeriodClose.Id = inId
+     ;
 
 
 END;
