@@ -104,7 +104,7 @@ BEGIN
      END IF;
 
      -- проверка
-     IF COALESCE (vbMovementItemId, 0) = 0
+     IF COALESCE (vbMovementItemId, 0) = 0 AND 1=0
      THEN
          RAISE EXCEPTION 'ќшибка.Ёлемент не найден.';
      END IF;
@@ -126,12 +126,18 @@ BEGIN
 
 
      -- сохранили протокол !!!до изменений!!!
-     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, FALSE);
+     IF vbMovementItemId > 0 THEN PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, FALSE); END IF;
 
      -- сохранили <Ёлемент документа>
-     PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, ioAmount, NULL)
-     FROM MovementItem
-     WHERE MovementItem.Id = vbMovementItemId;
+     IF vbMovementItemId > 0
+     THEN
+         PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, ioAmount, NULL)
+         FROM MovementItem
+         WHERE MovementItem.Id = vbMovementItemId;
+     ELSE
+         ioId:= lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inGoodsId, inMovementId, ioAmount, NULL);
+         vbMovementItemId:= ioId;
+     END IF;
 
      -- сохранили свойство < оличество дозаказ>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), vbMovementItemId, ioAmountSecond);
