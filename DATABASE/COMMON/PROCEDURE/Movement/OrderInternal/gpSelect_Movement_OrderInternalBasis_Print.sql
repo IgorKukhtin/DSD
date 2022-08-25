@@ -297,6 +297,11 @@ BEGIN
                                                                                                                          , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные  + Прочие материалы
                                                                                                                           )
                                                                           THEN 8455 -- Склад специй
+
+                                                                     WHEN Object_InfoMoney_View.InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_20000() -- Общефирменные
+                                                                                                                    )
+                                                                          THEN 8455 -- Склад специй
+
                                                                      ELSE 8439 -- Участок мясного сырья
                                                                 END
 

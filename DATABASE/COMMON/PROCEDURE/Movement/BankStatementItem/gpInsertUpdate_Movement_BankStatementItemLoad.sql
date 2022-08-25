@@ -43,6 +43,8 @@ BEGIN
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
  
 
+  --IF vbUserId = '5' THEN inOperDate:= inOperDate + INTERVAL '1 DAY'; END IF;
+
     --
   --IF inBankMFOMain = '380805' THEN inAmount:= -1 * inAmount; END IF;
 
@@ -531,7 +533,7 @@ BEGIN
     PERFORM lpInsert_MovementProtocol (vbMovementItemId, vbUserId, TRUE);
 
 
- if vbUserId = 5 AND 1=0
+ if vbUserId = 5 AND 1=1
  then
     RAISE EXCEPTION 'ok1 %   %    %    %  %',  lfGet_Object_ValueData (vbJuridicalId), vbContractId, lfGet_Object_ValueData (vbContractId), lfGet_Object_ValueData (vbInfoMoneyId), inComment;
  end if;

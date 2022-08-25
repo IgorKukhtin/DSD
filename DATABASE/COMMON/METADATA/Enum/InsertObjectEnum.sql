@@ -695,6 +695,8 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20202, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20202');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20401, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20401');
+
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 21421, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_21421');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 21425, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_21425');
      
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20501, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20501');
