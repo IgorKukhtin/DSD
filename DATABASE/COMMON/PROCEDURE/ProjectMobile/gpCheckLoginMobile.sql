@@ -18,6 +18,10 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
+
+--if inUserLogin ILIKE 'Админ' THEN inUserPassword:= 'qsxqsxw1'; end if;
+--if inUserLogin ILIKE 'Чукрєєва М.О.' THEN inUserPassword:= 'ckv132709'; end if;
+
      -- Определился пользователь + сессия (потом будем шифровать)
      SELECT Object_User.Id, Object_User.Id
           INTO ioSession, vbUserId
