@@ -1,4 +1,4 @@
--- Function: gpReport_JuridicalDefermentDebet()
+ -- Function: gpReport_JuridicalDefermentDebet()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentDebet (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
@@ -242,21 +242,25 @@ BEGIN
                                 -- за 60 дней
                               , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '60 DAY' AND inOperDate - INTERVAL '1 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
                                           WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '60 DAY' AND inOperDate - INTERVAL '1 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '60 DAY' AND inOperDate - INTERVAL '1 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
                                           ELSE 0
                                      END) AS SaleSumm_60
                                 -- за 61-90 дней
                               , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '90 DAY' AND inOperDate - INTERVAL '61 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
                                           WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '90 DAY' AND inOperDate - INTERVAL '61 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '90 DAY' AND inOperDate - INTERVAL '61 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
                                           ELSE 0
                                      END) AS SaleSumm_90
                                 -- за 91-120 дней
                               , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '120 DAY' AND inOperDate - INTERVAL '91 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
                                           WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '120 DAY' AND inOperDate - INTERVAL '91 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '120 DAY' AND inOperDate - INTERVAL '91 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
                                           ELSE 0
                                      END) AS SaleSumm_120
                                 -- за 121-360 дней
                               , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '360 DAY' AND inOperDate - INTERVAL '121 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
                                           WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '360 DAY' AND inOperDate - INTERVAL '121 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '360 DAY' AND inOperDate - INTERVAL '121 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
                                           ELSE 0
                                      END) AS SaleSumm_360
 
