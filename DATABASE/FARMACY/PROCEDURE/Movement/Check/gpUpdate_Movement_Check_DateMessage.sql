@@ -25,11 +25,11 @@ BEGIN
 
   -- raise notice 'Value 05: % % %', inMovementId, inCheckSourceKindId, inSession;
   
-  /*IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) OR
+  IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) OR
     NOT EXISTS(SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_CashierPharmacy()) 
   THEN
     RETURN 0;
-  END IF;*/
+  END IF;
 
   IF EXISTS(SELECT Movement.Id
             FROM Movement  

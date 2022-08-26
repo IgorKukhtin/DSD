@@ -264,6 +264,9 @@ type
     macStartLoad_SMER: TMultiAction;
     bbStartLoad_SMER: TdxBarButton;
     Code1C: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
   private
     { Private declarations }
   public

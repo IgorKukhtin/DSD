@@ -27,6 +27,7 @@ $BODY$
    DECLARE vbDiscountExternalId Integer;
    DECLARE vbisOneSupplier Boolean;
    DECLARE vbSPKindId Integer; 
+   DECLARE vbMedicalProgramSP Integer; 
    DECLARE vbPriceSamples TFloat;
 
    DECLARE curRemains refcursor;
@@ -141,7 +142,8 @@ BEGIN
          , COALESCE(ObjectBoolean_TwoPackages.ValueData, False) 
          , COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0)
          , COALESCE(MovementLinkObject_SPKind.ObjectId, 0)
-    INTO vbOperDate, vbUnitId, vbDiscountExternalId, vbisOneSupplier, vbSummChangePercent, vbSPKindId
+         , COALESCE(MovementLinkObject_MedicalProgramSP.ObjectId, 0)
+    INTO vbOperDate, vbUnitId, vbDiscountExternalId, vbisOneSupplier, vbSummChangePercent, vbSPKindId, vbMedicalProgramSP
     FROM Movement
 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -168,6 +170,10 @@ BEGIN
                                       ON MovementLinkObject_SPKind.MovementId = Movement.Id
                                      AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
 
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicalProgramSP
+                                      ON MovementLinkObject_MedicalProgramSP.MovementId = Movement.Id
+                                     AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+
     WHERE Movement.Id = inMovementId;
 
     -- Определить
@@ -177,7 +183,7 @@ BEGIN
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId);
 
-    IF vbSPKindId = zc_Enum_SPKind_SP()
+    IF vbSPKindId = zc_Enum_SPKind_SP() AND vbMedicalProgramSP <> 20079831
     THEN
       SELECT COALESCE(ObjectFloat_CashSettings_PriceSamples.ValueData, 0)                          AS PriceSamples
       INTO vbPriceSamples
@@ -192,6 +198,7 @@ BEGIN
     ELSE
       vbPriceSamples := 0;
     END IF;
+    vbPriceSamples := 0;
     
     -- данные почти все
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_remains'))

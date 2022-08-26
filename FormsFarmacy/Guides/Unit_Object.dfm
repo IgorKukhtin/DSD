@@ -1089,6 +1089,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 100
           end
+          object isShowActiveAlerts: TcxGridDBColumn
+            Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1072#1082#1090#1080#1074#1085#1099#1084' '#1090#1088#1077#1074#1086#1075#1072#1084
+            DataBinding.FieldName = 'isShowActiveAlerts'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
         end
       end
     end
@@ -4206,6 +4214,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object mactUpdate_isShowActiveAlerts: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isShowActiveAlerts
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1072#1082#1090#1080#1074#1085#1099#1084' '#1090#1088#1077#1074#1086#1075#1072#1084'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1072#1082#1090#1080#1074#1085#1099#1084' '#1090#1088#1077#1074#1086#1075#1072#1084'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1072#1082#1090#1080#1074#1085#1099#1084' '#1090#1088#1077#1074#1086#1075#1072#1084'"'
+      ImageIndex = 79
+    end
+    object actUpdate_isShowActiveAlerts: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isShowActiveAlerts
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isShowActiveAlerts
+        end>
+      Caption = 'actUpdate_isShowActiveAlerts'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -5001,6 +5034,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton37'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -5164,6 +5201,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object bbShowActive: TdxBarButton
       Action = actShowActive
+      Category = 0
+    end
+    object dxBarButton37: TdxBarButton
+      Action = mactUpdate_isShowActiveAlerts
       Category = 0
     end
   end
@@ -8382,5 +8423,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 80
     Top = 475
+  end
+  object spUpdate_isShowActiveAlerts: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isShowActiveAlerts'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowActiveAlerts'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isShowActiveAlerts'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 80
+    Top = 531
   end
 end

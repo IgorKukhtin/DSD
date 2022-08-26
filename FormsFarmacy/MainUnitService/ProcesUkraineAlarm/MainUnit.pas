@@ -65,7 +65,8 @@ type
     Token : String;
 
     FCount : Integer;
-
+    FListAlerts : String;
+    FTempListAlerts : String;
 
   public
     { Public declarations }
@@ -161,6 +162,7 @@ begin
           if TryStrToInt(jValue.FindValue('regionId').Value, regionId)  and
              not UkraineAlarmCDS.Locate('regionId;startDate', VarArrayOf([regionId, IncMinute(gfXSStrToDate(jValue.FindValue('lastUpdate').Value), 180)]), []) then
           begin
+            FTempListAlerts := FTempListAlerts + jValue.FindValue('lastUpdate').Value;
             UkraineAlarmCDS.Append;
             UkraineAlarmCDS.FieldByName('regionId').AsInteger := regionId;
             UkraineAlarmCDS.FieldByName('startDate').AsDateTime := IncMinute(gfXSStrToDate(jValue.FindValue('lastUpdate').Value), 180);
@@ -186,9 +188,17 @@ begin
   UkraineAlarmCDS.Close;
   UkraineAlarmCDS.CreateDataSet;
 
+  FListAlerts := '';
+  FTempListAlerts := '';
+
+
   GetAlerts(332);
   GetAlerts(351);
   GetAlerts(300);
+
+  if (FListAlerts <> FTempListAlerts) and (FListAlerts <> '') then FCount := 100;
+  FListAlerts := FTempListAlerts;
+
 end;
 
 procedure TMainForm.GetHistory(AregionId: Integer);
@@ -336,6 +346,8 @@ begin
   end;
 
   FCount := 0;
+  FListAlerts := '';
+  FTempListAlerts := '';
 
   ZConnection1.LibraryLocation := ExtractFilePath(Application.ExeName) + 'libpq.dll';
 
@@ -376,14 +388,17 @@ begin
     if FCount < 20 then
     begin
       btnGetAlertsClick(Sender);
+      btnProcesAlertsClick(Sender);
       Inc(FCount);
-    end else
+    end;
+
+    if FCount >= 20 then
     begin
       btnGetHistoryClick(Sender);
+      btnProcesAlertsClick(Sender);
       FCount := 0;
     end;
 
-    btnProcesAlertsClick(Sender);
 
   finally
     timer1.Enabled := True;

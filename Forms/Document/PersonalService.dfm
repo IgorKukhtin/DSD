@@ -1,29 +1,28 @@
 inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-  ClientHeight = 792
-  ClientWidth = 1444
-  ExplicitLeft = -567
-  ExplicitWidth = 1460
-  ExplicitHeight = 831
+  ClientHeight = 749
+  ClientWidth = 1370
+  ExplicitWidth = 1386
+  ExplicitHeight = 788
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 1444
-    Height = 677
+    Width = 1370
+    Height = 634
     ExplicitTop = 115
-    ExplicitWidth = 1444
-    ExplicitHeight = 677
-    ClientRectBottom = 677
-    ClientRectRight = 1444
+    ExplicitWidth = 1370
+    ExplicitHeight = 634
+    ClientRectBottom = 634
+    ClientRectRight = 1370
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1444
-      ExplicitHeight = 653
+      ExplicitWidth = 1370
+      ExplicitHeight = 610
       inherited cxGrid: TcxGrid
-        Width = 1444
-        Height = 258
-        ExplicitWidth = 1444
-        ExplicitHeight = 258
+        Width = 1370
+        Height = 215
+        ExplicitWidth = 1370
+        ExplicitHeight = 215
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1354,8 +1353,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 263
-        Width = 1444
+        Top = 220
+        Width = 1370
         Height = 161
         Align = alBottom
         PopupMenu = PopupMenu
@@ -1727,16 +1726,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 258
-        Width = 1444
+        Top = 215
+        Width = 1370
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
       end
       object cxGrid2: TcxGrid
         Left = 0
-        Top = 430
-        Width = 1444
+        Top = 387
+        Width = 1370
         Height = 138
         Align = alBottom
         PopupMenu = PopupMenu
@@ -1882,8 +1881,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 424
-        Width = 1444
+        Top = 381
+        Width = 1370
         Height = 6
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
@@ -1893,8 +1892,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       object ExportXmlGrid: TcxGrid
         Left = 0
-        Top = 568
-        Width = 1444
+        Top = 525
+        Width = 1370
         Height = 85
         Align = alBottom
         TabOrder = 5
@@ -1930,14 +1929,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1444
-        Height = 653
+        Width = 1370
+        Height = 610
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
@@ -2026,14 +2022,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
-        Width = 1444
-        Height = 653
+        Width = 1370
+        Height = 610
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -2360,10 +2353,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1444
+    Width = 1370
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 1444
+    ExplicitTop = 7
+    ExplicitWidth = 1370
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2512,6 +2506,23 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShowHint = True
       TabOrder = 20
       Width = 106
+    end
+    object cxLabel8: TcxLabel
+      Left = 1077
+      Top = 5
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 1077
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 22
+      Width = 243
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -4352,6 +4363,21 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = cbMail
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -5291,7 +5317,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 688
+    Left = 696
     Top = 24
   end
   object spUpdateIsMain: TdsdStoredProc
@@ -6348,5 +6374,33 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 1056
     Top = 304
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 1184
+    Top = 65533
   end
 end

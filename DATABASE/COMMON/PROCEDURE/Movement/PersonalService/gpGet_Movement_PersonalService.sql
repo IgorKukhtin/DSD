@@ -19,7 +19,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , strSign          TVarChar    -- ФИО пользователей. - есть эл. подпись
              , strSignNo        TVarChar    -- ФИО пользователей. - ожидается эл. подпись
              , MemberId         Integer     --
-             , MemberName       TVarChar    -- ФИО (пользователь) - ведомость начисления
+             , MemberName       TVarChar    -- ФИО (пользователь) - ведомость начисления 
+             , InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )
 AS
 $BODY$
@@ -57,6 +58,10 @@ BEGIN
              , 0                         AS MemberId
              , NULL::TVarChar            AS MemberName
 
+             , 0                     	 AS InfoMoneyId
+             , CAST ('' AS TVarChar) 	 AS InfoMoneyName
+             , CAST ('' AS TVarChar) 	 AS InfoMoneyName_all
+
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -81,7 +86,12 @@ BEGIN
            , tmpSign.strSign
            , tmpSign.strSignNo
            , Object_Member.Id                     AS MemberId
-           , Object_Member.ValueData              AS MemberName
+           , Object_Member.ValueData              AS MemberName   
+
+           , View_InfoMoney.InfoMoneyId
+           , View_InfoMoney.InfoMoneyName
+           , View_InfoMoney.InfoMoneyName_all
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -123,6 +133,8 @@ BEGIN
                                  ON ObjectLink_PersonalServiceList_Member.ObjectId = Object_PersonalServiceList.Id
                                 AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_PersonalServiceList_Member.ChildObjectId
+
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101()
 
        WHERE Movement.Id =  inMovementId;
 

@@ -1648,7 +1648,7 @@ BEGIN
          -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperCount_Master);
      ELSE
-     IF vbMovementDescId = zc_Movement_PersonalService()
+     IF vbMovementDescId IN (zc_Movement_PersonalService(), zc_Movement_PersonalTransport())
      THEN
          -- Сохранили свойство <Итого  Сумма (затраты) >
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperCount_Master);

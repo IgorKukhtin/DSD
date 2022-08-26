@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JurIdicalId Integer, JurIdicalName TVarChar
              , isDetail Boolean
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )
 AS
 $BODY$
@@ -99,6 +100,12 @@ BEGIN
                            AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService IN (zc_Enum_Process_AccessKey_PersonalServiceAdmin()))
                          --AND vbUserId <> zfCalc_UserMain()
                         )
+       --статьи
+       , tmpInfoMoney_View AS (SELECT *
+                               FROM Object_InfoMoney_View
+                               WHERE Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_60101(), zc_Enum_InfoMoney_21421())
+                               )
+       
        -- Результат
        SELECT
              Movement.Id                                AS Id
@@ -141,7 +148,14 @@ BEGIN
            , Object_JurIdical.Id                        AS JurIdicalId
            , Object_JurIdical.ValueData                 AS JurIdicalName
            , COALESCE(MovementBoolean_Detail.ValueData, False) :: Boolean  AS isDetail
-       FROM (SELECT Movement.Id
+
+           , View_InfoMoney.InfoMoneyId
+           , View_InfoMoney.InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName
+           , View_InfoMoney.InfoMoneyName_all
+
+       FROM (--Документы <Начисление зарплаты>
+             SELECT Movement.Id
              FROM tmpStatus
                   INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PersonalService() AND Movement.StatusId = tmpStatus.StatusId
                 --INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -166,7 +180,30 @@ BEGIN
                AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
                AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
                -- Волошина Е.А. + Няйко В.И. + Спічка Є.А.
-               -- AND (vbUserId NOT IN (140094, 1058530, 4538468) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
+               -- AND (vbUserId NOT IN (140094, 1058530, 4538468) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)  
+           UNION ALL
+           --Документы <Начисление проезд>
+             SELECT Movement.Id
+             FROM tmpStatus
+                  INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PersonalTransport() AND Movement.StatusId = tmpStatus.StatusId
+                --INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                               ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                              AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                  INNER JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
+             WHERE inIsServiceDate = FALSE
+            UNION ALL
+             SELECT MovementDate_ServiceDate.MovementId  AS Id
+             FROM MovementDate AS MovementDate_ServiceDate
+                  JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId AND Movement.DescId = zc_Movement_PersonalTransport()
+                  JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                               ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                              AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                  INNER JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
+            WHERE inIsServiceDate = TRUE
+               AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+               AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
             ) AS tmpMovement
             LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
 
@@ -177,7 +214,7 @@ BEGIN
                                   AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummToPay
                                     ON MovementFloat_TotalSummToPay.MovementId =  Movement.Id
@@ -252,7 +289,13 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_JurIdical
                                          ON MovementLinkObject_JurIdical.MovementId = Movement.Id
                                         AND MovementLinkObject_JurIdical.DescId = zc_MovementLinkObject_JurIdical()
-            LEFT JOIN Object AS Object_JurIdical ON Object_JurIdical.Id = MovementLinkObject_JurIdical.ObjectId
+            LEFT JOIN Object AS Object_JurIdical ON Object_JurIdical.Id = MovementLinkObject_JurIdical.ObjectId    
+
+            -- выводим в грид уп статья - для PersonalService - zc_Enum_InfoMoney_60101()  - для PersonalTransport - zc_Enum_InfoMoney_21421
+            LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = CASE WHEN Movement.DescId = zc_Movement_PersonalService()   THEN zc_Enum_InfoMoney_60101()
+                                                                                               WHEN Movement.DescId = zc_Movement_PersonalTransport() THEN zc_Enum_InfoMoney_21421()
+                                                                                          END
+                                                                          
             ;
 
 END;
@@ -262,6 +305,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.08.22         * add InfoMoney And zc_Movement_PersonalTransport
  25.03.20         * add TotalSummAuditAdd
  29.07.19         *
  25.06.18         * TotalSummAddOth
@@ -273,3 +317,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalServiceChoice (inStartDate:= '30.01.2014', inEndDate:= '01.02.2015', inPersonalServiceListId:= 0, inIsServiceDate:= FALSE, inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_PersonalServiceChoice (inStartDate:= '22.08.2022', inEndDate:= '31.08.2022', inPersonalServiceListId:= 0, inIsServiceDate:= FALSE, inIsErased := FALSE, inSession:= '9457')
+
