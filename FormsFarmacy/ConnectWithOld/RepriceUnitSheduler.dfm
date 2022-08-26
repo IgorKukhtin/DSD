@@ -306,6 +306,21 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
         end>
       isShowModal = False
     end
+    object actRepriceUnitSheduler_Line: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spRepriceUnitSheduler_Line
+      StoredProcList = <
+        item
+          StoredProc = spRepriceUnitSheduler_Line
+        end>
+      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1091' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      Hint = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1091' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      ImageIndex = 56
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1091' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -341,6 +356,10 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -403,6 +422,10 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Visible = ivAlways
       ImageIndex = 7
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actRepriceUnitSheduler_Line
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -520,5 +543,22 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
     PackSize = 1
     Left = 192
     Top = 192
+  end
+  object spRepriceUnitSheduler_Line: TdsdStoredProc
+    StoredProcName = 'gpRun_Object_RepriceUnitSheduler_Line'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'InId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 280
+    Top = 256
   end
 end

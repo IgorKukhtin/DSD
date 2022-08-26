@@ -45,6 +45,9 @@ type
     UnitRePriceName: TcxGridDBColumn;
     UserName: TcxGridDBColumn;
     actOpenUser: TOpenChoiceForm;
+    actRepriceUnitSheduler_Line: TdsdExecStoredProc;
+    spRepriceUnitSheduler_Line: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

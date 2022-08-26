@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusName TV
              , DateMessage TDateTime
              , DateFine TDateTime
              , Processing TVarChar
+             , UkraineAlarmInterval TVarChar
               )
 AS
 $BODY$
@@ -59,6 +60,7 @@ BEGIN
          , MovementDate_Message.ValueData          AS DateMessage
          , tmpProtocolFine.OperDate::TDateTime     AS DateFine
          , to_char(tmpProtocolFine.OperDate - MovementDate_Message.ValueData, 'HH24:MI:SS')::TVarChar AS Processing
+         , zfGet_UkraineAlarm_RangeInterval (MovementLinkObject_Unit.ObjectId, MovementDate_Message.ValueData, tmpProtocolFine.OperDate::TDateTime, inSession) AS UkraineAlarmInterval
     FROM tmpMovement AS Movement 
 
          INNER JOIN MovementDate  AS MovementDate_Message
@@ -91,4 +93,5 @@ ALTER FUNCTION gpReport_Check_OrderFine (TDateTime, TDateTime, Integer, TVarChar
 
 -- тест
 -- 
-SELECT * FROM gpReport_Check_OrderFine ('01.07.2022', '21.07.2022', 0, '3')
+
+select * from gpReport_Check_OrderFine(inStartDate := ('25.08.2022')::TDateTime , inEndDate := ('25.08.2022')::TDateTime , inUnitId := 0 ,  inSession := '3');

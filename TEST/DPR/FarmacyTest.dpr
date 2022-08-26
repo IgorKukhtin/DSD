@@ -1241,7 +1241,9 @@ uses
   Report_RestTermGoods in '..\..\FormsFarmacy\Report\Report_RestTermGoods.pas' {Report_RestTermGoodsForm: TParentForm},
   CheckBuyerForSite in '..\..\FormsFarmacy\Document\CheckBuyerForSite.pas' {CheckBuyerForSiteForm: TParentForm},
   Report_Goods_LeftTheMarket in '..\..\FormsFarmacy\Report\Report_Goods_LeftTheMarket.pas' {Report_Goods_LeftTheMarketForm: TParentForm},
-  UkraineAlarm in '..\..\FormsFarmacy\System\UkraineAlarm.pas' {UkraineAlarmForm: TParentForm};
+  UkraineAlarm in '..\..\FormsFarmacy\System\UkraineAlarm.pas' {UkraineAlarmForm: TParentForm},
+  Report_CheckMobileDialog in '..\..\FormsFarmacy\Report\Report_CheckMobileDialog.pas' {Report_CheckMobileDialogForm: TParentForm},
+  Report_CheckMobile in '..\..\FormsFarmacy\Report\Report_CheckMobile.pas' {Report_CheckMobileForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -5301,6 +5301,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_CheckMobile: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1052#1086#1073#1080#1083#1100#1085#1086#1077' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
+      FormName = 'TReport_CheckMobileForm'
+      FormNameParam.Value = 'TReport_CheckMobileForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6140,6 +6151,9 @@
       end
       object N362: TMenuItem
         Action = actReport_Goods_LeftTheMarket
+      end
+      object N364: TMenuItem
+        Action = actReport_CheckMobile
       end
     end
     object N36: TMenuItem [5]

@@ -1,29 +1,27 @@
-inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
-  Caption = 
-    #1054#1090#1095#1077#1090' <'#1064#1090#1088#1072#1092#1099' '#1079#1072' '#1079#1072#1076#1077#1088#1078#1082#1091' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1086#1074' '#1089' '#1089#1072#1081#1090#1072' '#1058#1072#1073#1083#1077#1090#1086#1082 +
-    '>'
+inherited Report_CheckMobileForm: TReport_CheckMobileForm
+  Caption = #1054#1090#1095#1077#1090' <'#1052#1086#1073#1080#1083#1100#1085#1086#1077' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077'>'
   ClientHeight = 480
-  ClientWidth = 1245
+  ClientWidth = 1170
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1261
+  ExplicitWidth = 1186
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 1245
+    Width = 1170
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1170
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 1245
+    ClientRectRight = 1170
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1170
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 1245
+        Width = 1170
         Height = 421
         ExplicitWidth = 1170
         ExplicitHeight = 421
@@ -223,115 +221,247 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = Fine
             end
             item
               Format = #1047#1072#1082#1072#1079#1086#1074' 0'
               Kind = skCount
-              Column = UnitName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object InvNumber: TcxGridDBColumn
+          object colStatus: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentVert = vaCenter
+          end
+          object colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentVert = vaCenter
+            Width = 47
+          end
+          object colUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 111
+          end
+          object colTotalCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'TotalCount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 72
           end
-          object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate'
+          object colTotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 79
           end
-          object StatusName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
-            DataBinding.FieldName = 'StatusName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 76
-          end
-          object UnitCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'UnitCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-          end
-          object UnitName: TcxGridDBColumn
-            Caption = #1040#1087#1090#1077#1082#1072
-            DataBinding.FieldName = 'UnitName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 270
-          end
-          object Fine: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
-            DataBinding.FieldName = 'Fine'
+          object colSummCard: TcxGridDBColumn
+            Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103')'
+            DataBinding.FieldName = 'SummCard'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 81
+            Width = 104
           end
-          object DateInsert: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
-            DataBinding.FieldName = 'DateInsert'
+          object colBayer: TcxGridDBColumn
+            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'Bayer'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 87
           end
-          object DateMessage: TcxGridDBColumn
-            Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1086#1073' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1080
-            DataBinding.FieldName = 'DateMessage'
+          object BayerPhone: TcxGridDBColumn
+            Caption = #1058#1077#1083'. ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
+            DataBinding.FieldName = 'BayerPhone'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085' ('#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
+            Options.Editing = False
+            Width = 102
+          end
+          object colCashMember: TcxGridDBColumn
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088
+            DataBinding.FieldName = 'CashMember'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 91
           end
-          object DateFine: TcxGridDBColumn
-            Caption = #1053#1072#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1096#1090#1088#1072#1092#1072
-            DataBinding.FieldName = 'DateFine'
+          object isSite: TcxGridDBColumn
+            Caption = #1063#1077#1088#1077#1079' '#1089#1072#1081#1090
+            DataBinding.FieldName = 'isSite'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 65
           end
-          object Processing: TcxGridDBColumn
-            Caption = #1042#1088#1077#1084#1103' '#1076#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
-            DataBinding.FieldName = 'Processing'
+          object InvNumberOrder: TcxGridDBColumn
+            Caption = #8470' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
+            DataBinding.FieldName = 'InvNumberOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072' ('#1089' '#1089#1072#1081#1090#1072')'
+            Options.Editing = False
+            Width = 90
+          end
+          object ConfirmedKindName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'ConfirmedKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
+            Options.Editing = False
+            Width = 80
+          end
+          object ConfirmedKindClientName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' '#1057#1052#1057
+            DataBinding.FieldName = 'ConfirmedKindClientName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
+            Options.Editing = False
+            Width = 102
+          end
+          object CancelReason: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1086#1090#1082#1072#1079#1072
+            DataBinding.FieldName = 'CancelReason'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 114
+          end
+          object isDeliverySite: TcxGridDBColumn
+            Caption = 'H'#1072#1096#1072' '#1076#1086#1089#1090#1072#1074#1082#1072
+            DataBinding.FieldName = 'isDeliverySite'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
+          end
+          object SummaDelivery: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1076#1086#1089#1090#1072#1074#1082#1080
+            DataBinding.FieldName = 'SummaDelivery'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object isCallOrder: TcxGridDBColumn
+            Caption = #1047#1072#1082#1072#1079' '#1087#1086' '#1079#1074#1086#1085#1082#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1055#1086#1095#1090#1072')'
+            DataBinding.FieldName = 'isCallOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object CommentCustomer: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1082#1083#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'CommentCustomer'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 103
+          end
+          object isMobileApplication: TcxGridDBColumn
+            Caption = #1052#1086#1073'. '#1087#1088#1080#1083'.'
+            DataBinding.FieldName = 'isMobileApplication'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
+          object UserReferalsName: TcxGridDBColumn
+            Caption = #1056#1077#1082#1086#1084'. '#1089#1086#1090#1088
+            DataBinding.FieldName = 'UserReferalsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Styles.Content = dmMain.cxContentStyle
             Width = 83
           end
-          object UkraineAlarmInterval: TcxGridDBColumn
-            Caption = #1055#1077#1088#1080#1086#1076' '#1090#1088#1077#1074#1086#1075
-            DataBinding.FieldName = 'UkraineAlarmInterval'
+          object isConfirmByPhone: TcxGridDBColumn
+            Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1090#1077#1083#1077#1092#1086#1085#1085#1099#1084' '#1079#1074#1086#1085#1082#1086#1084
+            DataBinding.FieldName = 'isConfirmByPhone'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 78
+            Width = 84
+          end
+          object DateComing: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1074' '#1072#1087#1090#1077#1082#1091
+            DataBinding.FieldName = 'DateComing'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
+          object MobileDiscount: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072' '#1089' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+            DataBinding.FieldName = 'MobileDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
+          object Color_UserReferals: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_UserReferals'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1245
+    Width = 1170
     Height = 33
     ExplicitWidth = 1170
     ExplicitHeight = 33
@@ -375,6 +505,20 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 244
     end
+    object cbIsUnComplete: TcxCheckBox
+      Left = 760
+      Top = 5
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077
+      TabOrder = 6
+      Width = 161
+    end
+    object cbIsErased: TcxCheckBox
+      Left = 927
+      Top = 5
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      TabOrder = 7
+      Width = 145
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -395,83 +539,33 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = cbIsUnComplete
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbIsErased
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
-    object actGet_UserUnit: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
-      StoredProcList = <
-        item
-          StoredProc = spGet_UserUnit
-        end>
-      Caption = 'actGet_UserUnit'
-    end
-    object actRefreshStart: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGet_UserUnit
-      StoredProcList = <
-        item
-          StoredProc = spGet_UserUnit
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshJuridical: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      Hint = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshPartionPrice: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshIsPartion: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_Check_OrderFineDialogForm'
-      FormNameParam.Value = 'TReport_Check_OrderFineDialogForm'
+      FormName = 'TReport_CheckMobileDialogForm'
+      FormNameParam.Value = 'TReport_CheckMobileDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -504,6 +598,20 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsUnComplete'
+          Value = Null
+          Component = cbIsUnComplete
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsErased'
+          Value = Null
+          Component = cbIsErased
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -555,6 +663,46 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TCheckForm'
+      FormNameParam.Value = 'TCheckForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      CheckIDRecords = True
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -565,7 +713,7 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
     Top = 160
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Check_OrderFine'
+    StoredProcName = 'gpReport_CheckMobile'
     Params = <
       item
         Name = 'inStartDate'
@@ -588,6 +736,22 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsUnComplete'
+        Value = Null
+        Component = cbIsUnComplete
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = cbIsErased
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -625,6 +789,10 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -657,6 +825,22 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
       Visible = ivAlways
       ImageIndex = 56
     end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
+    ColorRuleList = <
+      item
+        ColorColumn = UserReferalsName
+        BackGroundValueColumn = Color_UserReferals
+        ColorValueList = <>
+      end>
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 208
@@ -668,23 +852,16 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
         Component = PeriodChoice
       end
       item
+        Component = cbIsErased
       end
       item
         Component = GuidesUnit
+      end
+      item
+        Component = cbIsUnComplete
       end>
     Left = 432
     Top = 216
-  end
-  object rdUnit: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = GuidesUnit
-      end>
-    Left = 208
-    Top = 240
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -713,30 +890,6 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
         MultiSelectSeparator = ','
       end>
     Left = 344
-  end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'UnitId'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 288
-    Top = 192
   end
   object spUpdate_Price_MCSIsClose: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Price_MCSIsClose'
