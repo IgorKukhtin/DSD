@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ServiceDate TDateTime
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )
 AS
 $BODY$
@@ -26,7 +27,7 @@ BEGIN
      RETURN QUERY 
        SELECT 0 AS Id
             , CAST (NEXTVAL ('Movement_PersonalTransport_seq') as TVarChar) AS InvNumber
-            , CURRENT_DATE :;TDateTime AS OperDate 
+            , CURRENT_DATE ::TDateTime AS OperDate 
             , lfObject_Status.Code  AS StatusCode
             , lfObject_Status.Name  AS StatusName
 
@@ -35,6 +36,10 @@ BEGIN
 
             , 0                     AS PersonalServiceListId
             , ''       :: TVarChar  AS PersonalServiceListName
+
+            , 0                     	 AS InfoMoneyId
+            , CAST ('' AS TVarChar) 	 AS InfoMoneyName
+            , CAST ('' AS TVarChar) 	 AS InfoMoneyName_all
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
        ;
@@ -51,6 +56,10 @@ BEGIN
 
             , Object_PersonalServiceList.Id        AS PersonalServiceListId
             , Object_PersonalServiceList.ValueData AS PersonalServiceListName
+
+            , View_InfoMoney.InfoMoneyId
+            , View_InfoMoney.InfoMoneyName
+            , View_InfoMoney.InfoMoneyName_all
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -67,6 +76,7 @@ BEGIN
                                         AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
 
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_21421()
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_PersonalTransport();
 

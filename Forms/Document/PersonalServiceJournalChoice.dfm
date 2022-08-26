@@ -5,7 +5,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 929
-  ExplicitHeight = 572
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -175,6 +175,14 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 200
+          end
+          object InfoMoneyName_all: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
           end
           object isDetail: TcxGridDBColumn
             Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
@@ -408,25 +416,25 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
+    inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actComplete: TdsdChangeMovementStatus
+    inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
     end
     inherited actSetErased: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actReCompleteList: TMultiAction
+    inherited mactReCompleteList: TMultiAction
       Enabled = False
     end
-    inherited actCompleteList: TMultiAction
+    inherited mactCompleteList: TMultiAction
       Enabled = False
     end
-    inherited actUnCompleteList: TMultiAction
+    inherited mactUnCompleteList: TMultiAction
       Enabled = False
     end
-    inherited actSetErasedList: TMultiAction
+    inherited mactSetErasedList: TMultiAction
       Enabled = False
     end
     object actPrint: TdsdPrintAction
@@ -885,7 +893,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 616
-    Top = 64
+    Left = 608
+    Top = 40
   end
 end

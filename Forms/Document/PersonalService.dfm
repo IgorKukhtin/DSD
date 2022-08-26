@@ -11,18 +11,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Width = 1370
     Height = 634
     ExplicitTop = 115
-    ExplicitWidth = 1444
-    ExplicitHeight = 677
+    ExplicitWidth = 1370
+    ExplicitHeight = 634
     ClientRectBottom = 634
     ClientRectRight = 1370
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1444
-      ExplicitHeight = 653
+      ExplicitWidth = 1370
+      ExplicitHeight = 610
       inherited cxGrid: TcxGrid
         Width = 1370
         Height = 215
-        ExplicitWidth = 1444
-        ExplicitHeight = 258
+        ExplicitWidth = 1370
+        ExplicitHeight = 215
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1359,8 +1359,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 263
-        ExplicitWidth = 1444
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDs
@@ -1733,8 +1731,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 258
-        ExplicitWidth = 1444
       end
       object cxGrid2: TcxGrid
         Left = 0
@@ -1745,8 +1741,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         PopupMenu = PopupMenu
         TabOrder = 3
         Visible = False
-        ExplicitTop = 430
-        ExplicitWidth = 1444
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MessageDS
@@ -1895,8 +1889,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         AlignSplitter = salBottom
         Control = cxGrid2
         Visible = False
-        ExplicitTop = 424
-        ExplicitWidth = 1444
       end
       object ExportXmlGrid: TcxGrid
         Left = 0
@@ -1906,8 +1898,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alBottom
         TabOrder = 5
         Visible = False
-        ExplicitTop = 568
-        ExplicitWidth = 1444
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1939,14 +1929,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1444
-        Height = 653
+        Width = 1370
+        Height = 610
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
@@ -2035,14 +2022,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
-        Width = 1444
-        Height = 653
+        Width = 1370
+        Height = 610
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -2372,7 +2356,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Width = 1370
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 1444
+    ExplicitTop = 7
+    ExplicitWidth = 1370
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2521,6 +2506,23 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShowHint = True
       TabOrder = 20
       Width = 106
+    end
+    object cxLabel8: TcxLabel
+      Left = 1077
+      Top = 5
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 1077
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 22
+      Width = 243
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -4361,6 +4363,21 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = cbMail
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -5300,7 +5317,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 688
+    Left = 696
     Top = 24
   end
   object spUpdateIsMain: TdsdStoredProc
@@ -6357,5 +6374,33 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 1056
     Top = 304
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 1184
+    Top = 65533
   end
 end

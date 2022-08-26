@@ -3,7 +3,7 @@ object PersonalTransportForm: TPersonalTransportForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1088#1086#1077#1079#1076#1072'>'
   ClientHeight = 396
-  ClientWidth = 773
+  ClientWidth = 922
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object PersonalTransportForm: TPersonalTransportForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 773
+    Width = 922
     Height = 89
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 773
     object edInvNumber: TcxTextEdit
       Left = 16
       Top = 20
@@ -124,29 +125,49 @@ object PersonalTransportForm: TPersonalTransportForm
       TabOrder = 11
       Width = 97
     end
+    object cxLabel5: TcxLabel
+      Left = 662
+      Top = 2
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 662
+      Top = 20
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 243
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 115
-    Width = 773
+    Width = 922
     Height = 281
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 773
     ClientRectBottom = 281
-    ClientRectRight = 773
+    ClientRectRight = 922
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 773
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 773
+        Width = 922
         Height = 257
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 773
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1284,6 +1305,21 @@ object PersonalTransportForm: TPersonalTransportForm
         Component = edServiceDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 400
@@ -1451,6 +1487,34 @@ object PersonalTransportForm: TPersonalTransportForm
         MultiSelectSeparator = ','
       end>
     Left = 416
+    Top = 13
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 752
     Top = 13
   end
 end

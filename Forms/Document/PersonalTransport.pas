@@ -101,6 +101,9 @@ type
     bbItemProtocol: TdxBarButton;
     cxLabel6: TcxLabel;
     edServiceDate: TcxDateEdit;
+    cxLabel5: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
   private
   public
   end;
