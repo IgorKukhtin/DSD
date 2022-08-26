@@ -1,4 +1,4 @@
-unit Report_Check_OrderFine;
+unit Report_CheckMobile;
 
 interface
 
@@ -25,38 +25,25 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridBandedTableView, cxGridDBBandedTableView, cxDBEdit;
+  cxGridBandedTableView, cxGridDBBandedTableView, cxDBEdit, cxImageComboBox;
 
 type
-  TReport_Check_OrderFineForm = class(TAncestorReportForm)
+  TReport_CheckMobileForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     ceUnit: TcxButtonEdit;
-    rdUnit: TRefreshDispatcher;
     GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
-    spGet_UserUnit: TdsdStoredProc;
-    actGet_UserUnit: TdsdExecStoredProc;
-    actRefreshStart: TdsdDataSetRefresh;
-    actRefreshIsPartion: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    actRefreshPartionPrice: TdsdDataSetRefresh;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    actRefreshJuridical: TdsdDataSetRefresh;
     spUpdate_Price_MCSIsClose: TdsdStoredProc;
     bbMoneyBoxSun: TdxBarButton;
-    InvNumber: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
-    StatusName: TcxGridDBColumn;
-    UnitCode: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
-    Fine: TcxGridDBColumn;
-    DateInsert: TcxGridDBColumn;
-    DateMessage: TcxGridDBColumn;
-    DateFine: TcxGridDBColumn;
-    Processing: TcxGridDBColumn;
-    UkraineAlarmInterval: TcxGridDBColumn;
+    cbIsUnComplete: TcxCheckBox;
+    cbIsErased: TcxCheckBox;
+    actUpdate: TdsdInsertUpdateAction;
+    dxBarButton2: TdxBarButton;
+    Color_UserReferals: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -64,7 +51,7 @@ type
   end;
 
 var
-  Report_Check_OrderFineForm: TReport_Check_OrderFineForm;
+  Report_CheckMobileForm: TReport_CheckMobileForm;
 
 implementation
 
@@ -72,5 +59,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_Check_OrderFineForm)
+  RegisterClass(TReport_CheckMobileForm)
 end.

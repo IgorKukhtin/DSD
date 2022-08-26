@@ -1141,10 +1141,15 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_LeftTheMarketForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMobileForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMobileForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMobileDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMobileDialogForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_LeftTheMarketForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_LeftTheMarketForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RestTermGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RestTermGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RestTermGoodsForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AnalysisBonusesIncomeDialogForm'));

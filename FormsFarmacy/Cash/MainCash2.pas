@@ -10068,8 +10068,8 @@ begin
 
           lPriceSale := CheckCDS.FieldByName('PriceSale').asCurrency;
           lPrice := CheckCDS.FieldByName('Price').asCurrency;
-          lTypeDiscount := CheckCDS.FieldByName('TypeDiscount').AsVariant;
-          lChangePercent := CheckCDS.FieldByName('ChangePercent').AsVariant;
+          lTypeDiscount := CheckCDS.FieldByName('TypeDiscount').AsInteger;
+          lChangePercent := CheckCDS.FieldByName('ChangePercent').asCurrency;
           nMultiplicity := CheckCDS.FieldByName('Multiplicity').asCurrency;
           nFixEndDate := CheckCDS.FieldByName('FixEndDate').AsVariant;
 
