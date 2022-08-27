@@ -25,7 +25,7 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , StartDate TDateTime, EndDate TDateTime
              , DebetRemains TFloat, KreditRemains TFloat
              , SaleSumm TFloat--, DefermentPaymentRemains TFloat
-             , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
+             , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat, SaleSumm6 TFloat
              , Condition TVarChar, StartContractDate TDateTime, Remains TFloat
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar, AreaName_Partner TVarChar
@@ -236,13 +236,27 @@ BEGIN
       --                         AND (tmpRemains.BranchId = inBranchId OR COALESCE (inBranchId, 0) = 0)
                              )
 
+/*
+1-30 день
+31-60 день
+61-90 день
+91-180 день
+181-366 день
+Больше 366 дней
+*/
          -- продажи по клиентам у которых есть долг
        , tmpSale_all AS (SELECT Container.Id
                               , Container.Remains
-                                -- за 60 дней
-                              , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '60 DAY' AND inOperDate - INTERVAL '1 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
-                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '60 DAY' AND inOperDate - INTERVAL '1 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
-                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '60 DAY' AND inOperDate - INTERVAL '1 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                -- за 30 дней
+                              , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '30 DAY' AND inOperDate - INTERVAL '1 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '30 DAY' AND inOperDate - INTERVAL '1 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '30 DAY' AND inOperDate - INTERVAL '1 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                          ELSE 0
+                                     END) AS SaleSumm_30
+                                -- за 31 -60 дней
+                              , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '60 DAY' AND inOperDate - INTERVAL '31 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '60 DAY' AND inOperDate - INTERVAL '31 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '60 DAY' AND inOperDate - INTERVAL '31 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
                                           ELSE 0
                                      END) AS SaleSumm_60
                                 -- за 61-90 дней
@@ -251,19 +265,25 @@ BEGIN
                                           WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '90 DAY' AND inOperDate - INTERVAL '61 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
                                           ELSE 0
                                      END) AS SaleSumm_90
-                                -- за 91-120 дней
-                              , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '120 DAY' AND inOperDate - INTERVAL '91 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
-                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '120 DAY' AND inOperDate - INTERVAL '91 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
-                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '120 DAY' AND inOperDate - INTERVAL '91 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                -- за 91-180 дней
+                              , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '180 DAY' AND inOperDate - INTERVAL '91 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '180 DAY' AND inOperDate - INTERVAL '91 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '180 DAY' AND inOperDate - INTERVAL '91 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
                                           ELSE 0
-                                     END) AS SaleSumm_120
-                                -- за 121-360 дней
-                              , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '360 DAY' AND inOperDate - INTERVAL '121 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
-                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '360 DAY' AND inOperDate - INTERVAL '121 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
-                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '360 DAY' AND inOperDate - INTERVAL '121 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                     END) AS SaleSumm_180
+                                -- за 181-366 дней
+                              , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '366 DAY' AND inOperDate - INTERVAL '181 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '366 DAY' AND inOperDate - INTERVAL '181 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate BETWEEN inOperDate - INTERVAL '366 DAY' AND inOperDate - INTERVAL '181 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
                                           ELSE 0
-                                     END) AS SaleSumm_360
-
+                                     END) AS SaleSumm_366   
+                                -- более 366 дней
+                             /* , SUM (CASE WHEN MIContainer.OperDate < inOperDate - INTERVAL '366 DAY' AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate < inOperDate - INTERVAL '366 DAY' AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                          WHEN MIContainer.OperDate < inOperDate - INTERVAL '366 DAY' AND MIContainer.MovementDescId IN (zc_Movement_SendDebt()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount
+                                          ELSE 0
+                                     END) AS SaleSumm_367
+                             */
                          FROM tmpRemains_all AS Container
                               INNER JOIN tmpMIContainer AS MIContainer
                                                         ON MIContainer.ContainerId = Container.Id
@@ -286,10 +306,11 @@ BEGIN
                               , tmpRemains_all.ContractDate
 
                               , SUM (COALESCE (tmpRemains_all.Remains,   0))                        AS Remains
+                              , SUM (COALESCE (tmpSale_all.SaleSumm_30,  0))                        AS SaleSumm_30
                               , SUM (COALESCE (tmpSale_all.SaleSumm_60,  0))                        AS SaleSumm_60
                               , SUM (COALESCE (tmpSale_all.SaleSumm_90,  0))                        AS SaleSumm_90
-                              , SUM (COALESCE (tmpSale_all.SaleSumm_120, 0))                        AS SaleSumm_120
-                              , SUM (COALESCE (tmpSale_all.SaleSumm_360, 0))                        AS SaleSumm_360
+                              , SUM (COALESCE (tmpSale_all.SaleSumm_180, 0))                        AS SaleSumm_180
+                              , SUM (COALESCE (tmpSale_all.SaleSumm_366, 0))                        AS SaleSumm_366
                          FROM tmpRemains_all
                               LEFT JOIN tmpSale_all ON tmpSale_all.Id = tmpRemains_all.Id
                          GROUP BY tmpRemains_all.AccountId
@@ -321,36 +342,43 @@ BEGIN
 
                               , tmpRemains_all.Remains
 
-                              , CASE WHEN tmpRemains_all.Remains >= tmpRemains_all.SaleSumm_60
-                                          THEN tmpRemains_all.SaleSumm_60
+                              , CASE WHEN tmpRemains_all.Remains >= tmpRemains_all.SaleSumm_30
+                                          THEN tmpRemains_all.SaleSumm_30
                                      WHEN tmpRemains_all.Remains > 0
                                           THEN tmpRemains_all.Remains
                                      ELSE 0
+                                END AS SaleSumm_30
+
+                              , CASE WHEN tmpRemains_all.Remains >= tmpRemains_all.SaleSumm_30 + tmpRemains_all.SaleSumm_60
+                                          THEN tmpRemains_all.SaleSumm_60
+                                     WHEN tmpRemains_all.Remains > tmpRemains_all.SaleSumm_30
+                                          THEN tmpRemains_all.Remains - tmpRemains_all.SaleSumm_30
+                                     ELSE 0
                                 END AS SaleSumm_60
 
-                              , CASE WHEN tmpRemains_all.Remains >= tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90
+                              , CASE WHEN tmpRemains_all.Remains >= tmpRemains_all.SaleSumm_30 + tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90
                                           THEN tmpRemains_all.SaleSumm_90
                                      WHEN tmpRemains_all.Remains > tmpRemains_all.SaleSumm_60
-                                          THEN tmpRemains_all.Remains - tmpRemains_all.SaleSumm_60
+                                          THEN tmpRemains_all.Remains - tmpRemains_all.SaleSumm_30 - tmpRemains_all.SaleSumm_60
                                       ELSE 0
                                 END AS SaleSumm_90
 
-                              , CASE WHEN tmpRemains_all.Remains >= tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90 + tmpRemains_all.SaleSumm_120
-                                          THEN tmpRemains_all.SaleSumm_120
-                                     WHEN tmpRemains_all.Remains > tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90
-                                          THEN tmpRemains_all.Remains - tmpRemains_all.SaleSumm_60 - tmpRemains_all.SaleSumm_90
+                              , CASE WHEN tmpRemains_all.Remains >= tmpRemains_all.SaleSumm_30 + tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90 + tmpRemains_all.SaleSumm_180
+                                          THEN tmpRemains_all.SaleSumm_180
+                                     WHEN tmpRemains_all.Remains > tmpRemains_all.SaleSumm_30 + tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90
+                                          THEN tmpRemains_all.Remains - tmpRemains_all.SaleSumm_30 - tmpRemains_all.SaleSumm_60 - tmpRemains_all.SaleSumm_90
                                       ELSE 0
-                                END AS SaleSumm_120
+                                END AS SaleSumm_180
 
-                              , CASE WHEN tmpRemains_all.Remains >= tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90 + tmpRemains_all.SaleSumm_120 + tmpRemains_all.SaleSumm_360
-                                          THEN tmpRemains_all.SaleSumm_360
-                                     WHEN tmpRemains_all.Remains > tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90 + tmpRemains_all.SaleSumm_120
-                                          THEN tmpRemains_all.Remains - tmpRemains_all.SaleSumm_60 - tmpRemains_all.SaleSumm_90 - tmpRemains_all.SaleSumm_120
+                              , CASE WHEN tmpRemains_all.Remains >= tmpRemains_all.SaleSumm_30 + tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90 + tmpRemains_all.SaleSumm_180 + tmpRemains_all.SaleSumm_366
+                                          THEN tmpRemains_all.SaleSumm_366
+                                     WHEN tmpRemains_all.Remains > tmpRemains_all.SaleSumm_30 + tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90 + tmpRemains_all.SaleSumm_180
+                                          THEN tmpRemains_all.Remains - tmpRemains_all.SaleSumm_30 - tmpRemains_all.SaleSumm_60 - tmpRemains_all.SaleSumm_90 - tmpRemains_all.SaleSumm_180
                                       ELSE 0
-                                END AS SaleSumm_360
+                                END AS SaleSumm_366
 
-                              , CASE WHEN tmpRemains_all.Remains >= tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90 + tmpRemains_all.SaleSumm_120 + tmpRemains_all.SaleSumm_360
-                                          THEN tmpRemains_all.Remains - tmpRemains_all.SaleSumm_60 - tmpRemains_all.SaleSumm_90 - tmpRemains_all.SaleSumm_120 - tmpRemains_all.SaleSumm_360
+                              , CASE WHEN tmpRemains_all.Remains >= tmpRemains_all.SaleSumm_30 + tmpRemains_all.SaleSumm_60 + tmpRemains_all.SaleSumm_90 + tmpRemains_all.SaleSumm_180 + tmpRemains_all.SaleSumm_366
+                                          THEN tmpRemains_all.Remains - tmpRemains_all.SaleSumm_30 -tmpRemains_all.SaleSumm_60 - tmpRemains_all.SaleSumm_90 - tmpRemains_all.SaleSumm_180 - tmpRemains_all.SaleSumm_366
                                      ELSE 0
                                 END AS SaleSumm
 
@@ -397,22 +425,25 @@ BEGIN
                            , (CASE WHEN 1 * tmpData_All.Remains > 0 THEN 1 * tmpData_All.Remains ELSE 0 END) ::TFloat AS DebetRemains
                            , (CASE WHEN 1 * tmpData_All.Remains > 0 THEN 0 ELSE -1 * tmpData_All.Remains END)::TFloat AS KreditRemains
 
-                           , (COALESCE (tmpData_All.SaleSumm_60,  0)
+                           , (COALESCE (tmpData_All.SaleSumm_30,  0)
+                            + COALESCE (tmpData_All.SaleSumm_60,  0)
                             + COALESCE (tmpData_All.SaleSumm_90,  0)
-                            + COALESCE (tmpData_All.SaleSumm_120, 0)
-                            + COALESCE (tmpData_All.SaleSumm_360, 0)
+                            + COALESCE (tmpData_All.SaleSumm_180, 0)
+                            + COALESCE (tmpData_All.SaleSumm_366, 0)
                             + COALESCE (tmpData_All.SaleSumm,     0)
                              ) :: TFloat AS SaleSumm
 
-                           , tmpData_All.SaleSumm_60  ::TFloat AS SaleSumm1
+                           , tmpData_All.SaleSumm_30  ::TFloat AS SaleSumm1
+                           
+                           , tmpData_All.SaleSumm_60  ::TFloat AS SaleSumm2
 
-                           , tmpData_All.SaleSumm_90  ::TFloat AS SaleSumm2
+                           , tmpData_All.SaleSumm_90  ::TFloat AS SaleSumm3
 
-                           , tmpData_All.SaleSumm_120 ::TFloat AS SaleSumm3
+                           , tmpData_All.SaleSumm_180 ::TFloat AS SaleSumm4
 
-                           , tmpData_All.SaleSumm_360 ::TFloat AS SaleSumm4
+                           , tmpData_All.SaleSumm_366 ::TFloat AS SaleSumm5
 
-                           , tmpData_All.SaleSumm     ::TFloat AS SaleSumm5
+                           , tmpData_All.SaleSumm     ::TFloat AS SaleSumm6
 
                            , (tmpData_All.DayCount||' '|| CASE WHEN tmpData_All.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendar()
                                                                THEN 'К.дн.'
@@ -516,14 +547,14 @@ BEGIN
                    , tmpData.StartDate, tmpData.EndDate
                    , tmpData.DebetRemains, tmpData.KreditRemains
                    , tmpData.SaleSumm--, tmpData.DefermentPaymentRemains
-                   , tmpData.SaleSumm1, tmpData.SaleSumm2, tmpData.SaleSumm3, tmpData.SaleSumm4, tmpData.SaleSumm5
+                   , tmpData.SaleSumm1, tmpData.SaleSumm2, tmpData.SaleSumm3, tmpData.SaleSumm4, tmpData.SaleSumm5, tmpData.SaleSumm6
                    , tmpData.Condition, tmpData.StartContractDate, tmpData.Remains
                    , tmpData.InfoMoneyGroupName, tmpData.InfoMoneyDestinationName, tmpData.InfoMoneyCode, tmpData.InfoMoneyName
                    , tmpData.AreaName, tmpData.AreaName_Partner
            FROM tmpData
            WHERE (tmpData.DebetRemains <> 0 OR tmpData.KreditRemains <> 0
                OR tmpData.SaleSumm <> 0 --or tmpData.DefermentPaymentRemains <> 0
-               OR tmpData.SaleSumm1 <> 0 OR tmpData.SaleSumm2 <> 0 OR tmpData.SaleSumm3 <> 0 OR tmpData.SaleSumm4 <> 0 OR tmpData.SaleSumm5 <> 0
+               OR tmpData.SaleSumm1 <> 0 OR tmpData.SaleSumm2 <> 0 OR tmpData.SaleSumm3 <> 0 OR tmpData.SaleSumm4 <> 0 OR tmpData.SaleSumm5 <> 0 OR tmpData.SaleSumm6 <> 0
                OR tmpData.Remains <> 0
                  )
              AND (tmpData.PaidKindId = inPaidKindId OR inPaidKindId = 0)
@@ -539,7 +570,8 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 27.08.22         *
  10.07.20         * gpReport_JuridicalDefermentDebet
 */
 
