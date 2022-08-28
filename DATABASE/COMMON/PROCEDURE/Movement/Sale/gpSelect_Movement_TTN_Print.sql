@@ -288,7 +288,11 @@ BEGIN
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
 
            , OH_JuridicalDetails_To.FullName            AS JuridicalName_To
-           , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
+           , CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_to.ValueData <> ''
+                       THEN ObjectString_Unit_Address_to.ValueData
+                  ELSE OH_JuridicalDetails_To.JuridicalAddress
+             END :: TVarChar AS JuridicalAddress_To
+
            , OH_JuridicalDetails_To.OKPO                AS OKPO_To
            , (CASE WHEN ObjectString_PostalCode.ValueData  <> '' THEN ObjectString_PostalCode.ValueData || ' '      ELSE '' END
            || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
@@ -297,7 +301,11 @@ BEGIN
              ) :: TVarChar            AS PartnerAddress_To
 
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
-           , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
+           , CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_from.ValueData <> ''
+                       THEN ObjectString_Unit_Address_from.ValueData
+                  ELSE OH_JuridicalDetails_From.JuridicalAddress
+             END :: TVarChar AS JuridicalAddress_From
+
            , OH_JuridicalDetails_From.OKPO              AS OKPO_From
 
            , COALESCE (OH_JuridicalDetails_car.FullName, OH_JuridicalDetails_From.FullName)                 :: TVarChar AS JuridicalName_car
@@ -436,6 +444,15 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_Address_from
+                                   ON ObjectString_Unit_Address_from.ObjectId = MovementLinkObject_From.ObjectId
+                                  AND ObjectString_Unit_Address_from.DescId = zc_ObjectString_Unit_Address()
+                                  and 1=0
+            LEFT JOIN ObjectString AS ObjectString_Unit_Address_to
+                                   ON ObjectString_Unit_Address_to.ObjectId = MovementLinkObject_To.ObjectId
+                                  AND ObjectString_Unit_Address_to.DescId = zc_ObjectString_Unit_Address()
+                                  and 1=0
 
             LEFT JOIN ObjectString AS ObjectString_ToAddress
                                    ON ObjectString_ToAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
@@ -755,5 +772,4 @@ $BODY$
  08.01.15                                                       *
 */
 -- тест
---select * from gpSelect_Movement_TTN_Print(inMovementId := 15691934 ,  inSession := '5');
---FETCH ALL "<unnamed portal 96>";
+-- SELECT * FROM gpSelect_Movement_TTN_Print(inMovementId := 15691934 ,  inSession := '5'); --FETCH ALL "<unnamed portal 96>";
