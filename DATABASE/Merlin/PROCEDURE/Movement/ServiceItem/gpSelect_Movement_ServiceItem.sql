@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_ServiceItem()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ServiceItem (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ServiceItem (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ServiceItem(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
+    IN inIsDate_InsUpd     Boolean ,
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -232,7 +234,8 @@ BEGIN
                                        AND MIFloat_Area_after.DescId = zc_MIFloat_Area()
 
      --WHERE COALESCE (tmpMI_before.DateEnd_find + INTERVAL '1 DAY', tmpMI.DateEnd) BETWEEN inStartDate AND inEndDate
-       WHERE tmpMI.DateEnd BETWEEN inStartDate AND inEndDate
+       WHERE (inIsDate_InsUpd = FALSE AND tmpMI.DateEnd BETWEEN inStartDate AND inEndDate)
+          OR (inIsDate_InsUpd = TRUE AND (MovementDate_Insert.ValueData BETWEEN inStartDate AND inEndDate OR MovementDate_Update.ValueData BETWEEN inStartDate AND inEndDate) )
        -- WHERE tmpMI.MovementId = 291971
       ;
 
@@ -248,4 +251,4 @@ $BODY$
  */
 
 -- тест
--- SELECT DateStart, DateEnd, * FROM gpSelect_Movement_ServiceItem (inStartDate:= '01.01.2021', inEndDate:= '01.01.2022', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT DateStart, DateEnd, * FROM gpSelect_Movement_ServiceItem (inStartDate:= '01.01.2021', inEndDate:= '01.01.2022', inIsDate_InsUpd:=FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

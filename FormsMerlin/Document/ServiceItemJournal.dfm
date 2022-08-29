@@ -22,7 +22,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     Left = 0
     Top = 0
     Width = 879
-    Height = 31
+    Height = 51
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
@@ -76,16 +76,25 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
     end
+    object edIsDate: TcxCheckBox
+      Left = 10
+      Top = 26
+      Action = actRefresh_InsUpd
+      TabOrder = 6
+      Width = 207
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
+    Top = 77
     Width = 879
-    Height = 382
+    Height = 362
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 57
+    ExplicitHeight = 382
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -776,6 +785,19 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     Images = dmMain.ImageList
     Left = 80
     Top = 64
+    object actRefresh_InsUpd: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1076#1083#1103' '#1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+      Hint = #1076#1083#1103' '#1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -785,7 +807,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1076#1083#1103' '#1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
@@ -1391,6 +1413,14 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDate_InsUpd'
+        Value = Null
+        Component = edIsDate
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
