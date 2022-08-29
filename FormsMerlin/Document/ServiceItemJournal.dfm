@@ -3,7 +3,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
   ClientHeight = 439
-  ClientWidth = 879
+  ClientWidth = 1005
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,51 +21,51 @@ object ServiceItemJournalForm: TServiceItemJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 879
-    Height = 51
+    Width = 1005
+    Height = 54
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 109
       Top = 5
       EditValue = 44562d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 85
+      Width = 81
     end
     object deEnd: TcxDateEdit
-      Left = 310
+      Left = 309
       Top = 5
       EditValue = 44562d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 85
+      Width = 81
     end
     object cxLabel1: TcxLabel
-      Left = 10
+      Left = 17
       Top = 6
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel2: TcxLabel
-      Left = 200
-      Top = 6
+      Left = 198
+      Top = 7
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object edSearchUnitName: TcxTextEdit
-      Left = 531
+      Left = 506
       Top = 5
       TabOrder = 4
       DesignSize = (
-        126
+        129
         21)
-      Width = 126
+      Width = 129
     end
     object lbSearchName: TcxLabel
-      Left = 422
+      Left = 401
       Top = 4
       Caption = #1055#1086#1080#1089#1082' '#1054#1090#1076#1077#1083' : '
       ParentFont = False
@@ -77,8 +77,8 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Style.IsFontAssigned = True
     end
     object edIsDate: TcxCheckBox
-      Left = 10
-      Top = 26
+      Left = 17
+      Top = 29
       Action = actRefresh_InsUpd
       TabOrder = 6
       Width = 207
@@ -86,14 +86,15 @@ object ServiceItemJournalForm: TServiceItemJournalForm
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 77
-    Width = 879
-    Height = 362
+    Top = 80
+    Width = 1005
+    Height = 359
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
     ExplicitTop = 57
+    ExplicitWidth = 879
     ExplicitHeight = 382
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -588,7 +589,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 48
-    Top = 64
+    Top = 80
     DockControlHeights = (
       0
       0
@@ -784,7 +785,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 80
-    Top = 64
+    Top = 72
     object actRefresh_InsUpd: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1456,7 +1457,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 112
-    Top = 64
+    Top = 80
     object N3: TMenuItem
       Action = actInsert
     end

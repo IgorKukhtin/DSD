@@ -1,9 +1,11 @@
 DROP FUNCTION IF EXISTS gpInsert_Movement_Service_byServiceItem (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Movement_Service_byServiceItem (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Service_byServiceItem (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_Service_byServiceItem(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
+    IN inInfoMoneyId       Integer ,
     IN inSession           TVarChar    --  сессия пользователя
 )
 RETURNS VOID
@@ -31,7 +33,7 @@ BEGIN
                                    FROM tmpListDate
                                         CROSS JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate    := tmpListDate.OperDate
                                                                                            , inUnitId      := 0
-                                                                                           , inInfoMoneyId := 76878 -- _Аренда
+                                                                                           , inInfoMoneyId := inInfoMoneyId --76878 -- _Аренда
                                                                                            , inSession     := inSession
                                                                                             ) AS gpSelect
                                    WHERE gpSelect.Amount > 0
@@ -59,6 +61,7 @@ BEGIN
                                 WHERE Movement.DescId   = zc_Movement_Service()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                  AND (COALESCE (inInfoMoneyId,0) = 0 OR MILinkObject_InfoMoney.ObjectId = inInfoMoneyId)
                                )
 
            -- Список Начислений

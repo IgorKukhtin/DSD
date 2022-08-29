@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_Service()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Service(
     IN inStartDate         TDateTime , --
-    IN inEndDate           TDateTime , --
+    IN inEndDate           TDateTime , -- 
+    IN inInfoMoneyId       Integer ,
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -45,9 +47,14 @@ BEGIN
                            )
 
          , tmpMI AS (SELECT MovementItem.*
-                     FROM MovementItem
+                          , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
+                     FROM MovementItem 
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                           ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()             
                      WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                        AND MovementItem.DescId = zc_MI_Master()
+                       AND (COALESCE (inInfoMoneyId,0) = 0 OR MILinkObject_InfoMoney.ObjectId = inInfoMoneyId)
                      )
 
 
@@ -90,10 +97,7 @@ BEGIN
                                    ON ObjectString_Unit_GroupNameFull.ObjectId = Object_Unit.Id
                                   AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
             
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MovementItem.InfoMoneyId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
                                              ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
@@ -133,4 +137,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Service (inStartDate:= '30.01.2015', inEndDate:= '01.01.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Movement_Service (inStartDate:= '30.01.2015', inEndDate:= '01.01.2015', inInfoMoneyId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

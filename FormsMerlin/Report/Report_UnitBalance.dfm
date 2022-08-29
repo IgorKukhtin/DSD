@@ -1208,10 +1208,10 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoneyTreeForm'
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoneyTreeForm'
+    FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1249,6 +1249,6 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
         MultiSelectSeparator = ','
       end>
     Left = 688
-    Top = 65533
+    Top = 29
   end
 end

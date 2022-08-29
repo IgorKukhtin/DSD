@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_ServiceItem (TDateTime, TDateTime, Boo
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ServiceItem(
     IN inStartDate         TDateTime , --
-    IN inEndDate           TDateTime , --
-    IN inIsDate_InsUpd     Boolean ,
+    IN inEndDate           TDateTime , -- 
+    IN inIsDate_InsUpd     Boolean ,   -- для Дата создания/Корректировки
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
