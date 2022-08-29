@@ -91,7 +91,7 @@ BEGIN
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
             --
-            LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
             LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
                                    ON ObjectString_Unit_GroupNameFull.ObjectId = Object_Unit.Id
