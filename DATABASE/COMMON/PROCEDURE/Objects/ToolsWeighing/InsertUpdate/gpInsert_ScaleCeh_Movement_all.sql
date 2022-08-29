@@ -26,6 +26,8 @@ $BODY$
    DECLARE vbIsProductionIn Boolean;
    DECLARE vbIsReWork Boolean;
    DECLARE vbWeighingNumber TFloat;
+
+   DECLARE vbIsUpak_UnComplete Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement_all());
@@ -148,6 +150,20 @@ BEGIN
              vbIsProductionIn:= TRUE;
          END IF;
      END IF;
+
+
+     -- Схема с Упаковокой - документ будет не проведен
+     vbIsUpak_UnComplete:= EXISTS (SELECT 1
+                                   FROM Object_Unit_Scale_upak_View
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                          ON MovementLinkObject_From.MovementId = inMovementId
+                                                                         AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                                                         AND MovementLinkObject_From.ObjectId   = Object_Unit_Scale_upak_View.FromId
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                          ON MovementLinkObject_To.MovementId = inMovementId
+                                                                         AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                         AND MovementLinkObject_To.ObjectId   = Object_Unit_Scale_upak_View.ToId
+                                  );
 
 
      -- для zc_Movement_ProductionUnion + если zc_Enum_DocumentKind_PackDiff
@@ -1184,7 +1200,7 @@ BEGIN
                                          , inUserId         := vbUserId);
      ELSE
           -- <Перемещение>
-          IF vbMovementDescId = zc_Movement_Send()
+          IF vbMovementDescId = zc_Movement_Send() AND vbIsUpak_UnComplete = FALSE
           THEN
               -- Проводим Документ
               PERFORM gpComplete_Movement_Send (inMovementId     := vbMovementId_begin

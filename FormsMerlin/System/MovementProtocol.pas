@@ -51,6 +51,7 @@ type
     ProtocolDataCDSFieldValue: TStringField;
     ProtocolDataDS: TDataSource;
     colisInsert: TcxGridDBColumn;
+    Ord: TcxGridDBColumn;
   private
     { Private declarations }
   public

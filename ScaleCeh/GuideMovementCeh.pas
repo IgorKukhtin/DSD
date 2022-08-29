@@ -12,7 +12,17 @@ uses
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridLevel,
   cxClasses, cxGridCustomView, cxGrid, cxImageComboBox, dsdAddOn, Vcl.ActnList
- ,DataModul, dsdAction;
+ ,DataModul, dsdAction, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TGuideMovementCehForm = class(TForm)
@@ -33,7 +43,7 @@ type
     deEnd: TcxDateEdit;
     cxDBGrid: TcxGrid;
     cxDBGridDBTableView: TcxGridDBTableView;
-    Status: TcxGridDBColumn;
+    StatusCode: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     WeighingNumber: TcxGridDBColumn;
@@ -66,6 +76,11 @@ type
     DocumentKindName: TcxGridDBColumn;
     SubjectDocName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    StatusCode_parent: TcxGridDBColumn;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    actComplete: TAction;
+    actUnComplete: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -80,6 +95,8 @@ type
     procedure bbPrintClick(Sender: TObject);
     procedure bbViewMIClick(Sender: TObject);
     procedure cbPrintMovementClick(Sender: TObject);
+    procedure actCompleteExecute(Sender: TObject);
+    procedure actUnCompleteExecute(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -269,6 +286,44 @@ begin
      if Checked then ModalResult:=mrOK;
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideMovementCehForm.actCompleteExecute(Sender: TObject);
+var execParams:TParams;
+    MovementId:String;
+begin
+     MovementId:= CDS.FieldByName('Id').AsString;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'MovementId',ftInteger,CDS.FieldByName('MovementId_parent').AsInteger);
+     ParamAddValue(execParams,'StatusId',ftInteger,zc_Enum_Status_Complete);
+     //
+     DMMainScaleCehForm.gpUpdate_ScaleCeh_Movement_Status(execParams);
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+     if MovementId <> '' then
+        CDS.Locate('Id',MovementId,[loCaseInsensitive]);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementCehForm.actUnCompleteExecute(Sender: TObject);
+var execParams:TParams;
+    MovementId:String;
+begin
+     MovementId:= CDS.FieldByName('Id').AsString;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'MovementId',ftInteger,CDS.FieldByName('MovementId_parent').AsInteger);
+     ParamAddValue(execParams,'StatusId',ftInteger,zc_Enum_Status_UnComplete);
+     //
+     DMMainScaleCehForm.gpUpdate_ScaleCeh_Movement_Status(execParams);
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+     if MovementId <> '' then
+        CDS.Locate('Id',MovementId,[loCaseInsensitive]);
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideMovementCehForm.actExitExecute(Sender: TObject);
 begin
      Close;
@@ -284,6 +339,7 @@ begin
        Params.AddParam('inStartDate', ftDateTime, ptInput, 0);
        Params.AddParam('inEndDate', ftDateTime, ptInput,0);
        Params.AddParam('inIsComlete', ftBoolean, ptInput,FALSE);
+       Params.AddParam('inBranchCode', ftInteger, ptInput,SettingMain.BranchCode);
        OutputType:=otDataSet;
   end;
 end;

@@ -94,6 +94,7 @@ $BODY$
 -- -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_OrderExternal',                inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsBalance',                 inSession:= zfCalc_UserAdmin()); -- + !!!
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_JuridicalDefermentPayment',    inSession:= zfCalc_UserAdmin()); -- + !!!
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_JuridicalDefermentPayment365', inSession:= zfCalc_UserAdmin()); -- + !!!
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_JuridicalDefermentDebet',      inSession:= zfCalc_UserAdmin()); -- + !!!
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_JuridicalSold',                inSession:= zfCalc_UserAdmin()); -- + !!!
 

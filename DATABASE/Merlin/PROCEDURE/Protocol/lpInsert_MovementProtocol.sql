@@ -14,9 +14,10 @@ BEGIN
    (SELECT D.FieldXML
     FROM
    (SELECT '<Field FieldName = "№ документа" FieldValue = "' || zfStrToXmlStr(Movement.InvNumber) || '"/>'
-        || '<Field FieldName = "Дата документа" FieldValue = "' || DATE (Movement.OperDate) || '"/>'
+        || '<Field FieldName = '  || CASE WHEN Movement.DescId = zc_Movement_ServiceItem() THEN '"Дата, до которой действует условие"' ELSE '"Дата документа"' END
+                                  || ' FieldValue = "' || zfConvert_DateToString (Movement.OperDate) || '"/>'
         || '<Field FieldName = "Статус" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>'
-        || CASE WHEN Movement.AccessKeyId <> 0 THEN '<Field FieldName = "Доступ" FieldValue = "' || Movement.AccessKeyId :: TVarChar || '"/>' ELSE '' END
+      --|| CASE WHEN Movement.AccessKeyId <> 0 THEN '<Field FieldName = "Доступ" FieldValue = "' || Movement.AccessKeyId :: TVarChar || '"/>' ELSE '' END
         || CASE WHEN Movement.ParentId <> 0 THEN '<Field FieldName = "Главный" FieldValue = "' || COALESCE (Movement_parent.InvNumber, 'NULL') || '"/>' ELSE '' END
            AS FieldXML
          , 1 AS GroupId

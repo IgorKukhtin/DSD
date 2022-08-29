@@ -1,15 +1,17 @@
 -- Function: gpSelect_Scale_MovementCeh()
 
-DROP FUNCTION IF EXISTS gpSelect_Scale_MovementCeh (TDateTime, TDateTime, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Scale_MovementCeh (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Scale_MovementCeh (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Scale_MovementCeh(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inIsComlete   Boolean ,
+    IN inBranchCode  Integer   , --
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
+             , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar, StatusCode_parent Integer, StatusName_parent TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementDescNumber Integer, MovementDescId Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
@@ -66,6 +68,8 @@ BEGIN
                          THEN '*' || Movement_Parent.InvNumber
                     ELSE ''
                END :: TVarChar AS InvNumber_parent
+             , Object_Status_parent.ObjectCode          AS StatusCode_parent
+             , Object_Status_parent.ValueData           AS StatusName_parent
 
              , MovementDate_StartWeighing.ValueData  AS StartWeighing
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
@@ -92,19 +96,14 @@ BEGIN
              , Object_User.ValueData              AS UserName
 
        FROM tmpStatus
-            JOIN Movement ON Movement.DescId = zc_Movement_WeighingProduction()
+            JOIN Movement ON Movement.DescId IN (zc_Movement_WeighingProduction(), zc_Movement_WeighingPartner())
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                          AND Movement.StatusId = tmpStatus.StatusId
-
-            INNER JOIN MovementLinkObject AS MovementLinkObject_User
-                                          ON MovementLinkObject_User.MovementId = Movement.Id
-                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-                                         AND (MovementLinkObject_User.ObjectId = vbUserId OR vbUserId = 0)
-            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
+            LEFT JOIN Object AS Object_Status_parent ON Object_Status_parent.Id = Movement_Parent.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
                                       ON MovementBoolean_isIncome.MovementId =  Movement.Id
@@ -163,6 +162,18 @@ BEGIN
                                         AND MovementLinkObject_SubjectDoc.DescId     = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
+            INNER JOIN MovementLinkObject AS MovementLinkObject_User
+                                          ON MovementLinkObject_User.MovementId = Movement.Id
+                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                                         AND (MovementLinkObject_User.ObjectId = vbUserId OR vbUserId = 0
+                                            OR (MovementLinkObject_From.ObjectId = 8459 -- Розподільчий комплекс
+                                            AND MovementLinkObject_To.ObjectId   = 8451 -- ЦЕХ упаковки
+                                            AND inIsComlete                      = TRUE
+                                            AND inBranchCode                     = 101
+                                               )
+                                             )
+            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+
        ORDER BY COALESCE (MovementDate_EndWeighing.ValueData, MovementDate_StartWeighing.ValueData) DESC
               , MovementDate_StartWeighing.ValueData DESC
       ;
@@ -170,7 +181,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Scale_MovementCeh (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -179,4 +189,4 @@ ALTER FUNCTION gpSelect_Scale_MovementCeh (TDateTime, TDateTime, Boolean, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_MovementCeh (inStartDate:= '01.05.2016', inEndDate:= '01.05.2016', inIsComlete:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_MovementCeh (inStartDate:= '01.05.2016', inEndDate:= '01.05.2016', inIsComlete:= TRUE, inBranchCode:= 101, inSession:= zfCalc_UserAdmin())

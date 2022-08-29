@@ -45,6 +45,8 @@ $BODY$
    DECLARE vbOperDate_StartBegin TDateTime;
 
    DECLARE vbKeyData TVarChar;
+
+   DECLARE vbIsUpak_UnComplete Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
@@ -95,6 +97,19 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.В заявке указан неправильный № договора = <%> <%>.', lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_Contract())), lfGet_Object_ValueData (zc_Enum_InfoMoneyDestination_21500());
      END IF;
 
+
+     -- Схема с Упаковокой - документ будет не проведен
+     vbIsUpak_UnComplete:= EXISTS (SELECT 1
+                                   FROM Object_Unit_Scale_upak_View
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                          ON MovementLinkObject_From.MovementId = inMovementId
+                                                                         AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                                                         AND MovementLinkObject_From.ObjectId   = Object_Unit_Scale_upak_View.FromId
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                          ON MovementLinkObject_To.MovementId = inMovementId
+                                                                         AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                         AND MovementLinkObject_To.ObjectId   = Object_Unit_Scale_upak_View.ToId
+                                  );
 
      -- определили
      vbRetailId:= (SELECT ObjectLink_Juridical_Retail.ChildObjectId
@@ -1700,7 +1715,7 @@ BEGIN
                                                    , inUserId         := vbUserId);
                ELSE
                -- <Перемещение>
-               IF vbMovementDescId = zc_Movement_Send()
+               IF vbMovementDescId = zc_Movement_Send() AND vbIsUpak_UnComplete = FALSE
                THEN
                    -- Проводим Документ
                    PERFORM gpComplete_Movement_Send (inMovementId     := vbMovementId_begin
@@ -1891,7 +1906,7 @@ BEGIN
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
- IF vbUserId = 5 AND 1=1 THEN
+ IF vbUserId = 5 AND 1=0 THEN
 -- IF inSession = '1162887' AND 1=1 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %  %  %  % % % % %'
   , vbIsSendOnPriceIn -- inBranchCode -- 'Повторите действие через 3 мин.'

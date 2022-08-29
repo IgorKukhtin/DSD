@@ -18,9 +18,14 @@ BEGIN
   FROM
    (SELECT D.FieldXML
     FROM
-   (SELECT '<Field FieldName = "Ключ объекта" FieldValue = "' || MovementItem.ObjectId || '"/>'
-        || '<Field FieldName = "Объект" FieldValue = "' || zfStrToXmlStr (COALESCE (Object.ValueData, 'NULL')) || '"/>'
-        || '<Field FieldName = "Значение" FieldValue = "' || MovementItem.Amount || '"/>'
+   (SELECT '<Field FieldName = ' || CASE WHEN Object.DescId = zc_Object_Unit() THEN '"Ключ Отдел"' WHEN Object.DescId = zc_Object_Cash() THEN '"Ключ Касса"' ELSE '"Ключ объекта"' END
+                                 || ' FieldValue = "' || MovementItem.ObjectId || '"/>'
+        || '<Field FieldName = ' || CASE WHEN Object.DescId = zc_Object_Unit() THEN '"Отдел"' WHEN Object.DescId = zc_Object_Cash() THEN '"Касса"' ELSE '"Объект"' END
+                                 || ' FieldValue = "' || zfStrToXmlStr (COALESCE (CASE WHEN Object.DescId = zc_Object_Unit()
+                                                                                       THEN COALESCE (OS.ValueData, '') || ' ' || Object.ValueData
+                                                                                       ELSE Object.ValueData
+                                                                                  END, 'NULL')) || '"/>'
+        || '<Field FieldName = "Сумма" FieldValue = "' || zfConvert_FloatToString (MovementItem.Amount) || '"/>'
         || CASE WHEN MovementItem.ParentId <> 0 THEN '<Field FieldName = "ParentId" FieldValue = "' || MovementItem.ParentId || '"/>' ELSE '' END
         || '<Field FieldName = "Удален" FieldValue = "' || MovementItem.isErased || '"/>'
            AS FieldXML
@@ -28,7 +33,9 @@ BEGIN
          , MovementItem.DescId
     FROM MovementItem
          LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+         LEFT JOIN ObjectString AS OS ON OS.ObjectId = MovementItem.ObjectId AND OS.DescId = zc_ObjectString_Unit_GroupNameFull()
     WHERE MovementItem.Id = inMovementItemId
+
    UNION
     SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemFloatDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementItemFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 2 AS GroupId
@@ -37,21 +44,37 @@ BEGIN
          INNER JOIN MovementItemFloatDesc ON MovementItemFloatDesc.Id = MovementItemFloat.DescId
     WHERE MovementItemFloat.MovementItemId = inMovementItemId
       AND inIsErased IS NULL
+
    UNION
-    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemDateDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementItemDate.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemDateDesc.ItemName) || '" FieldValue = "'
+                                  || COALESCE (CASE WHEN MovementItemDate.DescId IN (zc_MIDate_Insert()
+                                                                                   , zc_MIDate_Update()
+                                                                                    )
+                                                     THEN zfConvert_DateTimeShortToString (MovementItemDate.ValueData)
+                                                ELSE zfConvert_DateToString (MovementItemDate.ValueData)
+                                               END, 'NULL') || '"/>' AS FieldXML 
          , 3 AS GroupId
          , MovementItemDate.DescId
     FROM MovementItemDate
          INNER JOIN MovementItemDateDesc ON MovementItemDateDesc.Id = MovementItemDate.DescId
     WHERE MovementItemDate.MovementItemId = inMovementItemId
       AND inIsErased IS NULL
+
    UNION
-    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemLinkObjectDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(CASE WHEN Object.ValueData = '' THEN Object.Id :: TVarChar ELSE COALESCE (Object.ValueData, 'NULL') END) || '"/>' AS FieldXML
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemLinkObjectDesc.ItemName)
+        || '" FieldValue = "' || zfStrToXmlStr(CASE WHEN Object.ValueData = '' THEN Object.Id :: TVarChar
+                                                    ELSE COALESCE (CASE WHEN Object.DescId = zc_Object_Unit()
+                                                                        THEN COALESCE (OS.ValueData, '') || ' ' || Object.ValueData
+                                                                        ELSE Object.ValueData
+                                                                   END, 'NULL')
+                                                                        
+                                               END) || '"/>' AS FieldXML
          , 4 AS GroupId
          , MovementItemLinkObject.DescId
     FROM MovementItemLinkObject
          INNER JOIN MovementItemLinkObjectDesc ON MovementItemLinkObjectDesc.Id = MovementItemLinkObject.DescId
          LEFT JOIN Object ON Object.Id = MovementItemLinkObject.ObjectId
+         LEFT JOIN ObjectString AS OS ON OS.ObjectId = MovementItemLinkObject.ObjectId AND OS.DescId = zc_ObjectString_Unit_GroupNameFull()
     WHERE MovementItemLinkObject.MovementItemId = inMovementItemId
       AND inIsErased IS NULL
    UNION

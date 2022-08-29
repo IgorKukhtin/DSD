@@ -213,6 +213,9 @@ var
   zc_Measure_Kg: Integer;
   zc_Measure_Kgg: Integer;
 
+  zc_Enum_Status_Complete: Integer;
+  zc_Enum_Status_UnComplete: Integer;
+
   zc_BarCodePref_Object  :String;
   zc_BarCodePref_Movement:String;
   zc_BarCodePref_MI      :String;

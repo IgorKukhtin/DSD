@@ -5,7 +5,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 798
-  ExplicitHeight = 358
+  ExplicitHeight = 362
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,22 +33,35 @@ inherited MovementProtocolForm: TMovementProtocolForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate'
+          object Ord: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 55
           end
-          object colisInsert: TcxGridDBColumn
-            Caption = #1047#1072#1075#1088#1091#1078#1077#1085
-            DataBinding.FieldName = 'isInsert'
+          object colDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 67
+            Options.Editing = False
+            Width = 150
+          end
+          object colUserName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'UserName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 144
           end
           object colObjectName: TcxGridDBColumn
             Caption = #8470' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101
@@ -56,32 +69,19 @@ inherited MovementProtocolForm: TMovementProtocolForm
           object colObjectTypeName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'MovementDescName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 138
           end
-          object colUserName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-            DataBinding.FieldName = 'UserName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 144
-          end
-          object UnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
+          object colisInsert: TcxGridDBColumn
+            Caption = #1057#1086#1079#1076#1072#1085#1080#1077
+            DataBinding.FieldName = 'isInsert'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 61
-          end
-          object PositionName: TcxGridDBColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'PositionName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 61
+            Width = 67
           end
         end
       end
@@ -148,8 +148,12 @@ inherited MovementProtocolForm: TMovementProtocolForm
     Height = 56
     ExplicitWidth = 782
     ExplicitHeight = 56
+    inherited deStart: TcxDateEdit
+      EditValue = 44562d
+    end
     inherited deEnd: TcxDateEdit
       Left = 335
+      EditValue = 44562d
       ExplicitLeft = 335
     end
     object edUser: TcxButtonEdit [3]

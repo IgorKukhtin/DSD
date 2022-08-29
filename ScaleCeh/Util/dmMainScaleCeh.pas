@@ -1,4 +1,3 @@
-
 unit dmMainScaleCeh;
 
 interface
@@ -55,6 +54,7 @@ type
     function gpInsert_ScaleCeh_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
     function gpInsert_MovementCeh_all(var execParamsMovement:TParams): Boolean;
     function gpUpdate_ScaleCeh_Movement_ArticleLoss(execParams:TParams): Boolean;
+    function gpUpdate_ScaleCeh_Movement_Status(execParams:TParams): Boolean;
     //
     //ScaleCeh
     function gpGet_ScaleCeh_Movement_checkPartion(var ValueStep_obv : Integer; MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
@@ -596,6 +596,26 @@ begin
        Params.Clear;
        Params.AddParam('inMovementId', ftInteger, ptInput, execParams.ParamByName('MovementId').AsInteger);
        Params.AddParam('inArticleLossId', ftInteger, ptInput, execParams.ParamByName('ArticleLossId').AsInteger);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_ScaleCeh_Movement_ArticleLoss');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpUpdate_ScaleCeh_Movement_Status(execParams:TParams): Boolean;
+begin
+    Result:=false;
+    with spSelect do begin
+       StoredProcName:='gpUpdate_ScaleCeh_Movement_Status';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParams.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inStatusId', ftInteger, ptInput, execParams.ParamByName('StatusId').AsInteger);
+       Params.AddParam('inBranchCode',ftInteger, ptInput, SettingMain.BranchCode);
        //try
          Execute;
        {except
@@ -1533,6 +1553,14 @@ begin
          Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Kgg() :: TVarChar';
          Execute;
          zc_Measure_Kgg:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_Status_Complete() :: TVarChar';
+         Execute;
+         zc_Enum_Status_Complete:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_Status_UnComplete() :: TVarChar';
+         Execute;
+         zc_Enum_Status_UnComplete:=DataSet.FieldByName('Value').asInteger;
 
          //BarCodePref
          Params.ParamByName('inSqlText').Value:='SELECT zc_BarCodePref_Object() :: TVarChar';
