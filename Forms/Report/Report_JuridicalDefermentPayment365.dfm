@@ -4,7 +4,6 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
   ClientWidth = 1123
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -88
   ExplicitWidth = 1139
   ExplicitHeight = 410
   PixelsPerInch = 96
@@ -1382,8 +1381,8 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365)'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365)'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -2063,6 +2062,7 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
     end
     object bbPribt: TdxBarButton
       Action = actPrint
+      Caption = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072' (365)'
       Category = 0
     end
     object bbSale: TdxBarButton
