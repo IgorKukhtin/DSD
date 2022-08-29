@@ -16,35 +16,32 @@ BEGIN
 
      -- документы начисления
      INSERT INTO _tmpMovement_Service (OperDate, UnitId, InfoMoneyId, CommentInfoMoneyId, Amount, MovementId_service)
-           WITH -- ServiceItem за период
-                tmpServiceItem AS (SELECT tmp.DateStart AS StartDate
-                                        , tmp.DateEnd   AS EndDate
-                                        , tmp.UnitId
-                                        , tmp.InfoMoneyId
-                                        , tmp.CommentInfoMoneyId
-                                        , tmp.Amount
-                                   FROM  gpSelect_Movement_ServiceItem(inStartDate := inStartDate
-                                                                     , inEndDate   := inEndDate
-                                                                     , inIsErased  := FALSE
-                                                                     , inSession   := inSession) AS tmp
-                                   WHERE tmp.StatusId = zc_Enum_Status_Complete()
+           WITH -- список по месяцам
+                tmpListDate AS (SELECT GENERATE_SERIES (zfCalc_Month_start (inStartDate)
+                                                      , zfCalc_Month_end (inEndDate)
+                                                      , '1 MONTH' :: INTERVAL
+                                                       ) AS OperDate
+                               )
+                -- ServiceItem на дату
+              , tmpServiceItem AS (SELECT tmpListDate.OperDate
+                                        , gpSelect.UnitId
+                                        , gpSelect.InfoMoneyId
+                                        , gpSelect.CommentInfoMoneyId
+                                        , gpSelect.Amount 
+                                   FROM tmpListDate
+                                        CROSS JOIN gpSelect_MovementItem_ServiceItem_onDate (inOperDate    := tmpListDate.OperDate
+                                                                                           , inUnitId      := 0
+                                                                                           , inInfoMoneyId := 76878 -- _Аренда
+                                                                                           , inSession     := inSession
+                                                                                            ) AS gpSelect
+                                   WHERE gpSelect.Amount > 0
                                   )
-         -- список по месяцам
-       , tmpListDate AS (SELECT GENERATE_SERIES (inStartDate
-                                               , inEndDate
-                                               , '1 MONTH' :: INTERVAL
-                                                ) AS OperDate
-                        )
-                        /*(SELECT GENERATE_SERIES ((SELECT MIN (tmpServiceItemAdd.StartDate) FROM tmpServiceItemAdd)
-                                               , (SELECT MAX (tmpServiceItemAdd.EndDate)   FROM tmpServiceItemAdd)
-                                               , '1 MONTH' :: INTERVAL
-                                                ) AS OperDate
-                        )*/
         -- находим существующие Начисления
-      , tmpMovement_Service AS (SELECT Movement.Id                     AS MovementId
-                                     , Movement.OperDate               AS OperDate
-                                     , MovementItem.ObjectId           AS UnitId
-                                     , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
+      , tmpMovement_Service AS (SELECT Movement.Id                            AS MovementId
+                                     , zfCalc_Month_start (Movement.OperDate) AS OperDate
+                                     , MovementItem.ObjectId                  AS UnitId
+                                     , MILinkObject_InfoMoney.ObjectId        AS InfoMoneyId
+                                     , MILinkObject_CommentInfoMoney.ObjectId AS CommentInfoMoneyId
                                 FROM Movement
                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                             AND MovementItem.DescId     = zc_MI_Master()
@@ -52,28 +49,31 @@ BEGIN
                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                       ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
-                                     INNER JOIN tmpListDate ON tmpListDate.OperDate = Movement.OperDate
-                                     INNER JOIN tmpServiceItem ON tmpServiceItem.UnitId      = MovementItem.ObjectId
-                                                              AND tmpServiceItem.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
-                                                              AND tmpListDate.OperDate BETWEEN tmpServiceItem.StartDate AND tmpServiceItem.EndDate
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
+                                                                      ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_CommentInfoMoney.DescId = zc_MILinkObject_CommentInfoMoney()
+                                     INNER JOIN MovementLinkObject AS MLO_Insert
+                                                                   ON MLO_Insert.MovementId = Movement.Id
+                                                                  AND MLO_Insert.DescId     = zc_MovementLinkObject_Insert()
+                                                                  AND MLO_Insert.ObjectId   = 2020
                                 WHERE Movement.DescId   = zc_Movement_Service()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                )
 
            -- Список Начислений
-           SELECT tmpListDate.OperDate
-                , tmpServiceItem.UnitId
-                , tmpServiceItem.InfoMoneyId
-                , tmpServiceItem.CommentInfoMoneyId
-                , tmpServiceItem.Amount
-                , COALESCE (tmpMovement_Service.MovementId, 0) AS MovementId_service
-           FROM tmpListDate
-                INNER JOIN tmpServiceItem ON tmpListDate.OperDate BETWEEN tmpServiceItem.StartDate AND tmpServiceItem.EndDate
-                LEFT JOIN tmpMovement_Service ON tmpMovement_Service.OperDate    = tmpListDate.OperDate
+           SELECT COALESCE (tmpServiceItem.OperDate, tmpServiceItem.OperDate)                     AS OperDate
+                , COALESCE (tmpServiceItem.UnitId, tmpServiceItem.UnitId)                         AS UnitId
+                , COALESCE (tmpServiceItem.InfoMoneyId, tmpServiceItem.InfoMoneyId)               AS InfoMoneyId
+                , COALESCE (tmpServiceItem.CommentInfoMoneyId, tmpServiceItem.CommentInfoMoneyId) AS CommentInfoMoneyId
+                , COALESCE (tmpServiceItem.Amount, 0)                                             AS Amount
+                , COALESCE (tmpMovement_Service.MovementId, 0)                                    AS MovementId_service
+           FROM tmpServiceItem
+                FULL JOIN tmpMovement_Service ON tmpMovement_Service.OperDate    = tmpServiceItem.OperDate
                                              AND tmpMovement_Service.UnitId      = tmpServiceItem.UnitId
                                              AND tmpMovement_Service.InfoMoneyId = tmpServiceItem.InfoMoneyId
-           ORDER BY tmpListDate.OperDate;
+         --WHERE tmpMovement_Service.MovementId IS NULL
+          ;
 
 
      -- Заливаем данные в начисления
@@ -86,11 +86,9 @@ BEGIN
                                             , inParent_InfoMoneyId:= tmpMovement.ParentId_InfoMoney
                                             , inInfoMoneyName     := tmpMovement.InfoMoneyName
                                             , inCommentInfoMoney  := tmpMovement.CommentInfoMoney
-                                            , inSession           := inSession :: TVarChar
+                                            , inSession           := '2020' -- inSession :: TVarChar
                                              ) AS MovementId
-     FROM (
-           -- Список Начислений
-           SELECT _tmpMovement_Service.MovementId_service
+     FROM (SELECT _tmpMovement_Service.MovementId_service
                 , _tmpMovement_Service.OperDate
                 , _tmpMovement_Service.UnitId
                 , _tmpMovement_Service.Amount
@@ -105,8 +103,9 @@ BEGIN
                                     AND ObjectLink_Parent.DescId   = zc_ObjectLink_InfoMoney_Parent()
                 LEFT JOIN Object AS Object_CommentInfoMoney ON Object_CommentInfoMoney.Id = _tmpMovement_Service.CommentInfoMoneyId
                 LEFT JOIN Movement ON Movement.Id = _tmpMovement_Service.MovementId_service
-           WHERE COALESCE (_tmpMovement_Service.MovementId_service,0) <> 0
-              OR (COALESCE (_tmpMovement_Service.MovementId_service,0) = 0 AND _tmpMovement_Service.Amount <> 0)
+
+           WHERE _tmpMovement_Service.MovementId_service <> 0
+              OR (_tmpMovement_Service.MovementId_service = 0 AND _tmpMovement_Service.Amount <> 0)
            ORDER BY _tmpMovement_Service.OperDate
           ) AS tmpMovement
     ;

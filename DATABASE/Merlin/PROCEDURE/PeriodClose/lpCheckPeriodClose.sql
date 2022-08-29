@@ -16,7 +16,7 @@ $BODY$
 BEGIN
 
 -- временно
-if inMovementDescId <> zc_Movement_ServiceItem()
+if inMovementDescId <> zc_Movement_ServiceItem() -- AND inMovementDescId <> zc_Movement_Service()
 then
 
      -- Проверка - период
