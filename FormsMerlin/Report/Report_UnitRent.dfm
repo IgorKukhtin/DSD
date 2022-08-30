@@ -112,6 +112,12 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     Width = 789
     Height = 340
     Align = alClient
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 9
   end
   object MasterCDS: TClientDataSet [6]
@@ -1007,10 +1013,22 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     FieldParams.FieldTextColorParam.Value = 'Color_Text'
     FieldParams.FieldTextColorParam.DataType = ftString
     FieldParams.FieldTextColorParam.MultiSelectSeparator = ','
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = []
+    Style.IsFontAssigned = True
     StyleFocused.BorderStyle = ebsThick
     StyleFocused.Color = clMenuHighlight
+    StyleFocused.Font.Charset = DEFAULT_CHARSET
+    StyleFocused.Font.Color = clWindowText
+    StyleFocused.Font.Height = -13
+    StyleFocused.Font.Name = 'Tahoma'
+    StyleFocused.Font.Style = []
     StyleFocused.TextColor = clYellow
     StyleFocused.TextStyle = [fsBold]
+    StyleFocused.IsFontAssigned = True
     PriorAction = actGet_Object_UnitPrior
     Left = 520
     Top = 264
