@@ -13,6 +13,7 @@ $BODY$
   DECLARE vbUnit Integer;
   DECLARE vbOperDate  TDateTime;
   DECLARE vbChangeIncmePaymentId Integer;
+  DECLARE vbStatusId    Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := inSession;
@@ -23,9 +24,30 @@ BEGIN
        vbUserId := lpCheckRight(inSession, zc_Enum_Process_UnComplete_ReturnOut());
      END IF;
 
+     -- Получить данные
+     SELECT Movement.StatusId
+     INTO vbStatusId
+     FROM Movement
+     WHERE Movement.Id = inMovementId;
+
      -- проверка - если <Master> Удален, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
 
+     IF vbStatusId = zc_Enum_Status_Erased() AND
+        EXISTS(SELECT 1
+               FROM MovementLinkMovement 
+
+                    INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                               ON MovementBoolean_Deferred.MovementId = MovementLinkMovement.MovementChildId
+                                              AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                              AND MovementBoolean_Deferred.ValueData = TRUE
+
+               WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Pretension()
+                 AND MovementLinkMovement.MovementId = inMovementId)
+     THEN
+       RAISE EXCEPTION 'Претензия отложена. Перед отменой удаления отмените отложку претензии.';       
+     END IF;
+           
      --Ищем связанный документ изменения долга по приходам
      SELECT
          MovementLinkMovement.MovementChildId

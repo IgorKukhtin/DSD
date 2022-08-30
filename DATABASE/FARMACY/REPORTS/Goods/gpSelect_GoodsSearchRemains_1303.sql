@@ -88,7 +88,7 @@ BEGIN
                         OR (upper(Goods_Main.Name) ILIKE UPPER('%'||inGoodsSearch||'%')  AND inGoodsSearch <> '' AND inCodeSearch = '')
                         OR (MI_IntenalSP.ObjectId in (SELECT Object_IntenalSP.Id        
                                                       FROM OBJECT AS Object_IntenalSP
-                                                      WHERE Object_IntenalSP.DescId = zc_Object_IntenalSP()
+                                                      WHERE Object_IntenalSP.DescId = zc_Object_IntenalSP_1303()
                                                         AND upper(Object_IntenalSP.ValueData) ILIKE UPPER('%'||inGoodsSearch||'%')) AND inGoodsSearch <> '' AND inCodeSearch = '')
                         OR (MI_BrandSP.ObjectId  in (SELECT Object_BrandSP.Id        
                                                      FROM OBJECT AS Object_BrandSP
@@ -547,6 +547,6 @@ $BODY$
 */
 
 -- тест
--- 
+-- select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'Анаст' , inPartnerMedicalID := 0 /*4474307*/ ,  inSession := '3');
 
-select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'Анаст' , inPartnerMedicalID := 0 /*4474307*/ ,  inSession := '3');
+select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'Метамізол натрію' , inPartnerMedicalID := 0 ,  inSession := '3');

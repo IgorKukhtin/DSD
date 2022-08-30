@@ -1925,6 +1925,7 @@
     object actInsert_ReturnOut: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actPUSHMessage
       PostDataSetBeforeExecute = False
       StoredProc = spInsert_ReturnOut
       StoredProcList = <
@@ -2051,6 +2052,16 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actPUSHMessage: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHInfo
+      StoredProcList = <
+        item
+          StoredProc = spPUSHInfo
+        end>
+      Caption = 'actPUSHMessage'
     end
   end
   inherited MasterDS: TDataSource
@@ -4442,5 +4453,61 @@
     PackSize = 1
     Left = 418
     Top = 352
+  end
+  object spPUSHInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_Income_ReturnOut'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSpecialLighting'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTextColor'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBold'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 850
+    Top = 280
   end
 end

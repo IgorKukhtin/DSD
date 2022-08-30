@@ -203,6 +203,8 @@ type
     actPUSHLinkCheck: TdsdShowPUSHMessage;
     actPretensionJournalIncome: TdsdOpenForm;
     dxBarButton5: TdxBarButton;
+    spPUSHInfo: TdsdStoredProc;
+    actPUSHMessage: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

@@ -94,7 +94,7 @@ BEGIN
              , Movement.InvNumber                                   AS DocumentNumber
              , NULL::Integer                                        AS WarehouseId
              , tmpUnit.PharmacyId                                   AS PharmacyId
-             , tmpJuridicalDetails.OKPO::Integer                    AS CompanyId
+             , CASE WHEN tmpJuridicalDetails.OKPO <> '' THEN tmpJuridicalDetails.OKPO END::Integer                    AS CompanyId
              , NULL::Integer                                        AS SrcCodeId
              , tmpGoodsPromo.WareId                                 AS WareId
              , COALESCE (MIF_PriceWithOutVAT.ValueData, 0)::TFloat  AS Price
@@ -120,7 +120,7 @@ BEGIN
              LEFT JOIN tmpJuridicalDetails ON tmpJuridicalDetails.JuridicalId = MovementLinkObject_From.ObjectId
 
 
-
+        WHERE COALESCE (tmpJuridicalDetails.OKPO, '') <> ''
         ORDER BY tmpData.MovementId
          ;
 
@@ -136,4 +136,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Farmak_CRMWhReceipt(13648288 , '01.03.2021', '3')
+ SELECT * FROM gpSelect_Farmak_CRMWhReceipt(13648288 , '24.08.2022', '3')

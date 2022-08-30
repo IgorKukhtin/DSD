@@ -57,6 +57,8 @@ type
     DateFine: TcxGridDBColumn;
     Processing: TcxGridDBColumn;
     UkraineAlarmInterval: TcxGridDBColumn;
+    ConfirmedProcessing: TcxGridDBColumn;
+    PotentiallyFine: TcxGridDBColumn;
   private
     { Private declarations }
   public
