@@ -99,6 +99,9 @@ type
     miServiceItemAddUpdate: TMenuItem;
     N3: TMenuItem;
     N8: TMenuItem;
+    actReport_UnitRent_service: TdsdOpenForm;
+    miReport_UnitRent_service: TMenuItem;
+    N11: TMenuItem;
   private
     { Private declarations }
   public

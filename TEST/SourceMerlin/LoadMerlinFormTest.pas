@@ -301,6 +301,9 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitRent_serviceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_UnitRent_serviceForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitRentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitRentForm');

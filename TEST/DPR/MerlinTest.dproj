@@ -568,6 +568,10 @@
 				<Form>ServiceItemAddJournal_historyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Report\Report_UnitRent_service.pas">
+				<Form>Report_UnitRent_serviceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
