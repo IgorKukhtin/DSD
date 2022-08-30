@@ -27,6 +27,16 @@ BEGIN
    END IF;
    
 
+   -- Проверка
+   IF inLeft < 0 THEN 
+      RAISE EXCEPTION 'Ошибка.Для <%> Left = <%>.', lfGet_Object_ValueData_sh (inId), inLeft;
+   END IF;
+
+   -- Проверка
+   IF inTop < 0 THEN 
+        RAISE EXCEPTION 'Ошибка.Для <%> Top = <%>.', lfGet_Object_ValueData_sh (inId), inTop;
+   END IF;
+
    -- сохранили 	Положение зафиксирована
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PositionFixed(), inId, True);
    -- сохранили Положение относительно левого края

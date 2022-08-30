@@ -209,10 +209,10 @@ BEGIN
       , Object_Parent.ValueData         AS ParentName
 
       , tmpUnitGroup.isPositionFixed
-      , tmpUnitGroup.Left
-      , tmpUnitGroup.Top
+      , CASE WHEN tmpUnitGroup.Left < 0 THEN -2 ELSE tmpUnitGroup.Left END :: Integer AS Left
+      , CASE WHEN tmpUnitGroup.Top < 0 THEN -2 ELSE tmpUnitGroup.Top END :: Integer AS Top
       , tmpUnitGroup.Width
-      , tmpUnitGroup.Height
+      , CASE WHEN tmpUnitGroup.Height < 125 THEN tmpUnitGroup.Height ELSE tmpUnitGroup.Height END :: Integer AS Height
 
       , COALESCE (Object_Parent.Id, 0) = vbStartId AS isRootTree
       , COALESCE (tmpUnitLast.Id, 0) > 0          AS isLetterTree
@@ -220,6 +220,9 @@ BEGIN
       , CASE WHEN SUM (COALESCE (tmpReport.AmountDebet, 0)) <> CASE WHEN SUM (COALESCE (tmpMI_Add.Amount, 0)) <> 0 THEN SUM (COALESCE (tmpMI_Add.Amount, 0)) ELSE SUM (COALESCE (tmpMI_Main.Amount, 0)) END
               AND COALESCE (tmpUnitLast.Id, 0) > 0
               AND SUM (COALESCE (tmpReport.AmountDebet, 0)) <> 0
+                  THEN zc_Color_Red()
+             WHEN SUM (COALESCE (tmpReport.AmountDebet, 0)) <> CASE WHEN SUM (COALESCE (tmpMI_Add.Amount, 0)) <> 0 THEN SUM (COALESCE (tmpMI_Add.Amount, 0)) ELSE SUM (COALESCE (tmpMI_Main.Amount, 0)) END
+              AND COALESCE (tmpUnitLast.Id, 0) > 0
                   THEN zc_Color_Red()
              ELSE zc_Color_Yelow()
         END :: Integer AS Color
