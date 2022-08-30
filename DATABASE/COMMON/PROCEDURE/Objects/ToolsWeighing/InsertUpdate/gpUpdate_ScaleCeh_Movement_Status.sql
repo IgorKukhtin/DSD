@@ -27,9 +27,10 @@ BEGIN
      -- Проверка
      IF inBranchCode <> 101 OR NOT EXISTS (SELECT 1 FROM Object_Unit_Scale_upak_View)
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав % документ <%>.'
+         RAISE EXCEPTION 'Ошибка.Нет прав % документ <%>.<%>'
                         , CASE WHEN inStatusId = zc_Enum_Status_Complete() THEN 'Проводить' ELSE 'Распроводить' END
                         , (SELECT MovementDesc.ItemName FROM Movement JOIN MovementDesc ON MovementDesc.Id = Movement.DescId WHERE Movement.Id = inMovementId)
+                        , inBranchCode
          ;
      END IF;
      -- Проверка
@@ -109,7 +110,7 @@ BEGIN
      END IF;
 
      -- Проверка
-     IF 1=1 OR vbUserId = 5
+     IF 1=1 AND vbUserId = 5
      THEN
          RAISE EXCEPTION 'Ошибка.Test Admin - ok.';
      END IF;
