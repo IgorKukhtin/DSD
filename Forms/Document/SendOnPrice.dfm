@@ -3,7 +3,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
   ClientHeight = 668
   ClientWidth = 1369
   ExplicitWidth = 1385
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -58,6 +58,16 @@ inherited SendOnPriceForm: TSendOnPriceForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPercentAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountPartner
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -98,6 +108,16 @@ inherited SendOnPriceForm: TSendOnPriceForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountPartner
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -269,7 +289,29 @@ inherited SendOnPriceForm: TSendOnPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object Price: TcxGridDBColumn [15]
+          object Count: TcxGridDBColumn [15]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090'. ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'Count'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074' ('#1088#1072#1089#1093#1086#1076')'
+            Width = 60
+          end
+          object CountPartner: TcxGridDBColumn [16]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090'. ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'CountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074' ('#1087#1088#1080#1093#1086#1076')'
+            Width = 60
+          end
+          object Price: TcxGridDBColumn [17]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -279,14 +321,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object CountForPrice: TcxGridDBColumn [16]
+          object CountForPrice: TcxGridDBColumn [18]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object AmountSumm: TcxGridDBColumn [17]
+          object AmountSumm: TcxGridDBColumn [19]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -296,7 +338,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
             Options.Editing = False
             Width = 80
           end
-          object UnitName: TcxGridDBColumn [18]
+          object UnitName: TcxGridDBColumn [20]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
             DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -370,6 +412,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitLeft = 3
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_Reason
@@ -2594,6 +2637,24 @@ inherited SendOnPriceForm: TSendOnPriceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Count'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountPartner'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountPartner'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPartionGoods'
         Value = Null
         Component = MasterCDS
@@ -2752,6 +2813,24 @@ inherited SendOnPriceForm: TSendOnPriceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Count'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountPartner'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountPartner'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPartionGoods'
         Value = Null
         Component = MasterCDS
@@ -2780,8 +2859,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 412
-    Top = 268
+    Left = 420
+    Top = 316
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
