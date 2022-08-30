@@ -13,8 +13,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusName TV
              , Fine TFloat
              , DateInsert TDateTime  
              , DateMessage TDateTime
+             , DateConfirmed TDateTime
              , DateFine TDateTime
              , Processing TVarChar
+             , PotentiallyFine TFloat
+             , ConfirmedProcessing TVarChar
              , UkraineAlarmInterval TVarChar
               )
 AS
@@ -28,14 +31,14 @@ BEGIN
 
     RETURN QUERY
     WITH tmpMovement AS (SELECT Movement.*
-                         FROM MovementBoolean AS MovementBoolean_AccruedFine
+                         FROM MovementDate AS MovementDate_AccruedFine
 
-                              INNER JOIN Movement ON Movement.ID = MovementBoolean_AccruedFine.MovementId
+                              INNER JOIN Movement ON Movement.ID = MovementDate_AccruedFine.MovementId
                                                  AND Movement.OperDate >= inStartDate
                                                  AND Movement.OperDate < inEndDate + INTERVAL '1 DAY'
                                
-                         WHERE MovementBoolean_AccruedFine.DescId = zc_MovementBoolean_AccruedFine()
-                           AND MovementBoolean_AccruedFine.ValueData = True),
+                         WHERE MovementDate_AccruedFine.DescId = zc_MovementDate_Message()
+                           AND MovementDate_AccruedFine.ValueData IS NOT NULL),
          tmpProtocol AS (SELECT MovementProtocol.*
                          FROM MovementProtocol 
                          WHERE MovementProtocol.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)),
@@ -47,25 +50,39 @@ BEGIN
                                   , MIN(tmpProtocol.OperDate)  AS OperDate
                              FROM tmpProtocol
                              WHERE tmpProtocol.ProtocolData ILIKE '%Начислить штраф%'
-                             GROUP BY tmpProtocol.MovementId)
+                             GROUP BY tmpProtocol.MovementId),
+         tmpProtocolConfirmed AS (SELECT tmpProtocol.MovementId 
+                                       , MIN(tmpProtocol.OperDate)  AS OperDate
+                                  FROM tmpProtocol
+                                  WHERE tmpProtocol.ProtocolData ILIKE '%"Подтвержден"%'
+                                  GROUP BY tmpProtocol.MovementId)
 
     SELECT Movement.Id
          , Movement.InvNumber
          , Movement.OperDate
-         , Object_Status.ValueData                 AS StatusName
-         , Object_Unit.ObjectCode                  AS UnitCode
-         , Object_Unit.ValueData                   AS UnitName
-         , 200::TFloat                             AS Fine
-         , tmpProtocolInsert.OperDate::TDateTime   AS DateInsert
-         , MovementDate_Message.ValueData          AS DateMessage
-         , tmpProtocolFine.OperDate::TDateTime     AS DateFine
-         , to_char(tmpProtocolFine.OperDate - MovementDate_Message.ValueData, 'HH24:MI:SS')::TVarChar AS Processing
-         , zfGet_UkraineAlarm_RangeInterval (MovementLinkObject_Unit.ObjectId, MovementDate_Message.ValueData, tmpProtocolFine.OperDate::TDateTime, inSession) AS UkraineAlarmInterval
+         , Object_Status.ValueData                   AS StatusName
+         , Object_Unit.ObjectCode                    AS UnitCode
+         , Object_Unit.ValueData                     AS UnitName
+         , CASE WHEN COALESCE(MovementBoolean_AccruedFine.ValueData, False) = TRUE THEN 200 END::TFloat  AS Fine
+         , tmpProtocolInsert.OperDate::TDateTime     AS DateInsert
+         , MovementDate_Message.ValueData            AS DateMessage
+         , tmpProtocolConfirmed.OperDate::TDateTime  AS DateConfirmed
+         , tmpProtocolFine.OperDate::TDateTime       AS DateFine
+         , to_char(tmpProtocolFine.OperDate - MovementDate_Message.ValueData, 'HH24:MI:SS')::TVarChar      AS Processing
+         , CASE WHEN COALESCE(MovementBoolean_AccruedFine.ValueData, False) = FALSE THEN 200 END::TFloat   AS PotentiallyFine
+         , to_char(tmpProtocolConfirmed.OperDate - MovementDate_Message.ValueData, 'HH24:MI:SS')::TVarChar AS ConfirmedProcessing
+         , zfGet_UkraineAlarm_RangeInterval (MovementLinkObject_Unit.ObjectId, MovementDate_Message.ValueData, COALESCE(tmpProtocolFine.OperDate, tmpProtocolConfirmed.OperDate)::TDateTime, inSession) AS UkraineAlarmInterval
     FROM tmpMovement AS Movement 
 
          INNER JOIN MovementDate  AS MovementDate_Message
                                   ON MovementDate_Message.MovementId = Movement.Id
                                  AND MovementDate_Message.DescId = zc_MovementDate_Message()  
+
+         INNER JOIN tmpProtocolConfirmed ON tmpProtocolConfirmed.MovementId = Movement.Id
+
+         LEFT JOIN MovementBoolean AS MovementBoolean_AccruedFine
+                                   ON MovementBoolean_AccruedFine.MovementId = Movement.Id
+                                  AND MovementBoolean_AccruedFine.DescId = zc_MovementBoolean_AccruedFine()  
 
          LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -78,6 +95,7 @@ BEGIN
          LEFT JOIN tmpProtocolInsert ON tmpProtocolInsert.MovementId = Movement.Id
          
          LEFT JOIN tmpProtocolFine ON tmpProtocolFine.MovementId = Movement.Id
+    WHERE MovementDate_Message.ValueData + INTERVAL '31 MINUTE' < tmpProtocolConfirmed.OperDate
         ;
 
 END;

@@ -68,6 +68,9 @@ type
     lbSearchName: TcxLabel;
     edSearchUnitName: TcxTextEdit;
     FieldFilter_UnitName: TdsdFieldFilter;
+    ceInfoMoney: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    GuidesInfoMoney: TdsdGuides;
   private
     { Private declarations }
   public

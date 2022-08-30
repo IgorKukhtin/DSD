@@ -46,6 +46,8 @@ BEGIN
        THEN
            IF EXISTS(SELECT 1
                      FROM MovementLinkMovement 
+                          INNER JOIN Movement ON Movement.Id =  MovementLinkMovement.MovementId
+                                             AND Movement.StatusId <> zc_Enum_Status_Erased() 
                      WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Pretension()
                        AND MovementLinkMovement.MovementChildId = inMovementId)
            THEN

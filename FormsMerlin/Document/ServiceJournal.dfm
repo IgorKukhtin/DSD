@@ -5,6 +5,7 @@ inherited ServiceJournalForm: TServiceJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -9
   ExplicitWidth = 1044
   ExplicitHeight = 370
   PixelsPerInch = 96
@@ -223,6 +224,23 @@ inherited ServiceJournalForm: TServiceJournalForm
         126
         21)
       Width = 126
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 747
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 228
+    end
+    object cxLabel5: TcxLabel
+      Left = 697
+      Top = 6
+      Caption = #1057#1090#1072#1090#1100#1103':'
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -760,16 +778,19 @@ inherited ServiceJournalForm: TServiceJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 272
@@ -974,6 +995,15 @@ inherited ServiceJournalForm: TServiceJournalForm
       Category = 0
     end
   end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesInfoMoney
+      end>
+  end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Service'
   end
@@ -1123,6 +1153,14 @@ inherited ServiceJournalForm: TServiceJournalForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -1150,7 +1188,7 @@ inherited ServiceJournalForm: TServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 464
+    Left = 488
     Top = 240
   end
   object FieldFilter_UnitName: TdsdFieldFilter
@@ -1160,5 +1198,51 @@ inherited ServiceJournalForm: TServiceJournalForm
     CheckBoxList = <>
     Left = 720
     Top = 88
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'iniService'
+        Value = True
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParentId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParentName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 864
+    Top = 5
   end
 end

@@ -370,6 +370,36 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = CountSendOnPriceOut_10900_W
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountStart_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIncome_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountReturnOut_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendIn_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOut_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOnPriceIn_byCount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -716,6 +746,36 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = CountSendOnPriceOut_10900_W
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountStart_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIncome_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountReturnOut_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendIn_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOut_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOnPriceIn_byCount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -2003,6 +2063,66 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 75
+      end
+      object CountStart_byCount: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1073#1090'. '#1085#1072#1095'. '
+        DataBinding.FieldName = 'CountStart_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CountIncome_byCount: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076'. '#1073#1090'.'
+        DataBinding.FieldName = 'CountIncome_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CountReturnOut_byCount: TcxGridDBColumn
+        Caption = #1042#1086#1079#1074#1088'.'#1087#1086#1089#1090'. '#1073#1090'.'
+        DataBinding.FieldName = 'CountReturnOut_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CountSendIn_byCount: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'.'#1087#1088#1080#1093'. '#1073#1090'.'
+        DataBinding.FieldName = 'CountSendIn_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CountSendOut_byCount: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'.'#1088#1072#1089#1093'. '#1073#1090'.'
+        DataBinding.FieldName = 'CountSendOut_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CountSendOnPriceIn_byCount: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1087#1086' '#1094#1077#1085#1077' '#1073#1090'.'
+        DataBinding.FieldName = 'CountSendOnPriceIn_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object PriceListStart: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1085#1072#1095'.'

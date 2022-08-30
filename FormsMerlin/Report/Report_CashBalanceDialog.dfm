@@ -178,10 +178,10 @@ object Report_CashBalanceDialogForm: TReport_CashBalanceDialogForm
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCash
-    FormNameParam.Value = 'TCashTreeForm'
+    FormNameParam.Value = 'TCash_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCashTreeForm'
+    FormName = 'TCash_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -205,10 +205,10 @@ object Report_CashBalanceDialogForm: TReport_CashBalanceDialogForm
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoneyTreeForm'
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoneyTreeForm'
+    FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

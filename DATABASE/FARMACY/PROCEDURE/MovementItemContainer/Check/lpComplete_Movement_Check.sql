@@ -198,7 +198,6 @@ BEGIN
     ELSE
       vbPriceSamples := 0;
     END IF;
-    vbPriceSamples := 0;
     
     -- данные почти все
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_remains'))

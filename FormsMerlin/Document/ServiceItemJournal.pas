@@ -110,6 +110,8 @@ type
     edSearchUnitName: TcxTextEdit;
     lbSearchName: TcxLabel;
     FieldFilter_UnitName: TdsdFieldFilter;
+    edIsDate: TcxCheckBox;
+    actRefresh_InsUpd: TdsdDataSetRefresh;
   private
   public
   end;

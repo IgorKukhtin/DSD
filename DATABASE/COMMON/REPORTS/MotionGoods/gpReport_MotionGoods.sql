@@ -95,7 +95,15 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CountTotalIn_Weight TFloat
              , CountTotalOut TFloat
              , CountTotalOut_Weight TFloat
-
+             --
+             , CountStart_byCount         TFloat
+             , CountEnd_byCount           TFloat
+             , CountIncome_byCount        TFloat
+             , CountReturnOut_byCount     TFloat
+             , CountSendIn_byCount        TFloat
+             , CountSendOut_byCount       TFloat
+             , CountSendOnPriceIn_byCount TFloat
+             --
              , SummStart TFloat
              , SummEnd TFloat
              , SummEnd_calc TFloat
@@ -308,6 +316,7 @@ BEGIN
                          WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                         )
        , tmpReport_all AS (SELECT * FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId, inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId, inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId))
+             
        , tmpReport_summ AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = FALSE OR tmpReport_all.ContainerId_count <> tmpReport_all.ContainerId)
        , tmpReport_count AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = TRUE AND tmpReport_all.ContainerId_count = tmpReport_all.ContainerId)
        , tmpReport AS (SELECT COALESCE (tmpReport_summ.AccountId,         tmpReport_count.AccountId)         AS AccountId
@@ -392,7 +401,17 @@ BEGIN
                             , COALESCE (tmpReport_summ.SummInventory_RePrice, 0) AS SummInventory_RePrice
 
                             , COALESCE (tmpReport_summ.SummProductionIn, 0)  AS SummProductionIn 
-                            , COALESCE (tmpReport_summ.SummProductionOut, 0) AS SummProductionOut
+                            , COALESCE (tmpReport_summ.SummProductionOut, 0) AS SummProductionOut      
+                            
+                             --  CountCount
+                            , COALESCE (tmpReport_count.CountStart_byCount,         tmpReport_summ.CountStart_byCount)         AS  CountStart_byCount        
+                            , COALESCE (tmpReport_count.CountEnd_byCount,           tmpReport_summ.CountEnd_byCount)           AS  CountEnd_byCount          
+                            , COALESCE (tmpReport_count.CountIncome_byCount,        tmpReport_summ.CountIncome_byCount)        AS  CountIncome_byCount      
+                            , COALESCE (tmpReport_count.CountReturnOut_byCount,     tmpReport_summ.CountReturnOut_byCount)     AS  CountReturnOut_byCount    
+                            , COALESCE (tmpReport_count.CountSendIn_byCount,        tmpReport_summ.CountSendIn_byCount)        AS  CountSendIn_byCount       
+                            , COALESCE (tmpReport_count.CountSendOut_byCount,       tmpReport_summ.CountSendOut_byCount)       AS  CountSendOut_byCount      
+                            , COALESCE (tmpReport_count.CountSendOnPriceIn_byCount, tmpReport_summ.CountSendOnPriceIn_byCount) AS  CountSendOnPriceIn_byCount
+
                        FROM tmpReport_summ
                             FULL JOIN tmpReport_count ON tmpReport_count.ContainerId_count = tmpReport_summ.ContainerId_count
                       )
@@ -556,6 +575,15 @@ BEGIN
                                             - tmpMIContainer_all.SummSale_40208
                                             + tmpMIContainer_all.SummLoss
                                             + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
+
+                                       --  CountCount
+                                       , SUM (tmpMIContainer_all.CountStart_byCount)          AS  CountStart_byCount        
+                                       , SUM (tmpMIContainer_all.CountEnd_byCount)            AS  CountEnd_byCount          
+                                       , SUM (tmpMIContainer_all.CountIncome_byCount)         AS  CountIncome_byCount      
+                                       , SUM (tmpMIContainer_all.CountReturnOut_byCount)      AS  CountReturnOut_byCount    
+                                       , SUM (tmpMIContainer_all.CountSendIn_byCount)         AS  CountSendIn_byCount       
+                                       , SUM (tmpMIContainer_all.CountSendOut_byCount)        AS  CountSendOut_byCount      
+                                       , SUM (tmpMIContainer_all.CountSendOnPriceIn_byCount)  AS  CountSendOnPriceIn_byCount
 
                                   FROM tmpReport AS tmpMIContainer_all
                                        -- LEFT JOIN _tmpLocation ON _tmpLocation.LocationId = tmpMIContainer_all.LocationId_by AND _tmpLocation.ContainerDescId = zc_Container_Count()
@@ -721,6 +749,15 @@ BEGIN
         , CAST (tmpMIContainer_group.CountTotalIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END        AS TFloat) AS CountTotalIn_Weight
         , CAST (tmpMIContainer_group.CountTotalOut       AS TFloat) AS CountTotalOut
         , CAST (tmpMIContainer_group.CountTotalOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END       AS TFloat) AS CountTotalOut_Weight
+
+        --  CountCount
+        , CAST (tmpMIContainer_group.CountStart_byCount         AS TFloat)  AS CountStart_byCount        
+        , CAST (tmpMIContainer_group.CountEnd_byCount           AS TFloat)  AS CountEnd_byCount          
+        , CAST (tmpMIContainer_group.CountIncome_byCount        AS TFloat)  AS CountIncome_byCount      
+        , CAST (tmpMIContainer_group.CountReturnOut_byCount     AS TFloat)  AS CountReturnOut_byCount    
+        , CAST (tmpMIContainer_group.CountSendIn_byCount        AS TFloat)  AS CountSendIn_byCount       
+        , CAST (tmpMIContainer_group.CountSendOut_byCount       AS TFloat)  AS CountSendOut_byCount      
+        , CAST (tmpMIContainer_group.CountSendOnPriceIn_byCount AS TFloat)  AS CountSendOnPriceIn_byCount
 
         , CAST (tmpMIContainer_group.SummStart            AS TFloat) AS SummStart
         , CAST (tmpMIContainer_group.SummEnd              AS TFloat) AS SummEnd
@@ -979,3 +1016,6 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 -- тест
 -- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * from gpReport_MotionGoods (inStartDate:= '01.09.2018', inEndDate:= '01.09.2018', inAccountGroupId:= 0, inUnitGroupId:= 8459, inLocationId:= 0, inGoodsGroupId:= 1860, inGoodsId:= 1, inUnitGroupId_by:= 0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := zfCalc_UserAdmin());
+
+-- 
+SELECT * from gpReport_MotionGoods22 (inStartDate:= '01.08.2022'::TDateTime, inEndDate:= '02.08.2022'::TDateTime, inAccountGroupId:= 0, inUnitGroupId:= 8459, inLocationId:= 0, inGoodsGroupId:= 1860, inGoodsId:= 0, inUnitGroupId_by:= 0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := zfCalc_UserAdmin());

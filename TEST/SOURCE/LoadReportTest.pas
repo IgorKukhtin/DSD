@@ -140,7 +140,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+  {
   LoadReportFromFile('Отчет - заявки (Резерв минус)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (Резерв минус).fr3');
   LoadReportFromFile('Отчет - заявки (Резерв минус) торг сеть', ReportPath + '\Отчеты (товарные)\Отчет - заявки (Резерв минус) торг сеть.fr3');
 
@@ -155,7 +155,7 @@ begin
 
   LoadReportFromFile('Печать Товаров Заявки (Информация по отгрузке)', ReportPath + '\Товарный Учет\Печать Товаров Заявки (Информация по отгрузке).fr3');
   exit;
-   {
+
   LoadReportFromFile('PrintMovement_OrderReturnTare', ReportPath + '\Товарный Учет\PrintMovement_OrderReturnTare.fr3');
   exit;
 
@@ -266,7 +266,10 @@ begin
   LoadReportFromFile('Отчет Итог по покупателю (c отсрочкой-накладные реализация)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c отсрочкой-накладные реализация).fr3');
   LoadReportFromFile('Отчет Итог по покупателю (c отсрочкой-накладные)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c отсрочкой-накладные).fr3');
   LoadReportFromFile('Отчет Итог по покупателю (c отсрочкой)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c отсрочкой).fr3');
-
+  }
+  LoadReportFromFile('Отчет Итог по покупателю (c отсрочкой365)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c отсрочкой365).fr3');
+  exit;
+  {
   LoadReportFromFile('Обороты по юр лицам - покупатели(бухг)', ReportPath + '\Отчеты (финансы)\Обороты по юр лицам - покупатели(бухг).fr3');
   LoadReportFromFile('Обороты по юр лицам - покупатели(факт)', ReportPath + '\Отчеты (финансы)\Обороты по юр лицам - покупатели(факт).fr3');
   LoadReportFromFile('Обороты по контрагентам (факт)', ReportPath + '\Отчеты (финансы)\Обороты по контрагентам (факт).fr3');

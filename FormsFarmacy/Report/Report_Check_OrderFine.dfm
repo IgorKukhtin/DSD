@@ -3,27 +3,27 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
     #1054#1090#1095#1077#1090' <'#1064#1090#1088#1072#1092#1099' '#1079#1072' '#1079#1072#1076#1077#1088#1078#1082#1091' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1086#1074' '#1089' '#1089#1072#1081#1090#1072' '#1058#1072#1073#1083#1077#1090#1086#1082 +
     '>'
   ClientHeight = 480
-  ClientWidth = 1245
+  ClientWidth = 1285
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1261
+  ExplicitWidth = 1301
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 1245
+    Width = 1285
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1170
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 1245
+    ClientRectRight = 1285
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1170
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 1245
+        Width = 1285
         Height = 421
         ExplicitWidth = 1170
         ExplicitHeight = 421
@@ -229,6 +229,11 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
               Format = #1047#1072#1082#1072#1079#1086#1074' 0'
               Kind = skCount
               Column = UnitName
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = PotentiallyFine
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -267,6 +272,7 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 51
           end
           object UnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072
@@ -284,7 +290,7 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 81
+            Width = 66
           end
           object DateInsert: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
@@ -292,7 +298,7 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 103
           end
           object DateMessage: TcxGridDBColumn
             Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1086#1073' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1080
@@ -300,7 +306,7 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 104
           end
           object DateFine: TcxGridDBColumn
             Caption = #1053#1072#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1096#1090#1088#1072#1092#1072
@@ -308,7 +314,7 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 100
           end
           object Processing: TcxGridDBColumn
             Caption = #1042#1088#1077#1084#1103' '#1076#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
@@ -316,7 +322,24 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 83
+            Width = 77
+          end
+          object ConfirmedProcessing: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1076#1086' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConfirmedProcessing'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
+          object PotentiallyFine: TcxGridDBColumn
+            Caption = #1055#1086#1090#1077#1085#1094#1080#1072#1083#1100#1085#1099#1081' '#1096#1090#1088#1072#1092
+            DataBinding.FieldName = 'PotentiallyFine'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
           end
           object UkraineAlarmInterval: TcxGridDBColumn
             Caption = #1055#1077#1088#1080#1086#1076' '#1090#1088#1077#1074#1086#1075
@@ -324,14 +347,14 @@ inherited Report_Check_OrderFineForm: TReport_Check_OrderFineForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 78
+            Width = 63
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1245
+    Width = 1285
     Height = 33
     ExplicitWidth = 1170
     ExplicitHeight = 33
