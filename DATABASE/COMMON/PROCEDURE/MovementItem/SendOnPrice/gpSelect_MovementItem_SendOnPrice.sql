@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
              , UnitId Integer, UnitName TVarChar
              , AmountSumm TFloat
+             , Count TFloat, CountPartner TFloat
              , CountPack TFloat, WeightTotal TFloat, WeightPack TFloat, isBarCode Boolean 
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
@@ -82,6 +83,9 @@ BEGIN
            , CAST (NULL AS TVarChar)    AS UnitName
 
            , CAST (NULL AS TFloat)      AS AmountSumm
+
+           , CAST (NULL AS TFloat)      AS Count
+           , CAST (NULL AS TFloat)      AS CountPartner
 
            , CAST (NULL AS TFloat)      AS CountPack
            , CAST (NULL AS TFloat)      AS WeightTotal
@@ -162,7 +166,7 @@ BEGIN
            , MIFloat_AmountPartner.ValueData       AS AmountPartner
            , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
            , (MovementItem.Amount - COALESCE (MIFloat_AmountChangePercent.ValueData, 0)) :: TFloat AS TotalPercentAmount
-
+          
            , MIFloat_Price.ValueData AS Price
            , MIFloat_CountForPrice.ValueData AS CountForPrice
 
@@ -178,6 +182,9 @@ BEGIN
                            ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
 
+           , MIFloat_Count.ValueData            AS Count
+           , MIFloat_CountPartner.ValueData     AS CountPartner
+           
            , MIFloat_CountPack.ValueData        AS CountPack
            , MIFloat_WeightTotal.ValueData      AS WeightTotal
            , MIFloat_WeightPack.ValueData       AS WeightPack
@@ -246,6 +253,14 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_WeightPack
                                         ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
                                        AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountPartner
+                                        ON MIFloat_CountPartner.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountPartner.DescId = zc_MIFloat_CountPartner() 
+
             LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode 
                                           ON MIBoolean_BarCode.MovementItemId = MovementItem.Id
                                          AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
@@ -286,6 +301,9 @@ BEGIN
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm*/
            , MIFloat_SummPriceList.ValueData AS AmountSumm
+
+           , MIFloat_Count.ValueData            AS Count
+           , MIFloat_CountPartner.ValueData     AS CountPartner
 
            , MIFloat_CountPack.ValueData        AS CountPack
            , MIFloat_WeightTotal.ValueData      AS WeightTotal
@@ -358,6 +376,14 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_WeightPack
                                         ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
                                        AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountPartner
+                                        ON MIFloat_CountPartner.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountPartner.DescId = zc_MIFloat_CountPartner()
+
             LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode 
                                           ON MIBoolean_BarCode.MovementItemId = MovementItem.Id
                                          AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
@@ -377,6 +403,7 @@ ALTER FUNCTION gpSelect_MovementItem_SendOnPrice (Integer, Integer, TDateTime, B
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.08.22         *
  02.12.19         * 
  05.05.14                                                        *   передалал все по новой на базе проц расхода.
  08.09.13                                        * add AmountChangePercent

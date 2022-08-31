@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean,Boolean, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean,Boolean, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean,Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice(
@@ -21,6 +22,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice(
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
+    IN inCount               TFloat    , -- Количество батонов (расход)
+    IN inCountPartner        TFloat    , -- Количество батонов(приход)
+
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inUnitId              Integer   , -- Подразделение
@@ -116,6 +120,8 @@ BEGIN
                                           , inChangePercentAmount:= inChangePercentAmount
                                           , inPrice              := inPrice
                                           , ioCountForPrice      := ioCountForPrice
+                                          , inCount              := inCount
+                                          , inCountPartner       := inCountPartner
                                           , inPartionGoods       := inPartionGoods
                                           , inGoodsKindId        := inGoodsKindId
                                           , inUnitId             := inUnitId
@@ -136,6 +142,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+
+ 30.08.22         * add inCount, inCountPartner
  19.11.15         * 
  04.06.15         * add inUnitId
  05.05.14                                                        * надо раскоментить права после отладки

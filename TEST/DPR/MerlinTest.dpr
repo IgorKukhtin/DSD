@@ -189,7 +189,8 @@ uses
   ServiceItemAddJournal in '..\..\FormsMerlin\Document\ServiceItemAddJournal.pas' {ServiceItemAddJournalForm: TParentForm},
   ServiceItemJournal_history in '..\..\FormsMerlin\Document\ServiceItemJournal_history.pas' {ServiceItemJournal_historyForm: TParentForm},
   ServiceItemAddUpdate in '..\..\FormsMerlin\Document\ServiceItemAddUpdate.pas' {ServiceItemAddUpdateForm: TParentForm},
-  ServiceItemAddJournal_history in '..\..\FormsMerlin\Document\ServiceItemAddJournal_history.pas' {ServiceItemAddJournal_historyForm: TParentForm};
+  ServiceItemAddJournal_history in '..\..\FormsMerlin\Document\ServiceItemAddJournal_history.pas' {ServiceItemAddJournal_historyForm: TParentForm},
+  Report_UnitRent_service in '..\..\FormsMerlin\Report\Report_UnitRent_service.pas' {Report_UnitRent_serviceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
