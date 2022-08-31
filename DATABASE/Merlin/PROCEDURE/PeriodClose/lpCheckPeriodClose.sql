@@ -16,11 +16,11 @@ $BODY$
 BEGIN
 
 -- временно
-if inMovementDescId <> zc_Movement_ServiceItem() -- AND inMovementDescId <> zc_Movement_Service()
-then
+-- if inMovementDescId <> zc_Movement_ServiceItem() -- AND inMovementDescId <> zc_Movement_Service()
+--  then
 
      -- Проверка - период
-     IF inOperDate < CURRENT_DATE - INTERVAL '3 DAY'
+     IF inOperDate < (CASE WHEN inMovementDescId = zc_Movement_ServiceItemAdd() THEN CURRENT_DATE ELSE CURRENT_DATE - INTERVAL '3 DAY' END)
         -- AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin())
      THEN
          RAISE EXCEPTION 'Ошибка.Для пользователя <%> изменения в документе возможны с <%>.Дата документа = <%>.(<%>)(<%>)'
@@ -38,13 +38,15 @@ then
         AND COALESCE (inUserId, -1) <> COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Insert()), -2)
         --AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin())
      THEN
-         RAISE EXCEPTION 'Ошибка.Документ Автор = <%> не может корректироваться пользователем <%>.'
+         RAISE EXCEPTION 'Ошибка.Документ Автор = <%> не может корректироваться пользователем <%>.(<%>)(<%>)'
                        , lfGet_Object_ValueData ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Insert()))
                        , lfGet_Object_ValueData (inUserId)
+                       , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
+                       , inMovementId
                         ;
      END IF;
 
-end if;
+-- end if;
 
  
 END;

@@ -35,20 +35,24 @@ $BODY$
    DECLARE vbAmount_base    TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ServiceItemAdd());
+     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ServiceItemAdd());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- дата документа
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     
+     --
+     outDateStart:= ('01.'||CASE WHEN COALESCE (ioNumStartDate, 0) = 0 THEN '01' ELSE ioNumStartDate :: TVarChar END ||'.'||(2000 + ioNumYearStart)) ::TDateTime;
 
      -- нашли Базовые условия
      SELECT gpSelect.DateStart, gpSelect.DateEnd, gpSelect.Amount, CASE WHEN inCommentInfoMoneyId > 0 THEN inCommentInfoMoneyId ELSE gpSelect.CommentInfoMoneyId END
             INTO vbDateStart_base, vbDateEnd_base, vbAmount_base, inCommentInfoMoneyId
-     FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate:= vbOperDate, inUnitId:= inUnitId, inInfoMoneyId :=inInfoMoneyId, inSession:= inSession) AS gpSelect
-     WHERE vbOperDate BETWEEN COALESCE (gpSelect.DateStart, zc_DateStart()) AND gpSelect.DateEnd
+     FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate:= outDateStart, inUnitId:= inUnitId, inInfoMoneyId :=inInfoMoneyId, inSession:= inSession) AS gpSelect
+     WHERE outDateStart BETWEEN COALESCE (gpSelect.DateStart, zc_DateStart()) AND gpSelect.DateEnd
     ;
      -- проверка
      IF COALESCE (vbAmount_base, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Базовыве условия не найдены.';
+        RAISE EXCEPTION 'Ошибка.Базовые условия на дату = <%> не найдены.', zfConvert_DateToString (outDateStart);
      END IF;
 
      -- если надо только заполнить

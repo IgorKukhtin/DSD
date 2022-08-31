@@ -109,7 +109,7 @@ BEGIN
                                             , inParent_InfoMoneyId:= tmpMovement.ParentId_InfoMoney
                                             , inInfoMoneyName     := tmpMovement.InfoMoneyName
                                             , inCommentInfoMoney  := tmpMovement.CommentInfoMoney
-                                            , inSession           := inUserId :: TVarChar
+                                            , inSession           := (-1 * inUserId) :: TVarChar
                                              ) AS MovementId
      FROM (
            -- Список Начислений

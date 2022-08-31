@@ -39,7 +39,7 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Вид документа не определен.<%><%><%><%>', vbDescId, inDescId, inMovementId, (SELECT lfGet_Object_ValueData_sh (StatusId) FROM Movement WHERE Id = inMovementId);
   END IF;
   
-  IF inUserId > 0 OR vbOperDate < '01.02.2022'
+  IF inUserId > 0 OR (vbOperDate < '01.02.2022' AND vbDescId <> zc_Movement_ServiceItemAdd())
   THEN
       -- 1.2. Проверка
       PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate

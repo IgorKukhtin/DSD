@@ -35,7 +35,7 @@ BEGIN
   -- 1.3. ПРОВЕРКА - Закрытый период + проверка пользователя
   IF vbStatusId_old = zc_Enum_Status_Complete()
   THEN 
-      IF inUserId > 0 OR vbOperDate < '01.02.2022'
+      IF inUserId > 0 OR (vbOperDate < '01.02.2022' AND vbDescId <> zc_Movement_ServiceItemAdd())
       THEN
           PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
                                     , inMovementId    := inMovementId

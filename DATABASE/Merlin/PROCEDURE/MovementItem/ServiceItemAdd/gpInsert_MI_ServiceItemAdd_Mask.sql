@@ -13,7 +13,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ServiceItemAdd());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ServiceItemAdd());
+     vbUserId:= lpGetUserBySession (inSession);
 
     
      PERFORM lpInsertUpdate_MovementItem_ServiceItemAdd (ioId                 := 0
