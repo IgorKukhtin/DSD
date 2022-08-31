@@ -1341,8 +1341,13 @@ BEGIN
                        , tmpData_all.N10_ifin
 
                        , tmpData_all.N9
-                       , CASE WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                                     , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change())
+                       , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_Prepay())
+                               AND tmpData_all.AmountTax_calc <> tmpData_all.Amount
+                                   THEN '102'  -- 2 --'Зміна кількості'
+
+                              WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                     , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
+                                                                      )
                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
                                    THEN '103'  --4 --'Повернення товару або авансових платежів'
 

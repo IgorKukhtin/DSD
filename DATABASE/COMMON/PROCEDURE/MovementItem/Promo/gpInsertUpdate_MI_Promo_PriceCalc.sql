@@ -380,7 +380,7 @@ BEGIN
      -- дальше считаем с/с
 
      -- нашли мес€ц
-     vbMonthPromo := (SELECT CASE WHEN MovementDate_Insert.ValueData >= '01.06.2022'
+     vbMonthPromo := (SELECT CASE WHEN MovementDate_Insert.ValueData >= '01.04.2022'
                                        THEN DATE_TRUNC ('MONTH', MovementDate_Insert.ValueData)
                                   WHEN EXTRACT (DAY FROM MovementDate_Insert.ValueData) BETWEEN 1 AND 9
                                        THEN DATE_TRUNC ('MONTH', (MovementDate_Insert.ValueData - INTERVAL '1 MONTH'))

@@ -107,7 +107,7 @@ BEGIN
      ;
 
 
-     IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_Complete_TaxCorrective())
+     IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_Complete_TaxCorrective()) AND 1=0
      THEN
          -- Проводим Документ
          outMessageText:= lpComplete_Movement_TaxCorrective (inMovementId := vbMovementId_to
@@ -119,6 +119,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isCopy(), inMovementId_from, TRUE);
      -- сохранили протокол для документа <Налоговая>
      PERFORM lpInsert_MovementProtocol (inMovementId_from, vbUserId, FALSE);
+
+
+IF vbUserId = 5
+THEN
+    RAISE EXCEPTION 'Ошибка.test = ok';
+END IF;
 
 
 END;
