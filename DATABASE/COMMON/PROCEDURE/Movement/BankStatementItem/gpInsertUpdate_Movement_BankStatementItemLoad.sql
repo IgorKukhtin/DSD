@@ -43,7 +43,7 @@ BEGIN
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
  
 
-  --IF vbUserId = '5' THEN inOperDate:= inOperDate + INTERVAL '1 DAY'; END IF;
+    IF vbUserId = '5' THEN inOperDate:= inOperDate + INTERVAL '1 DAY'; END IF;
 
     --
   --IF inBankMFOMain = '380805' THEN inAmount:= -1 * inAmount; END IF;
@@ -82,6 +82,7 @@ BEGIN
     END IF;
  
     -- нашли
+    IF TRIM (inCurrencyCode) = '' THEN inCurrencyCode:= '980'; END IF;
     vbCurrencyId:= (SELECT View_Currency.Id FROM Object_Currency_View AS View_Currency WHERE View_Currency.Code = zfConvert_StringToNumber (inCurrencyCode) OR View_Currency.InternalName = inCurrencyName);
     -- нашли
     IF COALESCE(vbCurrencyId, 0) = 0 THEN
@@ -533,7 +534,7 @@ BEGIN
     PERFORM lpInsert_MovementProtocol (vbMovementItemId, vbUserId, TRUE);
 
 
- if vbUserId = 5 AND 1=1
+ if vbUserId = 5 AND 1=0
  then
     RAISE EXCEPTION 'ok1 %   %    %    %  %',  lfGet_Object_ValueData (vbJuridicalId), vbContractId, lfGet_Object_ValueData (vbContractId), lfGet_Object_ValueData (vbInfoMoneyId), inComment;
  end if;
