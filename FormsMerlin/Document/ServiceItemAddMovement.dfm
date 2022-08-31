@@ -27,15 +27,12 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 115
-    ExplicitHeight = 351
     ClientRectBottom = 318
     ClientRectRight = 1184
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 327
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -43,7 +40,6 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
         Height = 294
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 327
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -323,6 +319,40 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             Options.Editing = False
             Width = 80
           end
+          object UpdateName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object UpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object InsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -346,7 +376,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     Height = 89
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 5
+    TabOrder = 3
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -477,13 +507,12 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 89
+    Top = 115
     Width = 1184
     Height = 33
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitTop = 92
     object lbSearchName: TcxLabel
       Left = 4
       Top = 6

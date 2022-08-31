@@ -9,8 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
     IN inFromId            Integer,
     IN inToId              Integer,
     IN inJuridicalBasisId  Integer ,
-    IN inIsErased          Boolean      , --
-    IN inSession           TVarChar       -- сессия пользователя
+    IN inIsErased          Boolean  , --
+    IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
