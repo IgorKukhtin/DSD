@@ -251,7 +251,7 @@ begin
       qryReport.SQL.Text := qrySendList.FieldByName('SQL').AsString;
       qryReport.Open;
       if Assigned(qryReport.FindField('StartDate')) then
-        cxGridDBChartView1.DataGroups[0].DisplayText := 'Дата. Начиная с ' + qryReport.FindField('StartDate').AsString;
+        cxGridDBChartView1.DataGroups[0].DisplayText := 'Дата. Начиная с ' + qryReport.FindField('StartDate').AsString + ' по ' + qryReport.FindField('EndDate').AsString;
     except
       on E: Exception do Add_Log(E.Message);
     end;
