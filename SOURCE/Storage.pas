@@ -4,7 +4,7 @@ unit Storage;
 
 interface
 
-uses SysUtils, System.Classes;
+uses SysUtils, System.Classes, IdSSLOpenSSL;
 
 type
 
@@ -322,6 +322,12 @@ begin
     Instance.IdHTTP.Request.Connection:='keep-alive';
     Instance.IdHTTP.OnWorkBegin := IdHTTPWork.IdHTTPWorkBegin;
     Instance.IdHTTP.OnWork := IdHTTPWork.IdHTTPWork;
+    Instance.IdHTTP.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(Instance.IdHTTP);
+    Instance.IdHTTP.IOHandler.MaxLineAction := maException;
+    TIdSSLIOHandlerSocketOpenSSL(Instance.IdHTTP.IOHandler).SSLOptions.Method := sslvSSLv23;
+//    TIdSSLIOHandlerSocketOpenSSL(Instance.IdHTTP.IOHandler).SSLOptions.Mode := sslmUnassigned;
+//    TIdSSLIOHandlerSocketOpenSSL(Instance.IdHTTP.IOHandler).SSLOptions.VerifyDepth := 0;
+
     Instance.FSendList := TStringList.Create;
     Instance.FReceiveStream := TStringStream.Create('');
     if dsdProject = prBoat then
