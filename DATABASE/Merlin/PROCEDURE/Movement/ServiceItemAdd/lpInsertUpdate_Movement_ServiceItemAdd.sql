@@ -34,7 +34,7 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
-        -- !!!протокол через свойства конкретного объекта!!!
+     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE
      THEN
          -- сохранили свойство <Дата корректировки>

@@ -40,7 +40,14 @@ BEGIN
 
      -- дата документа
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     --
      
+     IF inIsOne = TRUE
+     THEN
+         ioNumEndDate:= ioNumStartDate;
+         ioNumYearEnd:= ioNumYearStart;
+     END IF;
+
      --
      outDateStart:= ('01.'||CASE WHEN COALESCE (ioNumStartDate, 0) = 0 THEN '01' ELSE ioNumStartDate :: TVarChar END ||'.'||(2000 + ioNumYearStart)) ::TDateTime;
 
@@ -115,17 +122,19 @@ BEGIN
          -- Проверка StartDate - попадает в диапазон базовых условий
          IF ('01.'||ioNumStartDate||'.'||(2000 + ioNumYearStart)) ::TDateTime < vbDateStart_base
          THEN
-            RAISE EXCEPTION 'Ошибка.Начальная дата = <%> не может быть раньше начальной даты в базовом условии = <%>.'
+            RAISE EXCEPTION 'Ошибка.Начальная дата = <%> не попадает в период базового условия с <%> по <%>.'
                           , zfConvert_DateToString (('01.'||ioNumStartDate||'.'||(2000 + ioNumYearStart)) ::TDateTime)
                           , zfConvert_DateToString (vbDateStart_base)
+                          , zfConvert_DateToString (vbDateEnd_base)
                            ;
          END IF;
 
          -- Проверка EndDate - попадает в диапазон базовых условий
          IF ((('01.'||ioNumEndDate||'.'||(2000 + ioNumYearEnd)) ::TDateTime) + INTERVAL '1 MONTH' -  INTERVAL '1 Day') > vbDateEnd_base
          THEN
-            RAISE EXCEPTION 'Ошибка.Конечная дата = <%> не может быть позже конечной даты в базовом условии = <%>.'
+            RAISE EXCEPTION 'Ошибка.Конечная дата = <%> не попадает в период базового условия с <%> по <%>.'
                           , zfConvert_DateToString (('01.'||ioNumEndDate||'.'||(2000 + ioNumYearEnd)) ::TDateTime + INTERVAL '1 MONTH' -  INTERVAL '1 Day')
+                          , zfConvert_DateToString (vbDateStart_base)
                           , zfConvert_DateToString (vbDateEnd_base)
                            ;
          END IF;
