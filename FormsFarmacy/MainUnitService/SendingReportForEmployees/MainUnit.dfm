@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = 'O'#1090#1087#1088#1072#1074#1082#1072' '#1089#1086#1086#1073#1097#1077#1085#1080#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
   ClientHeight = 702
-  ClientWidth = 1025
+  ClientWidth = 1035
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,19 +19,21 @@ object MainForm: TMainForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1025
+    Width = 1035
     Height = 257
     Align = alTop
     BevelOuter = bvNone
     Caption = 'Panel1'
     TabOrder = 0
+    ExplicitWidth = 1025
     object Panel2: TPanel
       Left = 0
       Top = 0
-      Width = 1025
+      Width = 1035
       Height = 31
       Align = alTop
       TabOrder = 0
+      ExplicitWidth = 1025
       object btnSendTelegram: TButton
         Left = 635
         Top = 0
@@ -106,7 +108,7 @@ object MainForm: TMainForm
       end
     end
     object grChatId: TcxGrid
-      Left = 496
+      Left = 506
       Top = 31
       Width = 529
       Height = 226
@@ -115,6 +117,7 @@ object MainForm: TMainForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitLeft = 496
       object grChatIdDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ChatIdDS
@@ -173,13 +176,14 @@ object MainForm: TMainForm
     object cxGrid1: TcxGrid
       Left = 0
       Top = 31
-      Width = 496
+      Width = 506
       Height = 226
       Align = alClient
       TabOrder = 2
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitWidth = 496
       object cxGridDBTableView2: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = dsSendList
@@ -231,26 +235,29 @@ object MainForm: TMainForm
   object cxPageControl1: TcxPageControl
     Left = 0
     Top = 257
-    Width = 1025
+    Width = 1035
     Height = 445
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheet2
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1025
     ClientRectBottom = 441
     ClientRectLeft = 4
-    ClientRectRight = 1021
+    ClientRectRight = 1031
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 0
+      ExplicitWidth = 1017
       object grReport: TcxGrid
         Left = 0
         Top = 0
-        Width = 1017
+        Width = 1027
         Height = 417
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1017
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsReport_Upload
@@ -411,19 +418,24 @@ object MainForm: TMainForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1079#1072#1082#1072#1079#1086#1074' '#1087#1086' '#1045#1048#1062
       ImageIndex = 1
+      ExplicitWidth = 1017
       object grChart2: TcxGrid
         Left = 0
         Top = 0
-        Width = 1017
+        Width = 1027
         Height = 417
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1017
         object cxGridDBChartView1: TcxGridDBChartView
           DiagramLine.Active = True
+          DiagramLine.Legend.Position = cppTop
+          DiagramLine.AxisCategory.TickMarkLabels = False
           DiagramLine.Values.LineWidth = 2
           ToolBox.CustomizeButton = True
           ToolBox.DiagramSelector = True
+          ToolBox.Visible = tvNever
           object cxGridDBChartDataGroup2: TcxGridDBChartDataGroup
             DataBinding.FieldName = 'OperDate'
             DisplayText = #1044#1072#1090#1072
@@ -457,14 +469,16 @@ object MainForm: TMainForm
     object cxTabSheet3: TcxTabSheet
       Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080' '#1074' %'
       ImageIndex = 1
+      ExplicitWidth = 1017
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
-        Width = 1017
+        Width = 1027
         Height = 417
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1017
         object cxGridDBChartView2: TcxGridDBChartView
           DiagramLine.Values.LineWidth = 2
           DiagramStackedArea.Active = True
@@ -487,14 +501,16 @@ object MainForm: TMainForm
     object cxTabSheet4: TcxTabSheet
       Caption = #1056#1086#1089#1090'/'#1087#1072#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1086#1074' '#1084#1077#1089#1103#1094#1072' '#1082' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1084#1091' '#1084#1077#1089#1103#1094#1091' '#1074' %'
       ImageIndex = 3
+      ExplicitWidth = 1017
       object cxGrid3: TcxGrid
         Left = 0
         Top = 0
-        Width = 1017
+        Width = 1027
         Height = 417
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1017
         object cxGridDBChartView3: TcxGridDBChartView
           DiagramLine.Active = True
           DiagramLine.Values.LineWidth = 2

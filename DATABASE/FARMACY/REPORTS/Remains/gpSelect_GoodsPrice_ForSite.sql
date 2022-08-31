@@ -86,10 +86,15 @@ BEGIN
                                                                         AND Object_BarCode.isErased = False
                                                                         AND Object_Object.isErased = False)
                               )
+          , tmpGoods AS (SELECT DISTINCT Price_Site.GoodsId
+                        FROM tmpPrice_Site AS Price_Site         
+                        WHERE COALESCE (inSearch, '') = '' OR 
+                              CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END ILIKE '%'||inSearch||'%'
+                        )
           , tmpContainerRemains AS (SELECT Container.ObjectId           AS GoodsId
                                          , SUM(Container.Amount)        AS Remains 
                                     FROM Container
-                                         INNER JOIN tmpPrice_Site ON tmpPrice_Site.GoodsId = Container.ObjectId
+                                         INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
                                     WHERE Container.DescId = zc_Container_Count()
                                       AND Container.Amount <> 0
                                     GROUP BY Container.ObjectId  
@@ -105,13 +110,12 @@ BEGIN
 
                              , tmpContainerRemains.Remains::TFloat                          AS Remains
                               
-                        FROM tmpPrice_Site AS Price_Site         
+                        FROM tmpGoods 
+                        
+                             LEFT JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = tmpGoods.GoodsId      
 
                              LEFT JOIN tmpContainerRemains ON tmpContainerRemains.GoodsId = Price_Site.GoodsId
                                             
-                        WHERE COALESCE (inSearch, '') = '' OR 
-                              CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END ILIKE '%'||inSearch||'%'
-
                         ORDER BY CASE WHEN COALESCE (tmpContainerRemains.Remains, 0) = 0 THEN 1 ELSE 0 END 
                                , CASE WHEN inSortType = 0 THEN Price_Site.Price END
                                , CASE WHEN inSortType = 1 THEN Price_Site.Price END DESC
@@ -265,4 +269,4 @@ $BODY$
 -- select *, null as img_url from gpSelect_GoodsPrice_ForSite(394759, 1, 'uk', 0, 8, 0, '', zfCalc_UserSite())
 
 
-select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'uk', 0, 8, 0, 'Анальдим', zfCalc_UserSite())
+select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'uk', 0, 8, 0, 'Но-шпа', zfCalc_UserSite())

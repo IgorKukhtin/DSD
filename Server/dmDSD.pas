@@ -369,9 +369,9 @@ begin
                 ftString, ftMemo:
                   Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' +
                     StringsReplace(StringsReplace(StringsReplace(StringsReplace(StringsReplace(VarToStr(LStoredProc.Fields[I].Value),
+                      ['&'], ['&amp;']),
                       ['"'], ['&quot;']),
                       [''''], ['&apos;']),
-                      ['&'], ['&amp;']),
                       ['<'], ['&lt;']),
                       ['>'], ['&gt;']) + '"';
                 else
