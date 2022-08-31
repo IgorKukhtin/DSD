@@ -34,7 +34,8 @@ $BODY$
    DECLARE vbGoodsKindId_err Integer;
    DECLARE vbAmount_err      TFloat;
    DECLARE vbTaxDoc_err      TFloat;
-   DECLARE vbTaxMI_err      TFloat;
+   DECLARE vbTaxMI_err       TFloat;
+   DECLARE vbAmountDoc_err   TFloat;
 
    DECLARE vbOperDate_scale TDateTime;
    DECLARE vbOperDatePartner_order TDateTime;
@@ -182,6 +183,7 @@ BEGIN
 
      -- проверка - Количество вложение
      IF vbMovementDescId = zc_Movement_Sale() -- AND vbUserId = 5
+     and 1=1
      THEN
          -- нашли
          --vbGoodsPropertyId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = inMovementId AND MLO.DescId = zc_MovementLinkObject_GoodsProperty());
@@ -245,8 +247,8 @@ BEGIN
                                WHERE ObjectFloat_AmountDoc.ValueData > 0
                               )
 
-         SELECT tmpAmountDoc.GoodsId, tmpAmountDoc.GoodsKindId, tmpAmountDoc.Amount, tmpAmountDoc.TaxDoc, tmpAmountDoc.Amount / tmpAmountDoc.AmountDoc * 100 - 100
-                INTO vbGoodsId_err, vbGoodsKindId_err, vbAmount_err, vbTaxDoc_err, vbTaxMI_err
+         SELECT tmpAmountDoc.GoodsId, tmpAmountDoc.GoodsKindId, tmpAmountDoc.Amount, tmpAmountDoc.TaxDoc, tmpAmountDoc.Amount / tmpAmountDoc.AmountDoc * 100 - 100, tmpAmountDoc.AmountDoc
+                INTO vbGoodsId_err, vbGoodsKindId_err, vbAmount_err, vbTaxDoc_err, vbTaxMI_err, vbAmountDoc_err
          FROM tmpAmountDoc
               LEFT JOIN MovementLinkObject AS MLO ON MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract()
               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MLO.ObjectId
@@ -257,7 +259,7 @@ BEGIN
          --
          IF vbGoodsId_err > 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Сканирование для%<%> <%> Кол-во = <%>%допустимый проц.отклонения = <%>%факт проц.отклонения = <%>.'
+             RAISE EXCEPTION 'Ошибка.Сканирование для%<%> <%> Кол-во = <%>%допустимый проц.отклонения = <%>%факт проц.отклонения = <%>.%Значение в классификаторе <%>%Количество шт.вложение (проверка веса ящика) = <%>'
                            , CHR (13)
                            , lfGet_Object_ValueData (vbGoodsId_err)
                            , lfGet_Object_ValueData (vbGoodsKindId_err)
@@ -266,6 +268,10 @@ BEGIN
                            , zfConvert_FloatToString (vbTaxDoc_err)
                            , CHR (13)
                            , zfConvert_FloatToString (vbTaxMI_err)
+                           , CHR (13)
+                           , lfGet_Object_ValueData_sh (vbGoodsPropertyId)
+                           , CHR (13)
+                           , zfConvert_FloatToString (vbAmountDoc_err)
                            ;
          END IF;
 
@@ -1906,7 +1912,7 @@ BEGIN
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
- IF vbUserId = 5 AND 1=0 THEN
+ IF vbUserId = 5 AND 1=1 THEN
 -- IF inSession = '1162887' AND 1=1 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %  %  %  % % % % %'
   , vbIsSendOnPriceIn -- inBranchCode -- 'Повторите действие через 3 мин.'
