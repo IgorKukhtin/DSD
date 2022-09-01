@@ -1630,7 +1630,11 @@ BEGIN
                        , tmpData_all.N10_ifin
 
                        , tmpData_all.N9
-                       , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                       , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_Prepay())
+                               AND tmpData_all.AmountTax_calc <> tmpData_all.Amount
+                                   THEN '102'  -- 2 --'«м≥на к≥лькост≥'
+
+                              WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                  , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                   )
                                AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
