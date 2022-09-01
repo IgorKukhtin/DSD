@@ -28,7 +28,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
     IN inCurrencyPartnerValue  TFloat    , -- Курс для расчета суммы операции
     IN inParPartnerValue       TFloat    , -- Номинал для расчета суммы операции
     IN inMovementId_Partion    Integer   , -- Id документа продажи
-
     IN inUserId                Integer     -- Пользователь
 )
 RETURNS Integer

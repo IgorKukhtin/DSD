@@ -4,8 +4,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -238
-  ExplicitTop = -197
+  ExplicitTop = -161
   ExplicitWidth = 981
   ExplicitHeight = 714
   PixelsPerInch = 96
@@ -130,7 +129,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 106
           end
           object MemberName: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
@@ -161,6 +160,51 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
+          end
+          object InfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object InfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object InfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object InfoMoneyName_all: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
           object Comment_Service: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
@@ -374,7 +418,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = cbIsServiceDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -387,7 +431,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
   end
   inherited MasterDS: TDataSource
     Left = 72
-    Top = 112
+    Top = 144
   end
   inherited MasterCDS: TClientDataSet
     Left = 24
@@ -445,7 +489,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
         MultiSelectSeparator = ','
       end>
     Left = 128
-    Top = 96
+    Top = 152
   end
   inherited BarManager: TdxBarManager
     Left = 232

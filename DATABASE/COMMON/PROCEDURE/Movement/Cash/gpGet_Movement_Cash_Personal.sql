@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CashId Integer, CashName TVarChar
              , PersonalServiceListName TVarChar, PersonalServiceListId Integer
              , MemberId Integer, MemberName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
              )
 AS
 $BODY$
@@ -54,6 +55,9 @@ BEGIN
            , 0                                                 AS MemberId
            , CAST ('' as TVarChar)                             AS MemberName
 
+           , 0                                                 AS InfoMoneyId
+           , CAST ('' as TVarChar)                             AS InfoMoneyName
+           
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = inCashId 
                                                                         -- IN (SELECT MIN (Object.Id) FROM Object WHERE Object.AccessKeyId IN (SELECT MIN (lpGetAccessKey) FROM lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Cash())))
@@ -83,7 +87,10 @@ BEGIN
            , Object_PersonalServiceList.Id     AS PersonalServiceListId
 
            , Object_Member.Id                  AS MemberId
-           , Object_Member.ValueData           AS MemberName
+           , Object_Member.ValueData           AS MemberName    
+
+           , View_InfoMoney.InfoMoneyId
+           , View_InfoMoney.InfoMoneyName_all   AS InfoMoneyName
                     
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -112,7 +119,12 @@ BEGIN
                                              ON MILinkObject_Member.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MILinkObject_Member.ObjectId
-      
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+
        WHERE Movement.Id =  inMovementId;
 
    END IF;  

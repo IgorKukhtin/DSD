@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_Movement_Cash_Personal()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash_Personal (Integer, TVarChar, tdatetime, Integer, Integer, TVarChar, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash_Personal (Integer, TVarChar, tdatetime, Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash_Personal (Integer, TVarChar, tdatetime, Integer, Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash_Personal(
  INOUT ioMovementId          Integer   , -- 
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inParentId            Integer   , -- документ наче=исления зп
-    IN inCashId              Integer   , -- Касса
+    IN inCashId              Integer   , -- Касса 
+    IN inInfoMoneyId         Integer   , --
     IN inComment             TVarChar  , -- Комментерий
     IN inMemberId            Integer   , -- Физ лицо (через кого)
     IN inSession             TVarChar    -- сессия пользователя
@@ -40,7 +42,7 @@ BEGIN
                                                          , inMoneyPlaceId:= MovementLinkObject_PersonalServiceList.ObjectId
                                                          , inPositionId  := NULL
                                                          , inContractId  := NULL
-                                                         , inInfoMoneyId := zc_Enum_InfoMoney_60101() -- Заработная плата
+                                                         , inInfoMoneyId := inInfoMoneyId --zc_Enum_InfoMoney_60101() -- Заработная плата
                                                                          /*(SELECT DISTINCT MovementItemLinkObject.ObjectId
                                                                              FROM MovementItem
                                                                                   INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
@@ -78,6 +80,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 01.09.22         * inInfoMoneyId
  21.05.17         *
  05.04.15                                        * all
  16.02.15                                        * all

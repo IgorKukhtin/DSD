@@ -23,6 +23,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment_Service TVarChar
              , PersonalServiceListName TVarChar
              , TotalSummToPay_Service TFloat
+             , InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )
 AS
 $BODY$
@@ -89,7 +92,10 @@ BEGIN
                                                     AND Movement.ParentId > 0
                                  LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
                             WHERE inIsServiceDate = TRUE
-                           )
+                           )  
+          , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
+
+
        SELECT
              tmpMovement.Id
            , tmpMovement.InvNumber
@@ -116,6 +122,12 @@ BEGIN
             - COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCardSecondCash.ValueData, 0)
              ) :: TFloat AS TotalSummToPay_Service
+
+           , View_InfoMoney.InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName
+           , View_InfoMoney.InfoMoneyName_all
            
        FROM tmpMovement
             INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id 
@@ -164,6 +176,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment_Service
                                      ON MovementString_Comment_Service.MovementId = Movement_PersonalService.Id
                                     AND MovementString_Comment_Service.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
       ;
    
 END;
@@ -173,6 +190,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 01.09.22         *
  07.10.16         * add inJuridicalBasisId
  04.04.15                                        * all
  18.01.15         * add member
