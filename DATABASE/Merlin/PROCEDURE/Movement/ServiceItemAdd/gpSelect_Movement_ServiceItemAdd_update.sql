@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer
              , StatusCode Integer, StatusName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , InsertName_mi TVarChar, InsertDate_mi TDateTime
+             , UpdateName_mi TVarChar, UpdateDate_mi TDateTime
              , UnitId Integer, UnitCode Integer, UnitName TVarChar, UnitName_Full TVarChar
              , UnitGroupNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -76,10 +78,16 @@ BEGIN
            , Movement.OperDate
            , Movement.StatusCode
            , Movement.StatusName
+
            , Movement.InsertName
            , Movement.InsertDate
            , Movement.UpdateName
            , Movement.UpdateDate
+
+           , Object_Insert.ValueData    AS InsertName_mi
+           , MIDate_Insert.ValueData    AS InsertDate_mi
+           , Object_Update.ValueData    AS UpdateName_mi
+           , MIDate_Update.ValueData    AS UpdateDate_mi
 
            , Movement.UnitId
            , Movement.UnitCode
@@ -130,6 +138,23 @@ BEGIN
                               AND tmp_last.InfoMoneyId = Movement.InfoMoneyId
                               AND tmp_last.DateStart <= Movement.OperDate
                               AND tmp_last.DateEnd   >= Movement.OperDate
+
+            LEFT JOIN MovementItemDate AS MIDate_Insert
+                                       ON MIDate_Insert.MovementItemId = Movement.MovementItemId
+                                      AND MIDate_Insert.DescId = zc_MIDate_Insert()
+            LEFT JOIN MovementItemDate AS MIDate_Update
+                                       ON MIDate_Update.MovementItemId = Movement.MovementItemId
+                                      AND MIDate_Update.DescId = zc_MIDate_Update()
+
+            LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                             ON MILO_Insert.MovementItemId = Movement.MovementItemId
+                                            AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILO_Update
+                                             ON MILO_Update.MovementItemId = Movement.MovementItemId
+                                            AND MILO_Update.DescId = zc_MILinkObject_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
        ;
 
 

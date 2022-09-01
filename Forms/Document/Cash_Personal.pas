@@ -104,6 +104,9 @@ type
     isCalculated: TcxGridDBColumn;
     SummCardSecondRemains: TcxGridDBColumn;
     Amount_avance_ret: TcxGridDBColumn;
+    cxLabel7: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
   private
     { Private declarations }
   public

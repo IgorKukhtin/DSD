@@ -75,7 +75,7 @@ type
     bbUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;
     RouteChoiceForm: TOpenChoiceForm;
-    CarChoiceForm: TOpenChoiceForm;
+    PersonalServiceListChoiceForm: TOpenChoiceForm;
     cxLabel4: TcxLabel;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;

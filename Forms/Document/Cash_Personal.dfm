@@ -4,7 +4,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   ClientWidth = 982
   AddOnFormData.isSingle = True
   ExplicitWidth = 998
-  ExplicitHeight = 542
+  ExplicitHeight = 546
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -796,13 +796,13 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
     end
     object edComment: TcxTextEdit
-      Left = 470
+      Left = 625
       Top = 63
       TabOrder = 8
-      Width = 387
+      Width = 232
     end
     object cxLabel12: TcxLabel
-      Left = 470
+      Left = 625
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '
     end
@@ -858,6 +858,23 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       Properties.ReadOnly = True
       TabOrder = 15
       Width = 232
+    end
+    object cxLabel7: TcxLabel
+      Left = 470
+      Top = 45
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 470
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 140
     end
   end
   object edDocumentPersonalService: TcxButtonEdit [2]
@@ -1488,6 +1505,21 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 264
@@ -1531,6 +1563,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Name = 'inCashId'
         Value = ''
         Component = GuidesCash
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1830,6 +1870,20 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Name = 'TopPersonalServiceListName'
         Value = ''
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 5
@@ -1894,8 +1948,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 448
-    Top = 16
+    Left = 424
+    Top = 8
   end
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
@@ -2061,5 +2115,33 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     PackSize = 1
     Left = 426
     Top = 384
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 544
+    Top = 53
   end
 end

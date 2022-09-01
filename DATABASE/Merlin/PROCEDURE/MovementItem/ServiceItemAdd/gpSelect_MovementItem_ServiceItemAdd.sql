@@ -32,6 +32,8 @@ RETURNS TABLE (Id Integer
              , MonthNameEnd_before TDateTime
              , Amount_before TFloat
 
+             , InsertName TVarChar, UpdateName TVarChar
+             , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
 
               )
@@ -142,6 +144,11 @@ BEGIN
                 , NULL            :: TDateTime AS MonthNameEnd_before
                 , NULL            :: TFloat    AS Amount_before
 
+                , '' ::TVarChar       AS InsertName
+                , '' ::TVarChar       AS UpdateName
+                , CURRENT_TIMESTAMP ::TDateTime AS InsertDate
+                , NULL ::TDateTime    AS UpdateDate
+
                 , FALSE           :: Boolean   AS isErased
 
            FROM tmpUnit
@@ -197,6 +204,11 @@ BEGIN
                 , tmp_last.DateEnd         :: TDateTime AS MonthNameEnd_before
                 , tmp_last.Amount          :: TFloat    AS Amount_before
 
+                , Object_Insert.ValueData    AS InsertName
+                , Object_Update.ValueData    AS UpdateName
+                , MIDate_Insert.ValueData    AS InsertDate
+                , MIDate_Update.ValueData    AS UpdateDate
+
                 , tmpMI.isErased
            FROM tmpMI
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI.UnitId
@@ -217,7 +229,25 @@ BEGIN
                                                                      ON tmpMI.DateStart BETWEEN COALESCE (tmpMI_Main.DateStart, zc_DateStart()) AND tmpMI_Main.DateEnd
                                                                     AND tmpMI_Main.Amount > 0
 
-                LEFT JOIN tmp_last ON tmp_last.MovementItemId_find = tmpMI.Id
+                LEFT JOIN tmp_last ON tmp_last.MovementItemId_find = tmpMI.Id 
+
+                LEFT JOIN MovementItemDate AS MIDate_Insert
+                                           ON MIDate_Insert.MovementItemId = tmpMI.Id
+                                          AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                LEFT JOIN MovementItemDate AS MIDate_Update
+                                           ON MIDate_Update.MovementItemId = tmpMI.Id
+                                          AND MIDate_Update.DescId = zc_MIDate_Update()
+
+                LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                                 ON MILO_Insert.MovementItemId = tmpMI.Id
+                                                AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+
+                LEFT JOIN MovementItemLinkObject AS MILO_Update
+                                                 ON MILO_Update.MovementItemId = tmpMI.Id
+                                                AND MILO_Update.DescId = zc_MILinkObject_Update()
+                LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+
           ;
 
      ELSE
@@ -304,6 +334,11 @@ BEGIN
                 , zfCalc_Month_end (tmp_last.DateEnd)       AS MonthNameEnd_before
                 , tmp_last.Amount              :: TFloat    AS Amount_before
 
+                , Object_Insert.ValueData    AS InsertName
+                , Object_Update.ValueData    AS UpdateName
+                , MIDate_Insert.ValueData    AS InsertDate
+                , MIDate_Update.ValueData    AS UpdateDate
+
                 , tmpMI.isErased
            FROM tmpMI
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI.UnitId
@@ -323,7 +358,25 @@ BEGIN
                                                                      ON tmpMI.DateStart BETWEEN COALESCE (tmpMI_Main.DateStart, zc_DateStart()) AND tmpMI_Main.DateEnd
                                                                     AND tmpMI_Main.Amount > 0
 
-                LEFT JOIN tmp_last ON tmp_last.MovementItemId_find = tmpMI.Id
+                LEFT JOIN tmp_last ON tmp_last.MovementItemId_find = tmpMI.Id   
+
+                LEFT JOIN MovementItemDate AS MIDate_Insert
+                                           ON MIDate_Insert.MovementItemId = tmpMI.Id
+                                          AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                LEFT JOIN MovementItemDate AS MIDate_Update
+                                           ON MIDate_Update.MovementItemId = tmpMI.Id
+                                          AND MIDate_Update.DescId = zc_MIDate_Update()
+
+                LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                                 ON MILO_Insert.MovementItemId = tmpMI.Id
+                                                AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+
+                LEFT JOIN MovementItemLinkObject AS MILO_Update
+                                                 ON MILO_Update.MovementItemId = tmpMI.Id
+                                                AND MILO_Update.DescId = zc_MILinkObject_Update()
+                LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+
            ;
 
      END IF;
@@ -335,6 +388,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 31.08.22         *
  01.06.22         *
 */
 
