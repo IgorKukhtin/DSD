@@ -376,11 +376,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     Height = 89
     Align = alTop
     BevelOuter = bvNone
-<<<<<<< HEAD
-    TabOrder = 4
-=======
-    TabOrder = 3
->>>>>>> origin/master
+    TabOrder = 2
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -1143,7 +1139,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
           Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'UnitName'
+          ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
