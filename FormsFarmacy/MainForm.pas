@@ -981,6 +981,10 @@ type
     N363: TMenuItem;
     actReport_CheckMobile: TdsdOpenForm;
     N364: TMenuItem;
+    actReport_JuridicalRemainsEnd: TdsdOpenForm;
+    N365: TMenuItem;
+    actBonusesMobileApplication: TdsdOpenForm;
+    N366: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

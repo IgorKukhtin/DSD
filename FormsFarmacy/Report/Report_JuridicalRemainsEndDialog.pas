@@ -1,4 +1,4 @@
-unit Report_CheckMobileDialog;
+unit Report_JuridicalRemainsEndDialog;
 
 interface
 
@@ -22,28 +22,26 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_CheckMobileDialogForm = class(TParentForm)
+  TReport_JuridicalRemainsEndDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
+    deStart: TcxDateEdit;
     PeriodChoice: TPeriodChoice;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edUnit: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    GuidesUnit: TdsdGuides;
+    cxLabel6: TcxLabel;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     actGet_UserUnit: TdsdExecStoredProc;
+    spGet_UserUnit: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    cxLabel19: TcxLabel;
+    ceRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
-    deEnd: TcxDateEdit;
-    cxLabel2: TcxLabel;
-    deStart: TcxDateEdit;
     cxLabel1: TcxLabel;
-    cbIsErased: TcxCheckBox;
-    cbIsUnComplete: TcxCheckBox;
-    cbEmployeeMessage: TcxCheckBox;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public
@@ -55,6 +53,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_CheckMobileDialogForm);
+  RegisterClass(TReport_JuridicalRemainsEndDialogForm);
 
 end.
