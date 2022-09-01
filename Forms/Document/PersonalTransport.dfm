@@ -26,7 +26,6 @@ object PersonalTransportForm: TPersonalTransportForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 773
     object edInvNumber: TcxTextEdit
       Left = 16
       Top = 20
@@ -152,14 +151,12 @@ object PersonalTransportForm: TPersonalTransportForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 773
     ClientRectBottom = 281
     ClientRectRight = 922
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 773
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -167,7 +164,6 @@ object PersonalTransportForm: TPersonalTransportForm
         Height = 257
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 773
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -844,35 +840,27 @@ object PersonalTransportForm: TPersonalTransportForm
         end>
       isShowModal = True
     end
-    object CarChoiceForm: TOpenChoiceForm
+    object PersonalServiceListChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      FormName = 'TCarForm'
-      FormNameParam.Value = ''
+      FormName = 'TPersonalServiceListForm'
+      FormNameParam.Value = 'TPersonalServiceListForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CarId'
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CarName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CarModelName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CarModelName'
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1341,6 +1329,7 @@ object PersonalTransportForm: TPersonalTransportForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
+        Guides = GuidesPersonalServiceList
       end>
     ActionItemList = <
       item
@@ -1411,7 +1400,7 @@ object PersonalTransportForm: TPersonalTransportForm
     Top = 24
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_PersonalRate'
+    StoredProcName = 'gpUpdate_Status_PersonalTransport'
     DataSets = <>
     OutputType = otResult
     Params = <
