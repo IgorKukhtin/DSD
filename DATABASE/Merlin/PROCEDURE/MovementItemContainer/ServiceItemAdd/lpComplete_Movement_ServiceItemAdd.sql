@@ -53,7 +53,7 @@ BEGIN
                         )
         -- находим существующие Начисления
       , tmpMovement_Service AS (SELECT Movement.Id                     AS MovementId
-                                     , Movement.OperDate               AS OperDate
+                                     , MIDate_ServiceDate.ValueData    AS OperDate
                                      , MovementItem.ObjectId           AS UnitId
                                      , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
                                 FROM Movement
@@ -63,7 +63,10 @@ BEGIN
                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                       ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
-                                     INNER JOIN tmpListDate ON tmpListDate.OperDate = Movement.OperDate
+                                     LEFT JOIN MovementItemDate AS MIDate_ServiceDate
+                                                                ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
+                                                               AND MIDate_ServiceDate.DescId         = zc_MIDate_ServiceDate()
+                                     INNER JOIN tmpListDate ON tmpListDate.OperDate = MIDate_ServiceDate.ValueData
                                      INNER JOIN tmpMI ON tmpMI.UnitId      = MovementItem.ObjectId
                                                      AND tmpMI.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
                                                      AND tmpListDate.OperDate BETWEEN tmpMI.StartDate AND tmpMI.EndDate
@@ -90,7 +93,8 @@ BEGIN
      IF EXISTS (SELECT 1 FROM _tmpMovement_Service WHERE _tmpMovement_Service.MovementId_service = 0)
      THEN
          RAISE EXCEPTION 'Ошибка.Не найдены начисления для <%> <%> за <%>.Нельзя провести дополнение.Всего не найдено = <%>.'
-                       , lfGet_Object_ValueData_sh ((SELECT tmp.UnitId FROM _tmpMovement_Service AS tmp WHERE tmp.MovementId_service = 0 ORDER BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId, tmp.CommentInfoMoneyId, tmp.Amount LIMIT 1))
+                       , (SELECT OS.ValueData FROM _tmpMovement_Service AS tmp JOIN ObjectString AS OS ON OS.ObjectId = tmp.UnitId AND OS.DescId = zc_ObjectString_Unit_GroupNameFull() WHERE tmp.MovementId_service = 0 ORDER BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId, tmp.CommentInfoMoneyId, tmp.Amount LIMIT 1)
+               || '' ||  lfGet_Object_ValueData_sh ((SELECT tmp.UnitId FROM _tmpMovement_Service AS tmp WHERE tmp.MovementId_service = 0 ORDER BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId, tmp.CommentInfoMoneyId, tmp.Amount LIMIT 1))
                        , lfGet_Object_ValueData_sh ((SELECT tmp.InfoMoneyId FROM _tmpMovement_Service AS tmp WHERE tmp.MovementId_service = 0 ORDER BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId, tmp.CommentInfoMoneyId, tmp.Amount LIMIT 1))
                        , zfConvert_DateToString ((SELECT tmp.OperDate FROM _tmpMovement_Service AS tmp WHERE tmp.MovementId_service = 0 ORDER BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId, tmp.CommentInfoMoneyId, tmp.Amount LIMIT 1))
                        , (SELECT COUNT(*) FROM _tmpMovement_Service AS tmp WHERE tmp.MovementId_service = 0)
