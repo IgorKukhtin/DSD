@@ -44,6 +44,13 @@ type
     actUpdate: TdsdInsertUpdateAction;
     dxBarButton2: TdxBarButton;
     Color_UserReferals: TcxGridDBColumn;
+    ApplicationAward: TcxGridDBColumn;
+    isEmployeeMessage: TcxGridDBColumn;
+    cbEmployeeMessage: TcxCheckBox;
+    spUpdate_EmployeeMessage: TdsdStoredProc;
+    actUpdate_EmployeeMessage: TdsdExecStoredProc;
+    mactUpdate_EmployeeMessage: TMultiAction;
+    bbtUpdate_EmployeeMessage: TdxBarButton;
   private
     { Private declarations }
   public

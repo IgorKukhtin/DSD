@@ -1487,12 +1487,17 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
+  try
      // время когда сработал таймера
      vbOnTimer:= NOW;
+     Timer.Interval := 10000;
      cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' seccc ' + '('+FormatDateTime('dd.mm.yyyy hh:mm:ss',vbOnTimer)+')';
      Sleep(500);
      // обработка все
      fBeginAll;
+  finally
+
+  end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fGet_LoadPriceList (inJuridicalId, inContractId, inAreaId :Integer) : Integer;

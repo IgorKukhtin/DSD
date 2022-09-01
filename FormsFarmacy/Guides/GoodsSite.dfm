@@ -2316,6 +2316,7 @@ inherited GoodsSiteForm: TGoodsSiteForm
     end
     object dxBarButton17: TdxBarButton
       Action = mactSiteDiscont
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072'+'#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
       Category = 0
     end
     object dxBarButton18: TdxBarButton

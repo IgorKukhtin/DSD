@@ -82,19 +82,40 @@ BEGIN
                                                                         AND Object_BarCode.isErased = False
                                                                         AND Object_Object.isErased = False)
                               )
-          , tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
-                                     AND ObjectFloat_Goods_Price.ValueData > 0
-                                    THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
-                                    ELSE ROUND (Price_Value.ValueData, 2)
-                               END :: TFloat                           AS Price
+          , tmpObject_Price AS (SELECT CASE WHEN PriceSite_DiscontStart.ValueData IS NOT NULL
+                                             AND PriceSite_DiscontEnd.ValueData IS NOT NULL  
+                                             AND PriceSite_DiscontStart.ValueData <= CURRENT_DATE
+                                             AND PriceSite_DiscontEnd.ValueData >= CURRENT_DATE
+                                             AND COALESCE (PriceSite_DiscontAmount.ValueData, 0) > 0
+                                            THEN ROUND(CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                                             AND ObjectFloat_Goods_Price.ValueData > 0
+                                                                 THEN ObjectFloat_Goods_Price.ValueData
+                                                            ELSE ObjectFloat_Price_Value.ValueData
+                                                       END - COALESCE (PriceSite_DiscontAmount.ValueData, 0), 2)
+                                            WHEN PriceSite_DiscontStart.ValueData IS NOT NULL
+                                             AND PriceSite_DiscontEnd.ValueData IS NOT NULL  
+                                             AND PriceSite_DiscontStart.ValueData <= CURRENT_DATE
+                                             AND PriceSite_DiscontEnd.ValueData >= CURRENT_DATE
+                                             AND COALESCE (PriceSite_DiscontPercent.ValueData, 0) > 0 
+                                            THEN ROUND(CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                                             AND ObjectFloat_Goods_Price.ValueData > 0
+                                                                 THEN ObjectFloat_Goods_Price.ValueData
+                                                            ELSE ObjectFloat_Price_Value.ValueData
+                                                       END * (100 - COALESCE (PriceSite_DiscontPercent.ValueData, 0)) / 100, 1)
+                                            ELSE CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                                       AND ObjectFloat_Goods_Price.ValueData > 0
+                                                           THEN ObjectFloat_Goods_Price.ValueData
+                                                      ELSE ObjectFloat_Price_Value.ValueData
+                                                 END 
+                                            END::TFloat :: TFloat                           AS Price
                              , Price_Goods.ChildObjectId               AS GoodsId
                         FROM ObjectLink AS ObjectLink_Price_Unit
                            LEFT JOIN ObjectLink AS Price_Goods
                                                 ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                           LEFT JOIN ObjectFloat AS Price_Value
-                                                 ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Price_Value
+                                                 ON ObjectFloat_Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND ObjectFloat_Price_Value.DescId = zc_ObjectFloat_Price_Value()
                            -- Фикс цена для всей Сети
                            LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
                                                   ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
@@ -102,6 +123,18 @@ BEGIN
                            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
                                                    ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
                                                   AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                           LEFT JOIN ObjectDate AS PriceSite_DiscontStart
+                                                ON PriceSite_DiscontStart.ObjectId = Price_Goods.ChildObjectId
+                                               AND PriceSite_DiscontStart.DescId = zc_ObjectDate_Goods_DiscontSiteStart()
+                           LEFT JOIN ObjectDate AS PriceSite_DiscontEnd
+                                                ON PriceSite_DiscontEnd.ObjectId = Price_Goods.ChildObjectId
+                                               AND PriceSite_DiscontEnd.DescId = zc_ObjectDate_Goods_DiscontSiteEnd()
+                           LEFT JOIN ObjectFloat AS PriceSite_DiscontAmount
+                                                 ON PriceSite_DiscontAmount.ObjectId = Price_Goods.ChildObjectId
+                                                AND PriceSite_DiscontAmount.DescId = zc_ObjectFloat_Goods_DiscontAmountSite()
+                           LEFT JOIN ObjectFloat AS PriceSite_DiscontPercent
+                                                 ON PriceSite_DiscontPercent.ObjectId = Price_Goods.ChildObjectId
+                                                AND PriceSite_DiscontPercent.DescId = zc_ObjectFloat_Goods_DiscontPercentSite()
                         WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                           AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                         )
@@ -227,6 +260,5 @@ $BODY$
 -- тест
 --
  
-SELECT * FROM gpSelect_GoodsPrice_ForSite (inCategoryId := 394964 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Мило', inUnitId := 472116, inSession:= zfCalc_UserSite());
-
+SELECT * FROM gpSelect_GoodsPrice_ForSite (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Канефрон Н', inUnitId := 472116, inSession:= zfCalc_UserSite());
 

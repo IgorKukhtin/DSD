@@ -55,6 +55,10 @@ BEGIN
                                    , COALESCE(Object_Goods_Retail.Price, 0)     AS PriceTop 
                                    , Object_Goods_Retail.isTop                  AS isTop 
                                    , Object_Goods_Main.Id                       AS GoodsMainId
+                                   , Object_Goods_Retail.DiscontSiteStart
+                                   , Object_Goods_Retail.DiscontSiteEnd
+                                   , Object_Goods_Retail.DiscontAmountSite
+                                   , Object_Goods_Retail.DiscontPercentSite
                               FROM Object AS Object_PriceSite
 
                                    INNER JOIN ObjectLink AS Price_Goods
@@ -132,19 +136,70 @@ BEGIN
                              WHERE Container.DescId = zc_Container_Count()
                                AND Container.Amount <> 0
                                AND Container.ObjectId in (SELECT tmpData.GoodsId FROM tmpData)
+                               AND Container.WhereObjectId in (SELECT tmp.Id 
+                                                               FROM gpSelect_Object_Unit_Active (inNotUnitId := 0, inSession := inSession) AS tmp
+                                                                    INNER JOIN ObjectLink AS OL_Unit_Juridical
+                                                                                          ON OL_Unit_Juridical.ObjectId = tmp.Id
+                                                                                         AND OL_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+                                                                    INNER JOIN ObjectLink AS OL_Juridical_Retail
+                                                                                          ON OL_Juridical_Retail.ObjectId = OL_Unit_Juridical.ChildObjectId
+                                                                                         AND OL_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                                                                                         AND OL_Juridical_Retail.ChildObjectId = 4
+                                                                    INNER JOIN ObjectLink AS OL_Unit_Area
+                                                                                          ON OL_Unit_Area.ObjectId = tmp.Id
+                                                                                         AND OL_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
+                                                               )
                              GROUP BY Container.WhereObjectId
                                     , Container.ObjectId  
                              HAVING SUM(Container.Amount) > 0
                              )
           , tmpContainerAll AS (SELECT Price_Goods.ChildObjectId            AS GoodsId
-                                     , MIN(CASE WHEN tmpPrice_Site.IsTop = TRUE
-                                                 AND tmpPrice_Site.PriceTop > 0
-                                                THEN ROUND (tmpPrice_Site.PriceTop, 2)
-                                                ELSE ROUND (Price_Value.ValueData, 2) END)           AS PriceMin
-                                     , MAX(CASE WHEN tmpPrice_Site.IsTop = TRUE
-                                                 AND tmpPrice_Site.PriceTop > 0
-                                                THEN ROUND (tmpPrice_Site.PriceTop, 2)
-                                                ELSE ROUND (Price_Value.ValueData, 2) END)           AS PriceMax
+                                     , MIN(CASE WHEN tmpPrice_Site.DiscontSiteStart IS NOT NULL
+                                                 AND tmpPrice_Site.DiscontSiteEnd IS NOT NULL  
+                                                 AND tmpPrice_Site.DiscontSiteStart <= CURRENT_DATE
+                                                 AND tmpPrice_Site.DiscontSiteEnd >= CURRENT_DATE
+                                                 AND COALESCE (tmpPrice_Site.DiscontAmountSite, 0) > 0
+                                                THEN ROUND(CASE WHEN tmpPrice_Site.IsTop = TRUE
+                                                                 AND tmpPrice_Site.PriceTop > 0
+                                                                THEN ROUND (tmpPrice_Site.PriceTop, 2)
+                                                                ELSE ROUND (Price_Value.ValueData, 2) END - COALESCE (tmpPrice_Site.DiscontAmountSite, 0), 2)
+                                                WHEN tmpPrice_Site.DiscontSiteStart IS NOT NULL
+                                                 AND tmpPrice_Site.DiscontSiteEnd IS NOT NULL  
+                                                 AND tmpPrice_Site.DiscontSiteStart <= CURRENT_DATE
+                                                 AND tmpPrice_Site.DiscontSiteEnd >= CURRENT_DATE
+                                                 AND COALESCE (tmpPrice_Site.DiscontPercentSite, 0) > 0 
+                                                THEN ROUND(CASE WHEN tmpPrice_Site.IsTop = TRUE
+                                                                 AND tmpPrice_Site.PriceTop > 0
+                                                                THEN ROUND (tmpPrice_Site.PriceTop, 2)
+                                                                ELSE ROUND (Price_Value.ValueData, 2) END * (100 - COALESCE (tmpPrice_Site.DiscontPercentSite, 0)) / 100, 1)
+                                                ELSE CASE WHEN tmpPrice_Site.IsTop = TRUE
+                                                           AND tmpPrice_Site.PriceTop > 0
+                                                          THEN ROUND (tmpPrice_Site.PriceTop, 2)
+                                                          ELSE ROUND (Price_Value.ValueData, 2) END
+                                                END)           AS PriceMin
+                                     , MAX(CASE WHEN tmpPrice_Site.DiscontSiteStart IS NOT NULL
+                                                 AND tmpPrice_Site.DiscontSiteEnd IS NOT NULL  
+                                                 AND tmpPrice_Site.DiscontSiteStart <= CURRENT_DATE
+                                                 AND tmpPrice_Site.DiscontSiteEnd >= CURRENT_DATE
+                                                 AND COALESCE (tmpPrice_Site.DiscontAmountSite, 0) > 0
+                                                THEN ROUND(CASE WHEN tmpPrice_Site.IsTop = TRUE
+                                                                 AND tmpPrice_Site.PriceTop > 0
+                                                                THEN ROUND (tmpPrice_Site.PriceTop, 2)
+                                                                ELSE ROUND (Price_Value.ValueData, 2) END - COALESCE (tmpPrice_Site.DiscontAmountSite, 0), 2)
+                                                WHEN tmpPrice_Site.DiscontSiteStart IS NOT NULL
+                                                 AND tmpPrice_Site.DiscontSiteEnd IS NOT NULL  
+                                                 AND tmpPrice_Site.DiscontSiteStart <= CURRENT_DATE
+                                                 AND tmpPrice_Site.DiscontSiteEnd >= CURRENT_DATE
+                                                 AND COALESCE (tmpPrice_Site.DiscontPercentSite, 0) > 0 
+                                                THEN ROUND(CASE WHEN tmpPrice_Site.IsTop = TRUE
+                                                                 AND tmpPrice_Site.PriceTop > 0
+                                                                THEN ROUND (tmpPrice_Site.PriceTop, 2)
+                                                                ELSE ROUND (Price_Value.ValueData, 2) END * (100 - COALESCE (tmpPrice_Site.DiscontPercentSite	, 0)) / 100, 1)
+                                                ELSE CASE WHEN tmpPrice_Site.IsTop = TRUE
+                                                           AND tmpPrice_Site.PriceTop > 0
+                                                          THEN ROUND (tmpPrice_Site.PriceTop, 2)
+                                                          ELSE ROUND (Price_Value.ValueData, 2) END
+                                                END)           AS PriceMax
                                 FROM ObjectLink AS Price_Goods
                                 
                                      INNER JOIN ObjectLink AS ObjectLink_Price_Unit
@@ -160,7 +215,6 @@ BEGIN
 
                                      -- Фикс цена для всей Сети
                                      LEFT JOIN tmpPrice_Site  ON tmpPrice_Site.Id = Price_Goods.ChildObjectId
-
                                 WHERE Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                   AND Price_Goods.ChildObjectId in (SELECT tmpData.GoodsId FROM tmpData)               
                                 GROUP BY Price_Goods.ChildObjectId 
@@ -269,4 +323,4 @@ $BODY$
 -- select *, null as img_url from gpSelect_GoodsPrice_ForSite(394759, 1, 'uk', 0, 8, 0, '', zfCalc_UserSite())
 
 
-select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'uk', 0, 8, 0, 'Но-шпа', zfCalc_UserSite())
+select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'uk', 0, 8, 0, 'Канефрон Н', zfCalc_UserSite())

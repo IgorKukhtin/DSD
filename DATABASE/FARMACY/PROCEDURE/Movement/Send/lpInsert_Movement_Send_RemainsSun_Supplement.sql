@@ -152,6 +152,12 @@ BEGIN
        CREATE TEMP TABLE _tmpUnit_SunExclusion_Supplement (UnitId_from Integer, UnitId_to Integer) ON COMMIT DROP;
      END IF;
 
+     -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_PairSun_Supplement'))
+     THEN
+       CREATE TEMP TABLE _tmpGoods_SUN_PairSun_Supplement (GoodsId Integer, GoodsId_PairSun Integer, PairSunAmount TFloat) ON COMMIT DROP;
+     END IF;
+
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_all_Supplement'))
      THEN
@@ -472,6 +478,21 @@ BEGIN
           AND Object.isErased = FALSE
            ;
            
+         -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
+         INSERT INTO _tmpGoods_SUN_PairSun_Supplement (GoodsId, GoodsId_PairSun, PairSunAmount)
+            SELECT OL_GoodsPairSun.ObjectId      AS GoodsId
+                 , OL_GoodsPairSun.ChildObjectId            AS GoodsId_PairSun
+                 , COALESCE (OF_PairSunAmount.ValueData, 1) AS PairSunAmount
+            FROM ObjectLink AS OL_GoodsPairSun
+
+                 LEFT JOIN ObjectFloat AS OF_PairSunAmount
+                                       ON OF_PairSunAmount.ObjectId  = OL_GoodsPairSun.ObjectId 
+                                      AND OF_PairSunAmount.DescId    = zc_ObjectFloat_Goods_PairSunAmount()
+
+            WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun()
+           ;
+           
+           
      -- Товар из перемещения
 /*     IF inOperDate = '01.02.2021'
      THEN
@@ -509,8 +530,12 @@ BEGIN
              , Object_Goods_Main.UnitSupplementSUN1InId 
         FROM Object_Goods_Retail
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-                                         AND Object_Goods_Main.isSupplementSUN1 = TRUE
+                                         AND (Object_Goods_Main.isSupplementSUN1 = TRUE OR 
+                                              Object_Goods_Main.ID IN (SELECT Object_Goods_Retail.GoodsMainId 
+                                                                       FROM Object_Goods_Retail 
+                                                                            INNER JOIN _tmpGoods_SUN_PairSun_Supplement ON _tmpGoods_SUN_PairSun_Supplement.GoodsId_PairSun = Object_Goods_Retail.Id))
                                          AND Object_Goods_Main.isNot = FALSE
+                                         
              LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Object_Goods_Retail.ID
              LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
                                      ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
@@ -1410,6 +1435,10 @@ BEGIN
             LEFT JOIN _tmpGoods_Sun_exception_Supplement AS _tmpGoods_Sun_exception_Supplement
                                                          ON _tmpGoods_Sun_exception_Supplement.UnitId  = _tmpRemains_all_Supplement.UnitId
                                                         AND _tmpGoods_Sun_exception_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
+                                                        
+            -- если товар среди парных
+            LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun_Supplement.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun_Supplement
+                      ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_all_Supplement.GoodsId
 
        WHERE FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
                         CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
@@ -1461,7 +1490,8 @@ BEGIN
          AND NOT (_tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
                   AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
                   AND FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) < 0)
-         AND (COALESCE(_tmpGoods_SUN_Supplement.isSupplementMarkSUN1, False) = False OR COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) >= 0)) AS T1
+         AND (COALESCE(_tmpGoods_SUN_Supplement.isSupplementMarkSUN1, False) = False OR COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) >= 0)
+         AND COALESCE (_tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0) AS T1
          
     WHERE _tmpRemains_all_Supplement.UnitId = T1.UnitId
       AND _tmpRemains_all_Supplement.GoodsId = T1.GoodsId
@@ -1538,6 +1568,50 @@ BEGIN
 
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion_next; -- закрыли курсор1
+
+     -- !!! Добавили парные, после распределения ...
+     WITH -- Товар к которому нужна пара
+          tmpResult_Partion AS (SELECT _tmpResult_Supplement.*, _tmpGoods_SUN_PairSun_Supplement.GoodsId_PairSun, _tmpGoods_SUN_PairSun_Supplement.PairSunAmount
+                                FROM _tmpResult_Supplement
+
+                                     INNER JOIN _tmpGoods_SUN_PairSun_Supplement ON _tmpGoods_SUN_PairSun_Supplement.GoodsId = _tmpResult_Supplement.GoodsId
+                                ),
+          -- Наличие парных
+          tmpRemains_Pair  AS (SELECT _tmpRemains_all_Supplement.GoodsId
+                                    , _tmpRemains_all_Supplement.UnitId
+                                    , _tmpRemains_all_Supplement.Price
+                                    , _tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.AmountNotSend, 0) AS AmountRemains
+                               FROM _tmpRemains_all_Supplement
+                               WHERE _tmpRemains_all_Supplement.GoodsId IN (SELECT DISTINCT  _tmpGoods_SUN_PairSun_Supplement.GoodsId_PairSun FROM  _tmpGoods_SUN_PairSun_Supplement)
+                                 AND _tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.AmountNotSend, 0) > 0
+                               ),
+          -- Распределение
+          tmpResult AS (SELECT Result_Partion.*
+                             , Result_Partion.Amount * Result_Partion.PairSunAmount AS AmountPair
+                             , Remains_Pair.AmountRemains                AS AmountRemains
+                             , Remains_Pair.Price                        AS PricePair
+                             , SUM (Result_Partion.Amount * Result_Partion.PairSunAmount) 
+                               OVER (PARTITION BY Result_Partion.UnitId_from, Result_Partion.GoodsId_PairSun
+                                                           ORDER BY Result_Partion.UnitId_to) AS AmountSUM
+                       FROM tmpResult_Partion AS Result_Partion
+                            INNER JOIN tmpRemains_Pair AS Remains_Pair
+                                                         ON Remains_Pair.GoodsId = Result_Partion.GoodsId_PairSun
+                                                        AND Remains_Pair.UnitId  = Result_Partion.UnitId_from
+                          )
+
+     INSERT INTO _tmpResult_Supplement (UnitId_from, UnitId_to, GoodsId, Amount)
+     SELECT tmpItem.UnitId_from
+          , tmpItem.UnitId_to
+          , tmpItem.GoodsId_PairSun
+          , tmpItem.AmountAdd
+        FROM (SELECT DD.*
+                   , CASE WHEN DD.AmountRemains - DD.AmountSUM > 0 --AND DD.DOrd <> 1
+                               THEN DD.AmountPair
+                          ELSE DD.AmountRemains - DD.AmountSUM + DD.AmountPair
+                     END AS AmountAdd
+              FROM tmpResult AS DD
+              WHERE DD.AmountRemains - (DD.AmountSUM - DD.AmountPair) > 0
+             ) AS tmpItem;
 
      -- Результат
      RETURN QUERY
@@ -1644,4 +1718,4 @@ $BODY$
 
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inDriverId:= 0, inUserId:= 3);

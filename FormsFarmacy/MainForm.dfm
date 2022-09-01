@@ -5312,6 +5312,28 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_JuridicalRemainsEnd: TdsdOpenForm
+      Category = #1041#1040#1048
+      MoveParams = <>
+      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072
+      FormName = 'TReport_JuridicalRemainsEndForm'
+      FormNameParam.Value = 'TReport_JuridicalRemainsEndForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBonusesMobileApplication: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1041#1086#1085#1091#1089#1099' '#1087#1086' '#1082#1083#1080#1077#1085#1090#1072#1084' '#1086#1090' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+      FormName = 'TBonusesMobileApplicationForm'
+      FormNameParam.Value = 'TBonusesMobileApplicationForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5651,6 +5673,9 @@
         end
         object N213: TMenuItem
           Action = actBuyer
+        end
+        object N366: TMenuItem
+          Action = actBonusesMobileApplication
         end
       end
     end
@@ -6201,6 +6226,9 @@
       end
       object miReport_JuridicalSales: TMenuItem
         Action = actReport_JuridicalSales
+      end
+      object N365: TMenuItem
+        Action = actReport_JuridicalRemainsEnd
       end
       object N235: TMenuItem
         Action = actReport_IncomeVATBalance
