@@ -101,7 +101,7 @@ BEGIN
 
             LEFT JOIN Movement AS MovementPersonalService 
                                ON MovementPersonalService.Id = Movement.ParentId
-                              AND MovementPersonalService.DescId = zc_Movement_PersonalService()
+                              AND MovementPersonalService.DescId IN (zc_Movement_PersonalService(), zc_Movement_PersonalTransport())
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                          ON MovementLinkObject_PersonalServiceList.MovementId = MovementPersonalService.Id

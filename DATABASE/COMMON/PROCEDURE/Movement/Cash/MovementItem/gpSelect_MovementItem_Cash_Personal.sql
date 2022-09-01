@@ -114,13 +114,17 @@ BEGIN
                                           , CLO_Personal.ObjectId
                                           , CLO_InfoMoney.ObjectId
                                   )
-          , tmpParent_all AS (SELECT SUM (COALESCE (MIFloat_SummService.ValueData, 0))      AS SummService
-                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0) /*- COALESCE (tmpSummNalog.SummNalog, 0)*/ + COALESCE (MIFloat_SummNalog.ValueData, 0)
-                                        - COALESCE (MIFloat_SummCard.ValueData, 0)
-                                        - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
-                                        - COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
+          , tmpParent_all AS (SELECT SUM (CASE WHEN Movement.DescId = zc_Movement_PersonalTransport() THEN MovementItem.Amount ELSE COALESCE (MIFloat_SummService.ValueData, 0) END) AS SummService
+                                   , SUM (CASE WHEN Movement.DescId = zc_Movement_PersonalTransport() THEN MovementItem.Amount
+                                          ELSE COALESCE (MIFloat_SummToPay.ValueData, 0) /*- COALESCE (tmpSummNalog.SummNalog, 0)*/ + COALESCE (MIFloat_SummNalog.ValueData, 0)
+                                             - COALESCE (MIFloat_SummCard.ValueData, 0)
+                                             - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+                                             - COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
+                                          END
                                          ) AS SummToPay_cash
-                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)  /*- COALESCE (tmpSummNalog.SummNalog, 0)*/ + COALESCE (MIFloat_SummNalog.ValueData, 0)
+                                   , SUM (CASE WHEN Movement.DescId = zc_Movement_PersonalTransport() THEN MovementItem.Amount
+                                          ELSE COALESCE (MIFloat_SummToPay.ValueData, 0)  /*- COALESCE (tmpSummNalog.SummNalog, 0)*/ + COALESCE (MIFloat_SummNalog.ValueData, 0)
+                                          END
                                          ) AS SummToPay
                                    , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))         AS SummCard
                                    , SUM (COALESCE (MIFloat_SummCardSecond.ValueData, 0))   AS SummCardSecond
