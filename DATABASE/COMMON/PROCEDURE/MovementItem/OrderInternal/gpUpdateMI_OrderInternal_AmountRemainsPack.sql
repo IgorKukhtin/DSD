@@ -19,7 +19,7 @@ BEGIN
     -- проверка уникальности
     IF COALESCE(inOperDate, zc_DateStart()) <> COALESCE((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), zc_DateEnd())
     THEN
-        RAISE EXCEPTION 'Ошибка.Дата докумаента <%> не сохранена.<%>', inOperDate, (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+        RAISE EXCEPTION 'Ошибка.Дата документа <%> не сохранена.<%>', inOperDate, (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
     END IF;
 
     -- !!!пересчет Рецептур, временно захардкодил!!!
