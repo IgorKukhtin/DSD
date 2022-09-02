@@ -55,6 +55,8 @@ type
     PayrollTypeVIPDS: TDataSource;
     PayrollTypeVIPCDS: TClientDataSet;
     spSelect_PayrollTypeVIP: TdsdStoredProc;
+    ApplicationAward: TcxGridDBColumn;
+    TotalSum: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -2,7 +2,7 @@ object WagesVIP_UserForm: TWagesVIP_UserForm
   Left = 0
   Top = 0
   Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1091#1084#1084#1099' '#1047'/'#1055
-  ClientHeight = 233
+  ClientHeight = 295
   ClientWidth = 305
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -30,7 +30,7 @@ object WagesVIP_UserForm: TWagesVIP_UserForm
   end
   object cxButton1: TcxButton
     Left = 112
-    Top = 190
+    Top = 254
     Width = 75
     Height = 25
     Action = FormClose
@@ -71,7 +71,7 @@ object WagesVIP_UserForm: TWagesVIP_UserForm
   end
   object edHoursWork: TcxCurrencyEdit
     Left = 160
-    Top = 153
+    Top = 209
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = '0.##'
     Properties.ReadOnly = True
@@ -80,8 +80,36 @@ object WagesVIP_UserForm: TWagesVIP_UserForm
   end
   object cxLabel4: TcxLabel
     Left = 20
-    Top = 154
+    Top = 210
     Caption = #1054#1090#1088#1072#1073#1086#1090#1072#1085#1086' '#1095#1072#1089#1086#1074':'
+  end
+  object edApplicationAward: TcxCurrencyEdit
+    Left = 160
+    Top = 151
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 121
+  end
+  object cxLabel2: TcxLabel
+    Left = 20
+    Top = 152
+    Caption = #1055#1088#1077#1084#1080#1103' '#1079#1072' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077':'
+  end
+  object edTotalSum: TcxCurrencyEdit
+    Left = 160
+    Top = 178
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 121
+  end
+  object cxLabel5: TcxLabel
+    Left = 20
+    Top = 179
+    Caption = #1048#1090#1086#1075#1086':'
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_MovementItem_WagesVIP_User'
@@ -107,6 +135,20 @@ object WagesVIP_UserForm: TWagesVIP_UserForm
         Name = 'AmountAccrued'
         Value = Null
         Component = edAmountAccrued
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ApplicationAward'
+        Value = Null
+        Component = edApplicationAward
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSum'
+        Value = Null
+        Component = edTotalSum
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -197,7 +239,7 @@ object WagesVIP_UserForm: TWagesVIP_UserForm
     IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <>
-    Left = 216
+    Left = 208
     Top = 112
   end
 end

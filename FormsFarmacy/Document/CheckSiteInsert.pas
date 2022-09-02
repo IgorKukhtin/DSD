@@ -1,4 +1,4 @@
-unit CheckSummCard;
+unit CheckSiteInsert;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinXmas2008Blue, cxCheckBox, DataModul;
 
 type
-  TCheckSummCardForm = class(TAncestorJournalForm)
+  TCheckSiteInsertForm = class(TAncestorJournalForm)
     colUnitName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
@@ -60,8 +60,7 @@ type
     isConfirmByPhone: TcxGridDBColumn;
     DateComing: TcxGridDBColumn;
     MobileDiscount: TcxGridDBColumn;
-    actCheckSiteInsert: TdsdOpenForm;
-    dxBarButton2: TdxBarButton;
+    colOperDateCreate: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -74,6 +73,6 @@ implementation
 
 initialization
 
-  RegisterClass(TCheckSummCardForm)
+  RegisterClass(TCheckSiteInsertForm)
 
 end.

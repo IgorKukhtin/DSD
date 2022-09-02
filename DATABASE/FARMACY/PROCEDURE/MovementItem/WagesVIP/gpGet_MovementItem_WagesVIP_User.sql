@@ -1,6 +1,6 @@
 -- Function: gpGet_MovementItem_WagesVIP_User()
 
-DROP FUNCTION IF EXISTS gpGet_MovementItem_WagesVIP_User (TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MovementItem_WagesVIP_User (TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MovementItem_WagesVIP_User(
     IN inOperDate          TDateTime , --
@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_WagesVIP_User(
 RETURNS TABLE (OperDate  TDateTime
              , MemberCode Integer, MemberName TVarChar
              , AmountAccrued TFloat
+             , ApplicationAward TFloat
+             , TotalSum TFloat
              , HoursWork TFloat
               )
 AS
@@ -57,6 +59,8 @@ BEGIN
               , Object_Member.ValueData            AS MemberName
 
               , MovementItem.Amount                AS AmountAccrued
+              , MIFloat_ApplicationAward.ValueData AS ApplicationAward
+              , (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_ApplicationAward.ValueData , 0))::TFloat AS TotalSum
               , MIFloat_HoursWork.ValueData        AS HoursWork
         FROM MovementItem
 
@@ -66,9 +70,13 @@ BEGIN
              LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
 
+             LEFT JOIN MovementItemFloat AS MIFloat_ApplicationAward
+                                         ON MIFloat_ApplicationAward.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ApplicationAward.DescId = zc_MIFloat_ApplicationAward()
+
              LEFT JOIN MovementItemFloat AS MIFloat_HoursWork
                                          ON MIFloat_HoursWork.MovementItemId = MovementItem.Id
-                                        AND MIFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
+                                        AND MIFloat_HoursWork.DescId = zc_MIFloat_HoursWork()
 
         WHERE MovementItem.MovementId = vbMovementID
           AND MovementItem.DescId = zc_MI_Master()

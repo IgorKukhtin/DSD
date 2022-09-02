@@ -32,6 +32,10 @@ type
     actRefresh: TdsdDataSetRefresh;
     RefreshDispatcher: TRefreshDispatcher;
     FormClose: TdsdFormClose;
+    edApplicationAward: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
+    edTotalSum: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

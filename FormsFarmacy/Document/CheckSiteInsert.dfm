@@ -1,5 +1,5 @@
-inherited CheckSummCardForm: TCheckSummCardForm
-  Caption = #1047#1072#1087#1086#1083#1077#1085#1080#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099' '#1085#1072' '#1082#1072#1088#1090#1091
+inherited CheckSiteInsertForm: TCheckSiteInsertForm
+  Caption = #1047#1072#1082#1072#1079#1099' '#1089' '#1089#1072#1081#1090#1086#1074' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1082#1072#1079#1072
   ClientHeight = 554
   ClientWidth = 925
   AddOnFormData.RefreshAction = actRefreshStart
@@ -66,6 +66,9 @@ inherited CheckSummCardForm: TCheckSummCardForm
               Kind = skSum
               Column = SummaDelivery
             end>
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -81,9 +84,19 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Options.Editing = False
             Width = 99
           end
+          object colOperDateCreate: TcxGridDBColumn [2]
+            Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'OperDateCreate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
           inherited colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
+            Width = 85
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -118,8 +131,7 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Styles.Content = dmMain.cxHeaderL1Style
-            Styles.Header = dmMain.cxHeaderL1Style
+            Options.Editing = False
             Width = 104
           end
           object colBayer: TcxGridDBColumn
@@ -441,22 +453,9 @@ inherited CheckSummCardForm: TCheckSummCardForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
-    object actCheckSiteInsert: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1047#1072#1082#1072#1079#1099' '#1089' '#1089#1072#1081#1090#1086#1074' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1082#1072#1079#1072
-      Hint = #1047#1072#1082#1072#1079#1099' '#1089' '#1089#1072#1081#1090#1086#1074' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1082#1072#1079#1072
-      ImageIndex = 29
-      FormName = 'TCheckSiteInsertForm'
-      FormNameParam.Value = 'TCheckSiteInsertForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_CheckSummCard'
+    StoredProcName = 'gpSelect_Movement_CheckSiteInsert'
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -494,10 +493,6 @@ inherited CheckSummCardForm: TCheckSummCardForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -548,10 +543,6 @@ inherited CheckSummCardForm: TCheckSummCardForm
       Hint = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1089#1091#1084#1084' '#1087#1086' '#1082#1072#1089#1089#1086#1074#1086#1084#1091' '#1072#1087#1087#1072#1088#1072#1090#1091
       Visible = ivAlways
       ImageIndex = 56
-    end
-    object dxBarButton2: TdxBarButton
-      Action = actCheckSiteInsert
-      Category = 0
     end
   end
   inherited PopupMenu: TPopupMenu
