@@ -1,29 +1,29 @@
 inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPayment365Form
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081' 365>'
-  ClientHeight = 371
+  ClientHeight = 370
   ClientWidth = 1123
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1139
-  ExplicitHeight = 410
+  ExplicitHeight = 409
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1123
-    Height = 314
+    Height = 313
     TabOrder = 3
     ExplicitWidth = 1123
-    ExplicitHeight = 314
-    ClientRectBottom = 314
+    ExplicitHeight = 313
+    ClientRectBottom = 313
     ClientRectRight = 1123
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1123
-      ExplicitHeight = 314
+      ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 1123
-        Height = 314
+        Height = 313
         ExplicitWidth = 1123
-        ExplicitHeight = 314
+        ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -760,11 +760,11 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
       end>
   end
   inherited ActionList: TActionList
-    object actPrintOneWeek: TdsdPrintAction
+    object actPrint30: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
-          FromParam.Value = '1'
+          FromParam.Value = '30'
           FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
@@ -788,8 +788,8 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
         item
           StoredProc = spReport
         end>
-      Caption = #1055#1077#1088#1074#1072#1103' '#1085#1077#1076#1077#1083#1103
-      Hint = #1055#1077#1088#1074#1072#1103' '#1085#1077#1076#1077#1083#1103
+      Caption = '30 '#1076#1085#1077#1081
+      Hint = '30 '#1076#1085#1077#1081
       ImageIndex = 21
       DataSets = <
         item
@@ -859,19 +859,19 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintTwoWeek: TdsdPrintAction
+    object actPrint60: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
-          FromParam.Value = '2'
+          FromParam.Value = '60'
           FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
@@ -895,8 +895,8 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
         item
           StoredProc = spReport
         end>
-      Caption = #1042#1090#1086#1088#1072#1103' '#1085#1077#1076#1077#1083#1103
-      Hint = #1042#1090#1086#1088#1072#1103' '#1085#1077#1076#1077#1083#1103
+      Caption = '60 '#1076#1085#1077#1081
+      Hint = '60 '#1076#1085#1077#1081
       ImageIndex = 17
       DataSets = <
         item
@@ -966,19 +966,19 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintThreeWeek: TdsdPrintAction
+    object actPrint90: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
-          FromParam.Value = '3'
+          FromParam.Value = '90'
           FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
@@ -1002,8 +1002,8 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
         item
           StoredProc = spReport
         end>
-      Caption = #1058#1088#1077#1090#1100#1103' '#1085#1077#1076#1077#1083#1103
-      Hint = #1058#1088#1077#1090#1100#1103' '#1085#1077#1076#1077#1083#1103
+      Caption = '90 '#1076#1085#1077#1081
+      Hint = '90 '#1076#1085#1077#1081
       ImageIndex = 19
       DataSets = <
         item
@@ -1073,19 +1073,19 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintFourWeek: TdsdPrintAction
+    object actPrint180: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
-          FromParam.Value = '4'
+          FromParam.Value = '180'
           FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
@@ -1109,9 +1109,9 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
         item
           StoredProc = spReport
         end>
-      Caption = #1063#1077#1090#1074#1077#1088#1090#1072#1103' '#1085#1077#1076#1077#1083#1103
-      Hint = #1063#1077#1090#1074#1077#1088#1090#1072#1103' '#1085#1077#1076#1077#1083#1103
-      ImageIndex = 22
+      Caption = '180 '#1076#1085#1077#1081
+      Hint = '180 '#1076#1085#1077#1081
+      ImageIndex = 15
       DataSets = <
         item
           DataSet = cdsReport
@@ -1180,19 +1180,19 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintOther: TdsdPrintAction
+    object actPrint365: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
-          FromParam.Value = '5'
+          FromParam.Value = '365'
           FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
@@ -1216,9 +1216,9 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
         item
           StoredProc = spReport
         end>
-      Caption = #1041#1086#1083#1100#1096#1077' 28 '#1076#1085#1077#1081
-      Hint = #1041#1086#1083#1100#1096#1077' 28 '#1076#1085#1077#1081
-      ImageIndex = 23
+      Caption = '365 '#1076#1085#1077#1081
+      Hint = '365 '#1076#1085#1077#1081
+      ImageIndex = 22
       DataSets = <
         item
           DataSet = cdsReport
@@ -1227,7 +1227,7 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
       Params = <
         item
           Name = 'OperDate'
-          Value = 41640d
+          Value = 42370d
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1273,6 +1273,113 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
         end
         item
           Name = 'AccountName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AccountName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintOther: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = '366'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'PeriodNumber'
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'SaleSumm6'
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'SaleSumm'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1041#1086#1083#1100#1096#1077' 365 '#1076#1085#1077#1081
+      Hint = #1041#1086#1083#1100#1096#1077' 365 '#1076#1085#1077#1081
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = cdsReport
+          UserName = 'frxDBDataset'
+        end>
+      Params = <
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartContractDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StartContractDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PeriodNumber'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Summ'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SaleSumm6'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountName'
           Value = ''
           Component = MasterCDS
           ComponentItem = 'AccountName'
@@ -1287,8 +1394,8 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'365-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1989,19 +2096,23 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
         end
         item
           Visible = True
-          ItemName = 'bbReportOneWeek'
+          ItemName = 'bbPrint30'
         end
         item
           Visible = True
-          ItemName = 'bbTwoWeek'
+          ItemName = 'bbPrint60'
         end
         item
           Visible = True
-          ItemName = 'bbThreeWeek'
+          ItemName = 'bbPrint90'
         end
         item
           Visible = True
-          ItemName = 'bbFourWeek'
+          ItemName = 'bbPrint180'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint365'
         end
         item
           Visible = True
@@ -2040,20 +2151,24 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
           ItemName = 'dxBarStatic'
         end>
     end
-    object bbReportOneWeek: TdxBarButton
-      Action = actPrintOneWeek
+    object bbPrint30: TdxBarButton
+      Action = actPrint30
       Category = 0
     end
-    object bbTwoWeek: TdxBarButton
-      Action = actPrintTwoWeek
+    object bbPrint60: TdxBarButton
+      Action = actPrint60
       Category = 0
     end
-    object bbThreeWeek: TdxBarButton
-      Action = actPrintThreeWeek
+    object bbPrint90: TdxBarButton
+      Action = actPrint90
       Category = 0
     end
-    object bbFourWeek: TdxBarButton
-      Action = actPrintFourWeek
+    object bbPrint180: TdxBarButton
+      Action = actPrint180
+      Category = 0
+    end
+    object bbPrint365: TdxBarButton
+      Action = actPrint365
       Category = 0
     end
     object bbOther: TdxBarButton
@@ -2321,8 +2436,8 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 248
+    Left = 240
+    Top = 264
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'

@@ -1630,6 +1630,9 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       end
       item
         Control = edComment
+      end
+      item
+        Control = ceInfoMoney
       end>
     Left = 224
     Top = 217
@@ -1777,7 +1780,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 508
+    Left = 572
     Top = 246
   end
   object spSelectPrint: TdsdStoredProc
