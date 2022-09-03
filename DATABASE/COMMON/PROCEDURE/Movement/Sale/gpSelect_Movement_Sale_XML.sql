@@ -70,7 +70,7 @@ BEGIN
      INSERT INTO _Result(RowData)
         SELECT '<Header>'
               || '<DocumentNumber>' || vbInvnumber ||'</DocumentNumber>'
-              || '<DocumentDate> ' || zfConvert_DateShortToString(vbOperDate)  ||'</DocumentDate>'          
+              || '<DocumentDate>' || TO_CHAR(vbOperDate, 'yyyy-mm-dd')  ||'</DocumentDate>'          
               || '</Header> '
         ;
 

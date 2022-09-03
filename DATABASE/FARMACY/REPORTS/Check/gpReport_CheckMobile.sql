@@ -3,12 +3,13 @@
 DROP FUNCTION IF EXISTS gpReport_CheckMobile (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckMobile(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inUnitId        Integer ,
-    IN inIsUnComplete  Boolean ,
-    IN inIsErased      Boolean ,
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inStartDate          TDateTime , --
+    IN inEndDate            TDateTime , --
+    IN inUnitId             Integer ,
+    IN inIsUnComplete       Boolean ,
+    IN inIsErased           Boolean ,
+    IN inisEmployeeMessage  Boolean ,
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
              , TotalCount TFloat, TotalSumm TFloat, TotalSummPayAdd TFloat, TotalSummChangePercent TFloat
@@ -47,7 +48,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isErrorRRO Boolean 
              , isMobileApplication Boolean 
              , UserReferalsName TVarChar, isConfirmByPhone Boolean, DateComing TDateTime 
-             , MobileDiscount TFloat
+             , MobileDiscount TFloat, ApplicationAward TFloat, isEmployeeMessage Boolean
              , Color_UserReferals Integer
               )
 AS
@@ -67,8 +68,31 @@ BEGIN
                           SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inIsUnComplete = TRUE
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
-                         )
+                         ),
+            tmpMovementAll AS (SELECT MovementLinkObject.ObjectId                                     AS UserId
+                                    , MovementLinkObject.MovementId
+                               FROM MovementLinkObject
+                               WHERE MovementLinkObject.DescId = zc_MovementLinkObject_UserReferals()),
+            tmpMovement AS (SELECT MovementLinkObject.MovementId
+                                 , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
+                                                                            MovementString_BayerPhone.ValueData) ORDER BY Movement.ID DESC) AS Ord
+                            FROM tmpMovementAll AS MovementLinkObject
+ 
+                                 INNER JOIN Movement ON Movement.Id = MovementLinkObject.MovementId
+                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                    
+                                 LEFT JOIN MovementString AS MovementString_BayerPhone
+                                                          ON MovementString_BayerPhone.MovementId = Movement.Id
+                                                         AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
 
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                                              ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
+                                                             AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+                                 LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                                                        ON ObjectString_BuyerForSite_Phone.ObjectId = MovementLinkObject_BuyerForSite.ObjectId
+                                                       AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
+                            )
+                            
          SELECT
              Movement_Check.Id
            , Movement_Check.InvNumber
@@ -137,12 +161,17 @@ BEGIN
            , MovementDate_Coming.ValueData                                AS DateComing
            , MovementFloat_MobileDiscount.ValueData                       AS MobileDiscount
            
+           , CASE WHEN COALESCE (tmpMovement.MovementId, 0) <> 0 THEN 20 END::TFloat  AS ApplicationAward
+           
+           , Movement_Check.isEmployeeMessage                             AS isEmployeeMessage
+           
            , zc_Color_Yelow()                                             AS Color_UserReferals
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
                    , MovementLinkObject_CheckMember.ObjectId             AS MemberId
                    , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
+                   , COALESCE (MovementBoolean_EmployeeMessage.ValueData, False)::Boolean     AS isEmployeeMessage
               FROM Movement
                    INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
 
@@ -167,12 +196,17 @@ BEGIN
                                              ON MovementBoolean_Deferred.MovementId = Movement.Id
                                             AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
                    
+                   LEFT JOIN MovementBoolean AS MovementBoolean_EmployeeMessage
+                                             ON MovementBoolean_EmployeeMessage.MovementId = Movement.Id
+                                            AND MovementBoolean_EmployeeMessage.DescId = zc_MovementBoolean_EmployeeMessage()
+
               WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                 AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                 AND Movement.DescId = zc_Movement_Check()
                 AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = TRUE
                 AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = 0
                 AND (MovementLinkObject_Unit.ObjectId = inUnitId OR COALESCE(inUnitId, 0) = 0)
+                AND (COALESCE (MovementBoolean_EmployeeMessage.ValueData, False) = TRUE OR COALESCE(inisEmployeeMessage, False) = False)
            ) AS Movement_Check
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Check.StatusId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement_Check.UnitId
@@ -391,6 +425,9 @@ BEGIN
                                          ON MovementLinkObject_UserReferals.MovementId = Movement_Check.Id
                                         AND MovementLinkObject_UserReferals.DescId = zc_MovementLinkObject_UserReferals()
             LEFT JOIN Object AS Object_UserReferals ON Object_UserReferals.Id = MovementLinkObject_UserReferals.ObjectId
+            
+            LEFT JOIN tmpMovement ON tmpMovement.MovementId = Movement_Check.Id
+                                 AND tmpMovement.Ord = 1
       ;
 
 END;
@@ -408,4 +445,4 @@ $BODY$
 -- тест
 -- 
 
-select * from gpReport_CheckMobile(inStartDate := ('23.08.2022')::TDateTime , inEndDate := ('25.08.2022')::TDateTime , inUnitId := 0 , inIsUnComplete := 'True', inIsErased := 'True' ,  inSession := '3');
+select * from gpReport_CheckMobile(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('31.08.2022')::TDateTime , inUnitId := 472116 , inIsUnComplete := 'True' , inIsErased := 'True' , inisEmployeeMessage := 'True' ,  inSession := '3');

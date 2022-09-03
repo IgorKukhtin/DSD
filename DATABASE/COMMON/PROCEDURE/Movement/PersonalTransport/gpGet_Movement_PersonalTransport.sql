@@ -37,11 +37,14 @@ BEGIN
             , 0                     AS PersonalServiceListId
             , ''       :: TVarChar  AS PersonalServiceListName
 
-            , 0                     	 AS InfoMoneyId
-            , CAST ('' AS TVarChar) 	 AS InfoMoneyName
-            , CAST ('' AS TVarChar) 	 AS InfoMoneyName_all
+            , View_InfoMoney.InfoMoneyId
+            , View_InfoMoney.InfoMoneyName
+          --, View_InfoMoney.InfoMoneyName_all
+            , ('(' || View_InfoMoney.InfoMoneyCode :: TVarChar || ') ' || View_InfoMoney.InfoMoneyGroupName || ' ' || View_InfoMoney.InfoMoneyName) :: TVarChar AS InfoMoneyName_all
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+               LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_21421()
+          
        ;
      ELSE
      RETURN QUERY 
@@ -59,7 +62,8 @@ BEGIN
 
             , View_InfoMoney.InfoMoneyId
             , View_InfoMoney.InfoMoneyName
-            , View_InfoMoney.InfoMoneyName_all
+            --, View_InfoMoney.InfoMoneyName_all
+            , ('(' || View_InfoMoney.InfoMoneyCode :: TVarChar || ') ' || View_InfoMoney.InfoMoneyGroupName || ' ' || View_InfoMoney.InfoMoneyName) :: TVarChar AS InfoMoneyName_all
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

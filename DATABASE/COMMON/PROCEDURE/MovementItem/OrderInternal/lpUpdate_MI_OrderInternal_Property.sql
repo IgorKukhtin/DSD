@@ -357,7 +357,12 @@ end if;
             -- для Заявки на упаковку по ОСТАТКАМ
             AND (COALESCE (inDescId_ParamOrder, 0) <> zc_MIFloat_ContainerId() OR COALESCE (inAmount_ParamOrder, 0) = 0)
          THEN
-             RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%>.Дублирование запрещено. % %', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), inGoodsId, inGoodsKindId;
+             RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%>.Дублирование запрещено. % %'
+                            , lfGet_Object_ValueData (inGoodsId)
+                            , lfGet_Object_ValueData (inGoodsKindId)
+                            , inGoodsId
+                            , inGoodsKindId
+                             ;
          END IF;
 
          -- сохранили <Элемент документа>

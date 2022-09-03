@@ -62,7 +62,7 @@ BEGIN
                                                              , inName := TRIM (inInfoMoneyName)::TVarChar
                                                              , inInfoMoneyNameKindId := COALESCE ( (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inParent_InfoMoneyId AND OL.DescId = zc_ObjectLink_InfoMoney_InfoMoneyKind()), NULL) 
                                                              , inParentId := inParent_InfoMoneyId
-                                                             , inSession := inSession
+                                                             , inSession := vbUserId :: TVarChar
                                                              );
          END IF;
      END IF;
@@ -78,7 +78,7 @@ BEGIN
                                                                            , inCode := 0
                                                                            , inName := TRIM (inCommentInfoMoney)::TVarChar
                                                                            , inInfoMoneyNameKindId := 0
-                                                                           , inSession := inSession
+                                                                           , inSession := vbUserId :: TVarChar
                                                                             );
              -- сохранили
              PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentInfoMoney_UserAll(), vbCommentInfoMoneyId, NOT vbUser_isAll);

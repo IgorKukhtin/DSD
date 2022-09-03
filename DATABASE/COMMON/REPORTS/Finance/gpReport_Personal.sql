@@ -268,7 +268,7 @@ BEGIN
                                            , MIContainer.MovementItemId
                                            , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, MIContainer.ContainerId) AS Ord
                                       FROM tmpMIContainer AS MIContainer
-                                      WHERE MIContainer.MovementDescId = zc_Movement_PersonalService()
+                                      WHERE MIContainer.MovementDescId IN (zc_Movement_PersonalService(), zc_Movement_PersonalTransport())
                                      ) AS tmp
                                       LEFT JOIN MovementItemFloat AS MIFloat_SummService
                                                                   ON MIFloat_SummService.MovementItemId = tmp.MovementItemId
@@ -303,7 +303,7 @@ BEGIN
                             , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalCardSecond() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCardSecond
                             , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService(), zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCash
 
-                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_PersonalService_Nalog(), zc_Enum_AnalyzerId_PersonalService_NalogRet()) THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
+                            , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_PersonalService_Nalog(), zc_Enum_AnalyzerId_PersonalService_NalogRet()) THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalService(), zc_Movement_PersonalTransport()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
                             , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.MovementDescId        = zc_Movement_Income()                          THEN  1 * MIContainer.Amount ELSE 0 END) AS IncomeSumm
                             , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()            THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAdd
                             , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong()        THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAddLong

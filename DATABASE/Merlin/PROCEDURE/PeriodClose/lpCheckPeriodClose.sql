@@ -16,8 +16,8 @@ $BODY$
 BEGIN
 
 -- временно
--- if inMovementDescId <> zc_Movement_ServiceItem() -- AND inMovementDescId <> zc_Movement_Service()
---  then
+ if inMovementDescId <> zc_Movement_ServiceItem() -- AND inMovementDescId <> zc_Movement_Service()
+  then
 
      -- Проверка - период
      IF inOperDate < (CASE WHEN inMovementDescId = zc_Movement_ServiceItemAdd() THEN CURRENT_DATE ELSE CURRENT_DATE - INTERVAL '3 DAY' END)
@@ -46,7 +46,7 @@ BEGIN
                         ;
      END IF;
 
--- end if;
+ end if;
 
  
 END;

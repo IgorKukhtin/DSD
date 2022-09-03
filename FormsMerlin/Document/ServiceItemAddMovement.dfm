@@ -376,7 +376,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     Height = 89
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 3
+    TabOrder = 2
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -494,13 +494,12 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     end
     object cbisOne: TcxCheckBox
       Left = 658
-      Top = 65
+      Top = 66
       Hint = #1055#1086#1083#1085#1086#1089#1090#1100#1102' '#1086#1087#1083#1072#1095#1077#1085
       Caption = #1076#1086#1073#1072#1074#1080#1090#1100' '#1079#1072' 1 '#1084#1077#1089#1103#1094
       ParentShowHint = False
       Properties.ReadOnly = False
       ShowHint = False
-      State = cbsChecked
       TabOrder = 14
       Width = 135
     end

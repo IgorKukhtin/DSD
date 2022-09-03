@@ -144,6 +144,12 @@ BEGIN
        CREATE TEMP TABLE _tmpUnit_SunExclusion_Supplement_V2 (UnitId_from Integer, UnitId_to Integer) ON COMMIT DROP;
      END IF;
 
+     -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_PairSun_Supplement_V2'))
+     THEN
+       CREATE TEMP TABLE _tmpGoods_SUN_PairSun_Supplement_V2 (GoodsId Integer, GoodsId_PairSun Integer, PairSunAmount TFloat) ON COMMIT DROP;
+     END IF;
+
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_all_Supplement_V2'))
      THEN
@@ -537,6 +543,20 @@ BEGIN
                                                                      
            INNER JOIN tmpUserUnit ON tmpUserUnit.UnitId = MI_Goods.UnitId           
       ;
+
+         -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
+         INSERT INTO _tmpGoods_SUN_PairSun_Supplement_V2 (GoodsId, GoodsId_PairSun, PairSunAmount)
+            SELECT OL_GoodsPairSun.ObjectId      AS GoodsId
+                 , OL_GoodsPairSun.ChildObjectId            AS GoodsId_PairSun
+                 , COALESCE (OF_PairSunAmount.ValueData, 1) AS PairSunAmount
+            FROM ObjectLink AS OL_GoodsPairSun
+
+                 LEFT JOIN ObjectFloat AS OF_PairSunAmount
+                                       ON OF_PairSunAmount.ObjectId  = OL_GoodsPairSun.ObjectId 
+                                      AND OF_PairSunAmount.DescId    = zc_ObjectFloat_Goods_PairSunAmount()
+
+            WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun()
+           ;
       
  --raise notice 'Value 05: %', (select Count(*) from _tmpGoods_PromoUnit_Supplement_V2);      
 
@@ -862,9 +882,14 @@ BEGIN
             LEFT JOIN _tmpSUN_Send_SupplementAll_V2 ON _tmpSUN_Send_SupplementAll_V2.GoodsID = _tmpRemains_all_Supplement_V2.GoodsId
                                                    AND _tmpSUN_Send_SupplementAll_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId  
                                                                                                                             
+            -- если товар среди парных
+            LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun_Supplement_V2.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun_Supplement_V2
+                      ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_all_Supplement_V2.GoodsId
+
        WHERE _tmpRemains_all_Supplement_V2.Give > 0
          AND COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) = 0
          AND COALESCE(_tmpSUN_Send_SupplementAll_V2.GoodsID, 0) = 0
+         AND COALESCE (_tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
        ORDER BY _tmpRemains_all_Supplement_V2.Give DESC
               , _tmpRemains_all_Supplement_V2.UnitId
               , _tmpRemains_all_Supplement_V2.GoodsId
@@ -959,11 +984,15 @@ BEGIN
 
             LEFT JOIN _tmpSUN_Send_SupplementAll_V2 ON _tmpSUN_Send_SupplementAll_V2.GoodsID = _tmpRemains_all_Supplement_V2.GoodsId
                                                    AND _tmpSUN_Send_SupplementAll_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId  
-                                                                                                                            
+
+            -- если товар среди парных
+            LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun_Supplement_V2.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun_Supplement_V2
+                      ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_all_Supplement_V2.GoodsId                                                                                                                            
 
        WHERE _tmpRemains_all_Supplement_V2.Give - _tmpRemains_all_Supplement_V2.AmountUse > 0
          AND COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) = 0
          AND COALESCE(_tmpSUN_Send_SupplementAll_V2.GoodsID, 0) = 0
+         AND COALESCE (_tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
        ORDER BY _tmpRemains_all_Supplement_V2.Give DESC
               , _tmpRemains_all_Supplement_V2.UnitId
               , _tmpRemains_all_Supplement_V2.GoodsId
@@ -1037,9 +1066,52 @@ BEGIN
 
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion_next; -- закрыли курсор1
+
+     -- !!! Добавили парные, после распределения ...
+     WITH -- Товар к которому нужна пара
+          tmpResult_Partion AS (SELECT _tmpResult_Supplement_v2.*, _tmpGoods_SUN_PairSun_Supplement_v2.GoodsId_PairSun, _tmpGoods_SUN_PairSun_Supplement_v2.PairSunAmount
+                                FROM _tmpResult_Supplement_v2
+
+                                     INNER JOIN _tmpGoods_SUN_PairSun_Supplement_v2 ON _tmpGoods_SUN_PairSun_Supplement_v2.GoodsId = _tmpResult_Supplement_v2.GoodsId
+                                ),
+          -- Наличие парных
+          tmpRemains_Pair  AS (SELECT _tmpRemains_all_Supplement_v2.GoodsId
+                                    , _tmpRemains_all_Supplement_v2.UnitId
+                                    , _tmpRemains_all_Supplement_v2.Price
+                                    , _tmpRemains_all_Supplement_v2.AmountRemains - COALESCE(_tmpRemains_all_Supplement_v2.AmountNotSend, 0) AS AmountRemains
+                               FROM _tmpRemains_all_Supplement_v2
+                               WHERE _tmpRemains_all_Supplement_v2.GoodsId IN (SELECT DISTINCT  _tmpGoods_SUN_PairSun_Supplement_v2.GoodsId_PairSun FROM  _tmpGoods_SUN_PairSun_Supplement_v2)
+                                 AND _tmpRemains_all_Supplement_v2.AmountRemains - COALESCE(_tmpRemains_all_Supplement_v2.AmountNotSend, 0) > 0
+                               ),
+          -- Распределение
+          tmpResult AS (SELECT Result_Partion.*
+                             , Result_Partion.Amount * Result_Partion.PairSunAmount AS AmountPair
+                             , Remains_Pair.AmountRemains                AS AmountRemains
+                             , Remains_Pair.Price                        AS PricePair
+                             , SUM (Result_Partion.Amount * Result_Partion.PairSunAmount) 
+                               OVER (PARTITION BY Result_Partion.UnitId_from, Result_Partion.GoodsId_PairSun
+                                                           ORDER BY Result_Partion.UnitId_to) AS AmountSUM
+                       FROM tmpResult_Partion AS Result_Partion
+                            INNER JOIN tmpRemains_Pair AS Remains_Pair
+                                                         ON Remains_Pair.GoodsId = Result_Partion.GoodsId_PairSun
+                                                        AND Remains_Pair.UnitId  = Result_Partion.UnitId_from
+                          )
+
+     INSERT INTO _tmpResult_Supplement_v2 (UnitId_from, UnitId_to, GoodsId, Amount)
+     SELECT tmpItem.UnitId_from
+          , tmpItem.UnitId_to
+          , tmpItem.GoodsId_PairSun
+          , tmpItem.AmountAdd
+        FROM (SELECT DD.*
+                   , CASE WHEN DD.AmountRemains - DD.AmountSUM > 0 --AND DD.DOrd <> 1
+                               THEN DD.AmountPair
+                          ELSE DD.AmountRemains - DD.AmountSUM + DD.AmountPair
+                     END AS AmountAdd
+              FROM tmpResult AS DD
+              WHERE DD.AmountRemains - (DD.AmountSUM - DD.AmountPair) > 0
+             ) AS tmpItem;
      
 --raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement_V2);      
-
 
      -- Результат
      RETURN QUERY
@@ -1136,4 +1208,4 @@ $BODY$
 
 -- 
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inDriverId:= 0, inUserId:= 3);

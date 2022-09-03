@@ -52,8 +52,8 @@ BEGIN
                                                            , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
                                                            , inOperDatePartner_order:= NULL :: TDateTime
                                                            ) AS tmp);
-     -- исправили ошибку
-     vbPrice_find:= (SELECT tmp.ReturnPrice FROM gpSelectMobile_Object_PriceListItems_test (inPriceListId:= vbPriceListId, inGoodsId:= inGoodsId, inGoodsKindId:= inGoodsKindId, inSession := inSession) AS tmp);
+      -- исправили ошибку
+      vbPrice_find:= (SELECT tmp.ReturnPrice FROM gpSelectMobile_Object_PriceListItems_test (inPriceListId:= vbPriceListId, inGoodsId:= inGoodsId, inGoodsKindId:= inGoodsKindId, inSession := inSession) AS tmp);
 
       IF vbPrice_find > 0
       THEN 

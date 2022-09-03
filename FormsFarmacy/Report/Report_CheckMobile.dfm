@@ -239,6 +239,11 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = MobileDiscount
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = ApplicationAward
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -438,6 +443,16 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
             Styles.Content = dmMain.cxContentStyle
             Width = 83
           end
+          object ApplicationAward: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083#1072#1090#1072' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091' '#1079#1072' '#1084#1086#1073' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
+            DataBinding.FieldName = 'ApplicationAward'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 99
+          end
           object isConfirmByPhone: TcxGridDBColumn
             Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1090#1077#1083#1077#1092#1086#1085#1085#1099#1084' '#1079#1074#1086#1085#1082#1086#1084
             DataBinding.FieldName = 'isConfirmByPhone'
@@ -469,6 +484,14 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
+          end
+          object isEmployeeMessage: TcxGridDBColumn
+            Caption = #1054#1057' '#1086#1090' '#1072#1087#1090#1077#1082#1080
+            DataBinding.FieldName = 'isEmployeeMessage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
         end
       end
@@ -517,21 +540,28 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       Properties.UseNullString = True
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Width = 244
+      Width = 229
     end
     object cbIsUnComplete: TcxCheckBox
-      Left = 760
+      Left = 738
       Top = 5
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077
       TabOrder = 6
       Width = 161
     end
     object cbIsErased: TcxCheckBox
-      Left = 927
+      Left = 900
       Top = 5
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       TabOrder = 7
       Width = 145
+    end
+    object cbEmployeeMessage: TcxCheckBox
+      Left = 1033
+      Top = 5
+      Caption = #1058#1086#1083#1100#1082#1086' '#1054#1057' '#1086#1090' '#1072#1087#1090#1077#1082#1080
+      TabOrder = 8
+      Width = 135
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -569,6 +599,11 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = cbEmployeeMessage
+        Properties.Strings = (
+          'Checked')
       end>
   end
   inherited ActionList: TActionList
@@ -625,6 +660,13 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
           Name = 'IsErased'
           Value = Null
           Component = cbIsErased
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isEmployeeMessage'
+          Value = Null
+          Component = cbEmployeeMessage
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -717,6 +759,32 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actUpdate_EmployeeMessage: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_EmployeeMessage
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_EmployeeMessage
+        end>
+      Caption = 'actUpdate_EmployeeMessage'
+    end
+    object mactUpdate_EmployeeMessage: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_EmployeeMessage
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1057' '#1086#1090' '#1072#1087#1090#1077#1082#1080'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1057' '#1086#1090' '#1072#1087#1090#1077#1082#1080'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1057' '#1086#1090' '#1072#1087#1090#1077#1082#1080'"'
+      ImageIndex = 79
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -768,6 +836,14 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEmployeeMessage'
+        Value = Null
+        Component = cbEmployeeMessage
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 160
   end
@@ -811,6 +887,14 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         end
         item
           Visible = True
+          ItemName = 'bbtUpdate_EmployeeMessage'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -843,6 +927,10 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       Action = actUpdate
       Category = 0
     end
+    object bbtUpdate_EmployeeMessage: TdxBarButton
+      Action = mactUpdate_EmployeeMessage
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -857,8 +945,8 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       end>
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 208
-    Top = 16
+    Left = 272
+    Top = 0
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -873,6 +961,9 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       end
       item
         Component = cbIsUnComplete
+      end
+      item
+        Component = cbEmployeeMessage
       end>
     Left = 432
     Top = 216
@@ -938,5 +1029,31 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     PackSize = 1
     Left = 688
     Top = 240
+  end
+  object spUpdate_EmployeeMessage: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_EmployeeMessage'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEmployeeMessage'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isEmployeeMessage'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 424
+    Top = 336
   end
 end
