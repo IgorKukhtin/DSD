@@ -258,6 +258,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_JuridicalDefermentPayment_OperDate() RE
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_JuridicalDefermentPayment(), 'zc_ObjectDate_JuridicalDefermentPayment_OperDate', 'Дата последней оплаты' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_JuridicalDefermentPayment_OperDate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_JuridicalDefermentPayment_OperDateIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_JuridicalDefermentPayment_OperDateIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_JuridicalDefermentPayment(), 'zc_ObjectDate_JuridicalDefermentPayment_OperDateIn', 'Дата последнего прихода' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_JuridicalDefermentPayment_OperDateIn');
+
 
 --!!!FARMACY
 
@@ -645,6 +649,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 01.09.22         * zc_ObjectDate_JuridicalDefermentPayment_OperDateIn
  20.05.22                                                                                     * zc_ObjectDate_MCRequest_DateUpdate, zc_ObjectDate_MCRequest_DateDone
  17.03.22                                                                                     * zc_ObjectDate_User_KeyExpireDate
  24.02.22                                                                                     * zc_ObjectDate_ExchangeRates_OperDate

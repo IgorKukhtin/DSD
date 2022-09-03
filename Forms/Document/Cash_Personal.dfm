@@ -1630,6 +1630,9 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       end
       item
         Control = edComment
+      end
+      item
+        Control = ceInfoMoney
       end>
     Left = 224
     Top = 217
@@ -1765,8 +1768,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       item
         Component = GuidesPersonalServiceList
       end>
-    Left = 512
-    Top = 328
+    Left = 536
+    Top = 320
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1777,7 +1780,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 508
+    Left = 572
     Top = 246
   end
   object spSelectPrint: TdsdStoredProc
@@ -1876,17 +1879,20 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Value = Null
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
         Value = Null
         Component = GuidesInfoMoney
-        ComponentItem = 'Key'
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 336
-    Top = 5
+    Left = 304
+    Top = 13
   end
   object GuidesPersonalServiceJournal: TdsdGuides
     KeyField = 'Id'
@@ -1948,8 +1954,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 424
-    Top = 8
+    Left = 384
+    Top = 56
   end
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
@@ -2141,7 +2147,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 544
+    Left = 520
     Top = 53
   end
 end

@@ -30,6 +30,8 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , AreaName TVarChar
              , PaymentDate TDateTime, PaymentAmount TFloat
              , PaymentDate_jur TDateTime, PaymentAmount_jur TFloat
+             , IncomeDate TDateTime, IncomeAmount TFloat           --последний приход
+             , IncomeDate_jur TDateTime, IncomeAmount_jur TFloat
               )
 AS
 $BODY$
@@ -209,7 +211,7 @@ BEGIN
                         , ObjectLink_Juridical_JuridicalGroup.ChildObjectId
                  )
 
-   --находим последнии оплаты
+   --находим последнии оплаты    и последний приход
    , tmpLastPayment_all AS (SELECT tt.JuridicalId
                                  , tt.ContractId
                                  , tt.PaidKindId
@@ -217,6 +219,9 @@ BEGIN
                                  , tt.OperDate
                                  , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                                  , tt.Amount
+                                 -- последний приход
+                                 , tt.OperDateIn
+                                 , tt.AmountIn
                             FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt
                                  JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                  ON ObjectLink_Contract_InfoMoney.ObjectId = tt.ContractId
@@ -234,7 +239,18 @@ BEGIN
                                , tt.InfoMoneyId
                                , tt.OperDate
                        )
-
+      -- находим последниий приход
+   , tmpLastIncome AS (SELECT tt.JuridicalId
+                            , tt.PaidKindId
+                            , tt.InfoMoneyId
+                            , tt.OperDateIn
+                            , SUM (tt.AmountIn) AS AmountIn
+                       FROM tmpLastPayment_all AS tt
+                       GROUP BY tt.JuridicalId
+                              , tt.PaidKindId
+                              , tt.InfoMoneyId
+                              , tt.OperDateIn
+                      )
 
      SELECT a.AccountId, a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
           , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
@@ -259,7 +275,13 @@ BEGIN
           
           , tmpLastPaymentJuridical.OperDate :: TDateTime AS PaymentDate_jur
           , tmpLastPaymentJuridical.Amount   :: TFloat    AS PaymentAmount_jur
-      
+
+          , tmpLastPayment.OperDateIn :: TDateTime AS IncomeDate
+          , tmpLastPayment.AmountIn   :: TFloat    AS IncomeAmount
+          
+          , tmpLastIncomeJuridical.OperDateIn :: TDateTime AS IncomeDate_jur
+          , tmpLastIncomeJuridical.AmountIn   :: TFloat    AS IncomeAmount_jur
+
      FROM (
            SELECT 
                   Object_Account_View.AccountId
@@ -558,6 +580,19 @@ BEGIN
                    AND tmpLastPaymentJuridical.PaidKindId  = a.PaidKindId
                    AND tmpLastPaymentJuridical.InfoMoneyId = a.InfoMoneyId
                    AND tmpLastPaymentJuridical.Ord = 1
+
+        LEFT JOIN (SELECT tmpLastIncome.JuridicalId
+                        , tmpLastIncome.InfoMoneyId
+                        , tmpLastIncome.PaidKindId
+                        , tmpLastIncome.OperDateIn
+                        , tmpLastIncome.AmountIn
+                        , ROW_NUMBER() OVER(PARTITION BY tmpLastIncome.JuridicalId, tmpLastIncome.PaidKindId, tmpLastIncome.InfoMoneyId ORDER BY tmpLastIncome.OperDateIn DESC) AS Ord
+                   FROM tmpLastIncome
+                  ) AS tmpLastIncomeJuridical
+                    ON tmpLastIncomeJuridical.JuridicalId = a.JuridicalId
+                   AND tmpLastIncomeJuridical.PaidKindId  = a.PaidKindId
+                   AND tmpLastIncomeJuridical.InfoMoneyId = a.InfoMoneyId
+                   AND tmpLastIncomeJuridical.Ord = 1
 
      WHERE a.DebetRemains <> 0 or a.KreditRemains <> 0
         or a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0

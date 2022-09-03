@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalDefermentPayment(
 )
 RETURNS TABLE (Id Integer, JuridicalId Integer, ContractId Integer
              , PaidKindId Integer, PartnerId Integer
-             , OperDate TDateTime, Amount TFloat) AS
+             , OperDate TDateTime, Amount TFloat
+             , OperDateIn TDateTime, AmountIn TFloat
+             ) AS
 $BODY$
 BEGIN
    
@@ -19,7 +21,9 @@ BEGIN
             , ObjectLink_JuridicalDefermentPayment_PaidKind.ChildObjectId  AS PaidKindId
             , ObjectLink_JuridicalDefermentPayment_Partner.ChildObjectId   AS PartnerId
             , ObjectDate_JuridicalDefermentPayment_OperDate.ValueData      AS OperDate
-            , ObjectFloat_JuridicalDefermentPayment_Amount.ValueData       AS Amount
+            , ObjectFloat_JuridicalDefermentPayment_Amount.ValueData       AS Amount 
+            , ObjectDate_JuridicalDefermentPayment_OperDateIn.ValueData    AS OperDateIn
+            , ObjectFloat_JuridicalDefermentPayment_AmountIn.ValueData     AS AmountIn
        FROM Object AS Object_JuridicalDefermentPayment
              LEFT JOIN ObjectLink AS ObjectLink_JuridicalDefermentPayment_Juridical
                                   ON ObjectLink_JuridicalDefermentPayment_Juridical.ObjectId = Object_JuridicalDefermentPayment.Id
@@ -43,7 +47,16 @@ BEGIN
      
             LEFT JOIN ObjectFloat AS ObjectFloat_JuridicalDefermentPayment_Amount
                                   ON ObjectFloat_JuridicalDefermentPayment_Amount.ObjectId = Object_JuridicalDefermentPayment.Id
-                                 AND ObjectFloat_JuridicalDefermentPayment_Amount.DescId = zc_ObjectFloat_JuridicalDefermentPayment_Amount()
+                                 AND ObjectFloat_JuridicalDefermentPayment_Amount.DescId = zc_ObjectFloat_JuridicalDefermentPayment_Amount()  
+            --последний приход дата / сумма
+            LEFT JOIN ObjectDate AS ObjectDate_JuridicalDefermentPayment_OperDateIn
+                                 ON ObjectDate_JuridicalDefermentPayment_OperDateIn.ObjectId = Object_JuridicalDefermentPayment.Id
+                                AND ObjectDate_JuridicalDefermentPayment_OperDateIn.DescId = zc_ObjectDate_JuridicalDefermentPayment_OperDateIn()
+     
+            LEFT JOIN ObjectFloat AS ObjectFloat_JuridicalDefermentPayment_AmountIn
+                                  ON ObjectFloat_JuridicalDefermentPayment_AmountIn.ObjectId = Object_JuridicalDefermentPayment.Id
+                                 AND ObjectFloat_JuridicalDefermentPayment_AmountIn.DescId = zc_ObjectFloat_JuridicalDefermentPayment_AmountIn()
+
        WHERE Object_JuridicalDefermentPayment.DescId = zc_Object_JuridicalDefermentPayment();
   
 END;
@@ -57,6 +70,7 @@ LANGUAGE plpgsql VOLATILE;
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.09.22         *
  02.12.21         *
 */
 

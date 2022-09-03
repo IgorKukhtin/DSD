@@ -1178,6 +1178,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_JuridicalDefermentPayment_Amount() RET
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_JuridicalDefermentPayment_Amount', zc_Object_JuridicalDefermentPayment(), 'Сумма последней оплаты' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalDefermentPayment_Amount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_JuridicalDefermentPayment_AmountIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalDefermentPayment_AmountIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_JuridicalDefermentPayment_AmountIn', zc_Object_JuridicalDefermentPayment(), 'Сумма последнего прихода' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalDefermentPayment_AmountIn');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_ObjectCode_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ObjectCode_Basis'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_ObjectCode_Basis', zc_Object_Goods(), 'Код АЛАН' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ObjectCode_Basis');
@@ -2319,6 +2324,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 01.09.22         * zc_ObjectFloat_JuridicalDefermentPayment_AmountIn
  12.07.22         * zc_ObjectFloat_OrderCarInfo_...
  04.07.22                                                                                      * zc_ObjectFloat_CashSettings_DeviationsPrice1303
  20.06.22                                                                                      * zc_ObjectFloat_CashSettings_MinPriceSale

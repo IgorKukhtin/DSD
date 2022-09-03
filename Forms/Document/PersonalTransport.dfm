@@ -3,7 +3,7 @@ object PersonalTransportForm: TPersonalTransportForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1088#1086#1077#1079#1076#1072'>'
   ClientHeight = 396
-  ClientWidth = 922
+  ClientWidth = 919
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object PersonalTransportForm: TPersonalTransportForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 922
+    Width = 919
     Height = 89
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 922
     object edInvNumber: TcxTextEdit
       Left = 16
       Top = 20
@@ -145,25 +146,28 @@ object PersonalTransportForm: TPersonalTransportForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 115
-    Width = 922
+    Width = 919
     Height = 281
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 922
     ClientRectBottom = 281
-    ClientRectRight = 922
+    ClientRectRight = 919
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 922
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 922
+        Width = 919
         Height = 257
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 922
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -497,6 +501,22 @@ object PersonalTransportForm: TPersonalTransportForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoadExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbItemProtocol'
         end
         item
@@ -564,6 +584,10 @@ object PersonalTransportForm: TPersonalTransportForm
     end
     object bbItemProtocol: TdxBarButton
       Action = MovementItemProtocolOpenForm
+      Category = 0
+    end
+    object bbLoadExcel: TdxBarButton
+      Action = macLoadExcel
       Category = 0
     end
   end
@@ -1009,6 +1033,52 @@ object PersonalTransportForm: TPersonalTransportForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+    end
+    object macLoadExcel: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102' '#1087#1088#1086#1077#1079#1072' '#1080#1079' Excel ?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel '#1057#1091#1084#1084#1099' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1088#1086#1077#1079#1076#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel '#1057#1091#1084#1084#1099' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1088#1086#1077#1079#1076#1072
+      ImageIndex = 41
     end
   end
   object MasterDS: TDataSource
@@ -1505,5 +1575,37 @@ object PersonalTransportForm: TPersonalTransportForm
       end>
     Left = 752
     Top = 13
+  end
+  object spGetImportSetting: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TPersonalTransportForm;zc_Object_ImportSetting_PersonalTransport'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 848
+    Top = 240
   end
 end

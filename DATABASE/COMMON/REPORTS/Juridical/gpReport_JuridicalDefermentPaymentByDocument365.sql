@@ -1,9 +1,8 @@
 -- Function: gpReport_JuridicalSold()
 
-DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument365 (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentByDocument(
+CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentByDocument365(
     IN inOperDate         TDateTime , -- 
     IN inContractDate     TDateTime , -- 
     IN inJuridicalId      Integer   ,
@@ -11,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentByDocument(
     IN inContractId       Integer   , --
     IN inPaidKindId       Integer   , --
     IN inBranchId         Integer   , --
-    IN inPeriodCount      Integer   , --
+    IN inPeriodCount      Integer   , --  какой период берем
     IN inSaleSumm         TFloat    , 
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -19,6 +18,7 @@ RETURNS TABLE (Id Integer, OperDate TDateTime, InvNumber TVarChar, TotalSumm TFl
 AS
 $BODY$
    DECLARE vbLenght Integer;
+   DECLARE vbLenght_end Integer;
    DECLARE vbOperDate TDateTime;
    DECLARE vbNextOperDate TDateTime;
    DECLARE vbOperSumm TFloat;
@@ -34,7 +34,8 @@ BEGIN
 
      -- Выбираем остаток на дату по юр. лицам в разрезе договоров. 
      -- Так же выбираем продажи и возвраты за период 
-     vbLenght := 7;
+   --  vbLenght := 7; 
+     
 
   -- !!!Отчет строим не по договору а по "ключу"!!!
   CREATE TEMP TABLE _tmpContract (ContractId Integer) ON COMMIT DROP; 
@@ -45,8 +46,12 @@ BEGIN
       WHERE View_Contract_ContractKey.ContractId = inContractId;
 
 
-  IF inPeriodCount < 5 THEN
-
+  IF inPeriodCount < 366 THEN
+    IF inPeriodCount = 30  THEN vbLenght := 30;  vbLenght_end := 0;   END IF;
+    IF inPeriodCount = 60  THEN vbLenght := 60;  vbLenght_end := 30;  END IF;
+    IF inPeriodCount = 90  THEN vbLenght := 90;  vbLenght_end := 60;  END IF;
+    IF inPeriodCount = 180 THEN vbLenght := 180; vbLenght_end := 90;  END IF;
+    IF inPeriodCount = 365 THEN vbLenght := 365; vbLenght_end := 180; END IF;    
     RETURN QUERY  
         SELECT 
               Movement.Id
@@ -124,8 +129,8 @@ BEGIN
 
         WHERE Movement.DescId = zc_Movement_TransferDebtOut()
           AND Movement.StatusId = zc_Enum_Status_Complete()
-          AND Movement.OperDate >= (inContractDate::date - vbLenght * inPeriodCount)
-          AND Movement.OperDate < (inContractDate::date - vbLenght * (inPeriodCount - 1))
+          AND Movement.OperDate >= (inContractDate::date - vbLenght)
+          AND Movement.OperDate < (inContractDate::date - vbLenght_end)
           AND vbIsSale = TRUE
           AND (_tmpContract.ContractId > 0 OR inContractId = 0)
           AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
@@ -165,8 +170,8 @@ BEGIN
               INNER JOIN MovementDate AS MovementDate_OperDatePartner
                                       ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                      AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
-                                     AND MovementDate_OperDatePartner.ValueData >= (inContractDate::date - vbLenght * inPeriodCount)
-                                     AND MovementDate_OperDatePartner.ValueData < (inContractDate::date - vbLenght * (inPeriodCount - 1))
+                                     AND MovementDate_OperDatePartner.ValueData >= (inContractDate::date - vbLenght)
+                                     AND MovementDate_OperDatePartner.ValueData < (inContractDate::date - vbLenght_end)
               INNER JOIN MovementLinkObject AS MovementLinkObject_Partner
                                             ON MovementLinkObject_Partner.MovementId = Movement.Id
                                            AND MovementLinkObject_Partner.DescId = tmpDesc.DescId_Partner
@@ -225,7 +230,7 @@ BEGIN
         ORDER BY 2;
     
     ELSE
-      vbOperDate := (inContractDate::DATE) - vbLenght * 4;
+      vbOperDate := (inContractDate::DATE) - 365;
       vbNextOperDate := vbOperDate;
       vbOperSumm := 0;
       
@@ -429,7 +434,7 @@ BEGIN
       	 END IF;
 
          -- сумма по всем найденным документам
-         SELECT COALESCE (SUM (Summ), 0) INTO vbOperSumm FROM _tempMovement;
+         SELECT COALESCE (SUM (COALESCE(_tempMovement.Summ,0) ), 0) INTO vbOperSumm FROM _tempMovement;
 
       END LOOP;
 
@@ -516,11 +521,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.09.22         * 365
  05.07.14                                        * add zc_Movement_TransferDebtOut
  05.05.14                                        * add inPaidKindId
  26.04.14                                        * add Object_Contract_ContractKey_View
@@ -530,4 +535,4 @@ ALTER FUNCTION gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTim
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalDefermentPaymentByDocument ('01.01.2014'::TDateTime, '01.02.2013'::TDateTime, 0, 0, 0, 0, 0, 0, inSession:= '2' :: TVarChar); 
+-- SELECT * FROM gpReport_JuridicalDefermentPaymentByDocument365 ('01.01.2014'::TDateTime, '01.02.2013'::TDateTime, 0, 0, 0, 0, 0, 0, inSession:= '2' :: TVarChar); 
