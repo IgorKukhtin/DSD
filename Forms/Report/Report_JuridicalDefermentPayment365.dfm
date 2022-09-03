@@ -1,26 +1,26 @@
 inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPayment365Form
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081' 365>'
   ClientHeight = 370
-  ClientWidth = 1123
+  ClientWidth = 1028
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1139
+  ExplicitWidth = 1044
   ExplicitHeight = 409
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1123
+    Width = 1028
     Height = 313
     TabOrder = 3
     ExplicitWidth = 1123
     ExplicitHeight = 313
     ClientRectBottom = 313
-    ClientRectRight = 1123
+    ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1123
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
-        Width = 1123
+        Width = 1028
         Height = 313
         ExplicitWidth = 1123
         ExplicitHeight = 313
@@ -628,7 +628,7 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
     end
   end
   inherited Panel: TPanel
-    Width = 1123
+    Width = 1028
     ExplicitWidth = 1123
     inherited deStart: TcxDateEdit
       Left = 59
