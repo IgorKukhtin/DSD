@@ -19,6 +19,10 @@ $BODY$
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderGoods());
+     
+-- if vbUserId <> 5 THEN  RAISE EXCEPTION 'ѕовторите действие через 15 мин.';end if;
+
+
 
      --пробуем найти сохраненный док.
      vbMovementId := (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_OrderGoodsDetail());
@@ -123,10 +127,10 @@ BEGIN
                             --AND 1=0
                          )
      , tmpMIOrder_all AS (SELECT MovementItem.*
-                          FROM tmpMovOrder
-                               LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovOrder.MovementId
-                                                     AND MovementItem.DescId     = zc_MI_Master()
-                                                     AND MovementItem.isErased   = FALSE
+                          FROM MovementItem 
+                          WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovOrder.MovementId FROM tmpMovOrder)
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
                          )
          , tmpMIOrder AS (SELECT tmpMIOrder_all.*
                           FROM tmpMIOrder_all
@@ -186,10 +190,10 @@ BEGIN
                             AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                          )
       , tmpMISale_all AS (SELECT MovementItem.*
-                          FROM tmpMovSale
-                               LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovSale.MovementId
-                                                     AND MovementItem.DescId     = zc_MI_Master()
-                                                     AND MovementItem.isErased   = FALSE
+                          FROM MovementItem
+                          WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovSale.MovementId FROM tmpMovSale)
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
                          )
           , tmpMISale AS (SELECT tmpMISale_all.*
                           FROM tmpMISale_all
