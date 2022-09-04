@@ -1119,7 +1119,7 @@ function Recalc_PartionGoods(Edit:TEdit):Boolean;
 var PartionGoods:String;
 begin
         if ((SettingMain.BranchCode >= 301) or (SettingMain.BranchCode <= 310))
-        and(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Income)
+        //and(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Income)
         then Result:=true
         else
         if  (trim(Edit.Text)<>'')
