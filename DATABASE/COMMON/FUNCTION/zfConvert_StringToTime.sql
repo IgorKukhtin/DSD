@@ -25,4 +25,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM zfConvert_StringToTime ('10:00'), zc_DateStart()
+-- SELECT * FROM zfConvert_StringToTime ('10:00'), zfConvert_StringToDate ('10:00'), zc_DateStart()
