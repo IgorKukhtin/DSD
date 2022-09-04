@@ -1,8 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
@@ -33,7 +33,8 @@ $BODY$
    DECLARE vbPersent   TFloat;
    DECLARE vbisVIPforSales Boolean;
    DECLARE vbAmountVIP TFloat;
-   
+   DECLARE vbDeviationsPrice1303 TFloat;   
+   DECLARE vbPriceSale TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -132,6 +133,44 @@ BEGIN
                    IF vbPersent = 20 THEN  RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 20 процентов (для товара с приходной ценой от 100грн до 500грн).% Сделать PrintScreen экрана с ошибкой и отправить на Skype своему менеджеру для  исправления Цены реализации (после исправления - препарат можно отпустить по рецепту)', Chr(13)||Chr(10); END IF;
                    IF vbPersent = 15 THEN  RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 15 процентов (для товара с приходной ценой от 500грн до 1000грн).% Сделать PrintScreen экрана с ошибкой и отправить на Skype своему менеджеру для  исправления Цены реализации (после исправления - препарат можно отпустить по рецепту)', Chr(13)||Chr(10); END IF;
                    IF vbPersent = 10 THEN  RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 10 процентов (для товара с приходной ценой свыше 1000грн).% Сделать PrintScreen экрана с ошибкой и отправить на Skype своему менеджеру для  исправления Цены реализации (после исправления - препарат можно отпустить по рецепту)', Chr(13)||Chr(10); END IF;
+            END IF;
+            
+            SELECT COALESCE(ObjectFloat_CashSettings_DeviationsPrice1303.ValueData, 1)    AS DeviationsPrice1303
+            INTO vbDeviationsPrice1303
+            FROM Object AS Object_CashSettings
+                 LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DeviationsPrice1303
+                                       ON ObjectFloat_CashSettings_DeviationsPrice1303.ObjectId = Object_CashSettings.Id 
+                                      AND ObjectFloat_CashSettings_DeviationsPrice1303.DescId = zc_ObjectFloat_CashSettings_DeviationsPrice1303()
+            WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+            LIMIT 1;
+            
+            SELECT T1.PriceSale, T1.PriceSaleIncome  
+            INTO vbPriceSale, vbPriceCalc                          
+            FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := vbUnitId, inGoodsId := inGoodsId, inisCalc := True, inSession := inSession) AS T1;
+            
+            IF COALESCE(vbPriceSale, 0) = 0
+            THEN
+               RAISE EXCEPTION 'БЛОК ОТПУСКА. Товар не найден в реестре товаров соц. проекта 1303';
+            END IF;
+
+            -- Предложение по цене
+            IF (COALESCE (vbPriceCalc,0) < ioPriceSale) AND (COALESCE (trunc(vbPriceCalc * 10) / 10, 0) > 0)
+            THEN
+               ioPriceSale := trunc(vbPriceCalc * 10) / 10;
+            END IF;
+
+            IF vbPriceSale < ioPriceSale 
+            THEN
+                           
+              IF (ioPriceSale / vbPriceSale * 100 - 100) <= COALESCE(vbDeviationsPrice1303, 1.0)
+              THEN
+                ioPriceSale := vbPriceSale;
+              ELSE
+                 RAISE EXCEPTION '%',  'БЛОК ОТПУСКА !'||Chr(13)||Chr(10)|| 
+                           'Отпускная цена выше чем по реестру товаров соц. проекта 1303'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||
+                           'Максимальная цена реализации должна быть - '||zfConvert_FloatToString(vbPriceSale)||'грн.'||Chr(13)||Chr(10)|| 
+                           'У нас миним. цена для отпуска по ПКМУ 1303 - '||zfConvert_FloatToString(ioPriceSale)||'грн.';              
+              END IF;
             END IF;
 
     END IF;
@@ -313,3 +352,5 @@ $BODY$
  09.02.17         *
  13.10.15                                                                         *
 */
+
+-- select * from gpInsertUpdate_MovementItem_Sale(ioId := 0 , inMovementId := 29186995 , inGoodsId := 30802 , inAmount := 1 , ioPrice := 204.6 , ioPriceSale := 204.6 , inChangePercent := 100 , inNDSKindId := 9 ,  inSession := '3');

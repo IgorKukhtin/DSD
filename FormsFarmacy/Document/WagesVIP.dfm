@@ -11,20 +11,20 @@ inherited WagesVIPForm: TWagesVIPForm
     Top = 115
     Width = 1185
     Height = 465
-    ExplicitTop = 109
-    ExplicitWidth = 799
-    ExplicitHeight = 370
+    ExplicitTop = 115
+    ExplicitWidth = 1185
+    ExplicitHeight = 465
     ClientRectBottom = 465
     ClientRectRight = 1185
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 799
-      ExplicitHeight = 346
+      ExplicitWidth = 1185
+      ExplicitHeight = 441
       inherited cxGrid: TcxGrid
         Width = 1185
         Height = 433
-        ExplicitTop = 5
-        ExplicitWidth = 1052
-        ExplicitHeight = 338
+        ExplicitTop = -6
+        ExplicitWidth = 1185
+        ExplicitHeight = 433
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -49,6 +49,16 @@ inherited WagesVIPForm: TWagesVIPForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = TotalSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = ApplicationAward
             end>
           OptionsBehavior.IncSearch = True
           OptionsView.ColumnAutoWidth = True
@@ -67,7 +77,7 @@ inherited WagesVIPForm: TWagesVIPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 82
           end
           object MemberName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
@@ -75,7 +85,7 @@ inherited WagesVIPForm: TWagesVIPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 293
+            Width = 334
           end
           object HoursWork: TcxGridDBColumn
             Caption = #1054#1090#1088#1072#1073#1086#1090#1072#1085#1086' '#1095#1072#1089#1086#1074
@@ -83,7 +93,7 @@ inherited WagesVIPForm: TWagesVIPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 84
+            Width = 100
           end
           object AmountAccrued: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
@@ -94,14 +104,34 @@ inherited WagesVIPForm: TWagesVIPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 86
+            Width = 100
+          end
+          object ApplicationAward: TcxGridDBColumn
+            Caption = #1055#1088#1077#1084#1080#1103' '#1079#1072' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
+            DataBinding.FieldName = 'ApplicationAward'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object TotalSum: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086
+            DataBinding.FieldName = 'TotalSum'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object isIssuedBy: TcxGridDBColumn
             Caption = #1042#1099#1076#1072#1085#1086
             DataBinding.FieldName = 'isIssuedBy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 84
+            Width = 100
           end
           object DateIssuedBy: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
@@ -109,7 +139,7 @@ inherited WagesVIPForm: TWagesVIPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 100
           end
         end
       end
@@ -121,8 +151,6 @@ inherited WagesVIPForm: TWagesVIPForm
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
-        ExplicitTop = 338
-        ExplicitWidth = 799
       end
     end
   end
@@ -130,7 +158,7 @@ inherited WagesVIPForm: TWagesVIPForm
     Width = 1185
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 1304
+    ExplicitWidth = 1185
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8

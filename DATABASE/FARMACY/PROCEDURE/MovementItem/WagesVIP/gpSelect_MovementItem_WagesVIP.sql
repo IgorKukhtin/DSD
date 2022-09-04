@@ -11,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WagesVIP(
 RETURNS TABLE (Id Integer, UserID Integer
              , MemberCode Integer, MemberName TVarChar
              , AmountAccrued TFloat
+             , ApplicationAward TFloat
+             , TotalSum TFloat
              , HoursWork TFloat
 
              , isIssuedBy Boolean, DateIssuedBy TDateTime
@@ -37,6 +39,8 @@ BEGIN
                  , Object_Member.ValueData            AS MemberName
 
                  , MovementItem.Amount                AS AmountAccrued
+                 , MIFloat_ApplicationAward.ValueData AS ApplicationAward
+                 , (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_ApplicationAward.ValueData , 0))::TFloat AS TotalSum
                  
                  , MIFloat_HoursWork.ValueData        AS HoursWork
 
@@ -54,9 +58,13 @@ BEGIN
                   LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_ApplicationAward
+                                              ON MIFloat_ApplicationAward.MovementItemId = MovementItem.Id
+                                             AND MIFloat_ApplicationAward.DescId = zc_MIFloat_ApplicationAward()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_HoursWork
                                               ON MIFloat_HoursWork.MovementItemId = MovementItem.Id
-                                             AND MIFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
+                                             AND MIFloat_HoursWork.DescId = zc_MIFloat_HoursWork()
 
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
@@ -77,6 +85,8 @@ BEGIN
                  , Object_Member.ValueData            AS MemberName
 
                  , 0::TFloat                          AS AmountAccrued
+                 , 0::TFloat                          AS ApplicationAward
+                 , 0::TFloat                          AS TotalSum
                  
                  , 0::TFloat                          AS HoursWork
 
@@ -117,6 +127,8 @@ BEGIN
                  , Object_Member.ValueData            AS MemberName
 
                  , MovementItem.Amount                AS AmountAccrued
+                 , MIFloat_ApplicationAward.ValueData AS ApplicationAward
+                 , (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_ApplicationAward.ValueData , 0))::TFloat AS TotalSum
                  
                  , MIFloat_HoursWork.ValueData        AS HoursWork
 
@@ -134,9 +146,13 @@ BEGIN
                   LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_ApplicationAward
+                                              ON MIFloat_ApplicationAward.MovementItemId = MovementItem.Id
+                                             AND MIFloat_ApplicationAward.DescId = zc_MIFloat_ApplicationAward()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_HoursWork
                                               ON MIFloat_HoursWork.MovementItemId = MovementItem.Id
-                                             AND MIFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
+                                             AND MIFloat_HoursWork.DescId = zc_MIFloat_HoursWork()
 
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id

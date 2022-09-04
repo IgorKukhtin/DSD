@@ -44,17 +44,17 @@ type
     edAccount: TcxButtonEdit;
     cxLabel3: TcxLabel;
     GuidesAccount: TdsdGuides;
-    actPrintOneWeek: TdsdPrintAction;
-    actPrintTwoWeek: TdsdPrintAction;
-    actPrintThreeWeek: TdsdPrintAction;
-    actPrintFourWeek: TdsdPrintAction;
+    actPrint30: TdsdPrintAction;
+    actPrint60: TdsdPrintAction;
+    actPrint90: TdsdPrintAction;
+    actPrint180: TdsdPrintAction;
     spReport: TdsdStoredProc;
     cdsReport: TClientDataSet;
-    bbReportOneWeek: TdxBarButton;
+    bbPrint30: TdxBarButton;
     FormParams: TdsdFormParams;
-    bbTwoWeek: TdxBarButton;
-    bbThreeWeek: TdxBarButton;
-    bbFourWeek: TdxBarButton;
+    bbPrint60: TdxBarButton;
+    bbPrint90: TdxBarButton;
+    bbPrint180: TdxBarButton;
     bbOther: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPribt: TdxBarButton;
@@ -104,6 +104,8 @@ type
     bbUpdate_LastPayment: TdxBarButton;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    actPrint365: TdsdPrintAction;
+    bbPrint365: TdxBarButton;
   private
     { Private declarations }
   public

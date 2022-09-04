@@ -60,6 +60,8 @@ type
     isConfirmByPhone: TcxGridDBColumn;
     DateComing: TcxGridDBColumn;
     MobileDiscount: TcxGridDBColumn;
+    actCheckSiteInsert: TdsdOpenForm;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

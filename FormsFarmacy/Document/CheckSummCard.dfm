@@ -441,6 +441,19 @@ inherited CheckSummCardForm: TCheckSummCardForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object actCheckSiteInsert: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1047#1072#1082#1072#1079#1099' '#1089' '#1089#1072#1081#1090#1086#1074' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1082#1072#1079#1072
+      Hint = #1047#1072#1082#1072#1079#1099' '#1089' '#1089#1072#1081#1090#1086#1074' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1082#1072#1079#1072
+      ImageIndex = 29
+      FormName = 'TCheckSiteInsertForm'
+      FormNameParam.Value = 'TCheckSiteInsertForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_CheckSummCard'
@@ -481,6 +494,10 @@ inherited CheckSummCardForm: TCheckSummCardForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -531,6 +548,10 @@ inherited CheckSummCardForm: TCheckSummCardForm
       Hint = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1089#1091#1084#1084' '#1087#1086' '#1082#1072#1089#1089#1086#1074#1086#1084#1091' '#1072#1087#1087#1072#1088#1072#1090#1091
       Visible = ivAlways
       ImageIndex = 56
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actCheckSiteInsert
+      Category = 0
     end
   end
   inherited PopupMenu: TPopupMenu

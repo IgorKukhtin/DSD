@@ -1245,7 +1245,8 @@ uses
   Report_CheckMobileDialog in '..\..\FormsFarmacy\Report\Report_CheckMobileDialog.pas' {Report_CheckMobileDialogForm: TParentForm},
   Report_CheckMobile in '..\..\FormsFarmacy\Report\Report_CheckMobile.pas' {Report_CheckMobileForm: TParentForm},
   Report_JuridicalRemainsEndDialog in '..\..\FormsFarmacy\Report\Report_JuridicalRemainsEndDialog.pas' {Report_JuridicalRemainsEndDialogForm: TParentForm},
-  Report_JuridicalRemainsEnd in '..\..\FormsFarmacy\Report\Report_JuridicalRemainsEnd.pas' {Report_JuridicalRemainsEndForm: TParentForm};
+  Report_JuridicalRemainsEnd in '..\..\FormsFarmacy\Report\Report_JuridicalRemainsEnd.pas' {Report_JuridicalRemainsEndForm: TParentForm},
+  CheckSiteInsert in '..\..\FormsFarmacy\Document\CheckSiteInsert.pas' {CheckSiteInsertForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

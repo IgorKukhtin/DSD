@@ -386,8 +386,39 @@ BEGIN
       -- raise notice 'Value 05: % %', (SELECT SUM(tmpCalculationNP.Summa) FROM tmpCalculationNP), vbSummaNPAdd;
 
     END IF;
-    
-            
+
+    CREATE TEMP TABLE tmpUserReferals ON COMMIT DROP AS
+        (WITH  tmpUserReferals AS (SELECT Movement.OperDate
+                                        , MLO_UserReferals.ObjectId                           AS UserId
+                                        , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, MovementString_BayerPhone.ValueData)     AS BayerPhone
+                                        , ROW_NUMBER() OVER (PARTITION BY  COALESCE (ObjectString_BuyerForSite_Phone.ValueData, MovementString_BayerPhone.ValueData) 
+                                                             ORDER BY Movement.OperDate) AS Ord
+                                   FROM MovementLinkObject AS  MLO_UserReferals
+
+                                        INNER JOIN Movement ON Movement.Id = MLO_UserReferals.MovementId
+                                                           AND Movement.StatusId = zc_Enum_Status_Complete()    
+
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                                                     ON MovementLinkObject_BuyerForSite.MovementId = MLO_UserReferals.MovementId
+                                                                    AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+                                        LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                                                               ON ObjectString_BuyerForSite_Phone.ObjectId = MovementLinkObject_BuyerForSite.ObjectId
+                                                              AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
+
+                                        LEFT JOIN MovementString AS MovementString_BayerPhone
+                                                                 ON MovementString_BayerPhone.MovementId = MLO_UserReferals.MovementId
+                                                                AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
+
+                                   WHERE MLO_UserReferals.DescId = zc_MovementLinkObject_UserReferals())
+                                   
+         SELECT tmpUserReferals.UserId
+             , (COUNT(*) * 20)::TFloat     AS SummaCalc
+         FROM tmpUserReferals
+         WHERE tmpUserReferals.OperDate >= DATE_TRUNC ('MONTH', vbOperDate)
+           AND tmpUserReferals.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+           AND tmpUserReferals.Ord = 1
+         GROUP BY tmpUserReferals.UserId);
+                       
     -- сохранили отметку <Сумма реализации заказов принятых по телефону>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPhone(), inMovementId, vbTotalSummPhone);
     -- сохранили отметку <Сумма реализации заказов>
@@ -398,18 +429,22 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), inMovementId, vbHoursWork);
     
           
-    PERFORM lpInsertUpdate_MovementItem_WagesVIP_Calc (ioId              := COALESCE(tmpMI.Id, 0)
-                                                     , inMovementId      := inMovementId
-                                                     , inUserWagesId     := COALESCE(tmpCalc.UserID, tmpMI.UserID)
-                                                     , inAmountAccrued   := COALESCE(tmpCalc.Summa, 0)
-                                                     , inHoursWork       := COALESCE(tmpCalc.HoursWork, 0)
-                                                     , inUserId          := vbUserId)
+    PERFORM lpInsertUpdate_MovementItem_WagesVIP_Calc (ioId                 := COALESCE(tmpMI.Id, 0)
+                                                     , inMovementId         := inMovementId
+                                                     , inUserWagesId        := COALESCE(tmpCalc.UserID, tmpMI.UserID)
+                                                     , inAmountAccrued      := COALESCE(tmpCalc.Summa, 0)
+                                                     , inApplicationAward   := COALESCE(tmpCalc.ApplicationAward, 0)
+                                                     , inHoursWork          := COALESCE(tmpCalc.HoursWork, 0)
+                                                     , inUserId             := vbUserId)
     FROM (SELECT tmpCalculation.UserId
                , SUM(tmpCalculation.Summa) + COALESCE(MAX(tmpCalculationNP.Summa), 0) AS Summa
-               , SUM(tmpCalculation.HoursWork)::TFloat AS HoursWork
+               , SUM(tmpCalculation.HoursWork)::TFloat                                AS HoursWork
+               , MAX(tmpUserReferals.SummaCalc)::TFloat                               AS ApplicationAward
           FROM tmpCalculation
           
                LEFT JOIN tmpCalculationNP ON tmpCalculationNP.UserID = tmpCalculation.UserID
+          
+               LEFT JOIN tmpUserReferals ON tmpUserReferals.UserID = tmpCalculation.UserID
           
           GROUP BY tmpCalculation.UserId) AS tmpCalc
     
@@ -448,4 +483,4 @@ $BODY$
  21.08.19                                                        *
 */
 
--- select * from gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := 26769516,  inSession := '3');
+-- select * from gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := 29160110 ,  inSession := '3');

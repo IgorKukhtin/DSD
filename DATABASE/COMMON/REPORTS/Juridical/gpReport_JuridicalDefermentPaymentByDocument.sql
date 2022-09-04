@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentByDocument(
     IN inPaidKindId       Integer   , --
     IN inBranchId         Integer   , --
     IN inPeriodCount      Integer   , --
-    IN inSaleSumm             TFloat    , 
+    IN inSaleSumm         TFloat    , 
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, OperDate TDateTime, InvNumber TVarChar, TotalSumm TFloat, FromName TVarChar, ToName TVarChar, ContractNumber TVarChar, ContractTagName TVarChar, PaidKindName TVarChar)
@@ -269,7 +269,7 @@ BEGIN
                SELECT MovementDate_OperDatePartner.ValueData :: TDateTime AS OperDate
                FROM (SELECT zc_Movement_Sale() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner WHERE vbIsSale = TRUE
                     UNION ALL
-                     SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner, zc_MovementLinkObject_From() AS DescId_Unit WHERE vbIsSale = TRUE
+                     SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner WHERE vbIsSale = TRUE
                     UNION ALL
                      SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_From() AS DescId_Partner WHERE vbIsSale = FALSE
                     ) AS tmpDesc
@@ -366,7 +366,7 @@ BEGIN
       	        SELECT Movement.Id, tmpDesc.DescId_Contract, tmpDesc.DescId_PaidKind, MovementFloat_TotalSumm.ValueData
                 FROM (SELECT zc_Movement_Sale() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner WHERE vbIsSale = TRUE
                      UNION ALL
-                      SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner, zc_MovementLinkObject_From() AS DescId_Unit WHERE vbIsSale = TRUE
+                      SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner WHERE vbIsSale = TRUE
                      UNION ALL
                       SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_From() AS DescId_Partner WHERE vbIsSale = FALSE
                      ) AS tmpDesc

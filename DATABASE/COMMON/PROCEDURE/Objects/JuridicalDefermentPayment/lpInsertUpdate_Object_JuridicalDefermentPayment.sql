@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_Object_Calendar(Integer, Boolean, TDateTime, TVarChar,TVarChar )
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_JuridicalDefermentPayment (Integer, Integer, Integer, TDateTime, TFloat, Integer );
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_JuridicalDefermentPayment (Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, Integer );
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Object_JuridicalDefermentPayment (Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, Integer );
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_JuridicalDefermentPayment (Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TDateTime, TFloat, Integer );
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_JuridicalDefermentPayment (
     IN inId                Integer   , -- ключ объекта <>
@@ -10,7 +11,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_JuridicalDefermentPayment (
     IN inPaidKindId        Integer   , -- 
     IN inPartnerId         Integer   , -- 
     IN inOperDate          TDateTime , -- Дата последней оплаты
-    IN inAmount            TFloat    , -- сумма последней оплаты
+    IN inAmount            TFloat    , -- сумма последней оплаты 
+    IN inOperDateIn        TDateTime , -- Дата последнего прихода
+    IN inAmountIn          TFloat    , -- сумма последнего прихода
     IN inUserId            Integer 
 )
 RETURNS VOID AS
@@ -35,7 +38,11 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_JuridicalDefermentPayment_Amount(), inId, inAmount);
    
-   
+    -- сохранили свойство <>   
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_JuridicalDefermentPayment_OperDateIn(), inId, inOperDateIn);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_JuridicalDefermentPayment_AmountIn(), inId, inAmountIn);
+     
    -- сохранили протокол
    --PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
 

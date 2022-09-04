@@ -23,7 +23,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
+  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit, ExternalLoad;
 
 type
   TPersonalTransportForm = class(TParentForm)
@@ -104,6 +104,11 @@ type
     cxLabel5: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
+    spGetImportSetting: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    macLoadExcel: TMultiAction;
+    bbLoadExcel: TdxBarButton;
   private
   public
   end;
