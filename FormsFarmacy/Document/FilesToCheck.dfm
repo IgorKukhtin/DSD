@@ -1,5 +1,5 @@
 inherited FilesToCheckForm: TFilesToCheckForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1060#1072#1081#1083#1099' '#1074#1099#1082#1083#1072#1076#1082#1080' '#1076#1083#1103' '#1072#1087#1090#1077#1082'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1060#1072#1081#1083#1099' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1082#1080'>'
   ClientHeight = 516
   ClientWidth = 627
   ExplicitWidth = 643
@@ -332,11 +332,11 @@ inherited FilesToCheckForm: TFilesToCheckForm
       PortParam.Component = FormParams
       PortParam.ComponentItem = 'Port'
       PortParam.MultiSelectSeparator = ','
-      UsernameParam.Value = ''
-      UsernameParam.Component = FormParams
-      UsernameParam.ComponentItem = 'Username'
-      UsernameParam.DataType = ftString
-      UsernameParam.MultiSelectSeparator = ','
+      UserNameParam.Value = ''
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
       PasswordParam.Value = ''
       PasswordParam.Component = FormParams
       PasswordParam.ComponentItem = 'Password'
@@ -381,11 +381,11 @@ inherited FilesToCheckForm: TFilesToCheckForm
       PortParam.Component = FormParams
       PortParam.ComponentItem = 'Port'
       PortParam.MultiSelectSeparator = ','
-      UsernameParam.Value = ''
-      UsernameParam.Component = FormParams
-      UsernameParam.ComponentItem = 'Username'
-      UsernameParam.DataType = ftString
-      UsernameParam.MultiSelectSeparator = ','
+      UserNameParam.Value = ''
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
       PasswordParam.Value = ''
       PasswordParam.Component = FormParams
       PasswordParam.ComponentItem = 'Password'
@@ -430,11 +430,11 @@ inherited FilesToCheckForm: TFilesToCheckForm
       PortParam.Component = FormParams
       PortParam.ComponentItem = 'Port'
       PortParam.MultiSelectSeparator = ','
-      UsernameParam.Value = ''
-      UsernameParam.Component = FormParams
-      UsernameParam.ComponentItem = 'Username'
-      UsernameParam.DataType = ftString
-      UsernameParam.MultiSelectSeparator = ','
+      UserNameParam.Value = ''
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
       PasswordParam.Value = ''
       PasswordParam.Component = FormParams
       PasswordParam.ComponentItem = 'Password'
@@ -484,7 +484,7 @@ inherited FilesToCheckForm: TFilesToCheckForm
       FileOpenDialog.FavoriteLinks = <>
       FileOpenDialog.FileTypes = <
         item
-          DisplayName = #1060#1072#1083#1099' '#1074#1099#1082#1083#1072#1076#1086#1082
+          DisplayName = #1060#1072#1083#1099' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1082#1080
           FileMask = '*.xls;*.xlsx*.doc;*.docx;*.odt;*.jpg;*.png'
         end>
       FileOpenDialog.OkButtonLabel = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1092#1072#1081#1083

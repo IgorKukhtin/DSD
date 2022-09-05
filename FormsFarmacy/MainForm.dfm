@@ -5334,6 +5334,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actFilesToCheckJournal: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1060#1072#1081#1083#1099' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1082#1080
+      FormName = 'TFilesToCheckJournalForm'
+      FormNameParam.Value = 'TFilesToCheckJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6874,40 +6885,43 @@
       object N336: TMenuItem [18]
         Action = actLayoutFileJournal
       end
-      object N339: TMenuItem [19]
+      object N367: TMenuItem [19]
+        Action = actFilesToCheckJournal
+      end
+      object N339: TMenuItem [20]
         Action = actExchangeRates
       end
-      object N7: TMenuItem [20]
+      object N7: TMenuItem [21]
         Caption = '-'
       end
-      object miSaveData: TMenuItem [21]
+      object miSaveData: TMenuItem [22]
         Action = actSaveData
       end
-      object miPriceGroupSettings: TMenuItem [22]
+      object miPriceGroupSettings: TMenuItem [23]
         Action = actPriceGroupSettings
       end
-      object N102: TMenuItem [23]
+      object N102: TMenuItem [24]
         Action = actPriceGroupSettingsTOP
       end
-      object miJuridicalSettings: TMenuItem [24]
+      object miJuridicalSettings: TMenuItem [25]
         Action = actJuridicalSettings
       end
-      object N9: TMenuItem [25]
+      object N9: TMenuItem [26]
         Caption = '-'
       end
-      object miImportType: TMenuItem [26]
+      object miImportType: TMenuItem [27]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [27]
+      object miImportSettings: TMenuItem [28]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [28]
+      object miImportExportLink: TMenuItem [29]
         Action = actImportExportLink
       end
-      object miGlobalConst: TMenuItem [29]
+      object miGlobalConst: TMenuItem [30]
         Action = actGlobalConst
       end
-      object FarmacyCash1: TMenuItem [31]
+      object FarmacyCash1: TMenuItem [32]
         Action = actUnitForFarmacyCash
       end
       inherited miProtocolAll: TMenuItem
@@ -6921,34 +6935,34 @@
           Action = actUkraineAlarm
         end
       end
-      object N10: TMenuItem [33]
+      object N10: TMenuItem [34]
         Caption = '-'
       end
-      object miRepriceChange: TMenuItem [34]
+      object miRepriceChange: TMenuItem [35]
         Action = actRepriceСhangeRetail
       end
-      object miReprice_test: TMenuItem [35]
+      object miReprice_test: TMenuItem [36]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1090#1077#1089#1090')'
         OnClick = miReprice_testClick
       end
-      object miRepricePromo: TMenuItem [36]
+      object miRepricePromo: TMenuItem [37]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1087#1086' '#1089#1088#1077#1076#1085#1080#1084' '#1094#1077#1085#1072#1084' '#1080' '#1084#1072#1088#1082'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072#1084
         OnClick = miRepricePromoClick
       end
-      object miExportSalesForSupp: TMenuItem [37]
+      object miExportSalesForSupp: TMenuItem [38]
         Action = actExportSalesForSuppClick
       end
-      object miRepriceChangeJournal: TMenuItem [38]
+      object miRepriceChangeJournal: TMenuItem [39]
         Action = actRepriceChangeJournal
       end
-      object N298: TMenuItem [39]
+      object N298: TMenuItem [40]
         Action = actReport_RepriceSite
       end
-      object N261: TMenuItem [42]
+      object N261: TMenuItem [43]
         Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1103#1084' '#1074' '#1084#1077#1085#1102
         OnClick = N261Click
       end
-      object N270: TMenuItem [43]
+      object N270: TMenuItem [44]
         Action = actClearDefaultUnit
       end
       object FarmacyCash2: TMenuItem

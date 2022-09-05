@@ -1246,7 +1246,10 @@ uses
   Report_CheckMobile in '..\..\FormsFarmacy\Report\Report_CheckMobile.pas' {Report_CheckMobileForm: TParentForm},
   Report_JuridicalRemainsEndDialog in '..\..\FormsFarmacy\Report\Report_JuridicalRemainsEndDialog.pas' {Report_JuridicalRemainsEndDialogForm: TParentForm},
   Report_JuridicalRemainsEnd in '..\..\FormsFarmacy\Report\Report_JuridicalRemainsEnd.pas' {Report_JuridicalRemainsEndForm: TParentForm},
-  CheckSiteInsert in '..\..\FormsFarmacy\Document\CheckSiteInsert.pas' {CheckSiteInsertForm: TParentForm};
+  CheckSiteInsert in '..\..\FormsFarmacy\Document\CheckSiteInsert.pas' {CheckSiteInsertForm: TParentForm},
+  FilesToCheckCash in '..\..\FormsFarmacy\Cash\FilesToCheckCash.pas' {FilesToCheckCashForm: TParentForm},
+  FilesToCheck in '..\..\FormsFarmacy\Document\FilesToCheck.pas' {FilesToCheckForm: TParentForm},
+  FilesToCheckJournal in '..\..\FormsFarmacy\Document\FilesToCheckJournal.pas' {FilesToCheckJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

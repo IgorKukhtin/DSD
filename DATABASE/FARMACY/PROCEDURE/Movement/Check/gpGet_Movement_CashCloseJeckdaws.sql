@@ -34,9 +34,14 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId = Movement_Check.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                         ON MovementLinkObject_CashRegister.MovementId = Movement_Check.Id
+                                        AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+
       WHERE Movement_Check.Id = inMovementId
         AND Movement_Check.DescId = zc_Movement_Check()
-       AND COALESCE(Object_JackdawsChecks.ObjectCode, 0) = 1;
+        AND (COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0
+         OR COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0);
 
       IF COALESCE (vbStatusId, 0) = 0
       THEN

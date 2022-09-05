@@ -645,10 +645,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_MCRequest_DateDone() RETURNS Integer AS
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_MCRequest(), 'zc_ObjectDate_MCRequest_DateDone', 'Дата выполнения' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MCRequest_DateDone');
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_SetDateRRO() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SetDateRRO'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_SetDateRRO', 'Авто установка времени на РРО' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SetDateRRO');
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 05.09.22                                                                                     * zc_ObjectDate_Unit_SetDateRRO
  01.09.22         * zc_ObjectDate_JuridicalDefermentPayment_OperDateIn
  20.05.22                                                                                     * zc_ObjectDate_MCRequest_DateUpdate, zc_ObjectDate_MCRequest_DateDone
  17.03.22                                                                                     * zc_ObjectDate_User_KeyExpireDate

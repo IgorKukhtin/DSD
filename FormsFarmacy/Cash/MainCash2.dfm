@@ -6843,6 +6843,29 @@ inherited MainCashForm2: TMainCashForm2
         end>
       Caption = 'Site'
     end
+    object actOpenFilesToCheck: TAction
+      Caption = #1055#1072#1087#1082#1072' "'#1060#1072#1081#1083#1099' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1082#1080'"'
+      Enabled = False
+      Visible = False
+      OnExecute = actOpenFilesToCheckExecute
+    end
+    object actChoiceFilesToCheckCash: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFilesToCheckCash'
+      FormName = 'TFilesToCheckCashForm'
+      FormNameParam.Value = 'TFilesToCheckCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7114,6 +7137,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object mmOpenLayoutFile: TMenuItem
       Action = actOpenLayoutFile
+    end
+    object N64: TMenuItem
+      Action = actOpenFilesToCheck
     end
     object mmAddGoodsSupplement: TMenuItem
       Action = actAddGoodsSupplement
@@ -11082,5 +11108,75 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 832
     Top = 152
+  end
+  object spFilesToCheckFTPParams: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_FilesToCheckFTPParams'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inID'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outHost'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'LayoutFileHost'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPort'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'LayoutFilePort'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUsername'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'LayoutFileUsername'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPassword'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'LayoutFilePassword'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDir'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'LayoutFileDir'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNameFTP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'LayoutFileFileNameFTP'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'LayoutFileFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    AfterExecute = spLayoutFileFTPParamsAfterExecute
+    Left = 160
+    Top = 552
   end
 end

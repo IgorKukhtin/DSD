@@ -36,6 +36,7 @@ type
      function SerialNumber:String;
      procedure ClearArticulAttachment;
      procedure SetTime;
+     function GetTime : TDateTime;
      procedure Anulirovt;
      function InfoZReport : string;
      function JuridicalName : string;

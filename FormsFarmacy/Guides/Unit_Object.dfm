@@ -1097,6 +1097,22 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 92
           end
+          object SetDateRRO: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1072#1074#1090#1086' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1074#1088#1077#1084#1077#1085#1080' '#1085#1072' '#1056#1056#1054
+            DataBinding.FieldName = 'SetDateRRO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object isAutospaceOS: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1087#1088#1086#1089#1090#1072#1085#1086#1074#1082#1072' '#1054#1057
+            DataBinding.FieldName = 'isAutospaceOS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
         end
       end
     end
@@ -4239,6 +4255,82 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_isShowActiveAlerts'
     end
+    object mactUpdate_isAutospaceOS: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isAutospaceOS
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1040#1074#1090#1086#1087#1088#1086#1089#1090#1072#1085#1086#1074#1082#1072' '#1054#1057'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1040#1074#1090#1086#1087#1088#1086#1089#1090#1072#1085#1086#1074#1082#1072' '#1054#1057'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1040#1074#1090#1086#1087#1088#1086#1089#1090#1072#1085#1086#1074#1082#1072' '#1054#1057'"'
+      ImageIndex = 79
+    end
+    object actUpdate_isAutospaceOS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isAutospaceOS
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isAutospaceOS
+        end>
+      Caption = 'actUpdate_isShowActiveAlerts'
+    end
+    object actDateRRODialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDateRRODialog'
+      FormName = 'TDataChoiceDialogForm'
+      FormNameParam.Value = 'TDataChoiceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SetDateRRO'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1076#1072#1090#1091' '#1072#1074#1090#1086' '#1091#1089#1090#1072#1085#1086#1074#1082#1072' '#1074#1088#1077#1084#1077#1085#1080' '#1085#1072' '#1056#1056#1054
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object mactUpdate_SetDateRRO: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actDateRRODialog
+      ActionList = <
+        item
+          Action = actUpdate_SetDateRRO
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1044#1072#1090#1091' '#1072#1074#1090#1086' '#1091#1089#1090#1072#1085#1086#1074#1082#1072' '#1074#1088#1077#1084#1077#1085#1080' '#1085#1072' '#1056#1056#1054'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1044#1072#1090#1091' '#1072#1074#1090#1086' '#1091#1089#1090#1072#1085#1086#1074#1082#1072' '#1074#1088#1077#1084#1077#1085#1080' '#1085#1072' '#1056#1056#1054'"'
+      ImageIndex = 43
+    end
+    object actUpdate_SetDateRRO: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SetDateRRO
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SetDateRRO
+        end>
+      Caption = 'actUpdate_isShowActiveAlerts'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4974,6 +5066,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton39'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic2'
         end
         item
@@ -5035,6 +5131,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'dxBarButton37'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton38'
         end
         item
           Visible = True
@@ -5205,6 +5305,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton37: TdxBarButton
       Action = mactUpdate_isShowActiveAlerts
+      Category = 0
+    end
+    object dxBarButton38: TdxBarButton
+      Action = mactUpdate_isAutospaceOS
+      Category = 0
+    end
+    object dxBarButton39: TdxBarButton
+      Action = mactUpdate_SetDateRRO
       Category = 0
     end
   end
@@ -6221,6 +6329,12 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         Name = 'TelegramBotToken'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SetDateRRO'
+        Value = Null
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 29
@@ -8448,6 +8562,58 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end>
     PackSize = 1
     Left = 80
+    Top = 531
+  end
+  object spUpdate_isAutospaceOS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isAutospaceOS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAutospaceOS'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAutospaceOS'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 547
+  end
+  object spUpdate_SetDateRRO: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_SetDateRRO'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSetDateRRO'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SetDateRRO'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
     Top = 531
   end
 end

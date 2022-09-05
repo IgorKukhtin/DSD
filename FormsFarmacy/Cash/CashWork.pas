@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, Mask, CashInterface, DB, Buttons, Datasnap.DBClient,
-  Gauges, cxGraphics, cxControls, cxLookAndFeels,
+  Gauges, cxGraphics, cxControls, cxLookAndFeels, DateUtils,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxTextEdit, cxCurrencyEdit,
   cxClasses, cxPropertiesStore, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters,
   dsdDB, Vcl.Menus;
@@ -171,6 +171,17 @@ end;
 
 procedure TCashWorkForm.Button3Click(Sender: TObject);
 begin
+  if not MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').IsNull and
+     (MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').AsDateTime = Date) then
+  begin
+    m_Cash.SetTime;
+    if Abs(MinutesBetween(m_Cash.GetTime, Now)) > 2 then
+    begin
+      ShowMessage('Переведите время на РРО через FPWINX.');
+      Exit;
+    end;
+  end;
+
   m_Cash.PrintZeroReceipt;
 end;
 

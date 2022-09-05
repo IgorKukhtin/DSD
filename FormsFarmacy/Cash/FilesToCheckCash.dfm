@@ -1,7 +1,7 @@
 object FilesToCheckCashForm: TFilesToCheckCashForm
   Left = 0
   Top = 0
-  Caption = #1042#1099#1073#1086#1088' '#1092#1072#1081#1083#1072' '#1074#1099#1082#1083#1072#1076#1082#1080
+  Caption = #1060#1072#1081#1083#1099' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1082#1080
   ClientHeight = 296
   ClientWidth = 654
   Color = clBtnFace
@@ -26,8 +26,6 @@ object FilesToCheckCashForm: TFilesToCheckCashForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 452
-    ExplicitHeight = 318
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -278,8 +276,8 @@ object FilesToCheckCashForm: TFilesToCheckCashForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1092#1072#1081#1083#1072' '#1074#1099#1082#1083#1072#1076#1082#1080
-      Hint = #1042#1099#1073#1086#1088' '#1092#1072#1081#1083#1072' '#1074#1099#1082#1083#1072#1076#1082#1080
+      Caption = #1042#1099#1073#1086#1088' '#1092#1072#1081#1083#1072' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1082#1080
+      Hint = #1042#1099#1073#1086#1088' '#1092#1072#1081#1083#1072' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1082#1080
       ImageIndex = 7
       DataSource = DataSource
     end

@@ -252,6 +252,16 @@ BEGIN
 
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_MobileApplication(), ioId, True);
     
+      -- Автопростановка ОС   
+      IF EXISTS(SELECT 1
+                FROM ObjectBoolean
+                WHERE ObjectBoolean.DescId = zc_ObjectBoolean_Unit_AutospaceOS()
+                  AND ObjectBoolean.ObjectId = inUnitId
+                  AND ObjectBoolean.ValueData = TRUE) 
+      THEN
+        PERFORM lpInsertUpdate_MovementBoolean (zc_ObjectBoolean_Unit_AutospaceOS(), ioId, True);
+      END IF;
+
       -- По рекомендации сотрудника   
       IF COALESCE(inUserReferals, 0) <> 0 AND
          EXISTS(SELECT Object_User.Id

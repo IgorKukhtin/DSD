@@ -985,6 +985,8 @@ type
     N365: TMenuItem;
     actBonusesMobileApplication: TdsdOpenForm;
     N366: TMenuItem;
+    actFilesToCheckJournal: TdsdOpenForm;
+    N367: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
