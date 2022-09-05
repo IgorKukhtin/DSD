@@ -46,6 +46,7 @@ type
     function SerialNumber:String;
     procedure ClearArticulAttachment;
     procedure SetTime;
+    function GetTime : TDateTime;
     procedure Anulirovt;
     function InfoZReport : string;
     function JuridicalName : string;
@@ -307,6 +308,23 @@ begin
   if not Connected then exit;
   FPrinter.SetDate(FormatDateTime('DDMMYYYYhhmm',Now));
 end;
+
+function TCashFP320.GetTime : TDateTime;
+var S : String;
+begin
+  pData := 0;
+  pString := Password + ';';
+  FPrinter.DirectIO($21, pData, pString);
+  S := FPrinter.ReservedWord;
+  pData := 1;
+  pString := Password + ';';
+  FPrinter.DirectIO($21, pData, pString);
+  S := S + '  ' + FPrinter.ReservedWord;
+
+  S := COPY(S, 1, 2) + FormatSettings.DateSeparator + COPY(S, 3, 2) +  FormatSettings.DateSeparator + '20' + COPY(S, 5, 2) + ' ' + COPY(S, 8, 2) +  FormatSettings.TimeSeparator + COPY(S, 10, 2);
+  Result := StrToDateTime(S);
+end;
+
 
 function TCashFP320.SoldCode(const GoodsCode: integer; const Amount,
   Price: double): boolean;

@@ -8488,12 +8488,6 @@ begin
       exit;
     End;
 
-    if not MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').IsNull and
-       (MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').AsDateTime = Date) then
-    begin
-      Cash.SetTime;
-    end;
-
   except
     Begin
       ShowMessage
@@ -8556,6 +8550,13 @@ begin
   LoadTaxUnitNight;
   SetTaxUnitNight;
   SetMainFormCaption;
+
+  if (Cash <> nil) and
+     not MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').IsNull and
+     (MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').AsDateTime = Date) then
+  begin
+    Cash.SetTime;
+  end;
 end;
 
 function TMainCashForm2.InitLocalStorage: Boolean;
@@ -10733,7 +10734,7 @@ var
   AText: string;
 begin
 
-  if not AViewInfo.Focused then
+  if not AViewInfo.Focused and UnitConfigCDS.Active then
   begin
     if (FormParams.ParamByName('SPKindId').Value = 4823010) and (AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
       (AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index] < MinCurr(AViewInfo.GridRecord.Values[MainColPrice.Index], AViewInfo.GridRecord.Values[MainPriceSale1303.Index])) and
@@ -10789,7 +10790,8 @@ procedure TMainCashForm2.MainFixPercentStylesGetContentStyle(
   Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
-  if (FormParams.ParamByName('SPKindId').Value = 4823010) and (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
+  if UnitConfigCDS.Active and
+     (FormParams.ParamByName('SPKindId').Value = 4823010) and (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
      (ARecord.Values[MainPriceSaleOOC1303.Index] < MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
      ((MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) >
      UnitConfigCDS.FindField('DeviationsPrice1303').AsCurrency) then
@@ -10904,7 +10906,8 @@ procedure TMainCashForm2.MainGridDBTableViewStylesGetContentStyle(
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
   FStyle.Assign(MainGridDBTableView.Styles.Content);
-  if ((FormParams.ParamByName('SPKindId').Value = 4823010) or (AItem.Index = MainPriceSaleOOC1303.Index) or (AItem.Index = MainPriceSale1303.Index)) and
+  if UnitConfigCDS.Active and
+    ((FormParams.ParamByName('SPKindId').Value = 4823010) or (AItem.Index = MainPriceSaleOOC1303.Index) or (AItem.Index = MainPriceSale1303.Index)) and
     (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
     (ARecord.Values[MainPriceSaleOOC1303.Index] < MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
     ((MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) >

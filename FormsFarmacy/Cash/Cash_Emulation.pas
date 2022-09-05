@@ -54,6 +54,7 @@ type
     function SerialNumber:String;
     procedure ClearArticulAttachment;
     procedure SetTime;
+    function GetTime : TDateTime;
     procedure Anulirovt;
     function InfoZReport : string;
     function JuridicalName : string;
@@ -163,6 +164,11 @@ end;
 procedure TCashEmulation.SetTime;
 begin
 //  FPrinter.SETDT[FormatDateTime('DDMMYYHHNN', Now), Password];
+end;
+
+function TCashEmulation.GetTime : TDateTime;
+begin
+  Result := Now;
 end;
 
 function TCashEmulation.SoldCode(const GoodsCode: integer;

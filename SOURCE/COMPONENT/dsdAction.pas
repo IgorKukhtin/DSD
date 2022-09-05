@@ -7379,6 +7379,7 @@ begin
           FDataSet.FieldDefs.Clear;
 
           FDataSet.FieldDefs.Assign(FZQuery.FieldDefs);
+          for I := 0 to FDataSet.FieldDefs.Count - 1 do FDataSet.FieldDefs.Items[I].Attributes := [];
           FDataSet.CreateDataSet;
 
           with TGaugeFactory.GetGauge(Caption, 0, FZQuery.RecordCount) do

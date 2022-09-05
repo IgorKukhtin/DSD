@@ -163,19 +163,7 @@
         <DCCReference Include="..\SOURCE\DBF\VKDBFSorters.pas"/>
         <DCCReference Include="..\SOURCE\DBF\VKDBFUtil.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\Defaults.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\EDI.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\Document.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\InvoiceXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\OrdrspXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\StatusXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
         <DCCReference Include="..\SOURCE\LoginForm.pas">
             <Form>LoginForm</Form>
@@ -213,7 +201,6 @@
         </DCCReference>
         <DCCReference Include="..\SOURCE\dsdApplication.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\Cash_FP320.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\OposFiscalPrinter_1_11_Lib_TLB.pas"/>
         <DCCReference Include="..\SOURCE\LocalWorkUnit.pas"/>
@@ -244,8 +231,6 @@
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\LocalStorage.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\PromoCodeDialog.pas">
             <Form>PromoCodeDialogForm</Form>
             <DesignClass>TParentForm</DesignClass>
@@ -262,8 +247,6 @@
         <DCCReference Include="..\FormsFarmacy\Cash\ListDiffAddGoods.pas">
             <Form>ListDiffAddGoodsForm</Form>
         </DCCReference>
-        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\PayPosTermProcess.pas">
             <Form>PayPosTermProcessForm</Form>
         </DCCReference>
@@ -316,7 +299,6 @@
         <DCCReference Include="..\FormsFarmacy\Cash\Report_ImplementationPlanEmployeeCash.pas">
             <Form>Report_ImplementationPlanEmployeeCashForm</Form>
         </DCCReference>
-        <DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\EnterLoyaltySaveMoney.pas">
             <Form>EnterLoyaltySaveMoneyForm</Form>
         </DCCReference>
@@ -424,7 +406,6 @@
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\EnterBuyerForSite.pas">
             <Form>EnterBuyerForSiteForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

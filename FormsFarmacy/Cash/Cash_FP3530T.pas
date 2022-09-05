@@ -40,6 +40,7 @@ type
     function SerialNumber:String;
     procedure ClearArticulAttachment;
     procedure SetTime;
+    function GetTime : TDateTime;
     procedure Anulirovt;
     function InfoZReport : string;
     function JuridicalName : string;
@@ -104,6 +105,7 @@ function    DeleteArticle(hWin:HWND; fun:TMathFunc; par:LPARAM; cod:integer; pas
 function    ChangeArticlePrice(hWin:HWND; fun:TMathFunc; par:LPARAM; cod:integer;sena:Double; pass:LPSTR):integer; stdcall  ;external 'fpl.dll' name 'ChangeArticlePrice';
 function    GetArticleInfo(hWin:HWND; fun:TMathFunc; par:LPARAM; cod:integer):integer; stdcall  ;external 'fpl.dll' name 'GetArticleInfo';
 function    SetDateTime(hWin: HWND; fun: TMathFunc; par: LPARAM; n1, n2: LPSTR): integer; stdcall; external 'fpl.dll' name 'SetDateTime';
+function    GetDateTime(hWin:HWND; fun:TMathFunc; par:LPARAM):integer; stdcall;external 'fpl.dll' name 'GetDateTime';
 
 function    OpenNonfiscalReceipt(hWin:HWND; fun:TMathFunc; par:LPARAM):integer; stdcall; external 'fpl.dll' name 'OpenNonfiscalReceipt';
 function    CloseNonfiscalReceipt(hWin:HWND; fun:TMathFunc; par:LPARAM):integer; stdcall; external 'fpl.dll' name 'CloseNonfiscalReceipt';
@@ -298,14 +300,32 @@ procedure TCashFP3530T.SetTime;
 begin
  status:= 0;
 
+ GetDateTime(0,PrinterResults, 0);
+ while s=0 do Application.ProcessMessages;
+
+ s:=0;
+ GetStatus(0, PrinterResults, 0, True);
+ while s=0 do Application.ProcessMessages;
+end;
+
+function TCashFP3530T.GetTime : TDateTime;
+   var S1 : AnsiString;
+begin
+ status:= 0;
+
  SetDateTime(0,PrinterResults, 0, PAnsiChar(AnsiString(FormatDateTime('dd-mm-yy', Now))), PAnsiChar(AnsiString(FormatDateTime('hh:nn:ss', Now))));
  while s=0 do Application.ProcessMessages;
 
-  s:=0;
+  S1 := Unit_rt.RetItem[1] + ' ' + Unit_rt.RetItem[2];
+  S1 := StringReplace(S1, '-', FormatSettings.DateSeparator, [rfReplaceAll]);
+  Result := StrToDateTime(String(S1));
+
+ s:=0;
  GetStatus(0, PrinterResults, 0, True);
  while s=0 do Application.ProcessMessages;
 
 end;
+
 
 function TCashFP3530T.SoldCode(const GoodsCode: integer;
   const Amount: double; const Price: double = 0.00): boolean;

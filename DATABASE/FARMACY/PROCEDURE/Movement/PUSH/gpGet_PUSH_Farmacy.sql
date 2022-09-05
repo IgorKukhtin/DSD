@@ -1046,7 +1046,8 @@ BEGIN
       INTO vbText
       WHERE T1.KeyExpireDate >= date_trunc('month', CURRENT_DATE)
         AND T1.KeyExpireDate <= date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH'
-        AND T1.isErased = FALSE;   
+        AND T1.isErased = FALSE
+        AND T1.UnitId in (SELECT T2.ID FROM gpSelect_Object_Unit_Active (inNotUnitId := 0, inSession := inSession) AS T2);   
 
        IF COALESCE (vbText, '') <> ''
        THEN         
