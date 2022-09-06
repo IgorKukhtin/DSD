@@ -48,6 +48,7 @@ type
     function SerialNumber:String;
     procedure ClearArticulAttachment;
     procedure SetTime;
+    function GetTime : TDateTime;
     procedure Anulirovt;
     function InfoZReport : string;
     function JuridicalName : string;
@@ -313,6 +314,17 @@ procedure TCashMINI_FP54.SetTime;
 begin
   if SendCommand('set_date;' + IntToStr(DayOf(NOW)) + ';' + IntToStr(MonthOf(NOW)) + ';' + IntToStr(YearOf(NOW)) + ';') then
     SendCommand('set_time;' + IntToStr(HourOf(NOW)) + ';' + IntToStr(MinuteOf(NOW)) + ';' + IntToStr(SecondOf(NOW)) + ';');
+end;
+
+function TCashMINI_FP54.GetTime : TDateTime;
+var S : String;
+begin
+  SendCommand('get_date_time;');
+
+  S := FResult[1] + '  ' + FResult[2];
+
+  S := StringReplace(S, '.', FormatSettings.DateSeparator, [rfReplaceAll]);
+  Result := StrToDateTime(S);
 end;
 
 function TCashMINI_FP54.SoldCode(const GoodsCode: integer;

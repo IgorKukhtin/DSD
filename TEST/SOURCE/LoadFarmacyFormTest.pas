@@ -61,6 +61,7 @@ type
     procedure LoadEmployeeScheduleVIPFormTest;
     procedure LoadExchangeRatesFormTest;
     procedure LoadFinalSUAFormTest;
+    procedure LoadFilesToCheckFormTest;
     procedure LoadFiscalFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsGroupPromoFormTest;
@@ -701,6 +702,17 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitAutoSUAForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitAutoSUAForm');
+end;
+
+procedure TLoadFormTest.LoadFilesToCheckFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFilesToCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFilesToCheckForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFilesToCheckJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFilesToCheckJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFilesToCheckCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFilesToCheckCashForm');
 end;
 
 procedure TLoadFormTest.LoadFiscalFormTest;

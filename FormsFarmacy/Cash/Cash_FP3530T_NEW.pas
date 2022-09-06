@@ -42,6 +42,7 @@ type
     function SerialNumber:String;
     procedure ClearArticulAttachment;
     procedure SetTime;
+    function GetTime : TDateTime;
     procedure Anulirovt;
     function InfoZReport : string;
     function JuridicalName : string;
@@ -287,6 +288,19 @@ begin
   FPrinter.SETDT[FormatDateTime('DDMMYYHHNN', Now), Password];
   СообщениеКА(FPrinter.GETERROR)
 end;
+
+function TCashFP3530T_NEW.GetTime : TDateTime;
+var S : String;
+begin
+  S := FPrinter.RETDT[1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  S := S + '  ' + FPrinter.RETDT[0, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+
+  S := COPY(S, 1, 2) + FormatSettings.DateSeparator + COPY(S, 3, 2) +  FormatSettings.DateSeparator + '20' + COPY(S, 5, 2) + ' ' + COPY(S, 8, 2) +  FormatSettings.TimeSeparator + COPY(S, 10, 2);
+  Result := StrToDateTime(S);
+end;
+
 
 function TCashFP3530T_NEW.SoldCode(const GoodsCode: integer;
   const Amount: double; const Price: double = 0.00): boolean;

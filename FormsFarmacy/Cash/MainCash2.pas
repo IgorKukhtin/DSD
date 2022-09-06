@@ -630,6 +630,10 @@ type
     TimerActiveAlerts: TTimer;
     spActiveAlerts: TdsdStoredProc;
     lblActiveAlerts: TcxLabel;
+    actOpenFilesToCheck: TAction;
+    N64: TMenuItem;
+    actChoiceFilesToCheckCash: TOpenChoiceForm;
+    spFilesToCheckFTPParams: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -795,6 +799,7 @@ type
     procedure actDownloadFarmacyExecute(Sender: TObject);
     procedure actEnterBuyerForSiteExecute(Sender: TObject);
     procedure TimerActiveAlertsTimer(Sender: TObject);
+    procedure actOpenFilesToCheckExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -2860,7 +2865,7 @@ begin
         ShowPUSHMessageCash('Не обновлена служба FCash Service.'#13#10#13#10'Обратитесь в IT отдел.', cResult);
 
       ShowPUSHMessageCash('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Кристине.'#13#10 +
-                          'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!.', cResult);
+                          'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!', cResult);
 
       Load_PUSH(True);
     end
@@ -3258,6 +3263,20 @@ begin
   finally
     freeAndNil(dsdSave);
   end;
+end;
+
+procedure TMainCashForm2.actOpenFilesToCheckExecute(Sender: TObject);
+  var nId : Integer;
+begin
+  if UnitConfigCDS.FieldByName('FilesToCheckCount').AsInteger <= 0 then Exit;
+  if  UnitConfigCDS.FieldByName('FilesToCheckCount').AsInteger > 1 then
+  begin
+    if not actChoiceFilesToCheckCash.Execute then Exit;
+    nId := actChoiceFilesToCheckCash.GuiParams.ParamByName('Key').Value;
+  end else nId := UnitConfigCDS.FieldByName('FilesToCheckID').AsInteger;
+
+  spFilesToCheckFTPParams.ParamByName('inID').Value := nId;
+  if spFilesToCheckFTPParams.Execute = '' then actDownloadAndRunFile.Execute;
 end;
 
 procedure TMainCashForm2.actOpenLayoutFileExecute(Sender: TObject);
@@ -8531,6 +8550,13 @@ begin
   LoadTaxUnitNight;
   SetTaxUnitNight;
   SetMainFormCaption;
+
+  if (Cash <> nil) and
+     not MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').IsNull and
+     (MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').AsDateTime = Date) then
+  begin
+    Cash.SetTime;
+  end;
 end;
 
 function TMainCashForm2.InitLocalStorage: Boolean;
@@ -10708,7 +10734,7 @@ var
   AText: string;
 begin
 
-  if not AViewInfo.Focused then
+  if not AViewInfo.Focused and UnitConfigCDS.Active then
   begin
     if (FormParams.ParamByName('SPKindId').Value = 4823010) and (AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
       (AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index] < MinCurr(AViewInfo.GridRecord.Values[MainColPrice.Index], AViewInfo.GridRecord.Values[MainPriceSale1303.Index])) and
@@ -10764,7 +10790,8 @@ procedure TMainCashForm2.MainFixPercentStylesGetContentStyle(
   Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
-  if (FormParams.ParamByName('SPKindId').Value = 4823010) and (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
+  if UnitConfigCDS.Active and
+     (FormParams.ParamByName('SPKindId').Value = 4823010) and (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
      (ARecord.Values[MainPriceSaleOOC1303.Index] < MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
      ((MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) >
      UnitConfigCDS.FindField('DeviationsPrice1303').AsCurrency) then
@@ -10879,7 +10906,8 @@ procedure TMainCashForm2.MainGridDBTableViewStylesGetContentStyle(
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
   FStyle.Assign(MainGridDBTableView.Styles.Content);
-  if ((FormParams.ParamByName('SPKindId').Value = 4823010) or (AItem.Index = MainPriceSaleOOC1303.Index) or (AItem.Index = MainPriceSale1303.Index)) and
+  if UnitConfigCDS.Active and
+    ((FormParams.ParamByName('SPKindId').Value = 4823010) or (AItem.Index = MainPriceSaleOOC1303.Index) or (AItem.Index = MainPriceSale1303.Index)) and
     (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
     (ARecord.Values[MainPriceSaleOOC1303.Index] < MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
     ((MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) >
@@ -13948,6 +13976,8 @@ begin
       ('isTechnicalRediscount').AsBoolean;
     actOpenLayoutFile.Enabled := UnitConfigCDS.FieldByName('LayoutFileCount').AsInteger > 0;
     actOpenLayoutFile.Visible := actOpenLayoutFile.Enabled;
+    actOpenFilesToCheck.Enabled := UnitConfigCDS.FieldByName('FilesToCheckCount').AsInteger > 0;
+    actOpenFilesToCheck.Visible := actOpenFilesToCheck.Enabled;
     actAddGoodsSupplement.Enabled := UnitConfigCDS.FieldByName('isSupplementAddCash').AsBoolean;
     actAddGoodsSupplement.Visible := actAddGoodsSupplement.Enabled;
 

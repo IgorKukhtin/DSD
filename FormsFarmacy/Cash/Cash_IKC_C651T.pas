@@ -44,6 +44,7 @@ type
     function SerialNumber:String;
     procedure ClearArticulAttachment;
     procedure SetTime;
+    function GetTime : TDateTime;
     procedure Anulirovt;
     function InfoZReport : string;
     function JuridicalName : string;
@@ -146,6 +147,15 @@ end;
 procedure TCashIKC_C651T.SetTime;
 begin
   FPrinter.FPSetCurrentDate(Date);
+  if not FPrinter.FPSetCurrentTime(Now) then ShowError;
+end;
+
+function TCashIKC_C651T.GetTime : TDateTime;
+begin
+  FPrinter.FPGetCurrentDate;
+  FPrinter.FPGetCurrentTime;
+
+  Result := FPrinter.prCurrentDate +  FPrinter.prCurrentTime;
   if not FPrinter.FPSetCurrentTime(Now) then ShowError;
 end;
 

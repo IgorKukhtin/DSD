@@ -151,6 +151,16 @@ BEGIN
     THEN
 
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_MobileApplication(), ioId, True);
+
+      -- Автопростановка ОС   
+      IF EXISTS(SELECT 1
+                FROM ObjectBoolean
+                WHERE ObjectBoolean.DescId = zc_ObjectBoolean_Unit_AutospaceOS()
+                  AND ObjectBoolean.ObjectId = inUnitId
+                  AND ObjectBoolean.ValueData = TRUE) 
+      THEN
+        PERFORM lpInsertUpdate_MovementBoolean (zc_ObjectBoolean_Unit_AutospaceOS(), ioId, True);
+      END IF;
     
       -- По рекомендации сотрудника   
       IF COALESCE(inUserReferals, 0) <> 0 AND
@@ -204,4 +214,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Check_Site (0, 1, '2022-05-09 13:26:27'::TDateTime, 68870, 'Oleksii', '+38(050) 043-4130', '394725', '', False, 0 , False, '', TRUE, 123, TRUE, CURRENT_DATE::tdatetime, '3'); 
+-- SELECT * FROM gpInsertUpdate_Movement_Check_Site (0, 8393158, '2022-05-09 13:26:27'::TDateTime, 68870, 'Oleksii', '+38(050) 043-4130', '394725', '', False, 0 , False, '', TRUE, 123, TRUE, CURRENT_DATE::tdatetime, 0::TFloat, '3'); 
+

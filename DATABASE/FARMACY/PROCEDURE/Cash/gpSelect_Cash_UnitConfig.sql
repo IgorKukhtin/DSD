@@ -31,9 +31,10 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isPromoForSale Boolean, isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean,
                LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer,
                LikiDneproeHealthURL TVarChar, LikiDneproeLocation TVarChar, LikiDneproeHealthToken TVarChar,
-               isRemovingPrograms Boolean, ExpressVIPConfirm Integer, isErrorRROToVIP Boolean, LayoutFileCount Integer, LayoutFileID Integer, 
+               isRemovingPrograms Boolean, ExpressVIPConfirm Integer, isErrorRROToVIP Boolean, 
+               LayoutFileCount Integer, LayoutFileID Integer, FilesToCheckCount Integer, FilesToCheckID Integer, 
                isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean,
-               MinPriceSale TFloat, DeviationsPrice1303 TFloat
+               MinPriceSale TFloat, DeviationsPrice1303 TFloat, SetDateRRO TDateTime
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -262,6 +263,36 @@ BEGIN
                              AND MovementDate_EndPromo.ValueData >= CURRENT_DATE)
         , tmpLayoutFileCount AS (SELECT COUNT(*)::Integer AS LayoutFileCount
                                  FROM tmpLayoutFile)
+        , tmpFilesToCheck AS (SELECT
+                                  Movement.Id                        AS Id
+                                , Movement.InvNumber                 AS InvNumber
+                                , Movement.OperDate                  AS OperDate
+                                , MovementDate_StartPromo.ValueData  AS StartPromo
+                                , MovementDate_EndPromo.ValueData    AS EndPromo
+                                , ROW_NUMBER()OVER(ORDER BY Movement.OperDate DESC) as ORD
+
+                           FROM Movement
+
+                                INNER JOIN MovementDate AS MovementDate_StartPromo
+                                                       ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                      AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+
+                                INNER JOIN MovementDate AS MovementDate_EndPromo
+                                                       ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                      AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                                      
+                                INNER JOIN MovementItem AS MI_FilesToCheck
+                                                        ON MI_FilesToCheck.MovementId = Movement.Id
+                                                       AND MI_FilesToCheck.DescId = zc_MI_Master()
+                                                       AND MI_FilesToCheck.Amount = 1
+                                                       AND MI_FilesToCheck.ObjectId = vbUnitId
+                                                          
+                           WHERE Movement.DescId = zc_Movement_FilesToCheck()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
+                             AND MovementDate_EndPromo.ValueData >= CURRENT_DATE)
+        , tmpFilesToCheckCount AS (SELECT COUNT(*)::Integer AS FilesToCheckCount
+                                 FROM tmpFilesToCheck)
 
    SELECT
          Object_Unit.Id                                      AS Id
@@ -373,6 +404,9 @@ BEGIN
        , tmpLayoutFileCount.LayoutFileCount                                       AS LayoutFileCount
        , tmpLayoutFile.ID                                                         AS LayoutFileID
        
+       , tmpFilesToCheckCount.FilesToCheckCount                                     AS FilesToCheckCount
+       , tmpFilesToCheck.ID                                                       AS FilesToCheckID
+
        , COALESCE (ObjectBoolean_SUN_v2_SupplementAddCash.ValueData, FALSE):: Boolean     AS isSupplementAddCash
        , COALESCE (ObjectBoolean_ExpressVIPConfirm.ValueData, FALSE):: Boolean            AS isExpressVIPConfirm
        , COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE):: Boolean         AS isShowPlanEmployeeUser
@@ -380,6 +414,7 @@ BEGIN
        
        , tmpCashSettings.MinPriceSale
        , tmpCashSettings.DeviationsPrice1303
+       , ObjectDate_SetDateRRO.ValueData                                                  AS SetDateRRO 
 
    FROM Object AS Object_Unit
 
@@ -506,6 +541,10 @@ BEGIN
                                 ON ObjectBoolean_ShowActiveAlerts.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ShowActiveAlerts.DescId = zc_ObjectBoolean_Unit_ShowActiveAlerts()
 
+        LEFT JOIN ObjectDate AS ObjectDate_SetDateRRO
+                             ON ObjectDate_SetDateRRO.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SetDateRRO.DescId = zc_ObjectDate_Unit_SetDateRRO()
+
         LEFT JOIN tmpLoyalty ON 1 = 1
         LEFT JOIN tmpLoyaltySaveMoney ON 1 = 1
 
@@ -539,6 +578,9 @@ BEGIN
         LEFT JOIN tmpLayoutFileCount ON 1 = 1
         LEFT JOIN tmpLayoutFile ON tmpLayoutFile.ORD = 1
         
+        LEFT JOIN tmpFilesToCheckCount ON 1 = 1
+        LEFT JOIN tmpFilesToCheck ON tmpFilesToCheck.ORD = 1
+
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1
    ;

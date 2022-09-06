@@ -45,6 +45,7 @@ type
     function SerialNumber:String;
     procedure ClearArticulAttachment;
     procedure SetTime;
+    function GetTime : TDateTime;
     procedure Anulirovt;
     function InfoZReport : string;
     function JuridicalName : string;
@@ -160,6 +161,11 @@ end;
 procedure TCashVchasnoKasa.SetTime;
 begin
   //  На сервере;
+end;
+
+function TCashVchasnoKasa.GetTime : TDateTime;
+begin
+  Result := Now;
 end;
 
 function TCashVchasnoKasa.SoldCode(const GoodsCode: integer;

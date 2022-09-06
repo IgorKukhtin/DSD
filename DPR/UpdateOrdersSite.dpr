@@ -4,12 +4,12 @@ uses
   MidasLib,
   Vcl.Forms,
   MainUnit in '..\FormsFarmacy\MainUnitService\UpdateOrdersSite\MainUnit.pas' {MainForm},
-  UtilConst in '..\..\SOURCE\UtilConst.pas',
-  AncestorBase in 'D:\DSD\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
-  CommonData in 'D:\DSD\SOURCE\CommonData.pas',
-  Authentication in 'D:\DSD\SOURCE\Authentication.pas',
-  Storage in 'D:\DSD\SOURCE\Storage.pas',
-  DataModul in 'D:\DSD\SOURCE\DataModul.pas' {dmMain: TDataModule};
+  UtilConst in 'D:\SOURCE\UtilConst.pas',
+  AncestorBase in '..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
+  CommonData in '..\SOURCE\CommonData.pas',
+  Authentication in '..\SOURCE\Authentication.pas',
+  Storage in '..\SOURCE\Storage.pas',
+  DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule};
 
 {$R *.res}
 

@@ -489,6 +489,17 @@ type
     actUpdate_isShowActiveAlerts: TdsdExecStoredProc;
     spUpdate_isShowActiveAlerts: TdsdStoredProc;
     dxBarButton37: TdxBarButton;
+    spUpdate_isAutospaceOS: TdsdStoredProc;
+    spUpdate_SetDateRRO: TdsdStoredProc;
+    mactUpdate_isAutospaceOS: TMultiAction;
+    actUpdate_isAutospaceOS: TdsdExecStoredProc;
+    dxBarButton38: TdxBarButton;
+    actDateRRODialog: TExecuteDialog;
+    mactUpdate_SetDateRRO: TMultiAction;
+    actUpdate_SetDateRRO: TdsdExecStoredProc;
+    dxBarButton39: TdxBarButton;
+    SetDateRRO: TcxGridDBColumn;
+    isAutospaceOS: TcxGridDBColumn;
   private
     { Private declarations }
   public

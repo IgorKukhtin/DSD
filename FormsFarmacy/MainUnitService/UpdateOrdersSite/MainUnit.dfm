@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1074' '#1079#1072#1082#1072#1079#1072#1093' '#1089#1072#1081#1090#1072' "'#1053#1077'  '#1073#1086#1083#1077#1081'"'
   ClientHeight = 563
-  ClientWidth = 1040
+  ClientWidth = 1190
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,12 +17,13 @@ object MainForm: TMainForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 1040
+    Width = 1190
     Height = 33
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 1040
     DesignSize = (
-      1040
+      1190
       33)
     object btnAll: TButton
       Left = 16
@@ -42,12 +43,13 @@ object MainForm: TMainForm
       TabOrder = 0
     end
     object deStartDate: TcxDateEdit
-      Left = 883
+      Left = 1033
       Top = 6
       Anchors = [akTop, akRight]
       EditValue = 44747d
       Properties.Kind = ckDateTime
       TabOrder = 2
+      ExplicitLeft = 883
       Width = 145
     end
     object btnDo: TButton
@@ -74,23 +76,41 @@ object MainForm: TMainForm
       Action = actDo
       TabOrder = 5
     end
+    object btnPharmOrderBonuses: TButton
+      Left = 760
+      Top = 2
+      Width = 105
+      Height = 25
+      Action = actPharmOrderBonuses
+      TabOrder = 6
+    end
+    object btnInsertUpdate_MovementSiteBonus: TButton
+      Left = 871
+      Top = 2
+      Width = 105
+      Height = 25
+      Action = mactInsertUpdate_MovementSiteBonus
+      TabOrder = 7
+    end
   end
   object Panel3: TPanel
     Left = 0
     Top = 344
-    Width = 1040
+    Width = 1190
     Height = 219
     Align = alBottom
     Caption = 'Panel3'
     ShowCaption = False
     TabOrder = 1
+    ExplicitWidth = 1040
     object cxGridPharmOrders: TcxGrid
       Left = 1
       Top = 1
-      Width = 1038
+      Width = 1188
       Height = 48
       Align = alTop
       TabOrder = 0
+      ExplicitWidth = 1038
       object cxGridPharmOrdersDBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = PharmOrdersDS
@@ -225,10 +245,11 @@ object MainForm: TMainForm
     object cxGridUpdateOrdersSiteMI: TcxGrid
       Left = 537
       Top = 49
-      Width = 502
+      Width = 652
       Height = 169
       Align = alClient
       TabOrder = 2
+      ExplicitWidth = 502
       object cxGridUpdateOrdersSiteMIDBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = UpdateOrdersSiteMIDS
@@ -314,10 +335,11 @@ object MainForm: TMainForm
   object cxGridUpdateOrdersSite: TcxGrid
     Left = 0
     Top = 33
-    Width = 1040
+    Width = 744
     Height = 311
     Align = alClient
     TabOrder = 2
+    ExplicitWidth = 569
     object cxGridUpdateOrdersSiteDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = UpdateOrdersSiteDS
@@ -391,6 +413,67 @@ object MainForm: TMainForm
     end
     object cxGridUpdateOrdersSiteLevel1: TcxGridLevel
       GridView = cxGridUpdateOrdersSiteDBTableView1
+    end
+  end
+  object cxGridPharmOrderBonuses: TcxGrid
+    Left = 744
+    Top = 33
+    Width = 446
+    Height = 311
+    Align = alRight
+    TabOrder = 3
+    object cxGridPharmOrderBonusesView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = PharmOrderBonusesDS
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1047#1072#1082#1072#1079#1086#1074' 0'
+          Kind = skCount
+        end>
+      DataController.Summary.SummaryGroups = <>
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsView.Footer = True
+      OptionsView.GroupByBox = False
+      Styles.Content = dmMain.cxContentStyle
+      Styles.Footer = dmMain.cxFooterStyle
+      Styles.Header = dmMain.cxHeaderL1Style
+      Styles.Selection = dmMain.cxSelection
+      object cxGridDB_pharmacy_order_id: TcxGridDBColumn
+        Caption = 'Id '#1079#1072#1082#1072#1079#1072
+        DataBinding.FieldName = 'pharmacy_order_id'
+        HeaderAlignmentHorz = taCenter
+        Width = 100
+      end
+      object cxGridDB_user_id: TcxGridDBColumn
+        Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'user_id'
+        HeaderAlignmentHorz = taCenter
+        Width = 98
+      end
+      object cxGridDB_bonus: TcxGridDBColumn
+        Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
+        DataBinding.FieldName = 'bonus'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        Width = 129
+      end
+      object cxGridDB_bonus_used: TcxGridDBColumn
+        Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086
+        DataBinding.FieldName = 'bonus_used'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        Width = 96
+      end
+    end
+    object cxGridPharmOrderBonusesLevel: TcxGridLevel
+      GridView = cxGridPharmOrderBonusesView
     end
   end
   object Timer1: TTimer
@@ -674,6 +757,7 @@ object MainForm: TMainForm
       DataBase.ComponentItem = 'MySQL_DataBase'
       DataBase.DataType = ftString
       DataBase.MultiSelectSeparator = ','
+      SQLParam.Value = ''
       SQLParam.DataType = ftString
       SQLParam.MultiSelectSeparator = ','
       TypeTransaction = ttExecSQL
@@ -687,6 +771,83 @@ object MainForm: TMainForm
         end>
       ShowGaugeForm = False
       Caption = 'actPharmOrders'
+    end
+    object actPharmOrderBonuses: TdsdForeignData
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actSite_Param
+      ZConnection.ControlsCodePage = cCP_UTF16
+      ZConnection.ClientCodepage = 'utf8'
+      ZConnection.Catalog = ''
+      ZConnection.Properties.Strings = (
+        'codepage=utf8')
+      ZConnection.HostName = ''
+      ZConnection.Port = 0
+      ZConnection.Database = ''
+      ZConnection.User = ''
+      ZConnection.Password = ''
+      ZConnection.Protocol = 'mysql-5'
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'MySQL_Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'MySQL_Port'
+      PortParam.MultiSelectSeparator = ','
+      UserNameParam.Value = Null
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'MySQL_Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'MySQL_Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DataBase.Value = Null
+      DataBase.Component = FormParams
+      DataBase.ComponentItem = 'MySQL_DataBase'
+      DataBase.DataType = ftString
+      DataBase.MultiSelectSeparator = ','
+      SQLParam.DataType = ftString
+      SQLParam.MultiSelectSeparator = ','
+      DataSet = PharmOrderBonusesCDS
+      Params = <>
+      UpdateFields = <>
+      JsonParam.Value = ''
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+        end>
+      ShowGaugeForm = False
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1073#1086#1085#1091#1089#1099
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1073#1086#1085#1091#1089#1099
+    end
+    object mactInsertUpdate_MovementSiteBonus: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actSite_Param
+      ActionList = <
+        item
+          Action = actInsertUpdate_MovementSiteBonus
+        end>
+      View = cxGridPharmOrderBonusesView
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1073#1086#1085#1091#1089#1099
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1073#1086#1085#1091#1089#1099
+    end
+    object actInsertUpdate_MovementSiteBonus: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MovementSiteBonus
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MovementSiteBonus
+        end>
+      Caption = 'actSite_Param'
     end
   end
   object FormParams: TdsdFormParams
@@ -808,5 +969,65 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 472
     Top = 213
+  end
+  object PharmOrderBonusesDS: TDataSource
+    DataSet = PharmOrderBonusesCDS
+    Left = 1104
+    Top = 84
+  end
+  object PharmOrderBonusesCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'PharmOrderBonusesCDSField1'
+      end>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 976
+    Top = 84
+  end
+  object spInsertUpdate_MovementSiteBonus: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementSiteBonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = 44747d
+        Component = PharmOrderBonusesCDS
+        ComponentItem = 'pharmacy_order_id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBuyerForSiteCode'
+        Value = Null
+        Component = PharmOrderBonusesCDS
+        ComponentItem = 'user_id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonus'
+        Value = Null
+        Component = PharmOrderBonusesCDS
+        ComponentItem = 'bonus'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonus_Used'
+        Value = Null
+        Component = PharmOrderBonusesCDS
+        ComponentItem = 'bonus_used'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 976
+    Top = 141
   end
 end

@@ -93,6 +93,21 @@ type
     cxGridUpdateOrdersSiteMILevel1: TcxGridLevel;
     btnDoone: TButton;
     actUpdatePharmOrderProducts: TdsdForeignData;
+    cxGridPharmOrderBonuses: TcxGrid;
+    cxGridPharmOrderBonusesView: TcxGridDBTableView;
+    cxGridDB_pharmacy_order_id: TcxGridDBColumn;
+    cxGridDB_user_id: TcxGridDBColumn;
+    cxGridDB_bonus: TcxGridDBColumn;
+    cxGridDB_bonus_used: TcxGridDBColumn;
+    cxGridPharmOrderBonusesLevel: TcxGridLevel;
+    PharmOrderBonusesDS: TDataSource;
+    PharmOrderBonusesCDS: TClientDataSet;
+    btnPharmOrderBonuses: TButton;
+    actPharmOrderBonuses: TdsdForeignData;
+    spInsertUpdate_MovementSiteBonus: TdsdStoredProc;
+    btnInsertUpdate_MovementSiteBonus: TButton;
+    mactInsertUpdate_MovementSiteBonus: TMultiAction;
+    actInsertUpdate_MovementSiteBonus: TdsdExecStoredProc;
     procedure btnAllClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -169,7 +184,11 @@ begin
 
   DateStart := Now;
 
-  if actSelect_UpdateOrdersSite.Execute then  maDo.Execute;
+  if actSelect_UpdateOrdersSite.Execute then maDo.Execute;
+
+  Add_Log('Загрузка бонусов.');
+
+  if actPharmOrderBonuses.Execute then mactInsertUpdate_MovementSiteBonus.Execute;
 
   Add_Log('Выполнено.');
 
@@ -198,6 +217,18 @@ begin
     ini.free;
   end;
 
+  actPharmOrderBonuses.SQLParam.Value := 'select T1.pharmacy_order_id, MAX(T1.user_id) AS user_id,  SUM(T1.bonus) AS bonus, SUM(T1.bonus_used) AS bonus_used '#13 +
+                                         'from '#13 +
+                                         '(select pharm_orders.pharmacy_order_id, pharm_orders.user_id, pharm_order_bonuses.bonus, CAST(0 as double) AS bonus_used '#13 +
+                                         'from pharm_order_bonuses '#13 +
+                                         '     INNER JOIN pharm_orders ON pharm_orders.id = pharm_order_bonuses.order_id '#13 +
+                                         'where  pharm_orders.user_id is not Null and pharm_orders.created_at > CURRENT_DATE() - 10 '#13 +
+                                         'UNION ALL '#13 +
+                                         'select pharm_orders.pharmacy_order_id, pharm_orders.user_id, 0 AS bonus, pharm_orders.bonus_used '#13 +
+                                         'from pharm_orders '#13 +
+                                         'where pharm_orders.user_id is not Null and pharm_orders.bonus_used <> 0 and pharm_orders.created_at > CURRENT_DATE() - 10) AS T1 '#13 +
+                                         'GROUP BY T1.pharmacy_order_id';
+
   if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
   begin
     Application.ShowMainForm := False;
@@ -208,6 +239,8 @@ begin
     btnOpen.Enabled := false;
     Timer1.Enabled := true;
   end;
+
+
 end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);
