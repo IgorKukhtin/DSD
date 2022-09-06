@@ -15,6 +15,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
 
+-- if vbUserId <> 5 THEN RAISE EXCEPTION 'Ошибка.Повторите действие через 15 мин';end if;
 
     -- проверка уникальности
     IF COALESCE(inOperDate, zc_DateStart()) <> COALESCE((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), zc_DateEnd())
