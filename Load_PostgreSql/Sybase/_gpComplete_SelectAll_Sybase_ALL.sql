@@ -579,4 +579,4 @@ create table dba._pgMovementReComlete
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.05.2021', inEndDate:= '01.05.2021', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.08.2022', inEndDate:= '31.08.2022', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
