@@ -752,7 +752,7 @@ object UnitForm: TUnitForm
   object FieldFilter_NameFull: TdsdFieldFilter
     TextEdit = edSearchName
     DataSet = MasterCDS
-    Column = NameFull
+    Column = Name
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 224

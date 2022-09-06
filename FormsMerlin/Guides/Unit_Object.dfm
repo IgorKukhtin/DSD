@@ -45,7 +45,6 @@ object Unit_ObjectForm: TUnit_ObjectForm
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -84,6 +83,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
       object Name: TcxGridDBColumn
         Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -551,7 +551,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
   object FieldFilter_NameFull: TdsdFieldFilter
     TextEdit = edSearchName
     DataSet = MasterCDS
-    Column = NameFull
+    Column = Name
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 224
