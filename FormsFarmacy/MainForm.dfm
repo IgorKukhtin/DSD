@@ -5323,12 +5323,12 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actBonusesMobileApplication: TdsdOpenForm
+    object actReport_MovementSiteBonus: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1041#1086#1085#1091#1089#1099' '#1087#1086' '#1082#1083#1080#1077#1085#1090#1072#1084' '#1086#1090' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
-      FormName = 'TBonusesMobileApplicationForm'
-      FormNameParam.Value = 'TBonusesMobileApplicationForm'
+      FormName = 'TReport_MovementSiteBonusForm'
+      FormNameParam.Value = 'TReport_MovementSiteBonusForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -5686,7 +5686,7 @@
           Action = actBuyer
         end
         object N366: TMenuItem
-          Action = actBonusesMobileApplication
+          Action = actReport_MovementSiteBonus
         end
       end
     end

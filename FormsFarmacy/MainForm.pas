@@ -983,7 +983,7 @@ type
     N364: TMenuItem;
     actReport_JuridicalRemainsEnd: TdsdOpenForm;
     N365: TMenuItem;
-    actBonusesMobileApplication: TdsdOpenForm;
+    actReport_MovementSiteBonus: TdsdOpenForm;
     N366: TMenuItem;
     actFilesToCheckJournal: TdsdOpenForm;
     N367: TMenuItem;

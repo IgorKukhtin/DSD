@@ -1249,7 +1249,8 @@ uses
   CheckSiteInsert in '..\..\FormsFarmacy\Document\CheckSiteInsert.pas' {CheckSiteInsertForm: TParentForm},
   FilesToCheckCash in '..\..\FormsFarmacy\Cash\FilesToCheckCash.pas' {FilesToCheckCashForm: TParentForm},
   FilesToCheck in '..\..\FormsFarmacy\Document\FilesToCheck.pas' {FilesToCheckForm: TParentForm},
-  FilesToCheckJournal in '..\..\FormsFarmacy\Document\FilesToCheckJournal.pas' {FilesToCheckJournalForm: TParentForm};
+  FilesToCheckJournal in '..\..\FormsFarmacy\Document\FilesToCheckJournal.pas' {FilesToCheckJournalForm: TParentForm},
+  Report_MovementSiteBonus in '..\..\FormsFarmacy\Report\Report_MovementSiteBonus.pas' {Report_MovementSiteBonusForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

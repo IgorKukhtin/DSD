@@ -25,7 +25,6 @@ RETURNS TABLE (UnitID          Integer
              , ExpensesAmount  TFloat    -- Дополнительные затраты
 
              , Profit          TFloat    -- Прибыль
-
               )
 AS
 $BODY$
@@ -177,6 +176,7 @@ BEGIN
                 AND Movement.StatusId = zc_Enum_Status_Complete()
                 AND (COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) =True
                  OR Movement.Id IN (22653173, 22653613, 22653819))
+                AND FALSE
               GROUP BY AnalysisContainer.UnitId)
              -- Реализация за период
            , tmpRealization AS (SELECT AnalysisContainerItem.UnitID
@@ -477,4 +477,5 @@ $BODY$
 -- тест
 -- select * from gpReport_Profitability(inDateStart := ('01.04.2020')::TDateTime , inDateFinal := ('30.06.2020')::TDateTime , inUnitId := 3457773 , inisNoStaticCodes := False,  inSession := '3');
 
-select * from gpReport_Profitability(inDateStart := ('01.03.2021')::TDateTime , inDateFinal := ('31.03.2021')::TDateTime , inUnitId := 377610 , inisNoStaticCodes := 'True' ,  inSession := '3');
+
+select * from gpReport_Profitability(inDateStart := ('01.08.2022')::TDateTime , inDateFinal := ('31.08.2022')::TDateTime , inUnitId := 183292 , inisNoStaticCodes := 'True' ,  inSession := '3');

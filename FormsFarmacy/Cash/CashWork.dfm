@@ -229,5 +229,9 @@ object CashWorkForm: TCashWorkForm
       Caption = #1057#1088#1072#1074#1085#1080#1090#1100' '#1089#1091#1084#1084#1099' '#1056#1056#1054' '#1080' '#1087#1086' '#1087#1088#1086#1075#1088#1072#1084#1077
       OnClick = pmCheckSumClick
     end
+    object pmGetDate: TMenuItem
+      Caption = #1044#1072#1090#1072' '#1080#1079' '#1056#1056#1054
+      OnClick = pmGetDateClick
+    end
   end
 end
