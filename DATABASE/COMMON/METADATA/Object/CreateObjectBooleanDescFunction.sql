@@ -301,6 +301,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_CountCount() RETURNS Integer AS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_CountCount', 'Учет батонов' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_CountCount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_PersonalService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_PersonalService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_PersonalService', 'Формировать начисление зп автоматом' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_PersonalService');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Partner_EdiOrdspr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_EdiOrdspr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
@@ -1286,6 +1290,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 05.09.22         * zc_ObjectBoolean_Unit_PersonalService
  05.09.22                                                                                                          * zc_ObjectBoolean_Unit_AutospaceOS
  24.08.22                                                                                                          * zc_ObjectBoolean_Unit_ShowActiveAlerts
  09.08.22                                                                                                          * zc_ObjectBoolean_Goods_LeftTheMarket

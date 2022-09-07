@@ -1,8 +1,8 @@
-object UnitForm: TUnitForm
+object Unit_PersonalForm: TUnit_PersonalForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
-  ClientHeight = 420
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'> '#1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080#1081' '#1088#1072#1089#1095#1077#1090' '#1047#1055
+  ClientHeight = 388
   ClientWidth = 980
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,15 +21,17 @@ object UnitForm: TUnitForm
     Left = 0
     Top = 26
     Width = 8
-    Height = 394
+    Height = 362
+    ExplicitHeight = 394
   end
   object cxGrid: TcxGrid
     Left = 8
     Top = 26
     Width = 972
-    Height = 394
+    Height = 362
     Align = alClient
     TabOrder = 1
+    ExplicitHeight = 394
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -49,11 +51,32 @@ object UnitForm: TUnitForm
       object isIrna: TcxGridDBColumn
         Caption = #1048#1088#1085#1072
         DataBinding.FieldName = 'isIrna'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1088#1085#1072' ('#1044#1072'/'#1053#1077#1090')'
         Options.Editing = False
         Width = 45
+      end
+      object isPersonalService: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1080#1088'. '#1047#1055
+        DataBinding.FieldName = 'isPersonalService'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1087' '#1072#1074#1090#1086#1084#1072#1090#1086#1084
+        Width = 70
+      end
+      object PersonalServiceDate: TcxGridDBColumn
+        AlternateCaption = '80'
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1055
+        DataBinding.FieldName = 'PersonalServiceDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.Kind = ckDateTime
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1083#1080#1089#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1087' '#1072#1074#1090#1086#1084#1072#1090#1086#1084
+        Options.Editing = False
+        Width = 93
       end
       object ParentName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
@@ -106,27 +129,6 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
-      end
-      object isPersonalService: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1080#1088'. '#1047#1055
-        DataBinding.FieldName = 'isPersonalService'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1087' '#1072#1074#1090#1086#1084#1072#1090#1086#1084
-        Options.Editing = False
-        Width = 70
-      end
-      object PersonalServiceDate: TcxGridDBColumn
-        AlternateCaption = '80'
-        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1055
-        DataBinding.FieldName = 'PersonalServiceDate'
-        PropertiesClassName = 'TcxDateEditProperties'
-        Properties.Kind = ckDateTime
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1083#1080#1089#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1087' '#1072#1074#1090#1086#1084#1072#1090#1086#1084
-        Options.Editing = False
-        Width = 93
       end
       object AccountGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' c'#1095'. '#1075#1088'.'
@@ -209,6 +211,7 @@ object UnitForm: TUnitForm
       object InvNumber: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090')'
         DataBinding.FieldName = 'InvNumber'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -217,6 +220,7 @@ object UnitForm: TUnitForm
       object Contract_JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1076#1086#1075#1086#1074#1086#1088')'
         DataBinding.FieldName = 'Contract_JuridicalName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -225,6 +229,7 @@ object UnitForm: TUnitForm
       object Contract_InfomoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
         DataBinding.FieldName = 'Contract_InfomoneyName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -241,6 +246,7 @@ object UnitForm: TUnitForm
       object RouteSortingName: TcxGridDBColumn
         Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
         DataBinding.FieldName = 'RouteSortingName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -258,6 +264,7 @@ object UnitForm: TUnitForm
       object PartnerName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
         DataBinding.FieldName = 'PartnerName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -266,6 +273,7 @@ object UnitForm: TUnitForm
       object isPartionDate: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
         DataBinding.FieldName = 'isPartionDate'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -300,6 +308,7 @@ object UnitForm: TUnitForm
       object isPartionGoodsKind: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1080' '#1087#1086' '#1074#1080#1076#1091' '#1091#1087#1072#1082'. '#1076#1083#1103' '#1089#1099#1088#1100#1103
         DataBinding.FieldName = 'isPartionGoodsKind'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -308,6 +317,7 @@ object UnitForm: TUnitForm
       object isCountCount: TcxGridDBColumn
         Caption = #1059#1095#1077#1090' '#1073#1072#1090#1086#1085#1086#1074
         DataBinding.FieldName = 'isCountCount'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -333,8 +343,10 @@ object UnitForm: TUnitForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object SheetWorkTimeName: TcxGridDBColumn
@@ -430,23 +442,6 @@ object UnitForm: TUnitForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -467,11 +462,7 @@ object UnitForm: TUnitForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isIrna'
+          ItemName = 'bbInsertUpdate_PersonalService'
         end
         item
           Visible = True
@@ -542,8 +533,8 @@ object UnitForm: TUnitForm
       Action = actProtocol
       Category = 0
     end
-    object bbUpdate_isIrna: TdxBarButton
-      Action = macUpdate_isIrna
+    object bbInsertUpdate_PersonalService: TdxBarButton
+      Action = macInsertUpdate_PersonalService
       Category = 0
     end
   end
@@ -707,10 +698,8 @@ object UnitForm: TUnitForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_HistoryCost
       StoredProcList = <
         item
-          StoredProc = spUpdate_HistoryCost
         end>
       Caption = 'actUpdate_HistoryCost'
       ImageIndex = 76
@@ -746,46 +735,53 @@ object UnitForm: TUnitForm
         end>
       isShowModal = False
     end
-    object macUpdate_isIrna_list: TMultiAction
+    object macInsertUpdate_PersonalService_list: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdate_isIrna
+          Action = actInsertUpdate_PersonalService
         end>
       View = cxGridDBTableView
-      Caption = 'macUpdate_isIrna_list'
-      ImageIndex = 66
+      Caption = 'macInsertUpdate_PersonalService_list'
+      ImageIndex = 41
     end
-    object macUpdate_isIrna: TMultiAction
+    object macInsertUpdate_PersonalService: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = macUpdate_isIrna_list
-        end
-        item
-          Action = actRefresh
+          Action = macInsertUpdate_PersonalService_list
         end>
-      QuestionBeforeExecute = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1099#1073#1088#1072#1085#1085#1099#1093' '#1101#1083#1077#1084#1077#1085#1090#1086#1074' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1085#1072' '#1087#1088#1086#1090#1080#1074#1086#1087#1086#1083#1086#1078 +
-        #1085#1086#1077'?'
-      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1080#1079#1084#1077#1085#1077#1085#1086
-      Caption = 'macUpdate_isIrna'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1044#1072'/'#1053#1077#1090
-      ImageIndex = 66
+      QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1047#1055' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = 'macInsertUpdate_PersonalService'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
+      ImageIndex = 41
     end
-    object actUpdate_isIrna: TdsdExecStoredProc
+    object actInsertUpdate_PersonalService: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isIrna
+      StoredProc = gpInsertUpdate_PersonalService_byUnit
       StoredProcList = <
         item
-          StoredProc = spUpdate_isIrna
+          StoredProc = gpInsertUpdate_PersonalService_byUnit
         end>
-      Caption = 'actUpdate_isIrna'
-      ImageIndex = 66
+      Caption = 'actInsertUpdate_PersonalService'
+      ImageIndex = 41
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_Personal
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_Personal
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = GridDS
     end
   end
   object GridDS: TDataSource
@@ -849,8 +845,8 @@ object UnitForm: TUnitForm
     Left = 176
     Top = 200
   end
-  object spUpdate_HistoryCost: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Unit_HistoryCost'
+  object spUpdate_Unit_Personal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Unit_Personal'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -863,41 +859,63 @@ object UnitForm: TUnitForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId_HistoryCost'
+        Name = 'inPersonalServiceDate'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'UnitId_HistoryCost'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 624
-    Top = 232
-  end
-  object spUpdate_isIrna: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Guide_Irna'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
+        ComponentItem = 'PersonalServiceDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisIrna'
+        Name = 'inisPersonalService'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'isIrna'
+        ComponentItem = 'isPersonalService'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 480
-    Top = 136
+    Left = 528
+    Top = 168
+  end
+  object gpInsertUpdate_PersonalService_byUnit: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_PersonalService_Child_byUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPersonalService'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isPersonalService'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPersonalServiceDate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PersonalServiceDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 760
+    Top = 160
+  end
+  object PeriodChoice: TPeriodChoice
+    Left = 464
+    Top = 24
   end
 end

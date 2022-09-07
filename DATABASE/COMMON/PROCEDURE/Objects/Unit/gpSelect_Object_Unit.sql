@@ -29,7 +29,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isIrna Boolean,
                isErased Boolean,
                Address TVarChar,
-               Comment TVarChar
+               Comment TVarChar,
+               isPersonalService Boolean, PersonalServiceDate TDateTime
+               
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -156,6 +158,10 @@ BEGIN
 
            , ObjectString_Unit_Address.ValueData   AS Address
            , ObjectString_Unit_Comment.ValueData   AS Comment
+           
+           , COALESCE (ObjectBoolean_PersonalService.ValueData, FALSE)  ::Boolean   AS isPersonalService
+           , COALESCE (ObjectDate_PersonalService.ValueData, Null)      ::TDateTime AS PersonalServiceDate
+           
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
@@ -214,6 +220,14 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_CountCount
                                     ON ObjectBoolean_CountCount.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_CountCount.DescId = zc_ObjectBoolean_Unit_CountCount()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PersonalService
+                                    ON ObjectBoolean_PersonalService.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_PersonalService.DescId = zc_ObjectBoolean_Unit_PersonalService()
+
+            LEFT JOIN ObjectDate AS ObjectDate_PersonalService
+                                 ON ObjectDate_PersonalService.ObjectId = Object_Unit_View.Id
+                                AND ObjectDate_PersonalService.DescId = zc_ObjectDate_Unit_PersonalService()
 
             LEFT JOIN tmpPartner_Unit ON tmpPartner_Unit.UnitId = Object_Unit_View.Id
 
@@ -305,7 +319,10 @@ BEGIN
            , FALSE AS isIrna
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address
-           , CAST ('' as TVarChar)  AS Comment
+           , CAST ('' as TVarChar)  AS Comment  
+
+           , FALSE     ::Boolean   AS isPersonalService
+           , Null      ::TDateTime AS PersonalServiceDate
        FROM Object as Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Partner.Id
@@ -384,6 +401,8 @@ BEGIN
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address 
            , CAST ('' as TVarChar)  AS Comment 
+           , FALSE     ::Boolean    AS isPersonalService
+           , Null      ::TDateTime  AS PersonalServiceDate
       ;
 
 END;
@@ -395,6 +414,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.09.22         * PersonalService
  27.07.22         * isCountCount
  04.05.22         *
  15.12.21         * add PersonalHead

@@ -1,4 +1,4 @@
-unit Units;
+unit Unit_Personal;
 
 interface
 
@@ -21,10 +21,12 @@ uses
   dxSkinsdxBarPainter, dsdAddOn, dsdDB, Datasnap.DBClient, dsdAction,
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxSplitter, cxButtonEdit, cxCalendar;
+  cxGrid, cxSplitter, cxButtonEdit, cxCalendar, cxContainer, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
+  Vcl.ExtCtrls, ChoicePeriod;
 
 type
-  TUnitForm = class(TParentForm)
+  TUnit_PersonalForm = class(TParentForm)
     cxSplitter1: TcxSplitter;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
@@ -83,16 +85,20 @@ type
     Address: TcxGridDBColumn;
     isPartionGoodsKind: TcxGridDBColumn;
     actUnitChoiceForm: TOpenChoiceForm;
-    spUpdate_HistoryCost: TdsdStoredProc;
     actUpdate_HistoryCost: TdsdUpdateDataSet;
     actProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
-    spUpdate_isIrna: TdsdStoredProc;
-    actUpdate_isIrna: TdsdExecStoredProc;
-    macUpdate_isIrna_list: TMultiAction;
-    macUpdate_isIrna: TMultiAction;
-    bbUpdate_isIrna: TdxBarButton;
+    actInsertUpdate_PersonalService: TdsdExecStoredProc;
+    macInsertUpdate_PersonalService_list: TMultiAction;
+    macInsertUpdate_PersonalService: TMultiAction;
     isCountCount: TcxGridDBColumn;
+    isPersonalService: TcxGridDBColumn;
+    PersonalServiceDate: TcxGridDBColumn;
+    spUpdate_Unit_Personal: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    gpInsertUpdate_PersonalService_byUnit: TdsdStoredProc;
+    bbInsertUpdate_PersonalService: TdxBarButton;
+    PeriodChoice: TPeriodChoice;
   private
     { Private declarations }
   public
@@ -105,5 +111,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TUnitForm);
+  RegisterClass(TUnit_PersonalForm);
 end.
