@@ -71,7 +71,7 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbChoice: TSpeedButton
-        Left = 44
+        Left = 39
         Top = 3
         Width = 31
         Height = 29
@@ -89,7 +89,7 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbChangeMember: TSpeedButton
-        Left = 81
+        Left = 70
         Top = 3
         Width = 31
         Height = 29
@@ -126,7 +126,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrintClick
       end
       object bbViewMI: TSpeedButton
-        Left = 158
+        Left = 175
         Top = 3
         Width = 31
         Height = 29
@@ -347,7 +347,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrint_diffClick
       end
       object bbPrint_ReestrKind: TSpeedButton
-        Left = 238
+        Left = 245
         Top = 3
         Width = 31
         Height = 29
@@ -433,7 +433,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrintPackWeight_FozzyClick
       end
       object bbExport_Email: TSpeedButton
-        Left = 195
+        Left = 209
         Top = 3
         Width = 31
         Height = 29
@@ -496,8 +496,8 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
         OnClick = bbQualityDoc_listClick
       end
-      object SpeedButton1: TSpeedButton
-        Left = 121
+      object bbChangeOperDatePartner: TSpeedButton
+        Left = 107
         Top = 3
         Width = 31
         Height = 29
@@ -511,6 +511,24 @@ object GuideMovementForm: TGuideMovementForm
           FF000FFF1FFFFF1FFF000FFFF1FFFF1FFF000FF1FF1FF11FFF000FFF11FFFF1F
           FF000FFFFFFFFFFFFF0000000000000000000EEEEEEEEEEEEE000E0EEEEEEEEE
           0E00000000000000000880888088880888088800088888800088}
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object bbChangeTransport: TSpeedButton
+        Left = 138
+        Top = 3
+        Width = 31
+        Height = 29
+        Action = actChangeTransport
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          88888888778888C88888888191788C4C888888899908CEC4C888888991788C47
+          8888888890888C478888888890888C478888888890888C478888888890888C47
+          8888888890888C478888888890888C478888888890888CC0888888999908CCC4
+          7888888990888EC0888888889888888888888888888888888888}
         ParentShowHint = False
         ShowHint = True
       end
@@ -1388,6 +1406,11 @@ object GuideMovementForm: TGuideMovementForm
       Category = 'ScaleLib'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1090#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'> '#1087#1086' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
       OnExecute = actChangeOperDatePartnerExecute
+    end
+    object actChangeTransport: TAction
+      Category = 'ScaleLib'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'> '#1087#1086' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      OnExecute = actChangeTransportExecute
     end
   end
   object FormParams: TdsdFormParams

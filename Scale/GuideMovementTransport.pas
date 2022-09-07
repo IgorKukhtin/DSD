@@ -187,6 +187,7 @@ begin
      if Result then
      begin
          ParamsMovement_local.ParamByName('Transport_BarCode').AsString:=CDS.FieldByName('IdBarCode').AsString+CalcBarCode(CDS.FieldByName('IdBarCode').AsString);
+         ParamsMovement_local.ParamByName('TransportId').AsInteger:= CDS.FieldByName('Id').AsInteger;
      end;
 end;
 

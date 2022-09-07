@@ -476,6 +476,7 @@ begin
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inIsDocInsert', ftBoolean, ptInput, execParamsMovement.ParamByName('isDocInsert').AsBoolean);
        //try
          Execute;
          execParamsMovement.ParamByName('MovementId_begin').AsInteger:=DataSet.FieldByName('MovementId_begin').asInteger;

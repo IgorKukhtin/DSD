@@ -269,6 +269,9 @@ type
     ReReturnInPanel: TPanel;
     ReReturnInLabel: TLabel;
     EditReReturnIn: TcxButtonEdit;
+    infoPanelDocInsert: TPanel;
+    DocInsertLabel: TLabel;
+    cbDocInsert: TCheckBox;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -314,6 +317,7 @@ type
     procedure bbSetAssetClick(Sender: TObject);
     procedure EditReReturnInPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure cbDocInsertClick(Sender: TObject);
   private
     //aTest: Boolean;
     Scale_AP: IAPScale;
@@ -367,6 +371,9 @@ procedure TMainForm.Initialize_afterSave_all;
 begin
      EditPartionGoods.Text:='';
      EditBoxCode.Text:=GetArrayList_Value_byName(Default_Array,'BoxCode');
+     //
+     cbDocInsert.Checked:= true;
+     cbDocInsert.Checked:= false;
      //
      {EditBarCodeTransport.Text:='';
      PanelInvNumberTransport.Caption:='';
@@ -1240,6 +1247,11 @@ begin
     //
     GuideMovementForm.Execute(ParamsMovement,FALSE);//isChoice=FALSE
     myActiveControl;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.cbDocInsertClick(Sender: TObject);
+begin
+     ParamsMovement.ParamByName('isDocInsert').asBoolean:= cbDocInsert.Checked;
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.actRefreshExecute(Sender: TObject);

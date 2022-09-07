@@ -173,8 +173,6 @@ object GuideUnitForm: TGuideUnitForm
       Align = alLeft
       Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086')'
       TabOrder = 0
-      ExplicitLeft = -1
-      ExplicitTop = -3
       object EditCode: TEdit
         Left = 5
         Top = 17
@@ -247,10 +245,13 @@ object GuideUnitForm: TGuideUnitForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 408
     Top = 392
   end

@@ -1961,7 +1961,7 @@ object MainForm: TMainForm
       Left = 0
       Top = 520
       Width = 130
-      Height = 177
+      Height = 211
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvSpace
@@ -1993,7 +1993,7 @@ object MainForm: TMainForm
         end
         object EditBarCodeTransport: TcxButtonEdit
           Left = 3
-          Top = 15
+          Top = 13
           ParentFont = False
           Properties.Buttons = <
             item
@@ -2181,6 +2181,40 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+        end
+      end
+      object infoPanelDocInsert: TPanel
+        Left = 1
+        Top = 176
+        Width = 128
+        Height = 34
+        Align = alBottom
+        BevelOuter = bvNone
+        TabOrder = 5
+        object DocInsertLabel: TLabel
+          Left = 0
+          Top = 0
+          Width = 128
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1053#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitWidth = 86
+        end
+        object cbDocInsert: TCheckBox
+          Left = 42
+          Top = 16
+          Width = 40
+          Height = 17
+          Caption = #1044#1040
+          TabOrder = 0
+          OnClick = cbDocInsertClick
         end
       end
     end

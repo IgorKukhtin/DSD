@@ -139,9 +139,11 @@ type
     SubjectDocName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     bbQualityDoc_list: TSpeedButton;
-    SpeedButton1: TSpeedButton;
+    bbChangeOperDatePartner: TSpeedButton;
     actChangeOperDatePartner: TAction;
     OperDatePartner_parent: TcxGridDBColumn;
+    bbChangeTransport: TSpeedButton;
+    actChangeTransport: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -176,6 +178,7 @@ type
     procedure bbExport_EmailClick(Sender: TObject);
     procedure bbQualityDoc_listClick(Sender: TObject);
     procedure actChangeOperDatePartnerExecute(Sender: TObject);
+    procedure actChangeTransportExecute(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -202,7 +205,7 @@ var
 
 implementation
 {$R *.dfm}
-uses dmMainScale,UtilScale,UtilPrint,Main,DialogMovementDesc, DialogDateValue;
+uses dmMainScale,UtilScale,UtilPrint,Main,DialogMovementDesc, DialogDateValue, GuideMovementTransport;
 {------------------------------------------------------------------------------}
 function TGuideMovementForm.Execute(var execParamsMovement:TParams;isChoice:Boolean): boolean;
 begin
@@ -487,6 +490,28 @@ begin
     then actRefreshExecute(Self);
     //
     execParams.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.actChangeTransportExecute(Sender: TObject);
+var ParamsMovement_local:TParams;
+begin
+     Create_ParamsMovement(ParamsMovement_local);
+     //CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
+     try
+         ParamsMovement_local.ParamByName('isTransport_link').AsBoolean := TRUE;
+         ParamsMovement_local.ParamByName('MovementId').AsInteger:= CDS.FieldByName('MovementId_parent').AsInteger;
+         ParamsMovement_local.ParamByName('TransportId').AsInteger:= CDS.FieldByName('MovementId_TransportGoods').AsInteger;
+         ParamsMovement_local.ParamByName('OperDate').AsDateTime:= Date;
+         //
+         if GuideMovementTransportForm.Execute(ParamsMovement_local,TRUE)//isChoice=TRUE
+         then begin
+                  //DMMainScaleForm.gpGet_Scale_Transport(ParamsMovement_local,'');
+                  DMMainScaleForm.gpUpdate_Scale_Movement_Transport(ParamsMovement_local);
+                  actRefreshExecute(Self);
+              end;
+     finally
+       ParamsMovement_local.Free;
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.actChangeMemberExecute(Sender: TObject);

@@ -369,6 +369,7 @@ begin
 
      ParamAdd(Params,'TotalSumm',ftFloat);
 
+     ParamAddValue(Params,'isDocInsert',ftBoolean,FALSE);
 
 end;
 {------------------------------------------------------------------------}
