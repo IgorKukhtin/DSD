@@ -34,7 +34,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isRemovingPrograms Boolean, ExpressVIPConfirm Integer, isErrorRROToVIP Boolean, 
                LayoutFileCount Integer, LayoutFileID Integer, FilesToCheckCount Integer, FilesToCheckID Integer, 
                isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean,
-               MinPriceSale TFloat, DeviationsPrice1303 TFloat, SetDateRRO TDateTime
+               MinPriceSale TFloat, DeviationsPrice1303 TFloat, SetDateRRO TDateTime, isSetDateRRO boolean
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -415,6 +415,7 @@ BEGIN
        , tmpCashSettings.MinPriceSale
        , tmpCashSettings.DeviationsPrice1303
        , ObjectDate_SetDateRRO.ValueData                                                  AS SetDateRRO 
+       , ObjectString_SetDateRROList.ValueData LIKE '%'||zfConvert_DateToString (CURRENT_DATE)||'%'   AS isSetDateRRO 
 
    FROM Object AS Object_Unit
 
@@ -544,6 +545,9 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_SetDateRRO
                              ON ObjectDate_SetDateRRO.ObjectId = Object_Unit.Id
                             AND ObjectDate_SetDateRRO.DescId = zc_ObjectDate_Unit_SetDateRRO()
+        LEFT JOIN ObjectString AS ObjectString_SetDateRROList
+                               ON ObjectString_SetDateRROList.ObjectId = Object_Unit.Id
+                              AND ObjectString_SetDateRROList.DescId = zc_ObjectString_Unit_SetDateRROList()
 
         LEFT JOIN tmpLoyalty ON 1 = 1
         LEFT JOIN tmpLoyaltySaveMoney ON 1 = 1

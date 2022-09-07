@@ -151,7 +151,6 @@ type
     execUpdate_ExceptionUKTZED: TdsdExecStoredProc;
     spUpdate_inExceptionUKTZED_Revert: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
-    isPresent: TcxGridDBColumn;
     bsUpdate: TdxBarSubItem;
     bbUpdateInvisibleSUN: TdxBarButton;
     bbUpdateisSupplementSUN1: TdxBarButton;

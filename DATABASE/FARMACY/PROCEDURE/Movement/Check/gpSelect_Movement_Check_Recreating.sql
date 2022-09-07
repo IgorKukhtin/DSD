@@ -93,8 +93,8 @@ BEGIN
                                                   , inMovementId          := outMovementId   -- Ключ объекта <Документ>
                                                   , inGoodsId             := MovementItem_Check_View.GoodsId       -- Товары
                                                   , inAmount              := MovementItem_Check_View.Amount        -- Количество
-                                                  , inPrice               := MovementItem_Check_View.Price         -- Цена
-                                                  , inPriceSale           := MovementItem_Check_View.PriceSale     -- Цена без скидки
+                                                  , inPrice               := COALESCE(MovementItem_Check_View.Price, 0)              -- Цена
+                                                  , inPriceSale           := COALESCE(MovementItem_Check_View.PriceSale, 0)          -- Цена без скидки
                                                   , inChangePercent       := COALESCE(MovementItem_Check_View.ChangePercent, 0)      -- % Скидки
                                                   , inSummChangePercent   := COALESCE(MovementItem_Check_View.SummChangePercent, 0)  -- Сумма Скидки
                                                   , inPartionDateKindID   := MILO_PartionDateKind.ObjectId         -- Тип срок/не срок

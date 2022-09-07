@@ -8551,11 +8551,9 @@ begin
   SetTaxUnitNight;
   SetMainFormCaption;
 
-  if (Cash <> nil) and
-     not MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').IsNull and
-     (MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').AsDateTime = Date) then
+  if (Cash <> nil) and UnitConfigCDS.FieldByName('isSetDateRRO').AsBoolean then
   begin
-    Cash.SetTime;
+    if Abs(MinutesBetween(Cash.GetTime, Now)) > 2 then Cash.SetTime;
   end;
 end;
 

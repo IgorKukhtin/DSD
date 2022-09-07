@@ -31,6 +31,7 @@ type
     PopupMenuInfo: TPopupMenu;
     pmZReportInfo: TMenuItem;
     pmCheckSum: TMenuItem;
+    pmGetDate: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -42,6 +43,7 @@ type
     procedure btInfoClick(Sender: TObject);
     procedure pmZReportInfoClick(Sender: TObject);
     procedure pmCheckSumClick(Sender: TObject);
+    procedure pmGetDateClick(Sender: TObject);
   private
     m_Cash: ICash;
     m_DataSet: TDataSet;
@@ -171,8 +173,7 @@ end;
 
 procedure TCashWorkForm.Button3Click(Sender: TObject);
 begin
-  if not MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').IsNull and
-     (MainCashForm.UnitConfigCDS.FieldByName('SetDateRRO').AsDateTime = Date) then
+  if MainCashForm.UnitConfigCDS.FieldByName('isSetDateRRO').AsBoolean then
   begin
     m_Cash.SetTime;
     if Abs(MinutesBetween(m_Cash.GetTime, Now)) > 2 then
@@ -235,6 +236,11 @@ begin
       'Ñףללא ןמ ןנמדנאללו ךאנעא: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCard').AsFloat) + #13 +
       'Ñףללא ןמ ןנמדנאללו טעמדמ: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat + spGet_Money_CashRegister.ParamByName('outSummsCard').AsFloat));
 
+end;
+
+procedure TCashWorkForm.pmGetDateClick(Sender: TObject);
+begin
+  ShowMessage(FormatDateTime('dd.mm.yyyy hh:nn', m_Cash.GetTime));
 end;
 
 procedure TCashWorkForm.pmZReportInfoClick(Sender: TObject);

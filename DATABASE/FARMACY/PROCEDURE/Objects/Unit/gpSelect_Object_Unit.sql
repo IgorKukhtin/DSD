@@ -72,7 +72,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PharmacyManager TVarChar, PharmacyManagerPhone TVarChar
              , TelegramId TVarChar, isErrorRROToVIP Boolean, isShowMessageSite Boolean, isSupplementAddCash Boolean, isSupplementAdd30Cash Boolean
              , isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean
-             , SetDateRRO TDateTime, isAutospaceOS Boolean
+             , SetDateRRO TVarChar, isAutospaceOS Boolean
              
 ) AS
 $BODY$
@@ -294,7 +294,7 @@ BEGIN
       , COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE):: Boolean         AS isShowPlanEmployeeUser
       , COALESCE (ObjectBoolean_ShowActiveAlerts.ValueData, FALSE):: Boolean             AS isShowActiveAlerts
       
-      , ObjectDate_SetDateRRO.ValueData                                                  AS SetDateRRO 
+      , ObjectString_SetDateRROList.ValueData                                            AS SetDateRRO 
       , COALESCE (ObjectBoolean_AutospaceOS.ValueData, FALSE):: Boolean                  AS isAutospaceOS
 
     FROM Object AS Object_Unit
@@ -757,9 +757,9 @@ BEGIN
                              ON ObjectDate_FirstCheck.ObjectId = Object_Unit.Id
                             AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
                             
-        LEFT JOIN ObjectDate AS ObjectDate_SetDateRRO
-                             ON ObjectDate_SetDateRRO.ObjectId = Object_Unit.Id
-                            AND ObjectDate_SetDateRRO.DescId = zc_ObjectDate_Unit_SetDateRRO()
+        LEFT JOIN ObjectString AS ObjectString_SetDateRROList
+                               ON ObjectString_SetDateRROList.ObjectId = Object_Unit.Id
+                              AND ObjectString_SetDateRROList.DescId = zc_ObjectString_Unit_SetDateRROList()
         LEFT JOIN ObjectBoolean AS ObjectBoolean_AutospaceOS
                                 ON ObjectBoolean_AutospaceOS.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_AutospaceOS.DescId = zc_ObjectBoolean_Unit_AutospaceOS()
