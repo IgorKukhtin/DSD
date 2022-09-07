@@ -5345,6 +5345,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actSalePromoGoodsJournal: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1054#1090#1087#1091#1089#1082' '#1072#1082#1094#1080#1086#1085#1085#1099#1093' '#1090#1086#1074#1072#1088#1086#1074
+      FormName = 'TSalePromoGoodsJournalForm'
+      FormNameParam.Value = 'TSalePromoGoodsJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5678,6 +5689,9 @@
         end
         object N205: TMenuItem
           Action = actPermanentDiscount
+        end
+        object N368: TMenuItem
+          Action = actSalePromoGoodsJournal
         end
         object N212: TMenuItem
           Caption = '-'

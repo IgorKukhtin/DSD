@@ -155,6 +155,7 @@ type
     procedure LoadReturnTypeFormTest;
     procedure LoadReturnOutFormTest;
     procedure LoadSaleFormTest;
+    procedure LoadSalePromoGoodsFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSeasonalityCoefficientFormTest;
     procedure LoadSendFormTest;
@@ -3251,6 +3252,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicSPDialogForm');
+end;
+
+procedure TLoadFormTest.LoadSalePromoGoodsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePromoGoodsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSalePromoGoodsJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePromoGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSalePromoGoodsForm');
 end;
 
 procedure TLoadFormTest.LoadReturnInFormTest;

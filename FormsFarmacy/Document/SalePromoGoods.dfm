@@ -1,36 +1,35 @@
 inherited SalePromoGoodsForm: TSalePromoGoodsForm
-  Caption = #1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080', '#1087#1086#1076#1072#1088#1086#1082
+  Caption = #1054#1090#1087#1091#1089#1082' '#1072#1082#1094#1080#1086#1085#1085#1099#1093' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 658
-  ClientWidth = 920
+  ClientWidth = 958
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 936
+  ExplicitWidth = 974
   ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 920
+    Width = 958
     Height = 543
     ExplicitTop = 115
-    ExplicitWidth = 920
+    ExplicitWidth = 958
     ExplicitHeight = 543
     ClientRectBottom = 543
-    ClientRectRight = 920
+    ClientRectRight = 958
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 920
+      ExplicitWidth = 958
       ExplicitHeight = 519
       inherited cxGrid: TcxGrid
-        Width = 920
-        Height = 301
-        ExplicitWidth = 920
-        ExplicitHeight = 301
+        Width = 486
+        Height = 519
+        ExplicitWidth = 486
+        ExplicitHeight = 519
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = SignDS
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00; -,0.00; ;'
               Kind = skSum
-              Column = sqTotalSumm_CheckSale
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
@@ -44,123 +43,49 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object sgGUID: TcxGridDBColumn
-            Caption = #1055#1088#1086#1084#1086' '#1082#1086#1076
-            DataBinding.FieldName = 'GUID'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1086#1084#1086' '#1082#1086#1076
-            Options.Editing = False
-            Width = 150
-          end
-          object sqSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1074' '#1087#1086#1076#1072#1088#1086#1082
-            DataBinding.FieldName = 'Summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 68
-          end
-          object sgOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 68
-          end
-          object sqInvnumber_CheckSale: TcxGridDBColumn
-            Caption = #8470' '#1095#1077#1082#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
-            DataBinding.FieldName = 'Invnumber_CheckSale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 78
-          end
-          object sqOperDate_CheckSale: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1095#1077#1082#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
-            DataBinding.FieldName = 'OperDate_CheckSale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object sqTotalSumm_CheckSale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1095#1077#1082' '#1087#1086#1075#1072#1096#1077#1085#1080#1103')'
-            DataBinding.FieldName = 'TotalSumm_CheckSale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00; -,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 82
-          end
-          object sqUnitName_CheckSale: TcxGridDBColumn
-            Caption = #1040#1087#1090#1077#1082#1072' ('#1095#1077#1082' '#1087#1086#1075#1072#1096#1077#1085#1080#1103')'
-            DataBinding.FieldName = 'UnitName_CheckSale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 192
-          end
-          object sgComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 166
-          end
-          object sgInsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
-            DataBinding.FieldName = 'InsertName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object sgInsertdate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
-            DataBinding.FieldName = 'Insertdate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 54
-          end
-          object sgUpdateName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
+          object sgGoodsNameCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 56
+            Width = 64
           end
-          object sgUpdateDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
-            DataBinding.FieldName = 'UpdateDate'
+          object sgGoodsName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 56
+            Width = 305
+          end
+          object sqAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 83
           end
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 0
-        Top = 301
-        Width = 920
-        Height = 8
+        Left = 486
+        Top = 0
+        Width = 8
+        Height = 519
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
-        AlignSplitter = salBottom
+        AlignSplitter = salRight
         Control = Panel1
       end
       object Panel1: TPanel
-        Left = 0
-        Top = 309
-        Width = 920
-        Height = 210
-        Align = alBottom
+        Left = 494
+        Top = 0
+        Width = 464
+        Height = 519
+        Align = alRight
         BevelOuter = bvNone
         Caption = 'Panel1'
         ShowCaption = False
@@ -168,8 +93,8 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         object Panel2: TPanel
           Left = 0
           Top = 0
-          Width = 451
-          Height = 210
+          Width = 456
+          Height = 519
           Align = alClient
           BevelOuter = bvNone
           Caption = 'Panel2'
@@ -177,9 +102,9 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           TabOrder = 0
           object cxGrid1: TcxGrid
             Left = 0
-            Top = 109
-            Width = 451
-            Height = 101
+            Top = 288
+            Width = 456
+            Height = 231
             Align = alBottom
             PopupMenu = PopupMenu
             TabOrder = 0
@@ -264,8 +189,8 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           object cxGrid2: TcxGrid
             Left = 0
             Top = 0
-            Width = 451
-            Height = 101
+            Width = 456
+            Height = 280
             Align = alClient
             PopupMenu = PopupMenu
             TabOrder = 1
@@ -280,6 +205,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
               OptionsData.DeletingConfirmation = False
               OptionsView.ColumnAutoWidth = True
               OptionsView.GroupByBox = False
+              OptionsView.HeaderAutoHeight = True
               Styles.Content = dmMain.cxContentStyle
               Styles.Inactive = dmMain.cxSelection
               Styles.Selection = dmMain.cxSelection
@@ -290,28 +216,41 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
                 DataBinding.FieldName = 'isErased'
                 Visible = False
               end
-              object MasterIsChecked: TcxGridDBColumn
-                Caption = #1054#1090#1084'.'
-                DataBinding.FieldName = 'IsChecked'
-                HeaderAlignmentHorz = taCenter
-                HeaderAlignmentVert = vaCenter
-                Width = 56
-              end
               object MasterGoodsCode: TcxGridDBColumn
                 Caption = #1050#1086#1076
                 DataBinding.FieldName = 'GoodsCode'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 67
+                Width = 60
               end
               object MasterGoodsName: TcxGridDBColumn
-                Caption = #1058#1086#1074#1072#1088' '#1087#1086#1076#1072#1088#1086#1082
+                Caption = #1058#1086#1074#1072#1088' '#1072#1082#1094#1080#1086#1085#1085#1099#1081
                 DataBinding.FieldName = 'GoodsName'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 326
+                Width = 242
+              end
+              object MasterAmount: TcxGridDBColumn
+                Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+                DataBinding.FieldName = 'Amount'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                Properties.DecimalPlaces = 3
+                Properties.DisplayFormat = ',0.000;-,0.000; ;'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 78
+              end
+              object MasterPrice: TcxGridDBColumn
+                Caption = #1062#1077#1085#1072' (0 '#1087#1086' '#1087#1088#1072#1081#1089#1091')'
+                DataBinding.FieldName = 'Price'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                Properties.DisplayFormat = ',0.00;-,0.00; ;'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 74
               end
             end
             object cxGridLevel2: TcxGridLevel
@@ -320,8 +259,8 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           end
           object cxSplitter2: TcxSplitter
             Left = 0
-            Top = 101
-            Width = 451
+            Top = 280
+            Width = 456
             Height = 8
             Touch.ParentTabletOptions = False
             Touch.TabletOptions = [toPressAndHold]
@@ -329,93 +268,23 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
             Control = cxGrid1
           end
         end
-        object Panel3: TPanel
-          Left = 459
-          Top = 0
-          Width = 461
-          Height = 210
-          Align = alRight
-          BevelOuter = bvNone
-          Caption = 'Panel3'
-          ShowCaption = False
-          TabOrder = 1
-          object cxGrid3: TcxGrid
-            Left = 0
-            Top = 0
-            Width = 461
-            Height = 210
-            Align = alClient
-            PopupMenu = PopupMenu
-            TabOrder = 0
-            object cxGridDBTableView3: TcxGridDBTableView
-              Navigator.Buttons.CustomButtons = <>
-              DataController.DataSource = InfoDS
-              DataController.Summary.DefaultGroupSummaryItems = <>
-              DataController.Summary.FooterSummaryItems = <
-                item
-                  Format = ',0.##'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0.##'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0.##'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0.####'
-                  Kind = skSum
-                end>
-              DataController.Summary.SummaryGroups = <>
-              OptionsBehavior.IncSearch = True
-              OptionsData.Deleting = False
-              OptionsData.DeletingConfirmation = False
-              OptionsData.Editing = False
-              OptionsData.Inserting = False
-              OptionsView.ColumnAutoWidth = True
-              OptionsView.Footer = True
-              OptionsView.GroupByBox = False
-              OptionsView.HeaderAutoHeight = True
-              Styles.Content = dmMain.cxContentStyle
-              Styles.Inactive = dmMain.cxSelection
-              Styles.Selection = dmMain.cxSelection
-              Styles.Footer = dmMain.cxFooterStyle
-              Styles.Header = dmMain.cxHeaderStyle
-              Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-            end
-            object cxGridLevel3: TcxGridLevel
-              GridView = cxGridDBTableView3
-            end
-          end
-        end
         object cxSplitter3: TcxSplitter
-          Left = 451
+          Left = 456
           Top = 0
           Width = 8
-          Height = 210
+          Height = 519
           Touch.ParentTabletOptions = False
           Touch.TabletOptions = [toPressAndHold]
           AlignSplitter = salRight
-          Control = Panel3
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 920
+    Width = 958
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 920
+    ExplicitWidth = 958
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -455,15 +324,15 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Top = 62
       Properties.ReadOnly = False
       TabOrder = 7
-      Width = 196
+      Width = 412
     end
     object cxLabel10: TcxLabel
-      Left = 711
+      Left = 663
       Top = 5
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
     end
     object edInsertName: TcxButtonEdit
-      Left = 711
+      Left = 663
       Top = 23
       Properties.Buttons = <
         item
@@ -476,12 +345,12 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Width = 118
     end
     object cxLabel11: TcxLabel
-      Left = 711
+      Left = 663
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
     end
     object edUpdateName: TcxButtonEdit
-      Left = 711
+      Left = 663
       Top = 62
       Properties.Buttons = <
         item
@@ -494,12 +363,12 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Width = 118
     end
     object cxLabel13: TcxLabel
-      Left = 835
+      Left = 787
       Top = 45
       Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
     end
     object edUpdateDate: TcxDateEdit
-      Left = 835
+      Left = 787
       Top = 62
       EditValue = 42485d
       Properties.Kind = ckDateTime
@@ -522,7 +391,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Width = 100
     end
     object edInsertdate: TcxDateEdit
-      Left = 835
+      Left = 787
       Top = 23
       EditValue = 42485d
       Properties.Kind = ckDateTime
@@ -531,19 +400,19 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Width = 120
     end
     object cxLabel12: TcxLabel
-      Left = 831
+      Left = 783
       Top = 5
       Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
     end
     object cxLabel3: TcxLabel
       Left = 425
       Top = 6
-      Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1087#1086#1075
+      Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1072#1082#1094#1080#1080
     end
     object cxLabel6: TcxLabel
       Left = 537
       Top = 6
-      Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1087#1086#1075'.'
+      Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1072#1082#1094#1080#1080
     end
     object cxLabel19: TcxLabel
       Left = 225
@@ -564,66 +433,6 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       TabOrder = 21
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1089#1077#1090#1100'>'
       Width = 196
-    end
-    object cbisElectron: TcxCheckBox
-      Left = 108
-      Top = 43
-      Caption = #1076#1083#1103' '#1057#1072#1081#1090#1072
-      TabOrder = 22
-      Width = 78
-    end
-    object edSummRepay: TcxCurrencyEdit
-      Left = 518
-      Top = 62
-      Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
-      ParentShowHint = False
-      Properties.DisplayFormat = ',0.00'
-      Properties.ReadOnly = False
-      ShowHint = True
-      TabOrder = 23
-      Width = 87
-    end
-    object cxLabel20: TcxLabel
-      Left = 518
-      Top = 44
-      Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
-      Caption = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084'.'
-      ParentShowHint = False
-      ShowHint = True
-    end
-    object edMonthCount: TcxCurrencyEdit
-      Left = 425
-      Top = 62
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      Properties.ReadOnly = False
-      TabOrder = 25
-      Width = 87
-    end
-    object cxLabel14: TcxLabel
-      Left = 425
-      Top = 44
-      Caption = #1052#1077#1089'. '#1076#1083#1103' '#1087#1086#1075#1072#1096'.'
-    end
-    object edAmountPresent: TcxCurrencyEdit
-      Left = 611
-      Top = 62
-      Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
-      ParentShowHint = False
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.000'
-      Properties.ReadOnly = False
-      ShowHint = True
-      TabOrder = 27
-      Width = 87
-    end
-    object cxLabel4: TcxLabel
-      Left = 611
-      Top = 45
-      Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
-      Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1076#1072#1088#1082#1086#1074
-      ParentShowHint = False
-      ShowHint = True
     end
   end
   inherited ActionList: TActionList
@@ -896,24 +705,6 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         end>
       isShowModal = False
     end
-    object macInsertSalePromoGoodsSign: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = ExecuteDialogSalePromoGoodsSign
-        end
-        item
-        end
-        item
-          Action = actRefreshSalePromoGoodsSign
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099'?'
-      InfoAfterExecute = #1055#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099
-      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099
-      ImageIndex = 27
-    end
     object actInsertUpdate_MovementItem_Promo_Set_Zero: TdsdExecStoredProc
       Category = 'Load'
       MoveParams = <>
@@ -954,636 +745,6 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100
       ImageIndex = 41
-    end
-    object ExecuteDialogSalePromoGoodsSign: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
-      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
-      ImageIndex = 26
-      FormName = 'TSalePromoGoodsSignDialogForm'
-      FormNameParam.Value = 'TSalePromoGoodsSignDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inCount_GUID'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'inCount_GUID'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actExportToXLSSalePromoGoodsDay: TdsdExportToXLS
-      Category = 'DSDLibExport'
-      MoveParams = <>
-      BeforeAction = actExecSalePromoGoodsDay
-      ItemsDataSet = PrintItemsCDS
-      Title = #1048#1090#1086#1075#1080' '#1087#1086' '#1076#1085#1103#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1095#1090#1080
-      FileName = 'SalePromoGoodsDay'
-      FileNameParam.Value = 'SalePromoGoodsDay'
-      FileNameParam.DataType = ftString
-      FileNameParam.MultiSelectSeparator = ','
-      TitleHeight = 1.000000000000000000
-      TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
-      TitleFont.Height = -11
-      TitleFont.Name = 'Tahoma'
-      TitleFont.Style = []
-      HeaderFont.Charset = DEFAULT_CHARSET
-      HeaderFont.Color = clWindowText
-      HeaderFont.Height = -11
-      HeaderFont.Name = 'Tahoma'
-      HeaderFont.Style = []
-      ColumnParams = <
-        item
-          Caption = #1044#1072#1090#1072
-          FieldName = 'OperDate'
-          DataType = ftDateTime
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-          DetailedTexts = <>
-        end
-        item
-          Caption = #1051#1080#1084#1080#1090
-          FieldName = 'Amount'
-          DataType = ftCurrency
-          DecimalPlace = 2
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-          DetailedTexts = <>
-          Kind = skSumma
-        end
-        item
-          Caption = #1053#1072#1095#1080#1089#1083'. '#1089#1091#1084#1084#1072
-          FieldName = 'Accrued'
-          DataType = ftCurrency
-          DecimalPlace = 2
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-          DetailedTexts = <>
-          Kind = skSumma
-        end
-        item
-          Caption = #1053#1072#1095#1080#1089#1083'. '#1082#1086#1083'-'#1074#1086
-          FieldName = 'CountAccrued'
-          DataType = ftInteger
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-          DetailedTexts = <>
-          Kind = skSumma
-        end
-        item
-          Caption = #1055#1086#1089#1083'. '#1074#1099#1076#1072#1095#1072
-          FieldName = 'MaxTime'
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-          DetailedTexts = <>
-        end
-        item
-          Caption = #1048#1089#1087#1086#1083#1100#1079'. '#1089#1091#1084#1084#1072
-          FieldName = 'SummChange'
-          DataType = ftCurrency
-          DecimalPlace = 2
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-          DetailedTexts = <>
-          Kind = skSumma
-        end
-        item
-          Caption = #1048#1089#1087#1086#1083#1100#1079'. '#1089#1091#1084#1084#1072
-          FieldName = 'CountChange'
-          DataType = ftInteger
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-          DetailedTexts = <>
-          Kind = skSumma
-        end
-        item
-          Caption = #1055#1088#1086#1094'. '#1074#1077#1088#1085#1091#1074'.'
-          FieldName = 'PercentUsed'
-          DataType = ftCurrency
-          DecimalPlace = 4
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-          DetailedTexts = <>
-        end
-        item
-          Caption = #1055#1088#1086#1076#1072#1078' '#1087#1086' '#1087#1088#1086#1084#1086#1082#1086#1076#1091' '#1089#1091#1084#1084#1072
-          FieldName = 'SummSale'
-          DataType = ftCurrency
-          DecimalPlace = 2
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-          DetailedTexts = <>
-          Kind = skSumma
-        end
-        item
-          Caption = #1055#1088#1086#1076#1072#1078' '#1087#1086' '#1087#1088#1086#1084#1086#1082#1086#1076#1091' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
-          FieldName = 'CountSale'
-          DataType = ftInteger
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          CalcColumnLists = <>
-          DetailedTexts = <>
-          Kind = skSumma
-        end>
-      Caption = #1048#1090#1086#1075#1080' '#1087#1086' '#1076#1085#1103#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1095#1090#1080
-      Hint = #1048#1090#1086#1075#1080' '#1087#1086' '#1076#1085#1103#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1095#1090#1080
-      ImageIndex = 24
-    end
-    object actExecSalePromoGoodsDay: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSelectPrintSalePromoGoodsDay
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintSalePromoGoodsDay
-        end>
-      Caption = 'actExecSalePromoGoodsDay'
-    end
-    object actLinkWithChecks: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actChoiceSalePromoGoodsCheck
-        end
-        item
-          Action = actExecSalePromoGoodsCheck
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1057#1074#1103#1079#1072#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1089' '#1095#1077#1082#1086#1084
-      Hint = #1057#1074#1103#1079#1072#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1089' '#1095#1077#1082#1086#1084
-      ImageIndex = 29
-    end
-    object actChoiceSalePromoGoodsCheck: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceSalePromoGoodsCheck'
-      FormName = 'TChoiceSalePromoGoodsCheckForm'
-      FormNameParam.Value = 'TChoiceSalePromoGoodsCheckForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'UnitID'
-          Value = ''
-          Component = SignDCS
-          ComponentItem = 'UnitID'
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = 'NULL'
-          Component = SignDCS
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StartSummCash'
-          Value = Null
-          DataType = ftFloat
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId'
-          Value = Null
-          Component = SignDCS
-          ComponentItem = 'ID_Check'
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Key'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'CheckID'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actExecSalePromoGoodsCheck: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSetSalePromoGoodsCheck
-      StoredProcList = <
-        item
-          StoredProc = spSetSalePromoGoodsCheck
-        end>
-      Caption = 'actExecSalePromoGoodsCheck'
-    end
-    object actExportCreaturesPromocode: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1095#1105#1090' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1085#1099#1077' '#1087#1088#1086#1084#1086#1082#1086#1076#1099
-      Hint = #1054#1090#1095#1105#1090' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1085#1099#1077' '#1087#1088#1086#1084#1086#1082#1086#1076#1099
-      ImageIndex = 26
-      FormName = 'TReport_SalePromoGoods_CreaturesPromocodeForm'
-      FormNameParam.Value = 'TReport_SalePromoGoods_CreaturesPromocodeForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'MovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actExportUsedPromocode: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1095#1105#1090' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1077' '#1087#1088#1086#1084#1086#1082#1086#1076#1099
-      Hint = #1054#1090#1095#1105#1090' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1077' '#1087#1088#1086#1084#1086#1082#1086#1076#1099
-      ImageIndex = 25
-      FormName = 'TReport_SalePromoGoods_UsedPromocodeForm'
-      FormNameParam.Value = 'TReport_SalePromoGoods_UsedPromocodeForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'MovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actUnhook_Movement: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      PostDataSetBeforeExecute = False
-      StoredProc = spUnhook_Movement
-      StoredProcList = <
-        item
-          StoredProc = spUnhook_Movement
-        end>
-      Caption = #1054#1090#1082#1088#1077#1087#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1086#1090' '#1095#1077#1082#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
-      Hint = #1054#1090#1082#1088#1077#1087#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1086#1090' '#1095#1077#1082#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
-      ImageIndex = 76
-      QuestionBeforeExecute = #1054#1090#1082#1088#1077#1087#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1086#1090' '#1095#1077#1082#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1103'?'
-      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
-    end
-    object actInsertPromoCode: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecuteDialogPromoCode
-        end
-        item
-          Action = actExecSPInsertPromoCode
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099'?'
-      InfoAfterExecute = #1055#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099
-      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099
-      ImageIndex = 27
-    end
-    object actExecSPInsertPromoCode: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      StoredProc = spInsertPromoCode
-      StoredProcList = <
-        item
-          StoredProc = spInsertPromoCode
-        end>
-      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1099
-      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1099
-    end
-    object actExecuteDialogPromoCode: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
-      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
-      FormName = 'TIntegerDialogForm'
-      FormNameParam.Value = 'TIntegerDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Values'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'Count'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076#1086#1074
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actPrintSticker: TdsdExportToXLS
-      Category = 'DSDLibExport'
-      MoveParams = <>
-      BeforeAction = ExecSPPrintSticker
-      ItemsDataSet = PrintItemsCDS
-      FileName = 'PrintSticker'
-      FileNameParam.Value = 'PrintSticker'
-      FileNameParam.DataType = ftString
-      FileNameParam.MultiSelectSeparator = ','
-      TitleHeight = 1.000000000000000000
-      TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
-      TitleFont.Height = -11
-      TitleFont.Name = 'Tahoma'
-      TitleFont.Style = []
-      HeaderFont.Charset = DEFAULT_CHARSET
-      HeaderFont.Color = clWindowText
-      HeaderFont.Height = -11
-      HeaderFont.Name = 'Tahoma'
-      HeaderFont.Style = []
-      Footer = False
-      ColumnParams = <
-        item
-          FieldName = 'Column1'
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          Width = 25
-          WrapText = True
-          CalcColumnLists = <>
-          DetailedTexts = <
-            item
-              FieldName = 'GUID1'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-            end
-            item
-              FieldName = 'SITE1'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-            end>
-        end
-        item
-          FieldName = 'Column2'
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          Width = 25
-          WrapText = True
-          CalcColumnLists = <>
-          DetailedTexts = <
-            item
-              FieldName = 'GUID2'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-            end
-            item
-              FieldName = 'SITE2'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-            end>
-        end
-        item
-          FieldName = 'Column3'
-          DecimalPlace = 0
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          Width = 25
-          WrapText = True
-          CalcColumnLists = <>
-          DetailedTexts = <
-            item
-              FieldName = 'GUID3'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-            end
-            item
-              FieldName = 'SITE3'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-            end>
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1086#1074' '#1076#1083#1103' '#1088#1072#1079#1076#1072#1095#1080' '#1087#1088#1086#1084#1086#1082#1086#1076#1086#1074
-      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1086#1074' '#1076#1083#1103' '#1088#1072#1079#1076#1072#1095#1080' '#1087#1088#1086#1084#1086#1082#1086#1076#1086#1074
-      ImageIndex = 29
-    end
-    object ExecSPPrintSticker: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      BeforeAction = ExecutePromoCodeSignUnitName
-      PostDataSetBeforeExecute = False
-      StoredProc = spSelectPrintSticker
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintSticker
-        end>
-      Caption = 'ExecSPPrintSticker'
-    end
-    object ExecutePromoCodeSignUnitName: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'ExecutePromoCodeSignUnitName'
-      FormName = 'TPromoCodeSignUnitNameDialogForm'
-      FormNameParam.Value = 'TPromoCodeSignUnitNameDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'UnitName'
-          Value = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1085#1072' '#1089#1072#1081#1090#1077
-          Component = FormParams
-          ComponentItem = 'UnitName'
-          DataType = ftWideString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actInsertPromoCodeScales: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecuteDialogPromoCodeScales
-        end
-        item
-          Action = actExecSPInsertPromoCodeScales
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099'  '#1089#1086#1075#1083#1072#1089#1085#1086' '#1096#1082#1072#1083#1099'?'
-      InfoAfterExecute = #1055#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1096#1082#1072#1083#1099
-      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1096#1082#1072#1083#1099
-      ImageIndex = 54
-    end
-    object actExecSPInsertPromoCodeScales: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      StoredProc = spInsertPromoCodeScales
-      StoredProcList = <
-        item
-          StoredProc = spInsertPromoCodeScales
-        end>
-      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1099
-      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1099
-    end
-    object actExecuteDialogPromoCodeScales: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
-      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
-      FormName = 'TPromoCodeSignDialogForm'
-      FormNameParam.Value = 'TPromoCodeSignDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inCount_GUID'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'Count'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actOpenCheckSale: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TCheckForm'
-      FormNameParam.Value = 'TCheckForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = SignDCS
-          ComponentItem = 'ID_CheckSale'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 42370d
-          Component = edOperDate
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      CheckIDRecords = True
-      ActionType = acUpdate
-      DataSource = SignDS
-      DataSetRefresh = actRefresh
-      IdFieldName = 'ID_CheckSale'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -1664,15 +825,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton5'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenCheckSale'
         end
         item
           Visible = True
@@ -1688,15 +841,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertPromoCode'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton6'
         end
         item
           Visible = True
@@ -1764,8 +909,11 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Category = 0
     end
     object bbInsertSalePromoGoodsSign: TdxBarButton
-      Action = macInsertSalePromoGoodsSign
+      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099
       Category = 0
+      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099
+      Visible = ivAlways
+      ImageIndex = 27
     end
     object bbReportMinPriceForm: TdxBarButton
       Caption = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1077#1088#1072' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075')>'
@@ -1775,8 +923,11 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       ImageIndex = 26
     end
     object bbOpenReportMinPrice_All: TdxBarButton
-      Action = actExportToXLSSalePromoGoodsDay
+      Caption = #1048#1090#1086#1075#1080' '#1087#1086' '#1076#1085#1103#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1095#1090#1080
       Category = 0
+      Hint = #1048#1090#1086#1075#1080' '#1087#1086' '#1076#1085#1103#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1095#1090#1080
+      Visible = ivAlways
+      ImageIndex = 24
     end
     object bbGoodsIsCheckedYes: TdxBarButton
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
@@ -1821,16 +972,25 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       ImageIndex = 76
     end
     object dxBarButton1: TdxBarButton
-      Action = actLinkWithChecks
+      Caption = #1057#1074#1103#1079#1072#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1089' '#1095#1077#1082#1086#1084
       Category = 0
+      Hint = #1057#1074#1103#1079#1072#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1089' '#1095#1077#1082#1086#1084
+      Visible = ivAlways
+      ImageIndex = 29
     end
     object dxBarButton2: TdxBarButton
-      Action = actExportCreaturesPromocode
+      Caption = #1054#1090#1095#1105#1090' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1085#1099#1077' '#1087#1088#1086#1084#1086#1082#1086#1076#1099
       Category = 0
+      Hint = #1054#1090#1095#1105#1090' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1085#1099#1077' '#1087#1088#1086#1084#1086#1082#1086#1076#1099
+      Visible = ivAlways
+      ImageIndex = 26
     end
     object dxBarButton3: TdxBarButton
-      Action = actExportUsedPromocode
+      Caption = #1054#1090#1095#1105#1090' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1077' '#1087#1088#1086#1084#1086#1082#1086#1076#1099
       Category = 0
+      Hint = #1054#1090#1095#1105#1090' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1077' '#1087#1088#1086#1084#1086#1082#1086#1076#1099
+      Visible = ivAlways
+      ImageIndex = 25
     end
     object dxBarButton4: TdxBarButton
       Caption = #1054#1090#1082#1088#1077#1087#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1086#1090' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
@@ -1840,20 +1000,32 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       ImageIndex = 52
     end
     object dxBarButton5: TdxBarButton
-      Action = actUnhook_Movement
+      Caption = #1054#1090#1082#1088#1077#1087#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1086#1090' '#1095#1077#1082#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
       Category = 0
+      Hint = #1054#1090#1082#1088#1077#1087#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1086#1090' '#1095#1077#1082#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
+      Visible = ivAlways
+      ImageIndex = 76
     end
     object bbInsertPromoCode: TdxBarButton
-      Action = actInsertPromoCode
+      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099
       Category = 0
+      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099
+      Visible = ivAlways
+      ImageIndex = 27
     end
     object dxBarButton6: TdxBarButton
-      Action = actPrintSticker
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1086#1074' '#1076#1083#1103' '#1088#1072#1079#1076#1072#1095#1080' '#1087#1088#1086#1084#1086#1082#1086#1076#1086#1074
       Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1086#1074' '#1076#1083#1103' '#1088#1072#1079#1076#1072#1095#1080' '#1087#1088#1086#1084#1086#1082#1086#1076#1086#1074
+      Visible = ivAlways
+      ImageIndex = 29
     end
     object dxBarButton7: TdxBarButton
-      Action = actInsertPromoCodeScales
+      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1096#1082#1072#1083#1099
       Category = 0
+      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1096#1082#1072#1083#1099
+      Visible = ivAlways
+      ImageIndex = 54
     end
     object bbOpenCheckCreate: TdxBarButton
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1089#1086#1079#1076#1072#1085#1080#1103
@@ -1864,8 +1036,12 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       ShortCut = 115
     end
     object bbOpenCheckSale: TdxBarButton
-      Action = actOpenCheckSale
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
       Category = 0
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
+      Visible = ivAlways
+      ImageIndex = 1
+      ShortCut = 115
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1955,7 +1131,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       end
       item
         Name = 'Amount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1986,7 +1162,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2045,22 +1221,16 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       end
       item
         Name = 'StartPromo'
-        Value = 'NULL'
+        Value = Null
         Component = edStartPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndPromo'
-        Value = 'NULL'
+        Value = Null
         Component = edEndPromo
         DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MonthCount'
-        Value = Null
-        Component = edMonthCount
         MultiSelectSeparator = ','
       end
       item
@@ -2080,7 +1250,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       end
       item
         Name = 'Insertdate'
-        Value = 'NULL'
+        Value = Null
         Component = edInsertdate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2102,30 +1272,9 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       end
       item
         Name = 'UpdateDate'
-        Value = 'NULL'
+        Value = Null
         Component = edUpdateDate
         DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isElectron'
-        Value = Null
-        Component = cbisElectron
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SummRepay'
-        Value = Null
-        Component = edSummRepay
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountPresent'
-        Value = Null
-        Component = edAmountPresent
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 72
@@ -2168,7 +1317,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       end
       item
         Name = 'inStartPromo'
-        Value = 'NULL'
+        Value = Null
         Component = edStartPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -2176,7 +1325,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       end
       item
         Name = 'inEndPromo'
-        Value = 'NULL'
+        Value = Null
         Component = edEndPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -2185,7 +1334,6 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       item
         Name = 'inMonthCount'
         Value = Null
-        Component = edMonthCount
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2200,7 +1348,6 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       item
         Name = 'inisElectron'
         Value = Null
-        Component = cbisElectron
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2208,7 +1355,6 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       item
         Name = 'inSummRepay'
         Value = Null
-        Component = edSummRepay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2216,7 +1362,6 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       item
         Name = 'inAmountPresent'
         Value = Null
-        Component = edAmountPresent
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2264,10 +1409,8 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       item
       end
       item
-        Control = cbisElectron
       end
       item
-        Control = edAmountPresent
       end
       item
       end>
@@ -2279,42 +1422,10 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     Top = 320
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 654
     Top = 248
   end
@@ -2477,6 +1588,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2489,10 +1601,11 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
-    Left = 278
-    Top = 497
+    Left = 190
+    Top = 545
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_SalePromoGoodsChild'
@@ -2639,6 +1752,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2651,6 +1765,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 758
@@ -2681,8 +1796,8 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
-    Top = 496
+    Left = 208
+    Top = 448
   end
   object spInsertUpdateSalePromoGoodsSign: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_SalePromoGoodsSign'
@@ -2858,24 +1973,10 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     Left = 680
     Top = 448
   end
-  object InfoDS: TDataSource
-    DataSet = InfoDSD
-    Left = 944
-    Top = 432
-  end
-  object InfoDSD: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 896
-    Top = 416
-  end
   object spSelectSalePromoGoodsInfo: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_SalePromoGoodsSecond'
-    DataSet = InfoDSD
     DataSets = <
       item
-        DataSet = InfoDSD
       end>
     Params = <
       item
@@ -2887,15 +1988,13 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 976
-    Top = 368
+    Left = 992
+    Top = 288
   end
   object dsdStoredProc1: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_SalePromoGoodsSecond'
-    DataSet = InfoDSD
     DataSets = <
       item
-        DataSet = InfoDSD
       end>
     Params = <
       item
@@ -2910,51 +2009,6 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     Left = 1008
     Top = 416
   end
-  object spSelectPrintSalePromoGoodsDay: TdsdStoredProc
-    StoredProcName = 'gpReport_MovementItem_SalePromoGoodsSecondDay'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 831
-    Top = 208
-  end
-  object spSetSalePromoGoodsCheck: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_SalePromoGoodsSign_LinkCheck'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = SignDCS
-        ComponentItem = 'ID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCheckID'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CheckID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1046
-    Top = 200
-  end
   object PrintTitleCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -2963,10 +2017,10 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
   end
   object dsdDBViewAddOn3: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView3
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2979,9 +2033,10 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 392
-    Top = 56
+    Left = 384
+    Top = 32
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -3011,116 +2066,5 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       end>
     Left = 264
     Top = 16
-  end
-  object spUnhook_Movement: TdsdStoredProc
-    StoredProcName = 'gpUnhook_Movement_SalePromoGoods_CheckSale'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = SignDCS
-        ComponentItem = 'ID_CheckSale'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 632
-    Top = 360
-  end
-  object spInsertPromoCode: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementItem_SalePromoGoods_PromoCode'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCount'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Count'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 888
-    Top = 272
-  end
-  object spSelectPrintSticker: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_PrintSalePromoGoodsPromoCodeSticker'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'UnitName'
-        DataType = ftWideString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = SignDCS
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1007
-    Top = 272
-  end
-  object spInsertPromoCodeScales: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementItem_SalePromoGoods_PromoCodeScales'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCount'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'Count'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 888
-    Top = 328
   end
 end
