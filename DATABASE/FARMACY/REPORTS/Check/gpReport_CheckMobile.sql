@@ -159,7 +159,7 @@ BEGIN
            , Object_UserReferals.ValueData                                            AS UserReferalsName
            , COALESCE(MovementBoolean_ConfirmByPhone.ValueData, False)::Boolean      AS isConfirmByPhone
            , MovementDate_Coming.ValueData                                AS DateComing
-           , MovementFloat_MobileDiscount.ValueData                       AS MobileDiscount
+           , CASE WHEN Movement_Check.StatusId = zc_Enum_Status_Complete() THEN MovementFloat_MobileDiscount.ValueData END::TFloat AS MobileDiscount
            
            , CASE WHEN COALESCE (tmpMovement.MovementId, 0) <> 0 THEN 20 END::TFloat  AS ApplicationAward
            

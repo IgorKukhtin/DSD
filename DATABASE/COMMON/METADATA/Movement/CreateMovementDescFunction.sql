@@ -552,10 +552,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_FilesToCheck() RETURNS Integer AS $BODY$B
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_FilesToCheck', 'Файлы для проверки' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_FilesToCheck');
 
+CREATE OR REPLACE FUNCTION zc_Movement_SalePromoGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_SalePromoGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_SalePromoGoods', 'Отпуск акционных товаров' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SalePromoGoods');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 07.09.22                                                                                     * zc_Movement_SalePromoGoods
  03.09.22                                                                                     * zc_Movement_FilesToCheck
  23.08.22         * zc_Movement_PersonalTransport
  23.06.22                                                                                     * zc_Movement_GoodsSPSearch_1303
