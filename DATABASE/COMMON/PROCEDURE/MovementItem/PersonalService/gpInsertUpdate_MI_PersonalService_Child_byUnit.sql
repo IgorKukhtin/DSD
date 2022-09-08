@@ -29,14 +29,15 @@ BEGIN
      END IF;
 
      -- тест 3а 11,2022, дата док.01,12,2022
-     vbStartDate := '01.12.2022';
-     vbEndDate   := '30.12.2022';
+     --vbStartDate := '01.12.2022';
+     --vbEndDate   := '30.12.2022';
 
-     /*
+     
      -- расчет за прошлый мес€ц
-     vbStartDate := DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 MONTH');
-     vbEndDate   := DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY'); 
-     */
+     vbStartDate := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);
+     vbEndDate   := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 DAY')::TDateTime); 
+     
+     
 
        -- сохран€ем расчитанные отчетом данные по зп
        PERFORM gpInsertUpdate_MI_PersonalService_Child_Auto (inUnitId                 := inUnitId

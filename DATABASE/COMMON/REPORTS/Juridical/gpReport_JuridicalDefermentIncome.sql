@@ -30,8 +30,8 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , AreaName TVarChar
              , PaymentDate TDateTime, PaymentAmount TFloat
              , PaymentDate_jur TDateTime, PaymentAmount_jur TFloat
-             , IncomeDate TDateTime, IncomeAmount TFloat           --последний приход
-             , IncomeDate_jur TDateTime, IncomeAmount_jur TFloat
+             , IncomeDate TDateTime, IncomeAmount TFloat       
+             , IncomeDate_jur TDateTime, IncomeAmount_jur TFloat    --последний приход
               )
 AS
 $BODY$
@@ -80,7 +80,7 @@ BEGIN
                                             INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
                                                                   ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
                                                                  AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-                                       WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
+                                       WHERE (ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch   OR vbUserId = 9457)
                                          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                        GROUP BY ObjectLink_Contract_Personal.ObjectId
                                       )
@@ -219,6 +219,17 @@ BEGIN
                                  , tt.OperDate
                                  , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                                  , tt.Amount
+                            FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt
+                                 JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                 ON ObjectLink_Contract_InfoMoney.ObjectId = tt.ContractId
+                                                AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                            WHERE COALESCE (tt.Amount,0) <> 0
+                           )
+   , tmpLastIncome_all AS (SELECT tt.JuridicalId
+                                 , tt.ContractId
+                                 , tt.PaidKindId
+                                 , COALESCE (tt.PartnerId, 0) AS PartnerId
+                                 , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                                  -- последний приход
                                  , tt.OperDateIn
                                  , tt.AmountIn
@@ -226,7 +237,9 @@ BEGIN
                                  JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                  ON ObjectLink_Contract_InfoMoney.ObjectId = tt.ContractId
                                                 AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                            WHERE COALESCE (tt.AmountIn,0) <> 0
                            )
+                           
      -- находим последнии оплаты
    , tmpLastPayment AS (SELECT tt.JuridicalId
                              , tt.PaidKindId
@@ -245,7 +258,7 @@ BEGIN
                             , tt.InfoMoneyId
                             , tt.OperDateIn
                             , SUM (tt.AmountIn) AS AmountIn
-                       FROM tmpLastPayment_all AS tt
+                       FROM tmpLastIncome_all AS tt
                        GROUP BY tt.JuridicalId
                               , tt.PaidKindId
                               , tt.InfoMoneyId
@@ -276,8 +289,8 @@ BEGIN
           , tmpLastPaymentJuridical.OperDate :: TDateTime AS PaymentDate_jur
           , tmpLastPaymentJuridical.Amount   :: TFloat    AS PaymentAmount_jur
 
-          , tmpLastPayment.OperDateIn :: TDateTime AS IncomeDate
-          , tmpLastPayment.AmountIn   :: TFloat    AS IncomeAmount
+          , tmpLastIncome.OperDateIn :: TDateTime AS IncomeDate
+          , tmpLastIncome.AmountIn   :: TFloat    AS IncomeAmount
           
           , tmpLastIncomeJuridical.OperDateIn :: TDateTime AS IncomeDate_jur
           , tmpLastIncomeJuridical.AmountIn   :: TFloat    AS IncomeAmount_jur
@@ -580,7 +593,12 @@ BEGIN
                    AND tmpLastPaymentJuridical.PaidKindId  = a.PaidKindId
                    AND tmpLastPaymentJuridical.InfoMoneyId = a.InfoMoneyId
                    AND tmpLastPaymentJuridical.Ord = 1
-
+       -- последнии приходы
+        LEFT JOIN tmpLastIncome_all AS tmpLastIncome
+                                     ON tmpLastIncome.JuridicalId = a.JuridicalId
+                                    AND tmpLastIncome.ContractId  = a.ContractId
+                                    AND tmpLastIncome.PaidKindId  = a.PaidKindId
+                                    AND tmpLastIncome.PartnerId   = COALESCE (a.PartnerId,0)
         LEFT JOIN (SELECT tmpLastIncome.JuridicalId
                         , tmpLastIncome.InfoMoneyId
                         , tmpLastIncome.PaidKindId
