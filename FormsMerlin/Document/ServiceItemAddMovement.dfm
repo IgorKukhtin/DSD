@@ -362,6 +362,19 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             Options.Editing = False
             Width = 70
           end
+          object Id: TcxGridDBColumn
+            DataBinding.FieldName = 'Id'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -376,7 +389,7 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
     Height = 89
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 2
+    TabOrder = 1
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23

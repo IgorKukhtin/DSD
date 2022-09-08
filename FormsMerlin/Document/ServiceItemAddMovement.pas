@@ -124,6 +124,7 @@ type
     FieldFilter_UnitName: TdsdFieldFilter;
     lbSearchName: TcxLabel;
     edSearchUnitName: TcxTextEdit;
+    Id: TcxGridDBColumn;
   private
   public
   end;
