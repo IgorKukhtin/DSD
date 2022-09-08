@@ -107,6 +107,27 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 80
       end
+      object isPersonalService: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1080#1088'. '#1047#1055
+        DataBinding.FieldName = 'isPersonalService'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1087' '#1072#1074#1090#1086#1084#1072#1090#1086#1084
+        Options.Editing = False
+        Width = 70
+      end
+      object PersonalServiceDate: TcxGridDBColumn
+        AlternateCaption = '80'
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1055
+        DataBinding.FieldName = 'PersonalServiceDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.Kind = ckDateTime
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1083#1080#1089#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1087' '#1072#1074#1090#1086#1084#1072#1090#1086#1084
+        Options.Editing = False
+        Width = 93
+      end
       object AccountGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' c'#1095'. '#1075#1088'.'
         DataBinding.FieldName = 'AccountGroupCode'

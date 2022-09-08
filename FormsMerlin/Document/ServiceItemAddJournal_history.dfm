@@ -538,6 +538,14 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         end
         item
           Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowErased'
         end
         item
@@ -1332,9 +1340,6 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
     Images = dmMain.ImageList
     Left = 112
     Top = 64
-    object N3: TMenuItem
-      Action = actInsert
-    end
     object N2: TMenuItem
       Action = actUpdate
     end

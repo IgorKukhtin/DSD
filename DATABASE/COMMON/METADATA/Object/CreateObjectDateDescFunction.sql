@@ -263,6 +263,8 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_JuridicalDefermentPayment(), 'zc_ObjectDate_JuridicalDefermentPayment_OperDateIn', 'Дата последнего прихода' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_JuridicalDefermentPayment_OperDateIn');
 
 
+
+
 --!!!FARMACY
 
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_DateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_DateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -649,8 +651,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_SetDateRRO() RETURNS Integer AS $B
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_SetDateRRO', 'Авто установка времени на РРО' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SetDateRRO');
 
+
+ CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_PersonalService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_PersonalService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_PersonalService', 'Дата/время когда сформировались начисление зп автоматом' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_PersonalService');
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 06.09.22         * zc_ObjectDate_Unit_PersonalService
  05.09.22                                                                                     * zc_ObjectDate_Unit_SetDateRRO
  01.09.22         * zc_ObjectDate_JuridicalDefermentPayment_OperDateIn
  20.05.22                                                                                     * zc_ObjectDate_MCRequest_DateUpdate, zc_ObjectDate_MCRequest_DateDone

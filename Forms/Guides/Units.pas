@@ -21,7 +21,7 @@ uses
   dxSkinsdxBarPainter, dsdAddOn, dsdDB, Datasnap.DBClient, dsdAction,
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxSplitter, cxButtonEdit;
+  cxGrid, cxSplitter, cxButtonEdit, cxCalendar;
 
 type
   TUnitForm = class(TParentForm)

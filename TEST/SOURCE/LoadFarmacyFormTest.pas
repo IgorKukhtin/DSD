@@ -155,6 +155,7 @@ type
     procedure LoadReturnTypeFormTest;
     procedure LoadReturnOutFormTest;
     procedure LoadSaleFormTest;
+    procedure LoadSalePromoGoodsFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSeasonalityCoefficientFormTest;
     procedure LoadSendFormTest;
@@ -1155,7 +1156,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMobileForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementSiteBonusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementSiteBonusForm');
+
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMobileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMobileForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMobileDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMobileDialogForm');
@@ -1166,7 +1171,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalRemainsEndForm');
 
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_LeftTheMarketForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_LeftTheMarketForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_LeftTheMarketForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RestTermGoodsForm'));
@@ -3247,6 +3252,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicSPDialogForm');
+end;
+
+procedure TLoadFormTest.LoadSalePromoGoodsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePromoGoodsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSalePromoGoodsJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePromoGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSalePromoGoodsForm');
 end;
 
 procedure TLoadFormTest.LoadReturnInFormTest;

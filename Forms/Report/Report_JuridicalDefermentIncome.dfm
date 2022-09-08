@@ -376,6 +376,26 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
             Options.Editing = False
             Width = 75
           end
+          object IncomeDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'IncomeDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object IncomeAmount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'IncomeAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
           object IncomeDate_jur: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' ('#1070#1088'.'#1083#1080#1094#1086')'
             DataBinding.FieldName = 'IncomeDate_jur'

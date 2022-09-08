@@ -450,15 +450,6 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 81
           end
-          object isPresent: TcxGridDBColumn
-            Caption = #1055#1086#1076#1072#1088#1086#1082
-            DataBinding.FieldName = 'isPresent'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1086#1076#1072#1088#1086#1082'. '#1041#1083#1086#1082#1080#1088#1091#1077#1090#1100#1089#1103' '#1087#1088#1086#1076#1072#1078#1072' '#1085#1072' '#1082#1072#1089#1089#1072#1093
-            Options.Editing = False
-            Width = 61
-          end
           object isOnlySP: TcxGridDBColumn
             Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1057#1055' "'#1044#1086#1089#1090#1091#1087#1085#1110' '#1083#1110#1082#1080'"'
             DataBinding.FieldName = 'isOnlySP'

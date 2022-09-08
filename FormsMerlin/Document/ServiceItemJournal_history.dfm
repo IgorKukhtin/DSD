@@ -492,7 +492,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 16
+    Left = 56
     Top = 64
   end
   object dxBarManager: TdxBarManager
@@ -538,6 +538,14 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
         end
         item
           Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -575,7 +583,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
       Category = 0
     end
     object bbEdit: TdxBarButton
-      Action = mactUpdate
+      Action = actUpdate
       Category = 0
     end
     object bbComplete: TdxBarButton
@@ -748,7 +756,6 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
       ImageIndex = 0
       FormName = 'TServiceItemMovementForm'
       FormNameParam.Value = 'TServiceItemMovementForm'
@@ -1328,9 +1335,6 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
     Images = dmMain.ImageList
     Left = 112
     Top = 64
-    object N3: TMenuItem
-      Action = actInsert
-    end
     object N2: TMenuItem
       Action = actUpdate
     end
