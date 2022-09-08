@@ -22,7 +22,7 @@ RETURNS TABLE (
              --, UpdateName TVarChar, UpdateDate TDateTime
              , isPositionFixed Boolean, Left Integer, Top Integer, Width Integer, Height Integer
              , isRootTree Boolean, isLetterTree Boolean
-	         , Color Integer, Color_Text Integer
+             , Color Integer, Color_Text Integer
              --, isErased boolean
              )
 
@@ -160,13 +160,15 @@ BEGIN
                       )
 
      -- дополнения
-   , tmpServiceItemAdd AS (SELECT MovementItem.ObjectId                  AS UnitId
+   , tmpServiceItemAdd AS (SELECT Movement.Id                            AS MovementId
+                                , MovementItem.Id                        AS MovementItemId
+                                , MovementItem.ObjectId                  AS UnitId
                                 , MILinkObject_InfoMoney.ObjectId        AS InfoMoneyId
                                 , MovementItem.Amount
                                 , COALESCE (MIDate_DateStart.ValueData, zc_DateStart()) AS DateStart
                                 , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd())     AS DateEnd
      
-                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_InfoMoney.ObjectId ORDER BY Movement.OperDate DESC, Movement.Id DESC) AS Ord
+                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_InfoMoney.ObjectId ORDER BY Movement.OperDate DESC, Movement.Id DESC, MovementItem.id DESC) AS Ord
                            FROM Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
@@ -199,9 +201,10 @@ BEGIN
 
                               || CASE WHEN COALESCE (tmpUnitLast.Id, 0) > 0 THEN
                               chr(13)||'*баз.: ' || zfConvert_FloatToString (SUM (COALESCE (tmpMI_Main.Amount, 0)))
-                              ||chr(13)||'*доп: ' || zfConvert_FloatToString (SUM (COALESCE (tmpMI_Add.Amount, 0)))
+                            ||chr(13)||'*доп: ' || CASE WHEN MAX (tmpMI_Add.UnitId) > 0 THEN zfConvert_FloatToString (SUM (COALESCE (tmpMI_Add.Amount, 0))) ELSE ' - ' END
                                  ELSE ''
                                  END
+                              || CASE WHEN COALESCE (tmpUnitLast.Id, 0) > 0 AND SUM (tmpMI_Add.myCount) > 1 THEN chr(13)|| MAX (tmpMI_Add.MovementItemId) ELSE '' END
 
 		)::TVarChar AS Name  -- Н-начислено;  О - оплачено; Д-ДОЛГ
 
@@ -217,11 +220,11 @@ BEGIN
       , COALESCE (Object_Parent.Id, 0) = vbStartId AS isRootTree
       , COALESCE (tmpUnitLast.Id, 0) > 0          AS isLetterTree
 
-      , CASE WHEN SUM (COALESCE (tmpReport.AmountDebet, 0)) <> CASE WHEN SUM (COALESCE (tmpMI_Add.Amount, 0)) <> 0 THEN SUM (COALESCE (tmpMI_Add.Amount, 0)) ELSE SUM (COALESCE (tmpMI_Main.Amount, 0)) END
+      , CASE WHEN SUM (COALESCE (tmpReport.AmountDebet, 0)) <> CASE WHEN MAX (tmpMI_Add.UnitId) > 0 /*SUM (COALESCE (tmpMI_Add.Amount, 0)) <> 0*/ THEN SUM (COALESCE (tmpMI_Add.Amount, 0)) ELSE SUM (COALESCE (tmpMI_Main.Amount, 0)) END
               AND COALESCE (tmpUnitLast.Id, 0) > 0
               AND SUM (COALESCE (tmpReport.AmountDebet, 0)) <> 0
                   THEN zc_Color_Red()
-             WHEN SUM (COALESCE (tmpReport.AmountDebet, 0)) <> CASE WHEN SUM (COALESCE (tmpMI_Add.Amount, 0)) <> 0 THEN SUM (COALESCE (tmpMI_Add.Amount, 0)) ELSE SUM (COALESCE (tmpMI_Main.Amount, 0)) END
+             WHEN SUM (COALESCE (tmpReport.AmountDebet, 0)) <> CASE WHEN MAX (tmpMI_Add.UnitId) > 0 /*SUM (COALESCE (tmpMI_Add.Amount, 0)) <> 0*/ THEN SUM (COALESCE (tmpMI_Add.Amount, 0)) ELSE SUM (COALESCE (tmpMI_Main.Amount, 0)) END
               AND COALESCE (tmpUnitLast.Id, 0) > 0
                   THEN zc_Color_Red()
              ELSE zc_Color_Yelow()
@@ -247,8 +250,14 @@ BEGIN
                       ) AS tmpMI_Main
                         ON tmpMI_Main.UnitId = tmpUnitLast.Id
             -- дополнения
-            LEFT JOIN (SELECT tmpServiceItemAdd.UnitId, SUM (tmpServiceItemAdd.Amount) AS Amount
+            LEFT JOIN (SELECT tmpServiceItemAdd.UnitId, SUM (tmpServiceItemAdd_find.Amount) AS Amount, STRING_AGG (tmpServiceItemAdd_find.MovementItemId :: TVarChar, ';') AS MovementItemId
+                            , COUNT(*) AS myCount
                        FROM tmpServiceItemAdd
+                            INNER JOIN tmpServiceItemAdd AS tmpServiceItemAdd_find
+                                                         ON tmpServiceItemAdd_find.MovementId  = tmpServiceItemAdd.MovementId
+                                                        AND tmpServiceItemAdd_find.UnitId      = tmpServiceItemAdd.UnitId
+                                                        AND tmpServiceItemAdd_find.InfoMoneyId = tmpServiceItemAdd.InfoMoneyId
+                       WHERE tmpServiceItemAdd.Ord = 1 
                        GROUP BY tmpServiceItemAdd.UnitId
                       ) AS tmpMI_Add
                         ON tmpMI_Add.UnitId = tmpUnitLast.Id
