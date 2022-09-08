@@ -208,7 +208,11 @@ BEGIN
                                      inSession        := inSession
                                     ) AS Report_1
    )
- , tmpReport_1 AS (SELECT DISTINCT Res_1.MemberId /*, Res_1.PersonalGroupId, Res_1.PositionId, Res_1.PositionLevelId*/ FROM Res_1 WHERE Res_1.SheetWorkTime_Amount > 0)
+ , tmpReport_1 AS (SELECT Res.MemberId, MAX (Res.SheetWorkTime_Amount) AS SheetWorkTime_Amount /*, Res.PersonalGroupId, Res.PositionId, Res.PositionLevelId*/
+                   FROM Res_1 AS Res
+                   WHERE Res.SheetWorkTime_Amount > 0
+                   GROUP BY Res.MemberId
+                  )
  , Res AS (
     SELECT
          Res_1.StaffListId
@@ -304,6 +308,7 @@ BEGIN
        , NULL :: TDateTime AS SheetWorkTime_Date
        , Report_2.SUM_MemberHours
        , CASE WHEN tmpReport_1.MemberId > 0 THEN 0 ELSE Report_2.SheetWorkTime_Amount END AS SheetWorkTime_Amount
+     --, CASE WHEN tmpReport_1.MemberId > 0 AND Report_2.SheetWorkTime_Amount = tmpReport_1.SheetWorkTime_Amount THEN 0 ELSE Report_2.SheetWorkTime_Amount END AS SheetWorkTime_Amount
        , Report_2.StaffListSummKindId   AS ServiceModelCode
        , Report_2.StaffListSummKindName AS ServiceModelName
        , Report_2.StaffListSumm_Value   AS Price
