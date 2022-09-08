@@ -330,7 +330,10 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
-            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport_parent
+                                           ON MovementLinkMovement_Transport_parent.MovementId = Movement_Parent.Id
+                                          AND MovementLinkMovement_Transport_parent.DescId     = zc_MovementLinkMovement_Transport()
+            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = COALESCE (MovementLinkMovement_Transport_parent.MovementChildId, MovementLinkMovement_Transport.MovementChildId)
             LEFT JOIN MovementDate AS MovementDate_StartRunPlan
                                    ON MovementDate_StartRunPlan.MovementId = Movement_Transport.Id
                                   AND MovementDate_StartRunPlan.DescId = zc_MovementDate_StartRunPlan()

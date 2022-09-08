@@ -89,6 +89,7 @@ BEGIN
                            FROM MovementDate AS MovementDate_ServiceDate
                                 INNER JOIN Movement ON Movement.Id       = MovementDate_ServiceDate.MovementId
                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                   AND Movement.DescId   = zc_Movement_PersonalService()
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                               ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
                                                              AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()

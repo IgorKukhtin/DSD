@@ -3,12 +3,14 @@
 -- DROP FUNCTION IF EXISTS lpComplete_Movement_Sale_test (Integer, Integer, Boolean);
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind_test (Integer, Integer, Integer, TDateTime, Integer);
 
-DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
     IN inBranchCode          Integer   , --
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
+    IN inIsDocInsert         Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId_begin    Integer
@@ -48,6 +50,8 @@ $BODY$
    DECLARE vbKeyData TVarChar;
 
    DECLARE vbIsUpak_UnComplete Boolean;
+   
+   DECLARE vbIsDocMany Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
@@ -460,9 +464,18 @@ BEGIN
      END IF;
 
 
-     IF vbMovementDescId = zc_Movement_Sale()
+     -- определяется - может ли быть несколько документов под одну заявку
+     vbIsDocMany:= inBranchCode = 1 AND vbRetailId IN (310839 -- Фора
+                                                   --, 310854 -- Фоззі
+                                                      );
+     -- определяется признак
+     inIsDocInsert:= inIsDocInsert = TRUE AND vbIsDocMany = TRUE;
+
+     -- поиск
+     IF vbMovementDescId = zc_Movement_Sale() AND inIsDocInsert = FALSE
      THEN
-          IF 1 <(SELECT COUNT(*) FROM MovementLinkMovement
+          IF vbIsDocMany = FALSE
+             AND 1 < (SELECT COUNT(*) FROM MovementLinkMovement
                                      INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                                      ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
                                                                     AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
@@ -495,6 +508,8 @@ BEGIN
                                 WHERE MovementLinkMovement.MovementId = inMovementId
                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
                                   -- AND inSession <> '5'
+                                ORDER BY Movement.Id DESC
+                                LIMIT CASE WHEN vbIsDocMany = TRUE THEN 1 ELSE 100 END
                               );
      END IF;
      IF vbMovementDescId = zc_Movement_Inventory()

@@ -351,6 +351,10 @@ BEGIN
                -- Месяц начислений: есть
              , CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
                          THEN lpInsertFind_Object_ServiceDate (inOperDate:= MIDate_ServiceDate.ValueData)
+                    WHEN COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)) > 0
+                     AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_21421()
+                     AND MI_Child.Id > 0
+                         THEN lpInsertFind_Object_ServiceDate (inOperDate:= MIDate_ServiceDate.ValueData)
                     ELSE 0
                END AS ServiceDateId
  
@@ -964,8 +968,23 @@ BEGIN
               AND COALESCE (_tmpItem.OperSumm_Asset, 0) = 0
            ;
 
+     -- Проверка
+     IF inUserId = 5 AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка ok.Admin vbSumm_diff = <%> '
+                        , vbSumm_diff
+                         ;
+     END IF;
+
      END IF; -- !!!Курсовая разница!!!
 
+     -- Проверка
+     IF inUserId = 5 AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Admin vbSumm_diff = <%> '
+                        , vbSumm_diff
+                         ;
+     END IF;
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
