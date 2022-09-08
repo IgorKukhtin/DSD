@@ -240,6 +240,7 @@ type
     procedure SaveImplementationPlanEmployee;
     procedure SaveZReportLog;
     procedure SaveImplementationPlanEmployeeUser;
+    procedure SaveSalePromoGoods;
 //    procedure SaveGoodsAnalog;
 
     procedure SendZReport;
@@ -473,13 +474,15 @@ begin
       //Получение остатков по партиям
       if not gc_User.Local then SaveGoodsExpirationDate;
       //Получение выполнения плана продаж по сотруднику
-      SaveImplementationPlanEmployee;
+      if not gc_User.Local then SaveImplementationPlanEmployee;
       //Получение выполнения плана продаж по сотруднику итоги
       if not gc_User.Local then SaveImplementationPlanEmployeeUser;
+      //Получение акционных товаров
+      if not gc_User.Local then SaveSalePromoGoods;
       //Получение справочника аналогов
 //      if not gc_User.Local then SaveGoodsAnalog;
       // Отправляем логи
-      SendPickUpLogsAndDBF;
+      if not gc_User.Local then SendPickUpLogsAndDBF;
       // Отправка сообщения приложению про надобность обновить остатки из файла
       PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
       // Меняем хинт
@@ -567,6 +570,8 @@ begin   //yes
         if not gc_User.Local then SaveImplementationPlanEmployee;
         //Получение выполнения плана продаж по сотруднику итоги
         if not gc_User.Local then SaveImplementationPlanEmployeeUser;
+        //Получение акционных товаров
+        if not gc_User.Local then SaveSalePromoGoods;
         //Получение справочника аналогов
 //        if not gc_User.Local then SaveGoodsAnalog;
 
@@ -2669,6 +2674,52 @@ begin
   end;
 end;
 
+// Получение акционных товаров
+procedure TMainCashForm2.SaveSalePromoGoods;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'Получение акционных товаров';
+
+  // Ждем сервер
+  PauseUpdateRemains;
+
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_SalePromoGoods_Cash';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexSalePromoGoods');
+        WaitForSingleObject(MutexSalePromoGoods, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,SalePromoGoods_lcl);
+        finally
+          Add_Log('End MutexSalePromoGoods');
+          ReleaseMutex(MutexSalePromoGoods);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveSalePromoGoods Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
+  end;
+end;
 
 procedure TMainCashForm2.SendZReport;
   var IdFTP : Tidftp;

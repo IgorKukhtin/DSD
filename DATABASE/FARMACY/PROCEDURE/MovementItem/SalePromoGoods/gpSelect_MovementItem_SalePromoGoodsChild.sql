@@ -1,141 +1,84 @@
---- Function: gpSelect_MovementItem_SalePromoGoodsChild()
-
+-- Function: gpSelect_MovementItem_SalePromoGoods()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_SalePromoGoodsChild (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SalePromoGoodsChild(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , --
-    IN inIsErased    Boolean      , -- все
+    IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , DayCount      Integer, SummLimit     TFloat
-             , JuridicalName TVarChar
-             , RetailName    TVarChar
-             , IsChecked Boolean
-             , IsErased Boolean
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Amount TFloat, Price TFloat 
+             , isErased Boolean
               )
 AS
 $BODY$
     DECLARE vbUserId Integer;
-    DECLARE vbStatusId Integer;
+    DECLARE vbObjectId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Promo());
     vbUserId:= lpGetUserBySession (inSession);
+
+    -- поиск <Торговой сети>
+    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
     -- Результат
     IF inShowAll THEN
         -- Результат такой
         RETURN QUERY
-           WITH
-           tmpUnit AS (SELECT Object_Unit.Id AS UnitId
-                       FROM Object AS Object_Unit
-                            INNER JOIN ObjectLink AS ObjectLink_Unit_Parent
-                                                  ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
-                                                 AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
-                                                 AND ObjectLink_Unit_Parent.ChildObjectId > 0
-                            INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                                  ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
-                                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = 
-                                                     (SELECT MovementLinkObject_Retail.ObjectId FROM MovementLinkObject AS MovementLinkObject_Retail
-                                                      WHERE MovementLinkObject_Retail.MovementId = inMovementId
-                                                        AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail())                            
-                       WHERE Object_Unit.DescId = zc_Object_Unit()
-                         AND Object_Unit.isErased = inIsErased OR inIsErased = TRUE
-                       )
-         , tmpMI AS (SELECT MI_SalePromoGoods.Id             AS Id
-                          , MI_SalePromoGoods.ObjectId       AS ObjectId
-                          , MI_SalePromoGoods.Amount         AS Amount
-                          , MI_SalePromoGoods.IsErased       AS IsErased
-                          , COALESCE(MIFloat_DayCount.ValueData,0)::Integer          AS DayCount
-                          , COALESCE(MIFloat_Limit.ValueData,0)::TFloat              AS SummLimit
-                     FROM MovementItem AS MI_SalePromoGoods
-                    
-                          LEFT JOIN MovementItemFloat AS MIFloat_DayCount
-                                                      ON MIFloat_DayCount.MovementItemId =  MI_SalePromoGoods.Id
-                                                      AND MIFloat_DayCount.DescId = zc_MIFloat_DayCount()
-                          LEFT JOIN MovementItemFloat AS MIFloat_Limit
-                                                      ON MIFloat_Limit.MovementItemId =  MI_SalePromoGoods.Id
-                                                     AND MIFloat_Limit.DescId = zc_MIFloat_Limit()
+            WITH 
+                
+            MI_PromoCode AS (SELECT MI_PromoCode.Id
+                                  , MI_PromoCode.ObjectId    AS GoodsId
+                                  , MI_PromoCode.Amount
+                                  , MIFloat_Price.ValueData  AS Price
+                                  , MI_PromoCode.IsErased
+                             FROM MovementItem AS MI_PromoCode
+                             
+                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                              ON MIFloat_Price.MovementItemId =  MI_PromoCode.Id
+                                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                              
+                             WHERE MI_PromoCode.MovementId = inMovementId
+                               AND MI_PromoCode.DescId = zc_MI_Child()
+                               AND (MI_PromoCode.isErased = FALSE or inIsErased = TRUE)
+                             )
 
-                     WHERE MI_SalePromoGoods.MovementId = inMovementId
-                       AND MI_SalePromoGoods.DescId = zc_MI_Child()
-                       AND (MI_SalePromoGoods.isErased = FALSE or inIsErased = TRUE)
-                    )
-
-           SELECT COALESCE (tmpMI.Id, 0)                AS Id
-                , Object_Unit.Id                        AS UnitId
-                , Object_Unit.ObjectCode                AS UnitCode
-                , Object_Unit.ValueData                 AS UnitName
-                , tmpMI.DayCount
-                , tmpMI.SummLimit
-                , Object_Juridical.ValueData            AS JuridicalName
-                , Object_Retail.ValueData               AS RetailName
-                , CASE WHEN COALESCE (tmpMI.Amount, 0) = 1 THEN TRUE ELSE FALSE END AS IsChecked
-                , COALESCE (tmpMI.IsErased, FALSE)      AS IsErased
-           FROM tmpUnit
-
-               FULL JOIN tmpMI ON tmpMI.ObjectId = tmpUnit.UnitId
-                         
-               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE (tmpMI.ObjectId, tmpUnit.UnitId)
-
-               LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                    ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
-                                   AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
-    
-               LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                    ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
-                                   AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-               LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-           ;
+            SELECT COALESCE(MI_PromoCode.Id,0)           AS Id
+                 , Object_Goods.Id                       AS GoodsId
+                 , Object_Goods.ObjectCode               AS GoodsCode
+                 , Object_Goods.Name                     AS GoodsName
+                 , MI_PromoCode.Amount                   AS Amount
+                 , MI_PromoCode.Price                    AS Price
+                 , COALESCE(MI_PromoCode.IsErased,FALSE) AS isErased
+            FROM Object_Goods_Main AS Object_Goods
+                FULL OUTER JOIN MI_PromoCode ON MI_PromoCode.GoodsId = Object_Goods.Id
+            WHERE Object_Goods.isErased = FALSE 
+               OR MI_PromoCode.Id IS NOT NULL;
     ELSE
-    -- Результат другой
-    RETURN QUERY
-           SELECT MI_SalePromoGoods.Id
-                , Object_Unit.Id                   AS UnitId
-                , Object_Unit.ObjectCode           AS UnitCode
-                , Object_Unit.ValueData            AS UnitName
-                , COALESCE(MIFloat_DayCount.ValueData,0)::Integer          AS DayCount
-                , COALESCE(MIFloat_Limit.ValueData,0)::TFloat              AS SummLimit
-                , Object_Juridical.ValueData         AS JuridicalName
-                , Object_Retail.ValueData            AS RetailName
-                , CASE WHEN MI_SalePromoGoods.Amount = 1 THEN TRUE ELSE FALSE END AS IsChecked
-                , MI_SalePromoGoods.IsErased
-           FROM MovementItem AS MI_SalePromoGoods
+        -- Результат другой
+        RETURN QUERY
 
-               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MI_SalePromoGoods.ObjectId
-
-               LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                    ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
-                                   AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
-    
-               LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                    ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
-                                   AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-               LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-
-               LEFT JOIN MovementItemFloat AS MIFloat_DayCount
-                                           ON MIFloat_DayCount.MovementItemId =  MI_SalePromoGoods.Id
-                                           AND MIFloat_DayCount.DescId = zc_MIFloat_DayCount()
-               LEFT JOIN MovementItemFloat AS MIFloat_Limit
-                                           ON MIFloat_Limit.MovementItemId =  MI_SalePromoGoods.Id
-                                          AND MIFloat_Limit.DescId = zc_MIFloat_Limit()
-
-           WHERE MI_SalePromoGoods.MovementId = inMovementId
-             AND MI_SalePromoGoods.DescId = zc_MI_Child()
-             AND (MI_SalePromoGoods.isErased = FALSE or inIsErased = TRUE);
-    END IF;
- 
-  
+           SELECT MI_PromoCode.Id
+                , MI_PromoCode.ObjectId     AS GoodsId
+                , Object_Goods.ObjectCode   AS GoodsCode
+                , Object_Goods.Name         AS GoodsName
+                , MI_PromoCode.Amount       AS Amount
+                , MIFloat_Price.ValueData   AS Price
+                , MI_PromoCode.IsErased
+           FROM MovementItem AS MI_PromoCode
+                LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = MI_PromoCode.ObjectId  
+   
+                LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                            ON MIFloat_Price.MovementItemId =  MI_PromoCode.Id
+                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                           
+           WHERE MI_PromoCode.MovementId = inMovementId
+             AND MI_PromoCode.DescId = zc_MI_Child()
+             AND (MI_PromoCode.isErased = FALSE or inIsErased = TRUE);
+     END IF;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -147,4 +90,4 @@ $BODY$
  07.09.22                                                       *
 */
 
--- select * from gpSelect_MovementItem_SalePromoGoodsChild(inMovementId := 16406918  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3'::TVarChar);
+-- select * from gpSelect_MovementItem_SalePromoGoodsChild(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3'::TVarChar);

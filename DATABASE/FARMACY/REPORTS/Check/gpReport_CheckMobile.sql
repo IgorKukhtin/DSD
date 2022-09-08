@@ -1,6 +1,6 @@
 -- Function: gpReport_CheckMobile()
 
-DROP FUNCTION IF EXISTS gpReport_CheckMobile (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckMobile (TDateTime, TDateTime, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckMobile(
     IN inStartDate          TDateTime , --
@@ -46,7 +46,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , SummaDelivery TFloat
              , CommentCustomer TVarChar
              , isErrorRRO Boolean 
-             , isMobileApplication Boolean 
+             , isMobileApplication Boolean, isMobileFirstOrder Boolean
              , UserReferalsName TVarChar, isConfirmByPhone Boolean, DateComing TDateTime 
              , MobileDiscount TFloat, ApplicationAward TFloat, isEmployeeMessage Boolean
              , Color_UserReferals Integer
@@ -156,6 +156,8 @@ BEGIN
            , COALESCE(MovementBoolean_ErrorRRO.ValueData, False)          AS isErrorRRO
            
            , COALESCE (MovementBoolean_MobileApplication.ValueData, False)::Boolean   AS isMobileApplication
+           , COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False)::Boolean    AS isMobileFirstOrder
+           
            , Object_UserReferals.ValueData                                            AS UserReferalsName
            , COALESCE(MovementBoolean_ConfirmByPhone.ValueData, False)::Boolean      AS isConfirmByPhone
            , MovementDate_Coming.ValueData                                AS DateComing
@@ -420,6 +422,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_ConfirmByPhone
                                       ON MovementBoolean_ConfirmByPhone.MovementId = Movement_Check.Id
                                      AND MovementBoolean_ConfirmByPhone.DescId = zc_MovementBoolean_ConfirmByPhone()
+            LEFT JOIN MovementBoolean AS MovementBoolean_MobileFirstOrder
+                                      ON MovementBoolean_MobileFirstOrder.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_MobileFirstOrder.DescId = zc_MovementBoolean_MobileFirstOrder()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_UserReferals
                                          ON MovementLinkObject_UserReferals.MovementId = Movement_Check.Id
@@ -445,4 +450,6 @@ $BODY$
 -- тест
 -- 
 
-select * from gpReport_CheckMobile(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('31.08.2022')::TDateTime , inUnitId := 472116 , inIsUnComplete := 'True' , inIsErased := 'True' , inisEmployeeMessage := 'True' ,  inSession := '3');
+
+select * from gpReport_CheckMobile(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('30.09.2022')::TDateTime , inUnitId := 0 , inIsUnComplete := 'True' , inIsErased := 'True' , inisEmployeeMessage := 'False' ,  inSession := '3');
+

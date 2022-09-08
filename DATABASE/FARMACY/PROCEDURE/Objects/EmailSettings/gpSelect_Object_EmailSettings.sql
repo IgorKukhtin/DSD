@@ -37,7 +37,7 @@ BEGIN
                    LEFT JOIN ObjectLink AS ObjectLink_EmailKind
                                         ON ObjectLink_EmailKind.ObjectId = Object_Email.Id
                                        AND ObjectLink_EmailKind.DescId = zc_ObjectLink_Email_EmailKind()
-                WHERE Object_Email.DescId = zc_Object_Email()
+                WHERE Object_Email.DescId = zc_Object_Email()                
                 )
  , tmpEnumEmail AS (SELECT tmpEnum.*
                          , COALESCE (tmpEmail.EmailId, 0) AS EmailId
@@ -118,7 +118,8 @@ BEGIN
             LEFT JOIN tmpObjectEmail AS Object_EmailTools ON Object_EmailTools.Id = tmpEnumEmail.EmailToolsId
             LEFT JOIN tmpObjectEmail AS Object_Juridical ON Object_Juridical.Id = tmpObject.JuridicalId
                                     
-       WHERE tmpEnumEmail.EmailId = inEmailId OR inEmailId = 0
+       WHERE (tmpEnumEmail.EmailId = inEmailId OR inEmailId = 0)
+         AND (Object_Email.isErased = False OR inIsShowAll = TRUE)
       ;
   
 END;
@@ -138,3 +139,6 @@ $BODY$
 -- SELECT * FROM gpSelect_Object_EmailSettings (0, FALSE, '2')
 
 
+
+
+select * from gpSelect_Object_EmailSettings(inEmailId := 0 , inisShowAll := 'False' ,  inSession := '3');

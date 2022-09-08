@@ -594,11 +594,11 @@ begin
                         //IdMessage.CharSet := 'UTF-8';
 
                         //находим поставщика, который отправил на этот UserName + есть в нашем списке + время
-                        JurPos:=GetArrayList_Index_byJuridicalMail(vbArrayImportSettings, vbArrayMail[ii].UserName, IdMessage.From.Address, vbArrayMail[ii].AreaId);
+                        JurPos:=GetArrayList_Index_byJuridicalMail(vbArrayImportSettings, vbArrayMail[ii].UserName, Trim(IdMessage.From.Address), vbArrayMail[ii].AreaId);
                         //
                         if JurPos >=0
                         then PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' (' +  IntToStr(vbArrayImportSettings[JurPos].Id) + ') ' + vbArrayImportSettings[JurPos].AreaName + ' * ' + vbArrayImportSettings[JurPos].Name
-                        else PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' ' + vbArrayMail[ii].AreaName + ' * ' + IdMessage.From.Address + ' - ???';
+                        else PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' ' + vbArrayMail[ii].AreaName + ' * ' + Trim(IdMessage.From.Address) + ' - ???';
                         PanelMailFrom.Invalidate;
                         //если нашли поставщика, тогда это письмо надо загружать
                         if JurPos >= 0 then
@@ -618,7 +618,7 @@ begin
                              for j := 0 to IdMessage.MessageParts.Count - 1 do
                              begin
                                //
-                               PanelParts.Caption:= 'Parts : '+IdMessage.From.Address;
+                               PanelParts.Caption:= 'Parts : '+Trim(IdMessage.From.Address);
                                Application.ProcessMessages;
                                //если это вложенный файлик
                                if IdMessage.MessageParts[j] is TIdAttachment then

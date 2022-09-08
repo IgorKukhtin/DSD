@@ -51,6 +51,7 @@ type
     actUpdate_EmployeeMessage: TdsdExecStoredProc;
     mactUpdate_EmployeeMessage: TMultiAction;
     bbtUpdate_EmployeeMessage: TdxBarButton;
+    isMobileFirstOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public

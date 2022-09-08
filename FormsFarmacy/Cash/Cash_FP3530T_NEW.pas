@@ -285,6 +285,7 @@ end;
 
 procedure TCashFP3530T_NEW.SetTime;
 begin
+//  FPrinter.SETDT[DateTimeToStr(Now), Password];
   FPrinter.SETDT[FormatDateTime('DDMMYYHHNN', Now), Password];
   СообщениеКА(FPrinter.GETERROR)
 end;
@@ -294,7 +295,7 @@ var S : String;
 begin
   S := FPrinter.RETDT[1, Password];
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
-  S := S + '  ' + FPrinter.RETDT[0, Password];
+  S := S + ' ' + FPrinter.RETDT[0, Password];
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
 
   S := COPY(S, 1, 2) + FormatSettings.DateSeparator + COPY(S, 3, 2) +  FormatSettings.DateSeparator + '20' + COPY(S, 5, 2) + ' ' + COPY(S, 8, 2) +  FormatSettings.TimeSeparator + COPY(S, 10, 2);

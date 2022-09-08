@@ -1160,11 +1160,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementSiteBonusForm');
 
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMobileForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMobileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMobileForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMobileDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMobileDialogForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalRemainsEndDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalRemainsEndDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalRemainsEndForm'));

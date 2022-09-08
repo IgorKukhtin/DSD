@@ -26,8 +26,8 @@ type
     cxGridDBTableView1: TcxGridDBTableView;
     chJuridicalName: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    DetailDCS: TClientDataSet;
-    DetailDS: TDataSource;
+    ChildDCS: TClientDataSet;
+    ChildDS: TDataSource;
     spSelect_MovementItem_SalePromoGoodsChild: TdsdStoredProc;
     cxSplitter1: TcxSplitter;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
@@ -54,7 +54,7 @@ type
     SignDCS: TClientDataSet;
     SignDS: TDataSource;
     dsdDBViewAddOn2: TdsdDBViewAddOn;
-    spSelectPromoSalePromoGoodsSign: TdsdStoredProc;
+    spSelect_MovementItem_SalePromoGoodsSign: TdsdStoredProc;
     sgGoodsName: TcxGridDBColumn;
     bbInsertRecordPartner: TdxBarButton;
     spInsertUpdateSalePromoGoodsSign: TdsdStoredProc;
@@ -79,7 +79,7 @@ type
     cxLabel13: TcxLabel;
     edUpdateDate: TcxDateEdit;
     spErasedMISign: TdsdStoredProc;
-    sgGoodsNameCode: TcxGridDBColumn;
+    sgGoodsCode: TcxGridDBColumn;
     cxSplitter2: TcxSplitter;
     bbGoodsIsCheckedYes: TdxBarButton;
     bbGoodsIsCheckedNo: TdxBarButton;
@@ -93,13 +93,11 @@ type
     bbSignIsCheckedYes: TdxBarButton;
     Panel1: TPanel;
     Panel2: TPanel;
-    cxSplitter3: TcxSplitter;
     spSelectSalePromoGoodsInfo: TdsdStoredProc;
     MasterErased: TcxGridDBColumn;
     edEndPromo: TcxDateEdit;
     edStartPromo: TcxDateEdit;
     chIsChecked: TcxGridDBColumn;
-    dsdStoredProc1: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
     PrintTitleCDS: TClientDataSet;

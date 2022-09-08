@@ -21,7 +21,6 @@ object MainForm: TMainForm
     Height = 33
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 1040
     DesignSize = (
       1190
       33)
@@ -49,7 +48,6 @@ object MainForm: TMainForm
       EditValue = 44747d
       Properties.Kind = ckDateTime
       TabOrder = 2
-      ExplicitLeft = 883
       Width = 145
     end
     object btnDo: TButton
@@ -102,7 +100,6 @@ object MainForm: TMainForm
     Caption = 'Panel3'
     ShowCaption = False
     TabOrder = 1
-    ExplicitWidth = 1040
     object cxGridPharmOrders: TcxGrid
       Left = 1
       Top = 1
@@ -110,7 +107,6 @@ object MainForm: TMainForm
       Height = 48
       Align = alTop
       TabOrder = 0
-      ExplicitWidth = 1038
       object cxGridPharmOrdersDBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = PharmOrdersDS
@@ -249,7 +245,6 @@ object MainForm: TMainForm
       Height = 169
       Align = alClient
       TabOrder = 2
-      ExplicitWidth = 502
       object cxGridUpdateOrdersSiteMIDBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = UpdateOrdersSiteMIDS
@@ -339,7 +334,6 @@ object MainForm: TMainForm
     Height = 311
     Align = alClient
     TabOrder = 2
-    ExplicitWidth = 569
     object cxGridUpdateOrdersSiteDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = UpdateOrdersSiteDS
@@ -811,6 +805,7 @@ object MainForm: TMainForm
       DataBase.ComponentItem = 'MySQL_DataBase'
       DataBase.DataType = ftString
       DataBase.MultiSelectSeparator = ','
+      SQLParam.Value = ''
       SQLParam.DataType = ftString
       SQLParam.MultiSelectSeparator = ','
       DataSet = PharmOrderBonusesCDS
@@ -848,6 +843,84 @@ object MainForm: TMainForm
           StoredProc = spInsertUpdate_MovementSiteBonus
         end>
       Caption = 'actSite_Param'
+    end
+    object actPharmMobileFirstOrder: TdsdForeignData
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actSite_Param
+      ZConnection.ControlsCodePage = cCP_UTF16
+      ZConnection.ClientCodepage = 'utf8'
+      ZConnection.Catalog = ''
+      ZConnection.Properties.Strings = (
+        'codepage=utf8')
+      ZConnection.HostName = ''
+      ZConnection.Port = 0
+      ZConnection.Database = ''
+      ZConnection.User = ''
+      ZConnection.Password = ''
+      ZConnection.Protocol = 'mysql-5'
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'MySQL_Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'MySQL_Port'
+      PortParam.MultiSelectSeparator = ','
+      UserNameParam.Value = Null
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'MySQL_Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'MySQL_Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DataBase.Value = Null
+      DataBase.Component = FormParams
+      DataBase.ComponentItem = 'MySQL_DataBase'
+      DataBase.DataType = ftString
+      DataBase.MultiSelectSeparator = ','
+      SQLParam.Value = ''
+      SQLParam.DataType = ftString
+      SQLParam.MultiSelectSeparator = ','
+      DataSet = MobileFirstOrderCDS
+      Params = <>
+      UpdateFields = <>
+      JsonParam.Value = ''
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+        end>
+      ShowGaugeForm = False
+      Caption = #1055#1077#1088#1074#1072#1103' '#1087#1086#1082#1091#1087#1082#1072' '#1080' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+      Hint = #1055#1077#1088#1074#1072#1103' '#1087#1086#1082#1091#1087#1082#1072' '#1080' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+    end
+    object mactUpdate_MobileFirstOrder: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actSite_Param
+      ActionList = <
+        item
+          Action = actUpdate_MobileFirstOrder
+        end>
+      DataSource = MobileFirstOrderDS
+      Caption = #1055#1077#1088#1074#1072#1103' '#1087#1086#1082#1091#1087#1082#1072' '#1080' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+      Hint = #1055#1077#1088#1074#1072#1103' '#1087#1086#1082#1091#1087#1082#1072' '#1080' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+    end
+    object actUpdate_MobileFirstOrder: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MobileFirstOrder
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MobileFirstOrder
+        end>
+      Caption = 'actUpdate_MobileFirstOrder'
     end
   end
   object FormParams: TdsdFormParams
@@ -972,8 +1045,8 @@ object MainForm: TMainForm
   end
   object PharmOrderBonusesDS: TDataSource
     DataSet = PharmOrderBonusesCDS
-    Left = 1104
-    Top = 84
+    Left = 1080
+    Top = 60
   end
   object PharmOrderBonusesCDS: TClientDataSet
     Aggregates = <>
@@ -984,8 +1057,8 @@ object MainForm: TMainForm
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 976
-    Top = 84
+    Left = 936
+    Top = 60
   end
   object spInsertUpdate_MovementSiteBonus: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementSiteBonus'
@@ -1027,7 +1100,48 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 976
-    Top = 141
+    Left = 936
+    Top = 117
+  end
+  object MobileFirstOrderCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'PharmOrderBonusesCDSField1'
+      end>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 936
+    Top = 172
+  end
+  object spUpdate_MobileFirstOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_MobileFirstOrder'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MobileFirstOrderCDS
+        ComponentItem = 'pharmacy_order_id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMobileFirstOrder'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 936
+    Top = 221
+  end
+  object MobileFirstOrderDS: TDataSource
+    DataSet = MobileFirstOrderCDS
+    Left = 1088
+    Top = 172
   end
 end

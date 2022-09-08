@@ -1,13 +1,12 @@
 -- Function: gpInsertUpdate_MovementItem_SalePromoGoods()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SalePromoGoods (Integer, Integer, Integer, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SalePromoGoods (Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SalePromoGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
-    IN inIsChecked           Boolean   , -- отмечен
-    IN inComment             TVarChar  , -- примечание
+    IN inAmount              TFloat    , -- Количество
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -23,10 +22,6 @@ BEGIN
 
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-
-    -- сохранили свойство <Примечание>
-    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
-
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);

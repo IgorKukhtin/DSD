@@ -3908,8 +3908,7 @@ begin
     FormParams.ParamByName('isDiscountCommit').Value := True;
   end;
 
-  if Assigned(Cash) then CheckNumber := IntToStr(Cash.GetLastCheckId + 1);
-  if not Orders—reate1303(CheckNumber, CheckCDS) then Exit;
+  if FormParams.ParamByName('SPKindId').Value = 4823010 then if not Orders—reateCheck1303(CheckCDS) then exit;
 
   Add_Log('PutCheckToCash');
   PaidType := ptMoney;
@@ -4094,6 +4093,8 @@ begin
         UID // out AUID
         ) then
       Begin
+
+        if FormParams.ParamByName('SPKindId').Value = 4823010 then Orders—reate1303(CheckNumber);
 
         if (FormParams.ParamByName('HelsiID').Value <> '') then
         begin
@@ -8551,10 +8552,10 @@ begin
   SetTaxUnitNight;
   SetMainFormCaption;
 
-  if (Cash <> nil) and UnitConfigCDS.FieldByName('isSetDateRRO').AsBoolean then
-  begin
-    if Abs(MinutesBetween(Cash.GetTime, Now)) > 2 then Cash.SetTime;
-  end;
+//  if (Cash <> nil) and UnitConfigCDS.FieldByName('isSetDateRRO').AsBoolean then
+//  begin
+//    if Abs(MinutesBetween(Cash.GetTime, Now)) > 2 then Cash.SetTime;
+//  end;
 end;
 
 function TMainCashForm2.InitLocalStorage: Boolean;
