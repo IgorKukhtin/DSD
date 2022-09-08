@@ -10,8 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SalePromoGoods(
 )
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Comment TVarChar
-             , IsChecked Boolean
+             , Amount TFloat
              , isErased Boolean
               )
 AS
@@ -34,12 +33,8 @@ BEGIN
             MI_PromoCode AS (SELECT MI_PromoCode.Id
                                   , MI_PromoCode.ObjectId AS GoodsId
                                   , MI_PromoCode.Amount
-                                  , MIString_Comment.ValueData ::TVarChar AS Comment
                                   , MI_PromoCode.IsErased
                              FROM MovementItem AS MI_PromoCode
-                                  LEFT JOIN MovementItemString AS MIString_Comment
-                                                               ON MIString_Comment.MovementItemId = MI_PromoCode.Id
-                                                              AND MIString_Comment.DescId = zc_MIString_Comment()
                              WHERE MI_PromoCode.MovementId = inMovementId
                                AND MI_PromoCode.DescId = zc_MI_Master()
                                AND (MI_PromoCode.isErased = FALSE or inIsErased = TRUE)
@@ -49,8 +44,7 @@ BEGIN
                  , Object_Goods.Id                       AS GoodsId
                  , Object_Goods.ObjectCode               AS GoodsCode
                  , Object_Goods.Name                     AS GoodsName
-                 , COALESCE (MI_PromoCode.Comment, '') :: TVarChar AS Comment
-                 , CASE WHEN MI_PromoCode.Amount = 1 THEN TRUE ELSE FALSE END AS IsChecked
+                 , MI_PromoCode.Amount                   AS Amount
                  , COALESCE(MI_PromoCode.IsErased,FALSE) AS isErased
             FROM Object_Goods_Main AS Object_Goods
                 FULL OUTER JOIN MI_PromoCode ON MI_PromoCode.GoodsId = Object_Goods.Id
@@ -64,15 +58,11 @@ BEGIN
                 , MI_PromoCode.ObjectId     AS GoodsId
                 , Object_Goods.ObjectCode   AS GoodsCode
                 , Object_Goods.Name         AS GoodsName
-                , MIString_Comment.ValueData ::TVarChar AS Comment
-                , CASE WHEN MI_PromoCode.Amount = 1 THEN TRUE ELSE FALSE END AS IsChecked
+                , MI_PromoCode.Amount       AS Amount
                 , MI_PromoCode.IsErased
            FROM MovementItem AS MI_PromoCode
                 LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = MI_PromoCode.ObjectId  
    
-                LEFT JOIN MovementItemString AS MIString_Comment
-                                             ON MIString_Comment.MovementItemId = MI_PromoCode.Id
-                                            AND MIString_Comment.DescId = zc_MIString_Comment()                                    
            WHERE MI_PromoCode.MovementId = inMovementId
              AND MI_PromoCode.DescId = zc_MI_Master()
              AND (MI_PromoCode.isErased = FALSE or inIsErased = TRUE);
@@ -88,4 +78,4 @@ $BODY$
  07.09.22                                                       *
 */
 
--- select * from gpSelect_MovementItem_SalePromoGoods(inMovementId := 0 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3'::TVarChar);
+-- select * from gpSelect_MovementItem_SalePromoGoods(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3'::TVarChar);

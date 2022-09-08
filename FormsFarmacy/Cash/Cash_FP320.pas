@@ -319,7 +319,7 @@ begin
   pData := 1;
   pString := Password + ';';
   FPrinter.DirectIO($21, pData, pString);
-  S := S + '  ' + FPrinter.ReservedWord;
+  S := S + ' ' + FPrinter.ReservedWord;
 
   S := COPY(S, 1, 2) + FormatSettings.DateSeparator + COPY(S, 3, 2) +  FormatSettings.DateSeparator + '20' + COPY(S, 5, 2) + ' ' + COPY(S, 8, 2) +  FormatSettings.TimeSeparator + COPY(S, 10, 2);
   Result := StrToDateTime(S);

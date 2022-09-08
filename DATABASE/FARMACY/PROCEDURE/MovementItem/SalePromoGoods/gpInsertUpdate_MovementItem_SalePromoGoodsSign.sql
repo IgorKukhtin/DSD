@@ -1,11 +1,12 @@
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SalePromoGoodsSign (Integer, Integer, TVarChar, TFloat, TVarChar, TVarChar);
+-- Function: gpInsertUpdate_MovementItem_SalePromoGoodsSign()
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SalePromoGoodsSign (Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SalePromoGoodsSign(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGUID                TVarChar  , -- Подразделение
-    IN inSumm                TFloat    , -- Лимит суммы скидки в день для аптеки
-    IN inComment             TVarChar  , -- Примечание
+    IN inUnitId              Integer   , -- Подразделение
+    IN inIsChecked           Boolean   , -- отмечен
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -20,13 +21,8 @@ BEGIN
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), 0, inMovementId, inSumm, NULL);
-    
-    -- сохранили свойство <Примечание>
-    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
-
-
-     
+    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, (CASE WHEN inIsChecked = TRUE THEN 1 ELSE 0 END) ::TFloat, NULL);
+         
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
@@ -38,5 +34,5 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 05.10.20                                                       *
+ 07.09.22                                                       *
 */

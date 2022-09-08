@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EmailKindId Integer, EmailKindName TVarChar
              , ErrorTo TVarChar
              , AreaId Integer, AreaName TVarChar
+             , isErased boolean
                ) AS
 $BODY$
 BEGIN
@@ -24,6 +25,7 @@ BEGIN
         , ObjectString_ErrorTo.ValueData  AS ErrorTo
         , Object_Area.Id              AS AreaId
         , Object_Area.ValueData       AS AreaName
+        , Object_Email.isErased       AS isErased
    FROM Object AS Object_Email
       LEFT JOIN ObjectLink AS ObjectLink_EmailKind
                            ON ObjectLink_EmailKind.ObjectId = Object_Email.Id

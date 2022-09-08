@@ -1,31 +1,30 @@
 inherited SalePromoGoodsForm: TSalePromoGoodsForm
   Caption = #1054#1090#1087#1091#1089#1082' '#1072#1082#1094#1080#1086#1085#1085#1099#1093' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 658
-  ClientWidth = 958
+  ClientWidth = 918
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 974
+  ExplicitWidth = 934
   ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 958
+    Width = 918
     Height = 543
     ExplicitTop = 115
-    ExplicitWidth = 958
+    ExplicitWidth = 918
     ExplicitHeight = 543
     ClientRectBottom = 543
-    ClientRectRight = 958
+    ClientRectRight = 918
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 958
+      ExplicitWidth = 918
       ExplicitHeight = 519
       inherited cxGrid: TcxGrid
-        Width = 486
+        Width = 446
         Height = 519
-        ExplicitWidth = 486
+        ExplicitWidth = 446
         ExplicitHeight = 519
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.DataSource = SignDS
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00; -,0.00; ;'
@@ -34,6 +33,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -43,9 +43,9 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object sgGoodsNameCode: TcxGridDBColumn
+          object sgGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'UpdateName'
+            DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -57,7 +57,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 305
+            Width = 262
           end
           object sqAmount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
@@ -71,7 +71,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 486
+        Left = 446
         Top = 0
         Width = 8
         Height = 519
@@ -81,7 +81,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Control = Panel1
       end
       object Panel1: TPanel
-        Left = 494
+        Left = 454
         Top = 0
         Width = 464
         Height = 519
@@ -93,7 +93,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         object Panel2: TPanel
           Left = 0
           Top = 0
-          Width = 456
+          Width = 464
           Height = 519
           Align = alClient
           BevelOuter = bvNone
@@ -103,14 +103,14 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           object cxGrid1: TcxGrid
             Left = 0
             Top = 288
-            Width = 456
+            Width = 464
             Height = 231
             Align = alBottom
             PopupMenu = PopupMenu
             TabOrder = 0
             object cxGridDBTableView1: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
-              DataController.DataSource = DetailDS
+              DataController.DataSource = SignDS
               DataController.Filter.Options = [fcoCaseInsensitive]
               DataController.Summary.DefaultGroupSummaryItems = <>
               DataController.Summary.FooterSummaryItems = <>
@@ -138,7 +138,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
-                Width = 43
+                Width = 45
               end
               object chUnitCode: TcxGridDBColumn
                 Caption = #1050#1086#1076
@@ -146,15 +146,15 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 32
+                Width = 34
               end
               object chUnitName: TcxGridDBColumn
-                Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+                Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1077#1089#1083#1080' '#1085#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1086' '#1090#1086' '#1074#1089#1077' '#1072#1087#1090#1077#1082#1080')'
                 DataBinding.FieldName = 'UnitName'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 197
+                Width = 205
               end
               object chJuridicalName: TcxGridDBColumn
                 Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1072#1087#1090#1077#1082#1080')'
@@ -162,7 +162,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 80
+                Width = 97
               end
               object chRetailName: TcxGridDBColumn
                 Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
@@ -170,7 +170,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 99
+                Width = 69
               end
               object IsErased: TcxGridDBColumn
                 Caption = #1059#1076#1072#1083#1077#1085
@@ -189,14 +189,14 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           object cxGrid2: TcxGrid
             Left = 0
             Top = 0
-            Width = 456
+            Width = 464
             Height = 280
             Align = alClient
             PopupMenu = PopupMenu
             TabOrder = 1
             object cxGridDBTableView2: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
-              DataController.DataSource = MasterDS
+              DataController.DataSource = ChildDS
               DataController.Summary.DefaultGroupSummaryItems = <>
               DataController.Summary.FooterSummaryItems = <>
               DataController.Summary.SummaryGroups = <>
@@ -240,7 +240,6 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
                 Properties.DisplayFormat = ',0.000;-,0.000; ;'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                Options.Editing = False
                 Width = 78
               end
               object MasterPrice: TcxGridDBColumn
@@ -260,7 +259,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           object cxSplitter2: TcxSplitter
             Left = 0
             Top = 280
-            Width = 456
+            Width = 464
             Height = 8
             Touch.ParentTabletOptions = False
             Touch.TabletOptions = [toPressAndHold]
@@ -268,23 +267,14 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
             Control = cxGrid1
           end
         end
-        object cxSplitter3: TcxSplitter
-          Left = 456
-          Top = 0
-          Width = 8
-          Height = 519
-          Touch.ParentTabletOptions = False
-          Touch.TabletOptions = [toPressAndHold]
-          AlignSplitter = salRight
-        end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 958
+    Width = 918
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 958
+    ExplicitWidth = 918
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -489,10 +479,10 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     object actRefreshSalePromoGoodsSign: TdsdDataSetRefresh [4]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPromoSalePromoGoodsSign
+      StoredProc = spSelect_MovementItem_SalePromoGoodsSign
       StoredProcList = <
         item
-          StoredProc = spSelectPromoSalePromoGoodsSign
+          StoredProc = spSelect_MovementItem_SalePromoGoodsSign
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -506,10 +496,10 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           StoredProc = spGet
         end
         item
-          StoredProc = spSelectPromoSalePromoGoodsSign
+          StoredProc = spSelect
         end
         item
-          StoredProc = spSelect
+          StoredProc = spSelect_MovementItem_SalePromoGoodsSign
         end
         item
           StoredProc = spSelect_MovementItem_SalePromoGoodsChild
@@ -547,7 +537,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DetailDS
+      DataSource = ChildDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
     object actSetUnErasedSalePromoGoodsSign: TdsdUpdateErased [10]
@@ -583,7 +573,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DetailDS
+      DataSource = ChildDS
     end
     inherited actShowErased: TBooleanStoredProcAction
       StoredProcList = <
@@ -591,7 +581,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelectPromoSalePromoGoodsSign
+          StoredProc = spSelect_MovementItem_SalePromoGoodsSign
         end>
     end
     inherited actShowAll: TBooleanStoredProcAction
@@ -601,19 +591,18 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         end
         item
           StoredProc = spSelect_MovementItem_SalePromoGoodsChild
+        end
+        item
+          StoredProc = spSelect_MovementItem_SalePromoGoodsSign
         end>
     end
-    object dsdUpdateSignDS: TdsdUpdateDataSet [16]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateSalePromoGoodsSign
+    inherited actUpdateMainDS: TdsdUpdateDataSet
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateSalePromoGoodsSign
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
         end>
-      Caption = 'actUpdateSignDS'
-      DataSource = SignDS
     end
     object actUpdateChildDS: TdsdUpdateDataSet [17]
       Category = 'DSDLib'
@@ -628,9 +617,21 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           StoredProc = spGetTotalSumm
         end>
       Caption = 'actUpdateChildDS'
-      DataSource = DetailDS
+      DataSource = ChildDS
     end
-    object actDoLoad: TExecuteImportSettingsAction [18]
+    object dsdUpdateSignDS: TdsdUpdateDataSet [18]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateSalePromoGoodsSign
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateSalePromoGoodsSign
+        end>
+      Caption = 'actUpdateSignDS'
+      DataSource = SignDS
+    end
+    object actDoLoad: TExecuteImportSettingsAction [19]
       Category = 'Load'
       MoveParams = <>
       ImportSettingsId.Value = '0'
@@ -644,14 +645,6 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
-        end>
-    end
-    inherited actUpdateMainDS: TdsdUpdateDataSet
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIMaster
-        end
-        item
         end>
     end
     inherited actPrint: TdsdPrintAction
@@ -683,14 +676,14 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         item
           Name = 'key'
           Value = Null
-          Component = DetailDCS
+          Component = ChildDCS
           ComponentItem = 'ObjectId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = DetailDCS
+          Component = ChildDCS
           ComponentItem = 'ObjectName'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -698,7 +691,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         item
           Name = 'DescName'
           Value = Null
-          Component = DetailDCS
+          Component = ChildDCS
           ComponentItem = 'DescName'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -777,18 +770,6 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbSetErasedPromoPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedPromoPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -806,6 +787,18 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         item
           Visible = True
           ItemName = 'bbMISetUnErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedPromoPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedPromoPartner'
         end
         item
           Visible = True
@@ -1332,37 +1325,10 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMonthCount'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inComment'
         Value = Null
         Component = edComment
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisElectron'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSummRepay'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountPresent'
-        Value = Null
-        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1431,57 +1397,14 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_SalePromoGoods'
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsChecked'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'IsChecked'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 328
-    Top = 360
+    Left = 128
+    Top = 408
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 944
-    Top = 192
+    Left = 96
+    Top = 488
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_TotalSumm'
@@ -1533,24 +1456,24 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     Left = 396
     Top = 249
   end
-  object DetailDCS: TClientDataSet
+  object ChildDCS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 32
-    Top = 392
+    Left = 576
+    Top = 336
   end
-  object DetailDS: TDataSource
-    DataSet = DetailDCS
-    Left = 88
-    Top = 408
+  object ChildDS: TDataSource
+    DataSet = ChildDCS
+    Left = 632
+    Top = 352
   end
   object spSelect_MovementItem_SalePromoGoodsChild: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_SalePromoGoodsChild'
-    DataSet = DetailDCS
+    DataSet = ChildDCS
     DataSets = <
       item
-        DataSet = DetailDCS
+        DataSet = ChildDCS
       end>
     Params = <
       item
@@ -1578,8 +1501,8 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 520
-    Top = 432
+    Left = 552
+    Top = 296
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1615,7 +1538,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       item
         Name = 'ioId'
         Value = Null
-        Component = DetailDCS
+        Component = ChildDCS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -1629,27 +1552,36 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
+        Name = 'inGoodsId'
         Value = Null
-        Component = DetailDCS
-        ComponentItem = 'UnitId'
+        Component = ChildDCS
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsChecked'
+        Name = 'inAmount'
         Value = Null
-        Component = DetailDCS
-        ComponentItem = 'IsChecked'
-        DataType = ftBoolean
+        Component = ChildDCS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = ChildDCS
+        ComponentItem = 'Price'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 520
-    Top = 504
+    Left = 824
+    Top = 200
   end
   object spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -1659,7 +1591,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       item
         Name = 'inMovementItemId'
         Value = Null
-        Component = DetailDCS
+        Component = ChildDCS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1667,7 +1599,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       item
         Name = 'outIsErased'
         Value = Null
-        Component = DetailDCS
+        Component = ChildDCS
         ComponentItem = 'isErased'
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1684,7 +1616,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       item
         Name = 'inMovementItemId'
         Value = Null
-        Component = DetailDCS
+        Component = ChildDCS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1692,7 +1624,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       item
         Name = 'outIsErased'
         Value = Null
-        Component = DetailDCS
+        Component = ChildDCS
         ComponentItem = 'isErased'
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1737,13 +1669,13 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 56
-    Top = 496
+    Left = 544
+    Top = 576
   end
   object SignDS: TDataSource
     DataSet = SignDCS
-    Left = 104
-    Top = 512
+    Left = 616
+    Top = 576
   end
   object dsdDBViewAddOn2: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1771,7 +1703,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     Left = 758
     Top = 273
   end
-  object spSelectPromoSalePromoGoodsSign: TdsdStoredProc
+  object spSelect_MovementItem_SalePromoGoodsSign: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_SalePromoGoodsSign'
     DataSet = SignDCS
     DataSets = <
@@ -1788,6 +1720,14 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -1796,8 +1736,8 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 208
-    Top = 448
+    Left = 552
+    Top = 512
   end
   object spInsertUpdateSalePromoGoodsSign: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_SalePromoGoodsSign'
@@ -1821,37 +1761,27 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGUID'
+        Name = 'inUnitId'
         Value = Null
         Component = SignDCS
-        ComponentItem = 'GUID'
-        DataType = ftString
+        ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSumm'
+        Name = 'inIsChecked'
         Value = Null
         Component = SignDCS
-        ComponentItem = 'Summ'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = SignDCS
-        ComponentItem = 'Comment'
-        DataType = ftString
+        ComponentItem = 'IsChecked'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 344
-    Top = 496
+    Left = 824
+    Top = 544
   end
   object spUpErasedMISign: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'
@@ -1988,26 +1918,8 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 992
-    Top = 288
-  end
-  object dsdStoredProc1: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_SalePromoGoodsSecond'
-    DataSets = <
-      item
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1008
-    Top = 416
+    Left = 376
+    Top = 392
   end
   object PrintTitleCDS: TClientDataSet
     Aggregates = <>

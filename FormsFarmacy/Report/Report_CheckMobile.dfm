@@ -493,6 +493,13 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
             Options.Editing = False
             Width = 60
           end
+          object isMobileFirstOrder: TcxGridDBColumn
+            Caption = #1055#1077#1088#1074#1072#1103' '#1087#1086#1082#1091#1087#1082#1072
+            DataBinding.FieldName = 'isMobileFirstOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 62
+          end
         end
       end
     end

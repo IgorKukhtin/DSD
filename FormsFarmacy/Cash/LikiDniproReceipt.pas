@@ -82,7 +82,8 @@ type
 
 function GetReceipt1303(var AReceipt : String) : boolean;
 function ClearReceipt1303 : boolean;
-function OrdersСreate1303(const CheckNumber : String; const CheckCDS: TClientDataSet) : boolean;
+function OrdersСreateCheck1303(const CheckCDS: TClientDataSet) : boolean;
+function OrdersСreate1303(const CheckNumber : String) : boolean;
 function CheckLikiDniproReceipt_Number(var ANumber : string) : boolean;
 
 var LikiDniproReceiptApi : TLikiDniproReceiptApi;
@@ -580,7 +581,7 @@ begin
 
 end;
 
-function OrdersСreate1303(const CheckNumber : String; const CheckCDS: TClientDataSet) : boolean;
+function OrdersСreateCheck1303(const CheckCDS: TClientDataSet) : boolean;
   var sp : TdsdStoredProc; cResult: String;
 begin
   Result := True;
@@ -589,7 +590,6 @@ begin
   if LikiDniproReceiptApi.Recipe.FRecipe_Type <> 2 then Exit;
 
   Result := False;
-  LikiDniproReceiptApi.FPharmacy_Order_Id := CheckNumber;
 
   if (CheckCDS.RecordCount <> 1) then
   begin
@@ -600,7 +600,7 @@ begin
 
   if not ShowPUSHMessageCash('Провести продажу по соц. проекту 1303 на сумму ' + CheckCDS.FieldByName('Summ').AsString + ' грн.?', cResult) then Exit;
 
-  // Получаес датасет с партиями
+//  Получаес датасет с партиями
 
   sp := TdsdStoredProc.Create(nil);
   try
@@ -630,8 +630,21 @@ begin
     Exit;
   end;
 
-  Result := LikiDniproReceiptApi.OrdersСreate;
+  Result := True;
 
+end;
+
+function OrdersСreate1303(const CheckNumber : String) : boolean;
+begin
+  Result := True;
+
+  if not Assigned(LikiDniproReceiptApi) then Exit;
+  if LikiDniproReceiptApi.Recipe.FRecipe_Type <> 2 then Exit;
+
+  Result := False;
+  LikiDniproReceiptApi.FPharmacy_Order_Id := CheckNumber;
+
+  Result := LikiDniproReceiptApi.OrdersСreate;
 end;
 
 initialization

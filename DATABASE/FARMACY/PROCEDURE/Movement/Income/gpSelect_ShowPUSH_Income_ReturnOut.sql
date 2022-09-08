@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ShowPUSH_Income_ReturnOut(
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbText  TVarChar;
+   DECLARE vbText  Text;
 BEGIN
 
     outShowMessage      := False;
@@ -75,4 +75,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- 
-SELECT * FROM gpSelect_ShowPUSH_Income_ReturnOut(29092124, '3')
+SELECT * FROM gpSelect_ShowPUSH_Income_ReturnOut(23653669, '3')

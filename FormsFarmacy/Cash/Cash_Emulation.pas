@@ -131,6 +131,7 @@ function TCashEmulation.CloseReceiptEx(out CheckId: String): boolean;
 begin
   result := True;
   FPrinter.FSummaCheck := 0;
+  CheckId := '1211';
 //  CheckId := FPrinter.CLOSEFISKCHECK[1, Password];
 end;
 

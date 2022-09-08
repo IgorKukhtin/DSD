@@ -49,6 +49,7 @@ function DistributionPromo_lcl: String;
 function ImplementationPlanEmployee_lcl: String;
 function ZReportLog_lcl: String;
 function ImplementationPlanEmployeeUser_lcl: String;
+function SalePromoGoods_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String; AShowError : Boolean = True);
@@ -67,7 +68,8 @@ var
   MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
   MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate,
   MutexGoodsAnalog, MutexUserHelsi, MutexUserLikiDnipro, MutexEmployeeSchedule, MutexBuyer, MutexDistributionPromo,
-  MutexImplementationPlanEmployee, MutexZReportLog, MutexLog, MutexImplementationPlanEmployeeUser : THandle;
+  MutexImplementationPlanEmployee, MutexZReportLog, MutexLog, MutexImplementationPlanEmployeeUser,
+  MutexSalePromoGoods : THandle;
 
 implementation
 
@@ -217,6 +219,11 @@ End;
 function ImplementationPlanEmployeeUser_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'ImplementationPlanEmployeeUser.local';
+End;
+
+function SalePromoGoods_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'SalePromoGoods.local';
 End;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
@@ -520,6 +527,8 @@ begin
   LastErr := GetLastError;
   MutexImplementationPlanEmployeeUser := CreateMutex(nil, false, 'farmacycashMutexImplementationPlanEmployeeUser');
   LastErr := GetLastError;
+  MutexSalePromoGoods := CreateMutex(nil, false, 'farmacycashMutexMutexSalePromoGoods');
+  LastErr := GetLastError;
 end;
 
 procedure CloseMutex;
@@ -548,6 +557,7 @@ begin
  CloseHandle(MutexZReportLog);
  CloseHandle(MutexLog);
  CloseHandle(MutexImplementationPlanEmployeeUser);
+ CloseHandle(MutexSalePromoGoods);
 end;
 
 

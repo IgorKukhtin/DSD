@@ -108,6 +108,12 @@ type
     btnInsertUpdate_MovementSiteBonus: TButton;
     mactInsertUpdate_MovementSiteBonus: TMultiAction;
     actInsertUpdate_MovementSiteBonus: TdsdExecStoredProc;
+    MobileFirstOrderCDS: TClientDataSet;
+    spUpdate_MobileFirstOrder: TdsdStoredProc;
+    actPharmMobileFirstOrder: TdsdForeignData;
+    mactUpdate_MobileFirstOrder: TMultiAction;
+    actUpdate_MobileFirstOrder: TdsdExecStoredProc;
+    MobileFirstOrderDS: TDataSource;
     procedure btnAllClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -180,7 +186,7 @@ procedure TMainForm.btnAllClick(Sender: TObject);
 var ini: TIniFile; DateStart : TDateTime;
 begin
   Add_Log('-----------------');
-  Add_Log('Запуск обработки заазов.'#13#10);
+  Add_Log('Запуск обработки заазов.');
 
   DateStart := Now;
 
@@ -189,6 +195,10 @@ begin
   Add_Log('Загрузка бонусов.');
 
   if actPharmOrderBonuses.Execute then mactInsertUpdate_MovementSiteBonus.Execute;
+
+  Add_Log('Загрузка "Первая покупка мобильном приложением".');
+
+  if actPharmMobileFirstOrder.Execute then mactUpdate_MobileFirstOrder.Execute;
 
   Add_Log('Выполнено.');
 
@@ -228,6 +238,10 @@ begin
                                          'from pharm_orders '#13 +
                                          'where pharm_orders.user_id is not Null and pharm_orders.bonus_used <> 0 and pharm_orders.created_at > CURRENT_DATE() - 10) AS T1 '#13 +
                                          'GROUP BY T1.pharmacy_order_id';
+
+  actPharmMobileFirstOrder.SQLParam.Value := 'select pharm_orders.pharmacy_order_id '#13 +
+                                             'from pharm_orders'#13 +
+                                             'where pharm_orders.promo_code = ''MOBILE-FIRST-ORDER'' and pharm_orders.created_at > CURRENT_DATE() - 1';
 
   if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
   begin

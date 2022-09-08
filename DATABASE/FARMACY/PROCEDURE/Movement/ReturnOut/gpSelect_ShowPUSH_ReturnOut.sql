@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ShowPUSH_ReturnOut(
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbText  TVarChar;
+   DECLARE vbText  Text;
 BEGIN
 
     outShowMessage := False;

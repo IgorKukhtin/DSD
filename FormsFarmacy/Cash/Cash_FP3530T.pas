@@ -300,7 +300,7 @@ procedure TCashFP3530T.SetTime;
 begin
  status:= 0;
 
- GetDateTime(0,PrinterResults, 0);
+ SetDateTime(0,PrinterResults, 0, PAnsiChar(AnsiString(FormatDateTime('dd-mm-yy', Now))), PAnsiChar(AnsiString(FormatDateTime('hh:nn:ss', Now))));
  while s=0 do Application.ProcessMessages;
 
  s:=0;
@@ -313,8 +313,8 @@ function TCashFP3530T.GetTime : TDateTime;
 begin
  status:= 0;
 
- SetDateTime(0,PrinterResults, 0, PAnsiChar(AnsiString(FormatDateTime('dd-mm-yy', Now))), PAnsiChar(AnsiString(FormatDateTime('hh:nn:ss', Now))));
- while s=0 do Application.ProcessMessages;
+  GetDateTime(0,PrinterResults, 0);
+  while s=0 do Application.ProcessMessages;
 
   S1 := Unit_rt.RetItem[1] + ' ' + Unit_rt.RetItem[2];
   S1 := StringReplace(S1, '-', FormatSettings.DateSeparator, [rfReplaceAll]);
