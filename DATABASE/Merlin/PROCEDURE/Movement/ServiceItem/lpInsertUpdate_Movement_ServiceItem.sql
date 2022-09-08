@@ -24,6 +24,10 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- if COALESCE (ioId, 0) = 0 then RAISE EXCEPTION 'Ошибка.insert. <%> <%> <%>', lfGet_Object_ValueData_sh (inUnitId), lfGet_Object_ValueData_sh (inInfoMoneyId), zfConvert_DateToString (inOperDate); END IF;
+     
+     -- замена
+     inOperDate:= zfCalc_Month_end (inOperDate);
+
 
      -- Проверка
      /*IF inOperDate > CURRENT_DATE

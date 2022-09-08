@@ -101,6 +101,22 @@ BEGIN
                         ;
      END IF;
 
+     -- проверка
+     IF EXISTS (SELECT 1 FROM _tmpMovement_Service GROUP BY _tmpMovement_Service.OperDate, _tmpMovement_Service.UnitId, _tmpMovement_Service.InfoMoneyId HAVING COUNT(*) > 1)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нельзя ввести несколько дополнений за 1 месяц.%Найдено несколько для%Отдел = <%>%Месяц = <%>%Статья = <%>.'
+                       , CHR (13)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh ((SELECT tmp.UnitId FROM (SELECT tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId FROM _tmpMovement_Service AS tmp GROUP BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId HAVING COUNT(*) > 1) AS tmp
+                                                     ORDER BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId LIMIT 1))
+                       , CHR (13)
+                       , zfConvert_DateToString ((SELECT tmp.OperDate FROM (SELECT tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId FROM _tmpMovement_Service AS tmp GROUP BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId HAVING COUNT(*) > 1) AS tmp
+                                                     ORDER BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId LIMIT 1))
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh ((SELECT tmp.InfoMoneyId FROM (SELECT tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId FROM _tmpMovement_Service AS tmp GROUP BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId HAVING COUNT(*) > 1) AS tmp
+                                                     ORDER BY tmp.OperDate, tmp.UnitId, tmp.InfoMoneyId LIMIT 1))
+                        ;
+     END IF;
 
 
      -- Заливаем данные в начисления
