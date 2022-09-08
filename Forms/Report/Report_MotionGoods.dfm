@@ -2616,6 +2616,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     TabOrder = 8
     Width = 102
   end
+  object cbCount: TcxCheckBox
+    Left = 417
+    Top = 87
+    Caption = #1087#1077#1095#1072#1090#1100' '#1073#1072#1090#1086#1085#1099
+    Properties.ReadOnly = False
+    TabOrder = 9
+    Width = 102
+  end
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 48
@@ -4718,8 +4726,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 424
-    Top = 85
+    Left = 376
+    Top = 157
   end
   object FormParams: TdsdFormParams
     Params = <

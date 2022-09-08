@@ -231,6 +231,7 @@ type
     CountSendOnPriceOut_10900: TcxGridDBColumn;
     SummSendOnPriceOut_10900: TcxGridDBColumn;
     CountSendOnPriceOut_10900_W: TcxGridDBColumn;
+    cbCount: TcxCheckBox;
   private
   public
   end;

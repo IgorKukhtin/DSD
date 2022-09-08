@@ -89,6 +89,10 @@ type
     spInsert_Movement_Service: TdsdStoredProc;
     actInsert_Movement_Service: TdsdExecStoredProc;
     bbInsert_Movement_Service: TdxBarButton;
+    actOpenServiceItem_history: TdsdOpenForm;
+    actOpenServiceItemAdd_history: TdsdOpenForm;
+    bbOpenServiceItem_history: TdxBarButton;
+    bbOpenServiceItemAdd_history: TdxBarButton;
   private
   public
   end;
