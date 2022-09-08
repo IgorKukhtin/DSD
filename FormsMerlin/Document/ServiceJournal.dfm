@@ -5,7 +5,6 @@ inherited ServiceJournalForm: TServiceJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -9
   ExplicitWidth = 1044
   ExplicitHeight = 370
   PixelsPerInch = 96
@@ -71,7 +70,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 121
+            Width = 55
           end
           inherited colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
@@ -113,7 +112,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 149
+            Width = 120
           end
           object Amount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -136,25 +135,24 @@ inherited ServiceJournalForm: TServiceJournalForm
             Width = 33
           end
           object InfoMoneyName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+            Caption = #1057#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 197
+            Width = 120
           end
           object CommentInfoMoneyName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'CommentInfoMoneyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 198
+            Width = 80
           end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
@@ -164,7 +162,6 @@ inherited ServiceJournalForm: TServiceJournalForm
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
@@ -174,7 +171,6 @@ inherited ServiceJournalForm: TServiceJournalForm
           object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
@@ -184,7 +180,6 @@ inherited ServiceJournalForm: TServiceJournalForm
           object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
@@ -574,6 +569,7 @@ inherited ServiceJournalForm: TServiceJournalForm
     object macStartLoad: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actGetImportSetting
@@ -589,7 +585,6 @@ inherited ServiceJournalForm: TServiceJournalForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1080#1079' '#1092#1072#1081#1083#1072
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
-      WithoutNext = True
     end
     object macInsert_byServiceItemAdd: TMultiAction
       Category = 'Insert'
@@ -606,7 +601,7 @@ inherited ServiceJournalForm: TServiceJournalForm
         ' '#1072#1088#1077#1085#1076#1099'?'
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100'/'#1076#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1059#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100'/'#1076#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1059#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099
-      ImageIndex = 48
+      ImageIndex = 68
     end
     object actInsert_byServiceItemAdd: TdsdExecStoredProc
       Category = 'Insert'
@@ -625,7 +620,7 @@ inherited ServiceJournalForm: TServiceJournalForm
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
-      ImageIndex = 28
+      ImageIndex = 47
       FormName = 'TServiceItemJournal_historyForm'
       FormNameParam.Value = 'TServiceItemJournal_historyForm'
       FormNameParam.DataType = ftString
@@ -676,7 +671,7 @@ inherited ServiceJournalForm: TServiceJournalForm
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
-      ImageIndex = 28
+      ImageIndex = 48
       FormName = 'TServiceItemAddJournal_historyForm'
       FormNameParam.Value = 'TServiceItemAddJournal_historyForm'
       FormNameParam.DataType = ftString
@@ -747,7 +742,7 @@ inherited ServiceJournalForm: TServiceJournalForm
       QuestionBeforeExecute = #1054#1073#1085#1086#1074#1080#1090#1100'/'#1076#1086#1073#1072#1074#1080#1090#1100' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'?'
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100'/'#1076#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1059#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100'/'#1076#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099
-      ImageIndex = 47
+      ImageIndex = 49
     end
   end
   inherited MasterDS: TDataSource
@@ -890,11 +885,19 @@ inherited ServiceJournalForm: TServiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert_byServiceItem'
         end
         item
           Visible = True
           ItemName = 'bbInsert_byServiceItemAdd'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

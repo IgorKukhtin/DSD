@@ -32,9 +32,9 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Статья>.';
      END IF;
 
-     --переопределяем Нач. дата всегда 1 число месяца, конечная  - последнее
-     inDateStart := DATE_TRUNC ('Month',inDateStart);
-     inDateEnd   := DATE_TRUNC ('Month',inDateEnd + INTERVAL '1 Month') - INTERVAL '1 DAY';
+     -- переопределяем Нач. дата всегда 1 число месяца, конечная  - последнее
+     inDateStart := zfCalc_Month_start (inDateStart);
+     inDateEnd   := zfCalc_Month_start (inDateEnd);
      
      -- проверка для ServiceItemAdd
      IF (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId) = zc_Movement_ServiceItemAdd()
