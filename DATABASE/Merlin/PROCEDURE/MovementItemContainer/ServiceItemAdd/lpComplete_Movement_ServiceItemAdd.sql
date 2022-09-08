@@ -169,5 +169,42 @@ $BODY$
  01.06.22         *
 */
 
+/*
+-- Нельзя ввести несколько дополнений за 1 месяц
+with tmpListDate AS (SELECT GENERATE_SERIES ('01.01.2010'
+                                               , '01.01.2025'
+                                               , '1 MONTH' :: INTERVAL
+                                                ) AS OperDate
+                        )
+      , tmpMovement AS (SELECT *
+                                FROM Movement_ServiceItemAdd_View as Movement
+                                WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                                  and Movement.isErased = false
+                               )
+, tmp1 as (select tmpListDate.OperDate, UnitId, UnitName, UnitGroupNameFull, InfoMoneyId, InfoMoneyName, MovementId, InvNumber, tmpMovement.OperDate AS OperDate_mov, MovementItemId
+from tmpListDate
+join tmpMovement on tmpListDate.OperDate between tmpMovement.DateStart and tmpMovement.DateEnd
+)
+
+, t as (
+select tmp1 .OperDate, tmp1 .UnitId, tmp1 .UnitName, tmp1 .UnitGroupNameFull, tmp1 .InfoMoneyId, tmp1 .InfoMoneyName, tmp1 .MovementId, tmp1 .InvNumber, tmp1 .OperDate_mov, min (tmp1 .MovementItemId), max (tmp1 .MovementItemId)
+, tmp11.OperDate_mov as a2 , tmp1.OperDate_mov as a1
+from tmp1 
+left join tmp1  as tmp11 ON tmp11.OperDate = tmp1.OperDate
+                        and tmp11.UnitId = tmp1.UnitId
+                        and tmp11.InfoMoneyId = tmp1.InfoMoneyId
+                        and tmp11.OperDate_mov > tmp1.OperDate_mov
+-- and 1=0
+-- where tmp11.UnitId is not null
+ where tmp11.UnitId is  null
+--and tmp1 .MovementId = 294334 
+group by tmp1 .OperDate, tmp1 .UnitId, tmp1 .UnitName, tmp1 .UnitGroupNameFull, tmp1 .InfoMoneyId, tmp1 .InfoMoneyName, tmp1 .MovementId, tmp1 .InvNumber, tmp1 .OperDate_mov
+, tmp11.OperDate_mov  , tmp1.OperDate_mov 
+having count(*) > 1
+)
+
+ -- select * from tmp1 where MovementId = 294443 and UnitId = 52569 order by 1
+  select * from t order by 1
+*/
 -- тест
 -- SELECT * FROM lpComplete_Movement_ServiceItemAdd (inMovementId:= 40980, inUserId := zfCalc_UserAdmin() :: Integer);

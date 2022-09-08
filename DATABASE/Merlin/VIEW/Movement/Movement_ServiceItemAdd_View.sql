@@ -57,6 +57,7 @@ CREATE OR REPLACE VIEW Movement_ServiceItemAdd_View AS
 
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId     = zc_MI_Master() 
+                                   AND MovementItem.isErased   = FALSE
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemDate AS MIDate_DateStart
