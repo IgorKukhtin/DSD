@@ -102,7 +102,9 @@ RETURNS TABLE (AccountId Integer
              , CountReturnOut_byCount     TFloat
              , CountSendIn_byCount        TFloat
              , CountSendOut_byCount       TFloat
-             , CountSendOnPriceIn_byCount TFloat
+             , CountSendOnPriceIn_byCount  TFloat
+             , CountSendOnPriceOut_byCount TFloat
+             
               )
 AS
 $BODY$
@@ -1007,6 +1009,7 @@ end if;
                                       , 0 AS CountSendIn_byCount
                                       , 0 AS CountSendOut_byCount
                                       , 0 AS CountSendOnPriceIn_byCount
+                                      , 0 AS CountSendOnPriceOut_byCount
 
                                   FROM _tmpContainer
                                        INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId_begin
@@ -1554,6 +1557,7 @@ end if;
                                       , 0 AS CountSendIn_byCount
                                       , 0 AS CountSendOut_byCount
                                       , 0 AS CountSendOnPriceIn_byCount
+                                      , 0 AS CountSendOnPriceOut_byCount
                                   FROM _tmpContainer AS _tmpContainer
                                        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId_begin
                                                                                      AND MIContainer.OperDate > inEndDate
@@ -1666,6 +1670,7 @@ end if;
                                       , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = TRUE  AND MIContainer.MovementDescId = zc_Movement_Send()        THEN COALESCE (MIContainer.Amount,0) ELSE 0 END)    AS CountSendIn_byCount
                                       , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId = zc_Movement_Send()        THEN COALESCE (MIContainer.Amount,0) ELSE 0 END)    AS CountSendOut_byCount
                                       , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = TRUE  AND MIContainer.MovementDescId = zc_Movement_SendOnPrice() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END)    AS CountSendOnPriceIn_byCount
+                                      , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId = zc_Movement_SendOnPrice() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END)    AS CountSendOnPriceOut_byCount
                                   FROM _tmpContainer
                                         INNER JOIN Container ON Container.ParentId = _tmpContainer.ContainerId_begin
                                                             AND Container.DescId = zc_Container_CountCount()
@@ -1687,11 +1692,12 @@ end if;
                                          , Container.Amount
                                   HAVING Container.Amount - SUM ( COALESCE (MIContainer.Amount,0)) <> 0
                                       OR Container.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END) <> 0
-                                      OR SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_Income()    THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
-                                      OR SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ReturnOut() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
-                                      OR SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_Send()      THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
+                                      OR SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = TRUE  AND MIContainer.MovementDescId = zc_Movement_Income()    THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
+                                      OR SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = TRUE  AND MIContainer.MovementDescId = zc_Movement_ReturnOut() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
+                                      OR SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = TRUE  AND MIContainer.MovementDescId = zc_Movement_Send()      THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
                                       OR SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId = zc_Movement_Send()      THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
-                                      OR SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_SendOnPrice() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
+                                      OR SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = TRUE  AND MIContainer.MovementDescId = zc_Movement_SendOnPrice() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END)<> 0
+                                      OR SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId = zc_Movement_SendOnPrice() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END)<> 0
                                  )
 
          -- Результат
@@ -1775,13 +1781,14 @@ end if;
               , SUM (tmpMIContainer_all.SummProductionOut)       :: TFloat AS SummProductionOut
 
                --  CountCount
-              , SUM (tmpMIContainer_all.CountStart_byCount)         :: TFloat AS  CountStart_byCount        
-              , SUM (tmpMIContainer_all.CountEnd_byCount)           :: TFloat AS  CountEnd_byCount          
-              , SUM (tmpMIContainer_all.CountIncome_byCount)        :: TFloat AS  CountIncome_byCount      
-              , SUM (tmpMIContainer_all.CountReturnOut_byCount)     :: TFloat AS  CountReturnOut_byCount    
-              , SUM (tmpMIContainer_all.CountSendIn_byCount)        :: TFloat AS  CountSendIn_byCount       
-              , SUM (tmpMIContainer_all.CountSendOut_byCount)       :: TFloat AS  CountSendOut_byCount      
-              , SUM (tmpMIContainer_all.CountSendOnPriceIn_byCount) :: TFloat AS  CountSendOnPriceIn_byCount
+              , SUM (tmpMIContainer_all.CountStart_byCount)          :: TFloat AS  CountStart_byCount        
+              , SUM (tmpMIContainer_all.CountEnd_byCount)            :: TFloat AS  CountEnd_byCount          
+              , SUM (tmpMIContainer_all.CountIncome_byCount)         :: TFloat AS  CountIncome_byCount      
+              , SUM (tmpMIContainer_all.CountReturnOut_byCount)      :: TFloat AS  CountReturnOut_byCount    
+              , SUM (tmpMIContainer_all.CountSendIn_byCount)         :: TFloat AS  CountSendIn_byCount       
+              , SUM (tmpMIContainer_all.CountSendOut_byCount)        :: TFloat AS  CountSendOut_byCount      
+              , SUM (tmpMIContainer_all.CountSendOnPriceIn_byCount)  :: TFloat AS  CountSendOnPriceIn_byCount
+              , SUM (tmpMIContainer_all.CountSendOnPriceOut_byCount) :: TFloat AS  CountSendOnPriceOut_byCount
 
          FROM tmpMIContainer AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.AccountId 

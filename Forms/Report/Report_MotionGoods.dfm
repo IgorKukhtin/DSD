@@ -400,6 +400,11 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = CountSendOnPriceIn_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountEnd_byCount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -776,6 +781,11 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = CountSendOnPriceIn_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountEnd_byCount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -2074,6 +2084,16 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
+      object CountEnd_byCount: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1073#1090'. '#1082#1086#1085#1077#1095'. '
+        DataBinding.FieldName = 'CountEnd_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
       object CountIncome_byCount: TcxGridDBColumn
         Caption = #1055#1088#1080#1093#1086#1076'. '#1073#1090'.'
         DataBinding.FieldName = 'CountIncome_byCount'
@@ -2115,8 +2135,18 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 55
       end
       object CountSendOnPriceIn_byCount: TcxGridDBColumn
-        Caption = #1055#1077#1088#1077#1084'. '#1087#1086' '#1094#1077#1085#1077' '#1073#1090'.'
+        Caption = #1055#1077#1088#1077#1084'. '#1087#1086' '#1094#1077#1085#1077' '#1073#1090'. '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountSendOnPriceIn_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CountSendOnPriceOut_byCount: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1087#1086' '#1094#1077#1085#1077' '#1073#1090'. '#1088#1072#1089#1093'.'
+        DataBinding.FieldName = 'CountSendOnPriceOut_byCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -2404,6 +2434,60 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         VisibleForCustomization = False
         Width = 30
       end
+      object CountReturnIn_40208_byCount: TcxGridDBColumn
+        DataBinding.FieldName = 'CountReturnIn_40208_byCount'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
+      object CountReturnIn_byCount: TcxGridDBColumn
+        DataBinding.FieldName = 'CountReturnIn_byCount'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
+      object CountSale_byCount: TcxGridDBColumn
+        DataBinding.FieldName = 'CountSale_byCount'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
+      object CountSale_40208_byCount: TcxGridDBColumn
+        DataBinding.FieldName = 'CountSale_40208_byCount'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
+      object CountSale_10500_byCount: TcxGridDBColumn
+        DataBinding.FieldName = 'CountSale_10500_byCount'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
+      object CountProductionIn_byCount: TcxGridDBColumn
+        DataBinding.FieldName = 'CountProductionIn_byCount'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
+      object CountProductionOut_byCount: TcxGridDBColumn
+        DataBinding.FieldName = 'CountProductionOut_byCount'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
+      object CountLoss_byCount: TcxGridDBColumn
+        DataBinding.FieldName = 'CountLoss_byCount'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
+      object CountInventory_byCount: TcxGridDBColumn
+        DataBinding.FieldName = 'CountInventory_byCount'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -2613,7 +2697,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 87
     Caption = #1090#1086#1083#1100#1082#1086' '#1050#1086#1083'-'#1074#1086
     Properties.ReadOnly = False
-    TabOrder = 8
+    TabOrder = 6
     Width = 102
   end
   object cbCount: TcxCheckBox
@@ -2801,6 +2885,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbcbCount'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_Goods'
         end
         item
@@ -2974,6 +3066,13 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object bbPrintUnit: TdxBarButton
       Action = actPrintUnit
       Category = 0
+    end
+    object bbcbCount: TdxBarControlContainerItem
+      Caption = #1087#1077#1095#1072#1090#1100' '#1073#1072#1090#1086#1085#1099
+      Category = 0
+      Hint = #1087#1077#1095#1072#1090#1100' '#1073#1072#1090#1086#1085#1099
+      Visible = ivAlways
+      Control = cbCount
     end
   end
   object ActionList: TActionList
@@ -3464,6 +3563,13 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCount'
+          Value = Null
+          Component = cbCount
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
@@ -3754,6 +3860,13 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Component = GuidesLocation_by
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCount'
+          Value = Null
+          Component = cbCount
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1082#1083#1072#1076' '#1043#1055')'

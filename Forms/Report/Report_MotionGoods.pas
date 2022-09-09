@@ -232,6 +232,16 @@ type
     SummSendOnPriceOut_10900: TcxGridDBColumn;
     CountSendOnPriceOut_10900_W: TcxGridDBColumn;
     cbCount: TcxCheckBox;
+    bbcbCount: TdxBarControlContainerItem;
+    CountReturnIn_40208_byCount: TcxGridDBColumn;
+    CountInventory_byCount: TcxGridDBColumn;
+    CountLoss_byCount: TcxGridDBColumn;
+    CountProductionOut_byCount: TcxGridDBColumn;
+    CountProductionIn_byCount: TcxGridDBColumn;
+    CountSale_10500_byCount: TcxGridDBColumn;
+    CountSale_40208_byCount: TcxGridDBColumn;
+    CountSale_byCount: TcxGridDBColumn;
+    CountReturnIn_byCount: TcxGridDBColumn;
   private
   public
   end;
