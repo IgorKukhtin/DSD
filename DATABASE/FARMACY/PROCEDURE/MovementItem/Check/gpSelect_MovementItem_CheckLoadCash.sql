@@ -56,6 +56,8 @@ RETURNS TABLE (Id Integer
              , GoodsDiscountProcent TFloat
              , PriceSaleDiscount TFloat
              , isPriceDiscount boolean
+             , GoodsPresentID Integer
+             , isGoodsPresent boolean
               )
 AS
 $BODY$
@@ -423,6 +425,8 @@ BEGIN
                       CASE WHEN COALESCE(tmpGoodsDiscountPrice.MaxPrice, 0) = 0 OR tmpGoodsDiscountPrice.Price < tmpGoodsDiscountPrice.MaxPrice
                            THEN tmpGoodsDiscountPrice.Price ELSE tmpGoodsDiscountPrice.MaxPrice END * 98 / 100
                   END :: BOOLEAN                                                 AS isPriceDiscount
+           , COALESCE (MILinkObject_GoodsPresent.ObjectId, 0)                    AS GoodsPresentID
+           , COALESCE (MIBoolean_GoodsPresent.ValueData, False)                  AS isGoodsPresent
            
        FROM tmpMI AS MovementItem
 
@@ -467,6 +471,14 @@ BEGIN
             LEFT JOIN tmpObject AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
             
             LEFT JOIN tmpGoodsDiscountPrice ON tmpGoodsDiscountPrice.Id = MovementItem.Id
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsPresent
+                                             ON MILinkObject_GoodsPresent.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsPresent.DescId = zc_MILinkObject_GoodsPresent()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_GoodsPresent
+                                          ON MIBoolean_GoodsPresent.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_GoodsPresent.DescId         = zc_MIBoolean_GoodsPresent()
+
        ;
 END;
 $BODY$

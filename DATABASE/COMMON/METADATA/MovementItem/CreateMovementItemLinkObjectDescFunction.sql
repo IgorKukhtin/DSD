@@ -423,10 +423,15 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_MakerCountrySP_1303() RETURNS Integer
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_MakerCountrySP_1303', 'Найменування виробника, країна (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_MakerCountrySP_1303');
   
+CREATE OR REPLACE FUNCTION zc_MILinkObject_GoodsPresent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_GoodsPresent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_GoodsPresent', 'Прикркпленный акционный товар' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_GoodsPresent');
+  
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 10.09.22                                                                    * zc_MILinkObject_GoodsPresent
  24.06.22                                                                    * zc_MILinkObject_IntenalSP_1303, zc_MILinkObject_MakerCountrySP_1303
  16.05.22                                                                    * zc_MILinkObject_KindOutSP_1303, zc_MILinkObject_Dosage_1303, zc_MILinkObject_CountSP_1303, zc_MILinkObject_MakerSP_1303, zc_MILinkObject_Country_1303
  05.05.22         * zc_MILinkObject_Double

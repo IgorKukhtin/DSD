@@ -57,7 +57,12 @@ begin
   try
     try
       SalePromoGoodsDialoglDS.DataSet := ADS;
-      Result := ShowModal = mrOK;
+      while True do
+        if ShowModal = mrOK then
+        begin
+          Result := True;
+          Break;
+        end else ShowMessage('Акционный товар надо выбрать.');;
     Except ON E: Exception DO
       MessageDlg(E.Message,mtError,[mbOk],0);
     end;

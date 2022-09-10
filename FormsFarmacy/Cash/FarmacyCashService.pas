@@ -130,8 +130,11 @@ type
     DIVPARTID: Integer;     // Разделение партий в кассе для продажи
     //***20.09.21
     ISPRESENT: Boolean;     // Подарок
-    //***05.10.20
+    // ***20.09.21
     JURIDID: Integer;       // Списывать товар поставщика
+    // ***10.09.22
+    GOODSPR: Integer;       // Акционный товар
+    ISGOODSPR: Boolean;     // Акционная строчка
     //***10.08.16
     LIST_UID: String[50]    // UID строки продажи
   end;
@@ -1517,6 +1520,9 @@ begin
                     ISPRESENT := FieldByName('ISPRESENT').AsBoolean;
                     // ***20.09.21
                     JURIDID := FieldByName('JURIDID').AsInteger;
+                    // ***10.09.22
+                    GOODSPR := FieldByName('GOODSPR').AsInteger;
+                    ISGOODSPR := FieldByName('ISGOODSPR').AsBoolean;
                     // ***10.08.16
                     LIST_UID := trim(FieldByName('LIST_UID').AsString);
                   End;
@@ -1722,8 +1728,11 @@ begin
                   dsdSave.Params.AddParam('inDivisionPartiesID', ftInteger, ptInput, Null);
                   // ***05.10.20
                   dsdSave.Params.AddParam('inPresent', ftBoolean, ptInput, Null);
-                  // ***05.10.20
+                  // ***20.09.21
                   dsdSave.Params.AddParam('inJuridicalID', ftInteger, ptInput, Null);
+                  // ***10.09.22
+                  dsdSave.Params.AddParam('inGoodsPresentId', ftInteger, ptInput, Null);
+                  dsdSave.Params.AddParam('inisGoodsPresent', ftBoolean, ptInput, Null);
                   // ***10.08.16
                   dsdSave.Params.AddParam('inList_UID', ftString, ptInput, Null);
                   //
@@ -1761,6 +1770,9 @@ begin
                     dsdSave.ParamByName('inPresent').Value := Body[I].ISPRESENT;
                     // ***20.09.21
                     dsdSave.ParamByName('inJuridicalID').Value := Body[I].JURIDID;
+                    // ***20.09.21
+                    dsdSave.ParamByName('inGoodsPresentId').Value := Body[I].GOODSPR;
+                    dsdSave.ParamByName('inisGoodsPresent').Value := Body[I].ISGOODSPR;
                     // ***10.08.16
                     dsdSave.ParamByName('inList_UID').Value := Body[I].LIST_UID;
                     //
