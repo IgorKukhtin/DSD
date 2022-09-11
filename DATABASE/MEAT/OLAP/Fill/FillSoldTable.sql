@@ -933,6 +933,62 @@ where OperDate BETWEEN '01.06.2014' and  '31.12.2014'
 group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
 , DATE_TRUNC ('month', OperDate)
 */
+
+/*
+-- !!!check goods params
+--
+--      select * from Object where id = 8451
+-- update SoldTable set GoodsByGoodsKindId = tmpGoodsByGoodsKind.Id
+ select distinct SoldTable .GoodsId FROM SoldTable, 
+-- FROM 
+    (select Object.Id AS GoodsId
+           , ObjectLink_Goods_Business.ChildObjectId               AS BusinessId
+           , ObjectLink_Goods_GoodsPlatform.ChildObjectId          AS GoodsPlatformId
+           , ObjectLink_Goods_TradeMark.ChildObjectId              AS TradeMarkId
+           , ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId      AS GoodsGroupAnalystId
+           , ObjectLink_Goods_GoodsTag.ChildObjectId               AS GoodsTagId
+           , ObjectLink_Goods_GoodsGroup.ChildObjectId             AS GoodsGroupId
+           , ObjectLink_Goods_GoodsGroupStat.ChildObjectId         AS GoodsGroupStatId
+           , ObjectLink_Goods_Measure.ChildObjectId                AS MeasureId
+      from Object
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
+                                ON ObjectLink_Goods_Business.ObjectId = Object.Id
+                               AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                                ON ObjectLink_Goods_GoodsPlatform.ObjectId = Object.Id
+                               AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                ON ObjectLink_Goods_TradeMark.ObjectId = Object.Id
+                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object.Id
+                               AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                ON ObjectLink_Goods_GoodsTag.ObjectId = Object.Id
+                               AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object.Id
+                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object.Id
+                               AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                ON ObjectLink_Goods_Measure.ObjectId = Object.Id
+                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+      
+     ) AS tmp
+where tmp.GoodsId  = SoldTable .GoodsId
+  AND SoldTable.OperDate BETWEEN '01.01.2022' AND '31.08.2022'
+  AND (coalesce (tmp.BusinessId, 0) <> tmp.BusinessId
+    OR coalesce (tmp.GoodsPlatformId, 0) <> tmp.GoodsPlatformId
+    OR coalesce (tmp.TradeMarkId, 0) <> tmp.TradeMarkId
+    OR coalesce (tmp.GoodsGroupAnalystId, 0) <> tmp.GoodsGroupAnalystId
+    OR coalesce (tmp.GoodsTagId, 0) <> tmp.GoodsTagId
+    OR coalesce (tmp.GoodsGroupId, 0) <> tmp.GoodsGroupId
+    OR coalesce (tmp.GoodsGroupStatId, 0) <> tmp.GoodsGroupStatId
+    OR coalesce (tmp.MeasureId, 0) <> tmp.MeasureId
+      )
+*/
 -- тест
 -- SELECT * FROM SoldTable where OperDate = '03.09.2015'
--- SELECT * FROM FillSoldTable ('01.03.2021', '31.03.2021', zfCalc_UserAdmin())
+-- SELECT * FROM FillSoldTable ('01.08.2022', '31.08.2022', zfCalc_UserAdmin())

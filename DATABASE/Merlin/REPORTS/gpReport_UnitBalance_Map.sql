@@ -227,7 +227,12 @@ BEGIN
              WHEN SUM (COALESCE (tmpReport.AmountDebet, 0)) <> CASE WHEN MAX (tmpMI_Add.UnitId) > 0 /*SUM (COALESCE (tmpMI_Add.Amount, 0)) <> 0*/ THEN SUM (COALESCE (tmpMI_Add.Amount, 0)) ELSE SUM (COALESCE (tmpMI_Main.Amount, 0)) END
               AND COALESCE (tmpUnitLast.Id, 0) > 0
                   THEN zc_Color_Red()
+             -- пусто
+             WHEN SUM (COALESCE (tmpReport.AmountDebet, 0)) = 0 AND SUM (COALESCE (tmpReport.AmountKredit, 0)) = 0
+                  THEN zc_Color_Cyan()
+             -- Стандарт
              ELSE zc_Color_Yelow()
+
         END :: Integer AS Color
       , zc_Color_Blue()                           AS Color_Text
 

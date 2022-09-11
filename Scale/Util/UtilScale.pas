@@ -56,6 +56,7 @@ type
   //TArrayListLight = array of TListItemLight;
 
   TSettingMain = record
+    IP_str       :String;
     isModeSorting:Boolean;  // ScaleCeh - Режим маркировка/сортировка
     isPartionDate:Boolean;  // Scale
     isReason     :Boolean;  // Scale

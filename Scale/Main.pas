@@ -1911,6 +1911,15 @@ begin
        Params.AddParam('inMovementId', ftInteger, ptInput,0);
   end;
   err_count:=0;
+  //
+  // определили IP
+  with TIdIPWatch.Create(nil) do
+  begin
+        Active:=true;
+        SettingMain.IP_str:=LocalIP;
+        Free;
+  end;
+  //
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.GetPanelPartnerCaption(execParams:TParams):String;

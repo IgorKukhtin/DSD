@@ -127,6 +127,7 @@ type
     spUpdate_PersonalComlete: TdsdStoredProc;
     bbUpdatePersonalComlete: TdxBarButton;
     UnitName_PersonalGroup: TcxGridDBColumn;
+    IP: TcxGridDBColumn;
   private
   public
   end;

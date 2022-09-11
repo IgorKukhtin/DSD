@@ -788,6 +788,12 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Options.Editing = False
         Width = 132
       end
+      object IP: TcxGridDBColumn
+        DataBinding.FieldName = 'IP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

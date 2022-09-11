@@ -124,6 +124,7 @@ type
     MIAmount_Weight: TcxGridDBColumn;
     AmountPartner_Weight: TcxGridDBColumn;
     RealWeight_Weight: TcxGridDBColumn;
+    IP: TcxGridDBColumn;
   private
   public
   end;
