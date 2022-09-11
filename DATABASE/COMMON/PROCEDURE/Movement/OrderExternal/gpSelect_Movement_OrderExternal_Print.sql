@@ -586,10 +586,10 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, '') :: TVarChar  AS CodeSticker
            , COALESCE (tmpObject_GoodsPropertyValue.GoodsBoxName_short, tmpObject_GoodsPropertyValueGroup.GoodsBoxName_short) AS GoodsBoxName_short
            
-           , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) > 0
-                       THEN CAST ((tmpMI.Amount + tmpMI.AmountSecond) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) AS NUMERIC (16, 4))
-                  ELSE 0
-             END AS AmountBox
+           , CAST (CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) > 0
+                             THEN CAST ((tmpMI.Amount + tmpMI.AmountSecond) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) AS NUMERIC (16, 4))
+                        ELSE 0
+                   END AS NUMERIC(16,1)) :: TFloat AS AmountBox
           
            , COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0)     :: TFloat    AS BoxCount
            , Object_GoodsKind.ValueData      AS GoodsKindName

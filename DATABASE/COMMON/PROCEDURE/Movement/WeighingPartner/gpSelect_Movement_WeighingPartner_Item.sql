@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PositionCode1_Stick Integer, PositionName1_Stick TVarChar
              , UserName TVarChar
              , Comment TVarChar
+             , IP TVarChar
              , MovementId_ReturnIn Integer, InvNumber_ReturnInFull TVarChar
              , StartBegin_movement TDateTime, EndBegin_movement TDateTime, diffBegin_sec_movement TFloat -- для документа
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat                            -- для строк
@@ -234,6 +235,7 @@ BEGIN
 
              , Object_User.ValueData              AS UserName
              , MovementString_Comment.ValueData   AS Comment
+             , MovementString_IP.ValueData        AS IP
              
              , Movement_ReturnIn.Id                                                                                                AS MovementId_ReturnIn
              , zfCalc_InvNumber_isErased ('', Movement_ReturnIn.InvNumber, Movement_ReturnIn.OperDate, Movement_ReturnIn.StatusId) AS InvNumber_ReturnInFull
@@ -342,8 +344,11 @@ BEGIN
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
             LEFT JOIN MovementString AS MovementString_Comment
-                                     ON MovementString_Comment.MovementId =  Movement.Id
-                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId     = zc_MovementString_Comment()
+            LEFT JOIN MovementString AS MovementString_IP
+                                     ON MovementString_IP.MovementId = Movement.Id
+                                    AND MovementString_IP.DescId     = zc_MovementString_IP()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id

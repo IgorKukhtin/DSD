@@ -44,6 +44,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PositionId1_Stick Integer, PositionCode1_Stick Integer, PositionName1_Stick TVarChar
              , UserName TVarChar
              , Comment TVarChar
+             , IP TVarChar
              , isPromo Boolean
              , MovementPromo TVarChar
              , BranchCode    Integer
@@ -177,6 +178,7 @@ BEGIN
 
              , Object_User.ValueData              AS UserName
              , MovementString_Comment.ValueData   AS Comment
+             , MovementString_IP.ValueData        AS IP
 
              , COALESCE (MovementBoolean_Promo.ValueData, False) :: Boolean AS isPromo
              , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
@@ -237,8 +239,11 @@ BEGIN
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
             LEFT JOIN MovementString AS MovementString_Comment
-                                     ON MovementString_Comment.MovementId =  Movement.Id
-                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId     = zc_MovementString_Comment()
+            LEFT JOIN MovementString AS MovementString_IP
+                                     ON MovementString_IP.MovementId = Movement.Id
+                                    AND MovementString_IP.DescId     = zc_MovementString_IP()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id

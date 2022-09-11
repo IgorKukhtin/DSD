@@ -288,20 +288,23 @@ BEGIN
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
 
            , OH_JuridicalDetails_To.FullName            AS JuridicalName_To
-           , CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_to.ValueData <> ''
+           , CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_to.ValueData <> '' AND ObjectString_Unit_Address_to.ValueData NOT ILIKE '% - O - %'
                        THEN ObjectString_Unit_Address_to.ValueData
                   ELSE OH_JuridicalDetails_To.JuridicalAddress
              END :: TVarChar AS JuridicalAddress_To
 
            , OH_JuridicalDetails_To.OKPO                AS OKPO_To
-           , (CASE WHEN ObjectString_PostalCode.ValueData  <> '' THEN ObjectString_PostalCode.ValueData || ' '      ELSE '' END
-           || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
-           || CASE WHEN View_Partner_Address.ProvinceName  <> '' THEN View_Partner_Address.ProvinceName || ' р-н, '  ELSE '' END
-           || ObjectString_ToAddress.ValueData
+           , (CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_to.ValueData <> '' AND ObjectString_Unit_Address_to.ValueData NOT ILIKE '% - O - %'
+                       THEN ObjectString_Unit_Address_to.ValueData
+                  ELSE CASE WHEN ObjectString_PostalCode.ValueData  <> '' THEN ObjectString_PostalCode.ValueData || ' '      ELSE '' END
+                    || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
+                    || CASE WHEN View_Partner_Address.ProvinceName  <> '' THEN View_Partner_Address.ProvinceName || ' р-н, '  ELSE '' END
+                    || ObjectString_ToAddress.ValueData
+              END
              ) :: TVarChar            AS PartnerAddress_To
 
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
-           , CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_from.ValueData <> ''
+           , CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_from.ValueData <> '' AND ObjectString_Unit_Address_from.ValueData NOT ILIKE '% - O - %'
                        THEN ObjectString_Unit_Address_from.ValueData
                   ELSE OH_JuridicalDetails_From.JuridicalAddress
              END :: TVarChar AS JuridicalAddress_From
@@ -448,11 +451,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Unit_Address_from
                                    ON ObjectString_Unit_Address_from.ObjectId = MovementLinkObject_From.ObjectId
                                   AND ObjectString_Unit_Address_from.DescId = zc_ObjectString_Unit_Address()
-                                  and 1=0
+                                --and 1=0
             LEFT JOIN ObjectString AS ObjectString_Unit_Address_to
                                    ON ObjectString_Unit_Address_to.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectString_Unit_Address_to.DescId = zc_ObjectString_Unit_Address()
-                                  and 1=0
+                                --and 1=0
 
             LEFT JOIN ObjectString AS ObjectString_ToAddress
                                    ON ObjectString_ToAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)

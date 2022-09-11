@@ -24,7 +24,7 @@ BEGIN
      IF COALESCE (inAmount,0) = 0 THEN RETURN; END IF;
      
      --находим физ.лицо
-     vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND  UPPER (Object.ValueData) =  UPPER (TRIM (inPersonalName)));
+     vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND  UPPER (TRIM(Object.ValueData)) =  UPPER (TRIM (inPersonalName)));
      
      IF COALESCE (vbMemberId,0) = 0
      THEN 

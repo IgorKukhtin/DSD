@@ -147,6 +147,9 @@ CREATE OR REPLACE FUNCTION zc_MovementString_CarComment() RETURNS Integer AS $BO
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_CarComment', 'Примечание к отгрузке' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_CarComment');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_IP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_IP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_IP', 'IP' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_IP');
 
 
   --!!!!!!!!!!!!!!!!!!!!!!!!!!Аптека
