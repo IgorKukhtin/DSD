@@ -100,7 +100,7 @@ BEGIN
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
        WHERE Movement.UnitId = inUnitId
-         AND Movement.InfoMoneyId = inInfoMoneyId
+         AND (Movement.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
          AND Movement.isErased = FALSE
          AND ((inStartDate BETWEEN Movement.DateStart AND Movement.DateEnd) OR inIsAll = TRUE)
          

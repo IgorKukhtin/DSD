@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_UnitBalance_Map(
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
-              Id Integer, Code Integer, Name TVarChar
+              Id Integer, Code Integer, Name TVarChar, UnitName_all TVarChar
              --, Phone TVarChar, GroupNameFull TVarChar
              --, Comment TVarChar
              , ParentId Integer, ParentName TVarChar
@@ -208,6 +208,8 @@ BEGIN
 
 		)::TVarChar AS Name  -- Н-начислено;  О - оплачено; Д-ДОЛГ
 
+      , (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName_all
+
       , COALESCE (Object_Parent.Id,0)   AS ParentId
       , Object_Parent.ValueData         AS ParentName
 
@@ -230,6 +232,17 @@ BEGIN
              -- пусто
              WHEN SUM (COALESCE (tmpReport.AmountDebet, 0)) = 0 AND SUM (COALESCE (tmpReport.AmountKredit, 0)) = 0
                   THEN zc_Color_Cyan()
+
+             -- переплата
+             WHEN SUM (COALESCE (tmpReport.AmountDebet, 0)) < SUM (COALESCE (tmpReport.AmountKredit, 0))
+              AND COALESCE (tmpUnitLast.Id, 0) > 0
+                  THEN zc_Color_Pink()
+
+             -- все оплачено
+             WHEN SUM (COALESCE (tmpReport.AmountDebet, 0)) = SUM (COALESCE (tmpReport.AmountKredit, 0))
+              AND COALESCE (tmpUnitLast.Id, 0) > 0
+                  THEN zc_Color_UnEnabl()
+
              -- Стандарт
              ELSE zc_Color_Yelow()
 
@@ -241,12 +254,13 @@ BEGIN
             LEFT JOIN tmpReport ON tmpReport.UnitId = tmpGroup.UnitId
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnitGroup.Id
+            LEFT JOIN ObjectString AS ObjectString_GroupNameFull
+                                   ON ObjectString_GroupNameFull.ObjectId = tmpUnitGroup.Id
+                                  AND ObjectString_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
 
             LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = tmpUnitGroup.ParentId
 
             LEFT JOIN tmpUnitLast ON tmpUnitLast.Id = Object_Unit.Id
-
-            -- LEFT JOIN tmpOH ON tmpOH.UnitId = tmpGroup.UnitId
 
             -- Базовые условия - на дату
             LEFT JOIN (SELECT tmpServiceItem.UnitId, SUM (tmpServiceItem.Amount) AS Amount
@@ -269,8 +283,9 @@ BEGIN
 
      WHERE (Object_Unit.Id = 52460 AND inUnitGroupId = 0) OR inUnitGroupId <> 0
      GROUP BY Object_Unit.Id
-            , Object_Unit. ObjectCode
+            , Object_Unit.ObjectCode
             , Object_Unit.ValueData
+            , ObjectString_GroupNameFull.ValueData
             , COALESCE (Object_Parent.Id,0)
             , Object_Parent.ValueData
             , tmpUnitGroup.isPositionFixed
