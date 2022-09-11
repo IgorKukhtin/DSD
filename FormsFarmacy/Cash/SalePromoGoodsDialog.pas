@@ -30,6 +30,7 @@ type
     GoodsPresentCode: TcxGridDBColumn;
     PriceSale: TcxGridDBColumn;
     AmountSale: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
     procedure BankPOSTerminalGridDBTableViewDblClick(Sender: TObject);
   private
     { Private declarations }

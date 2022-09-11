@@ -33,7 +33,55 @@ inherited CheckVIPForm: TCheckVIPForm
       end
     end
   end
-  inherited ActionList: TActionList [1]
+  inherited SPUpdate_NotMCS: TdsdStoredProc [1]
+  end
+  inherited spMovementSetErased: TdsdStoredProc [2]
+  end
+  inherited spConfirmedKind_Complete: TdsdStoredProc [3]
+  end
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [4]
+  end
+  inherited spUpdateMovementItemAmount: TdsdStoredProc [5]
+  end
+  inherited PopupMenu: TPopupMenu [6]
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn [7]
+  end
+  inherited spSmashCheck: TdsdStoredProc [8]
+  end
+  inherited spUpdateOperDate: TdsdStoredProc [9]
+  end
+  inherited spMovementSetErasedSite: TdsdStoredProc [10]
+  end
+  inherited ClientDataSet1: TClientDataSet [11]
+  end
+  inherited DataSource1: TDataSource [12]
+  end
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [13]
+  end
+  inherited FormParams: TdsdFormParams [14]
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [15]
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore [16]
+  end
+  inherited spSelect: TdsdStoredProc [17]
+    Params = <
+      item
+        Name = 'inType'
+        Value = 1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited BarManager: TdxBarManager [18]
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+  end
+  inherited ActionList: TActionList [19]
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -305,6 +353,22 @@ inherited CheckVIPForm: TCheckVIPForm
           ComponentItem = 'isAutoVIPforSales'
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MobileDiscount'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MobileDiscount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
     end
     inherited actCheckCash: TdsdOpenForm
@@ -334,58 +398,10 @@ inherited CheckVIPForm: TCheckVIPForm
         end>
     end
   end
-  inherited MasterDS: TDataSource [2]
+  inherited MasterDS: TDataSource [20]
   end
-  inherited MasterCDS: TClientDataSet [3]
+  inherited MasterCDS: TClientDataSet [21]
   end
-  inherited spPUSHSetErased: TdsdStoredProc [4]
-  end
-  inherited SPUpdate_NotMCS: TdsdStoredProc [5]
-  end
-  inherited spMovementSetErased: TdsdStoredProc [6]
-  end
-  inherited spConfirmedKind_Complete: TdsdStoredProc [7]
-  end
-  inherited spConfirmedKind_UnComplete: TdsdStoredProc [8]
-  end
-  inherited spUpdateMovementItemAmount: TdsdStoredProc [9]
-  end
-  inherited PopupMenu: TPopupMenu [10]
-  end
-  inherited DBViewAddOn: TdsdDBViewAddOn [11]
-  end
-  inherited spSmashCheck: TdsdStoredProc [12]
-  end
-  inherited spUpdateOperDate: TdsdStoredProc [13]
-  end
-  inherited spMovementSetErasedSite: TdsdStoredProc [14]
-  end
-  inherited ClientDataSet1: TClientDataSet [15]
-  end
-  inherited DataSource1: TDataSource [16]
-  end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [17]
-  end
-  inherited FormParams: TdsdFormParams [18]
-  end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [19]
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore [20]
-  end
-  inherited spSelect: TdsdStoredProc [21]
-    Params = <
-      item
-        Name = 'inType'
-        Value = 1
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited BarManager: TdxBarManager [22]
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
+  inherited spPUSHSetErased: TdsdStoredProc [22]
   end
 end

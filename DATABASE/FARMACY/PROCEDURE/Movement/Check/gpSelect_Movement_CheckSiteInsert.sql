@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, OperDateCreat
              , isMobileApplication Boolean 
              , UserReferalsName TVarChar, isConfirmByPhone Boolean, DateComing TDateTime 
              , MobileDiscount TFloat
+             , isMobileFirstOrder Boolean 
               )
 AS
 $BODY$
@@ -187,6 +188,7 @@ BEGIN
            , COALESCE(MovementBoolean_ConfirmByPhone.ValueData, False)::Boolean      AS isConfirmByPhone
            , MovementDate_Coming.ValueData                                AS DateComing
            , MovementFloat_MobileDiscount.ValueData                       AS MobileDiscount
+           , COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False)::Boolean    AS isMobileFirstOrder
 
         FROM Movement_Check
         
@@ -412,6 +414,10 @@ BEGIN
                                          ON MovementLinkObject_UserReferals.MovementId = Movement_Check.Id
                                         AND MovementLinkObject_UserReferals.DescId = zc_MovementLinkObject_UserReferals()
             LEFT JOIN Object AS Object_UserReferals ON Object_UserReferals.Id = MovementLinkObject_UserReferals.ObjectId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_MobileFirstOrder
+                                      ON MovementBoolean_MobileFirstOrder.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_MobileFirstOrder.DescId = zc_MovementBoolean_MobileFirstOrder()
             
        WHERE tmpMovementProtocol.OperDate >= DATE_TRUNC ('DAY', inStartDate)
          AND tmpMovementProtocol.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
@@ -431,4 +437,4 @@ $BODY$
 -- тест
 -- 
 
-select * from gpSelect_Movement_CheckSiteInsert(inStartDate := ('31.08.2022')::TDateTime , inEndDate := ('31.08.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_Movement_CheckSiteInsert(inStartDate := ('30.09.2022')::TDateTime , inEndDate := ('30.09.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');

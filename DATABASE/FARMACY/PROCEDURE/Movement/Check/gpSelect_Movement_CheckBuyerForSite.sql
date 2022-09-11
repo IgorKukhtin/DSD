@@ -271,6 +271,7 @@ BEGIN
             , COALESCE(MovementBoolean_ConfirmByPhone.ValueData, False)::Boolean      AS isConfirmByPhone
             , MovementDate_Coming.ValueData                                AS DateComing
             , COALESCE(MovementFloat_MobileDiscount.ValueData, 0)::TFloat  AS MobileDiscount
+            , COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False)::Boolean    AS isMobileFirstOrder
 
        FROM tmpMovement as tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
@@ -474,6 +475,9 @@ BEGIN
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_AutoVIPforSales
                                       ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
                                      AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_MobileFirstOrder
+                                      ON MovementBoolean_MobileFirstOrder.MovementId = Movement.Id
+                                     AND MovementBoolean_MobileFirstOrder.DescId = zc_MovementBoolean_MobileFirstOrder()
 
        );
 

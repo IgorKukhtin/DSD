@@ -52,7 +52,8 @@ RETURNS TABLE (
   isBanAdd boolean,
   isDiscountCommit Boolean, 
   isAutoVIPforSales Boolean,
-  MobileDiscount TFloat
+  MobileDiscount TFloat, 
+  isMobileFirstOrder Boolean
  )
 AS
 $BODY$
@@ -211,6 +212,7 @@ BEGIN
             , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)                 AS isDiscountCommit
             , COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False)                AS isAutoVIPforSales
             , COALESCE(MovementFloat_MobileDiscount.ValueData, 0)::TFloat               AS MobileDiscount
+            , COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False)::Boolean    AS isMobileFirstOrder
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -389,6 +391,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_AutoVIPforSales
                                       ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
                                      AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_MobileFirstOrder
+                                      ON MovementBoolean_MobileFirstOrder.MovementId = Movement.Id
+                                     AND MovementBoolean_MobileFirstOrder.DescId = zc_MovementBoolean_MobileFirstOrder()
        ;
 
 END;
@@ -406,4 +412,4 @@ ALTER FUNCTION gpSelect_Movement_CheckLoadCash (TVarChar, TVarChar) OWNER TO pos
 -- тест
 -- 
 
-select * from gpSelect_Movement_CheckLoadCash(inVIPOrder := '359332' ,  inSession := '3');
+select * from gpSelect_Movement_CheckLoadCash(inVIPOrder := '450136' ,  inSession := '3');

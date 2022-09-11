@@ -57,7 +57,8 @@ RETURNS TABLE (
   isErrorRRO Boolean, 
   isAutoVIPforSales Boolean, 
   isMobileApplication Boolean, isConfirmByPhone Boolean, DateComing TDateTime,
-  MobileDiscount TFloat
+  MobileDiscount TFloat, 
+  isMobileFirstOrder Boolean
  )
 AS
 $BODY$
@@ -214,7 +215,8 @@ BEGIN
             , COALESCE(MovementBoolean_MobileApplication.ValueData, False)::Boolean   AS isMobileApplication
             , COALESCE(MovementBoolean_ConfirmByPhone.ValueData, False)::Boolean      AS isConfirmByPhone
             , MovementDate_Coming.ValueData                                AS DateComing
-            , MovementFloat_MobileDiscount.ValueData                       AS MobileDiscount
+            , COALESCE(MovementFloat_MobileDiscount.ValueData, 0)::TFloat  AS MobileDiscount
+            , COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False)::Boolean    AS isMobileFirstOrder
 
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
@@ -417,6 +419,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_AutoVIPforSales
                                       ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
                                      AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_MobileFirstOrder
+                                      ON MovementBoolean_MobileFirstOrder.MovementId = Movement.Id
+                                     AND MovementBoolean_MobileFirstOrder.DescId = zc_MovementBoolean_MobileFirstOrder()
        ;
 
 END;
