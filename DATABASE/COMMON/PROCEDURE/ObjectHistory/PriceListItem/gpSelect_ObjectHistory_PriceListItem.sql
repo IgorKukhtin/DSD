@@ -386,8 +386,8 @@ BEGIN
   
                      WHERE ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
                        AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
-                       AND ObjectHistory_PriceListItem.EndDate              >= vbStartDate
-                       AND ObjectHistory_PriceListItem.StartDate            <= vbEndDate
+                       AND COALESCE (ObjectHistory_PriceListItem.EndDate, zc_DateStart()) >= vbStartDate
+                       AND COALESCE (ObjectHistory_PriceListItem.StartDate, zc_DateEnd()) <= vbEndDate
                     )
    , tmpMinMax AS (SELECT tmp.GoodsId
                         , tmp.GoodsKindId
@@ -412,7 +412,7 @@ BEGIN
        -- Результат
        SELECT
              ObjectHistory_PriceListItem.Id
-           , ObjectHistory_PriceListItem.ObjectId
+           , ObjectLink_PriceListItem_PriceList.ObjectId
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
            , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName
@@ -567,7 +567,7 @@ BEGIN
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
-         AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
+         -- AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
        ;
 
      END IF;
