@@ -4,13 +4,15 @@
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind_test (Integer, Integer, Integer, TDateTime, Integer);
 
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
     IN inBranchCode          Integer   , --
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
     IN inIsDocInsert         Boolean   , -- 
+    IN inIP                  TVarChar,
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId_begin    Integer
@@ -1779,6 +1781,10 @@ BEGIN
 
      -- сохранили свойство <Протокол взвешивания>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndWeighing(), inMovementId, CURRENT_TIMESTAMP);
+
+     -- сохранили свойство <IP>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_IP(), inMovementId, inIP);
+     
 
      -- финиш - Обязательно меняем статус документа + сохранили протокол - <Взвешивание (контрагент)>
      PERFORM lpComplete_Movement (inMovementId := inMovementId
