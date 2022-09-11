@@ -83,10 +83,15 @@ BEGIN
                                                         ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                        AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+                                LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                                          ON MovementBoolean_MobileApplication.MovementId = Movement.Id
+                                                         AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+
                            WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '1 MONTH' + INTERVAL '4 DAY'
                              AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' + INTERVAL '4 DAY'
                              AND Movement.DescId = zc_Movement_Check()
                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND COALESCE(MovementBoolean_MobileApplication.ValueData, False) = False
                          UNION ALL
                          SELECT Movement.*
                               , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
@@ -103,10 +108,15 @@ BEGIN
                                                       ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
                                                          
+                              LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                                        ON MovementBoolean_MobileApplication.MovementId = Movement.Id
+                                                       AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+
                          WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate)
                            AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
                            AND Movement.DescId = zc_Movement_Check()
-                           AND Movement.StatusId = zc_Enum_Status_Complete())
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                           AND COALESCE(MovementBoolean_MobileApplication.ValueData, False) = False)
          , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
                                         , CASE WHEN MIN(date_trunc('day', MovementProtocol.OperDate + INTERVAL '3 HOUR')) < DATE_TRUNC ('MONTH', vbOperDate)
                                                     AND date_trunc('day', Movement.OperDate) > DATE_TRUNC ('MONTH', vbOperDate)
@@ -301,10 +311,15 @@ BEGIN
                                                           ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                          AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+                                LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                                          ON MovementBoolean_MobileApplication.MovementId = Movement.Id
+                                                         AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+
                              WHERE Movement.OperDate >= '01.01.2022'::TDateTime - INTERVAL '1 MONTH' + INTERVAL '4 DAY'
                                AND Movement.OperDate < '01.01.2022'::TDateTime + INTERVAL '1 MONTH' + INTERVAL '4 DAY'
                                AND Movement.DescId = zc_Movement_Check()
                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                               AND COALESCE(MovementBoolean_MobileApplication.ValueData, False) = False
                            UNION ALL
                            SELECT Movement.*
                                 , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
@@ -320,11 +335,16 @@ BEGIN
                                 LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                                         ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                        AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                                LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                                          ON MovementBoolean_MobileApplication.MovementId = Movement.Id
+                                                         AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
                                                            
                            WHERE Movement.OperDate >= '01.01.2022'::TDateTime
                              AND Movement.OperDate < '01.01.2022'::TDateTime + INTERVAL '1 MONTH'
                              AND Movement.DescId = zc_Movement_Check()
-                             AND Movement.StatusId = zc_Enum_Status_Complete())
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND COALESCE(MovementBoolean_MobileApplication.ValueData, False) = False)
            , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
                                           , CASE WHEN MIN(date_trunc('day', MovementProtocol.OperDate + INTERVAL '3 HOUR')) < '01.01.2022'::TDateTime
                                                       AND date_trunc('day', Movement.OperDate) > '01.01.2022'::TDateTime

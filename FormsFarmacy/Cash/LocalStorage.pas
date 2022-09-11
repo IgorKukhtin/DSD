@@ -110,7 +110,7 @@ begin
       //***26.10.21
       AddBoolField(LocalDataBaseHead, 'ISERRORRO');   //ВИП чек по ошибке РРО
       //***15.03.22
-      AddBoolField(LocalDataBaseHead, 'ISPAPERRSP');   //	Бумажный рецепт по СП
+      AddBoolField(LocalDataBaseHead, 'ISPAPERRSP');  //	Бумажный рецепт по СП
 
       LocalDataBaseHead.CreateTable;
     end
@@ -195,7 +195,7 @@ begin
         if FindField('ISERRORRO') = nil then AddBoolField(LFieldDefs,  'ISERRORRO');     //ВИП чек по ошибке РРО
         //***15.03.22
         if FindField('ISPAPERRSP') = nil then AddBoolField(LFieldDefs,  'ISPAPERRSP');    //	Бумажный рецепт по СП
-
+        //***10.09.22
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
 
@@ -345,6 +345,9 @@ begin
       AddBoolField(LocalDataBaseBody,  'ISPRESENT');   //Подарок
       //***20.09.21
       AddIntField(LocalDataBaseBody,  'JURIDID');      //Товар поставщика
+      //***10.09.22
+      AddIntField(LocalDataBaseBody,  'GOODSPR');     //Акционный товар
+      AddBoolField(LocalDataBaseBody, 'ISGOODSPR');   //Акционная строчка
 
       LocalDataBaseBody.CreateTable;
     end
@@ -376,6 +379,9 @@ begin
         if FindField('ISPRESENT') = nil then AddBoolField(LFieldDefs, 'ISPRESENT');
         //***20.09.21
         if FindField('JURIDID') = nil then AddIntField(LFieldDefs,  'JURIDID');
+        //***10.09.22
+        if FindField('GOODSPR') = nil then AddIntField(LFieldDefs,  'GOODSPR');
+        if FindField('ISGOODSPR') = nil then AddBoolField(LFieldDefs, 'ISGOODSPR');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -414,7 +420,10 @@ begin
         //***02.10.20
         (FindField('ISPRESENT') = nil) or
         //***20.09.21
-        (FindField('JURIDID') = nil));
+        (FindField('JURIDID') = nil) or
+        //***10.09.22
+        (FindField('GOODSPR') = nil) or
+        (FindField('ISGOODSPR') = nil));
 
       Close;
 

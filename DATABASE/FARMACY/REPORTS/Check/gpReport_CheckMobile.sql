@@ -47,7 +47,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CommentCustomer TVarChar
              , isErrorRRO Boolean 
              , isMobileApplication Boolean, isMobileFirstOrder Boolean
-             , UserReferalsName TVarChar, isConfirmByPhone Boolean, DateComing TDateTime 
+             , UserReferalsName TVarChar, UserUnitReferalsName TVarChar, isConfirmByPhone Boolean, DateComing TDateTime 
              , MobileDiscount TFloat, ApplicationAward TFloat, isEmployeeMessage Boolean
              , Color_UserReferals Integer
               )
@@ -91,7 +91,24 @@ BEGIN
                                  LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
                                                         ON ObjectString_BuyerForSite_Phone.ObjectId = MovementLinkObject_BuyerForSite.ObjectId
                                                        AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
-                            )
+                            ),
+            tmpEmployeeSchedule AS (SELECT DISTINCT
+                                           Movement.OperDate                        AS OperDate
+                                         , MovementItemMaster.ObjectId              AS UserId
+                                         , MILinkObject_Unit.ObjectId               AS UnitId
+                                        FROM Movement
+
+                                             INNER JOIN MovementItem AS MovementItemMaster
+                                                                     ON MovementItemMaster.MovementId = Movement.Id
+                                                                    AND MovementItemMaster.DescId = zc_MI_Master()
+
+                                             INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                               ON MILinkObject_Unit.MovementItemId = MovementItemMaster.Id
+                                                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+                                        WHERE Movement.OperDate BETWEEN date_trunc('Month', inStartDate) AND date_trunc('Month', inEndDate)
+                                          AND Movement.DescId = zc_Movement_EmployeeSchedule()
+                                          AND Movement.StatusId <> zc_Enum_Status_Erased())
                             
          SELECT
              Movement_Check.Id
@@ -159,6 +176,8 @@ BEGIN
            , COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False)::Boolean    AS isMobileFirstOrder
            
            , Object_UserReferals.ValueData                                            AS UserReferalsName
+           , Object_UnitUserReferals.ValueData                                        AS UserUnitReferalsName
+           
            , COALESCE(MovementBoolean_ConfirmByPhone.ValueData, False)::Boolean      AS isConfirmByPhone
            , MovementDate_Coming.ValueData                                AS DateComing
            , CASE WHEN Movement_Check.StatusId = zc_Enum_Status_Complete() THEN MovementFloat_MobileDiscount.ValueData END::TFloat AS MobileDiscount
@@ -431,6 +450,10 @@ BEGIN
                                         AND MovementLinkObject_UserReferals.DescId = zc_MovementLinkObject_UserReferals()
             LEFT JOIN Object AS Object_UserReferals ON Object_UserReferals.Id = MovementLinkObject_UserReferals.ObjectId
             
+            LEFT JOIN tmpEmployeeSchedule ON tmpEmployeeSchedule.OperDate = date_trunc('Month', Movement_Check.OperDate)
+                                         AND tmpEmployeeSchedule.UserId =MovementLinkObject_UserReferals.ObjectId 
+            LEFT JOIN Object AS Object_UnitUserReferals ON Object_UnitUserReferals.Id = tmpEmployeeSchedule.UnitId
+            
             LEFT JOIN tmpMovement ON tmpMovement.MovementId = Movement_Check.Id
                                  AND tmpMovement.Ord = 1
       ;
@@ -449,7 +472,6 @@ $BODY$
 
 -- тест
 -- 
-
 
 select * from gpReport_CheckMobile(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('30.09.2022')::TDateTime , inUnitId := 0 , inIsUnComplete := 'True' , inIsErased := 'True' , inisEmployeeMessage := 'False' ,  inSession := '3');
 

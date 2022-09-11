@@ -9,7 +9,8 @@
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, TVarChar, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, Boolean, Integer, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, Boolean, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, Boolean, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
@@ -28,6 +29,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
     IN inDivisionPartiesID   Integer   , -- Разделение партий в кассе для продажи
     IN inPresent             Boolean   , -- Подарок
     IN inJuridicalId         Integer   , -- Списывать товар поставщика
+    IN inGoodsPresentId      Integer   , -- Акционный товар
+    IN inisGoodsPresent      Boolean   , -- Акционная строчка
     IN inList_UID            TVarChar  , -- UID строки
     -- IN inDiscountCardNumber  TVarChar DEFAULT '', -- № Дисконтной карты
     in inUserSession	     TVarChar  , -- сессия пользователя (подменяем реальную)
@@ -117,7 +120,15 @@ BEGIN
                          LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
                                                           ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
-                                                         AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+                                                         AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()                                                         
+
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsPresent
+                                                          ON MILinkObject_GoodsPresent.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsPresent.DescId = zc_MILinkObject_GoodsPresent()
+                         LEFT JOIN MovementItemBoolean AS MIBoolean_GoodsPresent
+                                                       ON MIBoolean_GoodsPresent.MovementItemId = MovementItem.Id
+                                                      AND MIBoolean_GoodsPresent.DescId         = zc_MIBoolean_GoodsPresent()
+                                                         
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
@@ -125,6 +136,8 @@ BEGIN
                       AND COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId) = COALESCE (inNDSKindId, 0)
                       AND COALESCE (MILinkObject_DivisionParties.ObjectId, 0) = COALESCE (inDivisionPartiesID, 0)
                       AND COALESCE (MIBoolean_Present.ValueData, False) = COALESCE(inPresent, False)
+                      AND COALESCE (MILinkObject_GoodsPresent.ObjectId, 0) = COALESCE (inGoodsPresentID, 0)
+                      AND COALESCE (MIBoolean_GoodsPresent.ValueData, False) = COALESCE(inisGoodsPresent, False)
                       AND MovementItem.isErased   = FALSE
                    );
         END IF;
@@ -152,6 +165,14 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
                                                           ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsPresent
+                                                          ON MILinkObject_GoodsPresent.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsPresent.DescId = zc_MILinkObject_GoodsPresent()
+                         LEFT JOIN MovementItemBoolean AS MIBoolean_GoodsPresent
+                                                       ON MIBoolean_GoodsPresent.MovementItemId = MovementItem.Id
+                                                      AND MIBoolean_GoodsPresent.DescId         = zc_MIBoolean_GoodsPresent()
+
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
@@ -159,6 +180,8 @@ BEGIN
                       AND COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId) = COALESCE (inNDSKindId, 0)
                       AND COALESCE (MILinkObject_DivisionParties.ObjectId, 0) = COALESCE (inDivisionPartiesID, 0)
                       AND COALESCE (MIBoolean_Present.ValueData, False) = COALESCE(inPresent, False)
+                      AND COALESCE (MILinkObject_GoodsPresent.ObjectId, 0) = COALESCE (inGoodsPresentID, 0)
+                      AND COALESCE (MIBoolean_GoodsPresent.ValueData, False) = COALESCE(inisGoodsPresent, False)
                       AND MovementItem.isErased   = FALSE
                     LIMIT 1
                    );
@@ -220,6 +243,13 @@ BEGIN
     
     -- сохранили связь с <Списывать товар поставщика>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Juridical(), ioId, COALESCE (inJuridicalId, 0));
+
+    -- сохранили связь с <Акционный товар>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsPresent(), ioId, COALESCE (inGoodsPresentId, 0));
+
+    -- сохранили свойство <Акционная строчка>
+    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_GoodsPresent(), ioId, inisGoodsPresent);
+
 
     -- пересчитали Итоговые суммы
     PERFORM lpInsertUpdate_MovementFloat_TotalSummCheck (inMovementId);

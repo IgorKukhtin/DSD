@@ -634,6 +634,8 @@ type
     N64: TMenuItem;
     actChoiceFilesToCheckCash: TOpenChoiceForm;
     spFilesToCheckFTPParams: TdsdStoredProc;
+    SalePromoGoodsCDS: TClientDataSet;
+    SalePromoGoodsCalcCDS: TClientDataSet;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -729,7 +731,6 @@ type
     procedure actCashGoodsOneToExpirationDateExecute(Sender: TObject);
     procedure actGoodsAnalogExecute(Sender: TObject);
     procedure actGoodsAnalogChooseExecute(Sender: TObject);
-    procedure Label4Click(Sender: TObject);
     procedure actSetSPHelsiExecute(Sender: TObject);
     procedure actDeleteAccommodationAllIdExecute(Sender: TObject);
     procedure actDeleteAccommodationAllExecute(Sender: TObject);
@@ -866,7 +867,7 @@ type
     // процедура обновляет параметры для введения нового чека
     procedure NewCheck(ANeedRemainsRefresh: Boolean = True);
     // Изменение тела чека
-    procedure InsertUpdateBillCheckItems(AJuridicalId : Integer = 0; AJuridicalName : String = '');
+    procedure InsertUpdateBillCheckItems(AJuridicalId : Integer = 0; AJuridicalName : String = ''; AisGoodsPresent : boolean = False; APrice : Currency = 0);
     // Обновить остаток согласно пришедшей разнице
     procedure UpdateRemainsFromDiff(ADiffCDS: TClientDataSet);
     // Возвращает товар в верхний грид
@@ -896,6 +897,10 @@ type
     procedure LoadUnitConfig;
     procedure LoadTaxUnitNight;
     procedure LoadGoodsExpirationDate;
+    procedure LoadSalePromoGoods;
+    function CheckAddSalePromoGoods : Boolean;
+    function CheckSalePromoGoods : Boolean;
+    function CheckGoodsPromoGoods(AGoodsId : Integer) : Boolean;
 
     // проверили что есть остаток
     function fCheck_RemainsError: Boolean;
@@ -1048,7 +1053,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection,
   LikiDniproReceipt, EnterRecipeNumber1303, LikiDniproReceiptDialog, Clipbrd,
   TestingUser, ChoiceMedicalProgramSP, SimpleGauge, ListGoodsKeyword,
-  EnterBuyerForSite;
+  EnterBuyerForSite, SalePromoGoodsDialog;
 
 const
   StatusUnCompleteCode = 1;
@@ -1170,6 +1175,7 @@ begin
           LoadUnitConfig;
           LoadTaxUnitNight;
           SetTaxUnitNight;
+          LoadSalePromoGoods;
         end;
       3: // получен запрос на обновление всего
         begin
@@ -1183,6 +1189,7 @@ begin
           LoadUnitConfig;
           LoadTaxUnitNight;
           SetTaxUnitNight;
+          LoadSalePromoGoods;
         end;
       4: // получен запрос на сохранение в отдельную таблицу отгруженных чеков
         begin
@@ -3849,6 +3856,8 @@ begin
     exit;
   end;
 
+  if not CheckSalePromoGoods then Exit;
+
   if UnitConfigCDS.FieldByName('LoyaltySaveMoneyCount').AsInteger > 0 then
   begin
     if not pnlLoyaltySaveMoney.Visible then
@@ -6477,7 +6486,9 @@ begin
           CheckCDS.FieldByName('DiscountExternalID').AsVariant,
           CheckCDS.FieldByName('DivisionPartiesID').AsVariant]), []);
 
-      if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
+      if CheckCDS.FieldByName('isGoodsPresent').AsBoolean then
+           // Если подарок то не меняем
+      else if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
         (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
         CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value,
         CheckCDS.FieldByName('GoodsId').AsInteger) then
@@ -8549,6 +8560,7 @@ begin
   LoadBankPOSTerminal;
   LoadUnitConfig;
   LoadTaxUnitNight;
+  LoadSalePromoGoods;
   SetTaxUnitNight;
   SetMainFormCaption;
 
@@ -8690,7 +8702,7 @@ function GoodsToJSON(AId : Integer; AAmount : Currency; APartionDateKindId, ANds
     end;
 end;
 
-procedure TMainCashForm2.InsertUpdateBillCheckItems(AJuridicalId : Integer = 0; AJuridicalName : String = '');
+procedure TMainCashForm2.InsertUpdateBillCheckItems(AJuridicalId : Integer = 0; AJuridicalName : String = ''; AisGoodsPresent : boolean = False; APrice : Currency = 0);
 var
   lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent,
     nAmount, nAmountPS, nAmountPSJ, nAmountPSM, nAmountM, nGoodsPairSunAmount, nRemains, nAmountPut: Currency;
@@ -8818,7 +8830,7 @@ begin
         nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency;
       end;
     finally
-      CheckCDS.GotoBookmark(Bookmark);
+      if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
     end;
 
     // проверяем наличие по поставщику
@@ -8862,7 +8874,7 @@ begin
         CheckCDS.Post;
       end;
     finally
-      CheckCDS.GotoBookmark(Bookmark);
+      if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
     end;
 
   end else if not FStepSecond and SourceClientDataSet.FieldByName('isGoodsPairSun').AsBoolean then
@@ -8885,7 +8897,7 @@ begin
         nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency;
       end;
     finally
-      CheckCDS.GotoBookmark(Bookmark);
+      if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
     end;
 
     if nJuridicalId <> 0 then
@@ -8939,7 +8951,7 @@ begin
         CheckCDS.Post;
       end;
     finally
-      CheckCDS.GotoBookmark(Bookmark);
+      if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
     end;
   end;
 
@@ -8970,7 +8982,7 @@ begin
           nAmountPS := nAmountPS - checkCDS.FieldByName('Amount').AsCurrency;
         CheckCDS.Next;
       end;
-      CheckCDS.GotoBookmark(Bookmark);
+      if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
 
       // Проверим наличие парного
       if nAmount > 0 then
@@ -9076,7 +9088,7 @@ begin
             RemainsCDS.Filter := cFilterOld;
             RemainsCDS.Filtered := True;
             RemainsCDS.EnableControls;
-            CheckCDS.GotoBookmark(Bookmark);
+            if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
             nAmount := nAmountM;
           end;
         end;
@@ -9108,7 +9120,7 @@ begin
         finally
           CheckCDS.EnableControls;
           SourceClientDataSet.EnableControls;
-          CheckCDS.GotoBookmark(Bookmark);
+          if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
         end;
       end;
     end;
@@ -9258,6 +9270,14 @@ begin
       lGoodsId_bySoldRegim := SourceClientDataSet.FieldByName('Id').AsInteger;
       lTypeDiscount := 0;
 
+      if (AisGoodsPresent = True) and (APrice <> 0) then
+      begin
+        // цена БЕЗ скидки
+        lPriceSale := SourceClientDataSet.FieldByName('Price').asCurrency;
+        // цена СО скидкой
+        lPrice := APrice;
+      end
+      else
       if (Self.FormParams.ParamByName('SPTax').Value <> 0) and
         (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
         (FormParams.ParamByName('Price1303').Value <> 0) then
@@ -9664,13 +9684,14 @@ begin
       try
         CheckCDS.Filtered := false;
         // попытка добавить препарат с другой ценой. обновляем цену у уже существующего и обнуляем суммы для пересчета
-        if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent',
+        if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent',
           VarArrayOf([SourceClientDataSet.FieldByName('Id').AsInteger,
           SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
           SourceClientDataSet.FindField('NDSKindId').AsVariant,
           SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
           SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
-          FormParams.ParamByName('AddPresent').Value]), []) and
+          FormParams.ParamByName('AddPresent').Value,
+          AisGoodsPresent]), []) and
           ((CheckCDS.FieldByName('PriceSale').asCurrency <> lPriceSale) or
           (CheckCDS.FieldByName('Price').asCurrency <> lPrice)) and
           (CheckCDS.FieldByName('AmountOrder').asCurrency = 0) then
@@ -9682,6 +9703,8 @@ begin
             ShowMessage('Увеличивать количество на целые значения запрещено, можно до ближайшего целого. Отпустите клиента отдельтным чеком.');
             Exit;
           end;
+
+          if not AisGoodsPresent then if not CheckGoodsPromoGoods(CheckCDS.FieldByName('GoodsId').AsInteger) then Exit;
 
           CheckCDS.Edit;
           CheckCDS.FieldByName('Price').asCurrency := lPrice;
@@ -9797,6 +9820,8 @@ begin
             ShowMessage('Добавлять товар в чек запрещено. Отпустите клиента отдельным новым чеком.');
             Exit;
           end;
+
+          if not AisGoodsPresent then if not CheckGoodsPromoGoods(SourceClientDataSet.FieldByName('Id').AsInteger) then Exit;
 
           CheckCDS.Append;
           CheckCDS.FieldByName('Id').AsInteger := 0;
@@ -9975,15 +10000,18 @@ begin
           CheckCDS.FieldByName('PriceSaleDiscount').AsVariant := Null;
           CheckCDS.FieldByName('isPriceDiscount').AsBoolean := False;
 
+          CheckCDS.FieldByName('isGoodsPresent').AsBoolean := AisGoodsPresent;
+
           CheckCDS.Post;
 
-        End else if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent',
+        End else if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent',
           VarArrayOf([nId,
           SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
           SourceClientDataSet.FindField('NDSKindId').AsVariant,
           SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
           SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
-          FormParams.ParamByName('AddPresent').Value]), []) and
+          FormParams.ParamByName('AddPresent').Value,
+          AisGoodsPresent]), []) and
           (CheckCDS.FieldByName('JuridicalId').AsInteger <> nJuridicalId) then
         Begin
           if CheckCDS.FieldByName('AmountOrder').asCurrency > 0 then
@@ -10076,6 +10104,8 @@ begin
           exit;
         end;
       end;
+
+     if not AisGoodsPresent then if not CheckGoodsPromoGoods(CheckCDS.FieldByName('GoodsId').AsInteger) then Exit;
 
       // Проверим фиксированные скидки
       try
@@ -10344,7 +10374,7 @@ begin
           nAmountPSM := nAmountPSM + checkCDS.FieldByName('Amount').AsCurrency;
         CheckCDS.Next;
       end;
-      CheckCDS.GotoBookmark(Bookmark);
+      if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
 
       if (bBadJuridical = True) or gc_User.Local then
       begin
@@ -10434,14 +10464,13 @@ begin
         end;
       end;
     end;
+
+    // Добавление акционного товара
+    if not AisGoodsPresent then CheckAddSalePromoGoods;
+
   end;
 end;
 
-procedure TMainCashForm2.Label4Click(Sender: TObject);
-begin
-  inherited;
-
-end;
 
 { ------------------------------------------------------------------------------ }
 
@@ -11913,7 +11942,9 @@ begin
           checkCDS.FieldByName('SummChangePercent').asCurrency :=DiscountServiceForm.gSummChangePercent;
           end
           else }
-        if (Self.FormParams.ParamByName('SPTax').Value <> 0) and
+        if CheckCDS.FieldByName('isGoodsPresent').AsBoolean then
+           // Если подарок то не меняем
+        else if (Self.FormParams.ParamByName('SPTax').Value <> 0) and
           (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
           (FormParams.ParamByName('Price1303').Value <> 0) then
         begin
@@ -12920,16 +12951,16 @@ begin
           ADistributionPromoList, // Раздача акционных материалов.
           AMedicKashtanId,        // ФИО врача (МИС «Каштан»)
           AMemberKashtanId,       // ФИО пациента (МИС «Каштан»)
-          AisCorrectMarketing,    // Корректировка суммы маркетинг в ЗП по подразделению
+          AisCorrectMarketing,      // Корректировка суммы маркетинг в ЗП по подразделению
           AisCorrectIlliquidAssets, // Корректировка суммы нелеквида в ЗП по подразделению
-          AisDoctors,                // Врачи
-          AisDiscountCommit,         // Дисконт проведен на сайте
-          AZReport,                   // Номер Z отчета
-          AMedicalProgramSPId,       // Медицинская программа соц. проектов
-          AisManual,                  // ручной выбор медикаментов
-          ACategory1303Id,            // Категория 1303
-          AisErrorRRO,                 // ВИП чек по ошибке РРО
-          AisPaperRecipeSP            // Бумажный рецепт по СП
+          AisDoctors,               // Врачи
+          AisDiscountCommit,        // Дисконт проведен на сайте
+          AZReport,                 // Номер Z отчета
+          AMedicalProgramSPId,      // Медицинская программа соц. проектов
+          AisManual,                // ручной выбор медикаментов
+          ACategory1303Id,          // Категория 1303
+          AisErrorRRO,              // ВИП чек по ошибке РРО
+          AisPaperRecipeSP         // Бумажный рецепт по СП
           ]));
       End
       else
@@ -13121,9 +13152,12 @@ begin
             // ***19.06.20
             ADS.FieldByName('DivisionPartiesID').AsInteger, // Разделение партий в кассе для продажи
             // ***02.10.20
-            ADS.FieldByName('isPresent').AsBoolean, // Разделение партий в кассе для продажи
+            ADS.FieldByName('isPresent').AsBoolean, // Подарок
             // ***20.09.21
-            ADS.FieldByName('JuridicalId').AsInteger // Товар поставщика
+            ADS.FieldByName('JuridicalId').AsInteger, // Товар поставщика
+            // ***02.10.20
+            ADS.FieldByName('GoodsPresentId').AsInteger, // Акционный товар
+            ADS.FieldByName('isGoodsPresent').AsBoolean // Акционная строчка
             ]));
           // сохранили отгруженные препараты для корректировки полных остатков
           if FSaveCheckToMemData then
@@ -13172,6 +13206,10 @@ begin
               '<DiscountExternalName>"' + ADS.FieldByName('DiscountExternalName').AsString + '"</DiscountExternalName>' +
               '<DivisionPartiesID>"' + ADS.FieldByName('DivisionPartiesID').AsString + '"</DivisionPartiesID>' +
               '<DivisionPartiesName>"' + ADS.FieldByName('DivisionPartiesName').AsString + '"</DivisionPartiesName>' +
+              '<isPresent>"' + ADS.FieldByName('isPresent').AsString + '"</isPresent>' +
+              '<JuridicalId>"' + ADS.FieldByName('JuridicalId').AsString + '"</JuridicalId>' +
+              '<GoodsPresentId>"' + ADS.FieldByName('GoodsPresentId').AsString + '"</GoodsPresentId>' +
+              '<isGoodsPresent>"' + ADS.FieldByName('isGoodsPresent').AsString + '"</isGoodsPresent>' +
               '</Items>';
           except
             str_log_xml := str_log_xml + '<Items num="' + IntToStr(I) + '">' +
@@ -13914,6 +13952,19 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.LoadSalePromoGoods;
+begin
+  if not fileExists(SalePromoGoods_lcl) then
+    exit;
+
+  WaitForSingleObject(MutexSalePromoGoods, INFINITE);
+  try
+    LoadLocalData(SalePromoGoodsCDS, SalePromoGoods_lcl);
+  finally
+    ReleaseMutex(MutexSalePromoGoods);
+  end;
+end;
+
 procedure TMainCashForm2.LoadUnitConfig;
 var
   nPos: Integer;
@@ -14010,6 +14061,303 @@ begin
   finally
     ReleaseMutex(MutexTaxUnitNight);
   end;
+end;
+
+function TMainCashForm2.CheckAddSalePromoGoods : Boolean;
+var Bookmark, RBookmark : TBookmark; nAmount : Currency;
+begin
+  Result := True;
+  if SalePromoGoodsCDS.IsEmpty then Exit;
+
+  RBookmark := RemainsCDS.GetBookmark;
+  RemainsCDS.DisableControls;
+  try
+    if not CheckCDS.IsEmpty and (CheckCDS.FieldByName('GoodsPresentId').AsInteger = 0) then
+    begin
+      SalePromoGoodsCDS.Filter := 'EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = ' + CheckCDS.FieldByName('GoodsId').AsString;
+      SalePromoGoodsCDS.Filtered := True;
+      SalePromoGoodsCDS.First;
+      while not SalePromoGoodsCDS.Eof do
+      begin
+        SalePromoGoodsCDS.Edit;
+        SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := 0;
+        SalePromoGoodsCDS.FieldByName('AmountSale').AsCurrency := 0;
+        SalePromoGoodsCDS.Post;
+        if Abs(Frac(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency)) < 0.01 then
+        begin
+          if RemainsCDS.Locate('Id', SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, []) then
+          begin
+            try
+              RemainsCDS.Filtered := false;
+              RemainsCDS.Filter := 'Remains > ' + SalePromoGoodsCDS.FieldByName('AmountPresent').AsString + ' and ID = ' + SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsString;
+              RemainsCDS.Filtered := true;
+              if RemainsCDS.RecordCount > 0 then
+              begin
+                SalePromoGoodsCDS.Edit;
+                if SalePromoGoodsCDS.FieldByName('Price').AsCurrency = 0 then
+                  SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := RemainsCDS.FieldByName('Price').AsCurrency
+                else SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+                SalePromoGoodsCDS.FieldByName('AmountSale').AsCurrency := Min(RemainsCDS.FieldByName('Remains').AsCurrency,
+                    SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency * Round(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency + 0.01));
+                SalePromoGoodsCDS.Post;
+              end;
+            finally
+              RemainsCDS.Filtered := false;
+              RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0)';
+              RemainsCDS.Filtered := true;
+            end;
+
+          end;
+        end;
+        SalePromoGoodsCDS.Next;
+      end;
+
+      SalePromoGoodsCDS.Filtered := False;
+      SalePromoGoodsCDS.Filter := 'AmountSale > 0 and EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = ' + CheckCDS.FieldByName('GoodsId').AsString;
+      SalePromoGoodsCDS.Filtered := True;
+
+      if SalePromoGoodsCDS.RecordCount > 0 then
+      begin
+        if SalePromoGoodsDialogExecute(SalePromoGoodsCDS) then
+        begin
+          CheckCDS.Edit;
+          CheckCDS.FieldByName('GoodsPresentId').AsInteger := SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger;
+          CheckCDS.Post;
+        end;
+      end;
+    end;
+
+    if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
+    SalePromoGoodsCalcCDS.CreateDataSet;
+
+    Bookmark := CheckCDS.GetBookmark;
+    try
+      CheckCDS.Filtered := False;
+      CheckCDS.First;
+      while not CheckCDS.Eof do
+      begin
+        if (CheckCDS.FieldByName('Amount').AsCurrency = 0) and (CheckCDS.FieldByName('GoodsPresentId').AsInteger <> 0) then
+        begin
+          CheckCDS.Edit;
+          CheckCDS.FieldByName('GoodsPresentId').AsInteger := 0;
+          CheckCDS.Post;
+        end else if (CheckCDS.FieldByName('Amount').AsCurrency > 0) and (CheckCDS.FieldByName('GoodsPresentId').AsInteger <> 0) then
+        begin
+          SalePromoGoodsCDS.Filtered := False;
+          SalePromoGoodsCDS.Filter := 'EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = ' + CheckCDS.FieldByName('GoodsId').AsString + ' and GoodsPresentId = ' + CheckCDS.FieldByName('GoodsPresentId').AsString;
+          SalePromoGoodsCDS.Filtered := True;
+          if (SalePromoGoodsCDS.RecordCount = 0) or (Abs(Frac(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency)) > 0.01) then
+          begin
+            CheckCDS.Edit;
+            CheckCDS.FieldByName('GoodsPresentId').AsInteger := 0;
+            CheckCDS.Post;
+          end else if CheckCDS.FieldByName('GoodsPresentId').AsInteger <> 0 then
+          begin
+            if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([CheckCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Price').AsCurrency]), []) then
+            begin
+              SalePromoGoodsCalcCDS.Edit;
+              SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency +
+                SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency * Round(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency + 0.01);
+              SalePromoGoodsCalcCDS.Post;
+            end else
+            begin
+              SalePromoGoodsCalcCDS.Append;
+              SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger;
+              SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+              SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency * Round(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency + 0.01);
+              SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := 0;
+              SalePromoGoodsCalcCDS.Post;
+            end;
+          end;
+        end else if (CheckCDS.FieldByName('Amount').AsCurrency > 0) and CheckCDS.FieldByName('isGoodsPresent').AsBoolean then
+        begin
+          if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FieldByName('Price').AsCurrency]), []) then
+          begin
+            SalePromoGoodsCalcCDS.Edit;
+            SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency + CheckCDS.FieldByName('Amount').AsCurrency;
+            SalePromoGoodsCalcCDS.Post;
+          end else
+          begin
+            SalePromoGoodsCalcCDS.Append;
+            SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := CheckCDS.FieldByName('GoodsId').AsInteger;
+            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := CheckCDS.FieldByName('Price').AsCurrency;
+            SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := 0;
+            SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := CheckCDS.FieldByName('Amount').AsCurrency;
+            SalePromoGoodsCalcCDS.Post;
+          end;
+        end;
+        CheckCDS.Next;
+      end;
+
+      RemainsCDS.Filtered := false;
+      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0)';
+      RemainsCDS.Filtered := true;
+
+      // Проверяем акционные товары isGoodsPresent
+      SalePromoGoodsCalcCDS.First;
+      while not SalePromoGoodsCalcCDS.Eof  do
+      begin
+
+        if SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency >  SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency then
+        begin
+          if RemainsCDS.Locate('Id', SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger, []) then
+          begin
+            nAmount := MIN(RemainsCDS.FieldByName('Remains').asCurrency, SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency -  SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency);
+            SoldRegim := True;
+            SourceClientDataSet := RemainsCDS;
+            edAmount.Text := CurrToStr(nAmount);
+            SourceClientDataSet := RemainsCDS;
+            InsertUpdateBillCheckItems(0, '', True, SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency);
+
+            if SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency > (SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency + nAmount) then
+            begin
+              SalePromoGoodsCalcCDS.Edit;
+              SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency + nAmount;
+              SalePromoGoodsCalcCDS.Post;
+            end else SalePromoGoodsCalcCDS.Delete;
+
+          end else SalePromoGoodsCalcCDS.Delete;
+        end else if SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency <  SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency then
+        begin
+          if CheckCDS.Locate('GoodsId;Price;isGoodsPresent', VarArrayOf([SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger,
+             SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency, True]), []) then
+          begin
+            nAmount := - MIN(CheckCDS.FieldByName('Amount').asCurrency, SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency -  SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency);
+            SoldRegim := False;
+            CheckGrid.SetFocus;
+            edAmount.Text := CurrToStr(nAmount);
+            SourceClientDataSet := RemainsCDS;
+            InsertUpdateBillCheckItems(0, '', True, SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency);
+
+            if SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency < (SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency + nAmount) then
+            begin
+              SalePromoGoodsCalcCDS.Edit;
+              SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency + nAmount;
+              SalePromoGoodsCalcCDS.Post;
+            end else SalePromoGoodsCalcCDS.Delete;
+          end else SalePromoGoodsCalcCDS.Delete;
+        end else SalePromoGoodsCalcCDS.Delete;
+
+
+        SalePromoGoodsCalcCDS.First;
+      end;
+
+    finally
+      CheckCDS.Filtered := True;
+      if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
+    end;
+
+  finally
+    if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
+    SalePromoGoodsCDS.Filtered := False;
+    SalePromoGoodsCDS.Filter := '';
+    RemainsCDS.Filtered := false;
+    RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0)';
+    RemainsCDS.Filtered := true;
+    if not RemainsCDS.IsEmpty then RemainsCDS.GotoBookmark(RBookmark);
+    RemainsCDS.EnableControls;
+  end;
+end;
+
+function TMainCashForm2.CheckSalePromoGoods : Boolean;
+  var Bookmark : TBookmark;
+begin
+  Result := True;
+  if SalePromoGoodsCDS.IsEmpty then Exit;
+
+  CheckCDS.DisableConstraints;
+  Bookmark := CheckCDS.GetBookmark;
+  try
+    if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
+    SalePromoGoodsCalcCDS.CreateDataSet;
+
+    while not CheckCDS.Eof do
+    begin
+      if (CheckCDS.FieldByName('Amount').AsCurrency > 0) and (CheckCDS.FieldByName('GoodsPresentId').AsInteger <> 0) then
+      begin
+        SalePromoGoodsCDS.Filtered := False;
+        SalePromoGoodsCDS.Filter := 'EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = ' + CheckCDS.FieldByName('GoodsId').AsString + ' and GoodsPresentId = ' + CheckCDS.FieldByName('GoodsPresentId').AsString;
+        SalePromoGoodsCDS.Filtered := True;
+        if CheckCDS.FieldByName('GoodsPresentId').AsInteger <> 0 then
+        begin
+          if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([CheckCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Price').AsCurrency]), []) then
+          begin
+            SalePromoGoodsCalcCDS.Edit;
+            SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency +
+              SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency * Round(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency + 0.01);
+            SalePromoGoodsCalcCDS.Post;
+          end else
+          begin
+            SalePromoGoodsCalcCDS.Append;
+            SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger;
+            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+            SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency * Round(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency + 0.01);
+            SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := 0;
+            SalePromoGoodsCalcCDS.Post;
+          end;
+        end;
+      end else if (CheckCDS.FieldByName('Amount').AsCurrency > 0) and CheckCDS.FieldByName('isGoodsPresent').AsBoolean then
+      begin
+        if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FieldByName('Price').AsCurrency]), []) then
+        begin
+          SalePromoGoodsCalcCDS.Edit;
+          SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency + CheckCDS.FieldByName('Amount').AsCurrency;
+          SalePromoGoodsCalcCDS.Post;
+        end else
+        begin
+          SalePromoGoodsCalcCDS.Append;
+          SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := CheckCDS.FieldByName('GoodsId').AsInteger;
+          SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := CheckCDS.FieldByName('Price').AsCurrency;
+          SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := 0;
+          SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := CheckCDS.FieldByName('Amount').AsCurrency;
+          SalePromoGoodsCalcCDS.Post;
+        end;
+      end;
+      CheckCDS.Next;
+    end;
+
+    // Проверяем акционные товары isGoodsPresent
+    SalePromoGoodsCalcCDS.Filtered := False;
+    SalePromoGoodsCalcCDS.Filter := 'AmountUse > Amount';
+    SalePromoGoodsCalcCDS.Filtered := True;
+    SalePromoGoodsCalcCDS.First;
+    if not SalePromoGoodsCalcCDS.Eof then
+    begin
+      Result := False;
+      ShowMessage('Как минимум одного акционного товара в чеке больше чем должно быть.');
+    end;
+
+  finally
+    SalePromoGoodsCalcCDS.Filtered := False;
+    SalePromoGoodsCalcCDS.Filter := '';
+    if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
+    SalePromoGoodsCDS.Filtered := False;
+    SalePromoGoodsCDS.Filter := '';
+    if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
+    CheckCDS.EnableControls;
+  end;
+
+end;
+
+function TMainCashForm2.CheckGoodsPromoGoods(AGoodsId : Integer) : Boolean;
+begin
+  Result := True;
+  if SalePromoGoodsCDS.IsEmpty then Exit;
+
+  try
+      SalePromoGoodsCDS.Filter := 'EndPromo >= ' + FloatToStr(Date) + ' and GoodsPresentId = ' + IntToStr(AGoodsId);
+      SalePromoGoodsCDS.Filtered := True;
+      SalePromoGoodsCDS.First;
+      if not SalePromoGoodsCDS.Eof then
+      begin
+        Result := False;
+        ShowMessage('Изменять или добавлять акционный товара в чек запрещено.');
+      end;
+  finally
+      SalePromoGoodsCDS.Filtered := False;
+      SalePromoGoodsCDS.Filter := '';
+  end;
+
 end;
 
 function TMainCashForm2.GetAmount: Currency;

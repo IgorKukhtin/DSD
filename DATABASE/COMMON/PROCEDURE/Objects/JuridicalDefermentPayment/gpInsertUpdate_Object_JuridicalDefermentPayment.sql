@@ -592,22 +592,22 @@ BEGIN
                            WHERE COALESCE (tmpLastPayment1.Amount, tmpLastPayment2.Amount, tmpLastPayment3.Amount, tmpLastPayment4.Amount) <> 0
                            ) 
    , tmpLastIncome AS (SELECT tmpJuridical.JuridicalId
-                               , tmpJuridical.ContractId
-                               , COALESCE (tmpLastIncome1.PaidKindId, tmpLastIncome2.PaidKindId, tmpLastIncome3.PaidKindId, tmpLastIncome4.PaidKindId)  AS PaidKindId
-                               , COALESCE (tmpLastIncome1.PartnerId, tmpLastIncome2.PartnerId, tmpLastIncome3.PartnerId, tmpLastIncome4.PartnerId)      AS PartnerId
-                               , COALESCE (tmpLastIncome1.OperDate, tmpLastIncome2.OperDate, tmpLastIncome3.OperDate, tmpLastIncome4.OperDate)          AS OperDate
-                               , COALESCE (tmpLastIncome1.Amount, tmpLastIncome2.Amount, tmpLastIncome3.Amount, tmpLastIncome4.Amount)                  AS Amount
-                          FROM tmpJuridical
-                               LEFT JOIN tmpLastIncome1 ON tmpLastIncome1.JuridicalId = tmpJuridical.JuridicalId
-                                                       AND tmpLastIncome1.ContractId = tmpJuridical.ContractId
-                               LEFT JOIN tmpLastIncome2 ON tmpLastIncome2.JuridicalId = tmpJuridical.JuridicalId
-                                                       AND tmpLastIncome2.ContractId = tmpJuridical.ContractId
-                               LEFT JOIN tmpLastIncome3 ON tmpLastIncome3.JuridicalId = tmpJuridical.JuridicalId
-                                                       AND tmpLastIncome3.ContractId = tmpJuridical.ContractId
-                               LEFT JOIN tmpLastIncome4 ON tmpLastIncome4.JuridicalId = tmpJuridical.JuridicalId
-                                                       AND tmpLastIncome4.ContractId = tmpJuridical.ContractId
-                          WHERE COALESCE (tmpLastIncome1.Amount, tmpLastIncome2.Amount, tmpLastIncome3.Amount, tmpLastIncome4.Amount) <> 0
-                          )
+                            , tmpJuridical.ContractId
+                            , COALESCE (tmpLastIncome1.PaidKindId, tmpLastIncome2.PaidKindId, tmpLastIncome3.PaidKindId, tmpLastIncome4.PaidKindId)  AS PaidKindId
+                            , COALESCE (tmpLastIncome1.PartnerId, tmpLastIncome2.PartnerId, tmpLastIncome3.PartnerId, tmpLastIncome4.PartnerId)      AS PartnerId
+                            , COALESCE (tmpLastIncome1.OperDate, tmpLastIncome2.OperDate, tmpLastIncome3.OperDate, tmpLastIncome4.OperDate)          AS OperDate
+                            , COALESCE (tmpLastIncome1.Amount, tmpLastIncome2.Amount, tmpLastIncome3.Amount, tmpLastIncome4.Amount)                  AS Amount
+                       FROM tmpJuridical
+                            LEFT JOIN tmpLastIncome1 ON tmpLastIncome1.JuridicalId = tmpJuridical.JuridicalId
+                                                    AND tmpLastIncome1.ContractId = tmpJuridical.ContractId
+                            LEFT JOIN tmpLastIncome2 ON tmpLastIncome2.JuridicalId = tmpJuridical.JuridicalId
+                                                    AND tmpLastIncome2.ContractId = tmpJuridical.ContractId
+                            LEFT JOIN tmpLastIncome3 ON tmpLastIncome3.JuridicalId = tmpJuridical.JuridicalId
+                                                    AND tmpLastIncome3.ContractId = tmpJuridical.ContractId
+                            LEFT JOIN tmpLastIncome4 ON tmpLastIncome4.JuridicalId = tmpJuridical.JuridicalId
+                                                    AND tmpLastIncome4.ContractId = tmpJuridical.ContractId
+                       WHERE COALESCE (tmpLastIncome1.Amount, tmpLastIncome2.Amount, tmpLastIncome3.Amount, tmpLastIncome4.Amount) <> 0
+                       )
 ---
      --результат
      SELECT tmpLastPayment.JuridicalId

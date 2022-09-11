@@ -140,7 +140,8 @@ uses
   Printer_FP3530T_NEW in '..\FormsFarmacy\Cash\Printer_FP3530T_NEW.pas',
   Printer_Emulation in '..\FormsFarmacy\Cash\Printer_Emulation.pas',
   ListGoodsKeyword in '..\FormsFarmacy\Cash\ListGoodsKeyword.pas' {ListGoodsKeywordForm: TParentForm},
-  EnterBuyerForSite in '..\FormsFarmacy\Cash\EnterBuyerForSite.pas' {EnterBuyerForSiteForm};
+  EnterBuyerForSite in '..\FormsFarmacy\Cash\EnterBuyerForSite.pas' {EnterBuyerForSiteForm},
+  SalePromoGoodsDialog in '..\FormsFarmacy\Cash\SalePromoGoodsDialog.pas' {SalePromoGoodsForm: TParentForm};
 
 {$R *.res}
 

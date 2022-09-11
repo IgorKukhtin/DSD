@@ -33,15 +33,45 @@ BEGIN
 
     RETURN QUERY
     WITH
-     tmpContainer AS
+     tmpContainerAll AS
                    (SELECT Container.ObjectId
                          , Container.Id
+                         , Container.ParentId
                          , Container.Amount
+                         , Container.DescId  
                     FROM
                         Container
-                    WHERE Container.DescId        = zc_Container_Count()
+                    WHERE Container.DescId        IN (zc_Container_Count(), zc_Container_CountPartionDate())
                       AND Container.WhereObjectId = inUnitId
                       AND Container.Amount        <> 0
+                   )
+   , tmpContainerPD AS
+                   (SELECT Container.ParentId
+                         , SUM(Container.Amount) AS Amount
+                    FROM
+                        tmpContainerAll AS Container
+
+                        INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                      AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                        INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                              ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId  
+                                             AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                             AND ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE
+                                                     
+                    WHERE Container.DescId        = zc_Container_CountPartionDate()
+                    GROUP BY Container.ParentId
+                   )
+   , tmpContainer AS
+                   (SELECT Container.ObjectId
+                         , Container.Id
+                         , (Container.Amount - COALESCE (tmpContainerPD.Amount, 0)) AS Amount
+                    FROM
+                        tmpContainerAll AS Container
+                        
+                        LEFT JOIN tmpContainerPD ON tmpContainerPD.ParentId = Container.Id
+                    WHERE Container.DescId        = zc_Container_Count()
+                      AND (Container.Amount - COALESCE (tmpContainerPD.Amount, 0)) > 0
                    )
    , tmpPartionMI AS
                    (SELECT CLO.ContainerId
@@ -426,4 +456,4 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 
 --Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(10128935 ,'3');
 --Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(8156016  ,'3');
-Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(8156016  ,'3');
+Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(377610   ,'3');

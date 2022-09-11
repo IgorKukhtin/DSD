@@ -225,19 +225,25 @@ BEGIN
                                                 AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                             WHERE COALESCE (tt.Amount,0) <> 0
                            )
-   , tmpLastIncome_all AS (SELECT tt.JuridicalId
-                                 , tt.ContractId
-                                 , tt.PaidKindId
-                                 , COALESCE (tt.PartnerId, 0) AS PartnerId
-                                 , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
-                                 -- последний приход
-                                 , tt.OperDateIn
-                                 , tt.AmountIn
-                            FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt
-                                 JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
-                                                 ON ObjectLink_Contract_InfoMoney.ObjectId = tt.ContractId
-                                                AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-                            WHERE COALESCE (tt.AmountIn,0) <> 0
+   , tmpLastIncome_all AS (SELECT *
+                           FROM (SELECT  tt.JuridicalId
+                                       , tt.ContractId
+                                       , tt.PaidKindId
+                                       , COALESCE (tt.PartnerId, 0) AS PartnerId
+                                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+                                       -- последний приход
+                                       , tt.OperDateIn
+                                       , tt.AmountIn
+                                       , ROW_NUMBER() OVER (PARTITION BY tt.JuridicalId, tt.ContractId, tt.PaidKindId, COALESCE (tt.PartnerId, 0), ObjectLink_Contract_InfoMoney.ChildObjectId ORDER BY tt.OperDateIn DESC) AS ord
+      
+                                  FROM gpSelect_Object_JuridicalDefermentPayment('5') AS tt
+                                       JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                       ON ObjectLink_Contract_InfoMoney.ObjectId = tt.ContractId
+                                                      AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                                  WHERE COALESCE (tt.AmountIn,0) <> 0
+                                  --and  tt.JuridicalId = 301746
+                                  ) AS tmp
+                            WHERE tmp.Ord = 1
                            )
                            
      -- находим последнии оплаты
@@ -598,7 +604,7 @@ BEGIN
                                      ON tmpLastIncome.JuridicalId = a.JuridicalId
                                     AND tmpLastIncome.ContractId  = a.ContractId
                                     AND tmpLastIncome.PaidKindId  = a.PaidKindId
-                                    AND tmpLastIncome.PartnerId   = COALESCE (a.PartnerId,0)
+                                    AND (tmpLastIncome.PartnerId  = a.PartnerId AND COALESCE (a.PartnerId,0) <> 0)
         LEFT JOIN (SELECT tmpLastIncome.JuridicalId
                         , tmpLastIncome.InfoMoneyId
                         , tmpLastIncome.PaidKindId

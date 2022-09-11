@@ -5,11 +5,16 @@ DROP FUNCTION IF EXISTS gpSelect_SalePromoGoods_Cash (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_SalePromoGoods_Cash(
     IN inSession             TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (GoodsId          Integer
+RETURNS TABLE (EndPromo         TDateTime
+             , GoodsId          Integer
              , Amount           TFloat 
              , GoodsPresentId   Integer
              , AmountPresent    TFloat
              , Price            TFloat
+             , GoodsPresentCode Integer
+             , GoodsPresentName TVarChar
+             , PriceSale        TFloat
+             , AmountSale       TFloat
              )
 AS
 $BODY$
@@ -39,7 +44,7 @@ BEGIN
     RETURN QUERY
     WITH -- Документы
            tmpMovementAll AS (SELECT Movement.Id
-                                   , Movement.OperDate
+                                   , MovementDate_EndPromo.ValueData AS EndPromo
                               FROM Movement
 
                                    INNER JOIN MovementDate AS MovementDate_StartPromo
@@ -70,7 +75,7 @@ BEGIN
            tmpMIUnitGroup AS (SELECT DISTINCT MovementItem.Id   AS Id
                               FROM tmpMIUnitAll AS MovementItem),
            tmpMovement AS (SELECT Movement.Id
-                                , Movement.OperDate
+                                , Movement.EndPromo
                            FROM tmpMovementAll AS Movement
 
                                 LEFT JOIN tmpMIUnit ON tmpMIUnit.Id = Movement.Id
@@ -78,12 +83,15 @@ BEGIN
                                 LEFT JOIN tmpMIUnitGroup ON tmpMIUnitGroup.Id = Movement.Id
 
                            ),
-           tmpMI AS (SELECT Goods_Retail.Id                               AS GoodsId
+           tmpMI AS (SELECT Movement.EndPromo                             AS EndPromo
+                          , Goods_Retail.Id                               AS GoodsId
                           , MI_SalePromoGoods.Amount                      AS Amount
                           , Goods_RetailPresent.Id                        AS GoodsPresentId
+                          , Object_Goods_Main.ObjectCode                  AS GoodsPresentCode
+                          , Object_Goods_Main.Name                        AS GoodsPresentName
                           , MI_SalePromoGoodsPresent.Amount               AS AmountPresent
                           , COALESCE(MIFloat_Price.ValueData, 0)::TFloat  AS Price
-                          , ROW_NUMBER() OVER (PARTITION BY MI_SalePromoGoods.ObjectId, MI_SalePromoGoodsPresent.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                          , ROW_NUMBER() OVER (PARTITION BY MI_SalePromoGoods.ObjectId, MI_SalePromoGoodsPresent.ObjectId ORDER BY Movement.EndPromo DESC) AS Ord
                      FROM tmpMovement AS Movement
 
                           INNER JOIN MovementItem AS MI_SalePromoGoods
@@ -100,6 +108,7 @@ BEGIN
                                                  AND MI_SalePromoGoodsPresent.DescId = zc_MI_Child()
                                                  AND MI_SalePromoGoodsPresent.isErased = FALSE
                                                  AND MI_SalePromoGoodsPresent.Amount > 0
+                          INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = MI_SalePromoGoodsPresent.ObjectId 
                           INNER JOIN Object_Goods_Retail AS Goods_RetailPresent 
                                                          ON Goods_RetailPresent.GoodsMainId = MI_SalePromoGoodsPresent.ObjectId 
                                                         AND Goods_RetailPresent.RetailId = vbRetailId
@@ -109,11 +118,16 @@ BEGIN
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
                      )
                           
-        SELECT MovementIten.GoodsId
+        SELECT MovementIten.EndPromo                             AS EndPromo
+             , MovementIten.GoodsId
              , MovementIten.Amount
              , MovementIten.GoodsPresentId
              , MovementIten.AmountPresent
              , MovementIten.Price
+             , MovementIten.GoodsPresentCode
+             , MovementIten.GoodsPresentName
+             , 0::TFloat   AS PriceSale
+             , 0::TFloat   AS AmountSale
         FROM tmpMI AS MovementIten
         WHERE MovementIten.ORD = 1
         ;

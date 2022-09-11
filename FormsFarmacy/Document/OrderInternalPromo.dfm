@@ -715,6 +715,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Touch.TabletOptions = [toPressAndHold]
     AlignSplitter = salBottom
     Control = cxGrid2
+    ExplicitLeft = 216
+    ExplicitTop = 470
   end
   object cxGrid2: TcxGrid [5]
     Left = 0
@@ -760,6 +762,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        Options.Editing = False
         Width = 49
       end
       object clJuridicalName: TcxGridDBColumn
@@ -772,10 +775,9 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = True
+        Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 414
       end
       object clComment: TcxGridDBColumn

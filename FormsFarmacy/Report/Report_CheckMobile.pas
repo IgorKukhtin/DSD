@@ -52,6 +52,7 @@ type
     mactUpdate_EmployeeMessage: TMultiAction;
     bbtUpdate_EmployeeMessage: TdxBarButton;
     isMobileFirstOrder: TcxGridDBColumn;
+    UserUnitReferalsName: TcxGridDBColumn;
   private
     { Private declarations }
   public

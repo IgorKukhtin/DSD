@@ -625,6 +625,106 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actOpenServiceItemAdd_history: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1082' '#1091#1089#1083#1086#1074#1080#1103#1084' '#1072#1088#1077#1085#1076#1099'>'
+      ImageIndex = 48
+      FormName = 'TServiceItemAddJournal_historyForm'
+      FormNameParam.Value = 'TServiceItemAddJournal_historyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = edDateStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenServiceItem_history: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
+      ImageIndex = 47
+      FormName = 'TServiceItemJournal_historyForm'
+      FormNameParam.Value = 'TServiceItemJournal_historyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = edDateStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object GuidesUnit: TdsdGuides [10]
     KeyField = 'Id'
@@ -859,6 +959,14 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenServiceItem_history'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenServiceItemAdd_history'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert_Movement_Service'
         end
         item
@@ -943,6 +1051,14 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     end
     object bbInsert_Movement_Service: TdxBarButton
       Action = actInsert_Movement_Service
+      Category = 0
+    end
+    object bbOpenServiceItem_history: TdxBarButton
+      Action = actOpenServiceItem_history
+      Category = 0
+    end
+    object bbOpenServiceItemAdd_history: TdxBarButton
+      Action = actOpenServiceItemAdd_history
       Category = 0
     end
   end
