@@ -1466,10 +1466,26 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_SetDateRROList() RETURNS Integer
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Unit_SetDateRROList', zc_Object_Unit(), 'Перечень дат авто установки времени на РРО' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_SetDateRROList');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_InternetRepair_Provider() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InternetRepair_Provider'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_InternetRepair_Provider', zc_Object_InternetRepair(), 'Провайдер' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InternetRepair_Provider');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_InternetRepair_ContractNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InternetRepair_ContractNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_InternetRepair_ContractNumber', zc_Object_InternetRepair(), 'Номер договора' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InternetRepair_ContractNumber');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_InternetRepair_Phone() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InternetRepair_Phone'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_InternetRepair_Phone', zc_Object_InternetRepair(), 'Телефон' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InternetRepair_Phone');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_InternetRepair_WhoSignedContract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InternetRepair_WhoSignedContract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_InternetRepair_WhoSignedContract', zc_Object_InternetRepair(), 'Кто оформил договор' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InternetRepair_WhoSignedContract');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 12.09.22                                                                                                         * zc_ObjectString_InternetRepair...
  06.09.22                                                                                                         * zc_ObjectString_Unit_SetDateRROList
  20.08.22                                                                                                         * zc_ObjectString_Goods_GoodsWhoCan
  28.07.22                                                                                                         * zc_ObjectString_GoodsWhoCan_NameUkr, zc_ObjectString_GoodsMethodAppl_NameUkr

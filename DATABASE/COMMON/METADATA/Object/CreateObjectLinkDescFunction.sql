@@ -2842,9 +2842,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsSignOrigin() RETURNS Integer
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Goods_GoodsSignOrigin', 'Признак происхождения', zc_Object_Goods(), zc_Object_GoodsSignOrigin() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsSignOrigin');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_InternetRepair_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InternetRepair_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_InternetRepair_Unit', 'Подразделение', zc_Object_InternetRepair(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InternetRepair_Unit');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 12.09.22                                                                                      * zc_ObjectLink_InternetRepair_Unit
  12.08.22         * zc_ObjectLink_TradeMark_Retail
  08.08.22         * zc_ObjectLink_Retail_StickerHeader
  29.07.22         * zc_ObjectLink_GoodsPropertyValue_GoodsKindSub

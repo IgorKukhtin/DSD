@@ -67,10 +67,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBlob_StickerHeader_Info() RETURNS integer AS
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
    SELECT zc_Object_StickerHeader(), 'zc_ObjectBlob_StickerHeader_Info','Заголовок' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_StickerHeader_Info');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBlob_InternetRepair_Notes() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_InternetRepair_Notes'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
+   SELECT zc_Object_InternetRepair(), 'zc_ObjectBlob_InternetRepair_Notes','Пометки' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_InternetRepair_Notes');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 12.09.22                                                                         * zc_ObjectBlob_InternetRepair_Notes
  08.08.22          * zc_ObjectBlob_StickerHeader_Info
  27.03.21                                                                         * zc_objectBlob_FinalSUAProtocol_Recipient, zc_objectBlob_FinalSUAProtocol_Assortment
  27.04.19                                                                         * zc_ObjectBlob_User_Helsi_Key
