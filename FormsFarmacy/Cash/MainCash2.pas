@@ -636,6 +636,8 @@ type
     spFilesToCheckFTPParams: TdsdStoredProc;
     SalePromoGoodsCDS: TClientDataSet;
     SalePromoGoodsCalcCDS: TClientDataSet;
+    actInternetRepairCash: TdsdOpenForm;
+    N65: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -12243,8 +12245,9 @@ begin
 
         end;
 
-        CheckCDS.FieldByName('PriceDiscount').asCurrency :=
-          CheckCDS.FieldByName('Price').asCurrency;
+        if FormParams.ParamByName('LoyaltyChangeSumma').Value <> 0 then
+          CheckCDS.FieldByName('PriceDiscount').asCurrency :=
+            CheckCDS.FieldByName('Price').asCurrency;
         CheckCDS.FieldByName('Summ').asCurrency :=
           GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
           CheckCDS.FieldByName('Price').asCurrency,

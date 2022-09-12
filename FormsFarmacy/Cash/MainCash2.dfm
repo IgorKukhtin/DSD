@@ -6935,6 +6935,17 @@ inherited MainCashForm2: TMainCashForm2
         end>
       isShowModal = True
     end
+    object actInternetRepairCash: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1056#1077#1084#1086#1085#1090' '#1080#1085#1090#1077#1088#1085#1077#1090#1072
+      FormName = 'TInternetRepairCashForm'
+      FormNameParam.Value = 'TInternetRepairCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7166,6 +7177,9 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N57: TMenuItem
         Action = actInstructionsCash
+      end
+      object N65: TMenuItem
+        Action = actInternetRepairCash
       end
       object N33: TMenuItem
         Caption = '-'

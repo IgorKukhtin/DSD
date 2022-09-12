@@ -1,62 +1,59 @@
 -- Function: gpInsertUpdate_Object_InternetRepair()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InternetRepair (Integer ,Integer ,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InternetRepair (Integer , Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InternetRepair(
  INOUT ioId	                 Integer   ,    -- ключ объекта
     IN inCode                Integer   ,    -- код объекта
     IN inName                TVarChar  ,    -- Название объекта <
+
+    IN inUnitId              Integer   ,    -- Подразделение
+    IN inProvider            TVarChar  ,    -- Провайдер
+    IN inContractNumber      TVarChar  ,    -- Номер договора
+    IN inPhone               TVarChar  ,    -- Телефон
+    IN inWhoSignedContract   TVarChar  ,    -- Кто оформил договор
+    IN inNotes               TBlob     ,    -- Пометки
+
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbUnitKey TVarChar;
-   DECLARE ObjectName TVarChar;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Education());
    vbUserId:= lpGetUserBySession (inSession);
-   vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
-   IF vbUnitKey = '' THEN
-       RAISE EXCEPTION 'Не определено подразделение';
+   
+   IF COALESCE (inUnitId, 0) = 0 OR  COALESCE (inProvider, '') = ''
+   THEN
+     RAISE EXCEPTION 'Ошибка. Подразделение и провайдер должны быть заполнены.'; 
    END IF;
-   vbUnitId := vbUnitKey::Integer;
-
-
+   
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- Если код не установлен, определяем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_InternetRepair());
 
-   -- проверка уникальности <Наименование>
-   IF EXISTS (SELECT Object.ValueData FROM Object
-
-                 INNER JOIN ObjectLink AS ObjectLink_InternetRepair
-                                       ON ObjectLink_InternetRepair.ChildObjectId = vbUnitId
-                                      AND ObjectLink_InternetRepair.ObjectId = Object.Id
-                                      AND ObjectLink_InternetRepair.DescId = zc_Object_InternetRepair()
-
-              WHERE Object.DescId = zc_Object_InternetRepair()
-                AND Object.ValueData = inName
-                AND Object.Id <> ioId)
-   THEN
-      SELECT ItemName INTO ObjectName FROM ObjectDesc WHERE Id = zc_Object_InternetRepair();
-      RAISE EXCEPTION 'Значение "%" не уникально для справочника "%" по подразделению "%"', inName, ObjectName,
-        (SELECT ValueData FROM Object WHERE Id = vbUnitId);
-   END IF;
-   -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InternetRepair(), vbCode_calc);
-
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_InternetRepair(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_InternetRepair(), vbCode_calc, COALESCE(inName, ''));
 
    -- сохранили связь с <Подразделением>
-   PERFORM lpInsertUpdate_ObjectLink (zc_Object_InternetRepair(), ioId, vbUnitId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_InternetRepair_Unit(), ioId, inUnitId);
+
+   -- сохранили <Провайдер>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_InternetRepair_Provider(), ioId, inProvider);
+   -- сохранили <Номер договора>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_InternetRepair_ContractNumber(), ioId, inContractNumber);
+   -- сохранили <Телефон>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_InternetRepair_Phone(), ioId, inPhone);
+   -- сохранили <Кто оформил договор>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_InternetRepair_WhoSignedContract(), ioId, inWhoSignedContract);
+
+   -- сохранили <Пометки>
+   PERFORM lpInsertUpdate_ObjectBlob (zc_ObjectBlob_InternetRepair_Notes(), ioId, inNotes);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -64,7 +61,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_InternetRepair(Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_InternetRepair(Integer , Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

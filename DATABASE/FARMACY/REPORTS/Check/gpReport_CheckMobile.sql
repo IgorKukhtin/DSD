@@ -161,7 +161,8 @@ BEGIN
            
            , CASE WHEN COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False) = True AND
                        MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData , 0) >= 199.50 AND
-                       COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) <> 0 THEN 20 END::TFloat  AS ApplicationAward
+                       COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) <> 0 AND
+                       Movement_Check.StatusId = zc_Enum_Status_Complete() THEN 20 END::TFloat  AS ApplicationAward
            
            , Movement_Check.isEmployeeMessage                             AS isEmployeeMessage
            

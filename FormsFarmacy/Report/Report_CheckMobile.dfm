@@ -244,6 +244,11 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = ApplicationAward
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = TotalSummChangePercent
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -313,6 +318,16 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 79
+          end
+          object TotalSummChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1095#1077#1082#1077
+            DataBinding.FieldName = 'TotalSummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
           end
           object colSummCard: TcxGridDBColumn
             Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103')'
