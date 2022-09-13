@@ -15,7 +15,8 @@ RETURNS TABLE (UnitId TVarChar,  VidDoc TVarChar, InvNumber TVarChar, OperDate T
                ClientINN TVarChar, ClientOKPO TVarChar, CLIENTKIND TVarChar,
                InvNalog TVarChar, BillId TVarChar, EKSPCODE TVarChar, EXPName TVarChar,
                GoodsId TVarChar, PackId TVarChar, PackName TVarChar,
-               Doc1Date TVarChar, Doc1Number TVarChar, Doc2Date TVarChar, Doc2Number TVarChar)
+               Doc1Date TVarChar, Doc1Number TVarChar, Doc2Date TVarChar, Doc2Number TVarChar,
+               ContractCode TVarChar)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -52,8 +53,10 @@ BEGIN
 
   , tmpContract AS (SELECT ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                          , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
+                         , Object_Contract.ObjectCode                  AS ContractCode
                     FROM ObjectLink AS ObjectLink_Contract_InfoMoney
                          INNER JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+                         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_Contract_InfoMoney.ObjectId AND Object_Contract.DescId = zc_Object_Contract()
                     WHERE ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                    )
   , tmpMovement AS (SELECT Movement.*, Movement.OperDate AS OperDatePartner
@@ -104,6 +107,7 @@ BEGIN
                              )
        , tmpMov AS (SELECT Movement.*
                          , tmpContract.InfoMoneyId
+                         , tmpContract.ContractCode
                          , Object_Partner.Id                AS PartnerId
                          , Object_Partner.ValueData         AS PartnerName
                          , MovementFloat_TotalSumm.ValueData AS TotalSumm
@@ -122,15 +126,15 @@ BEGIN
                                                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
                          LEFT JOIN tmpMF AS MovementFloat_VATPercent
-                                                 ON MovementFloat_VATPercent.MovementId = Movement.Id
-                                                AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                                         ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                        AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
                          LEFT JOIN tmpMF AS MovementFloat_ChangePercent
-                                                 ON MovementFloat_ChangePercent.MovementId = Movement.Id
-                                                AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-                                                AND Movement.DescId <> zc_Movement_Sale()
+                                         ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                        AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                        AND Movement.DescId <> zc_Movement_Sale()
                          LEFT JOIN tmpMF_TotalSumm AS MovementFloat_TotalSumm
-                                                 ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                                   ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
       
                          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                         ON MovementLinkMovement_Master.MovementId = Movement.Id
@@ -185,7 +189,7 @@ BEGIN
                              AND MIMaster.isErased   = FALSE
                           )
               , tmpMIF AS (SELECT MovementItemFloat.*
-                           FROM MovementItemFloat
+                           FROM MovementItemFloat                                      
                            WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                           )
    , tmpMILO_GoodsKind AS (SELECT MILinkObject_GoodsKind.*
@@ -226,7 +230,7 @@ BEGIN
              END :: TVarChar                                           AS VidDoc
            , Movement.InvNumber				               AS InvNumber
            , TO_CHAR (Movement.OperDatePartner, 'DD.MM.YYYY') :: TVarChar AS OperDate
-
+                                                              
            , COALESCE (Movement.PartnerId, 0) :: TVarChar               AS ClientCode
            , Movement.PartnerName :: TVarChar                           AS ClientName
 
@@ -414,6 +418,7 @@ BEGIN
            , '' :: TVarChar                                            AS Doc2Date
            , '' :: TVarChar                                            AS Doc2Number
 
+           , Movement.ContractCode                        :: TVarChar  AS ContractCode
      FROM tmpMov AS Movement
             LEFT JOIN tmpMI AS MIMaster ON MIMaster.MovementId = Movement.Id
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MIMaster.ObjectId
@@ -452,6 +457,7 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.09.22         * add ContractCode
  05.04.17         *
  20.07.14                                        * add zc_Movement_PriceCorrective
  02.06.14                                        * add isErased = FALSE
@@ -463,3 +469,4 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '01.11.2016', inEndDate:= '11.11.2016', inInfoMoneyId:= 8911, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '30.11.2017', inEndDate:= '30.11.2017', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin()) AS a--  WHERE InvNumber = '400883'
+-- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '14.09.2022', inEndDate:= '14.09.2022', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin()) AS a limit 10 -- WHERE InvNumber = '400883'
