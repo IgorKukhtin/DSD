@@ -572,10 +572,26 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
     object actMISetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedMIMaster
+      StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
-          StoredProc = spErasedMIMaster
+          StoredProc = spUnErasedMIMaster
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
+    object actMISetUnErased_: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIMaster_
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster_
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -592,6 +608,22 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    object actMISetErased_: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIMaster_
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster_
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
@@ -857,7 +889,7 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
     Left = 288
     Top = 312
   end
-  object spErasedMIMaster: TdsdStoredProc
+  object spErasedMIMaster_: TdsdStoredProc
     StoredProcName = 'gpMI_SheetWorkTime_SetErased'
     DataSets = <>
     OutputType = otResult
@@ -931,5 +963,55 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
     PackSize = 1
     Left = 678
     Top = 263
+  end
+  object spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_SheetWorkTime_SetUnErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 822
+    Top = 256
+  end
+  object spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_SheetWorkTime_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 830
+    Top = 312
   end
 end

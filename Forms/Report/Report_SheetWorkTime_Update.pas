@@ -46,9 +46,9 @@ type
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
     isErased: TcxGridDBColumn;
-    spErasedMIMaster: TdsdStoredProc;
-    actMISetErased: TdsdUpdateErased;
-    actMISetUnErased: TdsdUpdateErased;
+    spErasedMIMaster_: TdsdStoredProc;
+    actMISetErased_: TdsdUpdateErased;
+    actMISetUnErased_: TdsdUpdateErased;
     actMovementItemProtocolOpenForm: TdsdOpenForm;
     bbMISetErased: TdxBarButton;
     bbMISetUnErased: TdxBarButton;
@@ -60,6 +60,10 @@ type
     UserName_mov: TcxGridDBColumn;
     MovementItemId: TcxGridDBColumn;
     MovementId: TcxGridDBColumn;
+    spUnErasedMIMaster: TdsdStoredProc;
+    spErasedMIMaster: TdsdStoredProc;
+    actMISetErased: TdsdUpdateErased;
+    actMISetUnErased: TdsdUpdateErased;
   private
     { Private declarations }
   public
