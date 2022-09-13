@@ -18,11 +18,11 @@ BEGIN
 
   -- устанавливаем новое значение
   outIsErased := FALSE;
- /*
+ 
   -- Обязательно меняем
   UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
          RETURNING MovementId INTO vbMovementId;
-  */
+  
   -- проверка - связанные документы Изменять нельзя
   -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
 
