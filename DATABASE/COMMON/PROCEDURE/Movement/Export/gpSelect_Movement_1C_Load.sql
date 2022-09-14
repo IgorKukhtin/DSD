@@ -16,7 +16,7 @@ RETURNS TABLE (UnitId TVarChar,  VidDoc TVarChar, InvNumber TVarChar, OperDate T
                InvNalog TVarChar, BillId TVarChar, EKSPCODE TVarChar, EXPName TVarChar,
                GoodsId TVarChar, PackId TVarChar, PackName TVarChar,
                Doc1Date TVarChar, Doc1Number TVarChar, Doc2Date TVarChar, Doc2Number TVarChar,
-               ContractCode TVarChar)
+               Contract TVarChar)
 AS
 $BODY$
    DECLARE vbUserId Integer;
