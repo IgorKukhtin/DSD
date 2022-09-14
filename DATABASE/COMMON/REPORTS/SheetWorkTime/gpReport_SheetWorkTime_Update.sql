@@ -24,6 +24,7 @@ CREATE OR REPLACE FUNCTION gpReport_SheetWorkTime_Update(
                , PersonalGroupName   TVarChar 
                , StorageLineId Integer, StorageLineName TVarChar
                , WorkTimeKindId Integer
+               , WorkTimeKindId_key Integer
                , WorkTimeKindName   TVarChar
                , ShortName TVarChar
                , Amount    TFloat  
@@ -91,12 +92,12 @@ BEGIN
                                                     AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                  AND Movement.DescId = zc_Movement_SheetWorkTime()
-                 AND COALESCE (MIObject_WorkTimeKind.ObjectId,0)<> 0
+               --AND COALESCE (MIObject_WorkTimeKind.ObjectId,0)<> 0
                )
      --
    , tmpMIProtocol AS (SELECT MovementItemProtocol.*
                               -- ¹ ï/ï
-                            , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.OperDate DESC) AS Ord
+                            , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.OperDate ASC) AS Ord
                        FROM MovementItemProtocol
                        WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                       )
@@ -136,6 +137,7 @@ BEGIN
          , Object_StorageLine.Id           AS StorageLineId
          , Object_StorageLine.ValueData    AS StorageLineName
          , Object_WorkTimeKind.Id          AS WorkTimeKindId
+         , Object_WorkTimeKind.Id          AS WorkTimeKindId_key
          , Object_WorkTimeKind.ValueData   AS WorkTimeKindName 
          , tmpMI.ShortName
          , tmpMI.Amount
