@@ -84,8 +84,8 @@ BEGIN
                      )
 
    , tmpContractPrice AS (SELECT tmp.ContractId
-                               , CASE WHEN tmp.StartDate = StartDate_first THEN tmp.PriceListId ELSE 0 END AS PriceListId_first
-                               , tmp.PriceListId_curr AS PriceListId_curr
+                               , MAX (CASE WHEN tmp.StartDate = StartDate_first THEN tmp.PriceListId ELSE 0 END) AS PriceListId_first
+                               , MAX (tmp.PriceListId_curr) AS PriceListId_curr
                           FROM (SELECT ObjectLink_ContractPriceList_PriceList.ChildObjectId AS PriceListId
                                      , ObjectDate_StartDate.ValueData          :: TDateTime AS StartDate
                                      , ObjectDate_EndDate.ValueData            :: TDateTime AS EndDate
@@ -119,9 +119,7 @@ BEGIN
                                 ) AS tmp
                            WHERE tmp.StartDate = StartDate_first 
                               OR COALESCE (tmp.PriceListId_curr,0) <> 0
-                           GROUP BY CASE WHEN tmp.StartDate = StartDate_first THEN tmp.PriceListId ELSE 0 END
-                                  , tmp.PriceListId_curr
-                                  , tmp.ContractId
+                           GROUP BY tmp.ContractId
                          )
        , tmpContract_View AS (SELECT *
                               FROM Object_Contract_View
