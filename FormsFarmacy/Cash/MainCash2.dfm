@@ -26,10 +26,13 @@ inherited MainCashForm2: TMainCashForm2
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 502
+      Width = 499
       Height = 153
       Align = alClient
       TabOrder = 0
+      ExplicitLeft = 135
+      ExplicitTop = 6
+      ExplicitWidth = 100
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = CheckGridDBTableViewFocusedRecordChanged
@@ -247,12 +250,13 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 502
+      Left = 499
       Top = 0
-      Width = 0
+      Width = 3
       Height = 153
       AlignSplitter = salRight
       Control = ExpirationDateGrid
+      ExplicitLeft = 502
     end
     object ExpirationDateGrid: TcxGrid
       Left = 502

@@ -1,4 +1,4 @@
--- Function: gpSelect_GoodsPrice_ForSite()
+-- Function: gpSelect_GoodsPrice_ForSite_Ol()
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
@@ -22,6 +22,8 @@ RETURNS TABLE (Id                Integer    -- Id товара
              , PriceUnitMin      TFloat     -- Минимальная цена подразделений
              , PriceUnitMax      TFloat     -- Максимальная цена подразделений
              , Remains           TFloat     -- Остаток по сети
+             
+             , isDiscountExternal boolean   -- Тосар участвует в дисконтной программе
               )
 AS
 $BODY$
@@ -47,9 +49,34 @@ BEGIN
     -- Результат
     RETURN QUERY
        WITH 
-            tmpPrice_Site AS (SELECT Object_PriceSite.Id                        AS Id
-                                   , ROUND(Price_Value.ValueData,2)::TFloat     AS Price
-                                   , Price_Goods.ChildObjectId                  AS GoodsId
+            tmpUnit AS (SELECT tmp.Id 
+                        FROM gpSelect_Object_Unit_Active (inNotUnitId := 0, inSession := inSession) AS tmp
+                             INNER JOIN ObjectLink AS OL_Unit_Juridical
+                                                   ON OL_Unit_Juridical.ObjectId = tmp.Id
+                                                  AND OL_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+                             INNER JOIN ObjectLink AS OL_Juridical_Retail
+                                                   ON OL_Juridical_Retail.ObjectId = OL_Unit_Juridical.ChildObjectId
+                                                   AND OL_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                                                  AND OL_Juridical_Retail.ChildObjectId = 4
+                             INNER JOIN ObjectLink AS OL_Unit_Area
+                                                   ON OL_Unit_Area.ObjectId = tmp.Id
+                                                  AND OL_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
+                        )
+          , tmpDiscountExternal AS (SELECT DISTINCT ObjectLink_BarCode_Goods.ChildObjectId  AS GoodsId
+                                    FROM Object AS Object_BarCode
+                                         LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                              ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                             AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                         LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                              ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                             AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                         LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+                                    WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                      AND Object_BarCode.isErased = False
+                                      AND Object_Object.isErased = False)
+          , tmpPrice_Site AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat     AS Price
+                                   , Object_Goods_Retail.Id                     AS GoodsId
                                    , Object_Goods_Main.Name                     AS Name
                                    , Object_Goods_Main.NameUkr                  AS NameUkr
                                    , COALESCE(Object_Goods_Retail.Price, 0)     AS PriceTop 
@@ -59,48 +86,51 @@ BEGIN
                                    , Object_Goods_Retail.DiscontSiteEnd
                                    , Object_Goods_Retail.DiscontAmountSite
                                    , Object_Goods_Retail.DiscontPercentSite
-                              FROM Object AS Object_PriceSite
+                              FROM Object_Goods_Main AS Object_Goods_Main
 
-                                   INNER JOIN ObjectLink AS Price_Goods
-                                           ON Price_Goods.ObjectId = Object_PriceSite.Id
-                                          AND Price_Goods.DescId = zc_ObjectLink_PriceSite_Goods()
+                                   LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId  = Object_Goods_Main.Id
+                                                                AND Object_Goods_Retail.RetailId     = 4
+
+                                   LEFT JOIN ObjectLink AS Price_Goods
+                                          ON Price_Goods.ChildObjectId = Object_Goods_Retail.Id
+                                         AND Price_Goods.DescId = zc_ObjectLink_PriceSite_Goods()
+                                         AND Price_Goods.ChildObjectId NOT IN (SELECT tmpDiscountExternal.GoodsId FROM tmpDiscountExternal)
 
                                    LEFT JOIN ObjectFloat AS Price_Value
-                                          ON Price_Value.ObjectId = Object_PriceSite.Id
+                                          ON Price_Value.ObjectId = Price_Goods.ObjectId
                                          AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
 
-                                   LEFT JOIN Object_Goods_Retail    ON Object_Goods_Retail.Id   = Price_Goods.ChildObjectId
-                                   LEFT JOIN Object_Goods_Main      ON Object_Goods_Main.Id     = Object_Goods_Retail.GoodsMainId
-
-                              WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
-                                AND Object_Goods_Main.isPublished = True
+                              WHERE Object_Goods_Main.isPublished = True
                                 AND (Object_Goods_Main.GoodsGroupId = inCategoryId OR COALESCE(inCategoryId, 0) = 0)
                                 AND (Object_Goods_Retail.Id = inProductId OR COALESCE(inProductId, 0) = 0)
-                                AND Price_Goods.ChildObjectId NOT IN (SELECT DISTINCT ObjectLink_BarCode_Goods.ChildObjectId  AS GoodsId
-                                                                      FROM Object AS Object_BarCode
-                                                                           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
-                                                                                                ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
-                                                                                               AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
-                                                                           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
-                                                                                                ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
-                                                                                               AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
-                                                                           LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
-
-                                                                      WHERE Object_BarCode.DescId = zc_Object_BarCode()
-                                                                        AND Object_BarCode.isErased = False
-                                                                        AND Object_Object.isErased = False)
+                                AND COALESCE (inSearch, '') = '' OR 
+                                    CASE WHEN lower(inSortLang) = 'uk' THEN Object_Goods_Main.NameUkr ELSE Object_Goods_Main.Name END ILIKE '%'||inSearch||'%'
+                                AND Object_Goods_Retail.Id NOT IN (SELECT tmpDiscountExternal.GoodsId FROM tmpDiscountExternal)
                               )
-          , tmpGoods AS (SELECT DISTINCT Price_Site.GoodsId
-                        FROM tmpPrice_Site AS Price_Site         
-                        WHERE COALESCE (inSearch, '') = '' OR 
-                              CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END ILIKE '%'||inSearch||'%'
-                        )
+          , tmpContainerRemainsPD AS (SELECT Container.ObjectId           AS GoodsId
+                                           , SUM(Container.Amount)        AS Remains 
+                                      FROM Container
+                                           INNER JOIN tmpPrice_Site ON tmpPrice_Site.GoodsId = Container.ObjectId
+                                           INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                         AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                                           INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                                 ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId  
+                                                                AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                                                AND ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE
+                                      WHERE Container.DescId = zc_Container_CountPartionDate()
+                                        AND Container.Amount <> 0
+                                        AND Container.WhereObjectId in (SELECT tmpUnit.Id FROM tmpUnit)
+                                      GROUP BY Container.ObjectId  
+                                      HAVING SUM(Container.Amount) > 0
+                                     )
           , tmpContainerRemains AS (SELECT Container.ObjectId           AS GoodsId
                                          , SUM(Container.Amount)        AS Remains 
                                     FROM Container
-                                         INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
+                                         INNER JOIN tmpPrice_Site ON tmpPrice_Site.GoodsId = Container.ObjectId
                                     WHERE Container.DescId = zc_Container_Count()
                                       AND Container.Amount <> 0
+                                      AND Container.WhereObjectId in (SELECT tmpUnit.Id FROM tmpUnit)
                                     GROUP BY Container.ObjectId  
                                     HAVING SUM(Container.Amount) > 0
                                     )
@@ -112,13 +142,15 @@ BEGIN
 
                              , Price_Site.Price                                             AS Price
 
-                             , tmpContainerRemains.Remains::TFloat                          AS Remains
+                             , (tmpContainerRemains.Remains - COALESCE (tmpContainerRemainsPD.Remains, 0))::TFloat AS Remains
                               
-                        FROM tmpGoods 
+                        FROM tmpPrice_Site AS tmpGoods 
                         
                              LEFT JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = tmpGoods.GoodsId      
 
                              LEFT JOIN tmpContainerRemains ON tmpContainerRemains.GoodsId = Price_Site.GoodsId
+
+                             LEFT JOIN tmpContainerRemainsPD ON tmpContainerRemainsPD.GoodsId = Price_Site.GoodsId
                                             
                         ORDER BY CASE WHEN COALESCE (tmpContainerRemains.Remains, 0) = 0 THEN 1 ELSE 0 END 
                                , CASE WHEN inSortType = 0 THEN Price_Site.Price END
@@ -128,27 +160,35 @@ BEGIN
                                , Price_Site.Name
                         LIMIT inLimit OFFSET inStart      
                         )
+          , tmpContainerPD AS (SELECT Container.WhereObjectId      AS UnitId
+                                    , Container.ObjectId           AS GoodsId
+                                    , SUM(Container.Amount)        AS Remains 
+                               FROM Container
+                                    INNER JOIN tmpData ON tmpData.GoodsId = Container.ObjectId
+                                    INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                  AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                                    INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                          ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId  
+                                                         AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                                         AND ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE
+                               WHERE Container.DescId = zc_Container_CountPartionDate()
+                                 AND Container.Amount <> 0
+                                -- AND Container.ObjectId in (SELECT tmpData.GoodsId FROM tmpData)
+                                 AND Container.WhereObjectId in (SELECT tmpUnit.Id FROM tmpUnit)
+                               GROUP BY Container.WhereObjectId
+                                      , Container.ObjectId  
+                               HAVING SUM(Container.Amount) > 0
+                               )
           , tmpContainer AS (SELECT Container.WhereObjectId      AS UnitId
                                   , Container.ObjectId           AS GoodsId
                                   , SUM(Container.Amount)        AS Remains 
                              FROM Container
-                                  --INNER JOIN tmpData ON tmpData.GoodsId = Container.ObjectId
+                                  INNER JOIN tmpData ON tmpData.GoodsId = Container.ObjectId
                              WHERE Container.DescId = zc_Container_Count()
                                AND Container.Amount <> 0
-                               AND Container.ObjectId in (SELECT tmpData.GoodsId FROM tmpData)
-                               AND Container.WhereObjectId in (SELECT tmp.Id 
-                                                               FROM gpSelect_Object_Unit_Active (inNotUnitId := 0, inSession := inSession) AS tmp
-                                                                    INNER JOIN ObjectLink AS OL_Unit_Juridical
-                                                                                          ON OL_Unit_Juridical.ObjectId = tmp.Id
-                                                                                         AND OL_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
-                                                                    INNER JOIN ObjectLink AS OL_Juridical_Retail
-                                                                                          ON OL_Juridical_Retail.ObjectId = OL_Unit_Juridical.ChildObjectId
-                                                                                         AND OL_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
-                                                                                         AND OL_Juridical_Retail.ChildObjectId = 4
-                                                                    INNER JOIN ObjectLink AS OL_Unit_Area
-                                                                                          ON OL_Unit_Area.ObjectId = tmp.Id
-                                                                                         AND OL_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
-                                                               )
+                              -- AND Container.ObjectId in (SELECT tmpData.GoodsId FROM tmpData)
+                               AND Container.WhereObjectId in (SELECT tmpUnit.Id FROM tmpUnit)
                              GROUP BY Container.WhereObjectId
                                     , Container.ObjectId  
                              HAVING SUM(Container.Amount) > 0
@@ -214,9 +254,14 @@ BEGIN
                                                           AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
 
                                      -- Фикс цена для всей Сети
-                                     LEFT JOIN tmpPrice_Site  ON tmpPrice_Site.Id = Price_Goods.ChildObjectId
+                                     LEFT JOIN tmpPrice_Site  ON tmpPrice_Site.GoodsId = Price_Goods.ChildObjectId
+                                     
+                                     LEFT JOIN tmpContainerPD ON tmpContainerPD.GoodsId = Price_Goods.ChildObjectId
+                                                             AND tmpContainerPD.UnitId = ObjectLink_Price_Unit.ChildObjectId
+                                     
                                 WHERE Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                  AND Price_Goods.ChildObjectId in (SELECT tmpData.GoodsId FROM tmpData)               
+                                  AND Price_Goods.ChildObjectId in (SELECT tmpData.GoodsId FROM tmpData)    
+                                  AND tmpContainer.Remains > COALESCE (tmpContainerPD.Remains, 0)
                                 GROUP BY Price_Goods.ChildObjectId 
                                 )
           , tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
@@ -298,6 +343,8 @@ BEGIN
 
              , Price_Site.Remains                                           AS Remains
              
+             , COALESCE(tmpDiscountExternal.GoodsId, 0) <> 0                AS isDiscountExternal
+             
         FROM tmpData AS Price_Site         
 
              LEFT JOIN tmpContainerAll ON tmpContainerAll.GoodsId = Price_Site.GoodsId
@@ -307,6 +354,8 @@ BEGIN
                                  AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
 
              LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Price_Site.GoodsMainId
+             
+             LEFT JOIN tmpDiscountExternal ON tmpDiscountExternal.GoodsId = Price_Site.GoodsId
        ;       
 
 END;
@@ -323,4 +372,4 @@ $BODY$
 -- select *, null as img_url from gpSelect_GoodsPrice_ForSite(394759, 1, 'uk', 0, 8, 0, '', zfCalc_UserSite())
 
 
-select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'uk', 0, 8, 0, 'Канефрон Н', zfCalc_UserSite())
+select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'ru', 0, 8, 0, 'кориол', zfCalc_UserSite())
