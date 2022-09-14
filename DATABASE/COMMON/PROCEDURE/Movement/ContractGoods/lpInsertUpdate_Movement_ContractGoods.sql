@@ -33,32 +33,42 @@ BEGIN
      END IF;
 
      -- находим предыдущий документ,ему устанавливаем дату окончания EndBeginDate  = inOperDate-1 день
-     vbMovementId_old:= (SELECT Movement.Id
-                         FROM Movement
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                                           AND MovementLinkObject_Contract.ObjectId = inContractId
-                         WHERE Movement.DescId = zc_Movement_ContractGoods()
-                            AND Movement.OperDate < inOperDate
-                            AND Movement.StatusId <> zc_Enum_Status_Erased()  --zc_Enum_Status_Complete()
-                         ORDER BY Movement.OperDate DESC
+     vbMovementId_old:= (SELECT tmp.Id
+                         FROM (SELECT Movement.Id
+                                    , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC) AS Ord
+                               FROM Movement
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                                 AND MovementLinkObject_Contract.ObjectId = inContractId
+                               WHERE Movement.DescId = zc_Movement_ContractGoods()
+                                  AND Movement.OperDate < inOperDate
+                                  AND Movement.StatusId <> zc_Enum_Status_Erased()  --zc_Enum_Status_Complete() 
+                                  AND Movement.Id <> ioId 
+                               ) AS tmp
+                         WHERE tmp.Ord = 1
                          LIMIT 1
                         );
      
      -- пробуем найти следующий док.
-     SELECT Movement.Id, Movement.OperDate
-            INTO vbMovementId_next, vbOperDate_next
-     FROM Movement
-         INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                      AND MovementLinkObject_Contract.ObjectId = inContractId
-     WHERE Movement.DescId = zc_Movement_ContractGoods()
-        AND Movement.OperDate > inOperDate
-        AND Movement.StatusId <> zc_Enum_Status_Erased()--zc_Enum_Status_Complete()
-     ORDER BY Movement.OperDate ASC
+     SELECT tmp.Id, tmp.OperDate
+    INTO vbMovementId_next, vbOperDate_next
+     FROM (SELECT Movement.Id, Movement.OperDate
+                , ROW_NUMBER() OVER (ORDER BY Movement.OperDate ASC) AS Ord
+           FROM Movement
+               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                            AND MovementLinkObject_Contract.ObjectId = inContractId
+           WHERE Movement.DescId = zc_Movement_ContractGoods()
+              AND Movement.OperDate > inOperDate
+              AND Movement.StatusId <> zc_Enum_Status_Erased()--zc_Enum_Status_Complete()
+              AND Movement.Id <> ioId 
+          ) AS tmp
+     WHERE tmp.Ord = 1
      LIMIT 1;
+
+     outEndBeginDate := (CASE WHEN COALESCE (vbMovementId_next,0) > 0 THEN vbOperDate_next - INTERVAL '1 DAY' ELSE zc_DateEnd() END);
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -75,7 +85,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
 
      -- сохранили свойство <Дата окончания> текущего документа
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), ioId, CASE WHEN vbMovementId_next > 0 THEN vbOperDate_next - INTERVAL '1 DAY' ELSE zc_DateEnd() END);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), ioId, outEndBeginDate);
 
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
@@ -100,7 +110,7 @@ BEGIN
 
 
      -- сохранили свойство <Дата окончания> предыдущего документа
-     IF vbMovementId_old > 0
+     IF COALESCE (vbMovementId_old,0) > 0
      THEN
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), vbMovementId_old, (inOperDate - INTERVAL '1 day')::TDateTime);
      END IF;
@@ -114,6 +124,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.09.22         *
  05.07.21         *
 */
 

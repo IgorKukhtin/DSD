@@ -472,6 +472,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Left = 179
     Top = 23
     EditValue = 42132d
+    Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 7
