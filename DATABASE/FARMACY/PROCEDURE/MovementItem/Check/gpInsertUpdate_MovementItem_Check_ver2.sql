@@ -89,6 +89,14 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
                                                           ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsPresent
+                                                          ON MILinkObject_GoodsPresent.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsPresent.DescId = zc_MILinkObject_GoodsPresent()
+                         LEFT JOIN MovementItemBoolean AS MIBoolean_GoodsPresent
+                                                       ON MIBoolean_GoodsPresent.MovementItemId = MovementItem.Id
+                                                      AND MIBoolean_GoodsPresent.DescId         = zc_MIBoolean_GoodsPresent()
+
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
@@ -98,6 +106,8 @@ BEGIN
                       AND COALESCE (MILinkObject_DivisionParties.ObjectId, 0) = COALESCE (inDivisionPartiesID, 0)
                       AND COALESCE (MIFloat_Price.ValueData, 0) = inPrice
                       AND COALESCE (MIBoolean_Present.ValueData, False) = COALESCE(inPresent, False)
+                      AND COALESCE (MILinkObject_GoodsPresent.ObjectId, 0) = COALESCE (inGoodsPresentID, 0)
+                      AND COALESCE (MIBoolean_GoodsPresent.ValueData, False) = COALESCE(inisGoodsPresent, False)
                    );
         ELSE
             ioId:= (SELECT MAX(MovementItem.Id)

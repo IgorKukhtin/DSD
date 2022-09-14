@@ -404,6 +404,27 @@ inherited GoodsSiteForm: TGoodsSiteForm
             Options.Editing = False
             Width = 114
           end
+          object Multiplicity: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' ('#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1076#1077#1083#1080#1090#1077#1083#1100')'
+            DataBinding.FieldName = 'Multiplicity'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###; ; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
+          object isMultiplicityError: TcxGridDBColumn
+            Caption = #1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'isMultiplicityError'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 87
+          end
         end
       end
     end
@@ -1762,6 +1783,84 @@ inherited GoodsSiteForm: TGoodsSiteForm
         end>
       Caption = 'mactUpdatePublishedSiteHide'
     end
+    object actUpdate_Multiplicity: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = astExecuteDialogMultiplicity
+      ActionList = <
+        item
+          Action = actExecUpfdate_Multiplicity
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1077'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1077'"'
+      ImageIndex = 43
+    end
+    object actExecUpfdate_Multiplicity: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Multiplicity
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Multiplicity
+        end>
+      Caption = 'actExecUpfdate_Multiplicity'
+    end
+    object astExecuteDialogMultiplicity: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogUpdate_PercentWagesStore'
+      FormName = 'TAmountDialogForm'
+      FormNameParam.Value = 'TAmountDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Amount'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'Multiplicity'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1080#1076#1072#1078#1077'"'
+          Component = FormParams
+          ComponentItem = 'MultiplicityLabel'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object maUpdate_isMultiplicityError: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_isMultiplicityError
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080'"'
+      ImageIndex = 79
+    end
+    object actExecUpdate_isMultiplicityError: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isMultiplicityError_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isMultiplicityError_Revert
+        end>
+      Caption = 'actExecUpdate_isMultiplicityError'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -2101,6 +2200,10 @@ inherited GoodsSiteForm: TGoodsSiteForm
         item
           Visible = True
           ItemName = 'dxBarButton19'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton27'
         end
         item
           Visible = True
@@ -2445,6 +2548,14 @@ inherited GoodsSiteForm: TGoodsSiteForm
       Hint = 'New Separator'
       Visible = ivAlways
       ShowCaption = False
+    end
+    object dxBarButton27: TdxBarButton
+      Action = actUpdate_Multiplicity
+      Category = 0
+    end
+    object dxBarButton28: TdxBarButton
+      Action = maUpdate_isMultiplicityError
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -3246,8 +3357,8 @@ inherited GoodsSiteForm: TGoodsSiteForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 48
-    Top = 216
+    Left = 680
+    Top = 160
   end
   object spUpdateGoodsAdditional: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_GoodsAdditionalFilter'
@@ -3712,5 +3823,31 @@ inherited GoodsSiteForm: TGoodsSiteForm
     PackSize = 1
     Left = 664
     Top = 376
+  end
+  object spUpdate_Multiplicity: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_Multiplicity'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMultiplicity'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'Multiplicity'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 112
   end
 end

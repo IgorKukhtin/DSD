@@ -87,6 +87,13 @@ type
     ObjectId: TcxGridDBColumn;
     TelegramId: TcxGridDBColumn;
     cxGridDBChartSeries11: TcxGridDBChartSeries;
+    cxTabSheet5: TcxTabSheet;
+    cxGridPopulMobileApplication: TcxGrid;
+    cxGridDBTableView3: TcxGridDBTableView;
+    cxGridDBColumn_UnitName: TcxGridDBColumn;
+    cxGridDBColumn_Users: TcxGridDBColumn;
+    cxGridDBColumn_Summa: TcxGridDBColumn;
+    cxGridLevel6: TcxGridLevel;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -228,6 +235,20 @@ begin
   cxGridDBChartView2.DataController.DataSource := Nil;
   cxGridDBChartView3.DataController.DataSource := Nil;
 
+  if qrySendList.FieldByName('Id').AsInteger in [13] then
+  begin
+    cxPageControl1.Properties.ActivePage := cxTabSheet5;
+    cxGridDBTableView3.DataController.DataSource := dsReport;
+    try
+      FileName := 'Photo.jpg';
+      qryReport.Close;
+      qryReport.SQL.Text := qrySendList.FieldByName('SQL').AsString;
+      qryReport.Open;
+      cxGridPopulMobileApplication.Height := 18 * (qryReport.RecordCount + 3);
+    except
+      on E: Exception do Add_Log(E.Message);
+    end;
+  end else
   if qrySendList.FieldByName('Id').AsInteger in [3, 4] then
   begin
     cxPageControl1.Properties.ActivePage := cxTabSheet3;
@@ -294,12 +315,54 @@ end;
 
 procedure TMainForm.btnExportClick(Sender: TObject);
 var
-  Urgently : boolean; AGraphic: TGraphic; imJPEG : TJPEGImage;
+  Urgently : boolean;
+  AGraphic: TGraphic;
+  imJPEG : TJPEGImage;
+  bmp: TBitmap;
+  DC: hDC;
 begin
   FMessage.Clear;
   if not qrySendList.Active then Exit;
   if qrySendList.IsEmpty then Exit;
 
+  if qrySendList.FieldByName('Id').AsInteger in [13] then
+  begin
+    if not qryReport.Active then Exit;
+    if qryReport.IsEmpty then Exit;
+    if qrySendList.FieldByName('Id').AsInteger = 3 then
+    begin
+      Add_Log('Ќачало выгрузки <”частие сотрудников в попул€ризации мобильного приложени€ по аптекам>');
+      FMessage.Text := '”частие сотрудников в попул€ризации мобильного приложени€ по аптекам';
+    end else
+    begin
+      Add_Log('Ќачало выгрузки <”частие сотрудников в попул€ризации мобильного приложени€ по аптекам за (' + FormatDateTime('dddd', IncDay(Date, - 1)) + ')');
+      FMessage.Text := '”частие сотрудников в попул€ризации мобильного приложени€ по аптекам за (' + FormatDateTime('dddd', IncDay(Date, - 1)) + ')';
+    end;
+
+    bmp := TBitmap.Create;
+    try
+      DC := GetDC(cxGridPopulMobileApplication.Handle);
+      try
+        bmp.Width := cxGridPopulMobileApplication.Width;
+        bmp.Height := cxGridPopulMobileApplication.Height;
+        bmp.Canvas.Lock;
+        cxGridPopulMobileApplication.PaintTo(bmp.Canvas.Handle, 0, 0);
+        bmp.Canvas.Unlock;
+
+        imJPEG := TJPEGImage.Create;
+        try
+          imJPEG.Assign(bmp);
+          imJPEG.SaveToFile(SavePath + FileName);
+        finally
+          AGraphic.Free;
+          imJPEG.Free;
+        end;
+      finally
+      end;
+    finally
+      bmp.Free;
+    end;
+  end else
   if qrySendList.FieldByName('Id').AsInteger in [3, 4] then
   begin
     if not qryReport.Active then Exit;
