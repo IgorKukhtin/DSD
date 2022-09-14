@@ -1252,7 +1252,11 @@ uses
   FilesToCheckJournal in '..\..\FormsFarmacy\Document\FilesToCheckJournal.pas' {FilesToCheckJournalForm: TParentForm},
   Report_MovementSiteBonus in '..\..\FormsFarmacy\Report\Report_MovementSiteBonus.pas' {Report_MovementSiteBonusForm: TParentForm},
   SalePromoGoodsJournal in '..\..\FormsFarmacy\Document\SalePromoGoodsJournal.pas' {SalePromoGoodsJournalForm: TParentForm},
-  SalePromoGoods in '..\..\FormsFarmacy\Document\SalePromoGoods.pas' {SalePromoGoodsForm: TParentForm};
+  SalePromoGoods in '..\..\FormsFarmacy\Document\SalePromoGoods.pas' {SalePromoGoodsForm: TParentForm},
+  InternetRepairEdit in '..\..\FormsFarmacy\Guides\InternetRepairEdit.pas' {InternetRepairEditForm: TParentForm},
+  InternetRepair in '..\..\FormsFarmacy\Guides\InternetRepair.pas' {InternetRepairForm: TParentForm},
+  InternetRepairCashEdit in '..\..\FormsFarmacy\Guides\InternetRepairCashEdit.pas' {InternetRepairCashEditForm: TParentForm},
+  InternetRepairCash in '..\..\FormsFarmacy\Guides\InternetRepairCash.pas' {InternetRepairCashForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

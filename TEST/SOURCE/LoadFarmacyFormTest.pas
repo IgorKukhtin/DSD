@@ -74,6 +74,7 @@ type
     procedure LoadHardwareFormTest;
     procedure LoadHouseholdInventoryFormTest;
     procedure LoadInventoryHouseholdInventoryFormTest;
+    procedure LoadInternetRepairFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadIncomeFormTest;
@@ -2235,6 +2236,19 @@ begin
   // Типы импорта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportTypeForm');
+end;
+
+procedure TLoadFormTest.LoadInternetRepairFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInternetRepairForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInternetRepairForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInternetRepairEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInternetRepairEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInternetRepairCashEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInternetRepairCashEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInternetRepairCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInternetRepairCashForm');
 end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;

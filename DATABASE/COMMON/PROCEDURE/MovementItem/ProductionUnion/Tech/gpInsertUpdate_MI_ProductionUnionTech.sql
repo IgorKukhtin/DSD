@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inMovementItemId_order Integer   , -- Ключ объекта <Элемент документа>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inReceiptId            Integer   , -- Рецептуры
     IN inGoodsId              Integer   , -- Товары
     IN inCount	              TFloat    , -- Количество батонов или упаковок
+    IN inCountReal            TFloat    , -- Количество шт. факт только для схемы "Тушенка"
     IN inRealWeight           TFloat    , -- Фактический вес(информативно)
     IN inRealWeightMsg        TFloat    , -- Фактический вес(после массажера)
     IN inRealWeightShp        TFloat    , -- Фактический вес(после шприцевания)
@@ -294,6 +296,7 @@ BEGIN
                                                                   , inGoodsId            := inGoodsId
                                                                   , inAmount             := COALESCE (vbAmount, 0)
                                                                   , inCount              := inCount
+                                                                  , inCountReal          := inCountReal
                                                                   , inRealWeight         := inRealWeight
                                                                   , inRealWeightMsg      := inRealWeightMsg
                                                                   , inRealWeightShp      := inRealWeightShp

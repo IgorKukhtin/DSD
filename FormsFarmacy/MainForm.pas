@@ -989,6 +989,8 @@ type
     N367: TMenuItem;
     actSalePromoGoodsJournal: TdsdOpenForm;
     N368: TMenuItem;
+    actInternetRepair: TdsdOpenForm;
+    N369: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

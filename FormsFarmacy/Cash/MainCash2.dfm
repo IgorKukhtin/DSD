@@ -3224,6 +3224,14 @@ inherited MainCashForm2: TMainCashForm2
           ComponentItem = 'MobileDiscount'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -3778,6 +3786,14 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'MobileDiscount'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -4610,6 +4626,14 @@ inherited MainCashForm2: TMainCashForm2
           ComponentItem = 'MobileDiscount'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -4914,6 +4938,14 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'MobileDiscount'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -5231,6 +5263,14 @@ inherited MainCashForm2: TMainCashForm2
           ComponentItem = 'MobileDiscount'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -5535,6 +5575,14 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'MobileDiscount'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -5913,6 +5961,14 @@ inherited MainCashForm2: TMainCashForm2
           ComponentItem = 'MobileDiscount'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -6190,6 +6246,14 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'MobileDiscount'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -6810,6 +6874,14 @@ inherited MainCashForm2: TMainCashForm2
           ComponentItem = 'MobileDiscount'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -6862,6 +6934,17 @@ inherited MainCashForm2: TMainCashForm2
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actInternetRepairCash: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1056#1077#1084#1086#1085#1090' '#1080#1085#1090#1077#1088#1085#1077#1090#1072
+      FormName = 'TInternetRepairCashForm'
+      FormNameParam.Value = 'TInternetRepairCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -7094,6 +7177,9 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N57: TMenuItem
         Action = actInstructionsCash
+      end
+      object N65: TMenuItem
+        Action = actInternetRepairCash
       end
       object N33: TMenuItem
         Caption = '-'
@@ -7766,6 +7852,12 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         Name = 'isPaperRecipeSP'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMobileFirstOrder'
         Value = Null
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -10047,6 +10139,14 @@ inherited MainCashForm2: TMainCashForm2
         ComponentItem = 'MobileDiscount'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMobileFirstOrder'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isMobileFirstOrder'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     AutoWidth = True
@@ -10363,6 +10463,14 @@ inherited MainCashForm2: TMainCashForm2
         Component = FormParams
         ComponentItem = 'MobileDiscount'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMobileFirstOrder'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isMobileFirstOrder'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -11079,6 +11187,14 @@ inherited MainCashForm2: TMainCashForm2
         Component = FormParams
         ComponentItem = 'MobileDiscount'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMobileFirstOrder'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isMobileFirstOrder'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

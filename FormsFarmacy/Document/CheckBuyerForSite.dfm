@@ -12,18 +12,19 @@ inherited CheckBuyerForSiteForm: TCheckBuyerForSiteForm
     Top = 67
     Width = 701
     Height = 392
-    ExplicitWidth = 736
-    ExplicitHeight = 433
+    ExplicitTop = 67
+    ExplicitWidth = 701
+    ExplicitHeight = 392
     ClientRectBottom = 392
     ClientRectRight = 701
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 736
-      ExplicitHeight = 433
+      ExplicitWidth = 701
+      ExplicitHeight = 392
       inherited cxGrid: TcxGrid
         Width = 701
         Height = 201
         Align = alTop
-        ExplicitWidth = 719
+        ExplicitWidth = 701
         ExplicitHeight = 201
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
@@ -261,8 +262,6 @@ inherited CheckBuyerForSiteForm: TCheckBuyerForSiteForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGrid
-        ExplicitTop = 273
-        ExplicitWidth = 8
       end
       object Panel1: TPanel
         Left = 0
@@ -273,10 +272,6 @@ inherited CheckBuyerForSiteForm: TCheckBuyerForSiteForm
         BevelOuter = bvNone
         Caption = 'Panel1'
         TabOrder = 2
-        ExplicitLeft = 281
-        ExplicitTop = 0
-        ExplicitWidth = 455
-        ExplicitHeight = 433
         object cxGrid1: TcxGrid
           Left = 0
           Top = 0
@@ -285,8 +280,6 @@ inherited CheckBuyerForSiteForm: TCheckBuyerForSiteForm
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 0
-          ExplicitWidth = 455
-          ExplicitHeight = 376
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DataSource1
@@ -435,8 +428,6 @@ inherited CheckBuyerForSiteForm: TCheckBuyerForSiteForm
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 5
-    ExplicitTop = 233
-    ExplicitWidth = 736
     object cxDBMemo1: TcxDBMemo
       Left = 267
       Top = 1
@@ -455,8 +446,6 @@ inherited CheckBuyerForSiteForm: TCheckBuyerForSiteForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 0
-      ExplicitLeft = 263
-      ExplicitWidth = 455
       Height = 39
       Width = 433
     end
@@ -791,6 +780,14 @@ inherited CheckBuyerForSiteForm: TCheckBuyerForSiteForm
           Component = MasterCDS
           ComponentItem = 'MobileDiscount'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091

@@ -636,6 +636,8 @@ type
     spFilesToCheckFTPParams: TdsdStoredProc;
     SalePromoGoodsCDS: TClientDataSet;
     SalePromoGoodsCalcCDS: TClientDataSet;
+    actInternetRepairCash: TdsdOpenForm;
+    N65: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1794,6 +1796,7 @@ begin
   FormParams.ParamByName('isAutoVIPforSales').Value := False;
   FormParams.ParamByName('isPaperRecipeSP').Value := False;
   FormParams.ParamByName('MobileDiscount').Value := 0;
+  FormParams.ParamByName('isMobileFirstOrder').Value := False;
 
   ClearFilterAll;
 
@@ -5126,6 +5129,7 @@ begin
 
     nChangeSumma := FormParams.ParamByName('LoyaltyChangeSumma').Value +
       FormParams.ParamByName('LoyaltySMSumma').Value;
+    if (nSumAll < 200) and (FormParams.ParamByName('isMobileFirstOrder').Value = True) then nChangeSumma := 0;
 
     if nChangeSumma > 0 then
     begin
@@ -5287,11 +5291,11 @@ begin
       CheckCDS.First;
       while not CheckCDS.Eof do
       begin
-        if not CheckCDS.FieldByName('isPresent').AsBoolean then
+        if not CheckCDS.FieldByName('isPresent').AsBoolean and not CheckCDS.FieldByName('isGoodsPresent').AsBoolean then
         begin
           if CheckCDS.FieldByName('PriceDiscount').asCurrency > 0 then
-            nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount')
-              .asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,
+            nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+              CheckCDS.FieldByName('PriceDiscount').asCurrency,
               FormParams.ParamByName('RoundingDown').Value)
           else
             nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
@@ -5302,14 +5306,15 @@ begin
       end;
     end;
 
+    if (nSumAll < 200) and (FormParams.ParamByName('isMobileFirstOrder').Value = True) then nChangeSumma := 0;
+
     CheckCDS.First;
     while not CheckCDS.Eof do
     begin
 
-      if nChangeSumma > 0 then
+      if (nChangeSumma > 0) and not CheckCDS.FieldByName('isPresent').AsBoolean and not CheckCDS.FieldByName('isGoodsPresent').AsBoolean then
       begin
-        if (CheckCDS.FieldByName('Amount').asCurrency <> 0) and (nSumAll > 0)
-        then
+        if (CheckCDS.FieldByName('Amount').asCurrency <> 0) and (nSumAll > 0) then
         begin
           if nChangeSumma < nSumAll then
           begin
@@ -9270,12 +9275,13 @@ begin
       lGoodsId_bySoldRegim := SourceClientDataSet.FieldByName('Id').AsInteger;
       lTypeDiscount := 0;
 
-      if (AisGoodsPresent = True) and (APrice <> 0) then
+      if AisGoodsPresent = True then
       begin
         // цена БЕЗ скидки
         lPriceSale := SourceClientDataSet.FieldByName('Price').asCurrency;
         // цена СО скидкой
-        lPrice := APrice;
+        if APrice <> 0 then lPrice := APrice
+        else lPrice := SourceClientDataSet.FieldByName('Price').asCurrency;
       end
       else
       if (Self.FormParams.ParamByName('SPTax').Value <> 0) and
@@ -11073,6 +11079,7 @@ begin
   FormParams.ParamByName('isAutoVIPforSales').Value := False;
   FormParams.ParamByName('isPaperRecipeSP').Value := False;
   FormParams.ParamByName('MobileDiscount').Value := 0;
+  FormParams.ParamByName('isMobileFirstOrder').Value := False;
 
   FFiscalNumber := '';
   pnlVIP.Visible := false;
@@ -12238,8 +12245,9 @@ begin
 
         end;
 
-        CheckCDS.FieldByName('PriceDiscount').asCurrency :=
-          CheckCDS.FieldByName('Price').asCurrency;
+        if FormParams.ParamByName('LoyaltyChangeSumma').Value <> 0 then
+          CheckCDS.FieldByName('PriceDiscount').asCurrency :=
+            CheckCDS.FieldByName('Price').asCurrency;
         CheckCDS.FieldByName('Summ').asCurrency :=
           GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
           CheckCDS.FieldByName('Price').asCurrency,
@@ -14082,6 +14090,7 @@ begin
         SalePromoGoodsCDS.Edit;
         SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := 0;
         SalePromoGoodsCDS.FieldByName('AmountSale').AsCurrency := 0;
+        SalePromoGoodsCDS.FieldByName('Remains').AsCurrency := 0;
         SalePromoGoodsCDS.Post;
         if Abs(Frac(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency)) < 0.01 then
         begin
@@ -14091,15 +14100,18 @@ begin
               RemainsCDS.Filtered := false;
               RemainsCDS.Filter := 'Remains > ' + SalePromoGoodsCDS.FieldByName('AmountPresent').AsString + ' and ID = ' + SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsString;
               RemainsCDS.Filtered := true;
-              if RemainsCDS.RecordCount > 0 then
+              RemainsCDS.First;
+              while not RemainsCDS.Eof do
               begin
                 SalePromoGoodsCDS.Edit;
                 if SalePromoGoodsCDS.FieldByName('Price').AsCurrency = 0 then
                   SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := RemainsCDS.FieldByName('Price').AsCurrency
                 else SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
-                SalePromoGoodsCDS.FieldByName('AmountSale').AsCurrency := Min(RemainsCDS.FieldByName('Remains').AsCurrency,
+                SalePromoGoodsCDS.FieldByName('AmountSale').AsCurrency := Min(SalePromoGoodsCDS.FieldByName('Remains').AsCurrency + RemainsCDS.FieldByName('Remains').AsCurrency,
                     SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency * Round(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency + 0.01));
+                SalePromoGoodsCDS.FieldByName('Remains').AsCurrency := SalePromoGoodsCDS.FieldByName('Remains').AsCurrency + RemainsCDS.FieldByName('Remains').AsCurrency;
                 SalePromoGoodsCDS.Post;
+                RemainsCDS.Next;
               end;
             finally
               RemainsCDS.Filtered := false;

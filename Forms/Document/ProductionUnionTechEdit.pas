@@ -52,6 +52,8 @@ type
     ceRealWeightMsg: TcxCurrencyEdit;
     ceRealWeightShp: TcxCurrencyEdit;
     cxLabel17: TcxLabel;
+    cxLabel18: TcxLabel;
+    ceCountReal: TcxCurrencyEdit;
   private
     { Private declarations }
   public

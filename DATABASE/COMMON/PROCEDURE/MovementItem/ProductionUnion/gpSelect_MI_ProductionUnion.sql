@@ -38,6 +38,7 @@ BEGIN
 
             , CAST (NULL AS TVarchar)               AS Comment
             , CAST (NULL AS TFloat)                 AS Count
+            , CAST (NULL AS TFloat)                 AS CountReal
             , CAST (NULL AS TFloat)                 AS RealWeight
 
             , CAST (NULL AS TFloat)                 AS CuterCount
@@ -129,6 +130,7 @@ BEGIN
 
             , MIString_Comment.ValueData        AS Comment
             , MIFloat_Count.ValueData           AS Count
+            , MIFloat_CountReal.ValueData       AS CountReal
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
             , MIFloat_CuterWeight.ValueData     AS CuterWeight
@@ -213,6 +215,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
                                         AND MIFloat_Count.DescId = zc_MIFloat_Count()
+             LEFT JOIN MovementItemFloat AS MIFloat_CountReal
+                                         ON MIFloat_CountReal.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CountReal.DescId = zc_MIFloat_CountReal()
 
              LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
                                          ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
@@ -298,6 +303,7 @@ BEGIN
 
             , MIString_Comment.ValueData        AS Comment
             , MIFloat_Count.ValueData           AS Count
+            , MIFloat_CountReal.ValueData       AS CountReal
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
             , MIFloat_CuterWeight.ValueData     AS CuterWeight
@@ -384,6 +390,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
                                         AND MIFloat_Count.DescId = zc_MIFloat_Count()
+             LEFT JOIN MovementItemFloat AS MIFloat_CountReal
+                                         ON MIFloat_CountReal.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CountReal.DescId = zc_MIFloat_CountReal()
 
              LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
                                          ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
@@ -585,6 +594,7 @@ ALTER FUNCTION gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar)
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.09.22         *
  31.03.15         * add GoodsGroupNameFull
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
  02.06.14                                                       *

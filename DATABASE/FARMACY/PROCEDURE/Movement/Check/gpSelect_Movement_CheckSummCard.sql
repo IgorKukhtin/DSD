@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isMobileApplication Boolean 
              , UserReferalsName TVarChar, isConfirmByPhone Boolean, DateComing TDateTime 
              , MobileDiscount TFloat
+             , isMobileFirstOrder Boolean 
               )
 AS
 $BODY$
@@ -136,7 +137,8 @@ BEGIN
            , Object_UserReferals.ValueData                                            AS UserReferalsName
            , COALESCE(MovementBoolean_ConfirmByPhone.ValueData, False)::Boolean      AS isConfirmByPhone
            , MovementDate_Coming.ValueData                                AS DateComing
-           , MovementFloat_MobileDiscount.ValueData                       AS MobileDiscount
+           , COALESCE(MovementFloat_MobileDiscount.ValueData, 0)::TFloat  AS MobileDiscount
+           , COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False)::Boolean    AS isMobileFirstOrder
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -388,6 +390,10 @@ BEGIN
                                          ON MovementLinkObject_UserReferals.MovementId = Movement_Check.Id
                                         AND MovementLinkObject_UserReferals.DescId = zc_MovementLinkObject_UserReferals()
             LEFT JOIN Object AS Object_UserReferals ON Object_UserReferals.Id = MovementLinkObject_UserReferals.ObjectId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_MobileFirstOrder
+                                      ON MovementBoolean_MobileFirstOrder.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_MobileFirstOrder.DescId = zc_MovementBoolean_MobileFirstOrder()
       ;
 
 END;

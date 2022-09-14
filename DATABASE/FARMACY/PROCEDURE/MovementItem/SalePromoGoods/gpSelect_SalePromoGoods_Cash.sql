@@ -15,6 +15,7 @@ RETURNS TABLE (EndPromo         TDateTime
              , GoodsPresentName TVarChar
              , PriceSale        TFloat
              , AmountSale       TFloat
+             , Remains          TFloat
              )
 AS
 $BODY$
@@ -58,7 +59,7 @@ BEGIN
                                                           AND MovementDate_EndPromo.ValueData  >= CURRENT_DATE
 
                               WHERE Movement.DescId = zc_Movement_SalePromoGoods()
-                                --AND Movement.StatusId = zc_Enum_Status_Complete()
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
                               ),
            tmpMIUnitAll AS (SELECT Movement.Id                      AS Id
                                  , MI_SalePromoGoods.ObjectId       AS UnitId
@@ -128,6 +129,7 @@ BEGIN
              , MovementIten.GoodsPresentName
              , 0::TFloat   AS PriceSale
              , 0::TFloat   AS AmountSale
+             , 0::TFloat   AS Remains
         FROM tmpMI AS MovementIten
         WHERE MovementIten.ORD = 1
         ;

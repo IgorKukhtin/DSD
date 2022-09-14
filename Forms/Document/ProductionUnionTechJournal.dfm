@@ -5,7 +5,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1092
-  ExplicitHeight = 723
+  ExplicitHeight = 724
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -77,6 +77,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = RealWeightShp
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountReal
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -128,6 +133,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = RealWeightShp
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountReal
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -374,7 +384,19 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 60
           end
-          object IsMain: TcxGridDBColumn [24]
+          object CountReal: TcxGridDBColumn [24]
+            Caption = #1050#1086#1083'. '#1096#1090'. '#1092#1072#1082#1090' ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'CountReal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'. '#1096#1090'. '#1092#1072#1082#1090' ('#1090#1091#1096#1077#1085#1082#1072')'
+            Options.Editing = False
+            Width = 66
+          end
+          object IsMain: TcxGridDBColumn [25]
             Caption = #1043#1083#1072#1074#1085'.'
             DataBinding.FieldName = 'isMain'
             HeaderAlignmentHorz = taCenter
@@ -382,7 +404,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 45
           end
-          object ReceiptCode: TcxGridDBColumn [25]
+          object ReceiptCode: TcxGridDBColumn [26]
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
             DataBinding.FieldName = 'ReceiptCode'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -397,7 +419,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object ReceiptName: TcxGridDBColumn [26]
+          object ReceiptName: TcxGridDBColumn [27]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
             DataBinding.FieldName = 'ReceiptName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -412,7 +434,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object PartionGoods: TcxGridDBColumn [27]
+          object PartionGoods: TcxGridDBColumn [28]
             Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -421,7 +443,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 60
           end
-          object Comment_receipt: TcxGridDBColumn [28]
+          object Comment_receipt: TcxGridDBColumn [29]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1088#1077#1094#1077#1087#1090#1091#1088#1072')'
             DataBinding.FieldName = 'Comment_receipt'
             HeaderAlignmentHorz = taCenter
@@ -429,14 +451,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 100
           end
-          object Comment: TcxGridDBColumn [29]
+          object Comment: TcxGridDBColumn [30]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object InsertName: TcxGridDBColumn [30]
+          object InsertName: TcxGridDBColumn [31]
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -444,7 +466,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 100
           end
-          object UpdateName: TcxGridDBColumn [31]
+          object UpdateName: TcxGridDBColumn [32]
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
@@ -452,7 +474,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 110
           end
-          object InsertDate: TcxGridDBColumn [32]
+          object InsertDate: TcxGridDBColumn [33]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -460,7 +482,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 90
           end
-          object UpdateDate: TcxGridDBColumn [33]
+          object UpdateDate: TcxGridDBColumn [34]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
@@ -468,7 +490,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 110
           end
-          object CuterWeight: TcxGridDBColumn [34]
+          object CuterWeight: TcxGridDBColumn [35]
             Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090'('#1082#1091#1090#1090#1077#1088')'
             DataBinding.FieldName = 'CuterWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1521,14 +1543,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Params = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1794,7 +1816,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -2965,6 +2987,86 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   end
   inherited spGet: TdsdStoredProc
     OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = ''
+        Component = edInvNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 42086d
+        Component = edOperDate
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusName'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 288
     Top = 168
   end
@@ -2984,43 +3086,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = ''
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 694
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = ''
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 646
     Top = 528
   end
@@ -3274,7 +3344,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = 'NULL'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime

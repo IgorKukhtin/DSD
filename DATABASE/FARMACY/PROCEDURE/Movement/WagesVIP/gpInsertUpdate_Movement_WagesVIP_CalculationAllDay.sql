@@ -410,33 +410,38 @@ BEGIN
     CREATE TEMP TABLE tmpUserReferals ON COMMIT DROP AS
         (WITH  tmpUserReferals AS (SELECT Movement.OperDate
                                         , MLO_UserReferals.ObjectId                           AS UserId
-                                        , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, MovementString_BayerPhone.ValueData)     AS BayerPhone
-                                        , ROW_NUMBER() OVER (PARTITION BY  COALESCE (ObjectString_BuyerForSite_Phone.ValueData, MovementString_BayerPhone.ValueData) 
-                                                             ORDER BY Movement.OperDate) AS Ord
-                                   FROM MovementLinkObject AS  MLO_UserReferals
+                                        , MovementLinkObject_Unit.ObjectId                    AS UnitId
+                                   FROM Movement
+                                   
+                                        INNER JOIN MovementLinkObject AS MLO_UserReferals
+                                                                      ON MLO_UserReferals.DescId = zc_MovementLinkObject_UserReferals()
+                                                                     AND MLO_UserReferals.MovementId = Movement.Id
 
-                                        INNER JOIN Movement ON Movement.Id = MLO_UserReferals.MovementId
-                                                           AND Movement.StatusId = zc_Enum_Status_Complete()    
+                                        INNER JOIN MovementBoolean AS MovementBoolean_MobileFirstOrder
+                                                                   ON MovementBoolean_MobileFirstOrder.MovementId = Movement.Id
+                                                                  AND MovementBoolean_MobileFirstOrder.DescId = zc_MovementBoolean_MobileFirstOrder()
+                                                                  AND MovementBoolean_MobileFirstOrder.ValueData = True
 
-                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
-                                                                     ON MovementLinkObject_BuyerForSite.MovementId = MLO_UserReferals.MovementId
-                                                                    AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
-                                        LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
-                                                               ON ObjectString_BuyerForSite_Phone.ObjectId = MovementLinkObject_BuyerForSite.ObjectId
-                                                              AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
+                                        LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                                ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                               AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                        LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
+                                                                ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
+                                                               AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+                                                                                                                                                                 
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()  
 
-                                        LEFT JOIN MovementString AS MovementString_BayerPhone
-                                                                 ON MovementString_BayerPhone.MovementId = MLO_UserReferals.MovementId
-                                                                AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
-
-                                   WHERE MLO_UserReferals.DescId = zc_MovementLinkObject_UserReferals())
+                                   WHERE Movement.DescId = zc_Movement_Check()
+                                     AND Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate)
+                                     AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                     AND (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0)) >= 199.50)
                                    
          SELECT tmpUserReferals.UserId
              , (COUNT(*) * 20)::TFloat     AS SummaCalc
          FROM tmpUserReferals
-         WHERE tmpUserReferals.OperDate >= DATE_TRUNC ('MONTH', vbOperDate)
-           AND tmpUserReferals.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
-           AND tmpUserReferals.Ord = 1
          GROUP BY tmpUserReferals.UserId);
                        
     -- сохранили отметку <Сумма реализации заказов принятых по телефону>

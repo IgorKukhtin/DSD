@@ -5356,6 +5356,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actInternetRepair: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1056#1077#1084#1086#1085#1090' '#1080#1085#1090#1077#1088#1085#1077#1090#1072
+      FormName = 'TInternetRepairForm'
+      FormNameParam.Value = 'TInternetRepairForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6813,6 +6824,9 @@
         end
         object N322: TMenuItem
           Action = actBanCommentSend
+        end
+        object N369: TMenuItem
+          Action = actInternetRepair
         end
         object N335: TMenuItem
           Action = actPickUpLogsAndDBF

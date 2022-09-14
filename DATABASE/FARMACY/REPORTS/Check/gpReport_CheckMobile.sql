@@ -69,29 +69,6 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          ),
-            tmpMovementAll AS (SELECT MovementLinkObject.ObjectId                                     AS UserId
-                                    , MovementLinkObject.MovementId
-                               FROM MovementLinkObject
-                               WHERE MovementLinkObject.DescId = zc_MovementLinkObject_UserReferals()),
-            tmpMovement AS (SELECT MovementLinkObject.MovementId
-                                 , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
-                                                                            MovementString_BayerPhone.ValueData) ORDER BY Movement.ID DESC) AS Ord
-                            FROM tmpMovementAll AS MovementLinkObject
- 
-                                 INNER JOIN Movement ON Movement.Id = MovementLinkObject.MovementId
-                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
-                                    
-                                 LEFT JOIN MovementString AS MovementString_BayerPhone
-                                                          ON MovementString_BayerPhone.MovementId = Movement.Id
-                                                         AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
-
-                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
-                                                              ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
-                                                             AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
-                                 LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
-                                                        ON ObjectString_BuyerForSite_Phone.ObjectId = MovementLinkObject_BuyerForSite.ObjectId
-                                                       AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
-                            ),
             tmpEmployeeSchedule AS (SELECT DISTINCT
                                            Movement.OperDate                        AS OperDate
                                          , MovementItemMaster.ObjectId              AS UserId
@@ -182,7 +159,10 @@ BEGIN
            , MovementDate_Coming.ValueData                                AS DateComing
            , CASE WHEN Movement_Check.StatusId = zc_Enum_Status_Complete() THEN MovementFloat_MobileDiscount.ValueData END::TFloat AS MobileDiscount
            
-           , CASE WHEN COALESCE (tmpMovement.MovementId, 0) <> 0 THEN 20 END::TFloat  AS ApplicationAward
+           , CASE WHEN COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False) = True AND
+                       MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData , 0) >= 199.50 AND
+                       COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) <> 0 AND
+                       Movement_Check.StatusId = zc_Enum_Status_Complete() THEN 20 END::TFloat  AS ApplicationAward
            
            , Movement_Check.isEmployeeMessage                             AS isEmployeeMessage
            
@@ -454,8 +434,6 @@ BEGIN
                                          AND tmpEmployeeSchedule.UserId =MovementLinkObject_UserReferals.ObjectId 
             LEFT JOIN Object AS Object_UnitUserReferals ON Object_UnitUserReferals.Id = tmpEmployeeSchedule.UnitId
             
-            LEFT JOIN tmpMovement ON tmpMovement.MovementId = Movement_Check.Id
-                                 AND tmpMovement.Ord = 1
       ;
 
 END;
@@ -474,4 +452,3 @@ $BODY$
 -- 
 
 select * from gpReport_CheckMobile(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('30.09.2022')::TDateTime , inUnitId := 0 , inIsUnComplete := 'True' , inIsErased := 'True' , inisEmployeeMessage := 'False' ,  inSession := '3');
-

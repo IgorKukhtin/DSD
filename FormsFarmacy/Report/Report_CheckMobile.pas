@@ -53,6 +53,7 @@ type
     bbtUpdate_EmployeeMessage: TdxBarButton;
     isMobileFirstOrder: TcxGridDBColumn;
     UserUnitReferalsName: TcxGridDBColumn;
+    TotalSummChangePercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

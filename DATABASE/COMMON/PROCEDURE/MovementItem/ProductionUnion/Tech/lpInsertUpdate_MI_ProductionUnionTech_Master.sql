@@ -1,14 +1,16 @@
 -- Function: lpInsertUpdate_MI_ProductionUnionTech_Master()
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnionTech_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inCount	             TFloat    , -- Количество батонов или упаковок
+    IN inCount	             TFloat    , -- Количество батонов или упаковок 
+    IN inCountReal           TFloat    , -- Количество шт. факт только для схемы "Тушенка"
     IN inRealWeight          TFloat    , -- Фактический вес(информативно)
     IN inRealWeightMsg       TFloat    , -- Фактический вес(после массажера)
     IN inRealWeightShp       TFloat    , -- Фактический вес(после шприцевания)
@@ -45,6 +47,10 @@ BEGIN
 
    -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), ioId, inCount);
+
+   -- сохранили свойство <Количество шт. факт только для схемы "Тушенка">
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountReal(), ioId, inCountReal);
+
    -- сохранили свойство <Фактический вес(информативно)>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeight(), ioId, inRealWeight);
    -- сохранили свойство <Количество кутеров>
@@ -81,6 +87,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.09.22         * inCountReal
  02.12.20         *
  21.03.15                                        *
 */
