@@ -26,6 +26,9 @@ BEGIN
    THEN
        RETURN;
    END IF;
+
+   -- ЦЕХ упаковки
+   --IF inUnitId IN (8451) THEN RETURN; END IF
    
    --IF inStartDate <= '07.07.2022' THEN RETURN; END IF;
 /*
