@@ -6,7 +6,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
   AddOnFormData.RefreshAction = nil
   AddOnFormData.isSingle = False
   ExplicitWidth = 542
-  ExplicitHeight = 184
+  ExplicitHeight = 188
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -149,14 +149,18 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         item
           FromParam.Value = Null
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'FileName'
           ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -311,6 +315,11 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
           Name = 'PACKNAME'
           DataType = ftString
           Size = 50
+        end
+        item
+          Name = 'CONTRACT'
+          DataType = ftString
+          Size = 20
         end>
       DataSet = BillList
       OpenFileDialog = False
@@ -318,6 +327,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
       FileName.Component = FormParams
       FileName.ComponentItem = 'FileName'
       FileName.DataType = ftString
+      FileName.MultiSelectSeparator = ','
     end
     object actClose: TdsdFormClose
       Category = 'DSDLib'
@@ -344,6 +354,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         Name = 'FileName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Top = 88
   end
@@ -362,6 +373,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         ComponentItem = 'StartDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -370,6 +382,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         ComponentItem = 'EndDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -377,6 +390,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -384,6 +398,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 280
@@ -405,6 +420,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -413,6 +429,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -420,6 +437,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 53
@@ -429,6 +447,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -439,6 +458,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -447,6 +467,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 456
     Top = 56
@@ -465,6 +486,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -472,12 +494,14 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPeriodLenght'
         Value = 'Day'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 24
