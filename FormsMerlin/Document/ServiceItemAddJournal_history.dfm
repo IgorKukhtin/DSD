@@ -268,14 +268,7 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = ' '#9#1044#1072#1090#1072', '#1076#1086' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1091#1089#1083#1086#1074#1080#1077
-        Width = 55
-      end
-      object Comment: TcxGridDBColumn
-        Caption = '***'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'.)'
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 120
+        Width = 70
       end
       object UnitGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
@@ -294,6 +287,37 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
+      end
+      object MonthNameStart: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1089'...'
+        DataBinding.FieldName = 'MonthNameStart'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'mmmm yyyy'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object MonthNameEnd: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1087#1086'...'
+        DataBinding.FieldName = 'MonthNameEnd'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'mmmm yyyy'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object Amount: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 80
       end
       object UnitName: TcxGridDBColumn
         Caption = #1054#1090#1076#1077#1083
@@ -323,6 +347,24 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
+      object miUpdateName_mi: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateName_mi'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077'-'#1101#1083#1077#1084#1077#1085#1090')'
+        Options.Editing = False
+        Width = 97
+      end
+      object miUpdateDate_mi: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateDate_mi'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077'-'#1101#1083#1077#1084#1077#1085#1090')'
+        Options.Editing = False
+        Width = 120
+      end
       object CommentInfoMoneyName: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'CommentInfoMoneyName'
@@ -337,36 +379,13 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         HeaderAlignmentVert = vaCenter
         Width = 174
       end
-      object Amount: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
-        DataBinding.FieldName = 'Amount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      object Comment: TcxGridDBColumn
+        Caption = '***'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'.)'
+        DataBinding.FieldName = 'Comment'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 80
-      end
-      object MonthNameStart: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1089'...'
-        DataBinding.FieldName = 'MonthNameStart'
-        PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'mmmm yyyy'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
-      object MonthNameEnd: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1087#1086'...'
-        DataBinding.FieldName = 'MonthNameEnd'
-        PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'mmmm yyyy'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
+        Width = 120
       end
       object DateStart: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089'...'
@@ -425,24 +444,6 @@ object ServiceItemAddJournal_historyForm: TServiceItemAddJournal_historyForm
         HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072'-'#1076#1086#1082#1091#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 78
-      end
-      object miUpdateName_mi: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
-        DataBinding.FieldName = 'UpdateName_mi'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077'-'#1101#1083#1077#1084#1077#1085#1090')'
-        Options.Editing = False
-        Width = 97
-      end
-      object miUpdateDate_mi: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
-        DataBinding.FieldName = 'UpdateDate_mi'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077'-'#1101#1083#1077#1084#1077#1085#1090')'
-        Options.Editing = False
-        Width = 67
       end
       object miInsertName_mi: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'

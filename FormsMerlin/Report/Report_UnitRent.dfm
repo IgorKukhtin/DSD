@@ -180,7 +180,8 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     object actUpdate: TdsdInsertUpdateAction [0]
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1090#1076#1077#1083
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1090#1076#1077#1083
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TUnitEditForm'
@@ -376,6 +377,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     object actInsertCash: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1054#1087#1083#1072#1090#1091
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1054#1087#1083#1072#1090#1091
       ShortCut = 45
@@ -503,6 +505,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     object macUpdateService: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actGet_Service_Last
@@ -517,6 +520,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     object macUpdateCash: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actGet_Cash_Last
@@ -531,6 +535,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     object actInsertService: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
       ImageIndex = 0
@@ -639,7 +644,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         item
           Name = 'StartDate'
           Value = Null
-          Component = edDateStart
+          Component = edServiceDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
@@ -654,7 +659,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
           Name = 'UnitName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'UnitName_all'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -689,7 +694,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         item
           Name = 'StartDate'
           Value = Null
-          Component = edDateStart
+          Component = edServiceDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
@@ -704,7 +709,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
           Name = 'UnitName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'UnitName_all'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -903,7 +908,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'bbExecuteDialog'
         end
         item
           Visible = True
@@ -911,7 +916,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         end
         item
           Visible = True
-          ItemName = 'bbExecuteDialog'
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -935,26 +940,6 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertCash'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateCash'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertService'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateService'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -963,23 +948,11 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenServiceItemAdd_history'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsert_Movement_Service'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdate_Object_Position_All'
         end
         item
           Visible = True

@@ -272,7 +272,7 @@ object ServiceItemJournal_historyForm: TServiceItemJournal_historyForm
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 102
+        Width = 55
       end
       object Month_diff: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089'.'
