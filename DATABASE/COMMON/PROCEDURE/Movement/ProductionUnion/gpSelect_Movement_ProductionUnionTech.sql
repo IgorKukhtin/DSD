@@ -301,6 +301,7 @@ BEGIN
 
             , MIString_Comment.ValueData        AS Comment
             , MIFloat_Count.ValueData           AS Count
+            , MIFloat_CountReal.ValueData       AS CountReal
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterWeight.ValueData     AS CuterWeight 
             
@@ -348,13 +349,13 @@ BEGIN
              INNER JOIN tmpStatus ON tmpStatus.StatusId = _tmpListMaster.StatusId
 
              LEFT JOIN tmpMIBoolean AS MIBoolean_OrderSecond
-                                           ON MIBoolean_OrderSecond.MovementItemId = _tmpListMaster.MovementItemId
-                                          AND MIBoolean_OrderSecond.DescId = zc_MIBoolean_OrderSecond()
+                                    ON MIBoolean_OrderSecond.MovementItemId = _tmpListMaster.MovementItemId
+                                   AND MIBoolean_OrderSecond.DescId = zc_MIBoolean_OrderSecond()
 
              LEFT JOIN tmpMIDate AS MIDate_PartionGoods
-                                        ON MIDate_PartionGoods.MovementItemId = _tmpListMaster.MovementItemId
-                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                                       AND _tmpListMaster.isPartionDate = FALSE
+                                 ON MIDate_PartionGoods.MovementItemId = _tmpListMaster.MovementItemId
+                                AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                AND _tmpListMaster.isPartionDate = FALSE
              LEFT JOIN ObjectLink AS ObjectLink_OrderType_Goods
                                   ON ObjectLink_OrderType_Goods.ChildObjectId = _tmpListMaster.GoodsId
                                  AND ObjectLink_OrderType_Goods.DescId = zc_ObjectLink_OrderType_Goods()
@@ -366,47 +367,53 @@ BEGIN
                                          ON MIFloat_Count.MovementItemId = _tmpListMaster.MovementItemId
                                         AND MIFloat_Count.DescId = zc_MIFloat_Count()
                                         AND _tmpListMaster.MovementId <> 0
+
+             LEFT JOIN MovementItemFloat AS MIFloat_CountReal
+                                         ON MIFloat_CountReal.MovementItemId = _tmpListMaster.MovementItemId
+                                        AND MIFloat_CountReal.DescId = zc_MIFloat_CountReal()
+                                        AND _tmpListMaster.MovementId <> 0
+
              LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
-                                         ON MIFloat_RealWeight.MovementItemId = _tmpListMaster.MovementItemId
-                                        AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
-                                        AND _tmpListMaster.MovementId <> 0
+                                  ON MIFloat_RealWeight.MovementItemId = _tmpListMaster.MovementItemId
+                                 AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
+                                 AND _tmpListMaster.MovementId <> 0
              LEFT JOIN tmpMIFloat AS MIFloat_CuterWeight
-                                         ON MIFloat_CuterWeight.MovementItemId = _tmpListMaster.MovementItemId
-                                        AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
-                                        AND _tmpListMaster.MovementId <> 0
+                                  ON MIFloat_CuterWeight.MovementItemId = _tmpListMaster.MovementItemId
+                                 AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
+                                 AND _tmpListMaster.MovementId <> 0
 
              LEFT JOIN tmpMIFloat AS MIFloat_RealWeightShp
-                                         ON MIFloat_RealWeightShp.MovementItemId = _tmpListMaster.MovementItemId
-                                        AND MIFloat_RealWeightShp.DescId = zc_MIFloat_RealWeightShp()
-                                        AND _tmpListMaster.MovementId <> 0
+                                  ON MIFloat_RealWeightShp.MovementItemId = _tmpListMaster.MovementItemId
+                                 AND MIFloat_RealWeightShp.DescId = zc_MIFloat_RealWeightShp()
+                                 AND _tmpListMaster.MovementId <> 0
              LEFT JOIN tmpMIFloat AS MIFloat_RealWeightMsg
-                                         ON MIFloat_RealWeightMsg.MovementItemId = _tmpListMaster.MovementItemId
-                                        AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
-                                        AND _tmpListMaster.MovementId <> 0
+                                  ON MIFloat_RealWeightMsg.MovementItemId = _tmpListMaster.MovementItemId
+                                 AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
+                                 AND _tmpListMaster.MovementId <> 0
 
              LEFT JOIN tmpMIBoolean AS MIBoolean_PartionClose
-                                           ON MIBoolean_PartionClose.MovementItemId = _tmpListMaster.MovementItemId
-                                          AND MIBoolean_PartionClose.DescId = zc_MIBoolean_PartionClose()
-                                          AND _tmpListMaster.MovementId <> 0
+                                    ON MIBoolean_PartionClose.MovementItemId = _tmpListMaster.MovementItemId
+                                   AND MIBoolean_PartionClose.DescId = zc_MIBoolean_PartionClose()
+                                   AND _tmpListMaster.MovementId <> 0
              LEFT JOIN tmpMIString AS MIString_Comment
-                                          ON MIString_Comment.MovementItemId = _tmpListMaster.MovementItemId
-                                         AND MIString_Comment.DescId = zc_MIString_Comment()
-                                         AND _tmpListMaster.MovementId <> 0
+                                   ON MIString_Comment.MovementItemId = _tmpListMaster.MovementItemId
+                                  AND MIString_Comment.DescId = zc_MIString_Comment()
+                                  AND _tmpListMaster.MovementId <> 0
 
              LEFT JOIN tmpMIDate AS MIDate_Insert
-                                        ON MIDate_Insert.MovementItemId = _tmpListMaster.MovementItemId
-                                       AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                                 ON MIDate_Insert.MovementItemId = _tmpListMaster.MovementItemId
+                                AND MIDate_Insert.DescId = zc_MIDate_Insert()
              LEFT JOIN tmpMIDate AS MIDate_Update
-                                        ON MIDate_Update.MovementItemId = _tmpListMaster.MovementItemId
-                                       AND MIDate_Update.DescId = zc_MIDate_Update()
+                                 ON MIDate_Update.MovementItemId = _tmpListMaster.MovementItemId
+                                AND MIDate_Update.DescId = zc_MIDate_Update()
 
              LEFT JOIN tmpMILinkObject AS MILO_Insert
-                                              ON MILO_Insert.MovementItemId = _tmpListMaster.MovementItemId
-                                             AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                                       ON MILO_Insert.MovementItemId = _tmpListMaster.MovementItemId
+                                      AND MILO_Insert.DescId = zc_MILinkObject_Insert()
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
              LEFT JOIN tmpMILinkObject AS MILO_Update
-                                              ON MILO_Update.MovementItemId = _tmpListMaster.MovementItemId
-                                             AND MILO_Update.DescId = zc_MILinkObject_Update()
+                                       ON MILO_Update.MovementItemId = _tmpListMaster.MovementItemId
+                                      AND MILO_Update.DescId = zc_MILinkObject_Update()
              LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpListMaster.GoodsId
@@ -744,6 +751,7 @@ $BODY$
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
 
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.09.22         *
  05.10.16         * add inJuridicalBasisId
  13.06.16         *
  07.11.15         * GoodsKindComplete

@@ -1,44 +1,44 @@
 ﻿inherited ProductionUnionTechEditForm: TProductionUnionTechEditForm
   ActiveControl = ceRealWeight
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1047#1072#1082#1083#1072#1076#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
-  ClientHeight = 302
+  ClientHeight = 296
   ClientWidth = 562
   AddOnFormData.isSingle = False
   ExplicitWidth = 568
-  ExplicitHeight = 330
+  ExplicitHeight = 325
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 167
-    Top = 265
+    Left = 168
+    Top = 253
     Height = 26
-    ExplicitLeft = 167
-    ExplicitTop = 265
+    ExplicitLeft = 168
+    ExplicitTop = 253
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 311
-    Top = 265
+    Left = 312
+    Top = 253
     Height = 26
-    ExplicitLeft = 311
-    ExplicitTop = 265
+    ExplicitLeft = 312
+    ExplicitTop = 253
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
-    Left = 370
-    Top = 155
+    Left = 246
+    Top = 198
     Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
     Visible = False
   end
   object ceOperDate: TcxDateEdit [3]
-    Left = 370
-    Top = 175
+    Left = 242
+    Top = 218
     EditValue = 42078d
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
-    Width = 86
+    Width = 108
   end
   object ceRealWeight: TcxCurrencyEdit [4]
     Left = 8
@@ -71,15 +71,15 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
   end
   object cxLabel10: TcxLabel [8]
-    Left = 256
-    Top = 198
+    Left = 370
+    Top = 200
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [9]
-    Left = 256
+    Left = 370
     Top = 218
     TabOrder = 5
-    Width = 301
+    Width = 187
   end
   object ceGooods: TcxButtonEdit [10]
     Left = 8
@@ -215,13 +215,13 @@
     Width = 111
   end
   object cxLabel14: TcxLabel [28]
-    Left = 127
-    Top = 155
+    Left = 8
+    Top = 198
     Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edDocumentKind: TcxButtonEdit [29]
-    Left = 127
-    Top = 175
+    Left = 8
+    Top = 218
     Properties.Buttons = <
       item
         Default = True
@@ -229,7 +229,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 29
-    Width = 224
+    Width = 227
   end
   object cxLabel15: TcxLabel [30]
     Left = 370
@@ -245,30 +245,46 @@
     Width = 86
   end
   object cxLabel16: TcxLabel [32]
-    Left = 8
-    Top = 198
+    Left = 127
+    Top = 155
     Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1084#1089#1078')'
   end
   object ceRealWeightMsg: TcxCurrencyEdit [33]
-    Left = 8
-    Top = 218
+    Left = 127
+    Top = 175
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 33
-    Width = 111
+    Width = 108
   end
   object ceRealWeightShp: TcxCurrencyEdit [34]
-    Left = 127
-    Top = 218
+    Left = 242
+    Top = 175
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 34
     Width = 108
   end
   object cxLabel17: TcxLabel [35]
-    Left = 127
-    Top = 198
+    Left = 242
+    Top = 155
     Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1096#1087#1088')'
+  end
+  object cxLabel18: TcxLabel [36]
+    Left = 369
+    Top = 155
+    Caption = #1064#1090'. '#1092#1072#1082#1090' '#1090#1091#1096#1077#1085'.'
+  end
+  object ceCountReal: TcxCurrencyEdit [37]
+    Left = 370
+    Top = 175
+    Hint = #1050#1086#1083'. '#1096#1090'. '#1092#1072#1082#1090' '#1090#1091#1096#1077#1085#1082#1072
+    ParentShowHint = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    ShowHint = True
+    TabOrder = 37
+    Width = 86
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 11
@@ -298,7 +314,7 @@
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -431,6 +447,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCountReal'
+        Value = Null
+        Component = ceCountReal
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inRealWeight'
         Value = 0.000000000000000000
         Component = ceRealWeight
@@ -510,7 +534,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -720,9 +744,16 @@
         Component = ceRealWeightShp
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountReal'
+        Value = Null
+        Component = ceCountReal
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
-    Left = 64
-    Top = 128
+    Left = 257
+    Top = 236
   end
   object ReceiptGuides: TdsdGuides
     KeyField = 'Id'
@@ -1062,7 +1093,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 184
+    Left = 160
     Top = 145
   end
 end
