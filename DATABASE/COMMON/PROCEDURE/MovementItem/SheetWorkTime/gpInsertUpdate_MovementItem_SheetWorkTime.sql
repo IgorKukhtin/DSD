@@ -398,7 +398,7 @@ BEGIN
 --        OR (vbUserId = 5 and ioWorkTimeKindId_key = 12917 and inMemberId in (8278565) and ioValue <> '0')
 --        OR (vbUserId = 5 and inMemberId in (8262719))
     THEN
-        RAISE EXCEPTION 'Ошибка.Найдено несколько элементов в Табеле%<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%>'
+        RAISE EXCEPTION 'Ошибка.Найдено несколько элементов в Табеле%<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%>'
                        , CHR (13)
                        , lfGet_Object_ValueData_sh (inMemberId) || '('|| inMemberId :: TVarChar || ')'
                        , CHR (13)
@@ -417,6 +417,77 @@ BEGIN
                        , ioValue
                        , CHR (13)
                        , vbValue
+                       
+                       , CHR (13)
+                       , zfConvert_DateToString (inOperDate)
+
+                       , CHR (13)
+                       , (SELECT MIN (MI_SheetWorkTime.Id)
+                          FROM MovementItem AS MI_SheetWorkTime
+                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
+                                                                      ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
+                                                                     AND MIObject_Position.DescId = zc_MILinkObject_Position()
+                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                                                                      ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id
+                                                                     AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+                                                                      ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id
+                                                                     AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
+                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_StorageLine
+                                                                      ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id
+                                                                     AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+
+                               -- нужно учитывать тип Раб. времени только при вызове из док. список бригад
+                               LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                                                ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
+                                                               AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+
+                           WHERE MI_SheetWorkTime.MovementId = vbMovementId
+                             AND MI_SheetWorkTime.ObjectId   = inMemberId
+                             AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
+                             AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
+                             AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
+                             AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
+                             --
+                             AND MI_SheetWorkTime.isErased   = FALSE
+                             --
+                             AND (inIsPersonalGroup = FALSE OR (inIsPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = ioWorkTimeKindId_key))
+                        --LIMIT CASE WHEN inIsPersonalGroup = TRUE THEN 1 ELSE 100 END
+                         )
+
+                       , CHR (13)
+                       , (SELECT MAX (MI_SheetWorkTime.Id)
+                          FROM MovementItem AS MI_SheetWorkTime
+                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
+                                                                      ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
+                                                                     AND MIObject_Position.DescId = zc_MILinkObject_Position()
+                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                                                                      ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id
+                                                                     AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+                                                                      ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id
+                                                                     AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
+                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_StorageLine
+                                                                      ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id
+                                                                     AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+
+                               -- нужно учитывать тип Раб. времени только при вызове из док. список бригад
+                               LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                                                ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
+                                                               AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+
+                           WHERE MI_SheetWorkTime.MovementId = vbMovementId
+                             AND MI_SheetWorkTime.ObjectId   = inMemberId
+                             AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
+                             AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
+                             AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
+                             AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
+                             --
+                             AND MI_SheetWorkTime.isErased   = FALSE
+                             --
+                             AND (inIsPersonalGroup = FALSE OR (inIsPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = ioWorkTimeKindId_key))
+                         --LIMIT CASE WHEN inIsPersonalGroup = TRUE THEN 1 ELSE 100 END
+                         )
                         ;
     END IF;
 
@@ -453,7 +524,7 @@ BEGIN
                             AND (inIsPersonalGroup = FALSE OR (inIsPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = ioWorkTimeKindId_key))
                          LIMIT CASE WHEN inIsPersonalGroup = TRUE THEN 1 ELSE 100 END
                         );
-    -- Поиск-2
+     -- Поиск-2
      IF COALESCE (vbMovementItemId, 0) = 0
      THEN
          vbMovementItemId := (SELECT MI_SheetWorkTime.Id
@@ -492,7 +563,7 @@ BEGIN
 
 
      -- Проверка через УНИКАЛЬНОСТЬ
-     IF COALESCE (vbMovementItemId, 0) = 0
+     IF COALESCE (vbMovementItemId, 0) = 0 AND 1=0
      THEN
          PERFORM lpInsert_LockUnique (inKeyData:= 'SheetWorkTime'
                                         || ';' || zc_Movement_SheetWorkTime() :: TVarChar
@@ -503,6 +574,7 @@ BEGIN
                                         || ';' || COALESCE (inPersonalGroupId, 0) :: TVarChar
                                         || ';' || COALESCE (inStorageLineId, 0) :: TVarChar
                                         || ';' || (CASE WHEN inIsPersonalGroup = FALSE THEN '0' ELSE COALESCE (ioTypeId, 0) :: TVarChar END) :: TVarChar
+                                        || ';' || (CASE WHEN inIsPersonalGroup = FALSE THEN '0' ELSE COALESCE (ioWorkTimeKindId_key, 0) :: TVarChar END) :: TVarChar
                                     , inUserId:= vbUserId);
      END IF;
 

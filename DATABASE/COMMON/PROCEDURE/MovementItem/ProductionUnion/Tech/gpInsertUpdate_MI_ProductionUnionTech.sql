@@ -75,7 +75,7 @@ BEGIN
    END IF;
 
 
-   -- Расчет
+   -- Расчет для шт.
    IF EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure() AND OL.DescId = zc_ObjectLink_Goods_Measure() AND OL.ChildObjectId = zc_Measure_Sh())
    THEN
        -- Куттера
@@ -274,7 +274,7 @@ BEGIN
    FROM _tmpChild WHERE _tmpChild.isErased = TRUE;
 
 
-   -- Расчет
+   -- Расчет для шт.
    IF EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure() AND OL.ChildObjectId = zc_Measure_Sh())
    THEN
        -- кол-во
