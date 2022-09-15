@@ -34,7 +34,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
              , PersonalTradeCode Integer
              , PersonalTradeName TVarChar
            
-             , JuridicalId Integer, JuridicalName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar 
+             , CurrencyId Integer, CurrencyName TVarChar
              , PriceListId_first Integer, PriceListName_first TVarChar
              , PriceListId_curr Integer, PriceListName_curr TVarChar
              
@@ -166,6 +167,9 @@ BEGIN
            , Object_Juridical.Id                 AS JuridicalId
            , Object_Juridical.ValueData          AS JuridicalName
 
+           , Object_Currency.Id                  AS CurrencyId
+           , Object_Currency.ValueData           AS CurrencyName
+
            , Object_PriceList_first.Id           AS PriceListId_first
            , Object_PriceList_first.ValueData    AS PriceListName_first
            , Object_PriceList_curr.Id            AS PriceListId_curr
@@ -192,6 +196,11 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_EndBegin
                                    ON MovementDate_EndBegin.MovementId = Movement.Id
                                   AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Currency
+                                         ON MovementLinkObject_Currency.MovementId = Movement.Id
+                                        AND MovementLinkObject_Currency.DescId = zc_MovementLinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MovementLinkObject_Currency.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
@@ -236,6 +245,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.09.22         *
  05.07.21         *
 */
 

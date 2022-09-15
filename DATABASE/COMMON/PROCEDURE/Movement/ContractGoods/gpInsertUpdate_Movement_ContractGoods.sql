@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_ContractGoods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, TDateTime, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ContractGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -9,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ContractGoods(
     IN inOperDate            TDateTime , -- Дата документа / С какой даты действует
     --IN inEndBeginDate        TDateTime , -- По какую дату действует
    OUT outEndBeginDate       TDateTime , -- По какую дату действует
-    IN inContractId          Integer   , --
+    IN inContractId          Integer   , -- 
+    IN inCurrencyId          Integer   , -- Валюта 
     IN inComment             TVarChar   , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -27,7 +29,8 @@ BEGIN
                                                 , ioInvNumber    := ioInvNumber
                                                 , inOperDate     := inOperDate
                                                 --, inEndBeginDate := inEndBeginDate
-                                                , inContractId   := inContractId
+                                                , inContractId   := inContractId 
+                                                , inCurrencyId   := inCurrencyId
                                                 , inComment      := inComment
                                                 , inUserId       := vbUserId
                                                  ) AS tmp;
@@ -39,6 +42,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.22         *
  05.07.21         *
 */
 

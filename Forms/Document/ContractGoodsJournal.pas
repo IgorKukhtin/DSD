@@ -57,6 +57,7 @@ type
     ContractName: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     macInsertMask: TMultiAction;
+    CurrencyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

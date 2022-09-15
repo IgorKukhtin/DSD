@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_ContractGoods()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ContractGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ContractGoods(
     IN inOperDate            TDateTime , -- Дата документа / С какой даты действует
    OUT outEndBeginDate       TDateTime , -- По какую дату действует
     IN inContractId          Integer   , --
+    IN inCurrencyId          Integer   , -- Валюта 
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -83,7 +85,9 @@ BEGIN
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-
+     -- сохранили связь с <Валюта>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Currency(), ioId, inCurrencyId);
+     
      -- сохранили свойство <Дата окончания> текущего документа
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), ioId, outEndBeginDate);
 
@@ -124,9 +128,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.22         *
  14.09.22         *
  05.07.21         *
 */
 
 -- тест
 -- 
+

@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
              , ContractStateKindName TVarChar
              , ContractTagId Integer, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , isMask Boolean --вернуть false
@@ -68,13 +69,18 @@ BEGIN
              , 0                                                AS JuridicalId
              , CAST ('' AS TVarChar) 	                        AS JuridicalName
 
+             , ObjectCurrency.Id         AS CurrencyId	-- грн
+             , ObjectCurrency.ValueData  AS CurrencyName
+
              , CAST ('' AS TVarChar) 		                    AS Comment
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP        ::TDateTime             AS InsertDate 
              , CAST (FALSE AS Boolean)                          AS isMask
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-              LEFT JOIN Object AS Object_Insert          ON Object_Insert.Id          = vbUserId
+              LEFT JOIN Object AS Object_Insert  ON Object_Insert.Id = vbUserId
+              LEFT JOIN Object as ObjectCurrency ON ObjectCurrency.descid= zc_Object_Currency()
+                                                AND ObjectCurrency.id = 14461	             -- грн
            ;
      ELSE
 
@@ -103,6 +109,9 @@ BEGIN
            , Object_Juridical.Id                    AS JuridicalId
            , Object_Juridical.ValueData             AS JuridicalName
 
+           , COALESCE (Object_Currency.Id, Object_CurrencyInf.Id)                AS CurrencyId
+           , COALESCE (Object_Currency.ValueData, Object_CurrencyInf.ValueData)  AS CurrencyName
+
            , MovementString_Comment.ValueData       AS Comment
 
            , Object_Insert.ValueData                AS InsertName
@@ -124,6 +133,15 @@ BEGIN
                                  ON ObjectLink_Contract_Juridical.ObjectId = MovementLinkObject_Contract.ObjectId
                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Currency
+                                         ON MovementLinkObject_Currency.MovementId = Movement.Id
+                                        AND MovementLinkObject_Currency.DescId = zc_MovementLinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MovementLinkObject_Currency.ObjectId
+
+            LEFT JOIN Object AS Object_CurrencyInf
+                             ON Object_CurrencyInf.descid= zc_Object_Currency()
+                            AND Object_CurrencyInf.id = 14461 --грн
 
             LEFT JOIN MovementDate AS MovementDate_EndBegin
                                    ON MovementDate_EndBegin.MovementId = Movement.Id
@@ -149,6 +167,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.22         *
  02.08.22         * 
 */
 
