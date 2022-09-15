@@ -30,7 +30,7 @@ BEGIN
                 ORDER BY ObjectHistory.StartDate DESC
                 LIMIT 1);
    -- проверка
-   IF COALESCE (vbId_find, 0) = 0
+   IF COALESCE (vbId_find, 0) = 0 AND 1=0
    THEN
        RAISE EXCEPTION 'ќшибка.Ёлемент не найден.';
    END IF;

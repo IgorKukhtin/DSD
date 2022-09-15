@@ -306,6 +306,11 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
             Options.Editing = False
             Width = 144
           end
+          object ColorMinPrice_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorMinPrice_calc'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
       object Panel1: TPanel
@@ -694,6 +699,16 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
     ColorRuleList = <
       item
         BackGroundValueColumn = colColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPrice_min
+        BackGroundValueColumn = ColorMinPrice_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPrice_min_NDS
+        BackGroundValueColumn = ColorMinPrice_calc
         ColorValueList = <>
       end>
     Left = 536

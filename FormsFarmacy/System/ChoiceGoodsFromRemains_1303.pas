@@ -59,6 +59,7 @@ type
     colPrice_min_NDS: TcxGridDBColumn;
     celIntenalSPName: TcxGridDBColumn;
     celBrandSPName: TcxGridDBColumn;
+    ColorMinPrice_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public
