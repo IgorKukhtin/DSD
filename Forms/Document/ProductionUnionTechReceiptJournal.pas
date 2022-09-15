@@ -169,6 +169,7 @@ type
     spPrintDays1_cuter: TdsdStoredProc;
     actPrintDays2_cuter: TdsdPrintAction;
     bbPrintDays2_cuter: TdxBarButton;
+    CountReal: TcxGridDBColumn;
   private
     { Private declarations }
   public

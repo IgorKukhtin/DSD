@@ -394,7 +394,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'. '#1096#1090'. '#1092#1072#1082#1090' ('#1090#1091#1096#1077#1085#1082#1072')'
             Options.Editing = False
-            Width = 66
+            Width = 70
           end
           object IsMain: TcxGridDBColumn [25]
             Caption = #1043#1083#1072#1074#1085'.'
