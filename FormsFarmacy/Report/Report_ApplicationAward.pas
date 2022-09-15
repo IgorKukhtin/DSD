@@ -1,4 +1,4 @@
-unit Report_CheckMobile;
+unit Report_ApplicationAward;
 
 interface
 
@@ -28,34 +28,17 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView, cxDBEdit, cxImageComboBox;
 
 type
-  TReport_CheckMobileForm = class(TAncestorReportForm)
-    cxLabel3: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
+  TReport_ApplicationAwardForm = class(TAncestorReportForm)
     dxBarButton1: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    spUpdate_Price_MCSIsClose: TdsdStoredProc;
     bbMoneyBoxSun: TdxBarButton;
-    cbIsUnComplete: TcxCheckBox;
-    cbIsErased: TcxCheckBox;
-    actUpdate: TdsdInsertUpdateAction;
     dxBarButton2: TdxBarButton;
-    Color_UserReferals: TcxGridDBColumn;
-    ApplicationAward: TcxGridDBColumn;
-    isEmployeeMessage: TcxGridDBColumn;
-    cbEmployeeMessage: TcxCheckBox;
     spUpdate_EmployeeMessage: TdsdStoredProc;
-    actUpdate_EmployeeMessage: TdsdExecStoredProc;
-    mactUpdate_EmployeeMessage: TMultiAction;
     bbtUpdate_EmployeeMessage: TdxBarButton;
-    isMobileFirstOrder: TcxGridDBColumn;
-    UserUnitReferalsName: TcxGridDBColumn;
-    TotalSummChangePercent: TcxGridDBColumn;
-    actReport_ApplicationAward: TdsdOpenForm;
-    dxBarButton3: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
@@ -63,7 +46,7 @@ type
   end;
 
 var
-  Report_CheckMobileForm: TReport_CheckMobileForm;
+  Report_ApplicationAwardForm: TReport_ApplicationAwardForm;
 
 implementation
 
@@ -71,5 +54,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_CheckMobileForm)
+  RegisterClass(TReport_ApplicationAwardForm)
 end.

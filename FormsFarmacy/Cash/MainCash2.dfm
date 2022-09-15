@@ -30,9 +30,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 153
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 135
-      ExplicitTop = 6
-      ExplicitWidth = 100
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = CheckGridDBTableViewFocusedRecordChanged
@@ -256,7 +253,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 153
       AlignSplitter = salRight
       Control = ExpirationDateGrid
-      ExplicitLeft = 502
     end
     object ExpirationDateGrid: TcxGrid
       Left = 502

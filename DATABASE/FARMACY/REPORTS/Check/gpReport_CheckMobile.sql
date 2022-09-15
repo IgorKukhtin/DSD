@@ -162,6 +162,7 @@ BEGIN
            , CASE WHEN COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False) = True AND
                        MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData , 0) >= 199.50 AND
                        COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) <> 0 AND
+                       COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 AND
                        Movement_Check.StatusId = zc_Enum_Status_Complete() THEN 20 END::TFloat  AS ApplicationAward
            
            , Movement_Check.isEmployeeMessage                             AS isEmployeeMessage
@@ -434,6 +435,9 @@ BEGIN
                                          AND tmpEmployeeSchedule.UserId =MovementLinkObject_UserReferals.ObjectId 
             LEFT JOIN Object AS Object_UnitUserReferals ON Object_UnitUserReferals.Id = tmpEmployeeSchedule.UnitId
             
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountExternal
+                                         ON MovementLinkObject_DiscountExternal.MovementId = Movement_Check.Id
+                                        AND MovementLinkObject_DiscountExternal.DescId = zc_MILinkObject_DiscountExternal()
       ;
 
 END;
@@ -451,4 +455,5 @@ $BODY$
 -- тест
 -- 
 
-select * from gpReport_CheckMobile(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('30.09.2022')::TDateTime , inUnitId := 0 , inIsUnComplete := 'True' , inIsErased := 'True' , inisEmployeeMessage := 'False' ,  inSession := '3');
+select * from gpReport_CheckMobile(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('30.09.2022')::TDateTime , inUnitId := 0 , inIsUnComplete := 'True' , inIsErased := 'False' , inisEmployeeMessage := 'False' ,  inSession := '3');
+

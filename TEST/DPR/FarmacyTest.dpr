@@ -1256,7 +1256,8 @@ uses
   InternetRepairEdit in '..\..\FormsFarmacy\Guides\InternetRepairEdit.pas' {InternetRepairEditForm: TParentForm},
   InternetRepair in '..\..\FormsFarmacy\Guides\InternetRepair.pas' {InternetRepairForm: TParentForm},
   InternetRepairCashEdit in '..\..\FormsFarmacy\Guides\InternetRepairCashEdit.pas' {InternetRepairCashEditForm: TParentForm},
-  InternetRepairCash in '..\..\FormsFarmacy\Guides\InternetRepairCash.pas' {InternetRepairCashForm: TParentForm};
+  InternetRepairCash in '..\..\FormsFarmacy\Guides\InternetRepairCash.pas' {InternetRepairCashForm: TParentForm},
+  Report_ApplicationAward in '..\..\FormsFarmacy\Report\Report_ApplicationAward.pas' {Report_ApplicationAwardForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
