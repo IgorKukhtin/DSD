@@ -193,6 +193,16 @@ type
     GoodsWhoCanName: TcxGridDBColumn;
     GoodsMethodApplName: TcxGridDBColumn;
     GoodsSignOriginName: TcxGridDBColumn;
+    spUpdate_Multiplicity: TdsdStoredProc;
+    actUpdate_Multiplicity: TMultiAction;
+    actExecUpfdate_Multiplicity: TdsdExecStoredProc;
+    astExecuteDialogMultiplicity: TExecuteDialog;
+    dxBarButton27: TdxBarButton;
+    Multiplicity: TcxGridDBColumn;
+    isMultiplicityError: TcxGridDBColumn;
+    maUpdate_isMultiplicityError: TMultiAction;
+    actExecUpdate_isMultiplicityError: TdsdExecStoredProc;
+    dxBarButton28: TdxBarButton;
   private
     { Private declarations }
   public

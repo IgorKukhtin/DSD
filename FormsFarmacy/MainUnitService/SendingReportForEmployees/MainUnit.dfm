@@ -25,7 +25,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     Caption = 'Panel1'
     TabOrder = 0
-    ExplicitWidth = 1025
     object Panel2: TPanel
       Left = 0
       Top = 0
@@ -33,7 +32,6 @@ object MainForm: TMainForm
       Height = 31
       Align = alTop
       TabOrder = 0
-      ExplicitWidth = 1025
       object btnSendTelegram: TButton
         Left = 635
         Top = 0
@@ -117,7 +115,6 @@ object MainForm: TMainForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 496
       object grChatIdDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ChatIdDS
@@ -183,7 +180,6 @@ object MainForm: TMainForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitWidth = 496
       object cxGridDBTableView2: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = dsSendList
@@ -239,9 +235,8 @@ object MainForm: TMainForm
     Height = 445
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet2
+    Properties.ActivePage = cxTabSheet5
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1025
     ClientRectBottom = 441
     ClientRectLeft = 4
     ClientRectRight = 1031
@@ -249,7 +244,6 @@ object MainForm: TMainForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 0
-      ExplicitWidth = 1017
       object grReport: TcxGrid
         Left = 0
         Top = 0
@@ -257,7 +251,6 @@ object MainForm: TMainForm
         Height = 417
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1017
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsReport_Upload
@@ -418,7 +411,6 @@ object MainForm: TMainForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1079#1072#1082#1072#1079#1086#1074' '#1087#1086' '#1045#1048#1062
       ImageIndex = 1
-      ExplicitWidth = 1017
       object grChart2: TcxGrid
         Left = 0
         Top = 0
@@ -427,7 +419,6 @@ object MainForm: TMainForm
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1017
         object cxGridDBChartView1: TcxGridDBChartView
           DiagramLine.Active = True
           DiagramLine.Legend.Position = cppTop
@@ -469,7 +460,6 @@ object MainForm: TMainForm
     object cxTabSheet3: TcxTabSheet
       Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080' '#1074' %'
       ImageIndex = 1
-      ExplicitWidth = 1017
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -478,7 +468,6 @@ object MainForm: TMainForm
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1017
         object cxGridDBChartView2: TcxGridDBChartView
           DiagramLine.Values.LineWidth = 2
           DiagramStackedArea.Active = True
@@ -501,7 +490,6 @@ object MainForm: TMainForm
     object cxTabSheet4: TcxTabSheet
       Caption = #1056#1086#1089#1090'/'#1087#1072#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1086#1074' '#1084#1077#1089#1103#1094#1072' '#1082' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1084#1091' '#1084#1077#1089#1103#1094#1091' '#1074' %'
       ImageIndex = 3
-      ExplicitWidth = 1017
       object cxGrid3: TcxGrid
         Left = 0
         Top = 0
@@ -510,7 +498,6 @@ object MainForm: TMainForm
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1017
         object cxGridDBChartView3: TcxGridDBChartView
           DiagramLine.Active = True
           DiagramLine.Values.LineWidth = 2
@@ -527,6 +514,73 @@ object MainForm: TMainForm
         end
         object cxGridLevel5: TcxGridLevel
           GridView = cxGridDBChartView3
+        end
+      end
+    end
+    object cxTabSheet5: TcxTabSheet
+      Caption = 
+        #1059#1095#1072#1089#1090#1080#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '#1074' '#1087#1086#1087#1091#1083#1103#1088#1080#1079#1072#1094#1080#1080' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103' '#1087#1086' '#1072#1087#1090 +
+        #1077#1082#1072#1084
+      ImageIndex = 4
+      object cxGridPopulMobileApplication: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 721
+        Height = 226
+        TabOrder = 0
+        LookAndFeel.Kind = lfStandard
+        LookAndFeel.NativeStyle = False
+        LookAndFeel.SkinName = ''
+        object cxGridDBTableView3: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChatIdDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Filter.Active = True
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = cxGridDBColumn_Summa
+            end>
+          DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.IncSearchItem = cxGridDBColumn_Summa
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsSelection.InvertSelect = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.IndicatorWidth = 0
+          object cxGridDBColumn_UnitName: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            Width = 445
+          end
+          object cxGridDBColumn_Users: TcxGridDBColumn
+            Caption = #1059#1095#1072#1089#1090#1074#1086#1074#1072#1083#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
+            DataBinding.FieldName = 'Users'
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 143
+          end
+          object cxGridDBColumn_Summa: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1080
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 108
+          end
+        end
+        object cxGridLevel6: TcxGridLevel
+          GridView = cxGridDBTableView3
         end
       end
     end

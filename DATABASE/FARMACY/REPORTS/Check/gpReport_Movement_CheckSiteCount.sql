@@ -49,11 +49,14 @@ BEGIN
      -- Результат
      RETURN QUERY
        WITH tmpMovement AS (SELECT Movement_Check.Id                                       AS Id
-                                 , COALESCE(Object_CheckSourceKind.ValueData, 'Не болей')  AS CheckSourceKindName
+                                 , COALESCE(Object_CheckSourceKind.ValueData, 
+                                   CASE WHEN COALESCE(MovementBoolean_MobileApplication.ValueData, False) = False 
+                                        THEN 'Не болей' ELSE 'Моб. приложение' END)  AS CheckSourceKindName
                                  , MovementFloat_TotalCount.ValueData                      AS TotalCount
                                  , MovementFloat_TotalSumm.ValueData                       AS TotalSumm
                                  , COALESCE(MovementBoolean_DeliverySite.ValueData, False) AS isDeliverySite
                                  , MovementFloat_SummaDelivery.ValueData                   AS SummaDelivery
+                                 , COALESCE(MovementBoolean_MobileApplication.ValueData, False)::Boolean   AS isMobileApplication
                             FROM (SELECT Movement.*
                                        , MovementLinkObject_Unit.ObjectId                    AS UnitId
                                        , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
@@ -68,11 +71,10 @@ BEGIN
                                                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
 
-
                                        LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                                                  ON MovementBoolean_Deferred.MovementId = Movement.Id
                                                                 AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-                                       
+                                                                              
                                   WHERE Movement.OperDate >= DATE_TRUNC ('DAY', vbStartDate) - INTERVAL '10 DAY' 
                                     AND Movement.DescId = zc_Movement_Check()
                                     AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = TRUE
@@ -107,6 +109,10 @@ BEGIN
                                                         ON MovementFloat_SummaDelivery.MovementId =  Movement_Check.Id
                                                        AND MovementFloat_SummaDelivery.DescId = zc_MovementFloat_SummaDelivery()
 
+                                LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                                          ON MovementBoolean_MobileApplication.MovementId = Movement_Check.Id
+                                                         AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+
                                 LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
                             WHERE COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0
                                OR COALESCE (MovementString_InvNumberOrder.ValueData, '') <> ''
@@ -117,6 +123,7 @@ BEGIN
                              INNER JOIN MovementProtocol ON Movement.Id = MovementProtocol.MovementId
                         GROUP BY Movement.Id)        
         , tmpMovementCurr AS (SELECT Movement.CheckSourceKindName
+                                   , Movement.isMobileApplication
                                    , Count(*)                    AS CountCheck
                                    , Sum(Movement.TotalCount)    AS TotalCount
                                    , Sum(Movement.TotalSumm)     AS TotalSumm
@@ -140,8 +147,9 @@ BEGIN
                               
                               WHERE tmpMovementProtocol.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                                 AND tmpMovementProtocol.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
-                              GROUP BY Movement.CheckSourceKindName) 
+                              GROUP BY Movement.CheckSourceKindName, Movement.isMobileApplication) 
         , tmpMovementPrev AS (SELECT Movement.CheckSourceKindName
+                                   , Movement.isMobileApplication
                                    , Count(*)                    AS CountCheck
                                    , Sum(Movement.TotalCount)    AS TotalCount
                                    , Sum(Movement.TotalSumm)     AS TotalSumm
@@ -165,7 +173,7 @@ BEGIN
 
                               WHERE tmpMovementProtocol.OperDate >=  DATE_TRUNC ('DAY', vbStartDate)
                                 AND tmpMovementProtocol.OperDate <  DATE_TRUNC ('DAY', vbEndDate) + INTERVAL '1 DAY'
-                              GROUP BY Movement.CheckSourceKindName) 
+                              GROUP BY Movement.CheckSourceKindName, Movement.isMobileApplication) 
 
         SELECT COALESCE(Movement.CheckSourceKindName, tmpMovementPrev.CheckSourceKindName)::TVarChar
              , tmpMovementPrev.CountCheck::Integer

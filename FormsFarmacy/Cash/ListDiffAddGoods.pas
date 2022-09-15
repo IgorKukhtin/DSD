@@ -283,7 +283,7 @@ begin
 
   if Pos('1303', DiffKindCDS.FieldByName('Name').AsString) > 0 then
   begin
-    if  MainCashForm.UnitConfigCDS.FieldByName('PartnerMedicalID').IsNull then
+    if MainCashForm.UnitConfigCDS.FieldByName('PartnerMedicalID').IsNull then
     begin
       Action := TCloseAction.caNone;
       ShowMessage('Аптека не подключена к СП по постановлению 1303'#13#10'Использование вида отказа <' + DiffKindCDS.FieldByName('Name').AsString + '> запрещено...');
@@ -291,7 +291,7 @@ begin
       Exit;
     end;
 
-    if GoodsCDS.FieldByName('PriceOOC1303').AsCurrency = 0 then
+    if GoodsCDS.FieldByName('PriceSaleOOC1303').AsCurrency = 0 then
     begin
       Action := TCloseAction.caNone;
       ShowMessage('Товар <' + GoodsCDS.FieldByName('GoodsName').AsString + '> не участвует в СП по постановлению 1303...');
@@ -308,8 +308,9 @@ begin
     end;
 
 
-    if (GoodsCDS.FieldByName('PriceOOC1303').AsCurrency < GoodsCDS.FieldByName('JuridicalPrice').AsCurrency) and
-      ((GoodsCDS.FieldByName('JuridicalPrice').AsCurrency / GoodsCDS.FieldByName('PriceOOC1303').AsCurrency * 100.0 - 100) > 1.0) then
+    if (GoodsCDS.FieldByName('PriceSaleOOC1303').AsCurrency < ListGoodsCDS.FieldByName('JuridicalPrice').AsCurrency) and
+      ((ListGoodsCDS.FieldByName('JuridicalPrice').AsCurrency / GoodsCDS.FieldByName('PriceSaleOOC1303').AsCurrency * 100.0 - 100) >
+      MainCashForm.UnitConfigCDS.FindField('DeviationsPrice1303').AsCurrency) then
     begin
       Action := TCloseAction.caNone;
       ShowMessage('Отпускная цена товара <' + GoodsCDS.FieldByName('GoodsName').AsString + '> выше чем по реестру товаров соц. проекта 1303...');

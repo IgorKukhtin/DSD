@@ -2,7 +2,6 @@ inherited MobileBillsForm: TMobileBillsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1090#1088#1072#1090#1099' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1091#1102' '#1089#1074#1103#1079#1100'>'
   ClientHeight = 501
   ClientWidth = 751
-  ExplicitTop = -47
   ExplicitWidth = 767
   ExplicitHeight = 540
   PixelsPerInch = 96
@@ -564,6 +563,26 @@ inherited MobileBillsForm: TMobileBillsForm
         item
         end>
     end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EmployeeName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
     object actRegionChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -968,7 +987,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1116,7 +1135,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'ioAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -1125,7 +1144,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'ioCurrMonthly'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'CurrMonthly'
         DataType = ftFloat
@@ -1134,7 +1153,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inCurrNavigator'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'CurrNavigator'
         DataType = ftFloat
@@ -1143,7 +1162,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inPrevNavigator'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'PrevNavigator'
         DataType = ftFloat
@@ -1152,7 +1171,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inLimit'
-        Value = 0
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'MobileLimit'
         DataType = ftFloat
@@ -1161,7 +1180,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inPrevLimit'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'PrevLimit'
         DataType = ftFloat
@@ -1170,7 +1189,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inDutyLimit'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'DutyLimit'
         DataType = ftFloat
@@ -1179,7 +1198,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inOverlimit'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Overlimit'
         DataType = ftFloat
@@ -1188,7 +1207,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inPrevMonthly'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'PrevMonthly'
         DataType = ftFloat
@@ -1264,7 +1283,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'ioAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -1273,7 +1292,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'ioCurrMonthly'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'CurrMonthly'
         DataType = ftFloat
@@ -1282,7 +1301,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inCurrNavigator'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'CurrNavigator'
         DataType = ftFloat
@@ -1291,7 +1310,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inPrevNavigator'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'PrevNavigator'
         DataType = ftFloat
@@ -1300,7 +1319,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inLimit'
-        Value = 0
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'MobileLimit'
         DataType = ftFloat
@@ -1309,7 +1328,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inPrevLimit'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'PrevLimit'
         DataType = ftFloat
@@ -1318,7 +1337,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inDutyLimit'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'DutyLimit'
         DataType = ftFloat
@@ -1327,7 +1346,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inOverlimit'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Overlimit'
         DataType = ftFloat
@@ -1336,7 +1355,7 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Name = 'inPrevMonthly'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'PrevMonthly'
         DataType = ftFloat
