@@ -42,6 +42,12 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech());
+   
+   -- !!!Проверка!!!
+   IF inCountReal <> 0 AND inFromId <> 2790412  -- ЦЕХ Тушенка
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав заполнять <Кол-во шт.факт> для подразделения <%>.', lfGet_Object_ValueData_sh (inFromId);
+   END IF;
 
 
    -- !!!Проверка закрытия периода только для <Технолог Днепр>!!!
@@ -50,7 +56,7 @@ BEGIN
        IF  (SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet) - INTERVAL '2 DAY' > inOperDate
         OR (SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet) - INTERVAL '2 DAY' > COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioMovementId), zc_DateEnd())
        THEN
-           RAISE EXCEPTION 'Ошибка.Период закрыт до <%>.', DATE ((SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet));
+           RAISE EXCEPTION 'Ошибка.Период закрыт до <%>.', zfConvert_DateToString ((SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet));
        END IF;
    END IF;
 
