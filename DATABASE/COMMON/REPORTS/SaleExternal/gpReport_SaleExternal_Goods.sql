@@ -1,16 +1,13 @@
--- Function: gpReport_SaleExternal()
+-- Function: gpReport_SaleExternal_Goods()
 
---DROP FUNCTION IF EXISTS gpReport_SaleExternal (TDateTime, TDateTime, Integer, Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpReport_SaleExternal (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_SaleExternal (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SaleExternal_Goods (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_SaleExternal(
+CREATE OR REPLACE FUNCTION gpReport_SaleExternal_Goods(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inRetailId           Integer   ,
     IN inJuridicalId        Integer   ,
     IN inGoodsGroupId       Integer   ,
-    IN inisContract         Boolean ,
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
@@ -18,26 +15,15 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , FromName TVarChar
              , PartnerId_from Integer, PartnerName_from TVarChar
              , PartnerRealId Integer, PartnerRealName TVarChar
-             , GoodsPropertyName TVarChar
+             , GoodsPropertyName TVarChar 
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsGroupNameFull TVarChar             
+             , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
+
              , AmountSh TFloat
              , AmountKg TFloat
              , TotalAmountKg TFloat
              , PartKg TFloat
-             , TotalSumm_calc TFloat
-             , TotalWeight_calc TFloat
-             , SaleReturn_Summ TFloat
-             , Sale_Summ TFloat
-             , Return_Summ TFloat
-             , SaleReturn_Weight TFloat
-             , Sale_Weight TFloat
-             , Return_Weight TFloat
-             , TotalSumm TFloat
-             , TotalWeight TFloat
-             , TotalSale_Summ    TFloat
-             , TotalReturn_Summ  TFloat
-             , TotalSale_Weight  TFloat
-             , TotalReturn_Weight TFloat
-             , ContractId Integer, ContractName TVarChar
               )
 AS
 $BODY$
@@ -155,13 +141,16 @@ BEGIN
                   )
 
    , tmpMI AS (SELECT tmp.MovementId
+                    , tmp.GoodsId
+                    , tmp.GoodsKindId
                     , tmp.AmountKg
                     , tmp.AmountSh
                     , tmp.TotalAmountKg
                     , CASE WHEN COALESCE (tmp.TotalAmountKg,0) <> 0 THEN tmp.AmountKg / tmp.TotalAmountKg *100 ELSE 0 END  AS PartKg
                FROM (
-                     SELECT tmpMovementAll.Id                                AS MovementId
-      
+                     SELECT tmpMovementAll.Id                             AS MovementId
+                          , MovementItem.ObjectId                         AS GoodsId
+                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                           , SUM (CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
                                       THEN MovementItem.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
                                       ELSE MovementItem.Amount
@@ -171,6 +160,7 @@ BEGIN
                                       THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,1) <> 0 THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE MovementItem.Amount END
                                       ELSE MovementItem.Amount
                                  END) AS AmountSh
+
                           , SUM (SUM(CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
                                           THEN MovementItem.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
                                           ELSE MovementItem.Amount
@@ -179,7 +169,11 @@ BEGIN
                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementAll.Id
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = FALSE
-                         --INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+                         INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
                          LEFT JOIN ObjectLink AS ObjectLink_Measure
                                               ON ObjectLink_Measure.ObjectId = MovementItem.ObjectId
@@ -189,120 +183,12 @@ BEGIN
                                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                      GROUP BY tmpMovementAll.Id
                             , tmpMovementAll.PartnerRealId
+                            , MovementItem.ObjectId
+                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                      ) AS tmp
                )
 
-   --
-   
-   -- фактические продажи 
-   -- на РЦ и на контрагентов
-     , tmpReport_1 AS (SELECT tmp.PartnerId
-                            , tmp.ContractId
-                            , SUM (COALESCE (tmp.Sale_Summ,0))         AS Sale_Summ
-                            , SUM (COALESCE (tmp.Return_Summ,0))       AS Return_Summ
-                            , SUM (COALESCE (tmp.SaleReturn_Summ,0))   AS SaleReturn_Summ
-                            , SUM (COALESCE (tmp.Sale_Weight,0))       AS Sale_Weight
-                            , SUM (COALESCE (tmp.Return_Weight,0))     AS Return_Weight 
-                            , SUM (COALESCE (tmp.SaleReturn_Weight,0)) AS SaleReturn_Weight
-
-                       FROM (SELECT tmp.PartnerId AS PartnerId
-                                  , tmp.ContractId
-                                  , SUM (COALESCE (tmp.Sale_Summ,0))      AS Sale_Summ
-                                  , SUM (COALESCE (tmp.Return_Summ,0))    AS Return_Summ
-                                  , SUM (COALESCE (tmp.Sale_Summ,0) - COALESCE (tmp.Return_Summ,0))      AS SaleReturn_Summ
-                                  , SUM (COALESCE (tmp.Sale_AmountPartner_Weight,0))   AS Sale_Weight
-                                  , SUM (COALESCE (tmp.Return_AmountPartner_Weight,0)) AS Return_Weight
-                                  , SUM (COALESCE (tmp.Sale_AmountPartner_Weight,0) - COALESCE (tmp.Return_AmountPartner_Weight,0))   AS SaleReturn_Weight
-                             FROM gpReport_GoodsMI_SaleReturnIn (inStartDate    := inStartDate    ::TDateTime 
-                                                               , inEndDate      := inEndDate      ::TDateTime    
-                                                               , inBranchId     := 0              ::Integer      
-                                                               , inAreaId       := 0              ::Integer
-                                                               , inRetailId     := 0              ::Integer      
-                                                               , inJuridicalId  := 0              ::Integer      
-                                                               , inPaidKindId   := 0              ::Integer
-                                                               , inTradeMarkId  := 0              ::Integer      
-                                                               , inGoodsGroupId := inGoodsGroupId ::Integer      
-                                                               , inInfoMoneyId  := 0              ::Integer      
-                                                               , inIsPartner    := TRUE           ::Boolean      
-                                                               , inIsTradeMark  := FALSE          ::Boolean      
-                                                               , inIsGoods      := FALSE          ::Boolean      
-                                                               , inIsGoodsKind  := FALSE          ::Boolean      
-                                                               , inIsContract   := inisContract          ::Boolean      
-                                                               , inIsOLAP       := TRUE           ::Boolean      
-                                                               , inSession      := inSession      ::TVarChar
-                                                               ) AS tmp
-                             --WHERE tmp.PartnerId IN (SELECT DISTINCT tmpMovementAll.PartnerRealId FROM tmpMovementAll WHERE tmpMovementAll.PartnerRealDescId = zc_Object_Partner())
-                             GROUP BY tmp.PartnerId, tmp.ContractId
-                            ) AS tmp
-                       GROUP BY tmp.PartnerId
-                              , tmp.ContractId
-                      )
-                  
-      -- на торг.сеть - где нет РЦ
-     , tmpReport_2 AS (SELECT tmp.PartnerRealId
-                            , tmp.ContractId
-                            , SUM (tmp.Sale_Summ)      AS Sale_Summ
-                            , SUM (tmp.Return_Summ)    AS Return_Summ
-                            , SUM (COALESCE (tmp.Sale_Summ,0) - COALESCE (tmp.Return_Summ,0) ) AS SaleReturn_Summ
-                            , SUM (tmp.Sale_Weight)    AS Sale_Weight
-                            , SUM (tmp.Return_Weight)  AS Return_Weight
-                            , SUM (COALESCE (tmp.Sale_Weight,0) - COALESCE (tmp.Return_Weight,0) ) AS SaleReturn_Weight
-
-                       FROM (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS PartnerRealId
-                                  , tmp.ContractId
-                                  , SUM (COALESCE (tmp.Sale_Summ,0))      AS Sale_Summ
-                                  , SUM (COALESCE (tmp.Return_Summ,0))    AS Return_Summ
-                                  , SUM (tmp.Sale_AmountPartner_Weight)   AS Sale_Weight
-                                  , SUM (tmp.Return_AmountPartner_Weight) AS Return_Weight
-                             FROM (SELECT DISTINCT tmpMovementAll.PartnerRealId FROM tmpMovementAll WHERE tmpMovementAll.PartnerRealDescId = zc_Object_Retail()) AS tmpRet
-                                   LEFT JOIN gpReport_GoodsMI_SaleReturnIn (inStartDate    := inStartDate    ::TDateTime 
-                                                                           , inEndDate      := inEndDate      ::TDateTime    
-                                                                           , inBranchId     := 0              ::Integer      
-                                                                           , inAreaId       := 0              ::Integer
-                                                                           , inRetailId     := tmpRet.PartnerRealId  ::Integer      
-                                                                           , inJuridicalId  := inJuridicalId  ::Integer      
-                                                                           , inPaidKindId   := 0              ::Integer
-                                                                           , inTradeMarkId  := 0              ::Integer      
-                                                                           , inGoodsGroupId := inGoodsGroupId ::Integer      
-                                                                           , inInfoMoneyId  := 0              ::Integer      
-                                                                           , inIsPartner    := TRUE           ::Boolean      
-                                                                           , inIsTradeMark  := FALSE          ::Boolean      
-                                                                           , inIsGoods      := FALSE          ::Boolean      
-                                                                           , inIsGoodsKind  := FALSE          ::Boolean      
-                                                                           , inIsContract   := inisContract   ::Boolean      
-                                                                           , inIsOLAP       := TRUE           ::Boolean      
-                                                                           , inSession      := inSession      ::TVarChar
-                                                                           ) AS tmp on 1=1
-                             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                  ON ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                                 AND ObjectLink_Partner_Juridical.ObjectId = tmp.PartnerId
-                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-    
-                             GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
-                                    , tmp.ContractId
-                            ) AS tmp
-                       GROUP BY tmp.PartnerRealId
-                              , tmp.ContractId
-                      )
-
-     -- сгруппируем отдельно продажи по РЦ 
-   , tmpReport_rc AS (SELECT tmp.PartnerId AS PartnerRealId
-                           , tmp.ContractId
-                           , SUM (tmp.Sale_Summ)         AS Sale_Summ
-                           , SUM (tmp.Return_Summ)       AS Return_Summ
-                           , SUM (tmp.SaleReturn_Summ)   AS SaleReturn_Summ
-                           , SUM (tmp.Sale_Weight)       AS Sale_Weight
-                           , SUM (tmp.Return_Weight)     AS Return_Weight
-                           , SUM (tmp.SaleReturn_Weight) AS SaleReturn_Weight
-                      FROM tmpReport_1 AS tmp
-                      WHERE tmp.PartnerId IN (SELECT DISTINCT tmpMovementAll.PartnerRealId FROM tmpMovementAll WHERE tmpMovementAll.PartnerRealDescId = zc_Object_Partner())
-                      GROUP BY tmp.PartnerId
-                           , tmp.ContractId
-                      )
-
-     -- данные по внешним продажам 
+   -- данные по внешним продажам 
    , tmpData AS (SELECT Movement.Id                 AS MovementId
                       , Movement.InvNumber          AS InvNumber
                       , Movement.OperDate           AS OperDate
@@ -314,6 +200,8 @@ BEGIN
                       , Movement.PartnerRealId
                       , Movement.PartnerRealName
                       , Movement.GoodsPropertyName
+                      , tmpMI.GoodsId
+                      , tmpMI.GoodsKindId
                       , tmpMI.AmountSh       AS AmountSh
                       , tmpMI.AmountKg       AS AmountKg
                       , tmpMI.TotalAmountKg  AS TotalAmountKg
@@ -337,37 +225,33 @@ BEGIN
            , tmpData.PartnerRealName
            , tmpData.GoodsPropertyName
 
+           , Object_Goods.Id          		AS GoodsId
+           , Object_Goods.ObjectCode  		AS GoodsCode
+           , Object_Goods.ValueData   		AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_GoodsKind.Id        	AS GoodsKindId
+           , Object_GoodsKind.ValueData 	AS GoodsKindName
+           , Object_Measure.ValueData       AS MeasureName
+
            , tmpData.AmountSh   :: TFloat
            , tmpData.AmountKg   :: TFloat
            , tmpData.TotalAmountKg :: TFloat
            , tmpData.PartKg     :: TFloat
            
-           , (COALESCE (tmpReport_rc.SaleReturn_Summ, tmpReport_ret.SaleReturn_Summ)     * tmpData.PartKg/100) :: TFloat AS TotalSumm_calc               -- Расчетная сумма продаж, грн (от факта)
-           , (COALESCE (tmpReport_rc.SaleReturn_Weight, tmpReport_ret.SaleReturn_Weight) * tmpData.PartKg/100) :: TFloat AS TotalWeight_calc             -- Раасчетная сумма продаж, кг (от факта)
-           
-           , tmpReport.SaleReturn_Summ    :: TFloat
-           , tmpReport.Sale_Summ          :: TFloat
-           , tmpReport.Return_Summ        :: TFloat
-           , tmpReport.SaleReturn_Weight  :: TFloat
-           , tmpReport.Sale_Weight        :: TFloat
-           , tmpReport.Return_Weight      :: TFloat
-           
-           , COALESCE (tmpReport_rc.SaleReturn_Summ, tmpReport_ret.SaleReturn_Summ)     :: TFloat AS TotalSumm
-           , COALESCE (tmpReport_rc.SaleReturn_Weight, tmpReport_ret.SaleReturn_Weight) :: TFloat AS TotalWeight
-           , COALESCE (tmpReport_rc.Sale_Summ, tmpReport_ret.Sale_Summ)                 :: TFloat AS TotalSale_Summ
-           , COALESCE (tmpReport_rc.Return_Summ, tmpReport_ret.Return_Summ)             :: TFloat AS TotalReturn_Summ
-           , COALESCE (tmpReport_rc.Sale_Weight, tmpReport_ret.Sale_Weight)             :: TFloat AS TotalSale_Weight
-           , COALESCE (tmpReport_rc.Return_Weight, tmpReport_ret.Return_Weight)         :: TFloat AS TotalReturn_Weight
-             
-           , COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId)  AS ContractId
-           , Object_Contract.ValueData                                     AS ContractName
        FROM tmpData
-            LEFT JOIN tmpReport_rc ON tmpReport_rc.PartnerRealId = tmpData.PartnerRealId --and 1=0
-                                  
-            LEFT JOIN tmpReport_2 AS tmpReport_ret ON tmpReport_ret.PartnerRealId = tmpData.PartnerRealId  --and 1=0
-            LEFT JOIN tmpReport_1 AS tmpReport ON tmpReport.PartnerId = tmpData.PartnerId_from --  and 1=0
-                                              AND ( COALESCE (tmpReport.ContractId,0) = COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId,0) )
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId)  --and 1=0
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpData.GoodsId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+
       ;
 
 END;

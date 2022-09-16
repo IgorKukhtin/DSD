@@ -2365,7 +2365,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyDialogForm');
   exit;
-
+   }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternal_GoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternal_GoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternal_GoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternal_GoodsDialogForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternal_OrderSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternal_OrderSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternal_OrderSaleDialogForm'));
@@ -3488,13 +3494,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
-   }
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoInvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoInvoiceForm');
   exit;
