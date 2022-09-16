@@ -610,28 +610,20 @@ BEGIN
                        )
 ---
      --результат
-     SELECT tmpLastPayment.JuridicalId
-          , tmpLastPayment.ContractId
-          , tmpLastPayment.PaidKindId
-          , tmpLastPayment.PartnerId
+     SELECT COALESCE (tmpLastPayment.JuridicalId, tmpLastIncome.JuridicalId)   AS JuridicalId
+          , COALESCE (tmpLastPayment.ContractId, tmpLastIncome.ContractId)     AS ContractId
+          , COALESCE (tmpLastPayment.PaidKindId, tmpLastIncome.PaidKindId)     AS PaidKindId
+          , COALESCE (tmpLastPayment.PartnerId, tmpLastIncome.PartnerId)       AS PartnerId
           , tmpLastPayment.OperDate
           , tmpLastPayment.Amount
           --
-          , Null ::TDateTime  AS OperDateIn
-          , 0    ::TFloat     AS AmountIn
-
-     FROM tmpLastPayment
-   UNION
-     SELECT tmpLastIncome.JuridicalId
-          , tmpLastIncome.ContractId
-          , tmpLastIncome.PaidKindId
-          , tmpLastIncome.PartnerId 
-          , Null ::TDateTime  AS OperDate
-          , 0    ::TFloat     AS Amount
-          --          
           , tmpLastIncome.OperDate AS OperDateIn
           , tmpLastIncome.Amount   AS AmountIn
-     FROM tmpLastIncome
+     FROM tmpLastPayment
+        FULL JOIN tmpLastIncome ON tmpLastIncome.JuridicalId = tmpLastPayment.JuridicalId
+                               AND tmpLastIncome.ContractId  = tmpLastPayment.ContractId
+                               AND tmpLastIncome.PaidKindId  = tmpLastPayment.PaidKindId
+                               AND tmpLastIncome.PartnerId   = tmpLastPayment.PartnerId
    
         ;
 

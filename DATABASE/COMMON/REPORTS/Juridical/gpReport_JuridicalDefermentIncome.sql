@@ -212,19 +212,24 @@ BEGIN
                  )
 
    --находим последнии оплаты    и последний приход
-   , tmpLastPayment_all AS (SELECT tt.JuridicalId
-                                 , tt.ContractId
-                                 , tt.PaidKindId
-                                 , COALESCE (tt.PartnerId, 0) AS PartnerId
-                                 , tt.OperDate
-                                 , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
-                                 , tt.Amount
-                            FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt
-                                 JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
-                                                 ON ObjectLink_Contract_InfoMoney.ObjectId = tt.ContractId
-                                                AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-                            WHERE COALESCE (tt.Amount,0) <> 0
-                           )
+   , tmpLastPayment_all AS (SELECT *
+                            FROM (SELECT tt.JuridicalId
+                                       , tt.ContractId
+                                       , tt.PaidKindId
+                                       , COALESCE (tt.PartnerId, 0) AS PartnerId
+                                       , tt.OperDate
+                                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+                                       , tt.Amount 
+                                       , ROW_NUMBER() OVER (PARTITION BY tt.JuridicalId, tt.ContractId, tt.PaidKindId, COALESCE (tt.PartnerId, 0), ObjectLink_Contract_InfoMoney.ChildObjectId ORDER BY tt.OperDate DESC) AS ord
+                                  FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt
+                                       JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                       ON ObjectLink_Contract_InfoMoney.ObjectId = tt.ContractId
+                                                      AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                                  WHERE COALESCE (tt.Amount,0) <> 0
+                                  ) AS tmp
+                            WHERE tmp.Ord = 1
+                            )
+
    , tmpLastIncome_all AS (SELECT *
                            FROM (SELECT  tt.JuridicalId
                                        , tt.ContractId
