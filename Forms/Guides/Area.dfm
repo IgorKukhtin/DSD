@@ -2,8 +2,8 @@ object AreaForm: TAreaForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1077#1075#1080#1086#1085#1099'>'
-  ClientHeight = 376
-  ClientWidth = 390
+  ClientHeight = 311
+  ClientWidth = 651
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,14 @@ object AreaForm: TAreaForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 390
-    Height = 350
+    Width = 651
+    Height = 285
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 390
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,14 +53,14 @@ object AreaForm: TAreaForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 48
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 243
+        Width = 208
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -69,6 +71,22 @@ object AreaForm: TAreaForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
+      end
+      object TelegramId: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
+        DataBinding.FieldName = 'TelegramId'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1043#1088#1091#1087#1087#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 182
+      end
+      object TelegramBotToken: TcxGridDBColumn
+        Caption = #1058#1086#1082#1077#1085' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090#1072' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
+        DataBinding.FieldName = 'TelegramBotToken'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1058#1086#1082#1077#1085' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090#1072' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 199
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -428,6 +446,7 @@ object AreaForm: TAreaForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item
@@ -438,6 +457,8 @@ object AreaForm: TAreaForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
   end

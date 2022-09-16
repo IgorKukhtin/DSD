@@ -5,7 +5,9 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Area(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Area(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , TelegramId TVarChar, TelegramBotToken TVarChar
+             , isErased boolean) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -13,11 +15,19 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT 
-     Object.Id         AS Id 
-   , Object.ObjectCode AS Code
-   , Object.ValueData  AS Name
-   , Object.isErased   AS isErased
+          Object.Id         AS Id 
+        , Object.ObjectCode AS Code
+        , Object.ValueData  AS Name  
+        , ObjectString_TelegramId.ValueData       ::TVarChar AS TelegramId
+        , ObjectString_TelegramBotToken.ValueData ::TVarChar AS TelegramBotToken
+        , Object.isErased   AS isErased
    FROM Object
+        LEFT JOIN ObjectString AS ObjectString_TelegramId
+                               ON ObjectString_TelegramId.ObjectId = Object_Car.Id
+                              AND ObjectString_TelegramId.DescId = zc_ObjectString_Area_TelegramId()
+        LEFT JOIN ObjectString AS ObjectString_TelegramBotToken
+                               ON ObjectString_TelegramBotToken.ObjectId = Object_Car.Id
+                              AND ObjectString_TelegramBotToken.DescId = zc_ObjectString_Area_TelegramBotToken()
    WHERE Object.DescId = zc_Object_Area();
   
 END;$BODY$

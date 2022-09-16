@@ -934,6 +934,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_PairDay_Comment() RETURNS Integer AS 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_PairDay_Comment', zc_object_PairDay(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PairDay_Comment');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Area_TelegramId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Area_TelegramId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Area_TelegramId', zc_object_Area(), 'Группа получателей в рассылке Акций' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Area_TelegramId');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectString_Area_TelegramBotToken() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Area_TelegramBotToken'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Area_TelegramBotToken', zc_object_Area(), 'Токен отправителя телеграм бота в рассылке Акций' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Area_TelegramBotToken');
+
+
+
 ---!!! Аптека
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_Code() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Code'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1485,6 +1496,8 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 16.09.22         * zc_ObjectString_Area_TelegramId
+                    zc_ObjectString_Area_TelegramBotToken
  12.09.22                                                                                                         * zc_ObjectString_InternetRepair...
  06.09.22                                                                                                         * zc_ObjectString_Unit_SetDateRROList
  20.08.22                                                                                                         * zc_ObjectString_Goods_GoodsWhoCan
