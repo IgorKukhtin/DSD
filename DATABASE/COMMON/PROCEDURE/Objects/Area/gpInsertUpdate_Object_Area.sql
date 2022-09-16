@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Area()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Area(

@@ -436,14 +436,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
   //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
 
-   {
+
   // Состояние договора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractStateKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractStateKindForm');
@@ -452,19 +452,21 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractArticleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractArticleEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractArticleEditForm');
+  }
   // Регионы
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
-  // Регионы (договора)
-  }
+   exit;
+   // Регионы (договора)
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaContractEditForm');
   exit;
-  {// Типы условий договоров
+  // Типы условий договоров
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionKindForm');
   }
