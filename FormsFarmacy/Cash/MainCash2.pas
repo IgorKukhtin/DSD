@@ -5129,7 +5129,6 @@ begin
 
     nChangeSumma := FormParams.ParamByName('LoyaltyChangeSumma').Value +
       FormParams.ParamByName('LoyaltySMSumma').Value;
-    if (nSumAll < 200) and (FormParams.ParamByName('isMobileFirstOrder').Value = True) then nChangeSumma := 0;
 
     if nChangeSumma > 0 then
     begin
@@ -5278,6 +5277,8 @@ var
   nSumAll, nPrice, nChangeSumma: Currency;
 begin
 
+  if DiscountServiceForm.gCode <> 0 then Exit;
+
   CheckCDS.DisableControls;
   CheckCDS.Filtered := false;
   nSumAll := 0;
@@ -5285,6 +5286,7 @@ begin
   try
 
     nChangeSumma := FormParams.ParamByName('MobileDiscount').Value;
+    if (FormParams.ParamByName('isMobileFirstOrder').Value = True) and (nChangeSumma = 0) then nChangeSumma := 20;
 
     if nChangeSumma > 0 then
     begin

@@ -90,9 +90,14 @@ BEGIN
                                                             ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
                                                            AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
 
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountExternal
+                                                                 ON MovementLinkObject_DiscountExternal.MovementId = Movement.Id
+                                                                AND MovementLinkObject_DiscountExternal.DescId = zc_MILinkObject_DiscountExternal()
+
                                WHERE Movement.DescId = zc_Movement_Check()
                                  AND Movement.OperDate >= DATE_TRUNC ('month', DATE_TRUNC ('month', CURRENT_DATE) - INTERVAL '1 DAY')
                                  AND Movement.OperDate < DATE_TRUNC ('month', CURRENT_DATE)
+                                 AND COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 
                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                                  AND (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0)) >= 199.50),
            tmpUserReferalsUnit AS (SELECT tmpUserReferals.UnitId

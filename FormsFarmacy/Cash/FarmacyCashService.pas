@@ -202,7 +202,6 @@ type
     procedure N7Click(Sender: TObject);
     procedure actCashRemainsExecute(Sender: TObject);
     procedure spUpdate_Log_CashRemainsAfterExecute(Sender: TObject);
-    procedure spSelectRemainsAfterExecute(Sender: TObject);
     procedure TimerNeedRemainsDiffTimer(Sender: TObject);
     procedure CashRemainsDiffExecute;
 
@@ -420,42 +419,46 @@ procedure TMainCashForm2.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   AllowedConduct := True; // ѕросим досрочно прекратить проведени€ чеков
   Add_Log('Start MutexRefresh 290');
-  WaitForSingleObject(MutexRefresh, INFINITE);
   try
-    if CanClose then
-    Begin
-      try
-        if not gc_User.Local then
-        Begin
-          spDelete_CashSession.Execute;
-        End
-        else
-        begin
-          Add_Log('Start MutexRemains 302');
-          WaitForSingleObject(MutexRemains, INFINITE);
-          try
-            SaveLocalData(RemainsCDS,remains_lcl);
-          finally
-            Add_Log('End MutexRemains 302');
-            ReleaseMutex(MutexRemains);
+    WaitForSingleObject(MutexRefresh, INFINITE);
+    try
+      if CanClose then
+      Begin
+        try
+          if not gc_User.Local then
+          Begin
+            spDelete_CashSession.Execute;
+          End
+          else
+          begin
+            Add_Log('Start MutexRemains 302');
+            WaitForSingleObject(MutexRemains, INFINITE);
+            try
+              SaveLocalData(RemainsCDS,remains_lcl);
+            finally
+              Add_Log('End MutexRemains 302');
+              ReleaseMutex(MutexRemains);
+            end;
+
+  //          Add_Log('Start MutexAlternative 311');
+  //          WaitForSingleObject(MutexAlternative, INFINITE);
+  //          try
+  //            SaveLocalData(AlternativeCDS,Alternative_lcl);
+  //          finally
+  //            Add_Log('End MutexAlternative 311');
+  //            ReleaseMutex(MutexAlternative);
+  //          end;
           end;
-
-//          Add_Log('Start MutexAlternative 311');
-//          WaitForSingleObject(MutexAlternative, INFINITE);
-//          try
-//            SaveLocalData(AlternativeCDS,Alternative_lcl);
-//          finally
-//            Add_Log('End MutexAlternative 311');
-//            ReleaseMutex(MutexAlternative);
-//          end;
+        Except
         end;
-      Except
-      end;
 
-    End;
-  finally
-    Add_Log('End MutexRefresh 290');
-    ReleaseMutex(MutexRefresh);
+      End;
+    finally
+      Add_Log('End MutexRefresh 290');
+      ReleaseMutex(MutexRefresh);
+    end;
+  except on E: Exception do
+    Add_Log('FormCloseQuery Exception: ' + E.Message);
   end;
 end;
 
@@ -970,21 +973,25 @@ begin  //+
   try
     ds := TClientDataSet.Create(nil);
     try
-      sp.OutputType := otDataSet;
-      sp.DataSet := ds;
-
-      sp.StoredProcName := 'gpSelect_CashGoods';
-      sp.Params.Clear;
-      sp.Execute;
-      Add_Log('Start MutexGoods');
-      WaitForSingleObject(MutexGoods, INFINITE); // только дл€ формы2;  защищаем так как есть в приложениее и сервисе
       try
-        SaveLocalData(ds,Goods_lcl);
-      finally
-        Add_Log('End MutexGoods');
-        ReleaseMutex(MutexGoods);
-      end;
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
 
+        sp.StoredProcName := 'gpSelect_CashGoods';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexGoods');
+        WaitForSingleObject(MutexGoods, INFINITE); // только дл€ формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,Goods_lcl);
+        finally
+          Add_Log('End MutexGoods');
+          ReleaseMutex(MutexGoods);
+        end;
+
+      Except ON E:Exception do
+        Add_Log('ќшибка ѕолучение списка медикаментов:' + E.Message);
+      end;
     finally
       ds.free;
     end;
@@ -1042,33 +1049,37 @@ begin  //+
   try
     ds := TClientDataSet.Create(nil);
     try
-      sp.OutputType := otDataSet;
-      sp.DataSet := ds;
-
-      sp.StoredProcName := 'gpSelect_Object_DiffKindCash';
-      sp.Params.Clear;
-      sp.Execute;
-      Add_Log('Start MutexDiffKind');
-      WaitForSingleObject(MutexDiffKind, INFINITE); // только дл€ формы2;  защищаем так как есть в приложениее и сервисе
       try
-        SaveLocalData(ds,DiffKind_lcl);
-      finally
-        Add_Log('End MutexDiffKind');
-        ReleaseMutex(MutexDiffKind);
-      end;
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
 
-      sp.StoredProcName := 'gpSelect_Cash_DiffKindPrice';
-      sp.Params.Clear;
-      sp.Execute;
-      Add_Log('Start MutexDiffKind');
-      WaitForSingleObject(MutexDiffKind, INFINITE); // только дл€ формы2;  защищаем так как есть в приложениее и сервисе
-      try
-        SaveLocalData(ds,DiffKindPrice_lcl);
-      finally
-        Add_Log('End MutexDiffKind');
-        ReleaseMutex(MutexDiffKind);
-      end;
+        sp.StoredProcName := 'gpSelect_Object_DiffKindCash';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexDiffKind');
+        WaitForSingleObject(MutexDiffKind, INFINITE); // только дл€ формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,DiffKind_lcl);
+        finally
+          Add_Log('End MutexDiffKind');
+          ReleaseMutex(MutexDiffKind);
+        end;
 
+        sp.StoredProcName := 'gpSelect_Cash_DiffKindPrice';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexDiffKind');
+        WaitForSingleObject(MutexDiffKind, INFINITE); // только дл€ формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,DiffKindPrice_lcl);
+        finally
+          Add_Log('End MutexDiffKind');
+          ReleaseMutex(MutexDiffKind);
+        end;
+
+      Except ON E:Exception do
+        Add_Log('ќшибка ѕолучение причин отказов:' + E.Message);
+      end;
     finally
       ds.free;
     end;
@@ -1215,11 +1226,6 @@ begin
   finally
     freeAndNil(sp);
   end;
-end;
-
-procedure TMainCashForm2.spSelectRemainsAfterExecute(Sender: TObject);
-begin
-
 end;
 
 { TSaveRealThread }
@@ -1959,108 +1965,12 @@ begin
               end;
             End;
           end;
-          // если проводить не нужно и если можно ... 04.02.2017
-
-  //        WaitForSingleObject(MutexDBF, INFINITE);
-  //        try
-  //          FLocalDataBaseHead.Active := True;
-  //          FLocalDataBaseHead.First;
-  //          FLocalDataBaseHead.Active := False;
-  //        finally
-  //          ReleaseMutex(MutexDBF);
-  //        end;
         End;
       End;
 
       // ѕолучаем Diff
       actCashRemainsExecute(Nil);
 
-//      if not ExistNotCompletedCheck and FirstRemainsReceived then
-//      begin
-//        MainCashForm2.tiServise.IconIndex := 3;
-//        tiServise.Hint := 'ѕолучение разницы в остатках';
-//        Application.ProcessMessages;
-//        Add_Log('Start MutexRemains 1173');
-//        WaitForSingleObject(MutexRemains, INFINITE);
-//        try
-//          try
-//            Add_Log('Receiving DIFF: ѕолучаем разницу');
-//            MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
-//            Add_Log('Receiving DIFF: ѕолучили записей: '+ IntToStr(DiffCDS.RecordCount));
-//            DiffCDS.First;
-//            if DiffCDS.FieldCount > 0 then
-//            begin
-//              Add_Log('Start MutexDBFDiff 1184');
-//              WaitForSingleObject(MutexDBFDiff, INFINITE);
-//              try
-//                Add_Log('Receiving DIFF: «аполн€ем DBFDiff');
-//                FLocalDataBaseDiff.Open;
-//                while not DiffCDS.eof do
-//                begin
-//                  FLocalDataBaseDiff.Append;
-//                  FLocalDataBaseDiff.Fields[0].AsVariant:=DiffCDS.Fields[0].AsVariant;
-//                  FLocalDataBaseDiff.Fields[1].AsVariant:=DiffCDS.Fields[1].AsVariant;
-//                  FLocalDataBaseDiff.Fields[2].AsVariant:=DiffCDS.Fields[2].AsVariant;
-//                  FLocalDataBaseDiff.Fields[3].AsVariant:=DiffCDS.Fields[3].AsVariant;
-//                  FLocalDataBaseDiff.Fields[4].AsVariant:=DiffCDS.Fields[4].AsVariant;
-//                  FLocalDataBaseDiff.Fields[5].AsVariant:=DiffCDS.Fields[5].AsVariant;
-//                  FLocalDataBaseDiff.Fields[6].AsVariant:=DiffCDS.Fields[6].AsVariant;
-//                  FLocalDataBaseDiff.Fields[7].AsVariant:=DiffCDS.Fields[7].AsVariant;
-//                  FLocalDataBaseDiff.Fields[8].AsVariant:=DiffCDS.Fields[8].AsVariant;
-//                  FLocalDataBaseDiff.Fields[9].AsVariant:=DiffCDS.Fields[9].AsVariant;
-//                  FLocalDataBaseDiff.Fields[10].AsVariant:=DiffCDS.Fields[10].AsVariant;
-//                  FLocalDataBaseDiff.Fields[11].AsVariant:=DiffCDS.Fields[11].AsVariant;
-//                  FLocalDataBaseDiff.Fields[12].AsVariant:=DiffCDS.Fields[12].AsVariant;
-//                  FLocalDataBaseDiff.Fields[13].AsVariant:=DiffCDS.Fields[13].AsVariant;
-//                  FLocalDataBaseDiff.Post;
-//                  DiffCDS.Next;
-//                end;
-//              finally
-//                Add_Log('End MutexDBFDiff 1184');
-//                FLocalDataBaseDiff.Close;
-//                ReleaseMutex(MutexDBFDiff);
-//              end;
-//              // ќтправка сообщени€ приложению про надобность обновить остатки из файла
-//              PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
-//            end;
-//          except on E: Exception do
-//            begin
-//              Add_Log('Receiving DIFF: ' + E.Message);
-//              Add_Log(IntToStr(GetLastError) + ' - ' + SysErrorMessage(GetLastError));
-//              FHasError := true;
-//              if gc_User.Local then
-//              begin
-//                tiServise.BalloonHint := 'ќстанавливаем проведение чеков';
-//                tiServise.ShowBalloonHint;
-//                Exit;
-//              end;
-//            end;
-//          end;
-//        finally
-//          Add_Log('End MutexRemains 1173');
-//          ReleaseMutex(MutexRemains);
-//        end;
-//        Add_Log('Start MutexRemains 1228');
-//        WaitForSingleObject(MutexRemains, INFINITE);
-//        try
-//          SaveLocalData(MainCashForm2.RemainsCDS, Remains_lcl);
-//        finally
-//          Add_Log('End MutexRemains 1228');
-//          ReleaseMutex(MutexRemains);
-//        end;
-//        Add_Log('Start MutexRemains 1236');
-//        WaitForSingleObject(MutexAlternative, INFINITE);
-//        try
-//          SaveLocalData(MainCashForm2.AlternativeCDS, Alternative_lcl);
-//        finally
-//          Add_Log('End MutexRemains 1236');
-//          ReleaseMutex(MutexAlternative);
-//        end;
-//        if FNeedSaveVIP then
-//        begin
-//          MainCashForm2.SaveLocalVIP;
-//        end;
-//      end;
     finally
       tiServise.Hint := 'ќжидание задани€.';
       Add_Log('End MutexAllowed 734');
