@@ -8113,6 +8113,10 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'isGoodsPresent'
         DataType = ftBoolean
+      end
+      item
+        Name = 'PriceLoad'
+        DataType = ftFloat
       end>
     IndexDefs = <
       item

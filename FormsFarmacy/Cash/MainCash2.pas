@@ -10637,8 +10637,8 @@ Begin
     FormParams.ParamByName('LoyaltySMSumma').Value) > 0 then
     PromoCodeLoyaltyCalc;
 
-  if FormParams.ParamByName('MobileDiscount').AsFloat > 0 then
-    MobileDiscountCalc;
+  if (FormParams.ParamByName('MobileDiscount').AsFloat > 0) or
+     (FormParams.ParamByName('isMobileFirstOrder').Value = True) then MobileDiscountCalc;
 
   FTotalSumm := 0;
   FSummLoyalty := 0;

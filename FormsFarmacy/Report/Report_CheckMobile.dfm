@@ -1011,6 +1011,11 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         ColorColumn = UserReferalsName
         BackGroundValueColumn = Color_UserReferals
         ColorValueList = <>
+      end
+      item
+        ColorColumn = UserUnitReferalsName
+        BackGroundValueColumn = Color_UserReferals
+        ColorValueList = <>
       end>
   end
   inherited PeriodChoice: TPeriodChoice
