@@ -846,6 +846,26 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         end>
       isShowModal = False
     end
+    object actReport_ConductedSalesMobile: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1076#1085#1103#1084
+      Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1076#1085#1103#1084
+      ImageIndex = 40
+      FormName = 'TReport_ConductedSalesMobileForm'
+      FormNameParam.Value = 'TReport_ConductedSalesMobileForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -964,6 +984,14 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_ConductedSalesMobile'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -998,6 +1026,10 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     end
     object dxBarButton3: TdxBarButton
       Action = actReport_ApplicationAward
+      Category = 0
+    end
+    object bbReport_ConductedSalesMobile: TdxBarButton
+      Action = actReport_ConductedSalesMobile
       Category = 0
     end
   end

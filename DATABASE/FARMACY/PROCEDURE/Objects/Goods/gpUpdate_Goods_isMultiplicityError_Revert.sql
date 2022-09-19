@@ -26,7 +26,7 @@ BEGIN
    END IF;
    
 */   
-   -- сохранили свойство <Перечень аналогов товара>
+   -- сохранили свойство <ППогрешность для кратности при продажи>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_MultiplicityError(), inGoodsMainId, NOT inisMultiplicityError);
    
     -- Сохранили в плоскую таблицй

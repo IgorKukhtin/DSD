@@ -1167,6 +1167,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMobileDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ApplicationAwardForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ApplicationAwardForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ConductedSalesMobileForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ConductedSalesMobileForm');
 
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalRemainsEndDialogForm'));

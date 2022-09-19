@@ -56,6 +56,8 @@ type
     TotalSummChangePercent: TcxGridDBColumn;
     actReport_ApplicationAward: TdsdOpenForm;
     dxBarButton3: TdxBarButton;
+    actReport_ConductedSalesMobile: TdsdOpenForm;
+    bbReport_ConductedSalesMobile: TdxBarButton;
   private
     { Private declarations }
   public
