@@ -1404,6 +1404,8 @@ type
     miReport_JuridicalDefermentPayment365: TMenuItem;
     actUnit_Personal: TdsdOpenForm;
     miUnit_Personal: TMenuItem;
+    actReport_SaleExternal_Goods: TdsdOpenForm;
+    miReport_SaleExternal_Goods: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

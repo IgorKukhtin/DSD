@@ -91,6 +91,9 @@ type
     edContractStateKind: TcxButtonEdit;
     InsertRecord1: TInsertRecord;
     bbInsertRecord: TdxBarButton;
+    cxLabel14: TcxLabel;
+    edCurrency: TcxButtonEdit;
+    GuidesCurrency: TdsdGuides;
   private
     { Private declarations }
   public

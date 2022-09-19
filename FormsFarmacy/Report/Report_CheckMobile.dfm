@@ -815,6 +815,57 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1057' '#1086#1090' '#1072#1087#1090#1077#1082#1080'"'
       ImageIndex = 79
     end
+    object actReport_ApplicationAward: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 
+        #1048#1090#1086#1075#1086#1074#1099#1081' '#1089#1074#1086#1076' '#1091#1095#1072#1089#1090#1080#1081' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1074' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080 +
+        #1083#1086#1078#1077#1085#1080#1103
+      Hint = 
+        #1048#1090#1086#1075#1086#1074#1099#1081' '#1089#1074#1086#1076' '#1091#1095#1072#1089#1090#1080#1081' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1074' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080 +
+        #1083#1086#1078#1077#1085#1080#1103
+      ImageIndex = 33
+      FormName = 'TReport_ApplicationAwardForm'
+      FormNameParam.Value = 'TReport_ApplicationAwardForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReport_ConductedSalesMobile: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1076#1085#1103#1084
+      Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1076#1085#1103#1084
+      ImageIndex = 40
+      FormName = 'TReport_ConductedSalesMobileForm'
+      FormNameParam.Value = 'TReport_ConductedSalesMobileForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -925,11 +976,23 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_ConductedSalesMobile'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -961,6 +1024,14 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       Action = mactUpdate_EmployeeMessage
       Category = 0
     end
+    object dxBarButton3: TdxBarButton
+      Action = actReport_ApplicationAward
+      Category = 0
+    end
+    object bbReport_ConductedSalesMobile: TdxBarButton
+      Action = actReport_ConductedSalesMobile
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -970,6 +1041,11 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     ColorRuleList = <
       item
         ColorColumn = UserReferalsName
+        BackGroundValueColumn = Color_UserReferals
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = UserUnitReferalsName
         BackGroundValueColumn = Color_UserReferals
         ColorValueList = <>
       end>

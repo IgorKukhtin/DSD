@@ -1581,10 +1581,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummaOrderConfirmation() RETURNS Integer A
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_SummaOrderConfirmation', 'Штраф за несовременное подтверждения заказов' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaOrderConfirmation');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_PriceLoad() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceLoad'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PriceLoad', 'Цена загруженная' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceLoad');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 17.09.22                                                                                                     * zc_MIFloat_PriceLoad
  13.09.22         * zc_MIFloat_CountReal
  30.08.22         * zc_MIFloat_CountPartner
  28.07.22         * zc_MIFloat_ChangePrice

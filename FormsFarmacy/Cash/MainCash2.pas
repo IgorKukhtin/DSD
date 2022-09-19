@@ -4930,12 +4930,7 @@ begin
     while not CheckCDS.Eof do
     begin
 
-      if (DiscountServiceForm.gCode > 0) and
-        (CheckCDS.FieldByName('PriceSale').asCurrency <> RemainsCDS.FieldByName('Price').asCurrency) then
-      begin
-
-      end
-      else if (Self.FormParams.ParamByName('SPTax').Value <> 0) and
+      if (Self.FormParams.ParamByName('SPTax').Value <> 0) and
         (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
         (FormParams.ParamByName('Price1303').Value <> 0) then
       begin
@@ -5050,6 +5045,22 @@ begin
           CheckCDS.FieldByName('Summ').asCurrency;
         CheckCDS.Post;
       end
+      else if Self.FormParams.ParamByName('PriceLoad').Value > 0 then
+      begin
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('Price').asCurrency := CheckCDS.FieldByName('PriceLoad').asCurrency;
+        CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
+        CheckCDS.FieldByName('Summ').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        CheckCDS.Post;
+      end
       else if CheckCDS.FieldByName('PricePartionDate').asCurrency > 0 then
       begin
         CheckCDS.Edit;
@@ -5129,7 +5140,6 @@ begin
 
     nChangeSumma := FormParams.ParamByName('LoyaltyChangeSumma').Value +
       FormParams.ParamByName('LoyaltySMSumma').Value;
-    if (nSumAll < 200) and (FormParams.ParamByName('isMobileFirstOrder').Value = True) then nChangeSumma := 0;
 
     if nChangeSumma > 0 then
     begin
@@ -5218,6 +5228,22 @@ begin
           CheckCDS.FieldByName('Summ').asCurrency;
         CheckCDS.Post;
       end
+      else if CheckCDS.FieldByName('PriceLoad').asCurrency > 0 then
+      begin
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          CheckCDS.FieldByName('PriceLoad').asCurrency;
+        CheckCDS.FieldByName('Summ').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        CheckCDS.Post;
+      end
       else if CheckCDS.FieldByName('PricePartionDate').asCurrency > 0 then
       begin
         CheckCDS.Edit;
@@ -5278,6 +5304,8 @@ var
   nSumAll, nPrice, nChangeSumma: Currency;
 begin
 
+  if DiscountServiceForm.gCode <> 0 then Exit;
+
   CheckCDS.DisableControls;
   CheckCDS.Filtered := false;
   nSumAll := 0;
@@ -5285,6 +5313,7 @@ begin
   try
 
     nChangeSumma := FormParams.ParamByName('MobileDiscount').Value;
+    if (FormParams.ParamByName('isMobileFirstOrder').Value = True) and (nChangeSumma = 0) then nChangeSumma := 20;
 
     if nChangeSumma > 0 then
     begin
@@ -5293,9 +5322,9 @@ begin
       begin
         if not CheckCDS.FieldByName('isPresent').AsBoolean and not CheckCDS.FieldByName('isGoodsPresent').AsBoolean then
         begin
-          if CheckCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+          if CheckCDS.FieldByName('PriceLoad').asCurrency > 0 then
             nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-              CheckCDS.FieldByName('PriceDiscount').asCurrency,
+              CheckCDS.FieldByName('PriceLoad').asCurrency,
               FormParams.ParamByName('RoundingDown').Value)
           else
             nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
@@ -5318,9 +5347,9 @@ begin
         begin
           if nChangeSumma < nSumAll then
           begin
-            if CheckCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+            if CheckCDS.FieldByName('PriceLoad').asCurrency > 0 then
               nPrice := RoundTo(GetSumm(CheckCDS.FieldByName('Amount')
-                .asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,
+                .asCurrency, CheckCDS.FieldByName('PriceLoad').asCurrency,
                 FormParams.ParamByName('RoundingDown').Value) *
                 (nSumAll - nChangeSumma) / nSumAll / CheckCDS.FieldByName
                 ('Amount').asCurrency, -1)
@@ -5354,7 +5383,22 @@ begin
           end;
         end;
       end
-      else if Self.FormParams.ParamByName('SiteDiscount').Value > 0 then
+      else if CheckCDS.FieldByName('PriceLoad').asCurrency > 0 then
+      begin
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          CheckCDS.FieldByName('PriceLoad').asCurrency;
+        CheckCDS.FieldByName('Summ').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        CheckCDS.Post;
+      end else if Self.FormParams.ParamByName('SiteDiscount').Value > 0 then
       begin
         CheckCDS.Edit;
         CheckCDS.FieldByName('Price').asCurrency :=
@@ -10635,8 +10679,8 @@ Begin
     FormParams.ParamByName('LoyaltySMSumma').Value) > 0 then
     PromoCodeLoyaltyCalc;
 
-  if FormParams.ParamByName('MobileDiscount').AsFloat > 0 then
-    MobileDiscountCalc;
+  if (FormParams.ParamByName('MobileDiscount').AsFloat > 0) or
+     (FormParams.ParamByName('isMobileFirstOrder').Value = True) then MobileDiscountCalc;
 
   FTotalSumm := 0;
   FSummLoyalty := 0;

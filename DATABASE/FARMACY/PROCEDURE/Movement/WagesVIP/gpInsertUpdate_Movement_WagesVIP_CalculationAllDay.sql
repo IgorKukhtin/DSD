@@ -433,9 +433,14 @@ BEGIN
                                                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()  
 
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountExternal
+                                                                     ON MovementLinkObject_DiscountExternal.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_DiscountExternal.DescId = zc_MILinkObject_DiscountExternal()
+
                                    WHERE Movement.DescId = zc_Movement_Check()
                                      AND Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate)
                                      AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+                                     AND COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
                                      AND (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0)) >= 199.50)
                                    

@@ -37,6 +37,10 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxLabel9: TcxLabel;
+    edTelegramId: TcxTextEdit;
+    edTelegramBotToken: TcxTextEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

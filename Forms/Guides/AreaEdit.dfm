@@ -2,7 +2,7 @@ object AreaEditForm: TAreaEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1077#1075#1080#1086#1085'>'
-  ClientHeight = 139
+  ClientHeight = 247
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,12 +24,12 @@ object AreaEditForm: TAreaEditForm
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 49
+    Top = 53
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 100
+    Top = 209
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object AreaEditForm: TAreaEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 100
+    Top = 209
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -48,7 +48,7 @@ object AreaEditForm: TAreaEditForm
   end
   object cxLabel2: TcxLabel
     Left = 10
-    Top = 8
+    Top = 9
     Caption = #1050#1086#1076
   end
   object edCode: TcxCurrencyEdit
@@ -59,11 +59,34 @@ object AreaEditForm: TAreaEditForm
     TabOrder = 5
     Width = 273
   end
+  object cxLabel9: TcxLabel
+    Left = 10
+    Top = 98
+    Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
+  end
+  object edTelegramId: TcxTextEdit
+    Left = 10
+    Top = 118
+    TabOrder = 7
+    Width = 273
+  end
+  object edTelegramBotToken: TcxTextEdit
+    Left = 10
+    Top = 162
+    TabOrder = 8
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 142
+    Caption = #1058#1086#1082#1077#1085' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090#1072' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
+  end
   object ActionList: TActionList
     Left = 152
     Top = 56
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -76,6 +99,8 @@ object AreaEditForm: TAreaEditForm
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -84,6 +109,8 @@ object AreaEditForm: TAreaEditForm
       Caption = 'Ok'
     end
     object dsdFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -97,12 +124,14 @@ object AreaEditForm: TAreaEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -110,9 +139,27 @@ object AreaEditForm: TAreaEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTelegramId'
+        Value = Null
+        Component = edTelegramId
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTelegramBotToken'
+        Value = Null
+        Component = edTelegramBotToken
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 56
+    PackSize = 1
+    Left = 128
+    Top = 136
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -120,6 +167,7 @@ object AreaEditForm: TAreaEditForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 8
@@ -135,20 +183,38 @@ object AreaEditForm: TAreaEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TelegramId'
+        Value = Null
+        Component = edTelegramId
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TelegramBotToken'
+        Value = Null
+        Component = edTelegramBotToken
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 184
-    Top = 16
+    PackSize = 1
+    Left = 64
+    Top = 120
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -162,11 +228,11 @@ object AreaEditForm: TAreaEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 104
+    Left = 216
+    Top = 88
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 8
-    Top = 48
+    Left = 224
+    Top = 24
   end
 end

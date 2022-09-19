@@ -388,6 +388,7 @@ BEGIN
                                                   , COALESCE (MB_RoundingDown.ValueData, False)
                                                   , COALESCE (MB_RoundingTo10.ValueData, False)
                                                   , COALESCE (MB_RoundingTo50.ValueData, False)) AS AmountSumm
+                                , MIFloat_PriceLoad.ValueData         AS PriceLoad
                             FROM tmpMI_all AS MovementItem
 
                                 LEFT JOIN tmpMIFloat AS MIFloat_AmountOrder
@@ -399,6 +400,9 @@ BEGIN
                                 LEFT JOIN tmpMIFloat AS MIFloat_PriceSale
                                                             ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                                            AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                                LEFT JOIN MovementItemFloat AS MIFloat_PriceLoad
+                                                            ON MIFloat_PriceLoad.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PriceLoad.DescId = zc_MIFloat_PriceLoad()
                                 LEFT JOIN tmpMIFloat AS MIFloat_ChangePercent
                                                             ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                            AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
@@ -539,6 +543,7 @@ BEGIN
                   END :: BOOLEAN                                                 AS isPriceDiscount
            , COALESCE (MILinkObject_GoodsPresent.ObjectId, 0)                    AS GoodsPresentID
            , COALESCE (MIBoolean_GoodsPresent.ValueData, False)                  AS isGoodsPresent
+           , MovementItem.PriceLoad
 
        FROM tmpMI_Sum AS MovementItem
 
@@ -872,6 +877,7 @@ BEGIN
                                       ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
                                       THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 1))::TFloat
                                       ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END END AS AmountSumm
+                                 , MIFloat_PriceLoad.ValueData         AS PriceLoad
                              FROM tmpMI_all AS MovementItem
 
                                 LEFT JOIN tmpMIFloat AS MIFloat_AmountOrder
@@ -883,6 +889,9 @@ BEGIN
                                 LEFT JOIN tmpMIFloat AS MIFloat_PriceSale
                                                             ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                                            AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                                LEFT JOIN MovementItemFloat AS MIFloat_PriceLoad
+                                                            ON MIFloat_PriceLoad.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PriceLoad.DescId = zc_MIFloat_PriceLoad()
                                 LEFT JOIN tmpMIFloat AS MIFloat_ChangePercent
                                                             ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                            AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
@@ -1020,6 +1029,7 @@ BEGIN
                   END :: BOOLEAN                                                 AS isPriceDiscount
            , COALESCE (MILinkObject_GoodsPresent.ObjectId, 0)                    AS GoodsPresentID
            , COALESCE (MIBoolean_GoodsPresent.ValueData, False)                  AS isGoodsPresent
+           , MovementItem.PriceLoad
 
        FROM tmpMI_Sum AS MovementItem
 

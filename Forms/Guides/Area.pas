@@ -56,6 +56,8 @@ type
     actInsert: TdsdInsertUpdateAction;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    TelegramId: TcxGridDBColumn;
+    TelegramBotToken: TcxGridDBColumn;
   private
     { Private declarations }
   public

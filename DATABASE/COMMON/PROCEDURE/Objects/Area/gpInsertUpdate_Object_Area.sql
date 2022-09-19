@@ -1,12 +1,15 @@
 -- Function: gpInsertUpdate_Object_Area()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Area(
- INOUT ioId             Integer   ,     -- ключ объекта <Регионы> 
-    IN inCode           Integer   ,     -- Код объекта  
-    IN inName           TVarChar  ,     -- Название объекта 
-    IN inSession        TVarChar        -- сессия пользователя
+ INOUT ioId               Integer   ,     -- ключ объекта <Регионы> 
+    IN inCode             Integer   ,     -- Код объекта  
+    IN inName             TVarChar  ,     -- Название объекта 
+    IN inTelegramId       TVarChar  ,     -- Группа получателей в рассылке Акций
+    IN inTelegramBotToken TVarChar  ,     -- Токен отправителя телеграм бота в рассылке Акций
+    IN inSession          TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -29,19 +32,25 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Area(), vbCode_calc, inName);
+         
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Area_TelegramId(), ioId, inTelegramId);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Area_TelegramBotToken(), ioId, inTelegramBotToken);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Area (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Area (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.09.22         *
  14.11.13         *
 */
 

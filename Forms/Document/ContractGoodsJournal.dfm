@@ -249,6 +249,14 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
             Options.Editing = False
             Width = 98
           end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072' '#1089#1087#1077#1094'.)'
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'

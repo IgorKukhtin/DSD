@@ -58,6 +58,7 @@ RETURNS TABLE (Id Integer
              , isPriceDiscount boolean
              , GoodsPresentID Integer
              , isGoodsPresent boolean
+             , PriceLoad TFloat
               )
 AS
 $BODY$
@@ -427,7 +428,8 @@ BEGIN
                   END :: BOOLEAN                                                 AS isPriceDiscount
            , COALESCE (MILinkObject_GoodsPresent.ObjectId, 0)                    AS GoodsPresentID
            , COALESCE (MIBoolean_GoodsPresent.ValueData, False)                  AS isGoodsPresent
-           
+           , MovementItem.PriceLoad
+
        FROM tmpMI AS MovementItem
 
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem

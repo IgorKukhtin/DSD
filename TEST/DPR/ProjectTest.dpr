@@ -1387,7 +1387,9 @@ uses
   PersonalTransport in '..\..\Forms\Document\PersonalTransport.pas' {PersonalTransportForm: TParentForm},
   PersonalTransportJournal in '..\..\Forms\Document\PersonalTransportJournal.pas' {PersonalTransportJournalForm: TParentForm},
   Report_JuridicalDefermentPayment365 in '..\..\Forms\Report\Report_JuridicalDefermentPayment365.pas' {Report_JuridicalDefermentPayment365Form: TParentForm},
-  Unit_Personal in '..\..\Forms\Guides\Unit_Personal.pas' {Unit_PersonalForm: TParentForm};
+  Unit_Personal in '..\..\Forms\Guides\Unit_Personal.pas' {Unit_PersonalForm: TParentForm},
+  Report_SaleExternal_Goods in '..\..\Forms\Report\Report_SaleExternal_Goods.pas' {Report_SaleExternal_GoodsForm: TParentForm},
+  Report_SaleExternal_GoodsDialog in '..\..\Forms\Report\Report_SaleExternal_GoodsDialog.pas' {Report_SaleExternal_GoodsDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

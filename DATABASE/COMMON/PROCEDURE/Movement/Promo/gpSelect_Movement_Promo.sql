@@ -33,7 +33,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , OperDateStart    TDateTime   --Дата начала расч. продаж до акции
              , OperDateEnd      TDateTime   --Дата окончания расч. продаж до акции
              , MonthPromo       TDateTime   --Месяц акции
-             , CheckDate        TDateTime   --Дата Согласования
+             , CheckDate        TDateTime   --Дата Согласования 
+             , MessageDate      TDateTime   --Дата/время сообщения Телеграм
              , CostPromo        TFloat      --Стоимость участия в акции
              , ChangePercent    TFloat      --(-)% Скидки (+)% Наценки по договору
 
@@ -192,6 +193,7 @@ BEGIN
              , MovementDate_OperDateEnd.ValueData          AS OperDateEnd        --Дата окончания расч. продаж до акции
              , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
              , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
+             , MovementDate_MessageDate.ValueData          AS MessageDate        --Дата/время сообщения Телеграм
              , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
              , MovementFloat_ChangePercent.ValueData       AS ChangePercent      --(-)% Скидки (+)% Наценки по договору
 
@@ -322,6 +324,10 @@ BEGIN
                                     ON MovementDate_CheckDate.MovementId = Movement_Promo.Id
                                    AND MovementDate_CheckDate.DescId = zc_MovementDate_Check()
 
+             LEFT JOIN MovementDate AS MovementDate_MessageDate
+                                    ON MovementDate_MessageDate.MovementId = Movement_Promo.Id
+                                   AND MovementDate_MessageDate.DescId = zc_MovementDate_Message()
+
              LEFT JOIN MovementFloat AS MovementFloat_CostPromo
                                      ON MovementFloat_CostPromo.MovementId = Movement_Promo.Id
                                     AND MovementFloat_CostPromo.DescId = zc_MovementFloat_CostPromo()
@@ -408,6 +414,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 16.09.22         * zc_MovementDate_Message
  05.10.20         *
  13.07.20         * ChangePercent
  01.04.20         *

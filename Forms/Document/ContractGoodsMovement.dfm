@@ -368,12 +368,12 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Width = 105
     end
     object cxLabel3: TcxLabel
-      Left = 272
+      Left = 383
       Top = 45
       Caption = #1070#1088'.'#1083#1080#1094#1086
     end
     object edJuridical: TcxButtonEdit
-      Left = 272
+      Left = 383
       Top = 63
       Properties.Buttons = <
         item
@@ -382,7 +382,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 315
+      Width = 204
     end
     object edContractTag: TcxButtonEdit
       Left = 598
@@ -461,6 +461,23 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Properties.ReadOnly = True
       TabOrder = 25
       Width = 139
+    end
+    object cxLabel14: TcxLabel
+      Left = 272
+      Top = 45
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072' '#1089#1087#1077#1094'.)'
+    end
+    object edCurrency: TcxButtonEdit
+      Left = 272
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 105
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -1369,6 +1386,21 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Component = FormParams
         ComponentItem = 'Id'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = GuidesCurrency
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1416,6 +1448,14 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = 'False'
         Component = ceComment
@@ -1445,8 +1485,10 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Control = edOperDate
       end
       item
+        Control = edContract
       end
       item
+        Control = edCurrency
       end
       item
       end
@@ -1791,8 +1833,8 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 324
-    Top = 16
+    Left = 372
+    Top = 8
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -1819,7 +1861,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 384
+    Left = 504
     Top = 56
   end
   object spUpdate_MI_ContractGoods_Save_No: TdsdStoredProc
@@ -2000,8 +2042,8 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 608
-    Top = 15
+    Left = 744
+    Top = 7
   end
   object GuidesContractStateKind: TdsdGuides
     KeyField = 'Id'
@@ -2014,5 +2056,34 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Params = <>
     Left = 480
     Top = 16
+  end
+  object GuidesCurrency: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrency
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCurrency
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 304
+    Top = 64
   end
 end

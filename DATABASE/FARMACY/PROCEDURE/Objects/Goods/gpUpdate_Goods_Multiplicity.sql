@@ -30,10 +30,13 @@ BEGIN
    
    -- сохранили свойство <Дополнение СУН1>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Multiplicity(), inGoodsMainId, inMultiplicity);
+   -- сохранили свойство <ППогрешность для кратности при продажи>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_MultiplicityError(), inGoodsMainId, COALESCE (inMultiplicity, 0) <> 0);
    
     -- Сохранили в плоскую таблицй
    BEGIN
      UPDATE Object_Goods_Main SET Multiplicity = inMultiplicity
+                                , isMultiplicityError = COALESCE (inMultiplicity, 0) <> 0
      WHERE Object_Goods_Main.Id = inGoodsMainId;  
    EXCEPTION
       WHEN others THEN 
