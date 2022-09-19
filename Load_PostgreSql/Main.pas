@@ -448,6 +448,9 @@ begin
       and (GetArrayCurrencyList_Index_byName (RootNode.ChildNodes[i].ChildNodes['cc'].Text) >= 0)
       //and (RootNode.ChildNodes[i].ChildNodes['r030'].Text = '840')
       then begin
+               myLogMemo_add('__start currency');
+               myLogMemo_add(DateToStr(OperDate) + '  ' + RootNode.ChildNodes[i].ChildNodes['cc'].Text + ' ' + RootNode.ChildNodes[i].ChildNodes['rate'].Text);
+               //
                toStoredProc_two.Params.ParamByName('inOperDate').Value:=OperDate;
                toStoredProc_two.Params.ParamByName('inAmount_text').Value:=RootNode.ChildNodes[i].ChildNodes['rate'].Text;
                toStoredProc_two.Params.ParamByName('inInternalName').Value:=RootNode.ChildNodes[i].ChildNodes['cc'].Text;
