@@ -1258,7 +1258,8 @@ uses
   InternetRepairCashEdit in '..\..\FormsFarmacy\Guides\InternetRepairCashEdit.pas' {InternetRepairCashEditForm: TParentForm},
   InternetRepairCash in '..\..\FormsFarmacy\Guides\InternetRepairCash.pas' {InternetRepairCashForm: TParentForm},
   Report_ApplicationAward in '..\..\FormsFarmacy\Report\Report_ApplicationAward.pas' {Report_ApplicationAwardForm: TParentForm},
-  Report_ConductedSalesMobile in '..\..\FormsFarmacy\Report\Report_ConductedSalesMobile.pas' {Report_ConductedSalesMobileForm: TParentForm};
+  Report_ConductedSalesMobile in '..\..\FormsFarmacy\Report\Report_ConductedSalesMobile.pas' {Report_ConductedSalesMobileForm: TParentForm},
+  Report_Object_Price_MCS_Year in '..\..\FormsFarmacy\Report\Report_Object_Price_MCS_Year.pas' {Report_Object_Price_MCS_YearForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

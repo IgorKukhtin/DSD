@@ -1000,6 +1000,98 @@ object MainForm: TMainForm
         end>
       Caption = 'actUpdate_BuyerForSiteBonus'
     end
+    object actSelect_BuyerForSite_BonusAdd: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_BuyerForSite_BonusAdd
+      StoredProcList = <
+        item
+          StoredProc = spSelect_BuyerForSite_BonusAdd
+        end>
+      Caption = 'actSelect_BuyerForSite_BonusAdd'
+    end
+    object actUpdatePharmUsersProfile: TdsdForeignData
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actSite_Param
+      ZConnection.ControlsCodePage = cCP_UTF16
+      ZConnection.ClientCodepage = 'utf8'
+      ZConnection.Catalog = ''
+      ZConnection.Properties.Strings = (
+        'codepage=utf8')
+      ZConnection.HostName = ''
+      ZConnection.Port = 0
+      ZConnection.Database = ''
+      ZConnection.User = ''
+      ZConnection.Password = ''
+      ZConnection.Protocol = 'mysql-5'
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'MySQL_Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'MySQL_Port'
+      PortParam.MultiSelectSeparator = ','
+      UserNameParam.Value = Null
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'MySQL_Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'MySQL_Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DataBase.Value = Null
+      DataBase.Component = FormParams
+      DataBase.ComponentItem = 'MySQL_DataBase'
+      DataBase.DataType = ftString
+      DataBase.MultiSelectSeparator = ','
+      SQLParam.Value = ''
+      SQLParam.Component = BuyerForSiteBonusAddCDS
+      SQLParam.ComponentItem = 'SQL'
+      SQLParam.DataType = ftString
+      SQLParam.MultiSelectSeparator = ','
+      TypeTransaction = ttExecSQL
+      Params = <>
+      UpdateFields = <>
+      JsonParam.Value = ''
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+        end>
+      ShowGaugeForm = False
+      Caption = 'actUpdatePharmUsersProfile'
+    end
+    object actUpdate_BuyerForSite_BonusAdded: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_BuyerForSite_BonusAdded
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_BuyerForSite_BonusAdded
+        end>
+      Caption = 'actUpdate_BuyerForSiteBonus'
+    end
+    object mactUpdatePharmUsersProfile: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdatePharmUsersProfile
+        end
+        item
+          Action = actUpdate_BuyerForSite_BonusAdded
+        end>
+      DataSource = BuyerForSiteBonusAddDS
+      Caption = #1050#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1073#1086#1085#1091#1089#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+      Hint = #1050#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1073#1086#1085#1091#1089#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1225,13 +1317,13 @@ object MainForm: TMainForm
   object PharmUsersProfileCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 856
-    Top = 424
+    Left = 552
+    Top = 376
   end
   object PharmUsersProfileDS: TDataSource
     DataSet = PharmUsersProfileCDS
-    Left = 976
-    Top = 428
+    Left = 656
+    Top = 380
   end
   object spUpdate_BuyerForSite_Bonus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_BuyerForSite_Bonus'
@@ -1256,7 +1348,47 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1104
-    Top = 421
+    Left = 776
+    Top = 381
+  end
+  object spSelect_BuyerForSite_BonusAdd: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_BuyerForSite_BonusAdd'
+    DataSet = BuyerForSiteBonusAddCDS
+    DataSets = <
+      item
+        DataSet = BuyerForSiteBonusAddCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 552
+    Top = 437
+  end
+  object BuyerForSiteBonusAddDS: TDataSource
+    DataSet = BuyerForSiteBonusAddCDS
+    Left = 896
+    Top = 428
+  end
+  object BuyerForSiteBonusAddCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 736
+    Top = 432
+  end
+  object spUpdate_BuyerForSite_BonusAdded: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_BuyerForSite_BonusAdded'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = BuyerForSiteBonusAddCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1048
+    Top = 429
   end
 end

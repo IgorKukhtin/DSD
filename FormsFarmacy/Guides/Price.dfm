@@ -1,19 +1,20 @@
 inherited PriceForm: TPriceForm
   Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1090#1077#1082#1091#1097#1080#1081
   ClientHeight = 422
-  ClientWidth = 829
+  ClientWidth = 817
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 845
+  ExplicitWidth = 833
   ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
     Left = 0
     Top = 0
-    Width = 829
+    Width = 817
     Height = 57
     Align = alTop
     TabOrder = 6
+    ExplicitWidth = 829
     object deOperDate: TcxDateEdit
       Left = 662
       Top = 32
@@ -73,18 +74,18 @@ inherited PriceForm: TPriceForm
   end
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 829
+    Width = 817
     Height = 339
     ExplicitTop = 83
     ExplicitWidth = 829
     ExplicitHeight = 339
     ClientRectBottom = 339
-    ClientRectRight = 829
+    ClientRectRight = 817
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 829
       ExplicitHeight = 339
       inherited cxGrid: TcxGrid
-        Width = 829
+        Width = 817
         Height = 339
         ExplicitWidth = 829
         ExplicitHeight = 339
@@ -1219,6 +1220,34 @@ inherited PriceForm: TPriceForm
       Hint = #1047#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077
       ImageIndex = 27
     end
+    object actReport_Object_Price_MCS_Year: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1103' '#1053#1058#1047' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1089' '#1075#1086#1076#1086#1084' '#1085#1072#1079#1072#1076
+      Hint = #1057#1088#1072#1074#1085#1077#1085#1080#1103' '#1053#1058#1047' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1089' '#1075#1086#1076#1086#1084' '#1085#1072#1079#1072#1076
+      ImageIndex = 3
+      FormName = 'TReport_Object_Price_MCS_YearForm'
+      FormNameParam.Value = 'TReport_Object_Price_MCS_YearForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = UnitGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1375,6 +1404,10 @@ inherited PriceForm: TPriceForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
         end>
     end
     object dxBarControlContainerItemUnit: TdxBarControlContainerItem
@@ -1419,6 +1452,10 @@ inherited PriceForm: TPriceForm
     end
     object bb: TdxBarButton
       Action = macUpdate_CheckPrice
+      Category = 0
+    end
+    object dxBarButton8: TdxBarButton
+      Action = actReport_Object_Price_MCS_Year
       Category = 0
     end
   end

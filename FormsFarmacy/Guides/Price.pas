@@ -111,6 +111,8 @@ type
     isMCSValue_dif: TcxGridDBColumn;
     MCSValueSun: TcxGridDBColumn;
     PercentMarkupSP: TcxGridDBColumn;
+    actReport_Object_Price_MCS_Year: TdsdOpenForm;
+    dxBarButton8: TdxBarButton;
   private
     { Private declarations }
   public

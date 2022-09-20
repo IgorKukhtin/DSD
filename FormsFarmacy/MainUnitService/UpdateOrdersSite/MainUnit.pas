@@ -120,6 +120,14 @@ type
     PharmUsersProfileCDS: TClientDataSet;
     PharmUsersProfileDS: TDataSource;
     spUpdate_BuyerForSite_Bonus: TdsdStoredProc;
+    spSelect_BuyerForSite_BonusAdd: TdsdStoredProc;
+    BuyerForSiteBonusAddDS: TDataSource;
+    BuyerForSiteBonusAddCDS: TClientDataSet;
+    actSelect_BuyerForSite_BonusAdd: TdsdExecStoredProc;
+    actUpdatePharmUsersProfile: TdsdForeignData;
+    mactUpdatePharmUsersProfile: TMultiAction;
+    spUpdate_BuyerForSite_BonusAdded: TdsdStoredProc;
+    actUpdate_BuyerForSite_BonusAdded: TdsdExecStoredProc;
     procedure btnAllClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -209,6 +217,10 @@ begin
   Add_Log('Загрузка "Загрузка остатка бонуса по покупателю".');
 
   if actPharmUsersProfile.Execute then mactUpdate_BuyerForSiteBonus.Execute;
+
+  Add_Log('Загрузка "Коректировка бонуса покупателей".');
+
+  if actSelect_BuyerForSite_BonusAdd.Execute then mactUpdatePharmUsersProfile.Execute;
 
   Add_Log('Выполнено.');
 

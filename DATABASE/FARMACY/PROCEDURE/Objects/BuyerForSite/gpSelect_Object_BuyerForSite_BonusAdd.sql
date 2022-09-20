@@ -5,15 +5,18 @@ DROP FUNCTION IF EXISTS gpSelect_Object_BuyerForSite_BonusAdd(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_BuyerForSite_BonusAdd(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Code Integer, BonusAdd TFloat) AS
+RETURNS TABLE (Id Integer, Code Integer, BonusAdd TFloat, SQL TVarChar) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Area()());
 
    RETURN QUERY 
-   SELECT Object_BuyerForSite.ObjectCode                AS Code
+   SELECT Object_BuyerForSite.Id                        AS Id
+        , Object_BuyerForSite.ObjectCode                AS Code
         , ObjectFloat_BuyerForSite_BonusAdd.ValueData   AS BonusAdd
+        , ('UPDATE users_profile SET bonus_amount = bonus_amount '||CASE WHEN ObjectFloat_BuyerForSite_BonusAdd.ValueData >= 0 THEN ' + ' ELSE ' ' END||
+          ObjectFloat_BuyerForSite_BonusAdd.ValueData::TVarChar||'  WHERE users_profile.user_id = '||Object_BuyerForSite.ObjectCode::TVarChar)::TVarChar
    FROM Object AS Object_BuyerForSite
         LEFT JOIN ObjectFloat AS ObjectFloat_BuyerForSite_BonusAdd
                               ON ObjectFloat_BuyerForSite_BonusAdd.ObjectId = Object_BuyerForSite.Id 

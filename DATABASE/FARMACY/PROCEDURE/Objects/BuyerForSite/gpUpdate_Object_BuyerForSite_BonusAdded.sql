@@ -25,11 +25,20 @@ BEGIN
                AND COALESCE(ObjectFloat.ValueData, 0) <> 0)
    THEN
          
-     -- сохранили “елефон
+     -- сохранили 
+     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_BuyerForSite_Bonus(), inId, 
+               (SELECT SUM( COALESCE(ObjectFloat.ValueData, 0)) FROM ObjectFloat 
+                WHERE ObjectFloat.DescId IN (zc_ObjectFloat_BuyerForSite_BonusAdd(), zc_ObjectFloat_BuyerForSite_Bonus())
+                  AND ObjectFloat.ObjectId = inId));
+
+     -- сохранили 
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_BuyerForSite_BonusAdded(), inId, 
                (SELECT SUM( COALESCE(ObjectFloat.ValueData, 0)) FROM ObjectFloat 
                 WHERE ObjectFloat.DescId IN (zc_ObjectFloat_BuyerForSite_BonusAdd(), zc_ObjectFloat_BuyerForSite_BonusAdded())
                   AND ObjectFloat.ObjectId = inId));
+
+     -- сохранили 
+     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_BuyerForSite_BonusAdd(), inId, 0);
 
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
