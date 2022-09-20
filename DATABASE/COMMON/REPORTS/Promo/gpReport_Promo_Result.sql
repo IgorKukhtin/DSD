@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Result (
     IN inEndDate        TDateTime, --дата окончания периода
     IN inIsPromo        Boolean,   --показать только Акции
     IN inIsTender       Boolean,   --показать только Тендеры
-    IN inisGoodsKind    Boolean,   -- группировать по Виду товара
+    IN inIsGoodsKind    Boolean,   -- группировать по Виду товара
     IN inUnitId         Integer,   --подразделение 
     IN inRetailId       Integer,   --подразделение 
     IN inMovementId     Integer,   --документ акции
@@ -188,8 +188,8 @@ BEGIN
                    , MI_PromoGoods.PriceWithVAT
                    , MI_PromoGoods.PriceSale
                    , MI_PromoGoods.GoodsWeight
-                   , CASE WHEN inisGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindName ELSE '' END
-                   , CASE WHEN inisGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindCompleteName ELSE '' END 
+                   , CASE WHEN inIsGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindName ELSE '' END
+                   , CASE WHEN inIsGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindCompleteName ELSE '' END 
                    --, MIFloat_PriceIn1.ValueData
                    , ObjectString_Goods_GoodsGroupFull.ValueData
               )
@@ -395,5 +395,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Report_Promo_Result (inStartDate:= '21.09.2017', inEndDate:= '21.09.2017', inIsPromo:= TRUE, inIsTender:= FALSE, inUnitId:= 0, inRetailId:= 0, inMovementId:= 0, inSession:= zfCalc_UserAdmin());
 
--- SELECT * FROM gpSelect_Report_Promo_Result (inStartDate:= '21.09.2017', inEndDate:= '21.09.2017', inIsPromo:= TRUE, inIsTender:= FALSE, inisGoodsKind:= true, inUnitId:= 0, inRetailId:= 0, inMovementId:= 0, inSession:= zfCalc_UserAdmin());
-
+-- SELECT * FROM gpSelect_Report_Promo_Result (inStartDate:= '21.09.2017', inEndDate:= '21.09.2017', inIsPromo:= TRUE, inIsTender:= FALSE, inIsGoodsKind:= true, inUnitId:= 0, inRetailId:= 0, inMovementId:= 0, inJuridicalId:= 0, inSession:= zfCalc_UserAdmin());
