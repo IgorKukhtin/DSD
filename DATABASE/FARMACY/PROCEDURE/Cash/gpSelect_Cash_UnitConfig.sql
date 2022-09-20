@@ -34,7 +34,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isRemovingPrograms Boolean, ExpressVIPConfirm Integer, isErrorRROToVIP Boolean, 
                LayoutFileCount Integer, LayoutFileID Integer, FilesToCheckCount Integer, FilesToCheckID Integer, 
                isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean,
-               MinPriceSale TFloat, DeviationsPrice1303 TFloat, SetDateRRO TDateTime, isSetDateRRO boolean
+               MinPriceSale TFloat, DeviationsPrice1303 TFloat, SetDateRRO TDateTime, isSetDateRRO boolean, SetDateRROList TVarChar
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -416,6 +416,7 @@ BEGIN
        , tmpCashSettings.DeviationsPrice1303
        , ObjectDate_SetDateRRO.ValueData                                                  AS SetDateRRO 
        , ObjectString_SetDateRROList.ValueData LIKE '%'||zfConvert_DateToString (CURRENT_DATE)||'%'   AS isSetDateRRO 
+       , ObjectString_SetDateRROList.ValueData                                            AS SetDateRROList 
 
    FROM Object AS Object_Unit
 

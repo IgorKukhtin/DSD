@@ -163,7 +163,10 @@ BEGIN
                        MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData , 0) >= 199.50 AND
                        COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) <> 0 AND
                        COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 AND
-                       Movement_Check.StatusId = zc_Enum_Status_Complete() THEN 20 END::TFloat  AS ApplicationAward
+                       Movement_Check.StatusId = zc_Enum_Status_Complete() THEN 
+                       CASE WHEN MovementFloat_TotalSumm.ValueData > 1000 
+                            THEN ROUND(MovementFloat_TotalSumm.ValueData * 0.02, 2)
+                            ELSE 20 END END::TFloat  AS ApplicationAward
            
            , Movement_Check.isEmployeeMessage                             AS isEmployeeMessage
            

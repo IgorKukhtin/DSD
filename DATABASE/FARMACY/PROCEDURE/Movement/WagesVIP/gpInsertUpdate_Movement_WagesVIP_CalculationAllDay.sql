@@ -411,6 +411,9 @@ BEGIN
         (WITH  tmpUserReferals AS (SELECT Movement.OperDate
                                         , MLO_UserReferals.ObjectId                           AS UserId
                                         , MovementLinkObject_Unit.ObjectId                    AS UnitId
+                                        , CASE WHEN MovementFloat_TotalSumm.ValueData > 1000
+                                               THEN ROUND(MovementFloat_TotalSumm.ValueData * 0.02, 2)
+                                               ELSE 20 END                                    AS ApplicationAward
                                    FROM Movement
                                    
                                         INNER JOIN MovementLinkObject AS MLO_UserReferals
@@ -445,7 +448,7 @@ BEGIN
                                      AND (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0)) >= 199.50)
                                    
          SELECT tmpUserReferals.UserId
-             , (COUNT(*) * 20)::TFloat     AS SummaCalc
+             , SUM(tmpUserReferals.ApplicationAward)::TFloat     AS SummaCalc
          FROM tmpUserReferals
          GROUP BY tmpUserReferals.UserId);
                        

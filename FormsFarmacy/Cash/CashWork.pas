@@ -173,9 +173,9 @@ end;
 
 procedure TCashWorkForm.Button3Click(Sender: TObject);
 begin
-  if MainCashForm.UnitConfigCDS.FieldByName('isSetDateRRO').AsBoolean then
+  if POS(FormatDateTime('DD.MM.YYYY', Date), MainCashForm.UnitConfigCDS.FieldByName('SetDateRROList').AsString) > 0 then
   begin
-//    m_Cash.SetTime;
+    m_Cash.SetTime;
     if Abs(MinutesBetween(m_Cash.GetTime, Now)) > 2 then
     begin
       ShowMessage('Переведите время на РРО через FPWINX.');

@@ -285,8 +285,7 @@ end;
 
 procedure TCashFP3530T_NEW.SetTime;
 begin
-//  FPrinter.SETDT[DateTimeToStr(Now), Password];
-  FPrinter.SETDT[FormatDateTime('DDMMYYHHNN', Now), Password];
+  FPrinter.SETDT['', Password];
   СообщениеКА(FPrinter.GETERROR)
 end;
 
