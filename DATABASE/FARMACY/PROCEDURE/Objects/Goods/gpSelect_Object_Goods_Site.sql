@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , MakerName TVarChar, MakerNameUkr TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
              , Dosage TVarChar, Volume TVarChar, GoodsWhoCanName TVarChar, GoodsMethodApplId integer, GoodsMethodApplName TVarChar, GoodsSignOriginId  integer,  GoodsSignOriginName TVarChar
              , isExpDateExcSite boolean, isHideOnTheSite boolean
-             , DiscontSiteStart TDateTime, DiscontSiteEnd TDateTime, DiscontAmountSite TFloat, DiscontPercentSite TFloat
+             , DiscontSiteStart TDateTime, DiscontSiteEnd TDateTime, DiscontAmountSite TFloat, DiscontPercentSite TFloat, MultiplicityDiscontSite TFloat
              , isNotUploadSites Boolean
              , isPublishedSite Boolean
              , Multiplicity TFloat, isMultiplicityError boolean
@@ -172,6 +172,7 @@ BEGIN
            , Object_Goods_Retail.DiscontSiteEnd
            , Object_Goods_Retail.DiscontAmountSite
            , Object_Goods_Retail.DiscontPercentSite
+           , Object_Goods_Retail.MultiplicityDiscontSite
            , Object_Goods_Main.isNotUploadSites
            
            , Object_Goods_Main.isPublishedSite                                   AS isPublishedSite

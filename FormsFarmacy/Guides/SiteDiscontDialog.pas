@@ -38,6 +38,8 @@ type
     cxLabel2: TcxLabel;
     deStart: TcxDateEdit;
     cxLabel3: TcxLabel;
+    ceMultiplicityDiscontSite: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

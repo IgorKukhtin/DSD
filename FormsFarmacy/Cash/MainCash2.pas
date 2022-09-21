@@ -3564,6 +3564,7 @@ begin
 
         if (FieldByName('Multiplicity').asCurrency <> 0) and
           (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency)
+          and (FormParams.ParamByName('MobileDiscount').Value = 0)
           and (trunc(FieldByName('Amount').asCurrency /
           FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0) then
         begin
@@ -11542,9 +11543,9 @@ begin
                   FieldByName('Price').asCurrency));
 
               if (FieldByName('Multiplicity').asCurrency <> 0) and
-                (FieldByName('Price').asCurrency <> FieldByName('PriceSale')
-                .asCurrency) and
-                (trunc(FieldByName('Amount').asCurrency /
+                (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency)
+                and (FormParams.ParamByName('MobileDiscount').Value = 0)
+                and (trunc(FieldByName('Amount').asCurrency /
                 FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0) then
               begin
                 ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName')
