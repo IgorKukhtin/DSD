@@ -1389,7 +1389,9 @@ uses
   Report_JuridicalDefermentPayment365 in '..\..\Forms\Report\Report_JuridicalDefermentPayment365.pas' {Report_JuridicalDefermentPayment365Form: TParentForm},
   Unit_Personal in '..\..\Forms\Guides\Unit_Personal.pas' {Unit_PersonalForm: TParentForm},
   Report_SaleExternal_Goods in '..\..\Forms\Report\Report_SaleExternal_Goods.pas' {Report_SaleExternal_GoodsForm: TParentForm},
-  Report_SaleExternal_GoodsDialog in '..\..\Forms\Report\Report_SaleExternal_GoodsDialog.pas' {Report_SaleExternal_GoodsDialogForm: TParentForm};
+  Report_SaleExternal_GoodsDialog in '..\..\Forms\Report\Report_SaleExternal_GoodsDialog.pas' {Report_SaleExternal_GoodsDialogForm: TParentForm},
+  TelegramGroup in '..\..\Forms\Guides\TelegramGroup.pas' {TelegramGroupForm: TParentForm},
+  TelegramGroupEdit in '..\..\Forms\Guides\TelegramGroupEdit.pas' {TelegramGroupEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

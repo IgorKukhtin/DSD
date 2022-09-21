@@ -1,4 +1,4 @@
-unit AreaEdit;
+unit TelegramGroupEdit;
 
 interface
 
@@ -18,11 +18,10 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdGuides, cxMaskEdit, cxButtonEdit;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TAreaEditForm = class(TParentForm)
+  TTelegramGroupEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -38,9 +37,10 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxLabel9: TcxLabel;
+    edTelegramId: TcxTextEdit;
+    edTelegramBotToken: TcxTextEdit;
     cxLabel3: TcxLabel;
-    edTelegramGroup: TcxButtonEdit;
-    GuidesTelegramGroup: TdsdGuides;
   private
     { Private declarations }
   public
@@ -52,6 +52,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TAreaEditForm);
+  RegisterClass(TTelegramGroupEditForm);
 
 end.

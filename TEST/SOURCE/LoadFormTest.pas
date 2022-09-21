@@ -221,6 +221,7 @@ type
     procedure LoadTransferDebtOutFormTest;
     procedure LoadTransferDebtInFormTest;
     procedure LoadTradeMarkFormTest;
+    procedure LoadTelegramGroupFormTest;
     procedure LoadToolsWeighingFormTest;
     procedure LoadVisitFormTest;
     procedure LoadUnionFormTest;
@@ -3308,7 +3309,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TToolsWeighingPlace_ObjectForm');
 end;
 
-
+procedure TLoadFormTest.LoadTelegramGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTelegramGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTelegramGroupEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTelegramGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTelegramGroupForm');
+end;
 
 {procedure TLoadFormTest.LoadUnitGroupFormTest;
 begin

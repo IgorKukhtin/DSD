@@ -1,7 +1,7 @@
-object AreaForm: TAreaForm
+object TelegramGroupForm: TTelegramGroupForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1077#1075#1080#1086#1085#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1090#1077#1083#1077#1075#1088#1072#1084'>'
   ClientHeight = 311
   ClientWidth = 651
   Color = clBtnFace
@@ -70,11 +70,19 @@ object AreaForm: TAreaForm
         Options.Editing = False
         Width = 78
       end
-      object TelegramGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1077#1083#1077#1075#1088#1072#1084
-        DataBinding.FieldName = 'TelegramGroupName'
+      object TelegramId: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
+        DataBinding.FieldName = 'TelegramId'
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1043#1088#1091#1087#1087#1072' '#1090#1077#1083#1077#1075#1088#1072#1084
+        HeaderHint = #1043#1088#1091#1087#1087#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 182
+      end
+      object TelegramBotToken: TcxGridDBColumn
+        Caption = #1058#1086#1082#1077#1085' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090#1072' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
+        DataBinding.FieldName = 'TelegramBotToken'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1058#1086#1082#1077#1085' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090#1072' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
         Options.Editing = False
         Width = 199
       end
@@ -262,8 +270,8 @@ object AreaForm: TAreaForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TAreaEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TTelegramGroupEditForm'
+      FormNameParam.Value = 'TTelegramGroupEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -280,10 +288,10 @@ object AreaForm: TAreaForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -298,8 +306,8 @@ object AreaForm: TAreaForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TAreaEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TTelegramGroupEditForm'
+      FormNameParam.Value = 'TTelegramGroupEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -382,8 +390,8 @@ object AreaForm: TAreaForm
       isShowModal = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Area'
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_TelegramGroup'
     DataSet = ClientDataSet
     DataSets = <
       item

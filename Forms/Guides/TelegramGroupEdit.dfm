@@ -1,8 +1,8 @@
-object AreaEditForm: TAreaEditForm
+object TelegramGroupEditForm: TTelegramGroupEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1077#1075#1080#1086#1085'>'
-  ClientHeight = 207
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1072' '#1090#1077#1083#1077#1075#1088#1072#1084'>'
+  ClientHeight = 247
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object AreaEditForm: TAreaEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 169
+    Top = 209
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object AreaEditForm: TAreaEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 169
+    Top = 209
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -59,22 +59,27 @@ object AreaEditForm: TAreaEditForm
     TabOrder = 5
     Width = 273
   end
-  object cxLabel3: TcxLabel
+  object cxLabel9: TcxLabel
     Left = 10
-    Top = 100
-    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1077#1083#1077#1075#1088#1072#1084
+    Top = 98
+    Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
   end
-  object edTelegramGroup: TcxButtonEdit
+  object edTelegramId: TcxTextEdit
     Left = 10
-    Top = 119
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
+    Top = 118
     TabOrder = 7
     Width = 273
+  end
+  object edTelegramBotToken: TcxTextEdit
+    Left = 10
+    Top = 162
+    TabOrder = 8
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 142
+    Caption = #1058#1086#1082#1077#1085' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090#1072' '#1074' '#1088#1072#1089#1089#1099#1083#1082#1077' '#1040#1082#1094#1080#1081
   end
   object ActionList: TActionList
     Left = 152
@@ -109,7 +114,7 @@ object AreaEditForm: TAreaEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Area'
+    StoredProcName = 'gpInsertUpdate_Object_TelegramGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -137,10 +142,18 @@ object AreaEditForm: TAreaEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inTelegramGroupId'
+        Name = 'inTelegramId'
         Value = Null
-        Component = GuidesTelegramGroup
-        ComponentItem = 'Key'
+        Component = edTelegramId
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTelegramBotToken'
+        Value = Null
+        Component = edTelegramBotToken
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -160,7 +173,7 @@ object AreaEditForm: TAreaEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Area'
+    StoredProcName = 'gpGet_Object_TelegramGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -186,17 +199,16 @@ object AreaEditForm: TAreaEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TelegramGroupId'
+        Name = 'TelegramId'
         Value = Null
-        Component = GuidesTelegramGroup
-        ComponentItem = 'Key'
+        Component = edTelegramId
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TelegramGroupName'
+        Name = 'TelegramBotToken'
         Value = Null
-        Component = GuidesTelegramGroup
-        ComponentItem = 'TextValue'
+        Component = edTelegramBotToken
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -222,35 +234,5 @@ object AreaEditForm: TAreaEditForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 224
     Top = 24
-  end
-  object GuidesTelegramGroup: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edTelegramGroup
-    FormNameParam.Value = 'TTelegramGroupForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TTelegramGroupForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesTelegramGroup
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesTelegramGroup
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 193
-    Top = 103
   end
 end
