@@ -9,7 +9,7 @@ uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj, Clipb
   cxGridDBTableView, frxClass, frxExportPDF, frxExportXLS, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
   System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, {IdMultipartFormData,}
-  Winapi.ActiveX, ZConnection, ZDataset, dxBar
+  Winapi.ActiveX, ZConnection, ZDataset, dxBar, DateUtils
   {$IFDEF DELPHI103RIO}, System.JSON, Actions {$ELSE} , Data.DBXJSON {$ENDIF}, Vcl.Graphics;
 
 type
@@ -1705,6 +1705,45 @@ type
     property InfoAfterExecute;
   end;
 
+  TdsdeSputnikContactsMessages = class(TdsdCustomAction)
+  private
+
+    FDataStart: TdsdParam;
+    FDataEnd: TdsdParam;
+    FUserName: TdsdParam;
+    FPassword: TdsdParam;
+    FPhone: TdsdParam;
+
+    FIdHTTP: TIdHTTP;
+    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+
+    FDataSet: TClientDataSet;
+
+  protected
+
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+
+    property DataStartParam: TdsdParam read FDataStart write FDataStart;
+    property DataEndParam: TdsdParam read FDataEnd write FDataEnd;
+    property UserNameParam: TdsdParam read FUserName write FUserName;
+    property PasswordParam: TdsdParam read FPassword write FPassword;
+    property PhoneParam: TdsdParam read FPhone write FPhone;
+
+    property DataSet: TClientDataSet read FDataSet write FDataSet;
+
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property QuestionBeforeExecute;
+    property ShortCut;
+    property SecondaryShortCuts;
+    property InfoAfterExecute;
+  end;
+
 procedure Register;
 
 implementation
@@ -1777,6 +1816,7 @@ begin
   RegisterActions('DSDLib', [TdsdVATNumberValidation], TdsdVATNumberValidation);
   RegisterActions('DSDLib', [TdsdLoadAgilis], TdsdLoadAgilis);
   RegisterActions('DSDLib', [TdsdLoadFile_https], TdsdLoadFile_https);
+  RegisterActions('DSDLib', [TdsdeSputnikContactsMessages], TdsdeSputnikContactsMessages);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -8149,6 +8189,155 @@ begin
     end;
   except  on E: Exception do
      ShowMessage('Ошибка получения файла: ' + E.Message);
+  end;
+
+end;
+
+{ TdsdeSputnikContactsMessages }
+
+constructor TdsdeSputnikContactsMessages.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FIdHTTP := TIdHTTP.Create;
+  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
+  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
+
+  FDataStart := TdsdParam.Create(nil);
+  FDataStart.DataType := ftDateTime;
+
+  FDataEnd := TdsdParam.Create(nil);
+  FDataEnd.DataType := ftDateTime;
+
+  FUserName := TdsdParam.Create(nil);
+  FUserName.DataType := ftString;
+  FUserName.Value := '';
+
+  FPassword := TdsdParam.Create(nil);
+  FPassword.DataType := ftString;
+  FPassword.Value := '';
+
+  FPhone := TdsdParam.Create(nil);
+  FPhone.DataType := ftString;
+  FPhone.Value := '';
+
+end;
+
+destructor TdsdeSputnikContactsMessages.Destroy;
+begin
+  FreeAndNil(FDataStart);
+  FreeAndNil(FDataEnd);
+  FreeAndNil(FUserName);
+  FreeAndNil(FPassword);
+  FreeAndNil(FPhone);
+
+  FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
+  FreeAndNil(FIdHTTP);
+  inherited;
+end;
+
+
+function TdsdeSputnikContactsMessages.LocalExecute: Boolean;
+var jsonItem : TJSONObject; jsonArray : TJSONArray;  jsonPair: TJSONPair;
+    S : String; I, nOffset, nMaxRows : Integer;
+    DataStart, DataEnd : TDateTime;
+begin
+  Result := False;
+
+  if not Assigned(FDataSet) then
+  begin
+    ShowMessage('Не определен источник данных.');
+    Exit;
+  end;
+
+  if FPhone.Value = '' then
+  begin
+    ShowMessage('Не заполнен номер телефона.');
+    Exit;
+  end;
+
+  nOffset := 0;
+  nMaxRows := 50;
+  S := '';
+  try
+    DataStart := FDataStart.Value;
+  except
+    DataStart := IncMonth(Date, - 1);
+  end;
+
+  try
+    DataEnd := FDataEnd.Value;
+  except
+    DataEnd := Date;
+  end;
+
+  FDataSet.DisableControls;
+  try
+
+    if FDataSet.Active then FDataSet.Close;
+    FDataSet.FieldDefs.Clear;
+    FDataSet.FieldDefs.Add('sentDateTime', ftDateTime);
+    FDataSet.FieldDefs.Add('activityStatus', ftString, 255);
+    FDataSet.FieldDefs.Add('text', ftString, 1100);
+    FDataSet.CreateDataSet;
+
+    FIdHTTP.Request.Clear;
+    FIdHTTP.Request.CustomHeaders.Clear;
+    FIdHTTP.Request.ContentType := 'application/json';
+    FIdHTTP.Request.Accept := 'application/json';
+    FIdHTTP.Request.AcceptEncoding := 'gzip, deflate';
+    FIdHTTP.Request.Connection := 'keep-alive';
+    FIdHTTP.Request.ContentEncoding := 'utf-8';
+    FIdHTTP.Request.BasicAuthentication := True;
+    FIdHTTP.Request.Username := FUserName.Value;
+    FIdHTTP.Request.Password := FPassword.Value;
+    FIdHTTP.Request.UserAgent:='';
+
+    while (Length(S) > 10) or (nOffset = 0) do
+    begin
+      try
+        S := FIdHTTP.Get(TIdURI.URLEncode('https://esputnik.com/api/v2/contacts/messages' + '?dateFrom=' + FormatDateTime('YYYY-MM-DD', DataStart) +
+                                                                                            '&dateTo=' + FormatDateTime('YYYY-MM-DD', DataEnd) +
+                                                                                            '&phone=' + FPhone.Value +
+                                                                                            '&offset=' + IntToStr(nOffset) +
+                                                                                            '&maxrows=' + IntToStr(nMaxRows)));
+
+        if FIdHTTP.ResponseCode = 200 then
+        begin
+          jsonArray := TJSONObject.ParseJSONValue(S) as TJSONArray;
+          try
+            for I := 0 to jsonArray.Size - 1 do
+            begin
+              jsonItem := jsonArray.Get(I) as TJSONObject;
+              FDataSet.Last;
+              FDataSet.Append;
+              try
+                FDataSet.FieldByName('sentDateTime').AsDateTime := gfXSStrToDate(jsonItem.Get('sentDateTime').JsonValue.Value);
+              except
+              end;
+              if jsonItem.Get('activityStatus').JsonValue.Value = 'DELIVERED' then
+                FDataSet.FieldByName('activityStatus').AsString := 'Доставлено'
+              else FDataSet.FieldByName('activityStatus').AsString := 'Не доставлено';
+              FDataSet.FieldByName('text').AsString := jsonItem.Get('text').JsonValue.Value;
+              FDataSet.Post;
+            end;
+          finally
+            FreeAndNil(jsonArray);
+          end;
+        end else ShowMessage(FIdHTTP.ResponseText);
+
+      except  on E: Exception do
+         ShowMessage('Ошибка получения истории сообщений для контакта: ' + E.Message);
+      end;
+
+      nOffset := nOffset + nMaxRows;
+    end;
+
+    Result := True;
+  finally
+    FDataSet.EnableControls;
   end;
 
 end;

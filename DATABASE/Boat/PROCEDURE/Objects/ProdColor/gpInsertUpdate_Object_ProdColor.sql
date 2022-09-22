@@ -1,12 +1,14 @@
 -- Торговая марка
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColor (Integer, Integer, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColor (Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColor (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColor(
  INOUT ioId              Integer,       -- ключ объекта <Бренд>
  INOUT ioCode            Integer,       -- свойство <Код Бренда>
     IN inName            TVarChar,      -- главное Название Бренда
     IN inComment         TVarChar,      -- 
+    IN inValue           TVarChar,      --
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -15,6 +17,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
    DECLARE vbIsInsert Boolean;  
+   DECLARE vbColor_calc Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ProdColor());
@@ -34,6 +37,29 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColor_Comment(), ioId, inComment);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColor_Value(), ioId, inValue);
+   
+   IF inValue <> ''
+   THEN
+      BEGIN
+         EXECUTE('SELECT CAST(x'''||SUBSTRING(inValue, 2, 7)||''' AS INT8)') INTO vbColor_calc;
+      EXCEPTION
+         WHEN others THEN vbColor_calc := zc_Color_White();
+      END;     
+   ELSE
+     vbColor_calc := zc_Color_White();
+   END IF;
+
+   -- сохранили свойство <>
+   IF vbColor_calc <> zc_Color_White() OR
+      EXISTS(SELECT 1 FROM ObjectFloat
+             WHERE ObjectId = ioId AND DescId = zc_ObjectFloat_ProdColor_Value())
+   THEN
+     PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ProdColor_Value(), ioId, vbColor_calc);
+   END IF;
+   
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>

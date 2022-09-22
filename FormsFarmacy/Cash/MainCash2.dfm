@@ -6946,6 +6946,17 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object acteSputnikContactsMessages: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089#1086#1086#1073#1097#1077#1085#1080#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1072#1082#1090#1072
+      FormName = 'TeSputnikContactsMessagesForm'
+      FormNameParam.Value = 'TeSputnikContactsMessagesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7198,6 +7209,9 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N13033: TMenuItem
         Action = actChoiceGoodsFromRemains_1303
+      end
+      object N66: TMenuItem
+        Action = acteSputnikContactsMessages
       end
     end
     object N47: TMenuItem

@@ -3528,6 +3528,11 @@ end;
 
 procedure TLoadFormTest.LoadSystemFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TeSputnikContactsMessagesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TeSputnikContactsMessagesForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPhoneNoSeparatorDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPhoneNoSeparatorDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUkraineAlarmForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUkraineAlarmForm');
 
