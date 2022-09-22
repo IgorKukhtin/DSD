@@ -114,6 +114,14 @@ inherited Report_SaleExternal_GoodsForm: TReport_SaleExternal_GoodsForm
             Options.Editing = False
             Width = 100
           end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
@@ -149,10 +157,35 @@ inherited Report_SaleExternal_GoodsForm: TReport_SaleExternal_GoodsForm
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 120
+          end
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 172
+          end
+          object GroupStatName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+            DataBinding.FieldName = 'GroupStatName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsGroupAnalystName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+            DataBinding.FieldName = 'GoodsGroupAnalystName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -194,7 +227,7 @@ inherited Report_SaleExternal_GoodsForm: TReport_SaleExternal_GoodsForm
             Width = 45
           end
           object AmountSh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'AmountSh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -205,7 +238,7 @@ inherited Report_SaleExternal_GoodsForm: TReport_SaleExternal_GoodsForm
             Width = 80
           end
           object AmountKg: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086', '#1082#1075
+            Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089
             DataBinding.FieldName = 'AmountKg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -221,6 +254,7 @@ inherited Report_SaleExternal_GoodsForm: TReport_SaleExternal_GoodsForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -232,6 +266,7 @@ inherited Report_SaleExternal_GoodsForm: TReport_SaleExternal_GoodsForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

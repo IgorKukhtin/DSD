@@ -52,6 +52,7 @@ type
     GuidesJuridical: TdsdGuides;
     cbContract: TcxCheckBox;
     actRefreshContract: TdsdDataSetRefresh;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

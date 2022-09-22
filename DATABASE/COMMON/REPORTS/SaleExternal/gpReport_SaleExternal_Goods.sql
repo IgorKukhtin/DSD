@@ -12,12 +12,12 @@ CREATE OR REPLACE FUNCTION gpReport_SaleExternal_Goods(
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , FromName TVarChar
+             , RetailName TVarChar, FromName TVarChar
              , PartnerId_from Integer, PartnerName_from TVarChar
              , PartnerRealId Integer, PartnerRealName TVarChar
              , GoodsPropertyName TVarChar 
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar             
+             , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, GroupStatName TVarChar, GoodsGroupAnalystName TVarChar            
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
 
              , AmountSh TFloat
@@ -108,6 +108,7 @@ BEGIN
                              , Object_PartnerReal.Id          AS PartnerRealId 
                              , Object_PartnerReal.ValueData   AS PartnerRealName
                              , Object_PartnerReal.DescId      AS PartnerRealDescId
+                             , Object_Retail.ValueData        AS RetailName
                         FROM tmpMovement
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                           ON MovementLinkObject_From.MovementId = tmpMovement.Id
@@ -126,6 +127,7 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_Retail
                                                   ON ObjectLink_Retail.ObjectId = Object_From.Id
                                                  AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
+                             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Retail.ChildObjectId
                              --если не указано РЦ считаем и группируем по Торг. сети
                              LEFT JOIN Object AS Object_PartnerReal ON Object_PartnerReal.Id = COALESCE (ObjectLink_PartnerReal.ChildObjectId, ObjectLink_Retail.ChildObjectId)
 
@@ -194,6 +196,7 @@ BEGIN
                       , Movement.OperDate           AS OperDate
                       , Object_Status.ObjectCode    AS StatusCode
                       , Object_Status.ValueData     AS StatusName
+                      , Movement.RetailName
                       , Movement.FromName
                       , Movement.PartnerId_from
                       , Movement.PartnerName_from
@@ -217,7 +220,8 @@ BEGIN
            , tmpData.InvNumber
            , tmpData.OperDate
            , tmpData.StatusCode
-           , tmpData.StatusName
+           , tmpData.StatusName 
+           , tmpData.RetailName
            , tmpData.FromName
            , tmpData.PartnerId_from
            , tmpData.PartnerName_from
@@ -229,6 +233,10 @@ BEGIN
            , Object_Goods.ObjectCode  		AS GoodsCode
            , Object_Goods.ValueData   		AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_GoodsGroup.ValueData                 AS GoodsGroupName
+           , Object_GoodsGroupStat.ValueData             AS GroupStatName
+           , Object_GoodsGroupAnalyst.ValueData          AS GoodsGroupAnalystName
+            
            , Object_GoodsKind.Id        	AS GoodsKindId
            , Object_GoodsKind.ValueData 	AS GoodsKindName
            , Object_Measure.ValueData       AS MeasureName
@@ -251,6 +259,20 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpData.GoodsId
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+                                 ON ObjectLink_Goods_GoodsGroupStat.ObjectId = tmpData.GoodsId
+                                AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
+            LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                 ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = tmpData.GoodsId
+                                AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+            LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
 
       ;
 
