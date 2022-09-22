@@ -20,6 +20,8 @@ inherited GoodsSiteForm: TGoodsSiteForm
       inherited cxGrid: TcxGrid
         Width = 1178
         Height = 518
+        ExplicitLeft = 3
+        ExplicitTop = -3
         ExplicitWidth = 1178
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -356,6 +358,17 @@ inherited GoodsSiteForm: TGoodsSiteForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 76
+          end
+          object MultiplicityDiscontSite: TcxGridDBColumn
+            Caption = #9#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1077' '#1085#1072' '#1089#1072#1081#1090#1077' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            DataBinding.FieldName = 'MultiplicityDiscontSite'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
           end
           object isNotUploadSites: TcxGridDBColumn
             Caption = #1053#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1090#1086#1088#1086#1085#1085#1080#1093' '#1089#1072#1081#1090#1086#1074
@@ -1056,6 +1069,14 @@ inherited GoodsSiteForm: TGoodsSiteForm
           Value = Null
           Component = FormParams
           ComponentItem = 'DiscontAmountSite'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MultiplicityDiscontSite'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MultiplicityDiscontSite'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -3074,6 +3095,12 @@ inherited GoodsSiteForm: TGoodsSiteForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'MultiplicityDiscontSite'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MySQL_Host'
         Value = Null
         DataType = ftString
@@ -3641,6 +3668,15 @@ inherited GoodsSiteForm: TGoodsSiteForm
         Value = Null
         Component = FormParams
         ComponentItem = 'DiscontAmountSite'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMultiplicityDiscontSite'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MultiplicityDiscontSite'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

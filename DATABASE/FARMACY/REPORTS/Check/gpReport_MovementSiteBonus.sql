@@ -14,6 +14,9 @@ RETURNS TABLE (BuyerForSiteId         Integer
              , Bonus_Used             TFloat
              , MobileDiscount         TFloat
              , MobileDiscount_Compl   TFloat
+             , Bonus_Balance          TFloat
+             , Bonus_Add              TFloat
+             , Bonus_Added            TFloat
              )
 AS
 $BODY$
@@ -33,6 +36,10 @@ BEGIN
         , SUM(MovementSiteBonus.Bonus_Used)::TFloat            AS Bonus_Used
         , SUM(MovementFloat_MobileDiscount.ValueData)::TFloat  AS MobileDiscount
         , SUM(CASE WHEN Movement.StatusId = zc_Enum_Status_Complete() THEN MovementFloat_MobileDiscount.ValueData END)::TFloat  AS MobileDiscount_Compl
+
+        , ObjectString_BuyerForSite_Bonus.ValueData            AS Bonus_Balance
+        , ObjectString_BuyerForSite_BonusAdd.ValueData         AS Bonus_Add
+        , ObjectString_BuyerForSite_BonusAdded.ValueData       AS Bonus_Added
    FROM MovementSiteBonus
 
         LEFT JOIN Object AS Object_BuyerForSite 
@@ -49,10 +56,23 @@ BEGIN
                                 ON MovementFloat_MobileDiscount.MovementId =  Movement.Id
                                AND MovementFloat_MobileDiscount.DescId = zc_MovementFloat_MobileDiscount()
                          
+        LEFT JOIN ObjectFloat AS ObjectString_BuyerForSite_Bonus
+                              ON ObjectString_BuyerForSite_Bonus.ObjectId = Object_BuyerForSite.Id 
+                             AND ObjectString_BuyerForSite_Bonus.DescId = zc_ObjectFloat_BuyerForSite_Bonus()
+        LEFT JOIN ObjectFloat AS ObjectString_BuyerForSite_BonusAdd
+                              ON ObjectString_BuyerForSite_BonusAdd.ObjectId = Object_BuyerForSite.Id 
+                             AND ObjectString_BuyerForSite_BonusAdd.DescId = zc_ObjectFloat_BuyerForSite_BonusAdd()
+        LEFT JOIN ObjectFloat AS ObjectString_BuyerForSite_BonusAdded
+                              ON ObjectString_BuyerForSite_BonusAdded.ObjectId = Object_BuyerForSite.Id 
+                             AND ObjectString_BuyerForSite_BonusAdded.DescId = zc_ObjectFloat_BuyerForSite_BonusAdded()
+
    GROUP BY Object_BuyerForSite.Id
           , Object_BuyerForSite.ObjectCode
           , Object_BuyerForSite.ValueData
           , ObjectString_BuyerForSite_Phone.ValueData 
+          , ObjectString_BuyerForSite_Bonus.ValueData
+          , ObjectString_BuyerForSite_BonusAdd.ValueData
+          , ObjectString_BuyerForSite_BonusAdded.ValueData
    HAVING SUM(MovementSiteBonus.Bonus) <> 0 OR SUM(MovementSiteBonus.Bonus_Used) <> 0 OR inShowAll = True;
 
 END;

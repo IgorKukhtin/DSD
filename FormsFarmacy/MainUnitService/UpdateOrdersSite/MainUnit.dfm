@@ -59,7 +59,7 @@ object MainForm: TMainForm
       TabOrder = 3
     end
     object btnOpen: TButton
-      Left = 520
+      Left = 504
       Top = 2
       Width = 201
       Height = 25
@@ -75,7 +75,7 @@ object MainForm: TMainForm
       TabOrder = 5
     end
     object btnPharmOrderBonuses: TButton
-      Left = 760
+      Left = 736
       Top = 2
       Width = 105
       Height = 25
@@ -83,7 +83,7 @@ object MainForm: TMainForm
       TabOrder = 6
     end
     object btnInsertUpdate_MovementSiteBonus: TButton
-      Left = 871
+      Left = 863
       Top = 2
       Width = 105
       Height = 25
@@ -922,6 +922,176 @@ object MainForm: TMainForm
         end>
       Caption = 'actUpdate_MobileFirstOrder'
     end
+    object actPharmUsersProfile: TdsdForeignData
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actSite_Param
+      ZConnection.ControlsCodePage = cCP_UTF16
+      ZConnection.ClientCodepage = 'utf8'
+      ZConnection.Catalog = ''
+      ZConnection.Properties.Strings = (
+        'codepage=utf8')
+      ZConnection.HostName = ''
+      ZConnection.Port = 0
+      ZConnection.Database = ''
+      ZConnection.User = ''
+      ZConnection.Password = ''
+      ZConnection.Protocol = 'mysql-5'
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'MySQL_Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'MySQL_Port'
+      PortParam.MultiSelectSeparator = ','
+      UserNameParam.Value = Null
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'MySQL_Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'MySQL_Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DataBase.Value = Null
+      DataBase.Component = FormParams
+      DataBase.ComponentItem = 'MySQL_DataBase'
+      DataBase.DataType = ftString
+      DataBase.MultiSelectSeparator = ','
+      SQLParam.Value = ''
+      SQLParam.DataType = ftString
+      SQLParam.MultiSelectSeparator = ','
+      DataSet = PharmUsersProfileCDS
+      Params = <>
+      UpdateFields = <>
+      JsonParam.Value = ''
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+        end>
+      ShowGaugeForm = False
+      Caption = #1055#1077#1088#1074#1072#1103' '#1087#1086#1082#1091#1087#1082#1072' '#1080' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+      Hint = #1055#1077#1088#1074#1072#1103' '#1087#1086#1082#1091#1087#1082#1072' '#1080' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+    end
+    object mactUpdate_BuyerForSiteBonus: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actSite_Param
+      ActionList = <
+        item
+          Action = actUpdate_BuyerForSiteBonus
+        end>
+      DataSource = PharmUsersProfileDS
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+    end
+    object actUpdate_BuyerForSiteBonus: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_BuyerForSite_Bonus
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_BuyerForSite_Bonus
+        end>
+      Caption = 'actUpdate_BuyerForSiteBonus'
+    end
+    object actSelect_BuyerForSite_BonusAdd: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_BuyerForSite_BonusAdd
+      StoredProcList = <
+        item
+          StoredProc = spSelect_BuyerForSite_BonusAdd
+        end>
+      Caption = 'actSelect_BuyerForSite_BonusAdd'
+    end
+    object actUpdatePharmUsersProfile: TdsdForeignData
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actSite_Param
+      ZConnection.ControlsCodePage = cCP_UTF16
+      ZConnection.ClientCodepage = 'utf8'
+      ZConnection.Catalog = ''
+      ZConnection.Properties.Strings = (
+        'codepage=utf8')
+      ZConnection.HostName = ''
+      ZConnection.Port = 0
+      ZConnection.Database = ''
+      ZConnection.User = ''
+      ZConnection.Password = ''
+      ZConnection.Protocol = 'mysql-5'
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'MySQL_Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'MySQL_Port'
+      PortParam.MultiSelectSeparator = ','
+      UserNameParam.Value = Null
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'MySQL_Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'MySQL_Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DataBase.Value = Null
+      DataBase.Component = FormParams
+      DataBase.ComponentItem = 'MySQL_DataBase'
+      DataBase.DataType = ftString
+      DataBase.MultiSelectSeparator = ','
+      SQLParam.Value = ''
+      SQLParam.Component = BuyerForSiteBonusAddCDS
+      SQLParam.ComponentItem = 'SQL'
+      SQLParam.DataType = ftString
+      SQLParam.MultiSelectSeparator = ','
+      TypeTransaction = ttExecSQL
+      Params = <>
+      UpdateFields = <>
+      JsonParam.Value = ''
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+        end>
+      ShowGaugeForm = False
+      Caption = 'actUpdatePharmUsersProfile'
+    end
+    object actUpdate_BuyerForSite_BonusAdded: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_BuyerForSite_BonusAdded
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_BuyerForSite_BonusAdded
+        end>
+      Caption = 'actUpdate_BuyerForSiteBonus'
+    end
+    object mactUpdatePharmUsersProfile: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdatePharmUsersProfile
+        end
+        item
+          Action = actUpdate_BuyerForSite_BonusAdded
+        end>
+      DataSource = BuyerForSiteBonusAddDS
+      Caption = #1050#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1073#1086#1085#1091#1089#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+      Hint = #1050#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1073#1086#1085#1091#1089#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1143,5 +1313,82 @@ object MainForm: TMainForm
     DataSet = MobileFirstOrderCDS
     Left = 1088
     Top = 172
+  end
+  object PharmUsersProfileCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 552
+    Top = 376
+  end
+  object PharmUsersProfileDS: TDataSource
+    DataSet = PharmUsersProfileCDS
+    Left = 656
+    Top = 380
+  end
+  object spUpdate_BuyerForSite_Bonus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_BuyerForSite_Bonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCode'
+        Value = 44747d
+        Component = PharmUsersProfileCDS
+        ComponentItem = 'user_id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonus'
+        Value = Null
+        Component = PharmUsersProfileCDS
+        ComponentItem = 'bonus_amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 776
+    Top = 381
+  end
+  object spSelect_BuyerForSite_BonusAdd: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_BuyerForSite_BonusAdd'
+    DataSet = BuyerForSiteBonusAddCDS
+    DataSets = <
+      item
+        DataSet = BuyerForSiteBonusAddCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 552
+    Top = 437
+  end
+  object BuyerForSiteBonusAddDS: TDataSource
+    DataSet = BuyerForSiteBonusAddCDS
+    Left = 896
+    Top = 428
+  end
+  object BuyerForSiteBonusAddCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 736
+    Top = 432
+  end
+  object spUpdate_BuyerForSite_BonusAdded: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_BuyerForSite_BonusAdded'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = BuyerForSiteBonusAddCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1048
+    Top = 429
   end
 end

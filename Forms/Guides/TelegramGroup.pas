@@ -1,4 +1,4 @@
-unit Area;
+unit TelegramGroup;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TAreaForm = class(TParentForm)
+  TTelegramGroupForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -36,7 +36,7 @@ type
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     bbSetErased: TdxBarButton;
@@ -56,7 +56,8 @@ type
     actInsert: TdsdInsertUpdateAction;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    TelegramGroupName: TcxGridDBColumn;
+    TelegramId: TcxGridDBColumn;
+    TelegramBotToken: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -68,6 +69,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TAreaForm);
+  RegisterClass(TTelegramGroupForm);
 
 end.

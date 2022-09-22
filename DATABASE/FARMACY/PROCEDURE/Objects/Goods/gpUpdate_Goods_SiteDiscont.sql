@@ -1,14 +1,15 @@
 -- Function: gpUpdate_Goods_SiteDiscont()
 
-DROP FUNCTION IF EXISTS gpUpdate_Goods_SiteDiscont(Integer, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_SiteDiscont(Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_SiteDiscont(
-    IN inGoodsId             Integer   ,    -- ключ объекта <Товар>
-    IN inDiscontSiteStart    TDateTime ,    -- Дата начало скидки на сайте
-    IN inDiscontSiteEnd      TDateTime ,    -- Дата окончания скидки на сайте
-    IN inDiscontPercentSite  TFloat    ,    -- Сумма скидки на сайте
-    IN inDiscontAmountSite   TFloat    ,    -- Процент скидки на сайте
-    IN inSession             TVarChar       -- текущий пользователь
+    IN inGoodsId                 Integer   ,    -- ключ объекта <Товар>
+    IN inDiscontSiteStart        TDateTime ,    -- Дата начало скидки на сайте
+    IN inDiscontSiteEnd          TDateTime ,    -- Дата окончания скидки на сайте
+    IN inDiscontPercentSite      TFloat    ,    -- Процент скидки на сайте
+    IN inDiscontAmountSite       TFloat    ,    -- Сумма скидки на сайте
+    IN inMultiplicityDiscontSite TFloat    ,    -- Кратность при продаже на сайте со скидкой
+    IN inSession                 TVarChar       -- текущий пользователь
 )
 RETURNS VOID AS
 $BODY$
@@ -24,13 +25,15 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_DiscontSiteEnd(), inGoodsId, inDiscontSiteEnd);
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_DiscontAmountSite(), inGoodsId, inDiscontAmountSite);
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_DiscontPercentSite(), inGoodsId, inDiscontPercentSite);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MultiplicityDiscontSite(), inGoodsId, inMultiplicityDiscontSite);
    
     -- Сохранили в плоскую таблицй
    BEGIN
-     UPDATE Object_Goods_Retail SET DiscontSiteStart   = inDiscontSiteStart
-                                  , DiscontSiteEnd     = inDiscontSiteEnd
-                                  , DiscontPercentSite = inDiscontPercentSite
-                                  , DiscontAmountSite  = inDiscontAmountSite
+     UPDATE Object_Goods_Retail SET DiscontSiteStart         = inDiscontSiteStart
+                                  , DiscontSiteEnd           = inDiscontSiteEnd
+                                  , DiscontPercentSite       = inDiscontPercentSite
+                                  , DiscontAmountSite        = inDiscontAmountSite
+                                  , MultiplicityDiscontSite  = inMultiplicityDiscontSite
      WHERE Object_Goods_Retail.Id = inGoodsId;  
    EXCEPTION
       WHEN others THEN 

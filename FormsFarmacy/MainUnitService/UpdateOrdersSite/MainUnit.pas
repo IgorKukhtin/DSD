@@ -114,6 +114,20 @@ type
     mactUpdate_MobileFirstOrder: TMultiAction;
     actUpdate_MobileFirstOrder: TdsdExecStoredProc;
     MobileFirstOrderDS: TDataSource;
+    mactUpdate_BuyerForSiteBonus: TMultiAction;
+    actUpdate_BuyerForSiteBonus: TdsdExecStoredProc;
+    actPharmUsersProfile: TdsdForeignData;
+    PharmUsersProfileCDS: TClientDataSet;
+    PharmUsersProfileDS: TDataSource;
+    spUpdate_BuyerForSite_Bonus: TdsdStoredProc;
+    spSelect_BuyerForSite_BonusAdd: TdsdStoredProc;
+    BuyerForSiteBonusAddDS: TDataSource;
+    BuyerForSiteBonusAddCDS: TClientDataSet;
+    actSelect_BuyerForSite_BonusAdd: TdsdExecStoredProc;
+    actUpdatePharmUsersProfile: TdsdForeignData;
+    mactUpdatePharmUsersProfile: TMultiAction;
+    spUpdate_BuyerForSite_BonusAdded: TdsdStoredProc;
+    actUpdate_BuyerForSite_BonusAdded: TdsdExecStoredProc;
     procedure btnAllClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -200,6 +214,14 @@ begin
 
   if actPharmMobileFirstOrder.Execute then mactUpdate_MobileFirstOrder.Execute;
 
+  Add_Log('Загрузка "Загрузка остатка бонуса по покупателю".');
+
+  if actPharmUsersProfile.Execute then mactUpdate_BuyerForSiteBonus.Execute;
+
+  Add_Log('Загрузка "Коректировка бонуса покупателей".');
+
+  if actSelect_BuyerForSite_BonusAdd.Execute then mactUpdatePharmUsersProfile.Execute;
+
   Add_Log('Выполнено.');
 
   ini := TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
@@ -242,6 +264,21 @@ begin
   actPharmMobileFirstOrder.SQLParam.Value := 'select pharm_orders.pharmacy_order_id '#13 +
                                              'from pharm_orders'#13 +
                                              'where pharm_orders.promo_code = ''MOBILE-FIRST-ORDER'' and pharm_orders.created_at > CURRENT_DATE() - 1';
+
+  actPharmUsersProfile.SQLParam.Value := 'WITH tmpUserAll AS (select pharm_orders.user_id '#13 +
+                                         '                    from pharm_order_bonuses '#13 +
+                                         '                         INNER JOIN pharm_orders ON pharm_orders.id = pharm_order_bonuses.order_id '#13 +
+                                         '                    where  pharm_orders.user_id is not Null and pharm_orders.created_at > CURRENT_DATE() - 5 '#13 +
+                                         '                    UNION ALL '#13 +
+                                         '                    select pharm_orders.user_id '#13 +
+                                         '                    from pharm_orders '#13 +
+                                         '                    where pharm_orders.user_id is not Null and pharm_orders.bonus_used <> 0 and pharm_orders.created_at > CURRENT_DATE() - 5) '#13 +
+                                         '             , tmpUser AS (SELECT DISTINCT tmpUserAll.user_id FROM tmpUserAll) '#13 +
+                                         'select users_profile.user_id, users_profile.bonus_amount '#13 +
+                                         'from users_profile '#13 +
+                                         '     left join tmpUser ON tmpUser.user_id =  users_profile.user_id '#13 +
+                                         'where COALESCE (tmpUser.user_id, 0) <> 0';
+
 
   if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
   begin

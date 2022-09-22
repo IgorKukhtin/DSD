@@ -203,6 +203,7 @@ type
     maUpdate_isMultiplicityError: TMultiAction;
     actExecUpdate_isMultiplicityError: TdsdExecStoredProc;
     dxBarButton28: TdxBarButton;
+    MultiplicityDiscontSite: TcxGridDBColumn;
   private
     { Private declarations }
   public

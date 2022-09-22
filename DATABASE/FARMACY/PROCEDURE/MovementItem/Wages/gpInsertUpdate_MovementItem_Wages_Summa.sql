@@ -204,7 +204,7 @@ BEGIN
              INNER JOIN Movement ON Movement.Id = MovementItem.MovementId 
         WHERE MovementItem.ID = ioId;
       
-/*        IF inisIssuedBy = TRUE AND vbOperDate >= '01.10.2019' AND 
+        IF inisIssuedBy = TRUE AND vbOperDate >= '01.10.2019' AND 
            NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) AND
            EXISTS(SELECT MovementItem.ObjectId 
                   FROM MovementItem 
@@ -238,7 +238,7 @@ BEGIN
                      MovementItemBoolean.DescId = zc_MIBoolean_isTestingUser()), FALSE) = FALSE)
         THEN
           RAISE EXCEPTION 'Ошибка. Сотрудник не сдал экзамен. Выдача зарплаты запрещена.';            
-        END IF;*/
+        END IF;
 
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_IssuedBy(), ioId, CURRENT_TIMESTAMP);
       

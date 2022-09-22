@@ -66,6 +66,11 @@ type
     actShowAll: TBooleanStoredProcAction;
     dxBarButton1: TdxBarButton;
     Phone: TcxGridDBColumn;
+    Bonus_Balance: TcxGridDBColumn;
+    Bonus_Add: TcxGridDBColumn;
+    Bonus_Added: TcxGridDBColumn;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    spUpdate_BonusAdd: TdsdStoredProc;
   private
   public
   end;

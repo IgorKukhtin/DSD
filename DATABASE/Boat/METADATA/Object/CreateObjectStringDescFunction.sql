@@ -316,9 +316,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Id_Site() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Id_Site', zc_Object_ProdOptions(), 'Id Сайт' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Id_Site');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_ProdColor_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ProdColor_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ProdColor_Value', zc_Object_ProdColor(), 'Значение цвета' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ProdColor_Value');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 22.09.22                                                       * zc_ObjectString_ProdColor_Value
  21.04.21         * zc_ObjectString_ProductDocument_Comment
  20.04.21         * zc_ObjectString_DocTag_Comment
                     zc_ObjectString_GoodsDocument_Comment

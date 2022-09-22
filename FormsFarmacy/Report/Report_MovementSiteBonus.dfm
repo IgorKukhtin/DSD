@@ -3,7 +3,7 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
   Top = 0
   Caption = #1041#1086#1085#1091#1089#1099' '#1087#1086' '#1082#1083#1080#1077#1085#1090#1072#1084' '#1086#1090' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
   ClientHeight = 440
-  ClientWidth = 803
+  ClientWidth = 1082
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,11 +19,11 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 803
+    Width = 1082
     Height = 414
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 697
+    ExplicitWidth = 803
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -197,6 +197,21 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
           Format = ',0.####;-,0.####; ;'
           Kind = skSum
           Column = AmountV1_PartionDate
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = Bonus_Balance
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = Bonus_Add
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = Bonus_Added
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -208,7 +223,6 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
       OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
@@ -261,6 +275,16 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
         Options.Editing = False
         Width = 101
       end
+      object Bonus_Balance: TcxGridDBColumn
+        Caption = #1054#1089#1090#1072#1090#1086#1082' '#1073#1086#1085#1091#1089#1072' ('#1089#1072#1081#1090')'
+        DataBinding.FieldName = 'Bonus_Balance'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
       object AmountV1_PartionDate: TcxGridDBColumn
         Caption = #1042' '#1079#1072#1082#1072#1079#1072#1093
         DataBinding.FieldName = 'MobileDiscount'
@@ -282,6 +306,25 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
+      end
+      object Bonus_Add: TcxGridDBColumn
+        Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082' '#1073#1086#1085#1091#1089#1091' ('#1072#1074#1090'. '#1086#1090#1087#1088#1072#1074#1080#1090#1100#1089#1103')'
+        DataBinding.FieldName = 'Bonus_Add'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object Bonus_Added: TcxGridDBColumn
+        Caption = #1041#1072#1083#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1086
+        DataBinding.FieldName = 'Bonus_Added'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 79
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -551,6 +594,18 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_BonusAdd
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_BonusAdd
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_MovementSiteBonus'
@@ -604,5 +659,31 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
     PropertiesCellList = <>
     Left = 392
     Top = 304
+  end
+  object spUpdate_BonusAdd: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_BuyerForSite_BonusAdd'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = False
+        Component = ClientDataSet
+        ComponentItem = 'BuyerForSiteId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonusAdd'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Bonus_Add'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 760
+    Top = 176
   end
 end

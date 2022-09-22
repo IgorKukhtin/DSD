@@ -1,20 +1,19 @@
 -- Function: gpInsertUpdate_Object_Area()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Area(
  INOUT ioId               Integer   ,     -- ключ объекта <Регионы> 
     IN inCode             Integer   ,     -- Код объекта  
     IN inName             TVarChar  ,     -- Название объекта 
-    IN inTelegramId       TVarChar  ,     -- Группа получателей в рассылке Акций
-    IN inTelegramBotToken TVarChar  ,     -- Токен отправителя телеграм бота в рассылке Акций
+    IN inTelegramGroupId  Integer   ,     -- Группа телеграм
     IN inSession          TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
     vbUserId:=lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Area());
@@ -23,21 +22,19 @@ BEGIN
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- Если код не установлен, определяем его каи последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Area());
+   inCode:=lfGet_ObjectCode (inCode, zc_Object_Area());
    
    -- проверка прав уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Area(), inName);
    -- проверка прав уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Area(), vbCode_calc);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Area(), inCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Area(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Area(), inCode, inName);
          
-   -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Area_TelegramId(), ioId, inTelegramId);
-   -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Area_TelegramBotToken(), ioId, inTelegramBotToken);
-   
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Area_TelegramGroup(), ioId, inTelegramGroupId);
+      
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -50,6 +47,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.09.22         *
  16.09.22         *
  14.11.13         *
 */

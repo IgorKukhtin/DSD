@@ -934,7 +934,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_PairDay_Comment() RETURNS Integer AS 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_PairDay_Comment', zc_object_PairDay(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PairDay_Comment');
 
-
+/*
 CREATE OR REPLACE FUNCTION zc_ObjectString_Area_TelegramId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Area_TelegramId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Area_TelegramId', zc_object_Area(), 'Группа получателей в рассылке Акций' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Area_TelegramId');
@@ -942,7 +942,15 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
  CREATE OR REPLACE FUNCTION zc_ObjectString_Area_TelegramBotToken() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Area_TelegramBotToken'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Area_TelegramBotToken', zc_object_Area(), 'Токен отправителя телеграм бота в рассылке Акций' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Area_TelegramBotToken');
+ */
+ 
+CREATE OR REPLACE FUNCTION zc_ObjectString_TelegramGroup_Id() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TelegramGroup_Id'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_TelegramGroup_Id', zc_object_Area(), 'Группа получателей в рассылке Акций' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TelegramGroup_Id');
 
+ CREATE OR REPLACE FUNCTION zc_ObjectString_TelegramGroup_BotToken() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TelegramGroup_BotToken'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_TelegramGroup_BotToken', zc_object_TelegramGroup(), 'Токен отправителя телеграм бота в рассылке Акций' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TelegramGroup_BotToken');
 
 
 ---!!! Аптека
@@ -1496,6 +1504,9 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 20.09.22         * zc_ObjectString_TelegramGroup_Id
+                    zc_ObjectString_TelegramGroup_BotToken
+
  16.09.22         * zc_ObjectString_Area_TelegramId
                     zc_ObjectString_Area_TelegramBotToken
  12.09.22                                                                                                         * zc_ObjectString_InternetRepair...

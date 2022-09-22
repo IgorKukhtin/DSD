@@ -1010,6 +1010,10 @@ CREATE OR REPLACE FUNCTION zc_Object_StickerHeader() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_StickerHeader', 'Заголовок для сети' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_StickerHeader');
 
+ CREATE OR REPLACE FUNCTION zc_Object_TelegramGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_TelegramGroup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_TelegramGroup', 'Группа телеграм' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TelegramGroup');
+
 
  
 
