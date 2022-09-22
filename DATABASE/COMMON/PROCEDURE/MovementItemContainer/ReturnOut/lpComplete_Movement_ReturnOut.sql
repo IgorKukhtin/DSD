@@ -887,6 +887,7 @@ BEGIN
                                                                                 , inCarId                  := NULL
                                                                                 , inMemberId               := vbMemberId_From
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                , inInfoMoneyId            := _tmpItem.InfoMoneyId
                                                                                 , inGoodsId                := _tmpItem.GoodsId
                                                                                 , inGoodsKindId            := _tmpItem.GoodsKindId
                                                                                 , inIsPartionCount         := _tmpItem.isPartionCount
