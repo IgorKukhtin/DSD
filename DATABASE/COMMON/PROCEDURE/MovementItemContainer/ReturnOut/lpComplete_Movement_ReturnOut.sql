@@ -530,6 +530,11 @@ BEGIN
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                    THEN 0
 
+                                               -- Запчасти и Ремонты + Шины
+                                               WHEN vbOperDate >= zc_DateStart_PartionGoods_20103()
+                                                AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20103()
+                                                   THEN lpInsertFind_Object_PartionGoods (inValue:= _tmpItem.PartionGoods)
+
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
@@ -547,6 +552,7 @@ BEGIN
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+        OR _tmpItem.InfoMoneyId            = zc_Enum_InfoMoney_20103()            -- Запчасти и Ремонты + Шины
      ;
 
      -- заполняем таблицу - элементы по ПОКУПАТЕЛЮ, со всеми свойствами для формирования Аналитик в проводках, здесь по !!!MovementItemId!!!

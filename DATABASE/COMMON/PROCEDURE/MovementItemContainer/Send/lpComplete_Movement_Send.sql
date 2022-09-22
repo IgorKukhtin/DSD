@@ -367,6 +367,8 @@ BEGIN
                                                                               )
                                           -- только не Перемещение ОС
                                           AND tmpMI.ContainerId_asset = 0
+                                          -- только если партия не указана
+                                          AND tmpMI.PartionGoods = ''
 
                                        UNION ALL
                                         SELECT tmpMI.MovementItemId                                  AS MovementItemId
@@ -399,6 +401,9 @@ BEGIN
                                                                               )
                                           -- только не Перемещение ОС
                                           AND tmpMI.ContainerId_asset = 0
+                                          -- только если партия не указана
+                                          AND tmpMI.PartionGoods = ''
+
                                        ) AS tmp ON tmp.MovementItemId = tmpMI.MovementItemId
                       )
     , tmpContainer AS (SELECT DD.ContainerId
@@ -548,8 +553,9 @@ BEGIN
      UPDATE _tmpItem SET PartionGoodsId_From = CASE WHEN _tmpItem.PartionGoodsId_From > 0
                                                          THEN _tmpItem.PartionGoodsId_From
 
+                                                    -- Запчасти и Ремонты + Шины
                                                     WHEN _tmpItem.OperDate >= zc_DateStart_PartionGoods_20103()
-                                                     AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20103() -- Запчасти и Ремонты + Шины
+                                                     AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20103()
                                                         THEN lpInsertFind_Object_PartionGoods (inValue:= _tmpItem.PartionGoods)
 
                                                     WHEN (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
@@ -697,8 +703,9 @@ BEGIN
                          , PartionGoodsId_To = CASE WHEN _tmpItem.PartionGoodsId_To > 0
                                                          THEN _tmpItem.PartionGoodsId_To
 
+                                                    -- Запчасти и Ремонты + Шины
                                                     WHEN _tmpItem.OperDate >= zc_DateStart_PartionGoods_20103()
-                                                     AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20103() -- Запчасти и Ремонты + Шины
+                                                     AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20103()
                                                         THEN lpInsertFind_Object_PartionGoods (inValue:= _tmpItem.PartionGoods)
 
                                                     WHEN (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
@@ -1473,6 +1480,7 @@ END IF;
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId --, ParentId, Amount, OperDate, IsActive)
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ContainerIntId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
+       -- это обычная проводка - zc_Container_Count
        SELECT 0
             , CASE WHEN _tmpItem.ContainerDescId = zc_Container_CountAsset()
                         THEN zc_MIContainer_CountAsset()
@@ -1495,6 +1503,7 @@ END IF;
        FROM _tmpItem
 
       UNION ALL
+       -- это обычная проводка - zc_Container_CountCount
        SELECT 0, zc_MIContainer_CountCount() AS DescId, vbMovementDescId, _tmpItem.MovementId, _tmpItem.MovementItemId
             , _tmpItem.ContainerId_countFrom
             , 0                                       AS AccountId                -- нет счета
