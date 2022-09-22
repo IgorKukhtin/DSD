@@ -495,7 +495,7 @@ end if;
                                                         , zc_MovementLinkMovement_Production()
                                                         , zc_MovementLinkMovement_Transport()
                                                         , zc_MovementLinkMovement_ReturnIn()
-                                                        )
+                                                         )
                      )
        , tmpMS_InvNumberPartner AS (SELECT MovementString.*
                                     FROM MovementString
