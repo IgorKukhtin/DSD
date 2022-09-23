@@ -22,6 +22,15 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (MovementDateDesc.Id, inMovementId, inValueData)
      FROM (SELECT inDescCode AS DescCode WHERE TRIM (inDescCode) <> '') AS tmp
           LEFT JOIN MovementDateDesc ON MovementDateDesc.Code ILIKE tmp.DescCode;
+          
+     IF EXISTS (SELECT 1 FROM MovementDateDesc WHERE MovementDateDesc.Code ILIKE tmp.DescCode AND MovementDateDesc.Id = zc_MovementDate_OperDatePartner())
+        AND EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.MovementChildId > 0 AND MLM.Id = zc_MovementLinkMovement_Master())
+     THEN
+         -- сохранили
+         UPDATE Movement SET OperDate = inValueData
+         WHERE Movement.Id = (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.Id = zc_MovementLinkMovement_Master())
+           AND Movement.DescId = zc_Movement_Tax();
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
