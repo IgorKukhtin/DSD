@@ -408,11 +408,42 @@ BEGIN
     END IF;
 
     CREATE TEMP TABLE tmpUserReferals ON COMMIT DROP AS
-        (WITH  tmpUserReferals AS (SELECT Movement.OperDate
+        (WITH tmpCheckGoodsSpecial AS ( SELECT MovementItemContainer.MovementId
+                                             , SUM(ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2))      AS Summa
+                                        FROM MovementItemContainer
+
+                                             LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
+                                                                       ON MovementBoolean_CorrectMarketing.MovementId = MovementItemContainer.MovementId
+                                                                      AND MovementBoolean_CorrectMarketing.DescId = zc_MovementBoolean_CorrectMarketing()
+
+                                             LEFT JOIN MovementBoolean AS MovementBoolean_Doctors
+                                                                       ON MovementBoolean_Doctors.MovementId = MovementItemContainer.MovementId
+                                                                      AND MovementBoolean_Doctors.DescId = zc_MovementBoolean_Doctors()
+
+                                             LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
+                                                                          ON MovementLinkObject_CheckSourceKind.MovementId =  MovementItemContainer.MovementId
+                                                                         AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+
+                                             LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                                                      ON MovementString_InvNumberOrder.MovementId = MovementItemContainer.MovementId
+                                                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+                                        WHERE MovementItemContainer.OperDate  >= DATE_TRUNC ('MONTH', vbOperDate)
+                                          AND MovementItemContainer.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+                                          AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                          AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                          AND COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False
+                                          AND COALESCE(MovementBoolean_Doctors.ValueData, False) = False
+                                          AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
+                                                                                          FROM Object_Goods_Retail
+                                                                                          WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
+                                                                                             OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
+                                        GROUP BY MovementItemContainer.MovementId),                  
+              tmpUserReferals AS (SELECT Movement.OperDate
                                         , MLO_UserReferals.ObjectId                           AS UserId
                                         , MovementLinkObject_Unit.ObjectId                    AS UnitId
-                                        , CASE WHEN MovementFloat_TotalSumm.ValueData > 1000
-                                               THEN ROUND(MovementFloat_TotalSumm.ValueData * 0.02, 2)
+                                        , CASE WHEN MovementFloat_TotalSumm.ValueData - COALESCE(tmpCheckGoodsSpecial.Summa, 0) > 1000
+                                               THEN ROUND((MovementFloat_TotalSumm.ValueData - COALESCE(tmpCheckGoodsSpecial.Summa, 0)) * 0.02, 2)
                                                ELSE 20 END                                    AS ApplicationAward
                                    FROM Movement
                                    
@@ -440,12 +471,15 @@ BEGIN
                                                                      ON MovementLinkObject_DiscountExternal.MovementId = Movement.Id
                                                                     AND MovementLinkObject_DiscountExternal.DescId = zc_MILinkObject_DiscountExternal()
 
+                                        LEFT JOIN tmpCheckGoodsSpecial ON tmpCheckGoodsSpecial.MovementId = Movement.ID
+
                                    WHERE Movement.DescId = zc_Movement_Check()
                                      AND Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate)
                                      AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
                                      AND COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                                     AND (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0)) >= 199.50)
+                                     AND (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) - 
+                                          COALESCE(tmpCheckGoodsSpecial.Summa, 0)) >= 199.50)
                                    
          SELECT tmpUserReferals.UserId
              , SUM(tmpUserReferals.ApplicationAward)::TFloat     AS SummaCalc

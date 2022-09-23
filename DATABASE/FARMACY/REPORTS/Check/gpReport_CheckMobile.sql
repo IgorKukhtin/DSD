@@ -85,8 +85,35 @@ BEGIN
 
                                         WHERE Movement.OperDate BETWEEN date_trunc('Month', inStartDate) AND date_trunc('Month', inEndDate)
                                           AND Movement.DescId = zc_Movement_EmployeeSchedule()
-                                          AND Movement.StatusId <> zc_Enum_Status_Erased())
-                            
+                                          AND Movement.StatusId <> zc_Enum_Status_Erased()),
+            tmpCheckGoodsSpecial AS ( SELECT MovementItemContainer.MovementId
+                                           , SUM(ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2))      AS Summa
+                                           , SUM(CASE WHEN MovementItemContainer.OperDate >= '16.06.2021'
+                                                       AND (COALESCE(MovementString_InvNumberOrder.ValueData, '') <> ''
+                                                        OR COALESCE(MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0
+                                                       AND MovementItemContainer.OperDate < '03.08.2021')
+                                                      THEN ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2) 
+                                                      ELSE 0 END)                                                                AS SummaSite
+                                      FROM MovementItemContainer
+
+                                           LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
+                                                                        ON MovementLinkObject_CheckSourceKind.MovementId =  MovementItemContainer.MovementId
+                                                                       AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+
+                                           LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                                                    ON MovementString_InvNumberOrder.MovementId = MovementItemContainer.MovementId
+                                                                   AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+                                      WHERE MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
+                                        AND MovementItemContainer.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
+                                        AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                        AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                        AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
+                                                                                        FROM Object_Goods_Retail
+                                                                                        WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
+                                                                                           OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
+                                      GROUP BY MovementItemContainer.MovementId)                                          
+                                                    
          SELECT
              Movement_Check.Id
            , Movement_Check.InvNumber
@@ -160,12 +187,13 @@ BEGIN
            , CASE WHEN Movement_Check.StatusId = zc_Enum_Status_Complete() THEN MovementFloat_MobileDiscount.ValueData END::TFloat AS MobileDiscount
            
            , CASE WHEN COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False) = True AND
-                       MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData , 0) >= 199.50 AND
+                       MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) - 
+                       COALESCE(tmpCheckGoodsSpecial.Summa, 0) >= 199.50 AND
                        COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) <> 0 AND
                        COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 AND
                        Movement_Check.StatusId = zc_Enum_Status_Complete() THEN 
-                       CASE WHEN MovementFloat_TotalSumm.ValueData > 1000 
-                            THEN ROUND(MovementFloat_TotalSumm.ValueData * 0.02, 2)
+                       CASE WHEN MovementFloat_TotalSumm.ValueData - COALESCE(tmpCheckGoodsSpecial.Summa, 0) > 1000 
+                            THEN ROUND((MovementFloat_TotalSumm.ValueData - COALESCE(tmpCheckGoodsSpecial.Summa, 0)) * 0.02, 2)
                             ELSE 20 END END::TFloat  AS ApplicationAward
            
            , Movement_Check.isEmployeeMessage                             AS isEmployeeMessage
@@ -441,6 +469,8 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountExternal
                                          ON MovementLinkObject_DiscountExternal.MovementId = Movement_Check.Id
                                         AND MovementLinkObject_DiscountExternal.DescId = zc_MILinkObject_DiscountExternal()
+
+            LEFT JOIN tmpCheckGoodsSpecial ON tmpCheckGoodsSpecial.MovementId = Movement_Check.ID
       ;
 
 END;
@@ -459,4 +489,3 @@ $BODY$
 -- 
 
 select * from gpReport_CheckMobile(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('30.09.2022')::TDateTime , inUnitId := 0 , inIsUnComplete := 'True' , inIsErased := 'False' , inisEmployeeMessage := 'False' ,  inSession := '3');
-

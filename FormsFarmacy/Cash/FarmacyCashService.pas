@@ -1499,6 +1499,7 @@ begin
                   SetLength(Body, Length(Body) + 1);
                   with Body[Length(Body) - 1], FLocalDataBaseBody do
                   Begin
+                    if Head.Id <> 0 then ID := FieldByName('ID').AsInteger;
                     CH_UID := trim(FieldByName('CH_UID').AsString);
                     GOODSID := FieldByName('GOODSID').AsInteger;
                     GOODSCODE := FieldByName('GOODSCODE').AsInteger;

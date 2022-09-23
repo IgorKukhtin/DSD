@@ -877,6 +877,13 @@
           HeaderAlignmentVert = vaCenter
           Width = 100
         end
+        object Color_ProdColor_ch2: TcxGridDBColumn
+          Caption = #1062#1074#1077#1090
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 59
+        end
         object Comment_ch2: TcxGridDBColumn
           Caption = '***Material/farbe'
           DataBinding.FieldName = 'Comment'
@@ -1105,6 +1112,12 @@
           Visible = False
           VisibleForCustomization = False
           Width = 55
+        end
+        object Color_ProdColorValue_Ch2: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_ProdColorValue'
+          Visible = False
+          Options.Editing = False
+          VisibleForCustomization = False
         end
       end
       object cxGridLevel1: TcxGridLevel
@@ -3313,6 +3326,8 @@
     ChartList = <>
     ColorRuleList = <
       item
+        ColorColumn = Color_ProdColor_ch2
+        BackGroundValueColumn = Color_ProdColorValue_Ch2
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
