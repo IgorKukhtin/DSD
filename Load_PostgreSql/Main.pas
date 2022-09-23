@@ -19,7 +19,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.ActnList, dsdAction;
 
 type
   TCurrencyItem = record
@@ -236,6 +237,9 @@ type
     Timer_Auto_PrimeCost: TTimer;
     Button1: TButton;
     cbOnlyTush: TCheckBox;
+    ActionList: TActionList;
+    actSendTelegramBot: TdsdSendTelegramBotAction;
+    Button2: TButton;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -254,6 +258,7 @@ type
     procedure Timer_Auto_PrimeCostTimer(Sender: TObject);
     procedure OKGuideButtonClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -328,6 +333,8 @@ type
 
     procedure pLoad_https_Currency_all;
     procedure pLoad_https_Currency(OperDate : TDateTime);
+    procedure pSend_Promo_Message_telegram;
+
     function GetArrayCurrencyList_Index_byName (Name:String):Integer;
 
     procedure myEnabledCB (cb:TCheckBox);
@@ -360,6 +367,82 @@ begin
     if ArrayCurrencyList[i].Name = Name then begin Result:=i;break;end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pSend_Promo_Message_telegram;
+var SaveRecord : Integer;
+begin
+     //
+     fromZConnection.Connected:=false;
+     // открыли
+     fOpenFromZQuery (' select tmp.*'
+                     +' from gpSelect_Movement_Promo_Message ('+FormatToVarCharServer_notNULL(DateToStr(Date))+','+FormatToVarCharServer_notNULL('5')+')  as tmp '
+                     );
+     SaveRecord:=fromZQuery.RecordCount;
+     Gauge.Progress:=0;
+     Gauge.MaxValue:=SaveRecord;
+     cbComplete_List.Caption:='('+IntToStr(SaveRecord)+') !!!Cписок Promo_Message_telegram!!!';
+     //
+     myLogMemo_add('');
+     myLogMemo_add('__start Send_Promo_Message_telegram');
+     SaveRecord:=0;
+     //
+     with fromZQuery,Sql do begin
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc_two.StoredProcName:='gpUpdate_MovementDate_Message';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if FieldByName('isSend').AsBoolean = TRUE then
+             begin
+                   actSendTelegramBot.ChatId.Value:= FieldByName('TelegramId').AsString;
+                   actSendTelegramBot.Token.Value:= FieldByName('TelegramBotToken').AsString;
+                   actSendTelegramBot.Message.Value:= FieldByName('Msg').AsString;
+                   //
+                   if actSendTelegramBot.Execute
+                   then begin
+                            toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+                            if myExecToStoredProc_two then SaveRecord:= SaveRecord + 1;// else exit;
+                        end
+                   else begin
+                        myLogMemo_add('!!!');
+                        myLogMemo_add('__err Send_Promo_Message_telegram');
+                        myLogMemo_add(FieldByName('TelegramId').AsString);
+                        myLogMemo_add(FieldByName('TelegramBotToken').AsString);
+                        myLogMemo_add(FieldByName('Msg').AsString);
+                        myLogMemo_add(FieldByName('MovementId').AsString + ' ' + FieldByName('InvNumber').AsString + ' ' + DateToStr(FieldByName('OperDate').AsDateTime));
+                   end;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myLogMemo_add('');
+     myLogMemo_add('__end Send_Promo_Message_telegram ('+IntToStr(SaveRecord)+')');
+     //
+     if not cbOnlyOpen.Checked then fromZConnection.Connected:=false;
+     //
+     fStop:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoad_https_Currency_all;
 var i,count: Integer;
 begin
@@ -375,6 +458,11 @@ begin
     count:= 0;
     while StrToDate(StartDateCompleteEdit.Text) + count <= StrToDate(EndDateCompleteEdit.Text)
     do count:= count + 1;
+    //
+    myLogMemo_add('__start Currency_all');
+    myLogMemo_add(StartDateCompleteEdit.Text);
+    myLogMemo_add(IntToStr(count));
+    myLogMemo_add(EndDateCompleteEdit.Text);
     //
     for i:= 0 to count
     do
@@ -1019,7 +1107,6 @@ begin
 
      isMsgCurrency_all:= FALSE;
 end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormShow(Sender: TObject);
 begin
 
@@ -1102,7 +1189,12 @@ begin
      then fBeginPack_oneDay;
 
      if (ParamStr(2)='autoPartion_period')
-     then fBeginPartion_Period;
+     then begin
+               //cbCurrency.Checked:= true;
+               //pLoad_https_Currency_all;
+               fBeginPartion_Period;
+               pSend_Promo_Message_telegram;
+     end;
 
      if (ParamStr(2)='autoFillSoldTable_curr')
      then pLoadFillSoldTable_curr;
@@ -1676,6 +1768,10 @@ var tmpDate1,tmpDate2:TDateTime;
     Year, Month, Day, Hour, Min, Sec, MSec: Word;
     StrTime:String;
 begin
+     //ShowMessage('');
+     //exit;
+     //
+     //
      if System.Pos('auto',ParamStr(2))<=0
      then
      if MessageDlg('Действительно загрузить выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
@@ -1755,6 +1851,11 @@ begin
 
      isMsgCurrency_all:= true;
      pLoad_https_Currency_all;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.Button2Click(Sender: TObject);
+begin
+     pSend_Promo_Message_telegram;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.PanelErrDblClick(Sender: TObject);

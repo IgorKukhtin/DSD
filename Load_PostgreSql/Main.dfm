@@ -48,20 +48,21 @@ object MainForm: TMainForm
       ExplicitWidth = 1307
     end
     object OKGuideButton: TButton
-      Left = 157
+      Left = 254
       Top = 25
-      Width = 113
+      Width = 96
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' GUIDE'
       DragMode = dmAutomatic
       TabOrder = 0
+      OnClick = OKGuideButtonClick
     end
     object StopButton: TButton
-      Left = 557
+      Left = 594
       Top = 25
-      Width = 121
+      Width = 83
       Height = 25
-      Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077
+      Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100
       TabOrder = 1
       OnClick = StopButtonClick
     end
@@ -92,16 +93,16 @@ object MainForm: TMainForm
       TabOrder = 4
     end
     object OKDocumentButton: TButton
-      Left = 278
+      Left = 356
       Top = 25
-      Width = 124
+      Width = 80
       Height = 25
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082
       TabOrder = 5
       OnClick = OKDocumentButtonClick
     end
     object OKCompleteDocumentButton: TButton
-      Left = 406
+      Left = 442
       Top = 25
       Width = 146
       Height = 25
@@ -118,13 +119,22 @@ object MainForm: TMainForm
       TabOrder = 7
     end
     object Button1: TButton
-      Left = 8
+      Left = 23
       Top = 25
-      Width = 138
+      Width = 122
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' Currency_all'
       TabOrder = 8
       OnClick = Button1Click
+    end
+    object Button2: TButton
+      Left = 151
+      Top = 25
+      Width = 97
+      Height = 25
+      Caption = 'Market Message'
+      TabOrder = 9
+      OnClick = Button2Click
     end
   end
   object GuidePanel: TPanel
@@ -3007,5 +3017,35 @@ object MainForm: TMainForm
     OnTimer = Timer_Auto_PrimeCostTimer
     Left = 344
     Top = 48
+  end
+  object ActionList: TActionList
+    Left = 192
+    Top = 352
+    object actSendTelegramBot: TdsdSendTelegramBotAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSendTelegramBot'
+      BaseURLParam.Value = 'https://api.telegram.org'
+      BaseURLParam.DataType = ftString
+      BaseURLParam.MultiSelectSeparator = ','
+      Token.Value = ''
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      ChatId.Value = ''
+      ChatId.DataType = ftString
+      ChatId.MultiSelectSeparator = ','
+      isSeend.Value = True
+      isSeend.DataType = ftBoolean
+      isSeend.MultiSelectSeparator = ','
+      isErroeSend.Value = False
+      isErroeSend.DataType = ftBoolean
+      isErroeSend.MultiSelectSeparator = ','
+      Error.Value = ''
+      Error.DataType = ftString
+      Error.MultiSelectSeparator = ','
+      Message.Value = ''
+      Message.DataType = ftString
+      Message.MultiSelectSeparator = ','
+    end
   end
 end
