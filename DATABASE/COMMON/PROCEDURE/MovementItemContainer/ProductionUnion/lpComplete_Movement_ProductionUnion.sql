@@ -309,7 +309,16 @@ BEGIN
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                    , CASE WHEN vbIsPeresort = TRUE THEN COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) ELSE Movement.OperDate END AS PartionGoodsDate
 
-                   , MovementItem.Amount AS OperCount
+                     -- OperCount
+                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
+                           AND vbUnitId_From IN (2790412) -- ЦЕХ Тушенка
+                           AND MIFloat_CountReal.ValueData > 0
+                               -- замена
+                               THEN MIFloat_CountReal.ValueData
+
+                          ELSE MovementItem.Amount
+                     END AS OperCount
+
                    , COALESCE (MIFloat_Count.ValueData, 0) AS OperCountCount
 
                   -- Управленческие назначения
@@ -340,6 +349,9 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                ON MIFloat_Count.MovementItemId = MovementItem.Id
                                               AND MIFloat_Count.DescId         = zc_MIFloat_Count()
+                   LEFT JOIN MovementItemFloat AS MIFloat_CountReal
+                                               ON MIFloat_CountReal.MovementItemId = MovementItem.Id
+                                              AND MIFloat_CountReal.DescId         = zc_MIFloat_CountReal()
 
                    LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                 ON MIString_PartionGoods.MovementItemId = MovementItem.Id
