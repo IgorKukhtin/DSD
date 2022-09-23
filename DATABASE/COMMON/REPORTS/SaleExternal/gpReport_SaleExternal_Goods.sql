@@ -33,17 +33,18 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF COALESCE (inRetailId,0) = 0
+     /*IF COALESCE (inRetailId,0) = 0
      THEN 
           --
           RAISE EXCEPTION 'Ошибка.Торговая сеть не выбрана';
      END IF;
-     
+       */
      vbGoodsPropertyId := (SELECT ObjectLink_Retail_GoodsProperty.ChildObjectId
                            FROM ObjectLink AS ObjectLink_Retail_GoodsProperty
                            WHERE ObjectLink_Retail_GoodsProperty.ObjectId = inRetailId --310854 --inRetailId
                              AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
-                           );
+                           );    
+                          
 
      RETURN QUERY
      WITH
@@ -67,7 +68,7 @@ BEGIN
                                                          ON ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                                                         AND ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Juridical_Retail.ObjectId
                                WHERE ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                               AND ObjectLink_Juridical_Retail.ChildObjectId = inRetailId --310854
+                               AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)--310854
                                ) AS tmp
                              LEFT JOIN ObjectLink AS ObjectLink_Partner_GoodsProperty
                                                   ON ObjectLink_Partner_GoodsProperty.ObjectId = tmp.PartnerId
@@ -98,7 +99,7 @@ BEGIN
                        AND Movement.DescId = zc_Movement_SaleExternal()
                        AND Movement.StatusId <>zc_Enum_Status_Erased()   --= zc_Enum_Status_Complete()
                      )
-
+                     
    , tmpMovementAll AS (SELECT tmpMovement.*
                              , Object_From.Id                 AS FromId
                              , Object_From.ValueData          AS FromName
@@ -131,7 +132,12 @@ BEGIN
                              --если не указано РЦ считаем и группируем по Торг. сети
                              LEFT JOIN Object AS Object_PartnerReal ON Object_PartnerReal.Id = COALESCE (ObjectLink_PartnerReal.ChildObjectId, ObjectLink_Retail.ChildObjectId)
 
+                             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                        ON ObjectLink_Partner_Juridical.ObjectId = Object_PartnerReal.Id
+                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
                              LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = tmpMovement.GoodsPropertyId
+                        WHERE ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0
                        )
    
    , tmpGoods AS (SELECT lfSelect.GoodsId AS GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
@@ -287,7 +293,4 @@ $BODY$
 */
 
 -- тест
---  SELECT * FROM gpReport_SaleExternal (inStartDate:= '01.11.2020', inEndDate:= '30.11.2020', inRetailId := 310854 , inJuridicalId := 0, inGoodsGroupId:= 0, inisContract:= False, inSession:= zfCalc_UserAdmin()) 
-
-
---select * from gpReport_SaleExternal(inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('31.12.2020')::TDateTime , inRetailId := 310828  /*310854 */, inJuridicalId := 15158  /*862910*/ , inGoodsGroupId := 1832 , inisContract := True ,  inSession := '5')--
+--  select * from gpReport_SaleExternal_Goods(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('31.08.2022')::TDateTime , inRetailId := 0/*310828 */ /*310854 */, inJuridicalId := 15158  /*862910*/ , inGoodsGroupId := 1832 ,  inSession := '5')--
