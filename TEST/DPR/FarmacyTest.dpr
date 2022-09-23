@@ -1259,7 +1259,9 @@ uses
   InternetRepairCash in '..\..\FormsFarmacy\Guides\InternetRepairCash.pas' {InternetRepairCashForm: TParentForm},
   Report_ApplicationAward in '..\..\FormsFarmacy\Report\Report_ApplicationAward.pas' {Report_ApplicationAwardForm: TParentForm},
   Report_ConductedSalesMobile in '..\..\FormsFarmacy\Report\Report_ConductedSalesMobile.pas' {Report_ConductedSalesMobileForm: TParentForm},
-  Report_Object_Price_MCS_Year in '..\..\FormsFarmacy\Report\Report_Object_Price_MCS_Year.pas' {Report_Object_Price_MCS_YearForm: TParentForm};
+  Report_Object_Price_MCS_Year in '..\..\FormsFarmacy\Report\Report_Object_Price_MCS_Year.pas' {Report_Object_Price_MCS_YearForm: TParentForm},
+  eSputnikContactsMessages in '..\..\FormsFarmacy\System\eSputnikContactsMessages.pas' {eSputnikContactsMessagesForm: TParentForm},
+  PhoneNoSeparatorDialog in '..\..\FormsFarmacy\System\PhoneNoSeparatorDialog.pas' {PhoneNoSeparatorDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

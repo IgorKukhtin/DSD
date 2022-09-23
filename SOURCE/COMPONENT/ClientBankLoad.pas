@@ -935,7 +935,8 @@ end;
 
 function TOTPBankXLSLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('Дата проведення').AsDateTime
+  //result := FDataSet.FieldByName('Дата проведення').AsDateTime
+  result := FDataSet.FieldByName('Дата архівування').AsDateTime
 end;
 
 function TOTPBankXLSLoad.GetOperSumm: real;

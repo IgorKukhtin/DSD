@@ -173,11 +173,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Client_Bank() RETURNS Integer AS $BODY
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Client(), 'zc_ObjectFloat_Client_Bank', 'Отсрочка в банковских днях' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Client_Bank');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ProdColor_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProdColor_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ProdColor(), 'zc_ObjectFloat_ProdColor_Value', 'Значение цвета для отображения' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProdColor_Value');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 22.09.22                                                       * zc_ObjectFloat_ProdColor_Value
  06.04.21         * zc_ObjectFloat_ProdOptItems_Count
  02.02.21         * zc_ObjectFloat_Partner_DiscountTax
                     zc_ObjectFloat_Partner_Bank

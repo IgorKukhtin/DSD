@@ -819,6 +819,7 @@ initialization
   RegisterClass (TdsdVATNumberValidation);
   RegisterClass (TdsdLoadAgilis);
   RegisterClass (TdsdLoadFile_https);
+  RegisterClass (TdsdeSputnikContactsMessages);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

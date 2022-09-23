@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColor(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
+             , Value TVarChar, Color_Value Integer
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased Boolean
@@ -30,6 +31,8 @@ BEGIN
            , Object_ProdColor.ObjectCode     AS Code
            , Object_ProdColor.ValueData      AS Name
            , ObjectString_Comment.ValueData  AS Comment
+           , ObjectString_Value.ValueData    AS Value
+           , COALESCE(ObjectFloat_Value.ValueData, zc_Color_White())::Integer  AS Color_Value
 
            , Object_Insert.ValueData         AS InsertName
            , ObjectDate_Insert.ValueData     AS InsertDate
@@ -38,6 +41,13 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColor.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ProdColor_Comment()
+
+          LEFT JOIN ObjectString AS ObjectString_Value
+                                 ON ObjectString_Value.ObjectId = Object_ProdColor.Id
+                                AND ObjectString_Value.DescId = zc_ObjectString_ProdColor_Value()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                ON ObjectFloat_Value.ObjectId = Object_ProdColor.Id
+                               AND ObjectFloat_Value.DescId = zc_ObjectFloat_ProdColor_Value()
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ProdColor.Id
