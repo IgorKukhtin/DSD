@@ -145,8 +145,8 @@
     Width = 82
   end
   object ceisSite: TcxCheckBox
-    Left = 204
-    Top = 8
+    Left = 324
+    Top = 26
     Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
     TabOrder = 19
     Width = 82
@@ -192,6 +192,21 @@
     Caption = #1059#1074#1086#1083#1077#1085#1085#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082
     TabOrder = 25
     Width = 149
+  end
+  object ceInternshipCompleted: TcxCheckBox
+    Left = 84
+    Top = 1
+    Caption = #1057#1090#1072#1078#1080#1088#1086#1074#1082#1072' '#1087#1088#1086#1074#1077#1076#1077#1085#1072
+    TabOrder = 26
+    Width = 149
+  end
+  object edInternshipConfirmation: TcxTextEdit
+    Left = 232
+    Top = 1
+    Enabled = False
+    StyleDisabled.TextColor = clWindowText
+    TabOrder = 27
+    Width = 166
   end
   object ActionList: TActionList
     Left = 269
@@ -349,6 +364,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisInternshipCompleted'
+        Value = Null
+        Component = ceInternshipCompleted
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 205
@@ -371,7 +394,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -487,6 +510,20 @@
         Value = Null
         Component = ceDismissedUser
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isInternshipCompleted'
+        Value = Null
+        Component = ceInternshipCompleted
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InternshipConfirmation'
+        Value = Null
+        Component = edInternshipConfirmation
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

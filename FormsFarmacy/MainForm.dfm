@@ -5367,17 +5367,6 @@
       GuiParams = <>
       isShowModal = False
     end
-    object acteSputnikContactsMessages: TdsdOpenForm
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089#1086#1086#1073#1097#1077#1085#1080#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1072#1082#1090#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1089#1072#1081#1090#1072' '#1080' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
-      FormName = 'TeSputnikContactsMessagesForm'
-      FormNameParam.Value = 'TeSputnikContactsMessagesForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6862,9 +6851,6 @@
         end
         object N361: TMenuItem
           Action = actReport_RestTermGoods
-        end
-        object N370: TMenuItem
-          Action = acteSputnikContactsMessages
         end
       end
       object miTaxUnit: TMenuItem [3]

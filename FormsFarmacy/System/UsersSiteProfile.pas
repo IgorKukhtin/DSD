@@ -1,4 +1,4 @@
-unit Report_MovementSiteBonus;
+unit UsersSiteProfile;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid;
 
 type
-  TReport_MovementSiteBonusForm = class(TParentForm)
+  TUsersSiteProfileForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -39,8 +39,12 @@ type
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    Panel1: TPanel;
     RefreshDispatcher: TRefreshDispatcher;
+    cxLabel1: TcxLabel;
+    FormParams: TdsdFormParams;
     bbStaticText: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     bbPrint: TdxBarButton;
     bbPrint2: TdxBarButton;
@@ -51,30 +55,19 @@ type
     bbGroup: TdxBarControlContainerItem;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    BuyerForSiteName: TcxGridDBColumn;
+    name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DBViewAddOn: TdsdDBViewAddOn;
-    BuyerForSiteCode: TcxGridDBColumn;
-    Bonus: TcxGridDBColumn;
+    user_id: TcxGridDBColumn;
     bbUpdate: TdxBarButton;
-    Bonus_Used: TcxGridDBColumn;
-    AmountV2: TcxGridDBColumn;
-    AmountV1_PartionDate: TcxGridDBColumn;
-    dxBarContainerItem1: TdxBarContainerItem;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
-    actShowAll: TBooleanStoredProcAction;
-    dxBarButton1: TdxBarButton;
-    Phone: TcxGridDBColumn;
-    Bonus_Balance: TcxGridDBColumn;
-    Bonus_Add: TcxGridDBColumn;
-    Bonus_Added: TcxGridDBColumn;
-    actUpdateDataSet: TdsdUpdateDataSet;
-    spUpdate_BonusAdd: TdsdStoredProc;
-    acteSputnikContactsMessages: TdsdOpenForm;
-    actUsersSiteProfile: TdsdOpenForm;
-    dxBarButton2: TdxBarButton;
-    dxBarButton3: TdxBarButton;
+    surname: TcxGridDBColumn;
+    edPhone: TcxMaskEdit;
+    spSite_Param: TdsdStoredProc;
+    actSite_Param: TdsdExecStoredProc;
+    actFD_DownloadUsersSiteProfile: TdsdForeignData;
+    created_at: TcxGridDBColumn;
+    phone: TcxGridDBColumn;
+    email: TcxGridDBColumn;
   private
   public
   end;
@@ -84,6 +77,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_MovementSiteBonusForm);
+  RegisterClass(TUsersSiteProfileForm);
 
 end.

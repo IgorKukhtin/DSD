@@ -110,6 +110,9 @@ type
     dxBarButton2: TdxBarButton;
     isNewUser: TcxGridDBColumn;
     isDismissedUser: TcxGridDBColumn;
+    isInternshipCompleted: TcxGridDBColumn;
+    InternshipConfirmation: TcxGridDBColumn;
+    DateInternshipConfirmation: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -48,6 +48,8 @@ type
     cbWorkingMultiple: TcxCheckBox;
     ceNewUser: TcxCheckBox;
     ceDismissedUser: TcxCheckBox;
+    ceInternshipCompleted: TcxCheckBox;
+    edInternshipConfirmation: TcxTextEdit;
   private
     { Private declarations }
   public

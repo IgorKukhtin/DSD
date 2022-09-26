@@ -1,28 +1,30 @@
 -- Function: gpInsertUpdate_Object_User()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
- INOUT ioId                 Integer   ,    -- ключ объекта <Пользователь> 
-    IN inCode               Integer   ,    -- 
-    IN inUserName           TVarChar  ,    -- главное Название пользователя объекта <Пользователь> 
-    IN inPassword           TVarChar  ,    -- пароль пользователя 
-    IN inSign               TVarChar  ,    -- Электронная подпись
-    IN inSeal               TVarChar  ,    -- Электронная печать
-    IN inKey                TVarChar  ,    -- Электроный Ключ 
-    IN inProjectMobile      TVarChar  ,    -- Серийный № моб устр-ва
-    IN inisProjectMobile    Boolean   ,    -- признак - это Торговый агент
-    IN inisSite             Boolean   ,    -- признак - Для сайта
-    IN inMemberId           Integer   ,    -- физ. лицо
-    IN inPasswordWages      TVarChar  ,    -- пароль пользователя 
-    IN inisWorkingMultiple  Boolean   ,    -- Работа на нескольких аптеках
-    IN inisNewUser          Boolean   ,    -- Новый сотрудник
-    IN inisDismissedUser    Boolean   ,    -- Уволенный сотрудник
-    IN inSession            TVarChar       -- сессия пользователя
+ INOUT ioId                     Integer   ,    -- ключ объекта <Пользователь> 
+    IN inCode                   Integer   ,    -- 
+    IN inUserName               TVarChar  ,    -- главное Название пользователя объекта <Пользователь> 
+    IN inPassword               TVarChar  ,    -- пароль пользователя 
+    IN inSign                   TVarChar  ,    -- Электронная подпись
+    IN inSeal                   TVarChar  ,    -- Электронная печать
+    IN inKey                    TVarChar  ,    -- Электроный Ключ 
+    IN inProjectMobile          TVarChar  ,    -- Серийный № моб устр-ва
+    IN inisProjectMobile        Boolean   ,    -- признак - это Торговый агент
+    IN inisSite                 Boolean   ,    -- признак - Для сайта
+    IN inMemberId               Integer   ,    -- физ. лицо
+    IN inPasswordWages          TVarChar  ,    -- пароль пользователя 
+    IN inisWorkingMultiple      Boolean   ,    -- Работа на нескольких аптеках
+    IN inisNewUser              Boolean   ,    -- Новый сотрудник
+    IN inisDismissedUser        Boolean   ,    -- Уволенный сотрудник
+    IN inisInternshipCompleted  Boolean   ,    -- Стажировка проведена
+    IN inSession                TVarChar       -- сессия пользователя
 )
   RETURNS Integer 
 AS
@@ -87,6 +89,28 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_NewUser(), ioId, inisNewUser);
    -- свойство <Уволенный сотрудник>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_DismissedUser(), ioId, inisDismissedUser);
+
+   IF COALESCE (inisInternshipCompleted, FALSE) <>
+      COALESCE((SELECT ObjectBoolean.ValueData 
+                FROM ObjectBoolean 
+                WHERE ObjectBoolean.ObjectId = ioId 
+                  AND ObjectBoolean.DescId = zc_ObjectBoolean_User_InternshipCompleted()), FALSE)
+   THEN
+     -- свойство <Стажировка проведена>
+     PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_InternshipCompleted(), ioId, inisInternshipCompleted);
+     
+     if COALESCE (inisInternshipCompleted, FALSE) = TRUE
+     THEN
+       -- свойство <Подтверждение стажировки>
+       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_User_InternshipConfirmation(), ioId, 0);
+     ELSE
+       IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+       THEN
+         RAISE EXCEPTION 'Отменить <Стажировка проведена>. Разрешено только системному администратору';
+       END IF;     
+     END IF;
+   END IF;
+
 
    -- Ведение протокола
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

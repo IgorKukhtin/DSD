@@ -43,6 +43,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     actShowPUSHMessageInfo: TdsdShowPUSHMessage;
     spPUSHInfo: TdsdStoredProc;
+    ceInternshipCompleted: TcxCheckBox;
   private
     { Private declarations }
   public

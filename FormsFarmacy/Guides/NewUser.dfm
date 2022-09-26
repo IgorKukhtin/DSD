@@ -118,6 +118,13 @@ object NewUserForm: TNewUserForm
     ModalResult = 8
     TabOrder = 7
   end
+  object ceInternshipCompleted: TcxCheckBox
+    Left = 193
+    Top = 8
+    Caption = #1057#1090#1072#1078#1080#1088#1086#1074#1082#1072' '#1087#1088#1086#1074#1077#1076#1077#1085#1072
+    TabOrder = 14
+    Width = 149
+  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 276
     Top = 135
@@ -440,6 +447,14 @@ object NewUserForm: TNewUserForm
         Value = 'False'
         Component = edPassword
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisInternshipCompleted'
+        Value = Null
+        Component = ceInternshipCompleted
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

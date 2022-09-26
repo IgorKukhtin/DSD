@@ -991,8 +991,6 @@ type
     N368: TMenuItem;
     actInternetRepair: TdsdOpenForm;
     N369: TMenuItem;
-    acteSputnikContactsMessages: TdsdOpenForm;
-    N370: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

@@ -1261,7 +1261,8 @@ uses
   Report_ConductedSalesMobile in '..\..\FormsFarmacy\Report\Report_ConductedSalesMobile.pas' {Report_ConductedSalesMobileForm: TParentForm},
   Report_Object_Price_MCS_Year in '..\..\FormsFarmacy\Report\Report_Object_Price_MCS_Year.pas' {Report_Object_Price_MCS_YearForm: TParentForm},
   eSputnikContactsMessages in '..\..\FormsFarmacy\System\eSputnikContactsMessages.pas' {eSputnikContactsMessagesForm: TParentForm},
-  PhoneNoSeparatorDialog in '..\..\FormsFarmacy\System\PhoneNoSeparatorDialog.pas' {PhoneNoSeparatorDialogForm: TParentForm};
+  PhoneNoSeparatorDialog in '..\..\FormsFarmacy\System\PhoneNoSeparatorDialog.pas' {PhoneNoSeparatorDialogForm: TParentForm},
+  UsersSiteProfile in '..\..\FormsFarmacy\System\UsersSiteProfile.pas' {UsersSiteProfileForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -22,6 +22,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , isWorkingMultiple Boolean
              , isNewUser Boolean
              , isDismissedUser Boolean
+             , isInternshipCompleted Boolean
+             , InternshipConfirmation TVarChar
+             , DateInternshipConfirmation TDateTime
               )
 AS
 $BODY$
@@ -86,6 +89,13 @@ END IF;
 
        , COALESCE (ObjectBoolean_NewUser.ValueData, FALSE)::Boolean          AS isNewUser
        , COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE)::Boolean    AS isDismissedUser
+
+       , COALESCE (ObjectBoolean_InternshipCompleted.ValueData, FALSE)::Boolean    AS isInternshipCompleted
+       , CASE WHEN  COALESCE (ObjectBoolean_InternshipCompleted.ValueData, FALSE) = FALSE THEN ''
+              WHEN COALESCE (ObjectFloat_InternshipConfirmation.ValueData, 0) = 0 THEN 'Не обработал сотрудник'
+              WHEN COALESCE (ObjectFloat_InternshipConfirmation.ValueData, 0) = 1 THEN 'Не подтверждено сотрудником'
+              ELSE 'Подтверждено сотрудником' END::TVarChar                        AS InternshipConfirmation
+       , ObjectDate_User_InternshipConfirmation.ValueData                          AS DateInternshipConfirmation
        
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
@@ -163,6 +173,16 @@ END IF;
         LEFT JOIN ObjectString AS ObjectString_PasswordWages
                ON ObjectString_PasswordWages.DescId = zc_ObjectString_User_PasswordWages() 
               AND ObjectString_PasswordWages.ObjectId = Object_User.Id
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_InternshipCompleted
+                                ON ObjectBoolean_InternshipCompleted.ObjectId = Object_User.Id
+                               AND ObjectBoolean_InternshipCompleted.DescId = zc_ObjectBoolean_User_InternshipCompleted()
+        LEFT JOIN ObjectFloat AS ObjectFloat_InternshipConfirmation
+                              ON ObjectFloat_InternshipConfirmation.ObjectId = Object_User.Id
+                             AND ObjectFloat_InternshipConfirmation.DescId = zc_ObjectFloat_User_InternshipConfirmation()
+        LEFT JOIN ObjectDate AS ObjectDate_User_InternshipConfirmation
+                             ON ObjectDate_User_InternshipConfirmation.ObjectId = Object_User.Id
+                            AND ObjectDate_User_InternshipConfirmation.DescId = zc_ObjectDate_User_InternshipConfirmation()
               
    WHERE Object_User.DescId = zc_Object_User();
   

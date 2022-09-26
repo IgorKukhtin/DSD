@@ -1,15 +1,16 @@
 -- Function: gpInsertUpdate_Object_NewUser()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarCharm, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_NewUser(
- INOUT ioId          Integer ,      -- Id
-    IN inName        TVarChar,      -- ФИО
-    IN inPhone       TVarChar,      -- Нномер телефона
-    IN inPositionId  Integer ,      -- Должность
-    IN inUnitId      Integer ,      -- Подразделение
-    IN inLogin       TVarChar,      -- Логин 
-    IN inPassword    TVarChar,      -- Пароль 
+ INOUT ioId                     Integer ,      -- Id
+    IN inName                   TVarChar,      -- ФИО
+    IN inPhone                  TVarChar,      -- Нномер телефона
+    IN inPositionId             Integer ,      -- Должность
+    IN inUnitId                 Integer ,      -- Подразделение
+    IN inLogin                  TVarChar,      -- Логин 
+    IN inPassword               TVarChar,      -- Пароль 
+    IN inisInternshipCompleted  Boolean ,    -- Стажировка проведена
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
@@ -101,12 +102,13 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Education(), vbMember, 1658917);   
    END IF;
                                                
-   ioId := gpInsertUpdate_Object_User_Lite(ioId          := 0
-                                         , inUserName    := inLogin
-                                         , inPassword    := inPassword
-                                         , inMemberId    := vbMember
-                                         , inisNewUser   := True
-                                         , inSession     := inSession);
+   ioId := gpInsertUpdate_Object_User_Lite(ioId                    := 0
+                                         , inUserName              := inLogin
+                                         , inPassword              := inPassword
+                                         , inMemberId              := vbMember
+                                         , inisNewUser             := True
+                                         , inisInternshipCompleted := inisInternshipCompleted
+                                         , inSession               := inSession);
                                          
    PERFORM gpInsertUpdate_Object_UserRole(ioId	     := 0
                                         , inUserId   := ioId
@@ -138,7 +140,7 @@ BEGIN
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
