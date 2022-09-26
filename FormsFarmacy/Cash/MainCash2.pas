@@ -1,3 +1,4 @@
+
 unit MainCash2;
 
 interface
@@ -21,7 +22,7 @@ uses
   cxButtonEdit, PosInterface, PosFactory, PayPosTermProcess,
   cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions,
   Vcl.ComCtrls, cxBlobEdit, cxMemo, cxRichEdit, cxEditRepositoryItems,
-  dxDateRanges;
+  dxDateRanges, cxImage;
 
 type
 
@@ -129,7 +130,7 @@ type
     MainColor_calc: TcxGridDBColumn;
     MaincolisFirst: TcxGridDBColumn;
     MaincolIsSecond: TcxGridDBColumn;
-    cxButton1: TcxButton;
+    btnChoiceGoodsFromRemains: TcxButton;
     actChoiceGoodsFromRemains: TOpenChoiceForm;
     TimerMoneyInCash: TTimer;
     MaincolIsPromo: TcxGridDBColumn;
@@ -640,6 +641,14 @@ type
     N65: TMenuItem;
     acteSputnikContactsMessages: TdsdOpenForm;
     N66: TMenuItem;
+    spGet_InternshipCompleted: TdsdStoredProc;
+    spUpdate_InternshipCompleted: TdsdStoredProc;
+    cxImageInstructions: TcxImage;
+    btnListDiffAddGoods: TcxButton;
+    btnListGoods: TcxButton;
+    btnMCS: TcxButton;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -805,6 +814,7 @@ type
     procedure actEnterBuyerForSiteExecute(Sender: TObject);
     procedure TimerActiveAlertsTimer(Sender: TObject);
     procedure actOpenFilesToCheckExecute(Sender: TObject);
+    procedure cxImageInstructionsClick(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -862,6 +872,7 @@ type
 
     FBuyerForSite : string;
 
+    wcActive, wcPrevious : TWinControl;
 
     procedure SetBlinkVIP(isRefresh: Boolean);
     procedure SetBlinkCheck(isRefresh: Boolean);
@@ -1021,6 +1032,7 @@ type
     procedure LoadMedicalProgramSPGoods(AGoodsId : Integer);
     procedure MoveLogFile;
     procedure SaveUnitConfig;
+    procedure ActiveControlChanged(Sender: TObject) ;
 
     property SoldRegim: Boolean read FSoldRegim write SetSoldRegim;
   end;
@@ -1060,7 +1072,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection,
   LikiDniproReceipt, EnterRecipeNumber1303, LikiDniproReceiptDialog, Clipbrd,
   TestingUser, ChoiceMedicalProgramSP, SimpleGauge, ListGoodsKeyword,
-  EnterBuyerForSite, SalePromoGoodsDialog;
+  EnterBuyerForSite, SalePromoGoodsDialog, InternshipConfirmation;
 
 const
   StatusUnCompleteCode = 1;
@@ -2842,6 +2854,7 @@ procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
 var
   cResult: string;
   LocalVersionInfo, BaseVersionInfo: TVersionInfo;
+  nResult : Integer;
 
   procedure Load_PUSH(ARun: Boolean);
   begin
@@ -2882,6 +2895,32 @@ begin
 
     if FPUSHStart then
     begin
+
+      if not gc_User.Local then
+      begin
+        spGet_InternshipCompleted.ParamByName('isInternshipConfirmation').Value := False;
+        spGet_InternshipCompleted.Execute;
+        if spGet_InternshipCompleted.ParamByName('isInternshipConfirmation').Value = True then
+        begin
+          while True do
+          begin
+            case ShowInternshipConfirmation of
+              mrYes : begin
+                        spUpdate_InternshipCompleted.ParamByName('inisInternshipConfirmation').Value := True;
+                        spUpdate_InternshipCompleted.Execute;
+                        Break;
+                      end;
+              mrNo : begin
+                       spUpdate_InternshipCompleted.ParamByName('inisInternshipConfirmation').Value := False;
+                       spUpdate_InternshipCompleted.Execute;
+                       Break;
+                     end;
+            else ShowMessage('Надо выбрать резулютат...');
+            end;
+          end;
+        end;
+      end;
+
       ShowPUSHMessageCash('Уважаемые коллеги!'#13#10#13#10 +
         '1. Сделайте Х-отчет, убедитесь, что он пустой 0,00.'#13#10 +
         '   Форс-Мажор РРО: звоним в любое время Татьяна (099-641-59-21), Юлия (0957767101)'#13#10
@@ -2894,6 +2933,7 @@ begin
       ShowPUSHMessageCash('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Кристине.'#13#10 +
                           'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!', cResult);
 
+      ShowPUSHMessageCash('При нажатии правой кнопки мыши на табличной части FCash вы можете ознакомиться с весомым функционалом программы. '#13#10#13#10 +'Ознакомьтесь!', cResult);
       Load_PUSH(True);
     end
     else if UnitConfigCDS.Active and
@@ -3064,19 +3104,60 @@ begin
 end;
 
 procedure TMainCashForm2.actListDiffAddGoodsExecute(Sender: TObject);
+  var nID : Integer; bCheckGrid : Boolean;
 begin
 
   if not RemainsCDS.Active then
     exit;
-  if RemainsCDS.RecordCount < 1 then
-    exit;
 
   with TListDiffAddGoodsForm.Create(nil) do
     try
-      GoodsCDS := RemainsCDS;
+      if not Self.CheckCDS.IsEmpty and ((Self.ActiveControl is TcxGridSite) and (Self.ActiveControl.Parent = Self.CheckGrid) or
+        (Self.ActiveControl = btnListDiffAddGoods) and (wcPrevious is TcxGridSite) and (wcPrevious.Parent = Self.CheckGrid)) then
+      begin
+        bCheckGrid := True;
+        nID := RemainsCDS.RecNo;
+        RemainsCDS.DisableControls;
+        RemainsCDS.Filtered := false;
+        if RemainsCDS.Locate('Id', Self.CheckCDS.FieldByName('GoodsId').AsInteger, []) then
+        begin
+          try
+            Price := RemainsCDS.FieldByName('Price').AsCurrency;
+            NDS := RemainsCDS.FieldByName('NDS').AsCurrency;
+            MCSValue := RemainsCDS.FieldByName('MCSValue').AsCurrency;
+            NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsInteger;
+
+            GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
+            GoodsCode := RemainsCDS.FieldByName('GoodsCode').AsInteger;
+            GoodsName := RemainsCDS.FieldByName('GoodsName').AsString;
+          finally
+            RemainsCDS.Filtered := True;
+            RemainsCDS.RecNo := nID;
+            RemainsCDS.EnableControls;
+          end;
+        end else Exit;
+      end else
+      begin
+        bCheckGrid := False;
+
+        if RemainsCDS.RecordCount < 1 then exit;
+
+        Price := RemainsCDS.FieldByName('Price').AsCurrency;
+        NDS := RemainsCDS.FieldByName('NDS').AsCurrency;
+        MCSValue := RemainsCDS.FieldByName('MCSValue').AsCurrency;
+        NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsInteger;
+
+        GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
+        GoodsCode := RemainsCDS.FieldByName('GoodsCode').AsInteger;
+        GoodsName := RemainsCDS.FieldByName('GoodsName').AsString;
+      end;
+
       ShowModal;
     finally
       Free;
+      if bCheckGrid then Self.CheckGrid.SetFocus
+      else Self.MainGrid.SetFocus;
+
     end;
 end;
 
@@ -3084,29 +3165,33 @@ procedure TMainCashForm2.actListGoodsExecute(Sender: TObject);
 var
   S: string;
 begin
-  if not fileExists(Goods_lcl) then
-  begin
-    ShowMessage
-      ('Справочник медикаментов не найден обратитесь к администратору...');
-    exit;
-  end;
-
-  if Self.ActiveControl is TcxGridSite then
-    S := MainGridDBTableView.DataController.Search.SearchText
-  else if ActiveControl is TcxCustomComboBoxInnerEdit then
-    S := Copy(lcName.Text, 1, Length(lcName.Text) - Length(lcName.SelText))
-  else
-    S := '';;
-
-  with TListGoodsForm.Create(nil) do
-    try
-      if S <> '' then
-        SetFilter(S);
-
-      ShowModal
-    finally
-      Free;
+  try
+    if not fileExists(Goods_lcl) then
+    begin
+      ShowMessage
+        ('Справочник медикаментов не найден обратитесь к администратору...');
+      exit;
     end;
+
+    if Self.ActiveControl is TcxGridSite then
+      S := MainGridDBTableView.DataController.Search.SearchText
+    else if ActiveControl is TcxCustomComboBoxInnerEdit then
+      S := Copy(lcName.Text, 1, Length(lcName.Text) - Length(lcName.SelText))
+    else
+      S := '';;
+
+    with TListGoodsForm.Create(nil) do
+      try
+        if S <> '' then
+          SetFilter(S);
+
+        ShowModal
+      finally
+        Free;
+      end;
+  finally
+    Self.MainGrid.SetFocus;
+  end;
 end;
 
 procedure TMainCashForm2.actManualDiscountExecute(Sender: TObject);
@@ -8224,6 +8309,11 @@ begin
   SetPromoCodeLoyaltySM(0, '', '', 0, 0);
 end;
 
+procedure TMainCashForm2.cxImageInstructionsClick(Sender: TObject);
+begin
+  actInstructionsCash.Execute;
+end;
+
 function TMainCashForm2.SetMorionCodeFilter : boolean;
   var S, S1, cResult : string; I : Integer; Res, ResQ: TArray<string>;
 begin
@@ -8463,6 +8553,7 @@ begin
   PanelMCSAuto.Visible := not PanelMCSAuto.Visible;
   MainGridDBTableView.Columns[MainGridDBTableView.GetColumnByFieldName
     ('MCSValue').Index].Options.Editing := PanelMCSAuto.Visible;
+  if ActiveControl = btnMCS then Self.MainGrid.SetFocus;
 end;
 
 procedure TMainCashForm2.miPrintNotFiscalCheckClick(Sender: TObject);
@@ -8499,6 +8590,7 @@ begin
   MoveLogFile;
 
   Application.OnMessage := AppMsgHandler; // только 2 форма
+  Screen.OnActiveControlChange := ActiveControlChanged;
   // мемдата для сохранения отгруженных чеков во время получение полных остатков
   FSaveCheckToMemData := false;
   FShowMessageCheckConnection := True;
@@ -11308,9 +11400,10 @@ end;
 
 procedure TMainCashForm2.ParentFormDestroy(Sender: TObject);
 begin
-  inherited;
+  Screen.OnActiveControlChange := nil;
   CloseMutex;
   FStyle.Free;
+  inherited;
 end;
 
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;
@@ -15588,6 +15681,12 @@ begin
     freeAndNil(sp);
     LoadUnitConfig;
   end;
+end;
+
+procedure TMainCashForm2.ActiveControlChanged(Sender: TObject);
+begin
+  wcPrevious := wcActive;
+  wcActive := Self.ActiveControl;
 end;
 
 { TSaveRealThread }
