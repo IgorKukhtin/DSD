@@ -1120,9 +1120,13 @@ end;
 function Recalc_PartionGoods(Edit:TEdit):Boolean;
 var PartionGoods:String;
 begin
-        if ((SettingMain.BranchCode >= 301) or (SettingMain.BranchCode <= 310))
+        if ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
         //and(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Income)
+        and (Pos('.',Edit.Text) = 0)
+        and (Pos('-',Edit.Text) = 0)
+
         then Result:=true
+
         else
         if  (trim(Edit.Text)<>'')
         and((ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Sale)
@@ -1135,7 +1139,7 @@ begin
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ReturnOut)
            )
         and(SettingMain.isPartionDate = FALSE)
-        and((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310))
+        //and((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310))
         then begin
                   PartionGoods:=myCalcPartionGoods(Edit.Text);
                   Result:=PartionGoods<>'';
