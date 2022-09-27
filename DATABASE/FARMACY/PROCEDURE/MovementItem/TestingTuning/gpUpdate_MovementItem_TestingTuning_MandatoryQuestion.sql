@@ -31,7 +31,7 @@ BEGIN
     END IF;    
     
      -- ѕроверка количества вопросов в теме 
-    IF COALESCE(inisMandatoryQuestion, FALSE) = FALSE AND
+/*    IF COALESCE(inisMandatoryQuestion, FALSE) = FALSE AND
        COALESCE((SELECT count(*) 
                  FROM MovementItem
                          
@@ -42,10 +42,10 @@ BEGIN
                                                            
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.ParentId = inParentId
-                   AND MovementItem.DescId = zc_MI_Child()), 0) >= 3
+                   AND MovementItem.DescId = zc_MI_Child()), 0) >= 4
     THEN
       RAISE EXCEPTION 'ѕревышено количество об€зательных вопросов в теме.';
-    END IF;    
+    END IF;  */  
  
     -- сохранили свойство <‘ото ответ>
     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_MandatoryQuestion(), inId, not inisMandatoryQuestion);

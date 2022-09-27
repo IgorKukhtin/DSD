@@ -203,6 +203,8 @@ type
     TransportSumm_load: TcxGridDBColumn;
     actChoiceFormProdOptions_ñomment: TOpenChoiceForm;
     AmountBasis_ch2: TcxGridDBColumn;
+    Color_ProdColor_ch2: TcxGridDBColumn;
+    Color_ProdColorValue_Ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

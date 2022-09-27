@@ -309,7 +309,7 @@ BEGIN
                                           , COALESCE(MIFloat_AmountManual.ValueData,0) 
                                           , COALESCE(MIFloat_AmountStorage.ValueData,0) 
                                           , MILinkObject_PartionDateKind.ObjectId
-                                          ,  MIDate_Insert.ValueData  
+                                          , MIDate_Insert.ValueData  
                                           , MovementTR.ID   
                                           , MovementTR.InvNumber
                                           , MovementTR.OperDate 
@@ -332,46 +332,40 @@ BEGIN
                                                     ON ObjectFloat_Price_Value.ObjectId = ObjectLink_Goods.ObjectId
                                                    AND ObjectFloat_Price_Value.DescId   = zc_ObjectFloat_Price_Value()
                         )
-
-         , tmpGoodsParam AS (SELECT tmp.GoodsId                                                       AS GoodsId
+          , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                                , ObjectFloat_NDSKind_NDS.ValueData
+                           FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                           WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                           )
+         , tmpGoodsParam AS (SELECT Object_Goods_Retail.Id                                            AS GoodsId
+                                  , Object_Goods_Main.Id                                              AS GoodsMainId
+                                  , Object_Goods_Main.ObjectCode                                      AS GoodsCode
+                                  , Object_Goods_Main.Name                                            AS GoodsName
                                   , Object_GoodsGroup.ValueData                                       AS GoodsGroupName
                                   , Object_NDSKind.ValueData                                          AS NDSKindName
+                                  , Object_ConditionsKeep.ValueData                                   AS ConditionsKeepName
                                   , ObjectFloat_NDSKind_NDS.ValueData                                 AS NDS 
-                                  , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)  :: Boolean  AS isClose
-                                  , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)    :: Boolean  AS isTOP
-                                  , COALESCE(ObjectBoolean_Goods_First.ValueData, False)  :: Boolean  AS isFirst
-                                  , COALESCE(ObjectBoolean_Goods_Second.ValueData, False) :: Boolean  AS isSecond
-                             FROM (SELECT DISTINCT COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId) AS GoodsId
-                                   FROM tmpRemains
-                                        FULL OUTER JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId) AS tmp
-                      
-                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                                       ON ObjectLink_Goods_GoodsGroup.ObjectId = tmp.GoodsId
-                                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-                                  LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                  , COALESCE(Object_Goods_Main.isClose, False)    :: Boolean          AS isClose
+                                  , COALESCE(Object_Goods_Retail.isTOP, false)    :: Boolean          AS isTOP
+                                  , COALESCE(Object_Goods_Retail.isFirst, False)  :: Boolean          AS isFirst
+                                  , COALESCE(Object_Goods_Retail.isSecond, False) :: Boolean          AS isSecond
+                                  , Object_Goods_Retail.isErased
+                             FROM Object_Goods_Retail 
+                             
+                                  LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
                                   
-                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
-                                                          ON ObjectBoolean_Goods_Close.ObjectId = tmp.GoodsId
-                                                         AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()  
-                                                         
-                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                                       ON ObjectLink_Goods_NDSKind.ObjectId = tmp.GoodsId
-                                                      AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-                                  LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
-                     
-                                  LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                                        ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
-                                                       AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
-                     
-                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                                          ON ObjectBoolean_Goods_TOP.ObjectId = tmp.GoodsId
-                                                         AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
-                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_First
-                                                          ON ObjectBoolean_Goods_First.ObjectId = tmp.GoodsId
-                                                         AND ObjectBoolean_Goods_First.DescId = zc_ObjectBoolean_Goods_First() 
-                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Second
-                                                          ON ObjectBoolean_Goods_Second.ObjectId = tmp.GoodsId
-                                                         AND ObjectBoolean_Goods_Second.DescId = zc_ObjectBoolean_Goods_Second()
+                                  LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_Goods_Main.GoodsGroupId
+                                  LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = Object_Goods_Main.NDSKindId
+
+                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                                       ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_Retail.Id
+                                                      AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                                  LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+                                     
+                                  LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                                     ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
+                                                     
+                             WHERE Object_Goods_Retail.RetailId = vbRetailId 
                                  )
          , tmpMI_Child AS (SELECT MovementItem.ParentId
                                 , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
@@ -417,20 +411,53 @@ BEGIN
                                            WHERE ObjectLink_Goods_ConditionsKeep.ObjectId IN (SELECT Object_Goods_Retail.Id FROM Object_Goods_Retail WHERE Object_Goods_Retail.RetailId = vbRetailId)
                                              AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
                                            )
+          , tmpMovementItem_Send AS (SELECT COALESCE(MovementItem_Send.ObjectId, tmpRemains.GoodsId)  AS ObjectId
+                                          , MovementItem_Send.Id
+                                          , MovementItem_Send.Amount
+                                          , MovementItem_Send.IsErased 
+                                          , MovementItem_Send.ReasonDifferencesId
+                                          , MovementItem_Send.PartionDateKindId
+                                                            
+                                          , COALESCE (MovementItem_Send.PriceIn, tmpRemains.PriceIn) AS PriceIn
+                                          , MovementItem_Send.SumPriceIn
+                                          , MovementItem_Send.PriceFrom
+                                          , MovementItem_Send.PriceTo
+
+                                          , MovementItem_Send.RemainsFrom
+                                          , MovementItem_Send.RemainsTo
+                                          , MovementItem_Send.ValueFrom
+                                          , MovementItem_Send.ValueTo
+
+                                          , MovementItem_Send.Price
+                                          , MovementItem_Send.Summa
+                                          , MovementItem_Send.PriceWithVAT
+                                          , MovementItem_Send.SummaWithVAT
+                                          , MovementItem_Send.AmountManual
+                                          , MovementItem_Send.AmountStorage
+                                          , MovementItem_Send.DateInsert
+
+                                          , MovementItem_Send.TechnicalRediscountID
+                                          , MovementItem_Send.TechnicalRediscountInvNumber
+                                          , MovementItem_Send.TechnicalRediscountOperDate      
+                                           
+                                          , tmpRemains.Amount                         AS AmountRemains
+                                          , tmpRemains.MinExpirationDate
+                                     FROM tmpRemains
+                                          FULL JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId)
 
             -- результат
             SELECT
                 COALESCE(MovementItem_Send.Id,0)                  AS Id
-              , Object_Goods.Id                                   AS GoodsId
-              , Object_Goods.ObjectCode                           AS GoodsCode
-              , Object_Goods.ValueData                            AS GoodsName
+              , tmpGoodsParam.GoodsId                             AS GoodsId
+              , tmpGoodsParam.GoodsCode                           AS GoodsCode
+              , tmpGoodsParam.GoodsName                           AS GoodsName
               , Object_PartionDateKind.Id                         AS PartionDateKindId
               , Object_PartionDateKind.ValueData      :: TVarChar AS PartionDateKindName
               , MovementItem_Send.Amount                          AS Amount
-              , tmpRemains.Amount::TFloat                         AS AmountRemains
+              , MovementItem_Send.AmountRemains::TFloat           AS AmountRemains
               , tmpCheck.Amount::TFloat                           AS AmountCheck
-              , COALESCE (MovementItem_Send.PriceIn, tmpRemains.PriceIn)::TFloat           AS PriceIn
-              , COALESCE (MovementItem_Send.SumPriceIn, (MovementItem_Send.Amount * tmpRemains.PriceIn))      ::TFloat  AS SumPriceIn
+              , MovementItem_Send.PriceIn::TFloat                 AS PriceIn
+              , COALESCE (MovementItem_Send.SumPriceIn, (MovementItem_Send.Amount * MovementItem_Send.PriceIn))      ::TFloat  AS SumPriceIn
               , CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END ::TFloat  AS PriceUnitFrom
               , CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END     ::TFloat  AS PriceUnitTo
 
@@ -453,8 +480,8 @@ BEGIN
               , (COALESCE (MovementItem_Send.AmountStorage,0) - COALESCE(MovementItem_Send.Amount,0)) ::TFloat as AmountStorageDiff
               , Object_ReasonDifferences.Id                                AS ReasonDifferencesId
               , Object_ReasonDifferences.ValueData                         AS ReasonDifferencesName
-              , COALESCE (Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
-              , COALESCE (tmpMI_Child.ExpirationDate, tmpRemains.MinExpirationDate)::TDateTime AS MinExpirationDate   
+              , tmpGoodsParam.ConditionsKeepName                           AS ConditionsKeepName
+              , COALESCE (tmpMI_Child.ExpirationDate, MovementItem_Send.MinExpirationDate)::TDateTime AS MinExpirationDate   
 
               , COALESCE (MovementItem_Send.IsErased,FALSE)                AS isErased
 
@@ -481,39 +508,32 @@ BEGIN
               , MovementItem_Send.TechnicalRediscountInvNumber                      AS TechnicalRediscountInvNumber
               , MovementItem_Send.TechnicalRediscountOperDate                       AS TechnicalRediscountOperDate
 
-            FROM tmpRemains
-                FULL OUTER JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
+            FROM tmpMovementItem_Send AS MovementItem_Send 
+
+                LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = MovementItem_Send.ObjectId
+
                 LEFT JOIN tmpPrice AS Object_Price_From
-                                   ON Object_Price_From.GoodsId = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
+                                   ON Object_Price_From.GoodsId = tmpGoodsParam.GoodsId
                                   AND Object_Price_From.UnitId = vbUnitFromId
                 LEFT JOIN tmpPrice AS Object_Price_To
-                                   ON Object_Price_To.GoodsId = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
+                                   ON Object_Price_To.GoodsId = tmpGoodsParam.GoodsId
                                   AND Object_Price_To.UnitId = vbUnitToId
 
                 LEFT JOIN Object AS Object_ReasonDifferences ON Object_ReasonDifferences.Id = MovementItem_Send.ReasonDifferencesId
                 LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementItem_Send.PartionDateKindId
                                   
-                LEFT JOIN tmpCheck ON tmpCheck.GoodsId = Object_Goods.Id
-                -- условия хранения
-                LEFT JOIN tmpOL_Goods_ConditionsKeep AS ObjectLink_Goods_ConditionsKeep 
-                                                     ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
-                                    --AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-                LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
-
-                LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
+                LEFT JOIN tmpCheck ON tmpCheck.GoodsId = tmpGoodsParam.GoodsId
 
                 LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem_Send.Id 
 
                 LEFT OUTER JOIN AccommodationLincGoods AS Accommodation
                                                        ON Accommodation.UnitId = vbUnitFromId
-                                                      AND Accommodation.GoodsId = Object_Goods.Id
+                                                      AND Accommodation.GoodsId = tmpGoodsParam.GoodsId
                                                       AND Accommodation.isErased = False
                 -- Размещение товара
                 LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = Accommodation.AccommodationId
 
-                LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Object_Goods.Id
-                LEFT JOIN tmpPromo ON tmpPromo.GoodsId = Object_Goods_Retail.GoodsMainId
+                LEFT JOIN tmpPromo ON tmpPromo.GoodsId = tmpGoodsParam.GoodsMainId
                 
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
                                                  ON MILinkObject_CommentSend.MovementItemId = MovementItem_Send.Id
@@ -521,7 +541,7 @@ BEGIN
                 LEFT JOIN Object AS Object_CommentSend
                                  ON Object_CommentSend.ID = MILinkObject_CommentSend.ObjectId
 
-            WHERE Object_Goods.isErased = FALSE 
+            WHERE tmpGoodsParam.isErased = FALSE 
                or MovementItem_Send.id is not null;
     ELSE
 
@@ -1004,4 +1024,4 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- 
-SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= False, inIsErased:= FALSE, inSession:= '2')
+select * from gpSelect_MovementItem_Send(inMovementId := 29429318 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

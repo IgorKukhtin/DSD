@@ -196,7 +196,15 @@ begin
 
   with TListDiffAddGoodsForm.Create(nil) do
   try
-    GoodsCDS := Self.ListGoodsCDS;
+    Price := Self.ListGoodsCDS.FieldByName('Price').AsCurrency;
+    NDS := Self.ListGoodsCDS.FieldByName('NDS').AsCurrency;
+    MCSValue := Self.ListGoodsCDS.FieldByName('MCSValue').AsCurrency;
+    NDSKindId := Self.ListGoodsCDS.FieldByName('NDSKindId').AsInteger;
+
+    GoodsId := Self.ListGoodsCDS.FieldByName('Id').AsInteger;
+    GoodsCode := Self.ListGoodsCDS.FieldByName('GoodsCode').AsInteger;
+    GoodsName := Self.ListGoodsCDS.FieldByName('GoodsName').AsString;
+
     if ShowModal <> mrOk then Exit;
   finally
      Free;

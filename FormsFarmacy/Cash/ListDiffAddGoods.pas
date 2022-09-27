@@ -51,15 +51,24 @@ type
     procedure TimerStartTimer(Sender: TObject);
   private
     FDiffKindId : Integer;
-    FGoodsCDS : TClientDataSet;
     FAmountDay : Currency;
     FAmountDiffKind, FMaxOrderAmount, FPackages : Currency;
+
+    FPrice, FNDS, FMCSValue : Currency;
+    FGoodsId, FGoodsCode, FNDSKindId : Integer;
+    FGoodsName : String;
 
     // Сохранение чека в локальной базе.
     function SaveLocal(AManagerId: Integer; AManagerName, ABayerName: String; AAmount : Currency): Boolean;
   public
+    property Price : Currency read FPrice write FPrice;
+    property NDS : Currency read FNDS write FNDS;
+    property MCSValue : Currency read FMCSValue write FMCSValue;
+    property NDSKindId : Integer read FNDSKindId write FNDSKindId;
 
-    property GoodsCDS : TClientDataSet read FGoodsCDS write FGoodsCDS;
+    property GoodsId : Integer read FGoodsId write FGoodsId;
+    property GoodsCode : Integer read FGoodsCode write FGoodsCode;
+    property GoodsName : String read FGoodsName write FGoodsName;
   end;
 
 implementation
@@ -97,8 +106,8 @@ begin
   if nAmount < 0 then nAmount := 0;
 
   Label8.Caption := 'Кол-во ' + CurrToStr(nAmount + FAmountDiffKind) + '  ' +
-                    'Poзн. цена,грн ' + GoodsCDS.FieldByName('Price').AsString + '  ' +
-                    'Сумма,грн ' + CurrToStr(RoundTo((nAmount + FAmountDiffKind) * GoodsCDS.FieldByName('Price').AsCurrency, - 2)) +
+                    'Poзн. цена,грн ' + CurrToStr(FPrice) + '  ' +
+                    'Сумма,грн ' + CurrToStr(RoundTo((nAmount + FAmountDiffKind) * FPrice, - 2)) +
                     IfThen (FMaxOrderAmount = 0, '', '  Макс. Сумма,грн ' + CurrToStr(FMaxOrderAmount)) +
                     IfThen (FPackages = 0, '', '  Макс. кол-во уп. ' + CurrToStr(FMaxOrderAmount));
 
@@ -165,7 +174,7 @@ begin
     nAmountDiffKind := 0;
     if not gc_User.Local then
     try
-      MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+      MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := FGoodsId;
       MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inDiffKindID').Value := FDiffKindId;
       MainCashForm.spSelect_CashListDiffGoods.Execute;
       if MainCashForm.CashListDiffCDS.Active and (MainCashForm.CashListDiffCDS.RecordCount = 1) then
@@ -193,7 +202,7 @@ begin
       ListDiffCDS.First;
       while not ListDiffCDS.Eof do
       begin
-        if (ListDiffCDS.FieldByName('ID').AsInteger = GoodsCDS.FieldByName('ID').AsInteger) then
+        if (ListDiffCDS.FieldByName('ID').AsInteger = FGoodsId) then
         begin
           if (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) then
           begin
@@ -209,10 +218,10 @@ begin
     end;
 
     if ((nAmountDiffKind + nAmount) > 1) and
-      (((nAmountDiffKind + nAmount) * GoodsCDS.FieldByName('Price').AsCurrency) > nMaxOrderAmount) then
+      (((nAmountDiffKind + nAmount) * FPrice) > nMaxOrderAmount) then
     begin
       Action := TCloseAction.caNone;
-      ShowMessage('Сумма заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
+      ShowMessage('Сумма заказа по позиции :'#13#10 + FGoodsName +
         #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
         '" превышает ' + CurrToStr(nMaxOrderAmount) + ' грн. ...');
       ceAmount.SetFocus;
@@ -226,7 +235,7 @@ begin
     nAmountDiffKind := 0;
     if not gc_User.Local then
     try
-      MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+      MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := FGoodsId;
       MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inDiffKindID').Value := FDiffKindId;
       MainCashForm.spSelect_CashListDiffGoods.Execute;
       if MainCashForm.CashListDiffCDS.Active and (MainCashForm.CashListDiffCDS.RecordCount = 1) then
@@ -254,7 +263,7 @@ begin
       ListDiffCDS.First;
       while not ListDiffCDS.Eof do
       begin
-        if (ListDiffCDS.FieldByName('ID').AsInteger = GoodsCDS.FieldByName('ID').AsInteger) then
+        if (ListDiffCDS.FieldByName('ID').AsInteger = FGoodsId) then
         begin
           if (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) then
           begin
@@ -273,7 +282,7 @@ begin
       ((nAmountDiffKind + nAmount) > nPackages) then
     begin
       Action := TCloseAction.caNone;
-      ShowMessage('Количество заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
+      ShowMessage('Количество заказа по позиции :'#13#10 + FGoodsName +
         #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
         '" превышает ' + CurrToStr(nPackages) + ' уп. ...');
       ceAmount.SetFocus;
@@ -291,29 +300,29 @@ begin
       Exit;
     end;
 
-    if GoodsCDS.FieldByName('PriceSaleOOC1303').AsCurrency = 0 then
+    if ListGoodsCDS.FieldByName('PriceOOC1303').AsCurrency = 0 then
     begin
       Action := TCloseAction.caNone;
-      ShowMessage('Товар <' + GoodsCDS.FieldByName('GoodsName').AsString + '> не участвует в СП по постановлению 1303...');
+      ShowMessage('Товар <' + FGoodsName + '> не участвует в СП по постановлению 1303...');
       beDiffKind.SetFocus;
       Exit;
     end;
 
-    if GoodsCDS.FieldByName('NDS').AsCurrency = 20 then
+    if FNDS = 20 then
     begin
       Action := TCloseAction.caNone;
-      ShowMessage('Запрещено использовать товар <' + GoodsCDS.FieldByName('GoodsName').AsString + '> с НДС 20% в СП по постановлению 1303...');
+      ShowMessage('Запрещено использовать товар <' + FGoodsName + '> с НДС 20% в СП по постановлению 1303...');
       beDiffKind.SetFocus;
       Exit;
     end;
 
 
-    if (GoodsCDS.FieldByName('PriceSaleOOC1303').AsCurrency < ListGoodsCDS.FieldByName('JuridicalPrice').AsCurrency) and
-      ((ListGoodsCDS.FieldByName('JuridicalPrice').AsCurrency / GoodsCDS.FieldByName('PriceSaleOOC1303').AsCurrency * 100.0 - 100) >
+    if (ListGoodsCDS.FieldByName('PriceOOC1303').AsCurrency < ListGoodsCDS.FieldByName('JuridicalPrice').AsCurrency) and
+      ((ListGoodsCDS.FieldByName('JuridicalPrice').AsCurrency / ListGoodsCDS.FieldByName('PriceOOC1303').AsCurrency * 100.0 - 100) >
       MainCashForm.UnitConfigCDS.FindField('DeviationsPrice1303').AsCurrency) then
     begin
       Action := TCloseAction.caNone;
-      ShowMessage('Отпускная цена товара <' + GoodsCDS.FieldByName('GoodsName').AsString + '> выше чем по реестру товаров соц. проекта 1303...');
+      ShowMessage('Отпускная цена товара <' + FGoodsName + '> выше чем по реестру товаров соц. проекта 1303...');
       beDiffKind.SetFocus;
       Exit;
     end;
@@ -323,8 +332,8 @@ begin
   begin
     try
       DiffKindPriceCDS.Filter := 'DiffKindId = ' + DiffKindCDS.FieldByName('Id').AsString  +
-                                 ' and MinPrice <= ' + GoodsCDS.FieldByName('Price').AsString +
-                                 ' and MaxPrice > ' + GoodsCDS.FieldByName('Price').AsString;
+                                 ' and MinPrice <= ' + CurrToStr(FPrice) +
+                                 ' and MaxPrice > ' + CurrToStr(FPrice);
       DiffKindPriceCDS.Filtered := True;
       if DiffKindPriceCDS.RecordCount = 1 then
       begin
@@ -332,21 +341,21 @@ begin
           ((nAmountDiffKind + nAmount) > DiffKindPriceCDS.FieldByName('Amount').AsCurrency) then
         begin
           Action := TCloseAction.caNone;
-          ShowMessage('Количество заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
+          ShowMessage('Количество заказа по позиции :'#13#10 + FGoodsName +
             #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
-            ' и ценой ' + GoodsCDS.FieldByName('Price').AsString +
+            ' и ценой ' + CurrToStr(FPrice) +
             ' " превышает ' + CurrToStr(DiffKindPriceCDS.FieldByName('Amount').AsCurrency) + ' уп. ...');
           ceAmount.SetFocus;
           Exit;
         end;
 
         if ((nAmountDiffKind + nAmount) > 1) and (DiffKindPriceCDS.FieldByName('Summa').AsCurrency > 0) and
-          (((nAmountDiffKind + nAmount) * GoodsCDS.FieldByName('Price').AsCurrency) > DiffKindPriceCDS.FieldByName('Summa').AsCurrency) then
+          (((nAmountDiffKind + nAmount) * FPrice) > DiffKindPriceCDS.FieldByName('Summa').AsCurrency) then
         begin
           Action := TCloseAction.caNone;
-          ShowMessage('Сумма заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
+          ShowMessage('Сумма заказа по позиции :'#13#10 + FGoodsName +
             #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
-            ' и ценой ' + GoodsCDS.FieldByName('Price').AsString +
+            ' и ценой ' + CurrToStr(FPrice) +
             '" превышает ' + CurrToStr(DiffKindPriceCDS.FieldByName('Amount').AsCurrency) + ' грн. ...');
           ceAmount.SetFocus;
           Exit;
@@ -359,7 +368,7 @@ begin
   end;
 
 
-  if GoodsCDS.FieldByName('Id').AsInteger = 0 then
+  if FGoodsId = 0 then
   begin
     Action := TCloseAction.caNone;
     ShowMessage('Ошибка Не выбран товар...');
@@ -367,20 +376,20 @@ begin
   end;
 
   if DiffKindCDS.FieldByName('isFindLeftovers').AsBoolean and
-     (GoodsCDS.FieldByName('Price').AsCurrency >= MainCashForm.UnitConfigCDS.FindField('CustomerThreshold').AsCurrency) then
+     (FPrice >= MainCashForm.UnitConfigCDS.FindField('CustomerThreshold').AsCurrency) then
   begin
     if not gc_User.Local then
     begin
-      spExistsRemainsGoods.ParamByName('inGoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+      spExistsRemainsGoods.ParamByName('inGoodsId').Value := FGoodsId;
       spExistsRemainsGoods.ParamByName('outThereIs').Value := False;
       spExistsRemainsGoods.Execute;
       if spExistsRemainsGoods.ParamByName('outThereIs').Value then
       begin
         ShowMessage('Заказываемый товар есть в наличии по другим аптекам.'#13#10#13#10 +
                     'Менеджер по возможности создаст на вас перемещение либо разблокирует товар для заказа у поставщика.');
-//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsId').Value := FGoodsId;
 //        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsCode').Value := GoodsCDS.FieldByName('GoodsCode').AsInteger;
-//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsName').Value := GoodsCDS.FieldByName('GoodsName').AsString;
+//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsName').Value := FGoodsName;
 //        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('Amount').Value := nAmount;
 //        actCustomerThresho_RemainsGoodsCash.Execute;
       end;
@@ -411,11 +420,11 @@ begin
       end;
 
       ListDiffCDS.Append;
-      ListDiffCDS.FieldByName('ID').AsInteger := GoodsCDS.FieldByName('ID').AsInteger;
+      ListDiffCDS.FieldByName('ID').AsInteger := FGoodsId;
       ListDiffCDS.FieldByName('Amount').AsCurrency := nAmount;
-      ListDiffCDS.FieldByName('Code').AsInteger := GoodsCDS.FieldByName('GoodsCode').AsInteger;
-      ListDiffCDS.FieldByName('Name').AsString := GoodsCDS.FieldByName('GoodsName').AsString;
-      ListDiffCDS.FieldByName('Price').AsCurrency := GoodsCDS.FieldByName('Price').AsCurrency;
+      ListDiffCDS.FieldByName('Code').AsInteger := FGoodsCode;
+      ListDiffCDS.FieldByName('Name').AsString := FGoodsName;
+      ListDiffCDS.FieldByName('Price').AsCurrency := FPrice;
       ListDiffCDS.FieldByName('DiffKindId').AsVariant := FDiffKindId;
       ListDiffCDS.FieldByName('Comment').AsString := meComent.Text;
       ListDiffCDS.FieldByName('UserID').AsString := gc_User.Session;
@@ -446,9 +455,9 @@ end;
 procedure TListDiffAddGoodsForm.FormShow(Sender: TObject);
   var AmountDiffUser, AmountDiff, AmountDiffPrev : currency;
       AmountIncome, AmountIncomeSend, PriceSaleIncome, Remains : currency; ListDate : Variant;
-      S : string; nID, nGoods : integer;
+      S : string; nID : integer;
 begin
-  if GoodsCDS = Nil then Exit;
+  if FGoodsId = 0 then Exit;
   FDiffKindId := 0;
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
@@ -457,7 +466,7 @@ begin
       AmountIncome := 0; AmountIncomeSend := 0; PriceSaleIncome := 0; ListDate := Null;
       if not gc_User.Local then
       try
-        MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+        MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := FGoodsId;
         MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inDiffKindID').Value := 0;
         MainCashForm.spSelect_CashListDiffGoods.Execute;
         if MainCashForm.CashListDiffCDS.Active and (MainCashForm.CashListDiffCDS.RecordCount = 1) then
@@ -501,14 +510,13 @@ begin
 
       Remains := 0;
       try
-        nGoods := GoodsCDS.FieldByName('Id').AsInteger;
         nID := MainCashForm.RemainsCDS.RecNo;
         MainCashForm.RemainsCDS.DisableControls;
         MainCashForm.RemainsCDS.Filtered := False;
         MainCashForm.RemainsCDS.First;
         while not MainCashForm.RemainsCDS.Eof do
         begin
-          if MainCashForm.RemainsCDS.FieldByName('Id').AsInteger = nGoods then
+          if MainCashForm.RemainsCDS.FieldByName('Id').AsInteger = FGoodsId then
           begin
             Remains := Remains + MainCashForm.RemainsCDS.FieldByName('Remains').AsCurrency +
                                  MainCashForm.RemainsCDS.FieldByName('Reserved').AsCurrency +
@@ -535,7 +543,7 @@ begin
         ListDiffCDS.First;
         while not ListDiffCDS.Eof do
         begin
-          if (ListDiffCDS.FieldByName('ID').AsInteger = GoodsCDS.FieldByName('ID').AsInteger) then
+          if (ListDiffCDS.FieldByName('ID').AsInteger = FGoodsId) then
           begin
             if (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) then
             begin
@@ -566,7 +574,7 @@ begin
         Exit;
       end;
 
-      if not ListGoodsCDS.Locate('Id', GoodsCDS.FieldByName('ID').AsInteger, []) then
+      if not ListGoodsCDS.Locate('Id', FGoodsId, []) then
       begin
         ListGoodsCDS.Close;
         ShowMessage('Ошибка медикамент не найден в прайсах поставщиков.');
@@ -587,7 +595,7 @@ begin
       if S = '' then S := #13#10'За последнии два дня отказы не найдены';
       if ListDate <> Null then S := S +  #13#10'Последний раз менеджер забрал заказ: ' + FormatDateTime('DD.mm.yyyy HH:NN', ListDate);
       if not MainCashForm.CashListDiffCDS.Active then S := #13#10'Работа автономно (Данные по кассе)' + S;
-      S := 'Препарат: '#13#10 + GoodsCDS.FieldByName('GoodsName').AsString + S;
+      S := 'Препарат: '#13#10 + FGoodsName + S;
       Label1.Caption := S;
 
       S := '';
@@ -604,7 +612,7 @@ begin
         if (AmountIncome > 0) and (AmountIncomeSend > 0) then S := S + ';';
         if AmountIncomeSend > 0 then S := S + ' внутрен. перещение - ' + CurrToStr(AmountIncomeSend) + 'упк.';
       end;
-      S := S + #13#10#13#10'НТЗ = ' + CurrToStr(GoodsCDS.FieldByName('MCSValue').AsCurrency) + ' упк. ОСТАТОК = ' + CurrToStr(Remains) + ' упк.';
+      S := S + #13#10#13#10'НТЗ = ' + CurrToStr(FMCSValue) + ' упк. ОСТАТОК = ' + CurrToStr(Remains) + ' упк.';
 //      if ListGoodsCDS.FieldByName('isResolution_224').AsBoolean then
 //      begin
 //        S := S + #13#10#13#10'ВНИМАНИЕ!!!! позиция из пост 224 - '#13#10'                СТАВИТЬ в ЗАКАЗ из рассчета на 1день продаж!';
@@ -660,7 +668,7 @@ begin
 
   if not gc_User.Local then
   try
-    MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+    MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := FGoodsId;
     MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inDiffKindID').Value := FDiffKindId;
     MainCashForm.spSelect_CashListDiffGoods.Execute;
     if MainCashForm.CashListDiffCDS.Active and (MainCashForm.CashListDiffCDS.RecordCount = 1) then
@@ -688,7 +696,7 @@ begin
     ListDiffCDS.First;
     while not ListDiffCDS.Eof do
     begin
-      if (ListDiffCDS.FieldByName('ID').AsInteger = GoodsCDS.FieldByName('ID').AsInteger) then
+      if (ListDiffCDS.FieldByName('ID').AsInteger = FGoodsId) then
       begin
         if (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) then
         begin
@@ -727,21 +735,21 @@ begin
   CheckCDS.Append;
   CheckCDS.FieldByName('Id').AsInteger := 0;
   CheckCDS.FieldByName('ParentId').AsInteger := 0;
-  CheckCDS.FieldByName('GoodsId').AsInteger := GoodsCDS.FieldByName('ID').AsInteger;
-  CheckCDS.FieldByName('GoodsCode').AsInteger := GoodsCDS.FieldByName('GoodsCode').AsInteger;
-  CheckCDS.FieldByName('GoodsName').AsString := GoodsCDS.FieldByName('GoodsName').AsString;
+  CheckCDS.FieldByName('GoodsId').AsInteger := FGoodsId;
+  CheckCDS.FieldByName('GoodsCode').AsInteger := FGoodsCode;
+  CheckCDS.FieldByName('GoodsName').AsString := FGoodsName;
   CheckCDS.FieldByName('Amount').asCurrency := AAmount;
-  CheckCDS.FieldByName('Price').asCurrency := GoodsCDS.FieldByName('Price').AsCurrency;
-  CheckCDS.FieldByName('Summ').asCurrency := GetSumm(AAmount, GoodsCDS.FieldByName('Price').AsCurrency, True);
-  CheckCDS.FieldByName('NDS').asCurrency := GoodsCDS.FieldByName('NDS').asCurrency;
-  CheckCDS.FieldByName('NDSKindId').AsInteger := GoodsCDS.FieldByName('NDSKindId').AsInteger;
+  CheckCDS.FieldByName('Price').asCurrency := FPrice;
+  CheckCDS.FieldByName('Summ').asCurrency := GetSumm(AAmount, FPrice, True);
+  CheckCDS.FieldByName('NDS').asCurrency := FNDS;
+  CheckCDS.FieldByName('NDSKindId').AsInteger := FNDSKindId;
   CheckCDS.FieldByName('DiscountExternalID').AsVariant := Null;
   CheckCDS.FieldByName('DiscountExternalName').AsVariant := Null;
   CheckCDS.FieldByName('DivisionPartiesID').AsVariant := Null;
   CheckCDS.FieldByName('DivisionPartiesName').AsVariant :=Null;
   CheckCDS.FieldByName('isErased').AsBoolean := false;
   // ***20.07.16
-  CheckCDS.FieldByName('PriceSale').asCurrency := GoodsCDS.FieldByName('Price').AsCurrency;
+  CheckCDS.FieldByName('PriceSale').asCurrency := FPrice;
   CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
   CheckCDS.FieldByName('SummChangePercent').asCurrency := 0;
   // ***19.08.16

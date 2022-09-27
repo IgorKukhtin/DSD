@@ -1,9 +1,9 @@
-object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
+object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
   Left = 0
   Top = 0
-  Caption = #1041#1086#1085#1091#1089#1099' '#1087#1086' '#1082#1083#1080#1077#1085#1090#1072#1084' '#1086#1090' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+  Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089#1086#1086#1073#1097#1077#1085#1080#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1072#1082#1090#1072
   ClientHeight = 440
-  ClientWidth = 1082
+  ClientWidth = 812
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,15 +14,38 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 812
+    Height = 31
+    Align = alTop
+    TabOrder = 0
+    object cxLabel1: TcxLabel
+      Left = 4
+      Top = 6
+      Caption = #1053#1086#1084#1077#1088' '#1090#1077#1083#1077#1092#1086#1085#1072':'
+    end
+    object edPhone: TcxMaskEdit
+      Left = 102
+      Top = 5
+      Properties.MaskKind = emkRegExpr
+      Properties.EditMask = '\d\d\d\d\d\d\d\d\d\d\d\d'
+      TabOrder = 1
+      Width = 147
+    end
+  end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 1082
-    Height = 414
+    Top = 57
+    Width = 812
+    Height = 383
     Align = alClient
-    TabOrder = 1
+    TabOrder = 5
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -80,12 +103,10 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
           Position = spFooter
-          Column = Bonus
         end
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = Bonus
         end
         item
           Format = ',0.00;-,0.00; ;'
@@ -156,61 +177,35 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = Bonus
         end
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
         end
         item
-          Format = ',0.####;-,0.####; ;'
-          Kind = skSum
-          Column = Bonus_Used
+          Format = #1057#1086#1086#1073#1097#1077#1085#1080#1081' 0'
+          Kind = skCount
+          Column = text
         end
         item
-          Format = ',0.####;-,0.####; ;'
-          Kind = skSum
-          Column = AmountV2
-        end
-        item
-          Format = ',0.####;-,0.####; ;'
+          Format = ',0.####'
           Kind = skSum
         end
         item
-          Format = ',0.####;-,0.####; ;'
+          Format = ',0.####'
           Kind = skSum
         end
         item
-          Format = ',0.####;-,0.####; ;'
+          Format = ',0.####'
           Kind = skSum
         end
         item
-          Format = ',0.####;-,0.####; ;'
+          Format = ',0.####'
           Kind = skSum
         end
         item
-          Format = ',0.####;-,0.####; ;'
+          Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####;-,0.####; ;'
-          Kind = skSum
-          Column = AmountV1_PartionDate
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-          Column = Bonus_Balance
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-          Column = Bonus_Add
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-          Column = Bonus_Added
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -222,108 +217,38 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
       OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.CellAutoHeight = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object BuyerForSiteCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'BuyerForSiteCode'
+      object GoodsCode: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086#1089#1090#1072#1074#1082#1080
+        DataBinding.FieldName = 'sentDateTime'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 62
+        Width = 164
       end
-      object BuyerForSiteName: TcxGridDBColumn
-        Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
-        DataBinding.FieldName = 'BuyerForSiteName'
+      object GoodsName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1091#1089
+        DataBinding.FieldName = 'activityStatus'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 197
+        Width = 122
       end
-      object Phone: TcxGridDBColumn
-        Caption = #1058#1077#1083#1077#1092#1086#1085
-        DataBinding.FieldName = 'Phone'
+      object text: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090
+        DataBinding.FieldName = 'text'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 129
-      end
-      object Bonus: TcxGridDBColumn
-        Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086' ('#1089#1072#1081#1090')'
-        DataBinding.FieldName = 'Bonus'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object Bonus_Used: TcxGridDBColumn
-        Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' ('#1089#1072#1081#1090')'
-        DataBinding.FieldName = 'Bonus_Used'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 101
-      end
-      object Bonus_Balance: TcxGridDBColumn
-        Caption = #1054#1089#1090#1072#1090#1086#1082' '#1073#1086#1085#1091#1089#1072' ('#1089#1072#1081#1090')'
-        DataBinding.FieldName = 'Bonus_Balance'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object AmountV1_PartionDate: TcxGridDBColumn
-        Caption = #1042' '#1079#1072#1082#1072#1079#1072#1093
-        DataBinding.FieldName = 'MobileDiscount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 96
-      end
-      object AmountV2: TcxGridDBColumn
-        Caption = #1042' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1093' '#1079#1072#1082#1072#1079#1072#1093
-        DataBinding.FieldName = 'MobileDiscount_Compl'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
-      object Bonus_Add: TcxGridDBColumn
-        Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082' '#1073#1086#1085#1091#1089#1091' ('#1072#1074#1090'. '#1086#1090#1087#1088#1072#1074#1080#1090#1100#1089#1103')'
-        DataBinding.FieldName = 'Bonus_Add'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 90
-      end
-      object Bonus_Added: TcxGridDBColumn
-        Caption = #1041#1072#1083#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1086
-        DataBinding.FieldName = 'Bonus_Added'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 79
+        Width = 491
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -332,14 +257,14 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 176
-    Top = 152
+    Left = 184
+    Top = 200
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 208
+    Left = 120
+    Top = 200
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -353,7 +278,7 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 312
+    Left = 368
     Top = 200
   end
   object dxBarManager: TdxBarManager
@@ -373,8 +298,8 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 224
-    Top = 208
+    Left = 272
+    Top = 200
     DockControlHeights = (
       0
       0
@@ -398,6 +323,10 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
           ItemName = 'bbStaticText'
         end
         item
@@ -415,10 +344,6 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
           ItemName = 'bbStaticText'
         end
         item
@@ -427,15 +352,7 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
-        end
-        item
-          Visible = True
           ItemName = 'bbStaticText'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
@@ -470,15 +387,11 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
     object bbStaticText: TdxBarButton
       Caption = '     '
       Category = 0
-      Enabled = False
       Visible = ivAlways
     end
     object bbExecuteDialog: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Action = ExecuteDialog
       Category = 0
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      Visible = ivAlways
-      ImageIndex = 35
     end
     object bbPrint: TdxBarButton
       Caption = #1055#1077#1095#1072#1090#1100' ('#1040#1082#1090#1080#1074'/'#1055#1072#1089#1089#1080#1074')'
@@ -529,42 +442,12 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
       Visible = ivAlways
     end
     object bbUpdate: TdxBarButton
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
       Category = 0
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
       Visible = ivAlways
       ImageIndex = 1
       ShortCut = 115
-    end
-    object dxBarContainerItem1: TdxBarContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <>
-    end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-    end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-    end
-    object dxBarButton1: TdxBarButton
-      Action = actShowAll
-      Category = 0
-    end
-    object dxBarButton2: TdxBarButton
-      Action = acteSputnikContactsMessages
-      Category = 0
-    end
-    object dxBarButton3: TdxBarButton
-      Action = actUsersSiteProfile
-      Category = 0
     end
   end
   object ActionList: TActionList
@@ -574,6 +457,7 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = dsdeSputnikContactsMessages1
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -594,74 +478,95 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actShowAll: TBooleanStoredProcAction
+    object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
-    end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_BonusAdd
-      StoredProcList = <
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TPhoneNoSeparatorDialogForm'
+      FormNameParam.Value = 'TPhoneNoSeparatorDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
         item
-          StoredProc = spUpdate_BonusAdd
+          Name = 'Phone'
+          Value = 41640d
+          Component = edPhone
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
-      Caption = 'actUpdateDataSet'
-      DataSource = DataSource
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
-    object acteSputnikContactsMessages: TdsdOpenForm
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+    object dsdeSputnikContactsMessages1: TdsdeSputnikContactsMessages
+      Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089#1086#1086#1073#1097#1077#1085#1080#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1072#1082#1090#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1089#1072#1081#1090#1072' '#1080' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
-      Hint = #1048#1089#1090#1086#1088#1080#1103' '#1089#1086#1086#1073#1097#1077#1085#1080#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1072#1082#1090#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1089#1072#1081#1090#1072' '#1080' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
-      ImageIndex = 29
-      FormName = 'TeSputnikContactsMessagesForm'
-      FormNameParam.Value = 'TeSputnikContactsMessagesForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actUsersSiteProfile: TdsdOpenForm
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1086' '#1082#1083#1080#1077#1085#1090#1077' '#1089#1072#1081#1090#1072
-      Hint = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1086' '#1082#1083#1080#1077#1085#1090#1077' '#1089#1072#1081#1090#1072
-      ImageIndex = 55
-      FormName = 'TUsersSiteProfileForm'
-      FormNameParam.Value = 'TUsersSiteProfileForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
+      DataStartParam.Value = Null
+      DataStartParam.Component = FormParams
+      DataStartParam.ComponentItem = 'DataStart'
+      DataStartParam.DataType = ftDateTime
+      DataStartParam.MultiSelectSeparator = ','
+      DataEndParam.Value = Null
+      DataEndParam.Component = FormParams
+      DataEndParam.ComponentItem = 'DataEnd'
+      DataEndParam.DataType = ftDateTime
+      DataEndParam.MultiSelectSeparator = ','
+      UserNameParam.Value = ''
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'UserName'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = ''
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      PhoneParam.Value = ''
+      PhoneParam.Component = edPhone
+      PhoneParam.DataType = ftString
+      PhoneParam.MultiSelectSeparator = ','
+      DataSet = ClientDataSet
+      Caption = 'dsdeSputnikContactsMessages1'
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpReport_MovementSiteBonus'
-    DataSet = ClientDataSet
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
+    StoredProcName = 'gpSelect_eSputnikContactsMessages_Params'
+    DataSets = <>
+    OutputType = otResult
     Params = <
       item
-        Name = 'inShowAll'
+        Name = 'DataStart'
         Value = Null
-        Component = actShowAll
-        DataType = ftBoolean
-        ParamType = ptInput
+        Component = FormParams
+        ComponentItem = 'DataStart'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DataEnd'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DataEnd'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Password'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -669,7 +574,7 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
     Top = 296
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 568
+    Left = 480
     Top = 288
   end
   object RefreshDispatcher: TRefreshDispatcher
@@ -679,8 +584,37 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
     ComponentList = <
       item
       end>
-    Left = 568
-    Top = 176
+    Left = 488
+    Top = 48
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'DataStart'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DataEnd'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 480
+    Top = 200
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -698,33 +632,7 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 392
-    Top = 304
-  end
-  object spUpdate_BonusAdd: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_BuyerForSite_BonusAdd'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = False
-        Component = ClientDataSet
-        ComponentItem = 'BuyerForSiteId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBonusAdd'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Bonus_Add'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 760
-    Top = 176
+    Left = 360
+    Top = 296
   end
 end

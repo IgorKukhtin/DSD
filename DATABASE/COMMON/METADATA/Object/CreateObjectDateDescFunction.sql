@@ -651,13 +651,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_SetDateRRO() RETURNS Integer AS $B
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_SetDateRRO', 'Авто установка времени на РРО' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SetDateRRO');
 
-
  CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_PersonalService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_PersonalService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_PersonalService', 'Дата/время когда сформировались начисление зп автоматом' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_PersonalService');
 
+ CREATE OR REPLACE FUNCTION zc_ObjectDate_User_InternshipConfirmation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_PersonalService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectDate_User_InternshipConfirmation', 'Дата подтверждения стажировки' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_InternshipConfirmation');
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 26.09.22                                                                                     * zc_ObjectDate_User_InternshipConfirmation
  06.09.22         * zc_ObjectDate_Unit_PersonalService
  05.09.22                                                                                     * zc_ObjectDate_Unit_SetDateRRO
  01.09.22         * zc_ObjectDate_JuridicalDefermentPayment_OperDateIn

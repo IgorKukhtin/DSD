@@ -221,6 +221,9 @@ type
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
     spPrintSticker: TdsdStoredProc;
+    actUpdate_AmountManual: TdsdExecStoredProc;
+    spUpdate_AmountManual: TdsdStoredProc;
+    dxBarButton15: TdxBarButton;
   private
     { Private declarations }
   public

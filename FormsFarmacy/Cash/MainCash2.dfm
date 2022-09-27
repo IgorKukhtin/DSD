@@ -1132,8 +1132,9 @@ inherited MainCashForm2: TMainCashForm2
       Height = 45
       Align = alBottom
       TabOrder = 1
+      ExplicitLeft = 1
       object ShapeState: TShape
-        Left = 754
+        Left = 766
         Top = 25
         Width = 10
         Height = 10
@@ -1195,7 +1196,7 @@ inherited MainCashForm2: TMainCashForm2
         TabOrder = 3
       end
       object btnCheck: TcxButton
-        Left = 530
+        Left = 496
         Top = 0
         Width = 91
         Height = 22
@@ -1244,7 +1245,7 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
       end
       object btnVIP: TcxButton
-        Left = 530
+        Left = 496
         Top = 21
         Width = 91
         Height = 22
@@ -1263,7 +1264,7 @@ inherited MainCashForm2: TMainCashForm2
         OnClick = actExecuteLoadVIPExecute
       end
       object lblMoneyInCash: TcxLabel
-        Left = 735
+        Left = 745
         Top = 1
         Caption = '0.00'
         ParentFont = False
@@ -1277,7 +1278,7 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
       end
       object btnOpenMCSForm: TcxButton
-        Left = 676
+        Left = 641
         Top = 21
         Width = 34
         Height = 22
@@ -1295,7 +1296,7 @@ inherited MainCashForm2: TMainCashForm2
         ParentFont = False
       end
       object chbNotMCS: TcxCheckBox
-        Left = 623
+        Left = 588
         Top = -1
         Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074'. '#1095#1077#1082' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' '#1053#1058#1047
         Caption = #1053#1058#1047
@@ -1311,8 +1312,8 @@ inherited MainCashForm2: TMainCashForm2
         TabOrder = 10
         OnClick = actSpecExecute
       end
-      object cxButton1: TcxButton
-        Left = 676
+      object btnChoiceGoodsFromRemains: TcxButton
+        Left = 641
         Top = 0
         Width = 34
         Height = 22
@@ -1359,7 +1360,7 @@ inherited MainCashForm2: TMainCashForm2
         TabOrder = 12
       end
       object cbDoctors: TcxCheckBox
-        Left = 468
+        Left = 465
         Top = 0
         Action = actDoctors
         ParentBackground = False
@@ -1376,7 +1377,7 @@ inherited MainCashForm2: TMainCashForm2
         TabOrder = 13
       end
       object lblActiveAlerts: TcxLabel
-        Left = 627
+        Left = 592
         Top = 21
         Hint = #1058#1088#1077#1074#1086#1075#1080' '#1085#1077#1090
         AutoSize = False
@@ -1390,8 +1391,176 @@ inherited MainCashForm2: TMainCashForm2
         Properties.Alignment.Vert = taVCenter
         Height = 22
         Width = 46
-        AnchorX = 650
+        AnchorX = 615
         AnchorY = 32
+      end
+      object cxImageInstructions: TcxImage
+        Left = 389
+        Top = 23
+        Hint = #1048#1085#1089#1090#1088#1091#1082#1094#1080#1080
+        ParentColor = True
+        ParentShowHint = False
+        Picture.Data = {
+          055449636F6E0000010001001010000001002000680400001600000028000000
+          1000000020000000010020000000000000040000000000000000000000000000
+          000000000000000000000000000000000000000000000000612800006D2F0006
+          72390116723A01166D2F00075F27000000000000000000000000000000000000
+          00000000000000000000000000000000441F00006F3400287F3F00979D5100DD
+          AC5A00F3AC5A00F39D5100DE7F4000986F340129482100000000000000000000
+          0000000000000000000000006A2A00027538006AA05200F5C96A00FFD57200FF
+          E07900FFE17900FFD77300FFCA6B00FEA05300F57539006C6A2A000200000000
+          00000000000000005C04000075380068A55500FBBE6300FFC46700FFDBAB77FF
+          DFAF78FFDFAF78FFDBAC78FFC56800FFBF6400FFA65600FB7538006A5C0D0000
+          00000000000000006E330023924A00F3AE5900FFB96000FFBF6400FFD3A97AFF
+          ECE9E6FFECE9E7FFD3A97CFFC06500FFBB6100FFB05A00FF934A00F46D330025
+          00000000570D0000783B008E9F5000FFA85600FFB35D00FFBD6300FFC06A0CFF
+          E9E4E0FFEAE5E1FFC16B0DFFBE6400FFB55E00FFAA5700FFA15100FE793B0090
+          5418000068280003854201D59B5004FFA55809FFB0600DFFB96811FFBC701EFF
+          EDE9E4FFEDE9E4FFBA6B16FFB55F02FFAC5800FFA35200FF9A4D00FF854200D7
+          682700036C31000E915319EDB17338FFB47539FFB97939FFBE7C3AFFC08041FF
+          FAF6F2FFFAF7F3FFC18345FFC07F3EFFB87736FFAC6A29FFA05A14FF864200EF
+          6C31000F6C31000D945A21EDB87D46FFB87D46FFB97E46FFBA7E44FFDDC0A4FF
+          FCFAF9FFFAF7F4FFBF864FFFBC8046FFB97E46FFB87E46FFB97F48FF9A632DEE
+          6D32000E66280002925820D1BE8653FFBE8653FFBE8653FFBD8552FFDDC1A7FF
+          DDC1A8FFDBBDA3FFBF8957FFBE8653FFBE8653FFBE8653FFBE8653FF975F29D3
+          64270002650F000082460A84C08D5CFFC48F5FFFC48F5FFFC48F5FFFC38F5FFF
+          DDC3ABFFDDC3ACFFC38F5FFFC48F5FFFC48F5FFFC48F5FFFC39162FF85490D87
+          60000000530000007B3D0119AA7440EFCA996DFFC9986CFFC9986CFFCB9C73FF
+          FCF9F8FFFCFAF8FFCB9D74FFC9986CFFC9986CFFCA996DFFAE7A47F07E3F021B
+          0000000000000000FBF9F8009B652D5CC4976DFAD0A279FFCFA178FFCFA178FF
+          DDBC9FFFDDBDA0FFCFA178FFCFA178FFD0A27AFFC69A70FA9F69325EFBFBFB00
+          0000000000000000FFFFFF00F1EAE504B68A5D65CAA37CF2D8B290FFD5AA85FF
+          D5AA84FFD5AA84FFD5AA85FFD8B290FFCCA57FF2B88D6067F0EAE40400000000
+          000000000000000000000000FFFFFF00FEFEFE03D8BFA52FCEAE8C9AD9BDA0DD
+          DDC1A5F2DDC1A6F2DABDA0DECFAF8C9CD8C0A630FFFFFF04FFFFFF0000000000
+          00000000000000000000000000000000FFFFFF00FFFFFF00FEFEFE06FDFBFA16
+          EFE5DA29EFE5DA29FDFCFA17FFFFFF07FFFFFF00000000000000000000000000
+          00000000FC3F0000F00F0000C0030000C0030000800100008001000000000000
+          0000000000000000000000008001000080010000C0030000C0030000E0070000
+          F81F0000}
+        PopupMenu = PopupMenu
+        Properties.ReadOnly = True
+        Properties.ShowFocusRect = False
+        ShowHint = True
+        Style.BorderColor = clBtnFace
+        Style.BorderStyle = ebsNone
+        Style.Edges = []
+        Style.TextColor = clBtnFace
+        StyleFocused.BorderColor = clBtnFace
+        StyleFocused.BorderStyle = ebsNone
+        StyleFocused.TextColor = clBtnFace
+        StyleHot.BorderStyle = ebsNone
+        TabOrder = 15
+        Transparent = True
+        OnClick = cxImageInstructionsClick
+        Height = 20
+        Width = 20
+      end
+      object btnListDiffAddGoods: TcxButton
+        Left = 675
+        Top = 0
+        Width = 46
+        Height = 22
+        Hint = #1051#1080#1089#1090' '#1086#1090#1082#1072#1079#1072' '#1090#1086#1074#1072#1088#1072' '#1082#1086#1090' '#1077#1089#1090#1100' '#1085#1072' '#1086#1089#1090#1072#1090#1082#1077
+        Action = actListDiffAddGoods
+        Caption = #1051#1054'     '
+        Colors.Default = 12713921
+        Colors.Normal = 12713921
+        Colors.Hot = 12713921
+        Colors.Pressed = 12713921
+        Colors.Disabled = 12713921
+        LookAndFeel.Kind = lfStandard
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 16
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object btnListGoods: TcxButton
+        Left = 675
+        Top = 22
+        Width = 46
+        Height = 22
+        Hint = #1051#1080#1089#1090' '#1086#1090#1082#1072#1079#1072' '#1090#1086#1074#1072#1088#1072' '#1082#1086#1090' '#1085#1077#1090' '#1085#1072' '#1086#1089#1090#1072#1090#1082#1077
+        Action = actListGoods
+        Caption = #1051#1054'     '
+        Colors.Default = 42495
+        Colors.Normal = 42495
+        Colors.Hot = 42495
+        Colors.Pressed = 42495
+        Colors.Disabled = 42495
+        LookAndFeel.Kind = lfStandard
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 17
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object btnMCS: TcxButton
+        Left = 722
+        Top = 22
+        Width = 40
+        Height = 22
+        Hint = 
+          #1042#1082#1083'/'#1074#1099#1082#1083' '#1088#1077#1078#1080#1084#1072' '#1072#1074#1090#1086' '#1091#1074#1077#1083#1080#1095#1077#1085#1080#1103' '#1053#1058#1047' '#1080' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1103' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1089#1087#1077 +
+          #1094#1082#1086#1085#1090#1088#1086#1083#1100
+        Caption = #1072#1053#1058#1047
+        Colors.Default = clAqua
+        Colors.Normal = clAqua
+        Colors.Hot = clAqua
+        Colors.Pressed = clAqua
+        Colors.Disabled = clAqua
+        LookAndFeel.Kind = lfStandard
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 18
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        OnClick = miMCSAutoClick
+      end
+      object cxLabel3: TcxLabel
+        Left = 699
+        Top = 6
+        Caption = 'F10'
+        Enabled = False
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -8
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = []
+        Style.TextStyle = [fsBold]
+        Style.IsFontAssigned = True
+        StyleDisabled.TextColor = clWindowText
+        Transparent = True
+      end
+      object cxLabel4: TcxLabel
+        Left = 699
+        Top = 27
+        Caption = 'F12'
+        Enabled = False
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -8
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = []
+        Style.TextStyle = [fsBold]
+        Style.IsFontAssigned = True
+        StyleDisabled.TextColor = clWindowText
+        Transparent = True
       end
     end
     object pnlExpirationDateFilter: TPanel
@@ -6384,7 +6553,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object actDoctors: TAction
       AutoCheck = True
-      Caption = #1042#1088#1072#1095#1080
+      Caption = #1042
       Hint = #1042#1088#1072#1095#1080
       OnExecute = actDoctorsExecute
     end
@@ -6946,6 +7115,17 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object acteSputnikContactsMessages: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089#1086#1086#1073#1097#1077#1085#1080#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1072#1082#1090#1072
+      FormName = 'TeSputnikContactsMessagesForm'
+      FormNameParam.Value = 'TeSputnikContactsMessagesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7198,6 +7378,9 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N13033: TMenuItem
         Action = actChoiceGoodsFromRemains_1303
+      end
+      object N66: TMenuItem
+        Action = acteSputnikContactsMessages
       end
     end
     object N47: TMenuItem
@@ -9225,8 +9408,8 @@ inherited MainCashForm2: TMainCashForm2
     ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
-    Left = 688
-    Top = 504
+    Left = 672
+    Top = 528
   end
   object spGet_Movement_InvNumberSP: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_InvNumberSP'
@@ -11341,5 +11524,38 @@ inherited MainCashForm2: TMainCashForm2
     StoreDefs = True
     Left = 272
     Top = 608
+  end
+  object spGet_InternshipCompleted: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_User_InternshipCompleted'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'isInternshipConfirmation'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    AfterExecute = spLayoutFileFTPParamsAfterExecute
+    Left = 264
+    Top = 544
+  end
+  object spUpdate_InternshipCompleted: TdsdStoredProc
+    StoredProcName = 'gpUpdate_UserCash_InternshipCompleted'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inisInternshipConfirmation'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    AfterExecute = spLayoutFileFTPParamsAfterExecute
+    Left = 392
+    Top = 552
   end
 end

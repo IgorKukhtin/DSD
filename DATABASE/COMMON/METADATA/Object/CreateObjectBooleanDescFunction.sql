@@ -1286,10 +1286,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_AutospaceOS() RETURNS Integer A
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_AutospaceOS', 'Автопростановка ОС' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_AutospaceOS');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_User_InternshipCompleted() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_InternshipCompleted'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectBoolean_User_InternshipCompleted', 'Стажировка проведена' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_InternshipCompleted');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 26.09.22                                                                                                          * zc_ObjectBoolean_User_InternshipCompleted
  05.09.22         * zc_ObjectBoolean_Unit_PersonalService
  05.09.22                                                                                                          * zc_ObjectBoolean_Unit_AutospaceOS
  24.08.22                                                                                                          * zc_ObjectBoolean_Unit_ShowActiveAlerts

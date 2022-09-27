@@ -2075,6 +2075,21 @@ inherited SendForm: TSendForm
       ImageIndex = 76
       QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"?'
     end
+    object actUpdate_AmountManual: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_AmountManual
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_AmountManual
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103'"'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103'"'
+      ImageIndex = 79
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103'"?'
+    end
     object actUpdate_ClearAmountManual: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2474,6 +2489,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton15'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton14'
         end>
     end
@@ -2489,6 +2508,10 @@ inherited SendForm: TSendForm
       Action = actPrintSticker
       Category = 0
       ImageIndex = 20
+    end
+    object dxBarButton15: TdxBarButton
+      Action = actUpdate_AmountManual
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -4594,5 +4617,22 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 328
     Top = 216
+  end
+  object spUpdate_AmountManual: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Send_AmountManual'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 926
+    Top = 384
   end
 end

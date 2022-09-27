@@ -1,12 +1,19 @@
--- Function: gpInsertUpdate_Movement_WagesVIP_CalculationAllDay()
+-- Function: gpSelect_Movement_WagesVIP_CalculationAllDay()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WagesVIP_CalculationAllDay (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_WagesVIP_Calculation (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_WagesVIP_Calculation(
     IN inMovementId            Integer    , -- Ключ объекта <Документ продажи>
     IN inSession               TVarChar     -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS TABLE (OperDate           TDateTime 
+             , UserId             Integer
+             , UserName           TVarChar 
+             , PayrollTypeVIPID   Integer
+             , HoursWork          TFloat
+             , HoursWorkDay       TFloat
+             , Summa              TFloat
+              ) AS
 $BODY$
    DECLARE vbUserId      Integer;
    DECLARE vbOperDate    TDateTime;
@@ -485,60 +492,23 @@ BEGIN
              , SUM(tmpUserReferals.ApplicationAward)::TFloat     AS SummaCalc
          FROM tmpUserReferals
          GROUP BY tmpUserReferals.UserId);
+
+
+     -- Результат
+     RETURN QUERY
+     SELECT tmpCalculation.OperDate::TDateTime
+          , tmpCalculation.UserId
+          , Object_User.ValueData
+          , tmpCalculation.PayrollTypeVIPID
+          , tmpCalculation.HoursWork
+          , tmpCalculation.HoursWorkDay
+          , tmpCalculation.Summa
+     FROM tmpCalculation
+     
+          LEFT JOIN Object AS Object_User ON Object_User.ID = tmpCalculation.UserId
+     ;
+          
                        
-    -- сохранили отметку <Сумма реализации заказов принятых по телефону>
-    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPhone(), inMovementId, vbTotalSummPhone);
-    -- сохранили отметку <Сумма реализации заказов>
-    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSale(), inMovementId, vbTotalSummSale);
-    -- сохранили отметку <Сумма реализации заказов>
-    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSaleNP(), inMovementId, vbTotalSummSaleNP + COALESCE(vbSummaNPAdd, 0));
-    -- сохранили отметку <Отработано часов всеми сотрудниками>
-    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), inMovementId, vbHoursWork);
-    
-          
-    PERFORM lpInsertUpdate_MovementItem_WagesVIP_Calc (ioId                 := COALESCE(tmpMI.Id, 0)
-                                                     , inMovementId         := inMovementId
-                                                     , inUserWagesId        := COALESCE(tmpCalc.UserID, tmpMI.UserID)
-                                                     , inAmountAccrued      := COALESCE(tmpCalc.Summa, 0)
-                                                     , inApplicationAward   := COALESCE(tmpCalc.ApplicationAward, 0)
-                                                     , inHoursWork          := COALESCE(tmpCalc.HoursWork, 0)
-                                                     , inUserId             := vbUserId)
-    FROM (SELECT tmpCalculation.UserId
-               , SUM(tmpCalculation.Summa) + COALESCE(MAX(tmpCalculationNP.Summa), 0) AS Summa
-               , SUM(tmpCalculation.HoursWork)::TFloat                                AS HoursWork
-               , MAX(tmpUserReferals.SummaCalc)::TFloat                               AS ApplicationAward
-          FROM tmpCalculation
-          
-               LEFT JOIN tmpCalculationNP ON tmpCalculationNP.UserID = tmpCalculation.UserID
-          
-               LEFT JOIN tmpUserReferals ON tmpUserReferals.UserID = tmpCalculation.UserID
-          
-          GROUP BY tmpCalculation.UserId) AS tmpCalc
-    
-         FULL JOIN (SELECT MovementItem.Id                    AS Id
-                         , MovementItem.ObjectId              AS UserID
-                         , MovementItem.Amount                AS AmountAccrued
-                         , MIFloat_HoursWork.ValueData        AS HoursWork
-                    FROM  MovementItem
-                   
-                          LEFT JOIN MovementItemFloat AS MIFloat_HoursWork
-                                                      ON MIFloat_HoursWork.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
-                                                    
-                    WHERE MovementItem.MovementId = inMovementId
-                      AND MovementItem.DescId = zc_MI_Master()) AS tmpMI ON tmpMI.UserID = tmpCalc.UserID
-         
-    WHERE COALESCE(tmpMI.AmountAccrued, 0) <> COALESCE(tmpCalc.Summa, 0)
-       OR COALESCE(tmpMI.HoursWork, 0) <> COALESCE(tmpCalc.HoursWork, 0);
-               
-    
-    -- сохранили свойство <Дата расчета>
-    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Calculation(), inMovementId, CURRENT_TIMESTAMP);    
-
-      -- Пересчитали итоговые суммы
---    PERFORM lpInsertUpdate_Movement_WagesVIP_TotalSumm (inMovementId);
-
- --   RAISE EXCEPTION '------> % % %  - %', vbTotalSummPhone, vbTotalSummSale, vbTotalSummSaleNP, vbHoursWork;      
 
 END;
 $BODY$
@@ -547,7 +517,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 21.08.19                                                        *
+ 26.09.22                                                        *
 */
 
--- select * from gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := 29160110 ,  inSession := '3');
+-- 
+
+select * from gpSelect_Movement_WagesVIP_Calculation(inMovementId := 29160110 ,  inSession := '3');

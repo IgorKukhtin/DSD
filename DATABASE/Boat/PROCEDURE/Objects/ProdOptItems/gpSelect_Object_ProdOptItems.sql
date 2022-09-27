@@ -35,6 +35,7 @@ RETURNS TABLE (MovementId_OrderClient Integer
              , Article TVarChar
              , ProdColorName TVarChar
              , ProdColorValue TVarChar
+             , Color_ProdColorValue Integer
              , MeasureName TVarChar
                -- % скидки
              , DiscountTax    TFloat
@@ -366,6 +367,7 @@ BEGIN
                                  END AS ProdColorName
                                  
                                , ObjectString_ProdColorValue.ValueData  AS ProdColorValue
+                               , COALESCE(ObjectFloat_Value.ValueData, zc_Color_White())::Integer  AS Color_Color_ProdColorValue
 
                                  -- % скидки
                                , COALESCE (ObjectFloat_DiscountTax.ValueData,0) AS DiscountTax
@@ -456,6 +458,9 @@ BEGIN
                                LEFT JOIN ObjectString AS ObjectString_ProdColorValue
                                                       ON ObjectString_ProdColorValue.ObjectId = Object_ProdColor.Id
                                                      AND ObjectString_ProdColorValue.DescId   =zc_ObjectString_ProdColor_Value()                               
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                     ON ObjectFloat_Value.ObjectId = Object_ProdColor.Id
+                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_ProdColor_Value()
 
                                LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                                      ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Goods.ChildObjectId
@@ -503,6 +508,7 @@ BEGIN
                          , tmpProdOptItems.ProdColorId
                          , tmpProdOptItems.ProdColorName  
                          , tmpProdOptItems.ProdColorValue
+                         , tmpProdOptItems.Color_Color_ProdColorValue
                          , tmpProdOptItems.MaterialOptionsId
                          
                            -- % скидки
@@ -536,6 +542,7 @@ BEGIN
                          , tmpProdOptions.ProdColorId
                          , tmpProdOptions.ProdColorName
                          , Null :: TVarChar    AS ProdColorValue
+                         , zc_Color_White()    AS Color_Color_ProdColorValue
                          , tmpProdOptions.MaterialOptionsId
 
                            -- % скидки
@@ -651,6 +658,7 @@ BEGIN
          , tmpGoods.Article
          , tmpRes.ProdColorName  :: TVarChar AS ProdColorName
          , tmpRes.ProdColorValue :: TVarChar AS ProdColorValue
+         , tmpRes.Color_Color_ProdColorValue
          , tmpGoods.MeasureName
 
          , tmpRes.DiscountTax    ::TFloat    AS DiscountTax
@@ -733,7 +741,8 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 23.09.22                                                       *
  08.10.20         *
 */
 

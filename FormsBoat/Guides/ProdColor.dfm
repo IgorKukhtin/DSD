@@ -3,7 +3,7 @@ object ProdColorForm: TProdColorForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Farbe>'
   ClientHeight = 376
-  ClientWidth = 430
+  ClientWidth = 582
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,12 +19,13 @@ object ProdColorForm: TProdColorForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 430
+    Width = 582
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 430
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -75,6 +76,14 @@ object ProdColorForm: TProdColorForm
         Options.Editing = False
         Width = 122
       end
+      object Value: TcxGridDBColumn
+        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1094#1074#1077#1090#1072
+        DataBinding.FieldName = 'Value'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
@@ -102,6 +111,19 @@ object ProdColorForm: TProdColorForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
+      end
+      object Colors: TcxGridDBColumn
+        Caption = #1062#1074#1077#1090
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 71
+      end
+      object Color_Value: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Value'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -541,7 +563,12 @@ object ProdColorForm: TProdColorForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Colors
+        BackGroundValueColumn = Color_Value
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

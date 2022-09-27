@@ -2,7 +2,7 @@ object ProdColorEditForm: TProdColorEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <Farbe>'
-  ClientHeight = 200
+  ClientHeight = 249
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object ProdColorEditForm: TProdColorEditForm
     Caption = 'Farbe'
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 163
+    Left = 33
+    Top = 203
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -38,7 +38,7 @@ object ProdColorEditForm: TProdColorEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 163
+    Top = 203
     Width = 75
     Height = 25
     Action = actFormClose
@@ -71,6 +71,17 @@ object ProdColorEditForm: TProdColorEditForm
     Top = 120
     TabOrder = 7
     Width = 273
+  end
+  object edValue: TcxTextEdit
+    Left = 10
+    Top = 168
+    TabOrder = 8
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 148
+    Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1094#1074#1077#1090#1072
   end
   object ActionList: TActionList
     Left = 152
@@ -139,6 +150,14 @@ object ProdColorEditForm: TProdColorEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue'
+        Value = Null
+        Component = edValue
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -186,6 +205,13 @@ object ProdColorEditForm: TProdColorEditForm
         Name = 'Comment'
         Value = Null
         Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value'
+        Value = Null
+        Component = edValue
         DataType = ftString
         MultiSelectSeparator = ','
       end>

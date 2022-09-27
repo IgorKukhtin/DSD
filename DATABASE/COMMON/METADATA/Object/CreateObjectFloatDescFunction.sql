@@ -2336,9 +2336,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_MultiplicityDiscontSite() RETURN
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_BuyerForSite(), 'zc_ObjectFloat_Goods_MultiplicityDiscontSite', 'Кратность при продаже на сайте со скидкой' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_MultiplicityDiscontSite');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_User_InternshipConfirmation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_User_InternshipConfirmation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectFloat_User_InternshipConfirmation', 'Подтверждение стажировки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_User_InternshipConfirmation');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 26.09.22                                                                                      * zc_ObjectFloat_User_InternshipConfirmation
  21.09.22                                                                                      * zc_ObjectFloat_Goods_MultiplicityDiscontSite
  20.09.22                                                                                      * zc_ObjectFloat_BuyerForSite_Bonus, zc_ObjectFloat_BuyerForSite_BonusAdd, zc_ObjectFloat_BuyerForSite_BonusAdded
  01.09.22         * zc_ObjectFloat_JuridicalDefermentPayment_AmountIn

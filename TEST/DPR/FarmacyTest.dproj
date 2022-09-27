@@ -4574,6 +4574,18 @@
 				<Form>Report_Object_Price_MCS_YearForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\System\eSputnikContactsMessages.pas">
+				<Form>eSputnikContactsMessagesForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\System\PhoneNoSeparatorDialog.pas">
+				<Form>PhoneNoSeparatorDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\System\UsersSiteProfile.pas">
+				<Form>UsersSiteProfileForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -1157,13 +1157,16 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUsersSiteProfileForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUsersSiteProfileForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Object_Price_MCS_YearForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Object_Price_MCS_YearForm');
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementSiteBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementSiteBonusForm');
-
+  {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMobileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMobileForm');
@@ -3528,6 +3531,11 @@ end;
 
 procedure TLoadFormTest.LoadSystemFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TeSputnikContactsMessagesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TeSputnikContactsMessagesForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPhoneNoSeparatorDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPhoneNoSeparatorDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUkraineAlarmForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUkraineAlarmForm');
 
@@ -3677,10 +3685,10 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerCountForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerCountForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalPrioritiesForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalPrioritiesForm');
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
  {

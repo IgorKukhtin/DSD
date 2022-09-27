@@ -20,6 +20,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isWorkingMultiple Boolean
              , isNewUser Boolean
              , isDismissedUser Boolean
+             , isInternshipCompleted Boolean
+             , InternshipConfirmation TVarChar
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -50,7 +52,9 @@ BEGIN
            , FALSE                  AS isWorkingMultiple
            , TRUE                   AS isNewUser
            , FALSE                  AS isDismissedUser
-;
+           , FALSE                  AS isInternshipCompleted
+           , CAST ('' as TVarChar)  AS InternshipConfirmation
+       ;
    ELSE
       RETURN QUERY 
       SELECT 
@@ -77,6 +81,12 @@ BEGIN
 
           , COALESCE (ObjectBoolean_NewUser.ValueData, FALSE)::Boolean          AS isNewUser
           , COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE)::Boolean    AS isDismissedUser
+
+          , COALESCE (ObjectBoolean_InternshipCompleted.ValueData, FALSE)::Boolean    AS isInternshipCompleted
+          , CASE WHEN COALESCE (ObjectBoolean_InternshipCompleted.ValueData, FALSE) = FALSE THEN ''
+                 WHEN COALESCE (ObjectFloat_InternshipConfirmation.ValueData, 0) = 0 THEN 'Не обработал сотрудник'
+                 WHEN COALESCE (ObjectFloat_InternshipConfirmation.ValueData, 0) = 1 THEN 'Не подтверждено сотрудником'
+                 ELSE 'Подтверждено сотрудником' END::TVarChar                        AS InternshipConfirmation
 
       FROM Object AS Object_User
            LEFT JOIN ObjectString AS ObjectString_UserPassword 
@@ -130,6 +140,13 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_DismissedUser
                                    ON ObjectBoolean_DismissedUser.ObjectId = Object_User.Id
                                   AND ObjectBoolean_DismissedUser.DescId = zc_ObjectBoolean_User_DismissedUser()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_InternshipCompleted
+                                   ON ObjectBoolean_InternshipCompleted.ObjectId = Object_User.Id
+                                  AND ObjectBoolean_InternshipCompleted.DescId = zc_ObjectBoolean_User_InternshipCompleted()
+           LEFT JOIN ObjectFloat AS ObjectFloat_InternshipConfirmation
+                                 ON ObjectFloat_InternshipConfirmation.ObjectId = Object_User.Id
+                                AND ObjectFloat_InternshipConfirmation.DescId = zc_ObjectFloat_User_InternshipConfirmation()
       WHERE Object_User.Id = inId;
    END IF;
   
@@ -150,4 +167,4 @@ ALTER FUNCTION gpGet_Object_User (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_User (1, '3')
+-- select * from gpGet_Object_User(inId := 3 ,  inSession := '3');
