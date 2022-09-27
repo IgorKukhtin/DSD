@@ -24,20 +24,21 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Remains: TcxGridDBColumn;
-    spGet_UserUnit: TdsdStoredProc;
-    actGet_UserUnit: TdsdExecStoredProc;
-    actRefreshStart: TdsdDataSetRefresh;
-    actOpenDocument: TdsdOpenForm;
     N2: TMenuItem;
     N3: TMenuItem;
     FormParams: TdsdFormParams;
-    spGet_MovementFormClass: TdsdStoredProc;
-    actGet_MovementFormClass: TdsdExecStoredProc;
-    rgUnit: TRefreshDispatcher;
+    spUpdate_MCS_ReportDay: TdsdStoredProc;
+    actUpdate_MCS_ReportDay: TdsdExecStoredProc;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    actRefreshIsPartion: TdsdDataSetRefresh;
     bbOpenReportForm: TdxBarButton;
+    MCSValueProc: TcxGridDBColumn;
+    MCSValueNew: TcxGridDBColumn;
+    mactCopyMCSValueYear: TMultiAction;
+    actCopyMCSValueYear: TdsdSetDefaultParams;
+    dxBarButton1: TdxBarButton;
+    mactUpdate_MCS_ReportDay: TMultiAction;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,29 +1,29 @@
 inherited Report_Object_Price_MCS_YearForm: TReport_Object_Price_MCS_YearForm
   Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1103' '#1053#1058#1047' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1089' '#1075#1086#1076#1086#1084' '#1085#1072#1079#1072#1076
   ClientHeight = 359
-  ClientWidth = 683
+  ClientWidth = 820
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 699
+  ExplicitWidth = 836
   ExplicitHeight = 398
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 67
-    Width = 683
+    Width = 820
     Height = 292
     TabOrder = 3
     ExplicitTop = 67
-    ExplicitWidth = 824
+    ExplicitWidth = 683
     ExplicitHeight = 292
     ClientRectBottom = 292
-    ClientRectRight = 683
+    ClientRectRight = 820
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 824
+      ExplicitWidth = 683
       ExplicitHeight = 292
       inherited cxGrid: TcxGrid
-        Width = 683
+        Width = 820
         Height = 292
-        ExplicitWidth = 824
+        ExplicitWidth = 683
         ExplicitHeight = 292
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -69,7 +69,6 @@ inherited Report_Object_Price_MCS_YearForm: TReport_Object_Price_MCS_YearForm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -137,6 +136,16 @@ inherited Report_Object_Price_MCS_YearForm: TReport_Object_Price_MCS_YearForm
             Options.Editing = False
             Width = 70
           end
+          object MCSValueProc: TcxGridDBColumn
+            Caption = '% '#1088#1072#1089#1093'.'
+            DataBinding.FieldName = 'MCSValueProc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object MCSValueMax: TcxGridDBColumn
             Caption = #1053#1058#1047' '#1084#1072#1082#1089'.'
             DataBinding.FieldName = 'MCSValueMax'
@@ -147,14 +156,23 @@ inherited Report_Object_Price_MCS_YearForm: TReport_Object_Price_MCS_YearForm
             HeaderAlignmentVert = vaCenter
             Width = 66
           end
+          object MCSValueNew: TcxGridDBColumn
+            Caption = #1053#1086#1074#1086#1077' '#1053#1058#1047
+            DataBinding.FieldName = 'MCSValueNew'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 683
+    Width = 820
     Height = 41
-    ExplicitWidth = 824
+    ExplicitWidth = 683
     ExplicitHeight = 41
     inherited deStart: TcxDateEdit
       Left = 790
@@ -224,66 +242,6 @@ inherited Report_Object_Price_MCS_YearForm: TReport_Object_Price_MCS_YearForm
       end>
   end
   inherited ActionList: TActionList
-    object actGet_UserUnit: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
-      StoredProcList = <
-        item
-          StoredProc = spGet_UserUnit
-        end>
-      Caption = 'actGet_UserUnit'
-    end
-    object actRefreshStart: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGet_UserUnit
-      StoredProcList = <
-        item
-          StoredProc = spGet_UserUnit
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actOpenDocument: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      FormNameParam.Name = 'FormClass'
-      FormNameParam.Value = ''
-      FormNameParam.Component = FormParams
-      FormNameParam.ComponentItem = 'FormClass'
-      FormNameParam.DataType = ftString
-      FormNameParam.ParamType = ptInput
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementId_Income'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actGet_MovementFormClass: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_MovementFormClass
-      StoredProcList = <
-        item
-          StoredProc = spGet_MovementFormClass
-        end>
-      Caption = 'actGet_MovementFormClass'
-    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -336,18 +294,60 @@ inherited Report_Object_Price_MCS_YearForm: TReport_Object_Price_MCS_YearForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actRefreshIsPartion: TdsdDataSetRefresh
+    object mactCopyMCSValueYear: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
+      ActionList = <
+        item
+          Action = actCopyMCSValueYear
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1075#1086#1076' '#1085#1072#1079#1076' '#1074' '#1085#1086#1074#1086#1077'?'
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1075#1086#1076' '#1085#1072#1079#1076' '#1074' '#1085#1086#1074#1086#1077
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1075#1086#1076' '#1085#1072#1079#1076' '#1074' '#1085#1086#1074#1086#1077
+      ImageIndex = 30
+    end
+    object actCopyMCSValueYear: TdsdSetDefaultParams
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'MCSValueYear'
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'MCSValueNew'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end>
+      Caption = 'actCopyMCSValueYear'
+      DefaultParams = <>
+    end
+    object mactUpdate_MCS_ReportDay: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_MCS_ReportDay
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1055#1088#1080#1084#1077#1085#1080#1090#1100' '#1053#1058#1047' '#1085#1086#1074#1086#1077' '#1085#1072' '#1087#1077#1088#1080#1086#1076' - 7 '#1076#1085#1077#1081'?'
+      Caption = #1055#1088#1080#1084#1077#1085#1080#1090#1100' '#1053#1058#1047' '#1085#1086#1074#1086#1077' '#1085#1072' '#1087#1077#1088#1080#1086#1076' - 7 '#1076#1085#1077#1081
+      Hint = #1055#1088#1080#1084#1077#1085#1080#1090#1100' '#1053#1058#1047' '#1085#1086#1074#1086#1077' '#1085#1072' '#1087#1077#1088#1080#1086#1076' - 7 '#1076#1085#1077#1081
+      ImageIndex = 78
+    end
+    object actUpdate_MCS_ReportDay: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MCS_ReportDay
       StoredProcList = <
         item
-          StoredProc = spSelect
+          StoredProc = spUpdate_MCS_ReportDay
         end>
-      Caption = #1076#1077#1090#1072#1083#1100#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1072#1088#1090#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
+      Caption = 'actUpdate_MCS_ReportDay'
     end
   end
   inherited MasterDS: TDataSource
@@ -384,15 +384,23 @@ inherited Report_Object_Price_MCS_YearForm: TReport_Object_Price_MCS_YearForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -418,6 +426,15 @@ inherited Report_Object_Price_MCS_YearForm: TReport_Object_Price_MCS_YearForm
       Visible = ivAlways
       ImageIndex = 25
     end
+    object dxBarButton1: TdxBarButton
+      Action = mactCopyMCSValueYear
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = mactUpdate_MCS_ReportDay
+      Caption = #1048#1079#1079#1084#1077#1085#1080#1090' '#1053#1058#1047' '#1085#1072' '#1085#1086#1074#1086#1077' '
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -425,13 +442,15 @@ inherited Report_Object_Price_MCS_YearForm: TReport_Object_Price_MCS_YearForm
       end
       item
       end>
+    Left = 376
+    Top = 144
   end
   inherited PopupMenu: TPopupMenu
     object N2: TMenuItem
       Caption = '-'
     end
     object N3: TMenuItem
-      Action = actOpenDocument
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -478,30 +497,6 @@ inherited Report_Object_Price_MCS_YearForm: TReport_Object_Price_MCS_YearForm
     Left = 296
     Top = 8
   end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'UnitId'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 440
-    Top = 128
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -521,43 +516,40 @@ inherited Report_Object_Price_MCS_YearForm: TReport_Object_Price_MCS_YearForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 208
+    Left = 264
+    Top = 144
   end
-  object spGet_MovementFormClass: TdsdStoredProc
-    StoredProcName = 'gpGet_MovementFormClass'
+  object spUpdate_MCS_ReportDay: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Price_MCS_ReportDay'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inUnitId'
         Value = ''
         Component = MasterCDS
-        ComponentItem = 'MovementId_Income'
+        ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outFormClass'
+        Name = 'inGoodsId'
         Value = ''
-        Component = FormParams
-        ComponentItem = 'FormClass'
-        DataType = ftString
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSValueNew'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 600
-    Top = 152
-  end
-  object rgUnit: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = GuidesUnit
-      end>
-    Left = 200
-    Top = 128
+    Left = 264
+    Top = 232
   end
 end

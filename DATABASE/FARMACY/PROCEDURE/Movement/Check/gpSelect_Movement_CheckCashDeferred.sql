@@ -149,6 +149,10 @@ BEGIN
                           )
           , tmpMovementString AS (SELECT * FROM MovementString WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                           )
+          , tmpMovementFloat AS (SELECT * FROM MovementFloat WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                          )
+          , tmpMovementDate AS (SELECT * FROM MovementDate WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                          )
           , tmpMovementLinkObject AS (SELECT * FROM MovementLinkObject WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                           )
                             
@@ -247,15 +251,15 @@ BEGIN
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummChangePercent
                                     ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
 
@@ -320,7 +324,7 @@ BEGIN
              LEFT JOIN tmpMovementString AS MovementString_InvNumberSP
                                       ON MovementString_InvNumberSP.MovementId = Movement.Id
                                      AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
-             LEFT JOIN MovementDate AS MovementDate_OperDateSP
+             LEFT JOIN tmpMovementDate AS MovementDate_OperDateSP
                                     ON MovementDate_OperDateSP.MovementId = Movement.Id
                                    AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
 
@@ -333,7 +337,7 @@ BEGIN
                                  AND ObjectFloat_SPTax.DescId   = zc_ObjectFloat_SPKind_Tax()
 
             -- инфа из документа промо код
-            LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+            LEFT JOIN tmpMovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.MovementId = Movement.Id
                                    AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
             LEFT JOIN MovementItem AS MI_PromoCode
@@ -346,7 +350,7 @@ BEGIN
                                          ON MIString_GUID.MovementItemId = MI_PromoCode.Id
                                         AND MIString_GUID.DescId = zc_MIString_GUID()
 
-            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_PromoCode
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoCode
                                          ON MovementLinkObject_PromoCode.MovementId = Movement_PromoCode.Id
                                         AND MovementLinkObject_PromoCode.DescId = zc_MovementLinkObject_PromoCode()
             LEFT JOIN Object AS Object_PromoCode ON Object_PromoCode.Id = MovementLinkObject_PromoCode.ObjectId
@@ -355,11 +359,11 @@ BEGIN
                                     ON MovementFloat_ChangePercent.MovementId = Movement_PromoCode.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
-            LEFT JOIN MovementFloat AS MovementFloat_ManualDiscount
+            LEFT JOIN tmpMovementFloat AS MovementFloat_ManualDiscount
                                     ON MovementFloat_ManualDiscount.MovementId =  Movement.Id
                                    AND MovementFloat_ManualDiscount.DescId = zc_MovementFloat_ManualDiscount()
 
-            LEFT JOIN MovementFloat AS MovementFloat_MobileDiscount
+            LEFT JOIN tmpMovementFloat AS MovementFloat_MobileDiscount
                                     ON MovementFloat_MobileDiscount.MovementId =  Movement.Id
                                    AND MovementFloat_MobileDiscount.DescId = zc_MovementFloat_MobileDiscount()
 
@@ -382,14 +386,14 @@ BEGIN
                                   ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
                                  AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
 
-            LEFT JOIN MovementDate AS MovementDate_Delay
+            LEFT JOIN tmpMovementDate AS MovementDate_Delay
                                    ON MovementDate_Delay.MovementId = Movement.Id
                                   AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
-            LEFT JOIN MovementDate AS MovementDate_Coming
+            LEFT JOIN tmpMovementDate AS MovementDate_Coming
                                    ON MovementDate_Coming.MovementId = Movement.Id
                                   AND MovementDate_Coming.DescId = zc_MovementDate_Coming()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummCard
                                     ON MovementFloat_TotalSummCard.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
 
@@ -532,6 +536,8 @@ BEGIN
                           )
           , tmpMIString AS (SELECT * FROM MovementItemString WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
                           )
+          , tmpMIBoolean AS (SELECT * FROM MovementItemBoolean WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
+                          )
           , tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_NDSKind_NDS.valuedata FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                                   WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                           )
@@ -540,48 +546,6 @@ BEGIN
                           FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                           WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                          )
-           , tmpMovSendPartion AS (SELECT
-                                          Movement.Id                               AS Id
-                                        , MovementFloat_ChangePercent.ValueData     AS ChangePercent
-                                        , MovementFloat_ChangePercentMin.ValueData  AS ChangePercentMin
-                                   FROM Movement
-
-                                        LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                                                ON MovementFloat_ChangePercent.MovementId =  Movement.Id
-                                                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-
-                                        LEFT JOIN MovementFloat AS MovementFloat_ChangePercentMin
-                                                                ON MovementFloat_ChangePercentMin.MovementId =  Movement.Id
-                                                               AND MovementFloat_ChangePercentMin.DescId = zc_MovementFloat_ChangePercentMin()
-
-                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-
-                                   WHERE Movement.DescId = zc_Movement_SendPartionDate()
-                                     AND Movement.StatusId = zc_Enum_Status_Complete()
-                                     AND MovementLinkObject_Unit.ObjectId = vbUnitKey::Integer
-                                   ORDER BY Movement.OperDate
-                                   LIMIT 1
-                                  )
-           , tmpMovItemSendPartion AS (SELECT
-                                              MovementItem.ObjectId    AS GoodsId
-                                            , MIFloat_ChangePercent.ValueData    AS ChangePercent
-                                            , MIFloat_ChangePercentMin.ValueData AS ChangePercentMin
-
-                                       FROM MovementItem
-
-                                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-                                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentMin
-                                                                        ON MIFloat_ChangePercentMin.MovementItemId = MovementItem.Id
-                                                                       AND MIFloat_ChangePercentMin.DescId = zc_MIFloat_ChangePercentMin()
-
-                                       WHERE MovementItem.MovementId = (select tmpMovSendPartion.Id from tmpMovSendPartion)
-                                         AND MovementItem.DescId = zc_MI_Master()
-                                         AND (MIFloat_ChangePercent.ValueData is not Null OR MIFloat_ChangePercentMin.ValueData is not Null)
-                                       )
            , tmpMI_Sum AS (SELECT  MovementItem.*
                                  , MIFloat_Price.ValueData             AS Price
                                  , MIFloat_PriceSale.ValueData         AS PriceSale
@@ -606,7 +570,7 @@ BEGIN
                                 LEFT JOIN tmpMIFloat AS MIFloat_PriceSale
                                                             ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                                            AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-                                LEFT JOIN MovementItemFloat AS MIFloat_PriceLoad
+                                LEFT JOIN tmpMIFloat AS MIFloat_PriceLoad
                                                             ON MIFloat_PriceLoad.MovementItemId = MovementItem.Id
                                                            AND MIFloat_PriceLoad.DescId = zc_MIFloat_PriceLoad()
                                 LEFT JOIN tmpMIFloat AS MIFloat_ChangePercent
@@ -624,7 +588,7 @@ BEGIN
                                 LEFT JOIN tmpMovementBoolean AS MB_RoundingDown
                                                           ON MB_RoundingDown.MovementId = MovementItem.MovementId
                                                          AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
-                                LEFT JOIN MovementBoolean AS MB_RoundingTo50
+                                LEFT JOIN tmpMovementBoolean AS MB_RoundingTo50
                                                           ON MB_RoundingTo50.MovementId = MovementItem.MovementId
                                                          AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
                                 LEFT JOIN tmpMIString AS MIString_UID
@@ -832,10 +796,10 @@ BEGIN
 
           LEFT JOIN tmpGoodsDiscountPrice ON tmpGoodsDiscountPrice.Id = MovementItem.Id
 
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsPresent
+          LEFT JOIN tmpMILinkObject AS MILinkObject_GoodsPresent
                                            ON MILinkObject_GoodsPresent.MovementItemId = MovementItem.Id
                                           AND MILinkObject_GoodsPresent.DescId = zc_MILinkObject_GoodsPresent()
-          LEFT JOIN MovementItemBoolean AS MIBoolean_GoodsPresent
+          LEFT JOIN tmpMIBoolean AS MIBoolean_GoodsPresent
                                         ON MIBoolean_GoodsPresent.MovementItemId = MovementItem.Id
                                        AND MIBoolean_GoodsPresent.DescId         = zc_MIBoolean_GoodsPresent()
 
@@ -861,4 +825,4 @@ ALTER FUNCTION gpSelect_Movement_CheckCashDeferred (Integer, TVarChar) OWNER TO 
 --
 --SELECT * FROM gpSelect_Movement_CheckCashDeferred (inType := 3, inSession:= '3')
 
-select * from gpSelect_Movement_CheckCashDeferred(inType := 2 ,  inSession := '3');
+select * from gpSelect_Movement_CheckCashDeferred(inType := 0 ,  inSession := '3');
