@@ -8,12 +8,14 @@ CREATE OR REPLACE FUNCTION gpReport_Object_Price_MCS_Year(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat, MCSValueYear TFloat, MCSValueMax TFloat
+             , MCSValueProc TFloat, UnitId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , MCSDateChange TDateTime
              , isErased boolean
              , isClose boolean, isFirst boolean , isSecond boolean
              , isTop boolean
              , Remains TFloat
+             , MCSValueNew TFloat
              ) AS
 $BODY$
 DECLARE
@@ -37,6 +39,7 @@ BEGIN
                         , ROUND(Price_Value.ValueData,2)   ::TFloat AS Price
                         , COALESCE (MCS_Value.ValueData,0) ::TFloat AS MCSValue
                         , MCS_datechange.valuedata                  AS MCSDateChange
+                        , ObjectLink_Price_Unit.ChildObjectId       AS UnitId
                    FROM Object AS Object_Price
                       INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                                   ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
@@ -113,7 +116,12 @@ BEGIN
          
          , tmpObjectHistory_Year.MCSValue           AS MCSValueYear
          , tmpObjectHistory_Max.MCSValue            AS MCSValueMax
-                              
+         
+         , CASE WHEN COALESCE(tmpObjectHistory_Year.MCSValue, 0) = 0 
+                THEN NULL
+                ELSE COALESCE (tmpPrice.MCSValue,0) / tmpObjectHistory_Year.MCSValue END::TFloat AS MCSValueProc
+               
+         , tmpPrice.UnitId               
          , tmpPrice.GoodsId
          , Object_Goods_Main.ObjectCode             AS GoodsCode
          , Object_Goods_Main.Name                   AS GoodsName
@@ -124,6 +132,7 @@ BEGIN
          , Object_Goods_Retail.isSecond
          , Object_Goods_Retail.isTop
          , tmpContainerCount.Remains 
+         , 0::TFloat                                AS MCSValueNew
     FROM tmpPrice
         
         JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = tmpPrice.goodsid

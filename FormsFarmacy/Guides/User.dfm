@@ -543,6 +543,10 @@ object UserForm: TUserForm
         end
         item
           Visible = True
+          ItemName = 'dxBarSubItem1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -604,6 +608,20 @@ object UserForm: TUserForm
     end
     object dxBarButton2: TdxBarButton
       Action = actClearDefaultUnit
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actUpdate_InternshipCompleted_0
       Category = 0
     end
   end
@@ -990,6 +1008,28 @@ object UserForm: TUserForm
       ImageIndex = 76
       QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1074' '#1076#1077#1092#1072#1091#1083#1100#1090#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072'?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+    end
+    object actUpdate_InternshipCompleted_0: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'InternshipConfirmation'
+          ToParam.MultiSelectSeparator = ','
+        end>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_InternshipCompleted
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_InternshipCompleted
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1089#1090#1072#1078#1080#1088#1086#1074#1082#1080'" '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1089#1090#1072#1078#1080#1088#1086#1074#1082#1080'" '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1089#1090#1072#1078#1080#1088#1086#1074#1082#1080'" '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'?'
     end
   end
   object spSelect: TdsdStoredProc
@@ -1380,5 +1420,40 @@ object UserForm: TUserForm
     PackSize = 1
     Left = 120
     Top = 280
+  end
+  object spUpdate_InternshipCompleted: TdsdStoredProc
+    StoredProcName = 'gpUpdate_User_InternshipCompleted'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInternshipConfirmation'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InternshipConfirmation'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 248
+    Top = 288
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'InternshipConfirmation'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end>
+    Left = 32
+    Top = 296
   end
 end
