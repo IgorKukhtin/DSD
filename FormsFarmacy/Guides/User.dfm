@@ -240,6 +240,14 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 85
       end
+      object DateInternshipCompleted: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089#1090#1072#1078#1080#1088#1086#1074#1082#1080
+        DataBinding.FieldName = 'DateInternshipCompleted'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 69
+      end
       object InternshipConfirmation: TcxGridDBColumn
         Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1089#1090#1072#1078#1080#1088#1086#1074#1082#1080
         DataBinding.FieldName = 'InternshipConfirmation'
@@ -621,8 +629,9 @@ object UserForm: TUserForm
         end>
     end
     object dxBarButton1: TdxBarButton
-      Action = actUpdate_InternshipCompleted_0
+      Action = actUpdate_InternshipConfirmation_0
       Category = 0
+      ImageIndex = 77
     end
   end
   object ActionList: TActionList
@@ -1009,7 +1018,7 @@ object UserForm: TUserForm
       QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1074' '#1076#1077#1092#1072#1091#1083#1100#1090#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072'?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
     end
-    object actUpdate_InternshipCompleted_0: TdsdExecStoredProc
+    object actUpdate_InternshipConfirmation_0: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1022,10 +1031,10 @@ object UserForm: TUserForm
         end>
       AfterAction = actRefresh
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_InternshipCompleted
+      StoredProc = spUpdate_InternshipConfirmation
       StoredProcList = <
         item
-          StoredProc = spUpdate_InternshipCompleted
+          StoredProc = spUpdate_InternshipConfirmation
         end>
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1089#1090#1072#1078#1080#1088#1086#1074#1082#1080'" '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
       Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1089#1090#1072#1078#1080#1088#1086#1074#1082#1080'" '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
@@ -1421,8 +1430,8 @@ object UserForm: TUserForm
     Left = 120
     Top = 280
   end
-  object spUpdate_InternshipCompleted: TdsdStoredProc
-    StoredProcName = 'gpUpdate_User_InternshipCompleted'
+  object spUpdate_InternshipConfirmation: TdsdStoredProc
+    StoredProcName = 'gpUpdate_User_InternshipConfirmation'
     DataSets = <>
     OutputType = otResult
     Params = <

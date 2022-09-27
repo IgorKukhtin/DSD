@@ -1,13 +1,14 @@
--- Function: gpSelect_Object_User (TVarChar)
+-- Function: gpSelect_Object_UserCash (TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_User (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_UserCash (Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_User(
+CREATE OR REPLACE FUNCTION gpSelect_Object_UserCash(
+    IN inIsShowAll   Boolean  ,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , MemberId Integer, MemberName TVarChar
-             , User_ TVarChar, UserSign TVarChar, UserSeal TVarChar, UserKey TVarChar
+             , UserSign TVarChar, UserSeal TVarChar, UserKey TVarChar
              , BranchCode Integer, BranchName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , PositionName TVarChar
@@ -18,7 +19,6 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , isSite Boolean
              , UpdateMobileFrom TDateTime, UpdateMobileTo TDateTime
              , InDate TDateTime, FarmacyCashDate TDateTime
-             , PasswordWages TVarChar
              , isWorkingMultiple Boolean
              , isNewUser Boolean
              , isDismissedUser Boolean
@@ -31,18 +31,9 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-IF inSession = '9464' THEN vbUserId := 9464;
-ELSE
-   -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_User());
-END IF;
 
-     -- Блокируем ему просмотр
-     IF vbUserId = 9457 -- Климентьев К.И.
-     THEN
-         vbUserId:= NULL;
-         RETURN;
-     END IF;
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Результат
    RETURN QUERY 
@@ -61,7 +52,6 @@ END IF;
        , Object_Member.Id                           AS MemberId
        , Object_Member.ValueData                    AS MemberName
                                                     
-       , ObjectString_User_.ValueData               AS User_
        , ObjectString_UserSign.ValueData            AS UserSign
        , ObjectString_UserSeal.ValueData            AS UserSeal
        , ObjectString_UserKey.ValueData             AS UserKey
@@ -84,7 +74,6 @@ END IF;
        
        , ObjectDate_User_In.ValueData               AS InDate
        , ObjectDate_User_FarmacyCash.ValueData      AS FarmacyCashDate
-       , ObjectString_PasswordWages.ValueData
  
        , COALESCE (ObjectBoolean_WorkingMultiple.ValueData, FALSE)::Boolean  AS isWorkingMultiple
 
@@ -100,9 +89,6 @@ END IF;
        , ObjectDate_User_InternshipConfirmation.ValueData                          AS DateInternshipConfirmation
        
    FROM Object AS Object_User
-        LEFT JOIN ObjectString AS ObjectString_User_
-                               ON ObjectString_User_.ObjectId = Object_User.Id
-                              AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
         LEFT JOIN ObjectString AS ObjectString_UserSign
                                ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
                               AND ObjectString_UserSign.ObjectId = Object_User.Id
@@ -172,10 +158,6 @@ END IF;
                              ON ObjectDate_User_FarmacyCash.ObjectId = Object_User.Id
                             AND ObjectDate_User_FarmacyCash.DescId = zc_ObjectDate_User_FarmacyCash()
 
-        LEFT JOIN ObjectString AS ObjectString_PasswordWages
-               ON ObjectString_PasswordWages.DescId = zc_ObjectString_User_PasswordWages() 
-              AND ObjectString_PasswordWages.ObjectId = Object_User.Id
-
         LEFT JOIN ObjectBoolean AS ObjectBoolean_InternshipCompleted
                                 ON ObjectBoolean_InternshipCompleted.ObjectId = Object_User.Id
                                AND ObjectBoolean_InternshipCompleted.DescId = zc_ObjectBoolean_User_InternshipCompleted()
@@ -189,7 +171,9 @@ END IF;
                              ON ObjectDate_User_InternshipConfirmation.ObjectId = Object_User.Id
                             AND ObjectDate_User_InternshipConfirmation.DescId = zc_ObjectDate_User_InternshipConfirmation()
               
-   WHERE Object_User.DescId = zc_Object_User();
+   WHERE Object_User.DescId = zc_Object_User()
+     AND Object_Position.ObjectCode in (1, 2)
+     AND (Object_User.isErased = False OR inIsShowAll = True);
   
 END;
 $BODY$
@@ -199,14 +183,10 @@ ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
- 06.11.17         *
- 02.05.17                                                       * zc_ObjectDate_User_UpdateMobileFrom, zc_ObjectDate_User_UpdateMobileTo
- 21.04.17         *
- 12.09.16         *
- 07.06.13                                        * lpCheckRight
- 25.09.13                                        *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 27.09.22                                                       *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_User ('3')
+--
+ SELECT * FROM gpSelect_Object_UserCash (False, '3')
