@@ -455,6 +455,7 @@ begin
     toStoredProc_two.Params.AddParam ('inAmount_text',ftString,ptInput, '');
     toStoredProc_two.Params.AddParam ('inInternalName',ftString,ptInput, '');
     //
+    //EndDateCompleteEdit.Text:='22.09.2022';
     count:= 0;
     while StrToDate(StartDateCompleteEdit.Text) + count <= StrToDate(EndDateCompleteEdit.Text)
     do count:= count + 1;
@@ -465,8 +466,10 @@ begin
     myLogMemo_add(EndDateCompleteEdit.Text);
     //
     for i:= 0 to count
-    do
+    do begin
+       myLogMemo_add(IntToStr(i));
        pLoad_https_Currency(StrToDate(StartDateCompleteEdit.Text) + i);
+    end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoad_https_Currency(OperDate : TDateTime);
@@ -513,6 +516,9 @@ begin
                              );
   except
        if isMsgCurrency_all = true then ShowMessage(DateToStr(OperDate));
+       //
+       myLogMemo_add('__err Currency_day');
+       myLogMemo_add(DateToStr(OperDate));
   end;
 
   try
@@ -1192,6 +1198,7 @@ begin
      then begin
                //cbCurrency.Checked:= true;
                //pLoad_https_Currency_all;
+               //
                fBeginPartion_Period;
                pSend_Promo_Message_telegram;
      end;

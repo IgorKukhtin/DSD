@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<TfrxReport Version="4.15.6" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Modal="False" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="42314.8481079514" ReportOptions.Description.Text="" ReportOptions.LastChange="44824.4459654745" ScriptLanguage="PascalScript" ScriptText.Text="&#13;&#10;begin&#13;&#10;&#13;&#10;end." PropData="0844617461736574730101061620446174615365744E616D653D2266727848656164220000095661726961626C657301010621204E616D653D22496E764E756D626572222056616C75653D2227313438323027220001061A204E616D653D22436F6D6D656E74222056616C75653D222727220001061E204E616D653D22436F6D6D656E744D61696E222056616C75653D222727220000055374796C650100">
+  <TfrxDataPage Name="Data" Height="1000" Left="0" Top="0" Width="1000"/>
+  <TfrxReportPage Name="Page1" PaperWidth="210" PaperHeight="297" PaperSize="9" LeftMargin="10" RightMargin="10" TopMargin="10" BottomMargin="10" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
+    <TfrxReportTitle Name="ReportTitle1" Height="120.94496" Left="0" Top="18.89765" Width="718.1107" Stretched="True">
+      <TfrxMemoView Name="Memo2" Left="476.22078" Top="0" Width="241.88992" Height="68.03154" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="Исполнительному директору&#13;&#10;Любарскому Г.О.&#13;&#10;И.О. Начальнику отдела маркетинга&#13;&#10;Фурсову А.А."/>
+      <TfrxMemoView Name="Memo3" Left="0" Top="73.48825" Width="718.1107" Height="22.67718" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-19" Font.Name="Arial" Font.Style="1" HAlign="haCenter" ParentFont="False" Text="Служебная записка № [InvNumber]"/>
+      <TfrxMemoView Name="Memo12" Align="baWidth" Left="0" Top="96.16543" Width="718.1107" Height="18.8976378" ShowHint="False" StretchMode="smActualHeight" Font.Charset="1" Font.Color="0" Font.Height="-11" Font.Name="Arial" Font.Style="1" ParentFont="False" Text=" Примечание : [Comment]"/>
+    </TfrxReportTitle>
+    <TfrxMasterData Name="MasterData1" Height="22.67718" Left="0" Top="283.46475" Width="718.1107" ColumnWidth="0" ColumnGap="0" DataSetName="frxHead" RowCount="0" Stretched="True">
+      <TfrxMemoView Name="Memo7" Left="3.77953" Top="0" Width="52.91342" Height="22.67718" ShowHint="False" StretchMode="smMaxHeight" DataField="lineno" DataSetName="frxHead" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" HAlign="haCenter" HideZeros="True" ParentFont="False" VAlign="vaBottom" Text="[frxHead.&#34;lineno&#34;]"/>
+      <TfrxMemoView Name="Memo8" Left="56.69295" Top="0" Width="268.34663" Height="22.67718" ShowHint="False" StretchMode="smMaxHeight" DataField="linename" DataSetName="frxHead" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="[frxHead.&#34;linename&#34;]"/>
+      <TfrxMemoView Name="Memo9" Left="325.03958" Top="0" Width="374.17347" Height="22.67718" ShowHint="False" StretchMode="smMaxHeight" DataField="linevalue" DataSetName="frxHead" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Courier New" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="[frxHead.&#34;linevalue&#34;]"/>
+    </TfrxMasterData>
+    <TfrxPageFooter Name="PageFooter1" Height="22.67718" Left="0" Top="408.18924" Width="718.1107">
+      <TfrxMemoView Name="Memo1" Left="3.77953" Top="0" Width="249.44898" Height="22.67718" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" ParentFont="False" Text="[Date]"/>
+    </TfrxPageFooter>
+    <TfrxPageHeader Name="PageHeader1" Height="18.89765" Left="0" Top="162.51979" Width="718.1107">
+      <TfrxMemoView Name="Memo4" Left="3.77953" Top="0" Width="52.91342" Height="18.89765" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="№"/>
+      <TfrxMemoView Name="Memo5" Left="56.69295" Top="0" Width="268.34663" Height="18.89765" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="Категории"/>
+      <TfrxMemoView Name="Memo6" Left="325.03958" Top="0" Width="374.17347" Height="18.89765" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="Поле для заполнения:"/>
+    </TfrxPageHeader>
+    <TfrxGroupHeader Name="GroupHeader1" Height="18.8976377952756" Left="0" Top="241.88992" Width="718.1107" Condition="frxHead.&#34;groupname&#34;">
+      <TfrxMemoView Name="Memo10" Align="baWidth" Left="0" Top="0" Width="718.1107" Height="18.8976378" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="3" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="[frxHead.&#34;groupname&#34;]"/>
+    </TfrxGroupHeader>
+    <TfrxReportSummary Name="ReportSummary1" Height="18.8976378" Left="0" Top="366.61441" Width="718.1107" Stretched="True">
+      <TfrxMemoView Name="Memo11" Align="baWidth" Left="0" Top="0" Width="718.1107" Height="18.8976378" ShowHint="False" StretchMode="smMaxHeight" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" ParentFont="False" Text=" Примечание : [CommentMain]"/>
+    </TfrxReportSummary>
+  </TfrxReportPage>
+</TfrxReport>
