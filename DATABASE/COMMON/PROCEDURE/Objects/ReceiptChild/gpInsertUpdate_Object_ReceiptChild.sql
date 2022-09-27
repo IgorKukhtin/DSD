@@ -2,6 +2,7 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptChild(
  INOUT ioId              Integer   , -- ключ объекта <Составляющие рецептур>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptChild(
    OUT outValueWeight    TFloat    , -- Значение объекта 
     IN inIsWeightMain    Boolean   , -- Входит в осн. сырье (100 кг.)
     IN inIsTaxExit       Boolean   , -- Зависит от % выхода
+ --   IN inIsReal          Boolean   , -- Зависит от факта
     IN inStartDate       TDateTime , -- Начальная дата
     IN inEndDate         TDateTime , -- Конечная дата
     IN inComment         TVarChar  , -- Комментарий
@@ -60,6 +62,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_WeightMain(), ioId, inIsWeightMain);
    -- сохранили свойство <Зависит от % выхода>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_TaxExit(), ioId, inIsTaxExit);
+
+   -- сохранили свойство <Зависит от факта>
+   --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_Real(), ioId, inIsReal);
+
    -- сохранили свойство <Начальная дата>
    -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_Start(), ioId, inStartDate);
    -- сохранили свойство <Конечная дата>
@@ -85,6 +91,7 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.09.22         *inIsReal
  14.06.21         * inReceiptLevelId
  12.11.15         * 
  14.02.15                                        *all
