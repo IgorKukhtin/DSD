@@ -28,11 +28,11 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , BoxNumber TFloat, LevelNumber TFloat
              , ChangePercentAmount TFloat, AmountChangePercent TFloat, ChangePercent TFloat
              , Price TFloat, CountForPrice TFloat
-             , PartionGoodsDate TDateTime
+             , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindName TVarChar, MeasureName TVarChar
              , BoxName TVarChar
              , PriceListName  TVarChar
-             ,  ReasonName TVarChar
+             , ReasonName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
              , MovementPromo TVarChar, PricePromo TFloat
@@ -143,6 +143,7 @@ end if;*/
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) 	  AS CountForPrice
            
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
+                  , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
                   
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Box.ObjectId, 0)       ELSE 0 END AS BoxId
@@ -180,6 +181,9 @@ end if;*/
                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                  LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                               ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                              AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
                   LEFT JOIN MovementItemDate AS MIDate_StartBegin
                                              ON MIDate_StartBegin.MovementItemId = MovementItem.Id
@@ -333,6 +337,7 @@ end if;*/
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) 	  AS CountForPrice
            
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
+                  , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
 
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Box.ObjectId, 0)       ELSE 0 END AS BoxId
@@ -366,6 +371,9 @@ end if;*/
                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                  LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                               ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                              AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -468,6 +476,7 @@ end if;*/
            , CASE WHEN tmpMI.CountForPrice = 0 THEN NULL ELSE tmpMI.CountForPrice END :: TFloat AS CountForPrice
            
            , CASE WHEN tmpMI.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpMI.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
+           , tmpMI.PartionGoods :: TVarChar AS PartionGoods
 
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
@@ -537,6 +546,7 @@ end if;*/
                   , tmpMI.CountForPrice
     
                   , tmpMI.PartionGoodsDate
+                  , tmpMI.PartionGoods
                   , tmpMI.GoodsKindId
                   , tmpMI.BoxId
                   , tmpMI.PriceListId
@@ -563,6 +573,7 @@ end if;*/
                    , tmpMI.Price
                    , tmpMI.CountForPrice
                    , tmpMI.PartionGoodsDate
+                   , tmpMI.PartionGoods
                    , tmpMI.GoodsKindId
                    , tmpMI.BoxId
                    , tmpMI.PriceListId

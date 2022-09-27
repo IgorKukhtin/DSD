@@ -68,7 +68,7 @@ BEGIN
        -- для некоторых случаев блокируем создание счета
        IF inInsert = FALSE
        THEN
-           RAISE EXCEPTION 'Ошибка.В данном документе невозможно создать новый Счет УП с параметрами: <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inAccountGroupId), lfGet_Object_ValueData (inAccountDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
+           RAISE EXCEPTION 'Ошибка.В данном документе невозможно создать новый Счет УП с параметрами: <%>, <%>, <%>, <%>, (%)', lfGet_Object_ValueData (inAccountGroupId), lfGet_Object_ValueData (inAccountDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId), inInfoMoneyDestinationId;
        END IF;
 
        -- Определяем Id 2-ий уровень по <Группа счетов> и <Аналитики счетов - направления>

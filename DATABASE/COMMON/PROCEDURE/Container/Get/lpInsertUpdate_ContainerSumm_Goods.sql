@@ -42,7 +42,7 @@ END IF;
 
 
 
-     -- 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
+     -- 1.0. - 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_70100(), zc_Enum_InfoMoneyDestination_70200(), zc_Enum_InfoMoneyDestination_70300(), zc_Enum_InfoMoneyDestination_70400()
                                     )
     AND inPartionGoodsId <> 0
@@ -72,7 +72,7 @@ END IF;
                                                   );
 
      ELSE
-     -- 10100 Мясное сырье
+     -- 1.1. - 10100 Мясное сырье
      IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
           -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение  2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с) 6)Вид товара - не всегда
           -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Физ. лицо (МО) 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с) 6)Вид товара - не всегда
@@ -98,7 +98,7 @@ END IF;
                                                   );
 
      ELSE
-     -- 20400 ГСМ + 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
+     -- 1.2. - 20400 ГСМ + 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20400()
                                    , zc_Enum_InfoMoneyDestination_70100(), zc_Enum_InfoMoneyDestination_70200(), zc_Enum_InfoMoneyDestination_70300(), zc_Enum_InfoMoneyDestination_70400()
                                     )
@@ -123,7 +123,7 @@ END IF;
                                                   );
 
      ELSE
-     -- 20103 Запчасти и Ремонты + Шины
+     -- 1.3. - 20103 Запчасти и Ремонты + Шины
      IF inInfoMoneyId IN (zc_Enum_InfoMoney_20103())
          AND inPartionGoodsId > 0
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Автомобиль / Физ.лицо(МО) / Подразделение  2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с) 6)!Партия товара!
@@ -148,7 +148,7 @@ END IF;
                                                  , inObjectId_6 := inPartionGoodsId
                                                   );
      ELSE
-     -- 20100 Запчасти и Ремонты
+     -- 1.4. - 20100 Запчасти и Ремонты
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100())
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Автомобиль / Физ.лицо(МО) / Подразделение  2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с) 6)!Партия товара!
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -173,7 +173,7 @@ END IF;
                                                   );
      ELSE
 
-     -- 20200 Прочие ТМЦ + 20300 МНМА
+     -- 1.5. - 20200 Прочие ТМЦ + 20300 МНМА
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20200(), zc_Enum_InfoMoneyDestination_20300())
                            -- 0.1)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Автомобиль / Подразделение 2)Физ. лицо (МО) 3)Товар 4)!Партия товара! 5)Статьи назначения 6)Статьи назначения(детализация с/с)
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -197,7 +197,7 @@ END IF;
                                                  , inObjectId_6 := inPartionGoodsId
                                                   );
      ELSE
-     -- 20700 Товары + 20900 Ирна + 30100 Продукция + 30200 Мясное сырье
+     -- 1.6. - 20700 Товары + 20900 Ирна + 30100 Продукция + 30200 Мясное сырье
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700(), zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение  2)Товар 3)!!!Партии товара!!! 4)Виды товаров 5)Статьи назначения 6)Статьи назначения(детализация с/с)
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Физ. лицо (МО) 2)Товар 3)!!!Партии товара!!! 4)Виды товаров 5)Статьи назначения 6)Статьи назначения(детализация с/с)
@@ -245,7 +245,7 @@ END IF;
                                                                 , inObjectId_6 := CASE WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE NULL END
                                                                  );
      ELSE
-     -- 20500 Оборотная тара
+     -- 1.7. - 20500 Оборотная тара
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500())
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Товар 2)Статьи назначения 3)Статьи назначения(детализация с/с)
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -264,7 +264,7 @@ END IF;
                                                  , inDescId_4   := zc_ContainerLinkObject_Unit()
                                                  , inObjectId_4 := 0
                                                   );
-     -- !!!Other!!!
+     -- 2.1. - !!!Other!!!
      ELSE                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение  2)Товар 3)Статьи назначения 4)Статьи назначения(детализация с/с)
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Физ. лицо (МО) 2)Товар 3)Статьи назначения 4)Статьи назначения(детализация с/с)
           vbContainerId := lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
@@ -282,6 +282,8 @@ END IF;
                                                  , inObjectId_3 := inInfoMoneyId_Detail
                                                  , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                  , inObjectId_4 := inInfoMoneyId
+                                                 , inDescId_5   := CASE WHEN inMemberId <> 0 THEN 0 WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
+                                                 , inObjectId_5 := CASE WHEN inMemberId <> 0 THEN 0 WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE NULL END
                                                   );
      END IF;
      END IF;

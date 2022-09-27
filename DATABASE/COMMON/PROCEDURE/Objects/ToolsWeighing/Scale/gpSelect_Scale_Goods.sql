@@ -1002,6 +1002,7 @@ BEGIN
                                        )
                                 AND*/ inBranchCode NOT BETWEEN 301 AND 310
                                    AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                               , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Переработка
                                                                                , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                                                                                 )
                                 UNION

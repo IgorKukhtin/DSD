@@ -988,6 +988,8 @@ BEGIN
                     || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk + 1) :: TVarChar || ' DAY') :: INTERVAl) 
              END :: TVarChar AS OperDateIn_str4
            , Movement.OperDate AS OperDateOut
+           
+           , tmpMIGoodsByGoodsKind.DaysQ_gk :: Integer AS DaysQ_gk
 
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
            , (zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' ä³á') :: TVarChar AS NormInDays_gk_str
