@@ -671,6 +671,15 @@ object ReceiptForm: TReceiptForm
         Options.Editing = False
         Width = 80
       end
+      object IsRealChild: TcxGridDBColumn
+        Caption = #1047#1072#1074#1080#1089#1080#1090' '#1086#1090' '#1082#1086#1083'. '#1092#1072#1082#1090
+        DataBinding.FieldName = 'isReal'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1074#1080#1089#1080#1090' '#1086#1090' '#1082#1086#1083'-'#1074#1086' '#1092#1072#1082#1090
+        Options.Editing = False
+        Width = 80
+      end
       object IsWeightMainChild: TcxGridDBColumn
         Caption = #1042#1093#1086#1076#1080#1090' '#1074' '#1086#1089#1085'. '#1089#1099#1088#1100#1077' (100 '#1082#1075'.)'
         DataBinding.FieldName = 'isWeightMain'
@@ -1076,6 +1085,10 @@ object ReceiptForm: TReceiptForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -1282,6 +1295,10 @@ object ReceiptForm: TReceiptForm
     end
     object bbUpdate_isIrna: TdxBarButton
       Action = macUpdate_isIrna
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actUpdateReal
       Category = 0
     end
   end
@@ -1706,6 +1723,19 @@ object ReceiptForm: TReceiptForm
       Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1091
       Hint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1091
       ImageIndex = 77
+    end
+    object actUpdateReal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateReal
+      StoredProcList = <
+        item
+          StoredProc = spUpdateReal
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1074#1080#1089#1080#1090' '#1086#1090' '#1082#1086#1083'. '#1092#1072#1082#1090'  '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1074#1080#1089#1080#1090' '#1086#1090' '#1082#1086#1083'. '#1092#1072#1082#1090'  '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 80
     end
     object actPrint: TdsdPrintAction
       Category = 'Print'
@@ -2670,5 +2700,42 @@ object ReceiptForm: TReceiptForm
     PackSize = 1
     Left = 640
     Top = 224
+  end
+  object spUpdateReal: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_isBoolean'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioParam'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isReal'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_ObjectBoolean_ReceiptChild_Real'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 850
+    Top = 453
   end
 end

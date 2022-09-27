@@ -22,7 +22,7 @@ RETURNS TABLE (
                GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar,
                isErased Boolean,
 
-               ReceiptChildId Integer, Value_Child TFloat, ValueWeight_Child TFloat, ValueWeight_calc_Child TFloat, isWeightMain_Child Boolean, isTaxExit_Child Boolean, isWeightTotal_Child Boolean,
+               ReceiptChildId Integer, Value_Child TFloat, ValueWeight_Child TFloat, ValueWeight_calc_Child TFloat, isWeightMain_Child Boolean, isTaxExit_Child Boolean, isWeightTotal_Child Boolean, isReal_Child Boolean ,
                StartDate_Child TDateTime, EndDate_Child TDateTime, Comment TVarChar,
                GoodsId_Child Integer, GoodsCode_Child Integer, GoodsName_Child TVarChar,
                GoodsKindId_Child Integer, GoodsKindCode_Child Integer, GoodsKindName_Child TVarChar,
@@ -252,6 +252,7 @@ BEGIN
          , COALESCE (tmpReceiptChild.isWeightMain , FALSE) :: Boolean AS isWeightMain
          , COALESCE (tmpReceiptChild.isTaxExit,     FALSE) :: Boolean AS isTaxExit
          , COALESCE (tmpReceiptChild.isWeightTotal, FALSE) :: Boolean AS isWeightTotal
+         , COALESCE (tmpReceiptChild.isReal,        FALSE) :: Boolean AS isReal
 
          , ObjectDate_StartDate.ValueData     AS StartDate
          , ObjectDate_EndDate.ValueData       AS EndDate
@@ -335,6 +336,7 @@ BEGIN
 
                 , ObjectBoolean_WeightMain.ValueData AS isWeightMain
                 , ObjectBoolean_TaxExit.ValueData    AS isTaxExit
+                , ObjectBoolean_Real.ValueData       AS isReal
 
                 , ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId AS ReceiptLevelId
 
@@ -358,6 +360,11 @@ BEGIN
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
                                         ON ObjectBoolean_TaxExit.ObjectId = Object_ReceiptChild.Id
                                        AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
+
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Real
+                                        ON ObjectBoolean_Real.ObjectId = Object_ReceiptChild.Id
+                                       AND ObjectBoolean_Real.DescId = zc_ObjectBoolean_ReceiptChild_Real()
+
                 LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                       ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                      AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
@@ -503,6 +510,7 @@ BEGIN
          , tmpReceiptChild.isWeightMain                     AS isWeightMain_Child
          , tmpReceiptChild.isTaxExit                        AS isTaxExit_Child
          , tmpReceiptChild.isWeightTotal                    AS isWeightTotal_Child
+         , tmpReceiptChild.isReal                           AS isReal_Child
          , tmpReceiptChild.StartDate                        AS StartDate_Child
          , tmpReceiptChild.EndDate                          AS EndDate_Child
          , tmpReceiptChild.Comment
@@ -553,6 +561,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 27.09.22         * isReal_Child
  22.06.21         * ReceiptLevel
  26.02.16         *
 */
