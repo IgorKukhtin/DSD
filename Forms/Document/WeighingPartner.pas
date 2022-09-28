@@ -179,6 +179,7 @@ type
     cxLabel24: TcxLabel;
     ceComment: TcxTextEdit;
     cbisList: TcxCheckBox;
+    PartionGoods: TcxGridDBColumn;
   private
   public
   end;
