@@ -75,7 +75,7 @@ BEGIN
      IF (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary' OR inTitle ILIKE 'moldings' OR inTitle ILIKE 'upholstery' OR inTitle ILIKE 'teak' )
      THEN
          -- если стандарт
-         IF inValue2 ILIKE 'Basic' THEN inValue2:= ''; END IF;
+         IF inValue2 ILIKE 'Basic' AND (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary') THEN inValue2:= ''; END IF;
          --
          -- если и ключ кривой
          IF NOT EXISTS (SELECT 1 FROM Object JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1 WHERE Object.DescId = zc_Object_ProdOptions())
