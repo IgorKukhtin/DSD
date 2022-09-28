@@ -1132,7 +1132,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 45
       Align = alBottom
       TabOrder = 1
-      ExplicitLeft = 1
       object ShapeState: TShape
         Left = 766
         Top = 25

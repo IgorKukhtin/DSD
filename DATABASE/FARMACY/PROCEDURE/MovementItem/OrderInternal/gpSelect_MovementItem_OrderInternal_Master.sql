@@ -431,23 +431,27 @@ BEGIN
                        GROUP BY tmp.GoodsId
                        )
       -- Дисконтные программы подразделения
-      , tmpDiscountJuridical AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
-                                      , STRING_AGG(CASE WHEN ObjectLink_Juridical.ChildObjectId = 59611 
-                                                        THEN 'Оптима' 
-                                                        ELSE Object_Juridical.ValueData END, ', ')  AS JuridicalName
-                                 FROM Object AS Object_DiscountExternalSupplier
-                                      LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
-                                                           ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalSupplier.Id
-                                                          AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalSupplier_DiscountExternal()
+      , tmpDiscountJuridicalAll AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
+                                         , ObjectLink_Juridical.ChildObjectId            AS JuridicalId
+                                         , CASE WHEN ObjectLink_Juridical.ChildObjectId = 59611 
+                                                THEN 'Оптима' 
+                                                ELSE Object_Juridical.ValueData END      AS JuridicalName
+                                    FROM Object AS Object_DiscountExternalSupplier
+                                         LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                              ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalSupplier.Id
+                                                             AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalSupplier_DiscountExternal()
 
-                                       LEFT JOIN ObjectLink AS ObjectLink_Juridical
-                                                            ON ObjectLink_Juridical.ObjectId = Object_DiscountExternalSupplier.Id
-                                                           AND ObjectLink_Juridical.DescId = zc_ObjectLink_DiscountExternalSupplier_Juridical()
-                                       LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
+                                          LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                               ON ObjectLink_Juridical.ObjectId = Object_DiscountExternalSupplier.Id
+                                                              AND ObjectLink_Juridical.DescId = zc_ObjectLink_DiscountExternalSupplier_Juridical()
+                                          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
 
-                                  WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier()
-                                    AND Object_DiscountExternalSupplier.isErased = FALSE
-                                  GROUP BY ObjectLink_DiscountExternal.ChildObjectId )
+                                     WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier()
+                                       AND Object_DiscountExternalSupplier.isErased = FALSE)
+      , tmpDiscountJuridical AS (SELECT tmpDiscountJuridicalAlL.DiscountExternalId                   AS DiscountExternalId
+                                      , STRING_AGG(tmpDiscountJuridicalAll.JuridicalName, ', ')      AS JuridicalName
+                                 FROM tmpDiscountJuridicalAll
+                                 GROUP BY tmpDiscountJuridicalAll.DiscountExternalId)
       -- Дисконтные программы подразделения
       , tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
                                  , tmpDiscountJuridical.JuridicalName::TVarChar  AS JuridicalName
@@ -470,6 +474,7 @@ BEGIN
                                  , Object_Object.Id                AS ObjectId
                                  , Object_Object.ValueData         AS DiscountName 
                                  , tmpUnitDiscount.JuridicalName   AS DiscountJuridical
+                                 , tmpUnitDiscount.DiscountExternalId 
                                  
                              FROM Object AS Object_BarCode
                                  LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
@@ -489,6 +494,14 @@ BEGIN
                                AND Object_Object.isErased = False
                                AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
                       )
+      , tmpGoodsDiscountJuridical AS (SELECT DISTINCT
+                                             tmpGoodsDiscount.GoodsMainId
+                                           , tmpDiscountJuridicalAll.JuridicalId
+                                           
+                                       FROM tmpGoodsDiscount
+                                       
+                                           INNER JOIN tmpDiscountJuridicalAll ON tmpDiscountJuridicalAll.DiscountExternalId = tmpGoodsDiscount.DiscountExternalId
+                                      )
 
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)           ::Boolean AS isSP
@@ -499,6 +512,7 @@ BEGIN
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0) ::TFloat AS CountPrice
                               , tmpGoodsDiscount.DiscountName
                               , tmpGoodsDiscount.DiscountJuridical
+                              , ObjectLink_Main.ChildObjectId                                           AS GoodsMainId
                          FROM  _tmpOrderInternal_MI AS tmpMI
                                 -- получаем GoodsMainId
                                 LEFT JOIN  ObjectLink AS ObjectLink_Child
@@ -543,6 +557,7 @@ BEGIN
                        , tmpGoodsMain.CountPrice
                        , tmpGoodsMain.DiscountName
                        , tmpGoodsMain.DiscountJuridical
+                       , tmpGoodsMain.GoodsMainId
 
                   FROM  _tmpOrderInternal_MI AS tmpMI
 
@@ -1066,6 +1081,7 @@ BEGIN
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
                    -- отклонение по цене  светло - салатовая- цена подешевела, светло-розовая - подорожала
+                  WHEN COALESCE (tmpMI.JuridicalId, 0) <> 0 AND COALESCE (tmpMI.DiscountName, '') <> '' AND COALESCE (tmpGoodsDiscountJuridical.GoodsMainId, 0) = 0 THEN zfCalc_Color (255, 165, 0) -- orange 
                   WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822 
                     OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612
                     OR tmpMI.JuridicalName ILIKE '%АйВи%' OR tmpMI.JuridicalName ILIKE '%АЙВІ%'  THEN zc_Color_Red()    --красный заказывать нельзя
@@ -1198,6 +1214,9 @@ BEGIN
                                           ON SupplierFailures.GoodsId = tmpMI.GoodsId
                                           
             LEFT JOIN tmpGoodsSPRegistry_1303 ON tmpGoodsSPRegistry_1303.GoodsId = tmpMI.GoodsId
+            
+            LEFT JOIN tmpGoodsDiscountJuridical ON tmpGoodsDiscountJuridical.GoodsMainId = tmpMI.GoodsMainId
+                                               AND tmpGoodsDiscountJuridical.JuridicalId = tmpMI.JuridicalId
            ;
 
 
@@ -2379,23 +2398,27 @@ BEGIN
                        )
 
       -- Дисконтные программы подразделения
-      , tmpDiscountJuridical AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
-                                      , STRING_AGG(CASE WHEN ObjectLink_Juridical.ChildObjectId = 59611 
-                                                        THEN 'Оптима' 
-                                                        ELSE Object_Juridical.ValueData END, ', ')  AS JuridicalName
-                                 FROM Object AS Object_DiscountExternalSupplier
-                                      LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
-                                                           ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalSupplier.Id
-                                                          AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalSupplier_DiscountExternal()
+      , tmpDiscountJuridicalAll AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
+                                         , ObjectLink_Juridical.ChildObjectId            AS JuridicalId
+                                         , CASE WHEN ObjectLink_Juridical.ChildObjectId = 59611 
+                                                THEN 'Оптима' 
+                                                ELSE Object_Juridical.ValueData END      AS JuridicalName
+                                    FROM Object AS Object_DiscountExternalSupplier
+                                         LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                              ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalSupplier.Id
+                                                             AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalSupplier_DiscountExternal()
 
-                                       LEFT JOIN ObjectLink AS ObjectLink_Juridical
-                                                            ON ObjectLink_Juridical.ObjectId = Object_DiscountExternalSupplier.Id
-                                                           AND ObjectLink_Juridical.DescId = zc_ObjectLink_DiscountExternalSupplier_Juridical()
-                                       LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
+                                          LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                               ON ObjectLink_Juridical.ObjectId = Object_DiscountExternalSupplier.Id
+                                                              AND ObjectLink_Juridical.DescId = zc_ObjectLink_DiscountExternalSupplier_Juridical()
+                                          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
 
-                                  WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier()
-                                    AND Object_DiscountExternalSupplier.isErased = FALSE
-                                  GROUP BY ObjectLink_DiscountExternal.ChildObjectId )
+                                     WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier()
+                                       AND Object_DiscountExternalSupplier.isErased = FALSE)
+      , tmpDiscountJuridical AS (SELECT tmpDiscountJuridicalAll.DiscountExternalId                   AS DiscountExternalId
+                                      , STRING_AGG(tmpDiscountJuridicalAll.JuridicalName, ', ')      AS JuridicalName
+                                 FROM tmpDiscountJuridicalAll
+                                 GROUP BY tmpDiscountJuridicalAll.DiscountExternalId)
       -- Дисконтные программы подразделения
       , tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
                                  , tmpDiscountJuridical.JuridicalName::TVarChar  AS JuridicalName
@@ -2418,6 +2441,7 @@ BEGIN
                                  , Object_Object.Id                AS ObjectId
                                  , Object_Object.ValueData         AS DiscountName 
                                  , tmpUnitDiscount.JuridicalName   AS DiscountJuridical
+                                 , tmpUnitDiscount.DiscountExternalId
                                  
                              FROM Object AS Object_BarCode
                                  LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
@@ -2437,6 +2461,14 @@ BEGIN
                                AND Object_Object.isErased = False
                                AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
                       )
+      , tmpGoodsDiscountJuridical AS (SELECT DISTINCT
+                                             tmpGoodsDiscount.GoodsMainId
+                                           , tmpDiscountJuridicalAll.JuridicalId
+                                           
+                                       FROM tmpGoodsDiscount
+                                       
+                                           INNER JOIN tmpDiscountJuridicalAll ON tmpDiscountJuridicalAll.DiscountExternalId = tmpGoodsDiscount.DiscountExternalId
+                                      )
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId                                                           AS GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)                             ::Boolean AS isSP
                               , COALESCE (ObjectBoolean_Resolution_224.ValueData, False)      ::Boolean AS isResolution_224
@@ -2446,6 +2478,7 @@ BEGIN
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0)               ::TFloat    AS CountPrice
                               , tmpGoodsDiscount.DiscountName
                               , tmpGoodsDiscount.DiscountJuridical
+                              , ObjectLink_Main.ChildObjectId                                           AS GoodsMainId
                          FROM tmpGoodsId AS tmpMI
                                 -- получаем GoodsMainId
                                 LEFT JOIN ObjectLink AS ObjectLink_Child
@@ -2995,6 +3028,7 @@ BEGIN
            , CASE
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
+                  WHEN COALESCE (tmpMI.JuridicalId, 0) <> 0 AND COALESCE (tmpGoodsMain.DiscountName, '') <> '' AND COALESCE (tmpGoodsDiscountJuridical.GoodsMainId, 0) = 0 THEN zfCalc_Color (255, 165, 0) -- orange 
                   WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822 
                     OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612
                     OR tmpMI.JuridicalName ILIKE '%АйВи%' OR tmpMI.JuridicalName ILIKE '%АЙВІ%'  THEN zc_Color_Red()    --красный заказывать нельзя
@@ -3101,6 +3135,9 @@ BEGIN
                                           ON SupplierFailures.GoodsId = tmpMI.GoodsId
 
             LEFT JOIN tmpGoodsSPRegistry_1303 ON tmpGoodsSPRegistry_1303.GoodsId = tmpMI.GoodsId
+
+            LEFT JOIN tmpGoodsDiscountJuridical ON tmpGoodsDiscountJuridical.GoodsMainId = tmpGoodsMain.GoodsMainId
+                                               AND tmpGoodsDiscountJuridical.JuridicalId = tmpMI.JuridicalId
            ;
 
 
@@ -4248,23 +4285,27 @@ BEGIN
                        )
 
       -- Дисконтные программы подразделения
-      , tmpDiscountJuridical AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
-                                      , STRING_AGG(CASE WHEN ObjectLink_Juridical.ChildObjectId = 59611 
-                                                        THEN 'Оптима' 
-                                                        ELSE Object_Juridical.ValueData END, ', ')  AS JuridicalName
-                                 FROM Object AS Object_DiscountExternalSupplier
-                                      LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
-                                                           ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalSupplier.Id
-                                                          AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalSupplier_DiscountExternal()
+      , tmpDiscountJuridicalAll AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
+                                         , ObjectLink_Juridical.ChildObjectId            AS JuridicalId
+                                         , CASE WHEN ObjectLink_Juridical.ChildObjectId = 59611 
+                                                THEN 'Оптима' 
+                                                ELSE Object_Juridical.ValueData END      AS JuridicalName
+                                    FROM Object AS Object_DiscountExternalSupplier
+                                         LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                              ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalSupplier.Id
+                                                             AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalSupplier_DiscountExternal()
 
-                                       LEFT JOIN ObjectLink AS ObjectLink_Juridical
-                                                            ON ObjectLink_Juridical.ObjectId = Object_DiscountExternalSupplier.Id
-                                                           AND ObjectLink_Juridical.DescId = zc_ObjectLink_DiscountExternalSupplier_Juridical()
-                                       LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
+                                          LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                               ON ObjectLink_Juridical.ObjectId = Object_DiscountExternalSupplier.Id
+                                                              AND ObjectLink_Juridical.DescId = zc_ObjectLink_DiscountExternalSupplier_Juridical()
+                                          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
 
-                                  WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier()
-                                    AND Object_DiscountExternalSupplier.isErased = FALSE
-                                  GROUP BY ObjectLink_DiscountExternal.ChildObjectId )
+                                     WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier()
+                                       AND Object_DiscountExternalSupplier.isErased = FALSE)
+      , tmpDiscountJuridical AS (SELECT tmpDiscountJuridicalAll.DiscountExternalId                   AS DiscountExternalId
+                                      , STRING_AGG(tmpDiscountJuridicalAll.JuridicalName, ', ')      AS JuridicalName
+                                 FROM tmpDiscountJuridicalAll
+                                 GROUP BY tmpDiscountJuridicalAll.DiscountExternalId)
       -- Дисконтные программы подразделения
       , tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
                                  , tmpDiscountJuridical.JuridicalName::TVarChar  AS JuridicalName
@@ -4287,6 +4328,7 @@ BEGIN
                                  , Object_Object.Id                AS ObjectId
                                  , Object_Object.ValueData         AS DiscountName 
                                  , tmpUnitDiscount.JuridicalName   AS DiscountJuridical
+                                 , tmpUnitDiscount.DiscountExternalId
                                  
                              FROM Object AS Object_BarCode
                                  LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
@@ -4306,6 +4348,14 @@ BEGIN
                                AND Object_Object.isErased = False
                                AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
                       )
+      , tmpGoodsDiscountJuridical AS (SELECT DISTINCT
+                                             tmpGoodsDiscount.GoodsMainId
+                                           , tmpDiscountJuridicalAll.JuridicalId
+                                           
+                                       FROM tmpGoodsDiscount
+                                       
+                                           INNER JOIN tmpDiscountJuridicalAll ON tmpDiscountJuridicalAll.DiscountExternalId = tmpGoodsDiscount.DiscountExternalId
+                                      )
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId                                                           AS GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)                             ::Boolean AS isSP
                               , COALESCE (ObjectBoolean_Resolution_224.ValueData, False)      ::Boolean AS isResolution_224 
@@ -4315,6 +4365,7 @@ BEGIN
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0)               ::TFloat    AS CountPrice
                               , tmpGoodsDiscount.DiscountName
                               , tmpGoodsDiscount.DiscountJuridical
+                              , ObjectLink_Main.ChildObjectId                                           AS GoodsMainId
                          FROM tmpGoodsId AS tmpMI
                                 -- получаем GoodsMainId
                                 LEFT JOIN ObjectLink AS ObjectLink_Child
@@ -4858,6 +4909,7 @@ BEGIN
            , CASE
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
+                  WHEN COALESCE (tmpMI.JuridicalId, 0) <> 0 AND COALESCE (tmpGoodsMain.DiscountName, '') <> '' AND COALESCE (tmpGoodsDiscountJuridical.GoodsMainId, 0) = 0 THEN zfCalc_Color (255, 165, 0) -- orange 
                   WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822 
                     OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612
                     OR tmpMI.JuridicalName ILIKE '%АйВи%' OR tmpMI.JuridicalName ILIKE '%АЙВІ%' THEN zc_Color_Red()    --красный заказывать нельзя
@@ -4964,6 +5016,9 @@ BEGIN
                                           ON SupplierFailures.GoodsId = tmpMI.GoodsId
 
             LEFT JOIN tmpGoodsSPRegistry_1303 ON tmpGoodsSPRegistry_1303.GoodsId = tmpMI.GoodsId
+
+            LEFT JOIN tmpGoodsDiscountJuridical ON tmpGoodsDiscountJuridical.GoodsMainId = tmpGoodsMain.GoodsMainId
+                                               AND tmpGoodsDiscountJuridical.JuridicalId = tmpMI.JuridicalId
            ;
 
 
@@ -5049,4 +5104,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 --select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26893369    , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3') order by GoodsId;
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 27068185 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 29497565 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
