@@ -37,13 +37,24 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
-   WITH tmpPersonal AS (SELECT View_Personal.MemberId
-                             , MAX (View_Personal.UnitId) AS UnitId
-                             , MAX (View_Personal.PositionId) AS PositionId
-                        FROM Object_Personal_View AS View_Personal
-                        WHERE View_Personal.isErased = FALSE
-                        GROUP BY View_Personal.MemberId
-                       )
+   WITH tmpEmployeeSchedule AS (SELECT Movement.OperDate                        AS OperDate
+                                     , MovementItemMaster.ObjectId              AS UserId
+                                     , MILinkObject_Unit.ObjectId               AS UnitId
+                                     , ROW_NUMBER() OVER (PARTITION BY MovementItemMaster.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                                    FROM Movement
+
+                                         INNER JOIN MovementItem AS MovementItemMaster
+                                                                 ON MovementItemMaster.MovementId = Movement.Id
+                                                                AND MovementItemMaster.DescId = zc_MI_Master()
+
+                                         INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                           ON MILinkObject_Unit.MovementItemId = MovementItemMaster.Id
+                                                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+                                    WHERE Movement.OperDate >= date_trunc('Month', CURRENT_DATE - INTERVAL '90 DAY')
+                                      AND Movement.DescId = zc_Movement_EmployeeSchedule()
+                                      AND Movement.StatusId <> zc_Enum_Status_Erased())
+                       
    SELECT 
          Object_User.Id                             AS Id
        , Object_User.ObjectCode                     AS Code
@@ -136,9 +147,15 @@ BEGIN
                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
-        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
-        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
-        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+         LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                              ON ObjectLink_Member_Position.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+        LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+
+        LEFT JOIN tmpEmployeeSchedule ON tmpEmployeeSchedule.UserId = Object_User.Id
+                                     AND tmpEmployeeSchedule.Ord = 1
+  
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpEmployeeSchedule.UnitId
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                              ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
@@ -173,7 +190,7 @@ BEGIN
               
    WHERE Object_User.DescId = zc_Object_User()
      AND Object_Position.ObjectCode in (1, 2)
-     AND (Object_User.isErased = False OR inIsShowAll = True);
+     AND (Object_User.isErased = False AND COALESCE(tmpEmployeeSchedule.UnitId, 0) <> 0 OR inIsShowAll = True);
   
 END;
 $BODY$

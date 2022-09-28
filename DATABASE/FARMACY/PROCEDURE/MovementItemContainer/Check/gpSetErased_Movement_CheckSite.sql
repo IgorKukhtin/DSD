@@ -51,10 +51,10 @@ BEGIN
       END IF;
     END IF;
     
-    IF vbConfirmedKindId <> zc_Enum_ConfirmedKind_UnComplete()
+/*    IF vbConfirmedKindId <> zc_Enum_ConfirmedKind_UnComplete()
     THEN
       RAISE EXCEPTION 'Ошибка. Удаление подтвержденных документов запрещено.';     
-    END IF;
+    END IF;*/
 
     -- Если есть распределение по партиям удаляем
     IF EXISTS(SELECT * FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False)
