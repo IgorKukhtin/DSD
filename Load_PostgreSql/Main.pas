@@ -517,7 +517,7 @@ begin
   except
        if isMsgCurrency_all = true then ShowMessage(DateToStr(OperDate));
        //
-       myLogMemo_add('__err Currency_day');
+       myLogMemo_add('__err-1 open Currency_day');
        myLogMemo_add(DateToStr(OperDate));
   end;
 
@@ -563,6 +563,11 @@ begin
   except
        if isMsgCurrency_all = true then ShowMessage(DateToStr(OperDate));
        if isMsgCurrency_all = true then ShowMessage(XML.XML.Text);
+       //
+       myLogMemo_add('__err-2 read Currency_day');
+       myLogMemo_add('XML.XML.Text');
+       myLogMemo_add(XML.XML.Text);
+       myLogMemo_add(DateToStr(OperDate));
   end;
 
 end;
