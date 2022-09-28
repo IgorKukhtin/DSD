@@ -117,6 +117,7 @@ type
     dsdSetUnErasedReceiptChild: TdsdUpdateErased;
     bb: TdxBarButton;
     spErasedUnErasedReceipt: TdsdStoredProc;
+    spUpdateReal: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -6,12 +6,12 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ReceiptChild(
     IN inId          Integer,       -- Составляющие рецептур 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Value TFloat, isWeightMain boolean, isTaxExit boolean,
+RETURNS TABLE (Id Integer, Value TFloat, isWeightMain Boolean, isTaxExit Boolean, isReal Boolean,
                StartDate TDateTime, EndDate TDateTime, Comment TVarChar,
                ReceiptId Integer, ReceiptName TVarChar, 
                PGoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar,
-               isErased boolean
+               isErased Boolean
                ) AS
 $BODY$
 BEGIN
@@ -28,6 +28,7 @@ BEGIN
          
            , CAST (FALSE AS Boolean) AS isWeightMain
            , CAST (FALSE AS Boolean) AS isTaxExit
+           , CAST (FALSE AS Boolean) AS isReal
            , CAST ('' as TDateTime)  AS StartDate
            , CAST ('' as TDateTime)  AS EndDate
            , CAST ('' as TVarChar)   AS Comment
@@ -55,6 +56,7 @@ BEGIN
          
          , ObjectBoolean_WeightMain.ValueData AS isWeightMain
          , ObjectBoolean_TaxExit.ValueData    AS isTaxExit
+         , ObjectBoolean_Real.ValueData ::Boolean AS isReal
          , ObjectDate_StartDate.ValueData     AS StartDate
          , ObjectDate_EndDate.ValueData       AS EndDate
          , ObjectString_Comment.ValueData     AS Comment
@@ -102,6 +104,10 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
                                   ON ObjectBoolean_TaxExit.ObjectId = Object_ReceiptChild.Id 
                                  AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Real
+                                  ON ObjectBoolean_Real.ObjectId = Object_ReceiptChild.Id
+                                 AND ObjectBoolean_Real.DescId = zc_ObjectBoolean_ReceiptChild_Real()
+
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ReceiptChild.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ReceiptChild_Comment()
@@ -121,6 +127,7 @@ ALTER FUNCTION gpGet_Object_ReceiptChild(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.09.22         *
  14.02.15                                        *all
  19.07.13         * rename zc_ObjectDate_
  09.07.13         *              

@@ -1099,6 +1099,38 @@ BEGIN
        END IF;   
    END IF;
 
+   IF vbUserId IN (3, 8037524)
+   THEN
+       SELECT COALESCE(Object_Member.ValueData, Object_User.ValueData)
+       INTO vbText
+       FROM Object AS Object_User
+       
+            LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                 ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_InternshipCompleted
+                                    ON ObjectBoolean_InternshipCompleted.ObjectId = Object_User.Id
+                                   AND ObjectBoolean_InternshipCompleted.DescId = zc_ObjectBoolean_User_InternshipCompleted()
+            LEFT JOIN ObjectFloat AS ObjectFloat_InternshipConfirmation
+                                  ON ObjectFloat_InternshipConfirmation.ObjectId = Object_User.Id
+                                 AND ObjectFloat_InternshipConfirmation.DescId = zc_ObjectFloat_User_InternshipConfirmation()
+            LEFT JOIN ObjectDate AS ObjectDate_User_InternshipConfirmation
+                                 ON ObjectDate_User_InternshipConfirmation.ObjectId = Object_User.Id
+                                AND ObjectDate_User_InternshipConfirmation.DescId = zc_ObjectDate_User_InternshipConfirmation()
+       
+       WHERE COALESCE (ObjectBoolean_InternshipCompleted.ValueData, FALSE) = TRUE
+         AND COALESCE (ObjectFloat_InternshipConfirmation.ValueData, 0) = 1
+         AND ObjectDate_User_InternshipConfirmation.ValueData >= vbDatePUSH;   
+
+       IF COALESCE (vbText, '') <> ''
+       THEN         
+         INSERT INTO _PUSH (Id, Text)
+         VALUES (76, 'Стажировку не прошли'||CHR(13)||CHR(13)||vbText||CHR(13)||CHR(13)||'Повторите курс!');
+       END IF;   
+   END IF;
+
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id
           , _PUSH.Text                   AS Text

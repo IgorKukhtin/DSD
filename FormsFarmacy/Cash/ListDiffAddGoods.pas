@@ -331,6 +331,7 @@ begin
   if DiffKindPriceCDS.Active then
   begin
     try
+      DiffKindPriceCDS.Filtered := False;
       DiffKindPriceCDS.Filter := 'DiffKindId = ' + DiffKindCDS.FieldByName('Id').AsString  +
                                  ' and MinPrice <= ' + CurrToStr(FPrice) +
                                  ' and MaxPrice > ' + CurrToStr(FPrice);
@@ -356,7 +357,7 @@ begin
           ShowMessage('Сумма заказа по позиции :'#13#10 + FGoodsName +
             #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
             ' и ценой ' + CurrToStr(FPrice) +
-            '" превышает ' + CurrToStr(DiffKindPriceCDS.FieldByName('Amount').AsCurrency) + ' грн. ...');
+            '" превышает ' + CurrToStr(DiffKindPriceCDS.FieldByName('Summa').AsCurrency) + ' грн. ...');
           ceAmount.SetFocus;
           Exit;
         end;

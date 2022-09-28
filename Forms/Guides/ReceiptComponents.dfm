@@ -1471,7 +1471,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 722
+    Left = 642
     Top = 125
   end
   object spUpdateWeightMain: TdsdStoredProc
@@ -1544,5 +1544,42 @@ object ReceiptComponentsForm: TReceiptComponentsForm
     PackSize = 1
     Left = 112
     Top = 272
+  end
+  object spUpdateReal: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_isBoolean'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReceiptChildId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioParam'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReal_Child'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_ObjectBoolean_ReceiptChild_Real'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 610
+    Top = 189
   end
 end

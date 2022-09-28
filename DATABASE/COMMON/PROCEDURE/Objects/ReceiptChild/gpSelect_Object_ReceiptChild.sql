@@ -1,7 +1,7 @@
 -- Function: gpSelect_Object_ReceiptChild()
 
 --DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptChild (Integer, Boolean, TVarChar);
---DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptChild (Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptChild (Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptChild(
     IN inReceiptId    Integer,
@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptChild(
     IN inShowAll      Boolean,
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Value TFloat, ValueWeight TFloat, ValueWeight_calc TFloat, isWeightMain Boolean, isTaxExit Boolean, isWeightTotal Boolean,
+RETURNS TABLE (Id Integer, Value TFloat, ValueWeight TFloat, ValueWeight_calc TFloat,
+               isWeightMain Boolean, isTaxExit Boolean, isWeightTotal Boolean, isReal Boolean,
                StartDate TDateTime, EndDate TDateTime, Comment TVarChar,
                ReceiptId Integer, ReceiptName TVarChar, 
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
@@ -42,7 +43,8 @@ BEGIN
 
          , COALESCE (tmpReceiptChild.isWeightMain , FALSE) :: Boolean AS isWeightMain
          , COALESCE (tmpReceiptChild.isTaxExit,     FALSE) :: Boolean AS isTaxExit
-         , COALESCE (tmpReceiptChild.isWeightTotal, FALSE) :: Boolean AS isWeightTotal
+         , COALESCE (tmpReceiptChild.isWeightTotal, FALSE) :: Boolean AS isWeightTotal 
+         , COALESCE (tmpReceiptChild.isReal, FALSE)        :: Boolean AS isReal
 
          , ObjectDate_StartDate.ValueData     AS StartDate
          , ObjectDate_EndDate.ValueData       AS EndDate
@@ -128,6 +130,7 @@ BEGIN
 
                 , ObjectBoolean_WeightMain.ValueData AS isWeightMain
                 , ObjectBoolean_TaxExit.ValueData    AS isTaxExit
+                , ObjectBoolean_Real.ValueData       AS isReal
 
                 , Object_InfoMoney_View.InfoMoneyCode
                 , Object_InfoMoney_View.InfoMoneyGroupName
@@ -159,7 +162,11 @@ BEGIN
                                        AND ObjectBoolean_WeightMain.DescId = zc_ObjectBoolean_ReceiptChild_WeightMain()
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
                                         ON ObjectBoolean_TaxExit.ObjectId = Object_ReceiptChild.Id
-                                       AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
+                                       AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit() 
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Real
+                                        ON ObjectBoolean_Real.ObjectId = Object_ReceiptChild.Id
+                                       AND ObjectBoolean_Real.DescId = zc_ObjectBoolean_ReceiptChild_Real()
+
                 LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                       ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                      AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
@@ -267,6 +274,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.09.22         * isReal
  14.06.21         *
  05.03.19         * 
  08.12.15         * add Parent

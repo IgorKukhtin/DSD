@@ -113,6 +113,12 @@ type
     isInternshipCompleted: TcxGridDBColumn;
     InternshipConfirmation: TcxGridDBColumn;
     DateInternshipConfirmation: TcxGridDBColumn;
+    dxBarSubItem1: TdxBarSubItem;
+    spUpdate_InternshipConfirmation: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actUpdate_InternshipConfirmation_0: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    DateInternshipCompleted: TcxGridDBColumn;
   private
     { Private declarations }
   public
