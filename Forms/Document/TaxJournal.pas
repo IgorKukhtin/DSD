@@ -158,6 +158,7 @@ type
     actUpdate_Branch: TdsdExecStoredProc;
     macUpdateBranch: TMultiAction;
     bbUpdateBranch: TdxBarButton;
+    OperDatePartner_Master: TcxGridDBColumn;
   private
     { Private declarations }
   public

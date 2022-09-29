@@ -4,8 +4,9 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
+  ExplicitLeft = -216
   ExplicitWidth = 1126
-  ExplicitHeight = 548
+  ExplicitHeight = 549
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -15,17 +16,17 @@ inherited TaxJournalForm: TTaxJournalForm
     TabOrder = 3
     ExplicitTop = 77
     ExplicitWidth = 1110
-    ExplicitHeight = 437
+    ExplicitHeight = 433
     ClientRectBottom = 433
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1110
-      ExplicitHeight = 437
+      ExplicitHeight = 433
       inherited cxGrid: TcxGrid
         Width = 1110
         Height = 433
         ExplicitWidth = 1110
-        ExplicitHeight = 437
+        ExplicitHeight = 433
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -153,6 +154,15 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 68
+          end
+          object OperDatePartner_Master: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'OperDatePartner_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077' '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+            Options.Editing = False
+            Width = 80
           end
           object isAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
