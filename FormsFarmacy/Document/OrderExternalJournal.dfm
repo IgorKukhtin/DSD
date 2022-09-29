@@ -543,6 +543,20 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       GuiParams = <>
       isShowModal = False
     end
+    object actUpdate_SetSupplierFailures: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isSupplierFailures
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isSupplierFailures
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079#1099' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1099'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079#1099' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1099'"'
+      ImageIndex = 79
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079#1099' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1099'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -673,6 +687,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_SetSupplierFailures'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_SupplierFailuresAll'
         end
         item
@@ -749,6 +771,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     end
     object bbReport_JuridicalItog: TdxBarButton
       Action = actReport_JuridicalItog
+      Category = 0
+    end
+    object bbUpdate_SetSupplierFailures: TdxBarButton
+      Action = actUpdate_SetSupplierFailures
       Category = 0
     end
   end
@@ -970,5 +996,37 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     PackSize = 1
     Left = 880
     Top = 283
+  end
+  object spUpdate_isSupplierFailures: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderExternal_SupplierFailures'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSupplierFailures'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSupplierFailures'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSupplierFailures'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 626
+    Top = 368
   end
 end

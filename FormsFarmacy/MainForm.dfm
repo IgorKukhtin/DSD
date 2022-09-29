@@ -5367,6 +5367,18 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actUserCash: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
+      Hint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
+      FormName = 'TUserCashForm'
+      FormNameParam.Value = 'TUserCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5743,6 +5755,9 @@
       end
       object N148: TMenuItem
         Action = actNewUser
+      end
+      object N370: TMenuItem
+        Action = actUserCash
       end
       object N80: TMenuItem
         Caption = '-'

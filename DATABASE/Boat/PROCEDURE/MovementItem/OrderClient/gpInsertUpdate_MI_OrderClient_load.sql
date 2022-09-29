@@ -56,6 +56,7 @@ $BODY$
    DECLARE vbGoodsId            Integer;
    DECLARE vbComment            TVarChar;
    DECLARE vbColor_title        TVarChar;
+   DECLARE vbColor              TVarChar;
    
    DECLARE vbLISSE_MATT TVarChar;
 
@@ -75,7 +76,7 @@ BEGIN
      IF (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary' OR inTitle ILIKE 'moldings' OR inTitle ILIKE 'upholstery' OR inTitle ILIKE 'teak' )
      THEN
          -- если стандарт
-         IF inValue2 ILIKE 'Basic' THEN inValue2:= ''; END IF;
+         IF inValue2 ILIKE 'Basic' AND (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary') THEN inValue2:= ''; END IF;
          --
          -- если и ключ кривой
          IF NOT EXISTS (SELECT 1 FROM Object JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1 WHERE Object.DescId = zc_Object_ProdOptions())
@@ -768,7 +769,22 @@ BEGIN
                               WHEN inTitle6 ILIKE 'color_title' THEN inValue6
                               WHEN inTitle7 ILIKE 'color_title' THEN inValue7
                          END;
-
+         -- 6.2.2.1 нашли значение ÷вет
+         vbColor:= CASE WHEN inTitle2 ILIKE 'color' THEN inValue2
+                        WHEN inTitle3 ILIKE 'color' THEN inValue3
+                        WHEN inTitle4 ILIKE 'color' THEN inValue4
+                        WHEN inTitle5 ILIKE 'color' THEN inValue5
+                        WHEN inTitle6 ILIKE 'color' THEN inValue6
+                        WHEN inTitle7 ILIKE 'color' THEN inValue7
+                   END;
+                         
+         -- 6.2.2.2 обновили значение ÷вета если надо
+         IF COALESCE(vbColor_title, '') <> '' AND COALESCE(vbColor, '') <> ''
+         THEN                   
+           PERFORM gpInsertUpdate_Object_ProdColor_Value (inName    := vbColor_title
+                                                        , inValue   := vbColor
+                                                        , inSession := inSession);
+         END IF;
 
          -- 6.2.3. нашли
          IF vbProdColorPatternId > 0

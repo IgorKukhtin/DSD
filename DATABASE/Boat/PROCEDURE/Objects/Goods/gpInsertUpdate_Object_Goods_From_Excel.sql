@@ -246,12 +246,12 @@ else RETURN;
        IF COALESCE (vbProdColorId,0) = 0
        THEN
             vbProdColorId := (SELECT tmp.ioId
-                              FROM gpInsertUpdate_Object_ProdColor (ioId        := 0         :: Integer
-                                                                 , ioCode      := 0         :: Integer
-                                                                 , inName      := TRIM (inProdColor) ::TVarChar
-                                                                 , inComment   := ''        :: TVarChar
-                                                                 , inSession   := inSession :: TVarChar
-                                                                  ) AS tmp);
+                              FROM gpInsertUpdate_Object_ProdColor_Load (ioId        := 0         :: Integer
+                                                                       , ioCode      := 0         :: Integer
+                                                                       , inName      := TRIM (inProdColor) ::TVarChar
+                                                                       , inComment   := ''        :: TVarChar
+                                                                       , inSession   := inSession :: TVarChar
+                                                                        ) AS tmp);
        END IF;
    END IF;
    
@@ -410,7 +410,8 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 29.09.22                                                       *
  09.11.20         *
 */
 

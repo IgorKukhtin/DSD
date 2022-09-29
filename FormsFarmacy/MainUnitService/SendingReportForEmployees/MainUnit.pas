@@ -244,7 +244,7 @@ begin
       qryReport.Close;
       qryReport.SQL.Text := qrySendList.FieldByName('SQL').AsString;
       qryReport.Open;
-      cxGridPopulMobileApplication.Height := 18 * (qryReport.RecordCount + 3);
+      cxGridPopulMobileApplication.Height := 18 * (qryReport.RecordCount + 4);
     except
       on E: Exception do Add_Log(E.Message);
     end;

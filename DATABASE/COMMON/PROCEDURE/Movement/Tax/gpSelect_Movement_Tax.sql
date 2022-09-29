@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , UnitCode Integer, UnitName TVarChar, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
-             , InvNumber_Master TVarChar, isError Boolean
+             , InvNumber_Master TVarChar, OperDatePartner_Master TDateTime, isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InvNumberBranch TVarChar, BranchName TVarChar
              , isEDI Boolean
@@ -122,7 +122,8 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName
            , Object_TaxKind.Id                	        AS TaxKindId
            , Object_TaxKind.ValueData         	        AS TaxKindName
-           , Movement_DocumentMaster.InvNumber          AS InvNumberPartner_Master
+           , Movement_DocumentMaster.InvNumber          AS InvNumber_Master
+           , MovementDate_OperDatePartner_Master.ValueData AS OperDatePartner_Master
            , CAST (CASE WHEN MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
                                 OR MovementDate_OperDatePartner_Master.ValueData <> Movement.OperDate
@@ -160,6 +161,8 @@ BEGIN
            
            , COALESCE (MovementBoolean_DisableNPP_auto.ValueData, FALSE) :: Boolean AS isDisableNPP
            , COALESCE (MovementBoolean_isAuto.ValueData, False)          :: Boolean AS isAuto
+           
+           
 
        FROM (SELECT Movement.Id
                   , MovementLinkObject_Branch.ObjectId           AS BranchId

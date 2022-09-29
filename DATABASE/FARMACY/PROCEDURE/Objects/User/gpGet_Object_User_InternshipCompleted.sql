@@ -12,7 +12,7 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Object_User());
+   vbUserId:= lpGetUserBySession (inSession);
 
    IF EXISTS (SELECT * FROM ObjectBoolean AS ObjectBoolean_InternshipCompleted
               WHERE ObjectBoolean_InternshipCompleted.ObjectId = vbUserId

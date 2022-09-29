@@ -103,6 +103,8 @@ BEGIN
      THEN
        -- свойство <Подтверждение стажировки>
        PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_User_InternshipConfirmation(), ioId, 0);
+       -- свойство <Дата подтверждения стажировки>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_User_InternshipCompleted(), ioId, CURRENT_DATE);
      ELSE
        IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
        THEN

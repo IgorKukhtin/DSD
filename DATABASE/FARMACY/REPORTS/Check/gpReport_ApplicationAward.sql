@@ -8,9 +8,11 @@ CREATE OR REPLACE FUNCTION gpReport_ApplicationAward(
     IN inEndDate       TDateTime , --
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (UnitCode      Integer         
-             , UnitName      TVarChar
-             , CountCheck    Integer
+RETURNS TABLE (UnitCode       Integer         
+             , UnitName       TVarChar
+             , CountCheck     Integer
+             , CountCheckPrew Integer
+             , DCountCheck    Integer
               )
 AS
 $BODY$
@@ -41,7 +43,7 @@ BEGIN
                                                                              ON MILinkObject_Unit.MovementItemId = MovementItemMaster.Id
                                                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
 
-                                      WHERE Movement.OperDate BETWEEN date_trunc('Month', inStartDate) AND date_trunc('Month', inEndDate)
+                                      WHERE Movement.OperDate BETWEEN date_trunc('Month', inStartDate) - INTERVAL '1 MONTH' AND date_trunc('Month', inEndDate)
                                         AND Movement.DescId = zc_Movement_EmployeeSchedule()
                                         AND Movement.StatusId <> zc_Enum_Status_Erased()),
          tmpEmployeeScheduleDey AS (SELECT Movement.OperDate + (((MovementItemChild.Amount - 1)::INTEGER)::TVarChar||' DAY')::INTERVAL AS OperDate
@@ -89,7 +91,7 @@ BEGIN
                                                                   ON MovementString_InvNumberOrder.MovementId = MovementItemContainer.MovementId
                                                                  AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
-                                    WHERE MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
+                                    WHERE MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate) - INTERVAL '1 MONTH'
                                       AND MovementItemContainer.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                                       AND MovementItemContainer.MovementDescId = zc_Movement_Check()
                                       AND MovementItemContainer.DescId = zc_MIContainer_Count()
@@ -131,7 +133,7 @@ BEGIN
                               LEFT JOIN tmpCheckGoodsSpecial ON tmpCheckGoodsSpecial.MovementId = Movement.ID
 
                          WHERE Movement.DescId = zc_Movement_Check()
-                           AND Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
+                           AND Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate) - INTERVAL '1 MONTH'
                            AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                            AND COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 
                            AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -157,23 +159,56 @@ BEGIN
                                   LEFT JOIN tmpEmployeeScheduleDey ON tmpEmployeeScheduleDey.OperDate = date_trunc('DAY', Movement.OperDate)
                                                                   AND tmpEmployeeScheduleDey.UserId = Movement.UserId
                                                                   AND tmpEmployeeScheduleDey.ORD = 1
+                                                                  
+                             WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                              ),
          tmpUserReferalsUnit AS (SELECT tmpUserReferals.UnitId
                                       , COUNT(DISTINCT tmpUserReferals.UserId) AS CountUser
                                       , COUNT(*)::Integer                      AS CountCheck
                                  FROM tmpUserReferals
-                                 GROUP BY tmpUserReferals.UnitId)
+                                 GROUP BY tmpUserReferals.UnitId),
+         tmpUserReferalsPrew AS (SELECT Movement.OperDate
+                                      , Movement.UserId
+                                      , COALESCE(tmpEmployeeSchedule.UnitId, tmpEmployeeScheduleDey.UnitId, Movement.UnitId) AS UnitId
+                                 FROM tmpMovement AS Movement
                                  
-      SELECT Object_Unit.ObjectCode                       AS UnitCode
-           , Object_Unit.ValueData                        AS UnitName
-           , COALESCE(tmpUserReferalsUnit.CountCheck, 0)  AS CountCheck
+                                      LEFT JOIN tmpMovementProtocol ON tmpMovementProtocol.MovementId = Movement.Id
+
+                                      LEFT JOIN tmpEmployeeSchedule ON tmpEmployeeSchedule.OperDate = date_trunc('Month', Movement.OperDate)
+                                                                   AND tmpEmployeeSchedule.UserId = Movement.UserId
+                                   
+                                      LEFT JOIN tmpEmployeeScheduleDey ON tmpEmployeeScheduleDey.OperDate = date_trunc('DAY', Movement.OperDate)
+                                                                      AND tmpEmployeeScheduleDey.UserId = Movement.UserId
+                                                                      AND tmpEmployeeScheduleDey.ORD = 1
+                                                                      
+                                 WHERE DATE_TRUNC ('MONTH', inStartDate) = DATE_TRUNC ('MONTH', inEndDate)
+                                   AND (Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) - INTERVAL '1 MONTH' + INTERVAL '1 DAY' OR 
+                                        DATE_TRUNC ('DAY', inStartDate) + INTERVAL '1 MONTH' = DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY' AND
+                                        Movement.OperDate < DATE_TRUNC ('DAY', inStartDate))
+                                 ),
+         tmpUserReferalsUnitPrew AS (SELECT tmpUserReferals.UnitId
+                                          , COUNT(DISTINCT tmpUserReferals.UserId) AS CountUser
+                                          , COUNT(*)::Integer                      AS CountCheck
+                                     FROM tmpUserReferalsPrew AS tmpUserReferals
+                                     GROUP BY tmpUserReferals.UnitId)
+                                 
+      SELECT Object_Unit.ObjectCode                           AS UnitCode
+           , Object_Unit.ValueData                            AS UnitName
+           , COALESCE(tmpUserReferalsUnit.CountCheck, 0)      AS CountCheck
+           , COALESCE(tmpUserReferalsUnitPrew.CountCheck, 0)  AS CountCheckPrew
+           , CASE WHEN DATE_TRUNC ('MONTH', inStartDate) <> DATE_TRUNC ('MONTH', inEndDate) THEN 0
+                  WHEN COALESCE(tmpUserReferalsUnit.CountCheck, 0) > COALESCE(tmpUserReferalsUnitPrew.CountCheck, 0) THEN 1
+                  WHEN COALESCE(tmpUserReferalsUnit.CountCheck, 0) < COALESCE(tmpUserReferalsUnitPrew.CountCheck, 0) THEN 2
+                  ELSE 3 END::INTEGER                         AS DCountCheck
       FROM (SELECT tmp.ID AS UnitId FROM gpSelect_Object_Unit_Active (inNotUnitId := 0, inSession := inSession) AS tmp) AS tmpUnit
         
            LEFT JOIN tmpUserReferalsUnit ON tmpUserReferalsUnit.UnitId =  tmpUnit.UnitId
+
+           LEFT JOIN tmpUserReferalsUnitPrew ON tmpUserReferalsUnitPrew.UnitId =  tmpUnit.UnitId
              
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitId
              
-      ORDER BY COALESCE(tmpUserReferalsUnit.CountCheck, 0)  DESC;
+      ORDER BY COALESCE(tmpUserReferalsUnit.CountCheck, 0)  DESC, COALESCE(tmpUserReferalsUnitPrew.CountCheck, 0)  DESC;
 
 END;
 $BODY$
@@ -188,4 +223,4 @@ $BODY$
 
 -- тест
 
-select * from gpReport_ApplicationAward(inStartDate := ('01.08.2022')::TDateTime, inEndDate := ('30.09.2022')::TDateTime, inSession := '3');     
+select * from gpReport_ApplicationAward(inStartDate := ('01.10.2022')::TDateTime , inEndDate := ('14.10.2022')::TDateTime ,  inSession := '3');

@@ -91,13 +91,15 @@ BEGIN
                                                       THEN 0
                                                  WHEN MovementItem.Id = inMovementItemId
                                                       THEN -- если это элемент который корректировался, тогда используется <Количество по рецептуре на 1 кутер> в док.
-                                                           outAmount_master * inAmountReceipt / vbValue_Receipt
+                                                           CASE WHEN MIFloat_CountReal.ValueData > 0 AND tmpReceiptChild.isReal = TRUE THEN MIFloat_CountReal.ValueData ELSE outAmount_master END
+                                                         * inAmountReceipt / vbValue_Receipt
                                                  ELSE -- для остальных используется <Количество по рецептуре на 1 кутер> в док. ИЛИ св-во из <Рецептуры>
-                                                      outAmount_master * COALESCE (MIFloat_AmountReceipt.ValueData, COALESCE (tmpReceiptChild.Value, 0)) / vbValue_Receipt
+                                                      CASE WHEN MIFloat_CountReal.ValueData > 0 AND tmpReceiptChild.isReal = TRUE THEN MIFloat_CountReal.ValueData ELSE outAmount_master END
+                                                    * COALESCE (MIFloat_AmountReceipt.ValueData, tmpReceiptChild.Value, 0) / vbValue_Receipt
                                              END
                                           , MovementItem.ParentId)
-             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReceipt(), MovementItem.Id, COALESCE (MIFloat_AmountReceipt.ValueData, COALESCE (tmpReceiptChild.Value, 0)))
-             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_TaxExit(), MovementItem.Id, COALESCE (tmpReceiptChild.isTaxExit, COALESCE (MIBoolean_TaxExit.ValueData, FALSE)))
+             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReceipt(), MovementItem.Id, COALESCE (MIFloat_AmountReceipt.ValueData, tmpReceiptChild.Value, 0))
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_TaxExit(), MovementItem.Id, COALESCE (tmpReceiptChild.isTaxExit, MIBoolean_TaxExit.ValueData, FALSE))
              , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), MovementItem.Id, inUserId)
              , lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), MovementItem.Id, CURRENT_TIMESTAMP)
        FROM MovementItem
@@ -107,14 +109,18 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountReceipt
                                         ON MIFloat_AmountReceipt.MovementItemId =  MovementItem.Id
                                        AND MIFloat_AmountReceipt.DescId = zc_MIFloat_AmountReceipt()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountReal
+                                        ON MIFloat_CountReal.MovementItemId =  MovementItem.Id
+                                       AND MIFloat_CountReal.DescId = zc_MIFloat_CountReal()
             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                              ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN (SELECT COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)      AS GoodsId
                             , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
                             , COALESCE (ObjectBoolean_TaxExit.ValueData, FALSE)              AS isTaxExit
+                            , COALESCE (ObjectBoolean_Real.ValueData, FALSE)                 AS isReal
                             , ObjectFloat_Value.ValueData                                    AS Value
-                      FROM ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                       FROM ObjectLink AS ObjectLink_ReceiptChild_Receipt
                             INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                                     AND Object_ReceiptChild.isErased = FALSE
                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
@@ -131,6 +137,11 @@ BEGIN
                             LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
                                                     ON ObjectBoolean_TaxExit.ObjectId = Object_ReceiptChild.Id 
                                                    AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
+
+                            LEFT JOIN ObjectBoolean AS ObjectBoolean_Real
+                                                    ON ObjectBoolean_Real.ObjectId = Object_ReceiptChild.Id 
+                                                   AND ObjectBoolean_Real.DescId = zc_ObjectBoolean_ReceiptChild_Real()
+
                        WHERE ObjectLink_ReceiptChild_Receipt.ChildObjectId = inReceiptId
                          AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
                       ) AS tmpReceiptChild ON tmpReceiptChild.GoodsId = MovementItem.ObjectId

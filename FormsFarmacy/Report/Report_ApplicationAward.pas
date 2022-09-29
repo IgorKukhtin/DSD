@@ -39,6 +39,7 @@ type
     spUpdate_EmployeeMessage: TdsdStoredProc;
     bbtUpdate_EmployeeMessage: TdxBarButton;
     FormParams: TdsdFormParams;
+    DCountCheck: TcxGridDBColumn;
   private
     { Private declarations }
   public

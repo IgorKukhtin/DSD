@@ -1,13 +1,14 @@
--- Function: gpSelect_Object_User (TVarChar)
+-- Function: gpSelect_Object_UserCash (TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_User (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_UserCash (Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_User(
+CREATE OR REPLACE FUNCTION gpSelect_Object_UserCash(
+    IN inIsShowAll   Boolean  ,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , MemberId Integer, MemberName TVarChar
-             , User_ TVarChar, UserSign TVarChar, UserSeal TVarChar, UserKey TVarChar
+             , UserSign TVarChar, UserSeal TVarChar, UserKey TVarChar
              , BranchCode Integer, BranchName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , PositionName TVarChar
@@ -18,7 +19,6 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , isSite Boolean
              , UpdateMobileFrom TDateTime, UpdateMobileTo TDateTime
              , InDate TDateTime, FarmacyCashDate TDateTime
-             , PasswordWages TVarChar
              , isWorkingMultiple Boolean
              , isNewUser Boolean
              , isDismissedUser Boolean
@@ -31,28 +31,30 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-IF inSession = '9464' THEN vbUserId := 9464;
-ELSE
-   -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_User());
-END IF;
 
-     -- Блокируем ему просмотр
-     IF vbUserId = 9457 -- Климентьев К.И.
-     THEN
-         vbUserId:= NULL;
-         RETURN;
-     END IF;
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Результат
    RETURN QUERY 
-   WITH tmpPersonal AS (SELECT View_Personal.MemberId
-                             , MAX (View_Personal.UnitId) AS UnitId
-                             , MAX (View_Personal.PositionId) AS PositionId
-                        FROM Object_Personal_View AS View_Personal
-                        WHERE View_Personal.isErased = FALSE
-                        GROUP BY View_Personal.MemberId
-                       )
+   WITH tmpEmployeeSchedule AS (SELECT Movement.OperDate                        AS OperDate
+                                     , MovementItemMaster.ObjectId              AS UserId
+                                     , MILinkObject_Unit.ObjectId               AS UnitId
+                                     , ROW_NUMBER() OVER (PARTITION BY MovementItemMaster.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                                    FROM Movement
+
+                                         INNER JOIN MovementItem AS MovementItemMaster
+                                                                 ON MovementItemMaster.MovementId = Movement.Id
+                                                                AND MovementItemMaster.DescId = zc_MI_Master()
+
+                                         INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                           ON MILinkObject_Unit.MovementItemId = MovementItemMaster.Id
+                                                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+                                    WHERE Movement.OperDate >= date_trunc('Month', CURRENT_DATE - INTERVAL '90 DAY')
+                                      AND Movement.DescId = zc_Movement_EmployeeSchedule()
+                                      AND Movement.StatusId <> zc_Enum_Status_Erased())
+                       
    SELECT 
          Object_User.Id                             AS Id
        , Object_User.ObjectCode                     AS Code
@@ -61,7 +63,6 @@ END IF;
        , Object_Member.Id                           AS MemberId
        , Object_Member.ValueData                    AS MemberName
                                                     
-       , ObjectString_User_.ValueData               AS User_
        , ObjectString_UserSign.ValueData            AS UserSign
        , ObjectString_UserSeal.ValueData            AS UserSeal
        , ObjectString_UserKey.ValueData             AS UserKey
@@ -84,7 +85,6 @@ END IF;
        
        , ObjectDate_User_In.ValueData               AS InDate
        , ObjectDate_User_FarmacyCash.ValueData      AS FarmacyCashDate
-       , ObjectString_PasswordWages.ValueData
  
        , COALESCE (ObjectBoolean_WorkingMultiple.ValueData, FALSE)::Boolean  AS isWorkingMultiple
 
@@ -100,9 +100,6 @@ END IF;
        , ObjectDate_User_InternshipConfirmation.ValueData                          AS DateInternshipConfirmation
        
    FROM Object AS Object_User
-        LEFT JOIN ObjectString AS ObjectString_User_
-                               ON ObjectString_User_.ObjectId = Object_User.Id
-                              AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
         LEFT JOIN ObjectString AS ObjectString_UserSign
                                ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
                               AND ObjectString_UserSign.ObjectId = Object_User.Id
@@ -150,9 +147,15 @@ END IF;
                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
-        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
-        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
-        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+         LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                              ON ObjectLink_Member_Position.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+        LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+
+        LEFT JOIN tmpEmployeeSchedule ON tmpEmployeeSchedule.UserId = Object_User.Id
+                                     AND tmpEmployeeSchedule.Ord = 1
+  
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpEmployeeSchedule.UnitId
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                              ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
@@ -172,10 +175,6 @@ END IF;
                              ON ObjectDate_User_FarmacyCash.ObjectId = Object_User.Id
                             AND ObjectDate_User_FarmacyCash.DescId = zc_ObjectDate_User_FarmacyCash()
 
-        LEFT JOIN ObjectString AS ObjectString_PasswordWages
-               ON ObjectString_PasswordWages.DescId = zc_ObjectString_User_PasswordWages() 
-              AND ObjectString_PasswordWages.ObjectId = Object_User.Id
-
         LEFT JOIN ObjectBoolean AS ObjectBoolean_InternshipCompleted
                                 ON ObjectBoolean_InternshipCompleted.ObjectId = Object_User.Id
                                AND ObjectBoolean_InternshipCompleted.DescId = zc_ObjectBoolean_User_InternshipCompleted()
@@ -189,7 +188,9 @@ END IF;
                              ON ObjectDate_User_InternshipConfirmation.ObjectId = Object_User.Id
                             AND ObjectDate_User_InternshipConfirmation.DescId = zc_ObjectDate_User_InternshipConfirmation()
               
-   WHERE Object_User.DescId = zc_Object_User();
+   WHERE Object_User.DescId = zc_Object_User()
+     AND Object_Position.ObjectCode in (1, 2)
+     AND (Object_User.isErased = False AND COALESCE(tmpEmployeeSchedule.UnitId, 0) <> 0 OR inIsShowAll = True);
   
 END;
 $BODY$
@@ -199,14 +200,10 @@ ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
- 06.11.17         *
- 02.05.17                                                       * zc_ObjectDate_User_UpdateMobileFrom, zc_ObjectDate_User_UpdateMobileTo
- 21.04.17         *
- 12.09.16         *
- 07.06.13                                        * lpCheckRight
- 25.09.13                                        *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 27.09.22                                                       *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_User ('3')
+--
+ SELECT * FROM gpSelect_Object_UserCash (False, '3')

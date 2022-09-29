@@ -60,6 +60,9 @@ type
     ProvinceCityName: TcxGridDBColumn;
     actReport_JuridicalItog: TdsdOpenForm;
     bbReport_JuridicalItog: TdxBarButton;
+    spUpdate_isSupplierFailures: TdsdStoredProc;
+    actUpdate_SetSupplierFailures: TdsdExecStoredProc;
+    bbUpdate_SetSupplierFailures: TdxBarButton;
   private
     { Private declarations }
   public

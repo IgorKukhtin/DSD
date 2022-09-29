@@ -1166,7 +1166,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementSiteBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementSiteBonusForm');
-  {
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMobileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMobileForm');
@@ -1176,7 +1176,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ApplicationAwardForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ConductedSalesMobileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ConductedSalesMobileForm');
-
+{
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalRemainsEndDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalRemainsEndDialogForm');
@@ -3722,10 +3722,13 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserNickForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserNickForm');
+}
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserCashForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TUserCashForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserHelsiEditForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');

@@ -14261,12 +14261,13 @@ begin
 end;
 
 function TMainCashForm2.CheckAddSalePromoGoods(AAdd : Boolean = True) : Boolean;
-var RBookmark : TBookmark;
+var RBookmark : TBookmark; RemainsFilter : string;
 begin
   Result := True;
   if SalePromoGoodsCDS.IsEmpty then Exit;
 
   RBookmark := RemainsCDS.GetBookmark;
+  RemainsFilter := RemainsCDS.Filter;
   RemainsCDS.DisableControls;
   try
     if not CheckCDS.IsEmpty and (CheckCDS.FieldByName('GoodsPresentId').AsInteger = 0) then
@@ -14335,7 +14336,7 @@ begin
     SalePromoGoodsCDS.Filtered := False;
     SalePromoGoodsCDS.Filter := '';
     RemainsCDS.Filtered := false;
-    RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0)';
+    RemainsCDS.Filter := RemainsFilter;
     RemainsCDS.Filtered := true;
     if not RemainsCDS.IsEmpty then RemainsCDS.GotoBookmark(RBookmark);
     RemainsCDS.FreeBookmark(RBookmark);
@@ -14344,11 +14345,12 @@ begin
 end;
 
 function TMainCashForm2.UpdateSalePromoGoods : Boolean;
-var Bookmark, RBookmark : TBookmark; nAmount : Currency;
+var Bookmark, RBookmark : TBookmark; nAmount : Currency; RemainsFilter : String;
 begin
   Result := True;
 
   RBookmark := RemainsCDS.GetBookmark;
+  RemainsFilter := RemainsCDS.Filter;
   RemainsCDS.DisableControls;
   try
 
@@ -14490,7 +14492,7 @@ begin
     SalePromoGoodsCDS.Filtered := False;
     SalePromoGoodsCDS.Filter := '';
     RemainsCDS.Filtered := false;
-    RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0)';
+    RemainsCDS.Filter := RemainsFilter;
     RemainsCDS.Filtered := true;
     if not RemainsCDS.IsEmpty then RemainsCDS.GotoBookmark(RBookmark);
     RemainsCDS.FreeBookmark(RBookmark);

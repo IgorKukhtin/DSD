@@ -3,27 +3,27 @@ inherited Report_ApplicationAwardForm: TReport_ApplicationAwardForm
     #1054#1090#1095#1077#1090' <'#1048#1090#1086#1075#1086#1074#1099#1081' '#1089#1074#1086#1076' '#1091#1095#1072#1089#1090#1080#1081' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1074' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1084#1086#1073#1080#1083#1100#1085 +
     #1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103'>'
   ClientHeight = 480
-  ClientWidth = 572
+  ClientWidth = 574
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 588
+  ExplicitWidth = 590
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 572
+    Width = 574
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 572
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 572
+    ClientRectRight = 574
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 572
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 572
+        Width = 574
         Height = 421
         ExplicitWidth = 572
         ExplicitHeight = 421
@@ -267,7 +267,7 @@ inherited Report_ApplicationAwardForm: TReport_ApplicationAwardForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 383
+            Width = 355
           end
           object CountCheck: TcxGridDBColumn
             Caption = #1047#1072#1082#1072#1079#1086#1074
@@ -277,12 +277,39 @@ inherited Report_ApplicationAwardForm: TReport_ApplicationAwardForm
             Options.Editing = False
             Width = 79
           end
+          object DCountCheck: TcxGridDBColumn
+            Caption = #1056'/'#1055
+            DataBinding.FieldName = 'DCountCheck'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Value = 0
+              end
+              item
+                ImageIndex = 81
+                Value = 1
+              end
+              item
+                ImageIndex = 82
+                Value = 2
+              end
+              item
+                ImageIndex = 83
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1086#1089#1090#1072'/ '#1087#1072#1076#1077#1085#1080#1077
+            Options.Editing = False
+            Width = 35
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 572
+    Width = 574
     Height = 33
     ExplicitWidth = 572
     ExplicitHeight = 33
