@@ -30,6 +30,28 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Не определено значение параметра <Товар>.';
    END IF;
 
+     ---Проверка zc_ObjectBoolean_GoodsByGoodsKind_Order для подразделений из Object_Unit_check_isOrder_View
+     IF EXISTS (SELECT 1
+                FROM MovementLinkObject AS MLO 
+                WHERE MLO.MovementId = inMovementId
+                  AND MLO.DescId = zc_MovementLinkObject_To()
+                  AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View AS tt)
+                )
+     THEN   
+         --если товара и вида товара  нет в zc_ObjectBoolean_GoodsByGoodsKind_Order  - тогда ошиибка
+         IF NOT EXISTS (SELECT 1
+                        FROM ObjectBoolean AS ObjectBoolean_Order
+                             INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
+                        WHERE ObjectBoolean_Order.ValueData = TRUE
+                          AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                          AND Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
+                          AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
+                        )
+         THEN
+             RAISE EXCEPTION 'Ошибка.У товара <%> <%> не установлено свойство Используется в заявках.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData_sh (inGoodsKindId);
+         END IF;
+     END IF;
+
    -- меняем параметр
    IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
 
