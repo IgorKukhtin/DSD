@@ -23,13 +23,22 @@ RETURNS TABLE (Id                Integer    -- Id товара
              , PriceUnitMax      TFloat     -- Максимальная цена подразделений
              , Remains           TFloat     -- Остаток по сети
              
-             , isDiscountExternal boolean   -- Тосар участвует в дисконтной программе
+             , isDiscountExternal boolean   -- Товар участвует в дисконтной программе
+             , isPartionDate      boolean   -- Есть товар со сроком годности
+
+             , FormDispensingId Integer     -- Форма отпуска
+             , NumberPlates Integer         -- Кол-во пластин в упаковке  
+             , QtyPackage Integer           -- Кол-во в упаковке
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
 
+   DECLARE vbDate_6 TDateTime;
+   DECLARE vbDate_3 TDateTime;
+   DECLARE vbDate_1 TDateTime;
+   DECLARE vbDate_0 TDateTime;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -39,6 +48,11 @@ BEGIN
 
     -- определяется <Торговая сеть>
     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', ABS (vbUserId));
+
+    -- значения для разделения по срокам
+    SELECT Date_6, Date_3, Date_1, Date_0
+    INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
+    FROM lpSelect_PartionDateKind_SetDate ();
     
     inStart := COALESCE (inStart, 0);
     if COALESCE (inLimit, 0) <= 0
@@ -86,6 +100,11 @@ BEGIN
                                    , Object_Goods_Retail.DiscontSiteEnd
                                    , Object_Goods_Retail.DiscontAmountSite
                                    , Object_Goods_Retail.DiscontPercentSite
+                                   , Object_Goods_Retail.SummaWages
+                                   , Object_Goods_Retail.PercentWages
+                                   , Object_Goods_Main.FormDispensingId
+                                   , Object_Goods_Main.NumberPlates
+                                   , Object_Goods_Main.QtyPackage
                               FROM Object_Goods_Main AS Object_Goods_Main
 
                                    LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId  = Object_Goods_Main.Id
@@ -143,6 +162,12 @@ BEGIN
                              , Price_Site.Price                                             AS Price
 
                              , (tmpContainerRemains.Remains - COALESCE (tmpContainerRemainsPD.Remains, 0))::TFloat AS Remains
+
+                             , tmpGoods.SummaWages
+                             , tmpGoods.PercentWages
+                             , tmpGoods.FormDispensingId
+                             , tmpGoods.NumberPlates
+                             , tmpGoods.QtyPackage
                               
                         FROM tmpPrice_Site AS tmpGoods 
                         
@@ -162,7 +187,8 @@ BEGIN
                         )
           , tmpContainerPD AS (SELECT Container.WhereObjectId      AS UnitId
                                     , Container.ObjectId           AS GoodsId
-                                    , SUM(Container.Amount)        AS Remains 
+                                    , SUM(CASE WHEN ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE THEN Container.Amount ELSE 0 END)         AS Remains 
+                                    , SUM(CASE WHEN NOT (ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE)  THEN Container.Amount ELSE 0 END)  AS RemainsPD 
                                FROM Container
                                     INNER JOIN tmpData ON tmpData.GoodsId = Container.ObjectId
                                     INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
@@ -171,10 +197,10 @@ BEGIN
                                     INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
                                                           ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId  
                                                          AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
-                                                         AND ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE
+                                                         AND ObjectDate_ExpirationDate.ValueData < vbDate_6
+
                                WHERE Container.DescId = zc_Container_CountPartionDate()
                                  AND Container.Amount <> 0
-                                -- AND Container.ObjectId in (SELECT tmpData.GoodsId FROM tmpData)
                                  AND Container.WhereObjectId in (SELECT tmpUnit.Id FROM tmpUnit)
                                GROUP BY Container.WhereObjectId
                                       , Container.ObjectId  
@@ -324,7 +350,12 @@ BEGIN
                                         , Object_Object.ValueData
                                         , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False))
                                 
-                           
+          , tmpContainerPDSum AS (SELECT Container.GoodsId           AS GoodsId
+                                       , SUM(Container.RemainsPD)    AS RemainsPD
+                                  FROM tmpContainerPD AS Container
+                                  GROUP BY Container.GoodsId
+                                  HAVING SUM(Container.RemainsPD) > 0
+                                  )                           
 
         SELECT Price_Site.GoodsId                                           AS Id
 
@@ -343,7 +374,15 @@ BEGIN
 
              , Price_Site.Remains                                           AS Remains
              
-             , COALESCE(tmpDiscountExternal.GoodsId, 0) <> 0                AS isDiscountExternal
+             , COALESCE(tmpDiscountExternal.GoodsId, 0) <> 0 OR
+               COALESCE(Price_Site.SummaWages, 0) <> 0 OR 
+               COALESCE(Price_Site.PercentWages, 0) <> 0                    AS isDiscountExternal
+
+             , COALESCE(tmpContainerPDSum.RemainsPD, 0) <> 0                AS isPartionDate
+
+             , Price_Site.FormDispensingId
+             , Price_Site.NumberPlates
+             , Price_Site.QtyPackage
              
         FROM tmpData AS Price_Site         
 
@@ -356,6 +395,9 @@ BEGIN
              LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Price_Site.GoodsMainId
              
              LEFT JOIN tmpDiscountExternal ON tmpDiscountExternal.GoodsId = Price_Site.GoodsId
+             
+             LEFT JOIN tmpContainerPDSum ON tmpContainerPDSum.GoodsId = Price_Site.GoodsId
+
        ;       
 
 END;
@@ -372,4 +414,4 @@ $BODY$
 -- select *, null as img_url from gpSelect_GoodsPrice_ForSite(394759, 1, 'uk', 0, 8, 0, '', zfCalc_UserSite())
 
 
-select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'ru', 0, 8, 0, 'кориол', zfCalc_UserSite())
+select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'ru', 0, 8, 0, 'ОРАЛТЕК', zfCalc_UserSite())

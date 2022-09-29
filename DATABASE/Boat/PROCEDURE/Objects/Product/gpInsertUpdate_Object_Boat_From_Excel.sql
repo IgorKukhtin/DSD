@@ -374,12 +374,12 @@ BEGIN
          IF COALESCE (vbColorId, 0) = 0
          THEN
              -- Создание
-             vbColorId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColor (ioId      := 0
-                                                                              , ioCode    := 0
-                                                                              , inName    := inHypalon1
-                                                                              , inComment := ''
-                                                                              , inSession := inSession
-                                                                               ) AS tmp);
+             vbColorId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColor_Load (ioId      := 0
+                                                                                   , ioCode    := 0
+                                                                                   , inName    := inHypalon1
+                                                                                   , inComment := ''
+                                                                                   , inSession := inSession
+                                                                                    ) AS tmp);
          END IF;
 
          -- Поиск - Items
@@ -2140,7 +2140,8 @@ END;$BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 29.09.22                                                       *
  11.10.20         *
 */
 
