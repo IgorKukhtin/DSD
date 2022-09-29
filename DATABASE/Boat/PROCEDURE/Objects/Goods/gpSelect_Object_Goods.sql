@@ -178,6 +178,7 @@ BEGIN
                                                     AND ObjectString_Article.DescId = zc_ObjectString_Article()
                                                     AND (ObjectString_Article.ValueData ILIKE 'AGL%'
                                                       OR ObjectString_Article.ValueData ILIKE 'BEL%'
+                                                      OR Object_Goods.ObjectCode < 0
                                                         )
                         WHERE Object_Goods.DescId = zc_Object_Goods()
                         --AND inIsLimit_100 = TRUE
