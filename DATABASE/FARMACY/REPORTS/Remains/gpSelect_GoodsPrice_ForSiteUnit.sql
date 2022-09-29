@@ -21,13 +21,22 @@ RETURNS TABLE (Id                Integer    -- Id товара
              , Price             TFloat     -- Интернет цена
              , Remains           TFloat     -- Остаток по сети
 
-             , isDiscountExternal boolean   -- Тосар участвует в дисконтной программе
+             , isDiscountExternal boolean   -- Товар участвует в дисконтной программе
+             , isPartionDate      boolean   -- Есть товар со сроком годности
+
+             , FormDispensingId Integer     -- Форма отпуска
+             , NumberPlates Integer         -- Кол-во пластин в упаковке  
+             , QtyPackage Integer           -- Кол-во в упаковке
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
 
+   DECLARE vbDate_6 TDateTime;
+   DECLARE vbDate_3 TDateTime;
+   DECLARE vbDate_1 TDateTime;
+   DECLARE vbDate_0 TDateTime;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -37,6 +46,11 @@ BEGIN
 
     -- определяется <Торговая сеть>
     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', ABS (vbUserId));
+    
+    -- значения для разделения по срокам
+    SELECT Date_6, Date_3, Date_1, Date_0
+    INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
+    FROM lpSelect_PartionDateKind_SetDate ();
     
     inStart := COALESCE (inStart, 0);
     if COALESCE (inLimit, 0) <= 0
@@ -84,6 +98,11 @@ BEGIN
                                    , Object_Goods_Retail.DiscontSiteEnd
                                    , Object_Goods_Retail.DiscontAmountSite
                                    , Object_Goods_Retail.DiscontPercentSite
+                                   , Object_Goods_Retail.SummaWages
+                                   , Object_Goods_Retail.PercentWages
+                                   , Object_Goods_Main.FormDispensingId
+                                   , Object_Goods_Main.NumberPlates
+                                   , Object_Goods_Main.QtyPackage
                               FROM Object_Goods_Main AS Object_Goods_Main
 
                                    LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId  = Object_Goods_Main.Id
@@ -162,7 +181,8 @@ BEGIN
                           AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                         )
           , tmpContainerPD AS (SELECT Container.ObjectId           AS GoodsId
-                                    , SUM(Container.Amount)        AS Remains 
+                                    , SUM(CASE WHEN ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE THEN Container.Amount ELSE 0 END)         AS Remains 
+                                    , SUM(CASE WHEN NOT (ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE)  THEN Container.Amount ELSE 0 END)  AS RemainsPD 
                                FROM Container
                                     INNER JOIN tmpPrice_Site ON tmpPrice_Site.GoodsId = Container.ObjectId
                                     INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
@@ -171,7 +191,7 @@ BEGIN
                                     INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
                                                           ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId  
                                                          AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
-                                                         AND ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE
+                                                         AND ObjectDate_ExpirationDate.ValueData <= vbDate_6
                                WHERE Container.DescId = zc_Container_CountPartionDate()
                                  AND Container.Amount <> 0
                                  AND (Container.WhereObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
@@ -248,6 +268,12 @@ BEGIN
                                         , Object_Object.Id
                                         , Object_Object.ValueData
                                         , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False))
+          , tmpContainerPDSum AS (SELECT Container.GoodsId           AS GoodsId
+                                       , SUM(Container.RemainsPD)    AS RemainsPD
+                                  FROM tmpContainerPD AS Container
+                                  GROUP BY Container.GoodsId
+                                  HAVING SUM(Container.RemainsPD) > 0
+                                  )                           
                               
                            
 
@@ -265,7 +291,15 @@ BEGIN
                                 COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) ::TFloat     AS Price
              , (tmpContainerAll.Remains - COALESCE (tmpContainerPD.Remains, 0))::TFloat          AS Remains
 
-             , COALESCE(tmpDiscountExternal.GoodsId, 0) <> 0                AS isDiscountExternal
+             , COALESCE(tmpDiscountExternal.GoodsId, 0) <> 0 OR
+               COALESCE(Price_Site.SummaWages, 0) <> 0 OR 
+               COALESCE(Price_Site.PercentWages, 0) <> 0                    AS isDiscountExternal
+
+             , COALESCE(tmpContainerPDSum.RemainsPD, 0) <> 0                AS isPartionDate
+
+             , Price_Site.FormDispensingId
+             , Price_Site.NumberPlates
+             , Price_Site.QtyPackage
              
         FROM tmpPrice_Site AS Price_Site         
 
@@ -282,6 +316,8 @@ BEGIN
              LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Price_Site.GoodsMainId
 
              LEFT JOIN tmpDiscountExternal ON tmpDiscountExternal.GoodsId = Price_Site.GoodsId
+
+             LEFT JOIN tmpContainerPDSum ON tmpContainerPDSum.GoodsId = Price_Site.GoodsId
 
         WHERE COALESCE (inSearch, '') = '' OR 
               CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END ILIKE '%'||inSearch||'%'
@@ -308,4 +344,4 @@ $BODY$
 -- тест
 --
  
-SELECT * FROM gpSelect_GoodsPrice_ForSite_Ol (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'аналь', inUnitId := 472116, inSession:= zfCalc_UserSite());
+SELECT * FROM gpSelect_GoodsPrice_ForSite_Ol (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'ОРАЛТЕК', inUnitId := 13711869 , inSession:= zfCalc_UserSite());

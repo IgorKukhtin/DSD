@@ -56,6 +56,7 @@ $BODY$
    DECLARE vbGoodsId            Integer;
    DECLARE vbComment            TVarChar;
    DECLARE vbColor_title        TVarChar;
+   DECLARE vbColor              TVarChar;
    
    DECLARE vbLISSE_MATT TVarChar;
 
@@ -768,7 +769,22 @@ BEGIN
                               WHEN inTitle6 ILIKE 'color_title' THEN inValue6
                               WHEN inTitle7 ILIKE 'color_title' THEN inValue7
                          END;
-
+         -- 6.2.2.1 нашли значение ÷вет
+         vbColor:= CASE WHEN inTitle2 ILIKE 'color' THEN inValue2
+                        WHEN inTitle3 ILIKE 'color' THEN inValue3
+                        WHEN inTitle4 ILIKE 'color' THEN inValue4
+                        WHEN inTitle5 ILIKE 'color' THEN inValue5
+                        WHEN inTitle6 ILIKE 'color' THEN inValue6
+                        WHEN inTitle7 ILIKE 'color' THEN inValue7
+                   END;
+                         
+         -- 6.2.2.2 обновили значение ÷вета если надо
+         IF COALESCE(vbColor_title, '') <> '' AND COALESCE(vbColor, '') <> ''
+         THEN                   
+           PERFORM gpInsertUpdate_Object_ProdColor_Value (inName    := vbColor_title
+                                                        , inValue   := vbColor
+                                                        , inSession := inSession);
+         END IF;
 
          -- 6.2.3. нашли
          IF vbProdColorPatternId > 0

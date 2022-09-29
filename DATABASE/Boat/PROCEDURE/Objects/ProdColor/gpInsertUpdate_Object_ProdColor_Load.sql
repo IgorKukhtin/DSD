@@ -1,14 +1,12 @@
 -- Торговая марка
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColor (Integer, Integer, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColor (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColor_Load (Integer, Integer, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColor(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColor_Load(
  INOUT ioId              Integer,       -- ключ объекта <Бренд>
  INOUT ioCode            Integer,       -- свойство <Код Бренда>
     IN inName            TVarChar,      -- главное Название Бренда
     IN inComment         TVarChar,      -- 
-    IN inValue           TVarChar,      --
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -37,30 +35,7 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColor_Comment(), ioId, inComment);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColor_Value(), ioId, inValue);
    
-   IF inValue <> ''
-   THEN
-      BEGIN
-         EXECUTE('SELECT CAST(x'''||SUBSTRING(inValue, 6, 2)||SUBSTRING(inValue, 4, 2)||SUBSTRING(inValue, 2, 2)||''' AS INT8)') INTO vbColor_calc;
-      EXCEPTION
-         WHEN others THEN vbColor_calc := zc_Color_White();
-      END;     
-   ELSE
-     vbColor_calc := zc_Color_White();
-   END IF;
-
-   -- сохранили свойство <>
-   IF vbColor_calc <> zc_Color_White() OR
-      EXISTS(SELECT 1 FROM ObjectFloat
-             WHERE ObjectId = ioId AND DescId = zc_ObjectFloat_ProdColor_Value())
-   THEN
-     PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ProdColor_Value(), ioId, vbColor_calc);
-   END IF;
-   
-
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -83,4 +58,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_ProdColor()
+-- SELECT * FROM gpInsertUpdate_Object_ProdColor_Load()

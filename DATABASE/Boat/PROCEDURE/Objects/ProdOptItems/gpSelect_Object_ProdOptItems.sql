@@ -367,7 +367,7 @@ BEGIN
                                  END AS ProdColorName
                                  
                                , ObjectString_ProdColorValue.ValueData  AS ProdColorValue
-                               , COALESCE(ObjectFloat_Value.ValueData, zc_Color_White())::Integer  AS Color_Color_ProdColorValue
+                               , ObjectFloat_Value.ValueData::Integer   AS Color_ProdColorValue
 
                                  -- % скидки
                                , COALESCE (ObjectFloat_DiscountTax.ValueData,0) AS DiscountTax
@@ -508,7 +508,7 @@ BEGIN
                          , tmpProdOptItems.ProdColorId
                          , tmpProdOptItems.ProdColorName  
                          , tmpProdOptItems.ProdColorValue
-                         , tmpProdOptItems.Color_Color_ProdColorValue
+                         , tmpProdOptItems.Color_ProdColorValue
                          , tmpProdOptItems.MaterialOptionsId
                          
                            -- % скидки
@@ -542,7 +542,7 @@ BEGIN
                          , tmpProdOptions.ProdColorId
                          , tmpProdOptions.ProdColorName
                          , Null :: TVarChar    AS ProdColorValue
-                         , zc_Color_White()    AS Color_Color_ProdColorValue
+                         , Null :: Integer     AS Color_ProdColorValue
                          , tmpProdOptions.MaterialOptionsId
 
                            -- % скидки
@@ -606,6 +606,22 @@ BEGIN
                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
                      )
+         -- все цветадля свчзки с примечаниями
+       , tmpProdColor AS (SELECT Object_ProdColor.ValueData      AS Name
+                               , ObjectString_Value.ValueData    AS Value
+                               , COALESCE(ObjectFloat_Value.ValueData, zc_Color_White())::Integer  AS Color_Value
+                               , ROW_NUMBER() OVER (PARTITION BY upper(Object_ProdColor.ValueData) ORDER BY Object_ProdColor.isErased DESC, Object_ProdColor.Id DESC) AS Ord 
+                           FROM Object AS Object_ProdColor
+                              LEFT JOIN ObjectString AS ObjectString_Value
+                                                     ON ObjectString_Value.ObjectId = Object_ProdColor.Id
+                                                    AND ObjectString_Value.DescId = zc_ObjectString_ProdColor_Value()
+                              LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                    ON ObjectFloat_Value.ObjectId = Object_ProdColor.Id
+                                                   AND ObjectFloat_Value.DescId = zc_ObjectFloat_ProdColor_Value()
+                           WHERE Object_ProdColor.DescId = zc_Object_ProdColor()
+                         )  
+                     
+                     
      -- Результат
      SELECT
            tmpRes.MovementId_OrderClient
@@ -657,8 +673,8 @@ BEGIN
          , tmpGoods.GoodsGroupName
          , tmpGoods.Article
          , tmpRes.ProdColorName  :: TVarChar AS ProdColorName
-         , tmpRes.ProdColorValue :: TVarChar AS ProdColorValue
-         , tmpRes.Color_Color_ProdColorValue
+         , COALESCE(tmpRes.ProdColorValue, ProdColorComent.Value, ProdColorName.Value)  :: TVarChar AS ProdColorValue
+         , COALESCE(tmpRes.Color_ProdColorValue, ProdColorComent.Color_Value, ProdColorName.Color_Value, zc_Color_White()) ::Integer AS Color_ProdColorValue
          , tmpGoods.MeasureName
 
          , tmpRes.DiscountTax    ::TFloat    AS DiscountTax
@@ -732,6 +748,14 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_ProdOptions_CodeVergl
                                 ON ObjectFloat_ProdOptions_CodeVergl.ObjectId = Object_ProdOptions.Id
                                AND ObjectFloat_ProdOptions_CodeVergl.DescId = zc_ObjectFloat_ProdOptions_CodeVergl()
+                               
+          LEFT JOIN tmpProdColor AS ProdColorName 
+                                 ON ProdColorName.Name ILIKE tmpRes.ProdColorName
+                                AND ProdColorName.Ord = 1 
+
+          LEFT JOIN tmpProdColor AS ProdColorComent 
+                                 ON ProdColorComent.Name ILIKE ObjectString_Comment.ValueData
+                                AND ProdColorComent.Ord = 1 
     ;
 
 END;
