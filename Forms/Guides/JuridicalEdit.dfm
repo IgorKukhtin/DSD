@@ -3,7 +3,7 @@
   ClientHeight = 599
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 624
+  ExplicitHeight = 628
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -48,12 +48,12 @@
   end
   object cxLabel2: TcxLabel [6]
     Left = 5
-    Top = 167
+    Top = 185
     Caption = #1050#1086#1076' GLN - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1080'/'#1080#1083#1080' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' '
   end
   object edGLNCode: TcxTextEdit [7]
     Left = 5
-    Top = 186
+    Top = 204
     TabOrder = 1
     Width = 272
   end
@@ -66,17 +66,17 @@
   end
   object cxLabel3: TcxLabel [9]
     Left = 5
-    Top = 210
+    Top = 225
     Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
   end
   object cxLabel4: TcxLabel [10]
     Left = 5
-    Top = 253
+    Top = 266
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
   object ceJuridicalGroup: TcxButtonEdit [11]
     Left = 5
-    Top = 229
+    Top = 244
     Properties.Buttons = <
       item
         Default = True
@@ -88,7 +88,7 @@
   end
   object ceGoodsProperty: TcxButtonEdit [12]
     Left = 5
-    Top = 272
+    Top = 285
     Properties.Buttons = <
       item
         Default = True
@@ -100,12 +100,12 @@
   end
   object cxLabel5: TcxLabel [13]
     Left = 5
-    Top = 297
+    Top = 307
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceInfoMoney: TcxButtonEdit [14]
     Left = 5
-    Top = 316
+    Top = 326
     Properties.Buttons = <
       item
         Default = True
@@ -612,12 +612,12 @@
   end
   object cxLabel14: TcxLabel [16]
     Left = 5
-    Top = 426
+    Top = 430
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object cePriceList: TcxButtonEdit [17]
     Left = 5
-    Top = 445
+    Top = 449
     Properties.Buttons = <
       item
         Default = True
@@ -630,12 +630,12 @@
   end
   object cxLabel15: TcxLabel [18]
     Left = 5
-    Top = 467
+    Top = 472
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
   end
   object cePriceListPromo: TcxButtonEdit [19]
     Left = 6
-    Top = 484
+    Top = 489
     Properties.Buttons = <
       item
         Default = True
@@ -664,7 +664,7 @@
     Properties.ShowTime = False
     Properties.ValidateOnEnter = False
     TabOrder = 22
-    Width = 120
+    Width = 128
   end
   object edStartPromo: TcxDateEdit [23]
     Left = 5
@@ -678,12 +678,12 @@
   end
   object cxLabel19: TcxLabel [24]
     Left = 5
-    Top = 383
+    Top = 389
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
   end
   object ceRetailReport: TcxButtonEdit [25]
     Left = 5
-    Top = 402
+    Top = 408
     Properties.Buttons = <
       item
         Default = True
@@ -695,12 +695,12 @@
   end
   object cxLabel20: TcxLabel [26]
     Left = 5
-    Top = 341
+    Top = 349
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
   end
   object ceRetail: TcxButtonEdit [27]
     Left = 5
-    Top = 360
+    Top = 368
     Properties.Buttons = <
       item
         Default = True
@@ -746,13 +746,20 @@
     TabOrder = 36
     Width = 241
   end
+  object cbisNotRealGoods: TcxCheckBox [33]
+    Left = 8
+    Top = 161
+    Caption = #1053#1077#1090' c'#1093#1077#1084#1099' '#1089' '#1079#1072#1084#1077#1085#1086#1081' '#1092#1072#1082#1090'/'#1073#1091#1093#1075' '#1086#1090#1075#1088'.) ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 37
+    Width = 272
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
     Top = 144
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 8
-    Top = 234
+    Left = 64
+    Top = 314
   end
   inherited ActionList: TActionList
     Left = 375
@@ -1170,6 +1177,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisNotRealGoods'
+        Value = Null
+        Component = cbisNotRealGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDayTaxSummary'
         Value = Null
         Component = edDayTaxSummary
@@ -1246,8 +1261,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 256
-    Top = 144
+    Left = 296
+    Top = 128
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Juridical'
@@ -1440,6 +1455,13 @@
         Name = 'isPriceWithVAT'
         Value = Null
         Component = cbisPriceWithVAT
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotRealGoods'
+        Value = Null
+        Component = cbisNotRealGoods
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -2049,8 +2071,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 280
-    Top = 434
+    Left = 304
+    Top = 410
   end
   object RetailReportGuides: TdsdGuides
     KeyField = 'Id'

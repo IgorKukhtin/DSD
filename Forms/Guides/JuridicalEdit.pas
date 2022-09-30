@@ -148,6 +148,7 @@ type
     cxLabel23: TcxLabel;
     cbisPriceWithVAT: TcxCheckBox;
     spCheckOKPO: TdsdStoredProc;
+    cbisNotRealGoods: TcxCheckBox;
   private
     { Private declarations }
   public

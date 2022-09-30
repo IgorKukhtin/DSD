@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                GUID TVarChar, isGUID Boolean,
                isBranchAll Boolean,
                isNotTare Boolean,
+               isNotRealGoods Boolean,
                isVatPrice Boolean,
                VatPriceDate TDateTime,
                isIrna Boolean,
@@ -124,6 +125,7 @@ BEGIN
                                                     , zc_ObjectBoolean_Juridical_isOrderMin()
                                                     , zc_ObjectBoolean_Juridical_isBranchAll()
                                                     , zc_ObjectBoolean_Juridical_isVatPrice()
+                                                    , zc_ObjectBoolean_Juridical_isNotRealGoods()
                                                     , zc_ObjectBoolean_Juridical_isNotTare()
                                                     )*/
                        )
@@ -212,6 +214,7 @@ BEGIN
        , CASE WHEN ObjectString_GUID.ValueData <> '' THEN TRUE ELSE FALSE END :: Boolean AS isGUID
        , COALESCE (ObjectBoolean_isBranchAll.ValueData, FALSE)                :: Boolean AS isBranchAll
        , COALESCE (ObjectBoolean_isNotTare.ValueData, FALSE)                  :: Boolean AS isNotTare
+       , COALESCE (ObjectBoolean_isNotRealGoods.ValueData, FALSE)             :: Boolean AS isNotRealGoods
 
        , COALESCE (ObjectBoolean_isVatPrice.ValueData, FALSE) :: Boolean   AS isVatPrice
        , COALESCE (ObjectDate_VatPrice.ValueData, NULL)       :: TDateTime AS VatPriceDate
@@ -260,6 +263,10 @@ BEGIN
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isVatPrice
                                    ON ObjectBoolean_isVatPrice.ObjectId = Object_Juridical.Id 
                                   AND ObjectBoolean_isVatPrice.DescId = zc_ObjectBoolean_Juridical_isVatPrice()  
+
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isNotRealGoods
+                                   ON ObjectBoolean_isNotRealGoods.ObjectId = Object_Juridical.Id 
+                                  AND ObjectBoolean_isNotRealGoods.DescId = zc_ObjectBoolean_Juridical_isNotRealGoods()
 
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_Guide_Irna
                                    ON ObjectBoolean_Guide_Irna.ObjectId = Object_Juridical.Id
@@ -379,6 +386,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 30.09.22         *
  04.05.22         *
  30.01.22
  20.10.21         * SummOrderMin

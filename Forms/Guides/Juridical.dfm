@@ -265,6 +265,15 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 133
       end
+      object isNotRealGoods: TcxGridDBColumn
+        Caption = #1053#1077#1090' c'#1093#1077#1084#1099' '#1089' '#1079#1072#1084#1077#1085#1086#1081' '#1092#1072#1082#1090'/'#1073#1091#1093#1075' '#1086#1090#1075#1088#1091#1079#1082#1072')'
+        DataBinding.FieldName = 'isNotRealGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1077#1090' c'#1093#1077#1084#1099' '#1089' '#1079#1072#1084#1077#1085#1086#1081' '#1092#1072#1082#1090'/'#1073#1091#1093#1075' '#1086#1090#1075#1088#1091#1079#1082#1072')'
+        Options.Editing = False
+        Width = 133
+      end
       object isVatPrice: TcxGridDBColumn
         Caption = #1057#1093'. '#1088#1072#1089#1095'. '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' '#1089#1090#1088'.'
         DataBinding.FieldName = 'isVatPrice'
