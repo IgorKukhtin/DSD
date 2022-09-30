@@ -557,6 +557,20 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       ImageIndex = 79
       QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079#1099' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1099'"?'
     end
+    object actUpdate_SetSupplierFailures_Clear: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isSupplierFailures_Clear
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isSupplierFailures_Clear
+        end>
+      Caption = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079#1099' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1099'"'
+      Hint = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079#1099' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1099'"'
+      ImageIndex = 76
+      QuestionBeforeExecute = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079#1099' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1099'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -691,6 +705,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_SetSupplierFailures_Clear'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -775,6 +793,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     end
     object bbUpdate_SetSupplierFailures: TdxBarButton
       Action = actUpdate_SetSupplierFailures
+      Category = 0
+    end
+    object bbUpdate_SetSupplierFailures_Clear: TdxBarButton
+      Action = actUpdate_SetSupplierFailures_Clear
       Category = 0
     end
   end
@@ -1028,5 +1050,37 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     PackSize = 1
     Left = 626
     Top = 368
+  end
+  object spUpdate_isSupplierFailures_Clear: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderExternal_SupplierFailures'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSupplierFailures'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSupplierFailures'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSupplierFailures'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 626
+    Top = 432
   end
 end

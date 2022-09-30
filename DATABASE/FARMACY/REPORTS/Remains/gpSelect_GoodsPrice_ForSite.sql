@@ -1,4 +1,4 @@
--- Function: gpSelect_GoodsPrice_ForSite_Ol()
+-- Function: gpSelect_GoodsPrice_ForSite()
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
@@ -27,6 +27,8 @@ RETURNS TABLE (Id                Integer    -- Id товара
              , isPartionDate      boolean   -- Есть товар со сроком годности
 
              , FormDispensingId Integer     -- Форма отпуска
+             , FormDispensingName TVarChar
+             , FormDispensingNameUkr TVarChar
              , NumberPlates Integer         -- Кол-во пластин в упаковке  
              , QtyPackage Integer           -- Кол-во в упаковке
               )
@@ -381,6 +383,8 @@ BEGIN
              , COALESCE(tmpContainerPDSum.RemainsPD, 0) <> 0                AS isPartionDate
 
              , Price_Site.FormDispensingId
+             , Object_FormDispensing.ValueData                              AS FormDispensingName
+             , ObjectString_FormDispensing_NameUkr.ValueData                AS NameUkr
              , Price_Site.NumberPlates
              , Price_Site.QtyPackage
              
@@ -398,6 +402,10 @@ BEGIN
              
              LEFT JOIN tmpContainerPDSum ON tmpContainerPDSum.GoodsId = Price_Site.GoodsId
 
+             LEFT JOIN Object AS Object_FormDispensing ON Object_FormDispensing.Id = Price_Site.FormDispensingId
+             LEFT JOIN ObjectString AS ObjectString_FormDispensing_NameUkr
+                                    ON ObjectString_FormDispensing_NameUkr.ObjectId = Object_FormDispensing.Id
+                                   AND ObjectString_FormDispensing_NameUkr.DescId = zc_ObjectString_FormDispensing_NameUkr()   
        ;       
 
 END;

@@ -35,9 +35,6 @@
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitLeft = -64
-      ExplicitTop = 0
-      ExplicitHeight = 409
       object edMeasureName: TcxTextEdit
         Left = 7
         Top = 66
@@ -524,7 +521,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ManagerPharmacy'
+        Name = 'isManagerPharmacy'
         Value = Null
         Component = ceManagerPharmacy
         DataType = ftBoolean

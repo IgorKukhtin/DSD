@@ -8,7 +8,7 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   cxPropertiesStore, dsdAddOn, dsdGuides, dsdDB, dsdAction, Vcl.ActnList,
   cxMaskEdit, cxButtonEdit, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel,
-  cxTextEdit, dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox;
+  cxTextEdit, dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox, cxDropDownEdit;
 
 type
   TUserEditForm = class(TParentForm)
@@ -50,6 +50,8 @@ type
     ceDismissedUser: TcxCheckBox;
     ceInternshipCompleted: TcxCheckBox;
     edInternshipConfirmation: TcxTextEdit;
+    cbLanguage: TcxComboBox;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public
