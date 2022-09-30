@@ -1769,7 +1769,8 @@ inherited LossForm: TLossForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 320
+    Left = 272
+    Top = 16
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1797,7 +1798,7 @@ inherited LossForm: TLossForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 464
+    Left = 584
     Top = 8
   end
   object GuidesArticleLoss: TdsdGuides

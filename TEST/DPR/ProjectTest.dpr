@@ -625,7 +625,6 @@ uses
   ReceiptGoods_Object in '..\..\Forms\Guides\ReceiptGoods_Object.pas' {ReceiptGoods_ObjectForm: TParentForm},
   JuridicalGLN in '..\..\Forms\Guides\JuridicalGLN.pas' {JuridicalGLNForm: TParentForm},
   PartnerGLN in '..\..\Forms\Guides\PartnerGLN.pas' {PartnerGLNForm: TParentForm},
-  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
   Report_ReceiptSaleAnalyzeReal in '..\..\Forms\Report\Report_ReceiptSaleAnalyzeReal.pas' {Report_ReceiptSaleAnalyzeRealForm: TParentForm},
   Report_GoodsMI_Defroster in '..\..\Forms\Report\Report_GoodsMI_Defroster.pas' {Report_GoodsMI_DefrosterForm: TParentForm},
   MeDocCOMTest in '..\SOURCE\Component\MeDocCOMTest.pas',
@@ -1391,7 +1390,8 @@ uses
   Report_SaleExternal_Goods in '..\..\Forms\Report\Report_SaleExternal_Goods.pas' {Report_SaleExternal_GoodsForm: TParentForm},
   Report_SaleExternal_GoodsDialog in '..\..\Forms\Report\Report_SaleExternal_GoodsDialog.pas' {Report_SaleExternal_GoodsDialogForm: TParentForm},
   TelegramGroup in '..\..\Forms\Guides\TelegramGroup.pas' {TelegramGroupForm: TParentForm},
-  TelegramGroupEdit in '..\..\Forms\Guides\TelegramGroupEdit.pas' {TelegramGroupEditForm: TParentForm};
+  TelegramGroupEdit in '..\..\Forms\Guides\TelegramGroupEdit.pas' {TelegramGroupEditForm: TParentForm},
+  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

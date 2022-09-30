@@ -122,7 +122,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_isNotTare() RETURNS Intege
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_isNotTare', 'нет формирования возврат тары от покупателя' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isNotTare');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_isNotRealGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isNotRealGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_isNotRealGoods', 'нет cхемы с заменой факт/бухг отгрузка)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isNotRealGoods');
 
+   
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_JuridicalSettings_isPriceClose() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_JuridicalSettings_isPriceClose'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)

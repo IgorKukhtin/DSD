@@ -1859,10 +1859,6 @@
 				<Form>PartnerGLNForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind.pas">
-				<Form>GoodsByGoodsKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_ReceiptSaleAnalyzeReal.pas">
 				<Form>Report_ReceiptSaleAnalyzeRealForm</Form>
 				<FormType>dfm</FormType>
@@ -4840,6 +4836,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\TelegramGroupEdit.pas">
 				<Form>TelegramGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind.pas">
+				<Form>GoodsByGoodsKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
