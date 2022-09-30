@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner Integer
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar, OKPO_Retail TVarChar
+             , FromId Integer, FromName TVarChar
+             , ToId Integer, ToName_inf TVarChar, ToName TVarChar, OKPO_To TVarChar, OKPO_Retail TVarChar
              , INN_To TVarChar
              , UnitCode Integer, UnitName TVarChar, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -88,7 +89,8 @@ BEGIN
            , Object_From.Id                    		    AS FromId
            , Object_From.ValueData             		    AS FromName
            , Object_To.Id                      		    AS ToId
-           , Object_To.ValueData               		    AS ToName
+           , Object_To.ValueData               		    AS ToName_inf
+           , ObjectHistory_JuridicalDetails_View.FullName ::TVarChar AS ToName        --берем из истории
            , ObjectHistory_JuridicalDetails_View.OKPO       AS OKPO_To
            , ObjectString_Retail_OKPO.ValueData             AS OKPO_Retail
            , CASE WHEN Movement.Id IN (-- Tax
