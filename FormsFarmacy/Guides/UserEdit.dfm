@@ -211,6 +211,7 @@
   object cbLanguage: TcxComboBox
     Left = 213
     Top = 121
+    Properties.DropDownListStyle = lsFixedList
     Properties.Items.Strings = (
       'RU'
       'UA')
@@ -387,6 +388,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguage'
+        Value = Null
+        Component = cbLanguage
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 317
@@ -538,6 +547,13 @@
         Name = 'InternshipConfirmation'
         Value = Null
         Component = edInternshipConfirmation
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Language'
+        Value = Null
+        Component = cbLanguage
         DataType = ftString
         MultiSelectSeparator = ','
       end>

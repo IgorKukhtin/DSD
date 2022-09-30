@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isDismissedUser Boolean
              , isInternshipCompleted Boolean
              , InternshipConfirmation TVarChar
+             , Language TVarChar
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -37,23 +38,24 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_User()) AS Code
-           , CAST ('' as TVarChar)  AS NAME
-           , CAST ('' as TVarChar)  AS Password
-           , CAST ('' as TVarChar)  AS UserSign
-           , CAST ('' as TVarChar)  AS UserSeal
-           , CAST ('' as TVarChar)  AS UserKey
-           , 0 AS MemberId 
-           , CAST ('' as TVarChar)  AS MemberName
-           , CAST ('' as TVarChar)  AS ProjectMobile
-           , FALSE                  AS isProjectMobile
-           , FALSE                  AS isSite
-           , CAST ('' as TVarChar)  AS PasswordWages
-           , FALSE                  AS isManagerPharmacy
-           , FALSE                  AS isWorkingMultiple
-           , TRUE                   AS isNewUser
-           , FALSE                  AS isDismissedUser
-           , FALSE                  AS isInternshipCompleted
-           , CAST ('' as TVarChar)  AS InternshipConfirmation
+           , CAST ('' as TVarChar)   AS NAME
+           , CAST ('' as TVarChar)   AS Password
+           , CAST ('' as TVarChar)   AS UserSign
+           , CAST ('' as TVarChar)   AS UserSeal
+           , CAST ('' as TVarChar)   AS UserKey
+           , 0                       AS MemberId 
+           , CAST ('' as TVarChar)   AS MemberName
+           , CAST ('' as TVarChar)   AS ProjectMobile
+           , FALSE                   AS isProjectMobile
+           , FALSE                   AS isSite
+           , CAST ('' as TVarChar)   AS PasswordWages
+           , FALSE                   AS isManagerPharmacy
+           , FALSE                   AS isWorkingMultiple
+           , TRUE                    AS isNewUser
+           , FALSE                   AS isDismissedUser
+           , FALSE                   AS isInternshipCompleted
+           , CAST ('' as TVarChar)   AS InternshipConfirmation
+           , CAST ('RU' as TVarChar) AS Language
        ;
    ELSE
       RETURN QUERY 
@@ -87,6 +89,7 @@ BEGIN
                  WHEN COALESCE (ObjectFloat_InternshipConfirmation.ValueData, 0) = 0 THEN 'Не обработал сотрудник'
                  WHEN COALESCE (ObjectFloat_InternshipConfirmation.ValueData, 0) = 1 THEN 'Не подтверждено сотрудником'
                  ELSE 'Подтверждено сотрудником' END::TVarChar                        AS InternshipConfirmation
+          , COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
 
       FROM Object AS Object_User
            LEFT JOIN ObjectString AS ObjectString_UserPassword 
@@ -108,6 +111,10 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_ProjectMobile
                   ON ObjectString_ProjectMobile.ObjectId = Object_User.Id
                  AND ObjectString_ProjectMobile.DescId = zc_ObjectString_User_ProjectMobile()
+                 
+           LEFT JOIN ObjectString AS ObjectString_Language
+                  ON ObjectString_Language.ObjectId = Object_User.Id
+                 AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
                  
            LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                   ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id

@@ -3728,11 +3728,11 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserForm');
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserHelsiEditForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
-    exit;
+ {   exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');

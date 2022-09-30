@@ -44,6 +44,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ExpressVIPConfirm Integer
              , MinPriceSale TFloat
              , DeviationsPrice1303 TFloat
+             , isWagesCheckTesting Boolean
              ) AS
 $BODY$
 BEGIN
@@ -93,6 +94,7 @@ BEGIN
         , ObjectFloat_CashSettings_ExpressVIPConfirm.ValueData::Integer            AS ExpressVIPConfirm
         , ObjectFloat_CashSettings_MinPriceSale.ValueData                          AS MinPriceSale
         , ObjectFloat_CashSettings_DeviationsPrice1303.ValueData                   AS DeviationsPrice1303
+        , COALESCE(ObjectBoolean_CashSettings_WagesCheckTesting.ValueData, FALSE)  AS isWagesCheckTesting
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -167,6 +169,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_RemovingPrograms
                                 ON ObjectBoolean_CashSettings_RemovingPrograms.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_RemovingPrograms.DescId = zc_ObjectBoolean_CashSettings_RemovingPrograms()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_WagesCheckTesting
+                                ON ObjectBoolean_CashSettings_WagesCheckTesting.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_WagesCheckTesting.DescId = zc_ObjectBoolean_CashSettings_WagesCheckTesting()
 
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_MethodsAssortment
                ON ObjectLink_CashSettings_MethodsAssortment.ObjectId = Object_CashSettings.Id

@@ -264,6 +264,14 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 121
       end
+      object Language: TcxGridDBColumn
+        Caption = #1071#1079#1099#1082' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074' '#1082#1072#1089#1089#1099
+        DataBinding.FieldName = 'Language'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 95
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

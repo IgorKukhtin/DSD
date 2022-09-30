@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , DateInternshipCompleted TDateTime
              , InternshipConfirmation TVarChar
              , DateInternshipConfirmation TDateTime
+             , Language TVarChar
               )
 AS
 $BODY$
@@ -98,6 +99,7 @@ END IF;
               WHEN COALESCE (ObjectFloat_InternshipConfirmation.ValueData, 0) = 1 THEN 'Не подтверждено сотрудником'
               ELSE 'Подтверждено сотрудником' END::TVarChar                        AS InternshipConfirmation
        , ObjectDate_User_InternshipConfirmation.ValueData                          AS DateInternshipConfirmation
+       , COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
        
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
@@ -122,6 +124,11 @@ END IF;
         LEFT JOIN ObjectString AS ObjectString_Foto
                                ON ObjectString_Foto.ObjectId = Object_User.Id
                               AND ObjectString_Foto.DescId = zc_ObjectString_User_Foto()
+
+        LEFT JOIN ObjectString AS ObjectString_Language
+                               ON ObjectString_Language.ObjectId = Object_User.Id
+                              AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+                                   
                               
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                 ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
