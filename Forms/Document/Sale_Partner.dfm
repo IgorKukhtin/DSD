@@ -533,6 +533,33 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 100
           end
+          object GoodsRealCode: TcxGridDBColumn [39]
+            Caption = #1050#1086#1076' '#1090#1086#1074'.('#1092#1072#1082#1090' '#1086#1090#1075#1088')'
+            DataBinding.FieldName = 'GoodsRealCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1090#1086#1074'.('#1092#1072#1082#1090' '#1086#1090#1075#1088#1091#1079#1082#1072')'
+            Options.Editing = False
+            Width = 74
+          end
+          object GoodsRealName: TcxGridDBColumn [40]
+            Caption = #1058#1086#1074#1072#1088' ('#1092#1072#1082#1090' '#1086#1090#1075#1088')'
+            DataBinding.FieldName = 'GoodsRealName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1086#1074#1072#1088' ('#1092#1072#1082#1090' '#1086#1090#1075#1088#1091#1079#1082#1072')'
+            Options.Editing = False
+            Width = 78
+          end
+          object GoodsKindRealName: TcxGridDBColumn [41]
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1092#1072#1082#1090' '#1086#1090#1075#1088')'
+            DataBinding.FieldName = 'GoodsKindRealName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1092#1072#1082#1090' '#1086#1090#1075#1088#1091#1079#1082#1072')'
+            Options.Editing = False
+            Width = 89
+          end
         end
       end
     end

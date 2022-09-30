@@ -239,7 +239,7 @@ BEGIN
                                  , MIFloat_PromoMovement.ValueData               AS MovementId_Promo
                                  , MovementItem.isErased                         AS isErased
 
-                                 , COALESCE (MILinkObject_GoodsReal.ObjectId, 0)     AS GoodsRealId
+                                 , MILinkObject_GoodsReal.ObjectId                   AS GoodsRealId
                                  , COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) AS GoodsKindRealId
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -790,7 +790,7 @@ BEGIN
                                  , MIFloat_PromoMovement.ValueData               AS MovementId_Promo
                                  , MovementItem.isErased                         AS isErased  
 
-                                 , COALESCE (MILinkObject_GoodsReal.ObjectId, 0)     AS GoodsRealId
+                                 , MILinkObject_GoodsReal.ObjectId                   AS GoodsRealId
                                  , COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) AS GoodsKindRealId
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId

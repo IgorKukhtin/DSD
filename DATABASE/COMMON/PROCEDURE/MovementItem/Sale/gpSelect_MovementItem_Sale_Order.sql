@@ -18,6 +18,8 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , Count TFloat, HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
+             , GoodsRealId Integer, GoodsRealCode Integer, GoodsRealName TVarChar
+             , GoodsKindRealId Integer, GoodsKindRealName  TVarChar
              , AssetId Integer, AssetName TVarChar
              , BoxId Integer, BoxName TVarChar
              , AmountSumm TFloat
@@ -229,12 +231,23 @@ BEGIN
                                            AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
                                         )
 
+          , tmMILinkObject_GoodsReal AS (SELECT MovementItemLinkObject.*
+                                         FROM MovementItemLinkObject
+                                         WHERE MovementItemLinkObject.DescId = zc_MILinkObject_GoodsReal()
+                                           AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmMILinkObject_GoodsKindReal AS (SELECT MovementItemLinkObject.*
+                                             FROM MovementItemLinkObject
+                                             WHERE MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKindReal()
+                                               AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                            )
+
           , tmpMIDate_PartionGoods AS (SELECT MovementItemDate.*
                                        FROM MovementItemDate
                                        WHERE MovementItemDate.DescId = zc_MIDate_PartionGoods()
                                          AND MovementItemDate.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
                                       )
-
+                                                                 
           , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                            , MovementItem.ObjectId                         AS GoodsId
                            , MovementItem.Amount                           AS Amount
@@ -258,6 +271,9 @@ BEGIN
                            , MILinkObject_Box.ObjectId                     AS BoxId
                            , MILinkObject_Asset.ObjectId                   AS AssetId
                            , MIFloat_PromoMovement.ValueData ::Integer     AS MovementId_Promo
+
+                           , MILinkObject_GoodsReal.ObjectId                   AS GoodsRealId
+                           , COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) AS GoodsKindRealId
 
                            , MovementItem.isErased
                        FROM tmp_MI AS MovementItem
@@ -313,7 +329,14 @@ BEGIN
 
                             LEFT JOIN tmpMIDate_PartionGoods AS MIDate_PartionGoods
                                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
-                                                      --AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                                      --AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()  
+
+                            LEFT JOIN tmMILinkObject_GoodsReal AS MILinkObject_GoodsReal
+                                                               ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_GoodsReal.DescId = zc_MILinkObject_GoodsReal()
+                            LEFT JOIN tmMILinkObject_GoodsKindReal AS MILinkObject_GoodsKindReal
+                                                                   ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
                      )
 
            -- Связь с акциями для существующих MovementItem
@@ -447,6 +470,8 @@ BEGIN
                                , tmpMI.BoxId
                                , tmpMI.AssetId
                                , tmpMI.MovementId_Promo
+                               , tmpMI.GoodsRealId
+                               , tmpMI.GoodsKindRealId
 
                                , COALESCE (tmpMI.GoodsKindId, tmpMI_Order_find.GoodsKindId)     AS GoodsKindId
                                , COALESCE (tmpMI.Price, tmpMI_Order_find.Price)                 AS Price
@@ -492,6 +517,13 @@ BEGIN
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Measure.ValueData   AS MeasureName
+
+           , 0                    AS GoodsRealId
+           , 0                    AS GoodsRealCode
+           , ''::TVarChar         AS GoodsRealName
+           , 0                    AS GoodsKindRealId
+           , ''::TVarChar         AS GoodsKindRealName
+
            , 0 ::Integer                AS AssetId
            , '' ::TVarChar              AS AssetName
            , 0 ::Integer                AS BoxId
@@ -597,6 +629,12 @@ BEGIN
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , Object_Measure.ValueData               AS MeasureName
 
+           , Object_GoodsReal.Id                        AS GoodsRealId
+           , Object_GoodsReal.ObjectCode                AS GoodsRealCode
+           , Object_GoodsReal.ValueData     ::TVarChar  AS GoodsRealName
+           , Object_GoodsKindReal.Id                    AS GoodsKindRealId
+           , Object_GoodsKindReal.ValueData ::TVarChar  AS GoodsKindRealName
+
            , Object_Asset.Id                        AS AssetId
            , Object_Asset.ValueData                 AS AssetName
 
@@ -684,7 +722,10 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId 
+            
+            LEFT JOIN Object AS Object_GoodsReal     ON Object_GoodsReal.Id     = tmpMI.GoodsRealId
+            LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = tmpMI.GoodsKindRealId
            ;
 
      ELSE
@@ -799,6 +840,17 @@ BEGIN
                                          AND MovementItemDate.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
                                       )
 
+          , tmMILinkObject_GoodsReal AS (SELECT MovementItemLinkObject.*
+                                         FROM MovementItemLinkObject
+                                         WHERE MovementItemLinkObject.DescId = zc_MILinkObject_GoodsReal()
+                                           AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmMILinkObject_GoodsKindReal AS (SELECT MovementItemLinkObject.*
+                                             FROM MovementItemLinkObject
+                                             WHERE MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKindReal()
+                                               AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                            )
+
           , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                            , MovementItem.ObjectId                         AS GoodsId
                            , MovementItem.Amount                           AS Amount
@@ -822,6 +874,9 @@ BEGIN
                            , MILinkObject_Box.ObjectId                     AS BoxId
                            , MILinkObject_Asset.ObjectId                   AS AssetId
                            , MIFloat_PromoMovement.ValueData ::Integer     AS MovementId_Promo
+
+                           , MILinkObject_GoodsReal.ObjectId                   AS GoodsRealId
+                           , COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) AS GoodsKindRealId
 
                            , MovementItem.isErased
                        FROM tmp_MI AS MovementItem
@@ -877,7 +932,15 @@ BEGIN
 
                             LEFT JOIN tmpMIDate_PartionGoods AS MIDate_PartionGoods
                                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+
+                            LEFT JOIN tmMILinkObject_GoodsReal AS MILinkObject_GoodsReal
+                                                               ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_GoodsReal.DescId = zc_MILinkObject_GoodsReal()
+                            LEFT JOIN tmMILinkObject_GoodsKindReal AS MILinkObject_GoodsKindReal
+                                                                   ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
                      )
+
            -- Связь с акциями для существующих MovementItem
           , tmpMIPromo_ AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
                                    , MovementItem.Id                               AS MovementItemId
@@ -1009,6 +1072,8 @@ BEGIN
                                , tmpMI.BoxId
                                , tmpMI.AssetId
                                , tmpMI.MovementId_Promo
+                               , tmpMI.GoodsRealId
+                               , tmpMI.GoodsKindRealId
 
                                , COALESCE (tmpMI.GoodsKindId, tmpMI_Order_find.GoodsKindId)     AS GoodsKindId
                                , COALESCE (tmpMI.Price, tmpMI_Order_find.Price)                 AS Price
@@ -1051,6 +1116,12 @@ BEGIN
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , Object_Measure.ValueData               AS MeasureName
+
+           , Object_GoodsReal.Id                        AS GoodsRealId
+           , Object_GoodsReal.ObjectCode                AS GoodsRealCode
+           , Object_GoodsReal.ValueData     ::TVarChar  AS GoodsRealName
+           , Object_GoodsKindReal.Id                    AS GoodsKindRealId
+           , Object_GoodsKindReal.ValueData ::TVarChar  AS GoodsKindRealName
 
            , Object_Asset.Id                        AS AssetId
            , Object_Asset.ValueData                 AS AssetName
@@ -1140,6 +1211,9 @@ BEGIN
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+            LEFT JOIN Object AS Object_GoodsReal     ON Object_GoodsReal.Id     = tmpMI.GoodsRealId
+            LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = tmpMI.GoodsKindRealId
            ;
 
      END IF;
