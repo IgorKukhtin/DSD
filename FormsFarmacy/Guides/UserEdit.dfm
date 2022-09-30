@@ -208,9 +208,24 @@
     TabOrder = 27
     Width = 166
   end
+  object cbLanguage: TcxComboBox
+    Left = 213
+    Top = 121
+    Properties.Items.Strings = (
+      'RU'
+      'UA')
+    TabOrder = 28
+    Text = 'RU'
+    Width = 185
+  end
+  object cxLabel9: TcxLabel
+    Left = 213
+    Top = 101
+    Caption = #1071#1079#1099#1082' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074' '#1082#1072#1089#1089#1099
+  end
   object ActionList: TActionList
-    Left = 269
-    Top = 72
+    Left = 325
+    Top = 64
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -374,8 +389,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 205
-    Top = 80
+    Left = 317
+    Top = 128
   end
   object dsdFormParams: TdsdFormParams
     Params = <
