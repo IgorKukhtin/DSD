@@ -41,7 +41,7 @@ BEGIN
                 WHERE MLO.MovementId = inMovementId
                   AND MLO.DescId = zc_MovementLinkObject_To()
                   AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View AS tt)
-                )
+                ) 
      THEN   
          --если товара и вида товара  нет в zc_ObjectBoolean_GoodsByGoodsKind_Order  - тогда ошиибка
          IF NOT EXISTS (SELECT 1
@@ -51,15 +51,15 @@ BEGIN
                           AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                           AND Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
                           AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
-                        )
+                        )  
          THEN
-             RAISE EXCEPTION 'Ошибка.У товара <%> <%> не установлено свойство Используется в заявках.% <%> № <%> от <%> % <%>'
+             RAISE EXCEPTION 'Ошибка.У товара <%> <%> не установлено свойство Используется в заявках.% % № % от % % %'
                             , lfGet_Object_ValueData (inGoodsId)
                             , lfGet_Object_ValueData_sh (inGoodsKindId)
                             , CHR (13)
                             , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal()) 
                             , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
-                            , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                            , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
                             , CHR (13)
                             , (SELECT Object.ValueData 
                                FROM MovementLinkObject AS MLO
@@ -353,3 +353,7 @@ where Movement.DescId = zc_Movement_OrderExternal()
   and COALESCE (MIFloat_ChangePercent.ValueData, 0) = 0
   and coalesce (MILinkObject_GoodsKind_sale.ObjectId , 0) = coalesce (MILinkObject_GoodsKind.ObjectId , 0)
 */
+
+
+--SELECT * FROM zfConvert_DateToString (CURRENT_TIMESTAMP)
+

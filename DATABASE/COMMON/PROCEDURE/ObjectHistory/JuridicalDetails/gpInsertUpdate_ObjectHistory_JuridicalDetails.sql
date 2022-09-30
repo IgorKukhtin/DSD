@@ -2,20 +2,22 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент истории реквизитов юр. лиц>
     IN inJuridicalId            Integer,    -- Юр. лицо
     IN inOperDate               TDateTime,  -- Дата действия прайс-листа
     IN inBankId                 Integer,    -- Банк
+    IN inName                   TVarChar,   -- Юр. лицо наименование
     IN inFullName               TVarChar,   -- Юр. лицо полное наименование
-    IN inJuridicalAddress	TVarChar,   -- Юридический адрес
+    IN inJuridicalAddress	    TVarChar,   -- Юридический адрес
     IN inOKPO                   TVarChar,   -- ОКПО
     IN inINN	                TVarChar,   -- ИНН
-    IN inNumberVAT	        TVarChar,   -- Номер свидетельства плательщика НДС
+    IN inNumberVAT	            TVarChar,   -- Номер свидетельства плательщика НДС
     IN inAccounterName	        TVarChar,   -- ФИО бухг.
-    IN inMainName	        TVarChar,   -- ФИО директора
+    IN inMainName	            TVarChar,   -- ФИО директора
     IN inBankAccount	        TVarChar,   -- р.счет
     IN inPhone      	        TVarChar,   -- телефон
     IN inInvNumberBranch        TVarChar,   -- № филиала
@@ -104,6 +106,8 @@ BEGIN
 
    -- Юр. лицо полное название
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_FullName(), ioId, inFullName);
+   -- Юр. лицо название
+   PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_Name(), ioId, inName);
    -- Юридический адрес
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress(), ioId, inJuridicalAddress);
    -- ОКПО
@@ -134,7 +138,8 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 07,04,16         * add InvNumberBranch
+ 30.09.22         * Name
+ 07.04.16         * add InvNumberBranch
  26.11.15         * add MainName
  03.08.14                                        * add кроме "виртуальных"
  12.02.14                                                       * add phone

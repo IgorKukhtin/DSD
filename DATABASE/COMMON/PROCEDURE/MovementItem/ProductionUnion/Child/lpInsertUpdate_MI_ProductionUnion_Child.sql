@@ -42,13 +42,13 @@ BEGIN
                           AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
                         )
          THEN
-             RAISE EXCEPTION 'Ошибка.У товара <%> <%> не установлено свойство Используется в заявках.% <%> № <%> от <%> % <%>'
+             RAISE EXCEPTION 'Ошибка.У товара <%> <%> не установлено свойство Используется в заявках.% % № % от % % %'
                             , lfGet_Object_ValueData (inGoodsId)
                             , lfGet_Object_ValueData_sh (inGoodsKindId)
                             , CHR (13)
                             , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_ProductionUnion()) 
                             , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
-                            , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                            , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
                             , CHR (13)
                             , (SELECT Object.ValueData 
                                FROM MovementLinkObject AS MLO

@@ -149,6 +149,8 @@ type
     cbisPriceWithVAT: TcxCheckBox;
     spCheckOKPO: TdsdStoredProc;
     cbisNotRealGoods: TcxCheckBox;
+    cxLabel24: TcxLabel;
+    edName_history: TcxDBTextEdit;
   private
     { Private declarations }
   public
