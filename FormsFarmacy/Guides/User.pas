@@ -119,6 +119,7 @@ type
     actUpdate_InternshipConfirmation_0: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     DateInternshipCompleted: TcxGridDBColumn;
+    Language: TcxGridDBColumn;
   private
     { Private declarations }
   public

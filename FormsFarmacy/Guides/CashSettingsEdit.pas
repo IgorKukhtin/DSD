@@ -95,6 +95,7 @@ type
     cxLabel30: TcxLabel;
     ceDeviationsPrice1303: TcxCurrencyEdit;
     cxLabel31: TcxLabel;
+    cdWagesCheckTesting: TcxCheckBox;
   private
     { Private declarations }
   public

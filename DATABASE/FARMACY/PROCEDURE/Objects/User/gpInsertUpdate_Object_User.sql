@@ -5,7 +5,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
  INOUT ioId                     Integer   ,    -- ключ объекта <Пользователь> 
@@ -24,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
     IN inisNewUser              Boolean   ,    -- Новый сотрудник
     IN inisDismissedUser        Boolean   ,    -- Уволенный сотрудник
     IN inisInternshipCompleted  Boolean   ,    -- Стажировка проведена
+    IN inLanguage               TVarChar  ,    -- Язык справочников кассы
     IN inSession                TVarChar       -- сессия пользователя
 )
   RETURNS Integer 
@@ -56,6 +58,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Key(), ioId, inKey);
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_ProjectMobile(), ioId, inProjectMobile);
+
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Language(), ioId, inLanguage);
 
    IF COALESCE (inisSite, FALSE) = TRUE AND COALESCE (inisNewUser, FALSE) = TRUE AND
       NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId 

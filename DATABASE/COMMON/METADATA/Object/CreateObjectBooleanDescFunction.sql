@@ -1299,10 +1299,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_User_InternshipCompleted() RETURNS I
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(), 'zc_ObjectBoolean_User_InternshipCompleted', 'Стажировка проведена' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_InternshipCompleted');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_WagesCheckTesting() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_WagesCheckTesting'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_WagesCheckTesting', 'Контроль сдачи экзамен при выдача зарплаты' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_WagesCheckTesting');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 30.09.22                                                                                                          * zc_ObjectBoolean_CashSettings_WagesCheckTesting
  26.09.22         * zc_ObjectBoolean_ReceiptChild_Real
  26.09.22                                                                                                          * zc_ObjectBoolean_User_InternshipCompleted
  05.09.22         * zc_ObjectBoolean_Unit_PersonalService

@@ -515,6 +515,16 @@ object CashSettingsEditForm: TCashSettingsEditForm
       #1082#1080#1088#1086#1074#1082#1080
     Caption = '% '#1073#1083#1086#1082#1072' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1086' 1303'
   end
+  object cdWagesCheckTesting: TcxCheckBox
+    Left = 531
+    Top = 156
+    Hint = #1050#1086#1085#1090#1088#1086#1083#1100' '#1089#1076#1072#1095#1080' '#1101#1082#1079#1072#1084#1077#1085' '#1087#1088#1080' '#1074#1099#1076#1072#1095#1072' '#1079#1072#1088#1087#1083#1072#1090#1099
+    Caption = #1050#1086#1085#1090#1088#1086#1083#1100' '#1089#1076#1072#1095#1080' '#1101#1082#1079#1072#1084#1077#1085' '#1087#1088#1080' '#1074#1099#1076#1072#1095#1072' '#1079#1072#1088#1087#1083#1072#1090#1099
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 70
+    Width = 338
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -838,6 +848,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisWagesCheckTesting'
+        Value = Null
+        Component = cdWagesCheckTesting
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1104,6 +1122,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Component = ceDeviationsPrice1303
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWagesCheckTesting'
+        Value = Null
+        Component = cdWagesCheckTesting
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1130,8 +1155,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object FormParams: TdsdFormParams
     Params = <>
-    Left = 456
-    Top = 152
+    Left = 448
+    Top = 184
   end
   object MethodsAssortmentGuides: TdsdGuides
     KeyField = 'Id'
