@@ -15,6 +15,7 @@ $BODY$
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
    DECLARE vbExpressVIPConfirm Integer;
+   DECLARE vbLanguage TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
@@ -36,6 +37,16 @@ BEGIN
      LIMIT 1;
 
      vbSiteDiscount := COALESCE (gpGet_GlobalConst_SiteDiscount(inSession), 0);
+
+     SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+     INTO vbLanguage
+     FROM Object AS Object_User
+                 
+          LEFT JOIN ObjectString AS ObjectString_Language
+                 ON ObjectString_Language.ObjectId = Object_User.Id
+                AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+     WHERE Object_User.Id = vbUserId;    
 
      --raise notice 'Value 01: %', CLOCK_TIMESTAMP();
 
@@ -566,7 +577,9 @@ BEGIN
              MovementItem.MovementId  AS MovementId
            , MovementItem.ObjectId    AS GoodsId
            , Object_Goods_Main.ObjectCode  AS GoodsCode
-           , Object_Goods_Main.Name   AS GoodsName
+           , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods_Main.NameUkr, '') <> ''
+                  THEN Object_Goods_Main.NameUkr
+                  ELSE Object_Goods_Main.Name END   AS GoodsName
            , MovementItem.Amount      AS Amount
            , MovementItem.Price       AS Price
            , MovementItem.AmountSumm  AS Summ

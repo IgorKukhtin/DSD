@@ -1,17 +1,19 @@
 -- Function: gpSelect_GoodsPrice_ForSite()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite_Ol (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite_Ol (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite_Ol (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsPrice_ForSite_Ol(
-    IN inCategoryId       Integer     ,  -- Группа
-    IN inSortType         Integer     ,  -- Тип сортировка
-    IN inSortLang         TVarChar    ,  -- По названию
-    IN inStart            Integer     ,  -- Смещение
-    IN inLimit            Integer     ,  -- Количество строк
-    IN inProductId        Integer     ,  -- Только указанный товар
-    IN inSearch           TVarChar    ,  -- Фильтр для ILIKE
-    IN inUnitId           Integer     ,  -- Подразделение
-    IN inSession          TVarChar       -- сессия пользователя
+    IN inCategoryId         Integer     ,  -- Группа
+    IN inSortType           Integer     ,  -- Тип сортировка
+    IN inSortLang           TVarChar    ,  -- По названию
+    IN inStart              Integer     ,  -- Смещение
+    IN inLimit              Integer     ,  -- Количество строк
+    IN inProductId          Integer     ,  -- Только указанный товар
+    IN inSearch             TVarChar    ,  -- Фильтр для ILIKE
+    IN inUnitId             Integer     ,  -- Подразделение
+    IN inisDiscountExternal Boolean     ,  -- Показывать товар участвующий в дисконтной программе
+    IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id                Integer    -- Id товара
 
@@ -124,7 +126,7 @@ BEGIN
                                 AND (Object_Goods_Retail.Id = inProductId OR COALESCE(inProductId, 0) = 0)
                                 AND COALESCE (inSearch, '') = '' OR 
                                     CASE WHEN lower(inSortLang) = 'uk' THEN Object_Goods_Main.NameUkr ELSE Object_Goods_Main.Name END ILIKE '%'||inSearch||'%'
-                                AND Object_Goods_Retail.Id NOT IN (SELECT tmpDiscountExternal.GoodsId FROM tmpDiscountExternal)
+                                AND (COALESCE(inisDiscountExternal, False) = TRUE OR Object_Goods_Retail.Id NOT IN (SELECT tmpDiscountExternal.GoodsId FROM tmpDiscountExternal))
                               )
           , tmpObject_Price AS (SELECT CASE WHEN PriceSite_DiscontStart.ValueData IS NOT NULL
                                              AND PriceSite_DiscontEnd.ValueData IS NOT NULL  
@@ -353,4 +355,4 @@ $BODY$
 -- тест
 --
  
-SELECT * FROM gpSelect_GoodsPrice_ForSite_Ol (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'ОРАЛТЕК', inUnitId := 13711869 , inSession:= zfCalc_UserSite());
+SELECT * FROM gpSelect_GoodsPrice_ForSite_Ol (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'моксо', inUnitId := 13711869, inisDiscountExternal := True , inSession:= zfCalc_UserSite());

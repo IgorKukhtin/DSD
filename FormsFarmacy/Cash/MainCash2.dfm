@@ -7125,6 +7125,22 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object actUserEditLanguage: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      AfterAction = acrRefreshName
+      Caption = #1071#1079#1099#1082' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1103' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TUserEditLanguageForm'
+      FormNameParam.Value = 'TUserEditLanguageForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+    end
+    object acrRefreshName: TAction
+      Caption = 'acrRefreshName'
+      OnExecute = acrRefreshNameExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7398,6 +7414,12 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N60: TMenuItem
         Action = actManual
+      end
+    end
+    object N67: TMenuItem
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072
+      object N68: TMenuItem
+        Action = actUserEditLanguage
       end
     end
     object mmOpenLayoutFile: TMenuItem

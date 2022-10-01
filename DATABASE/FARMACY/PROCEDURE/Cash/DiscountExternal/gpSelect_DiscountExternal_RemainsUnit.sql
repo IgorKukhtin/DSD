@@ -14,6 +14,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbRetailId Integer;
+   DECLARE vbLanguage TVarChar;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -33,7 +34,17 @@ BEGIN
                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                    WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
-                     
+
+    SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+    INTO vbLanguage
+    FROM Object AS Object_User
+                 
+         LEFT JOIN ObjectString AS ObjectString_Language
+                ON ObjectString_Language.ObjectId = Object_User.Id
+               AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+    WHERE Object_User.Id = vbUserId;   
+                         
    RETURN QUERY 
        WITH 
           tmpGoods AS (SELECT 
@@ -43,7 +54,9 @@ BEGIN
                                
                              , Object_Goods.Id             AS GoodsId
                              , Object_Goods.ObjectCode     AS GoodsCode
-                             , Object_Goods.ValueData      AS GoodsName 
+                             , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods.NameUkr, '') <> ''
+                                    THEN Object_Goods.NameUkr
+                                    ELSE Object_Goods.Name END      AS GoodsName 
                                            
                              , Object_Object.Id            AS ObjectId
                              , Object_Object.ValueData     AS ObjectName 
@@ -52,7 +65,8 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
                                                   ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
                                                  AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
-                             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_BarCode_Goods.ChildObjectId
+                             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = ObjectLink_BarCode_Goods.ChildObjectId
+                             LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
                                  
                              LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
                                                   ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id

@@ -265,7 +265,7 @@ object UserForm: TUserForm
         Width = 121
       end
       object Language: TcxGridDBColumn
-        Caption = #1071#1079#1099#1082' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074' '#1082#1072#1089#1089#1099
+        Caption = #1071#1079#1099#1082' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1103' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'Language'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
