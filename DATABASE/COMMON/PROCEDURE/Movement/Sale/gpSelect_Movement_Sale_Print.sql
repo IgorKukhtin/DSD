@@ -668,8 +668,12 @@ BEGIN
 
            , Object_From.ValueData             		AS FromName
            , CASE WHEN vbIsKiev = TRUE THEN TRUE ELSE FALSE END AS isPrintPageBarCode
+
           -- , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
-           , CASE WHEN COALESCE (OH_JuridicalDetails_To.Name,'') <> '' THEN (OH_JuridicalDetails_To.FullName ||' '|| ObjectString_ToAddress.ValueData) ::TVarChar AS ToName
+           , CASE WHEN COALESCE (OH_JuridicalDetails_To.Name,'') <> '' THEN (OH_JuridicalDetails_To.Name ||' '|| ObjectString_ToAddress.ValueData) 
+                  ELSE COALESCE (Object_Partner.ValueData, Object_To.ValueData)
+             END ::TVarChar AS ToName
+
            , Object_PaidKind.ValueData         		AS PaidKindName
            , View_Contract.InvNumber        		AS ContractName
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
