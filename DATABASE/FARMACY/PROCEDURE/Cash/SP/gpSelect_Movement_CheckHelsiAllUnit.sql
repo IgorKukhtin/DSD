@@ -30,6 +30,7 @@ RETURNS TABLE (Ord Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbLanguage TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
@@ -37,10 +38,20 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
 
+    SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+    INTO vbLanguage
+    FROM Object AS Object_User
+                 
+         LEFT JOIN ObjectString AS ObjectString_Language
+                ON ObjectString_Language.ObjectId = Object_User.Id
+               AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+    WHERE Object_User.Id = vbUserId;    
+
 
      -- Результат
      RETURN QUERY
-WITH -- Товары соц-проект
+     WITH -- Товары соц-проект
            tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
                                , MI_IntenalSP.ObjectId         AS IntenalSPId
                                , MIFloat_PriceRetSP.ValueData  AS PriceRetSP
@@ -158,8 +169,10 @@ WITH -- Товары соц-проект
 
            , MovementItem.Id                                    AS MovementItemId
            , MovementItem.ObjectId                              AS GoodsId
-           , Object_Goods.goodscodeInt                          AS GoodsCode
-           , Object_Goods.goodsname                             AS GoodsName
+           , Object_Goods.ObjectCode                            AS GoodsCode
+           , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods.NameUkr, '') <> ''
+                  THEN Object_Goods.NameUkr
+                  ELSE Object_Goods.Name END                    AS GoodsName
            , MovementItem.Amount
            , MIFloat_Price.ValueData             AS Price
            , zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData
@@ -243,7 +256,8 @@ WITH -- Товары соц-проект
                                      ON MB_RoundingTo50.MovementId = MovementItem.MovementId
                                     AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
 
-           LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+           LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
+           LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
 
            -- получается GoodsMainId
            LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = MovementItem.ObjectId

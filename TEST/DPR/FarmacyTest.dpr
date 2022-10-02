@@ -1263,7 +1263,8 @@ uses
   eSputnikContactsMessages in '..\..\FormsFarmacy\System\eSputnikContactsMessages.pas' {eSputnikContactsMessagesForm: TParentForm},
   PhoneNoSeparatorDialog in '..\..\FormsFarmacy\System\PhoneNoSeparatorDialog.pas' {PhoneNoSeparatorDialogForm: TParentForm},
   UsersSiteProfile in '..\..\FormsFarmacy\System\UsersSiteProfile.pas' {UsersSiteProfileForm: TParentForm},
-  UserCash in '..\..\FormsFarmacy\Guides\UserCash.pas' {UserCashForm: TParentForm};
+  UserCash in '..\..\FormsFarmacy\Guides\UserCash.pas' {UserCashForm: TParentForm},
+  UserEditLanguage in '..\..\FormsFarmacy\Guides\UserEditLanguage.pas' {UserEditLanguageForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

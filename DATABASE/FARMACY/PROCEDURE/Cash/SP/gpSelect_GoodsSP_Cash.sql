@@ -50,6 +50,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbRetailId Integer;
+   DECLARE vbLanguage TVarChar;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_GoodsSP());
@@ -68,7 +69,16 @@ BEGIN
                    WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
 
-
+    SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+    INTO vbLanguage
+    FROM Object AS Object_User
+                 
+         LEFT JOIN ObjectString AS ObjectString_Language
+                ON ObjectString_Language.ObjectId = Object_User.Id
+               AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+    WHERE Object_User.Id = vbUserId;    
+    
     RETURN QUERY
     WITH -- Товары соц-проект
            tmpMedicalProgramSPUnit AS (SELECT ObjectLink_MedicalProgramSP.ChildObjectId         AS MedicalProgramSPId
@@ -177,7 +187,9 @@ BEGIN
         SELECT MovementItem.Id                                       AS Id
              , MovementItem.GoodsId                                  AS GoodsId
              , Object_Goods.ObjectCode                    ::Integer  AS GoodsCode
-             , Object_Goods.ValueData                                AS GoodsName
+             , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods.NameUkr, '') <> ''
+                    THEN Object_Goods.NameUkr
+                    ELSE Object_Goods.Name END                       AS GoodsName
 
              , COALESCE(tmpObject_Price.Price,0)::TFloat             AS Price
              , CASE WHEN COALESCE(tmpObject_Price.Price - MIFloat_PriceSP.ValueData, 0) > 0
@@ -222,7 +234,8 @@ BEGIN
 
         FROM tmpMovementItem AS MovementItem
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
+            LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.GoodsId
+            LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
 
             LEFT JOIN MovementItemFloat AS MIFloat_ColSP
                                         ON MIFloat_ColSP.MovementItemId = MovementItem.Id

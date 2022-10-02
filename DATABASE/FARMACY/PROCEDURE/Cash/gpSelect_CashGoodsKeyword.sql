@@ -19,6 +19,7 @@ $BODY$
   DECLARE vbObjectId    Integer;
   DECLARE vbUnitId      Integer;
   DECLARE vbUnitIdStr   TVarChar;
+  DECLARE vbLanguage TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -31,6 +32,16 @@ BEGIN
      ELSE
      	vbUnitId := 0;
      END IF;
+
+    SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+    INTO vbLanguage
+    FROM Object AS Object_User
+                 
+         LEFT JOIN ObjectString AS ObjectString_Language
+                ON ObjectString_Language.ObjectId = Object_User.Id
+               AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+    WHERE Object_User.Id = vbUserId;    
 
     RETURN QUERY
     WITH
@@ -46,7 +57,9 @@ BEGIN
 
     SELECT GoodsRemains.ObjectId                                             AS Id
          , Object_Goods_Main.ObjectCode
-         , Object_Goods_Main.Name
+         , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods_Main.NameUkr, '') <> ''
+                THEN Object_Goods_Main.NameUkr
+                ELSE Object_Goods_Main.Name END                              AS Name
          , GoodsRemains.Amount::TFloat                                       AS Amount
          , Object_Accommodation.ValueData                                    AS AccommodationName
     FROM  tmpContainer AS GoodsRemains 

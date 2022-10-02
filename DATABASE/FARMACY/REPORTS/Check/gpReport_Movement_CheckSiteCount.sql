@@ -77,6 +77,7 @@ BEGIN
                                                                               
                                   WHERE Movement.OperDate >= DATE_TRUNC ('DAY', vbStartDate) - INTERVAL '10 DAY' 
                                     AND Movement.DescId = zc_Movement_Check()
+                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
                                     AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = TRUE
                                ) AS Movement_Check
 
@@ -219,3 +220,4 @@ $BODY$
 --select * from gpReport_Movement_CheckSiteCount(inStartDate := ('16.06.2021')::TDateTime , inEndDate := ('16.06.2021')::TDateTime , inSession := '3');
 
 select * FROM gpReport_Movement_CheckSiteCount(inStartDate := CURRENT_DATE - INTERVAL '1 DAY', inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := '3');     
+

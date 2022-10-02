@@ -5,10 +5,11 @@ DROP FUNCTION IF EXISTS gpReport_TelegramBot_PopulMobileApplication (TVarChar);
 CREATE OR REPLACE FUNCTION gpReport_TelegramBot_PopulMobileApplication(
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (UnitCode Integer         
-             , UnitName TVarChar
-             , Users    TVarChar
-             , Summa    TFloat
+RETURNS TABLE (UnitCode   Integer         
+             , UnitName   TVarChar
+             , Users      TVarChar
+             , Summa      TFloat
+             , CountChech Integer
               )
 AS
 $BODY$
@@ -139,6 +140,7 @@ BEGIN
                                  AND (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) - 
                                       COALESCE(tmpCheckGoodsSpecial.Summa, 0)) >= 199.50),
            tmpUserReferalsUnit AS (SELECT tmpUserReferals.UnitId
+                                        , COUNT(*)                               AS CountChech
                                         , COUNT(DISTINCT tmpUserReferals.UserId) AS CountUser
                                         , COUNT(DISTINCT CASE WHEN tmpUserReferals.PositionCode = 1 THEN tmpUserReferals.UserId END) AS CountUser1
                                         , COUNT(DISTINCT CASE WHEN tmpUserReferals.PositionCode <> 1 THEN tmpUserReferals.UserId END) AS CountUser2
@@ -165,7 +167,8 @@ BEGIN
                                             
                           ')'
                     ELSE '' END)::TVArChar AS Users
-             , tmpUserReferalsUnit.Summa  AS Summa
+             , tmpUserReferalsUnit.Summa      AS Summa
+             , tmpUserReferalsUnit.CountChech::Integer AS CountChech
         FROM tmpBoardUser
         
              LEFT JOIN tmpUserReferalsUnit ON tmpUserReferalsUnit.UnitId =  tmpBoardUser.UnitId

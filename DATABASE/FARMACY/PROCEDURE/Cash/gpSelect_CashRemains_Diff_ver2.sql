@@ -65,6 +65,7 @@ $BODY$
 
    DECLARE vbAreaId   Integer;
    DECLARE vbObjectId Integer;
+   DECLARE vbLanguage TVarChar;
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -143,6 +144,16 @@ BEGIN
     ELSE
       vbDividePartionDate := False;
     END IF;
+
+    SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+    INTO vbLanguage
+    FROM Object AS Object_User
+                 
+         LEFT JOIN ObjectString AS ObjectString_Language
+                ON ObjectString_Language.ObjectId = Object_User.Id
+               AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+    WHERE Object_User.Id = vbUserId;    
 
     -- ќбновили дату последнего обращени€ по сессии
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
@@ -549,7 +560,9 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
         SELECT
             _DIFF.ObjectId,
             Object_Goods_Main.ObjectCode,
-            Object_Goods_Main.Name,
+            CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods_Main.NameUkr, '') <> ''
+                 THEN Object_Goods_Main.NameUkr
+                 ELSE Object_Goods_Main.Name END AS Name,
             zfCalc_PriceCash(_DIFF.Price, 
                              CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) AS Price,

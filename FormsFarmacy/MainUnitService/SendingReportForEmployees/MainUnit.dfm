@@ -565,14 +565,20 @@ object MainForm: TMainForm
             Caption = #1040#1087#1090#1077#1082#1072
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
-            Width = 445
+            Width = 386
           end
           object cxGridDBColumn_Users: TcxGridDBColumn
             Caption = #1059#1095#1072#1089#1090#1074#1086#1074#1072#1083#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
             DataBinding.FieldName = 'Users'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 143
+            Width = 130
+          end
+          object cxGridDBColumn_CountChech: TcxGridDBColumn
+            Caption = #1050#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1082#1072#1079#1086#1074
+            DataBinding.FieldName = 'CountChech'
+            HeaderAlignmentHorz = taCenter
+            Width = 76
           end
           object cxGridDBColumn_Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1084#1086#1073#1080#1083#1100#1085#1086#1077' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
@@ -582,7 +588,7 @@ object MainForm: TMainForm
             HeaderAlignmentHorz = taCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 108
+            Width = 109
           end
         end
         object cxGridLevel6: TcxGridLevel

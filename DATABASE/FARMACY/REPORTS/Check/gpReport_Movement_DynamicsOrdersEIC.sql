@@ -51,6 +51,7 @@ BEGIN
                                        
                                   WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate) - INTERVAL '5 DAY' 
                                     AND Movement.DescId = zc_Movement_Check()
+                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
                                     AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = TRUE
                                ) AS Movement_Check
 

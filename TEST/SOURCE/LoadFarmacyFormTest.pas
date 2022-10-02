@@ -3726,6 +3726,9 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserCashForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserCashForm');
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditLanguageForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TUserEditLanguageForm');
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
