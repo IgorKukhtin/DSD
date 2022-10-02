@@ -4704,6 +4704,29 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ComponentItem = 'PricePromo'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealCode'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsKindRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindRealName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 184
     Top = 376
@@ -4860,6 +4883,29 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Component = MasterCDS
         ComponentItem = 'PricePromo'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealCode'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsKindRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindRealName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 72

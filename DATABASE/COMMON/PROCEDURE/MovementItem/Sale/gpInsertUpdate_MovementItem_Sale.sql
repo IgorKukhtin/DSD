@@ -28,7 +28,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
    OUT outWeightTotal            TFloat    , 
    OUT outCountPack              TFloat    , 
    OUT outMovementPromo          TVarChar  , -- 
-   OUT outPricePromo             Numeric (16,8), -- 
+   OUT outPricePromo             Numeric (16,8), --
+   OUT outGoodsRealCode         Integer  , -- Товар (факт отгрузка)
+   OUT outGoodsRealName         TVarChar  , -- Товар (факт отгрузка)
+   OUT outGoodsKindRealName     TVarChar  , -- Вид товара (факт отгрузка) 
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -129,7 +132,10 @@ BEGIN
      SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice, tmp.outAmountSumm
           , zfCalc_PromoMovementName (tmp.outMovementId_Promo, NULL, NULL, NULL, NULL)
           , tmp.outPricePromo
+          , tmp.outGoodsRealCode, tmp.outGoodsRealName
+          , tmp.outGoodsKindRealName
             INTO ioId, ioPrice, ioCountForPrice, outAmountSumm, outMovementPromo, outPricePromo
+               , outGoodsRealCode, outGoodsRealName, outGoodsKindRealName
      FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                           , inMovementId         := inMovementId
                                           , inGoodsId            := inGoodsId

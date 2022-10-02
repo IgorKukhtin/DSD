@@ -23,12 +23,17 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioMovementId_Promo    Integer   ,
  INOUT ioChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
    OUT outPricePromo         TFloat    ,
-    IN inIsCheckPrice        Boolean   , -- 
+    IN inIsCheckPrice        Boolean   , --
+   OUT outGoodsRealCode      Integer  , -- Товар (факт отгрузка)
+   OUT outGoodsRealName      TVarChar  , -- Товар (факт отгрузка)
+   OUT outGoodsKindRealName  TVarChar  , -- Вид товара (факт отгрузка) 
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbGoodsKindRealId Integer;
+   DECLARE vbGoodsRealId Integer;
 BEGIN
      -- проверка
      IF COALESCE (inGoodsId, 0) = 0
@@ -124,6 +129,48 @@ BEGIN
                                                     );
      END IF;*/
 
+     -- при изменении ObjectId и/или в zc_MILinkObject_GoodsKind
+     -- находим и автоматом подставляем из zc_ObjectLink_GoodsByGoodsKind_GoodsReal + zc_ObjectLink_GoodsByGoodsKind_GoodsKindReal если они есть + нет блокировки в Juridical_isNotRealGoods
+     IF NOT EXISTS (SELECT 1
+                    FROM MovementLinkObject AS MLO
+                        INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                              ON ObjectLink_Partner_Juridical.ObjectId = MLO.ObjectId
+                                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                        INNER JOIN ObjectBoolean AS ObjectBoolean_isNotRealGoods
+                                                 ON ObjectBoolean_isNotRealGoods.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId 
+                                                AND ObjectBoolean_isNotRealGoods.DescId = zc_ObjectBoolean_Juridical_isNotRealGoods()
+                                                AND COALESCE (ObjectBoolean_isNotRealGoods.ValueData, FALSE) = TRUE
+                    WHERE MLO.MovementId = inMovementId
+                      AND MLO.DescId = zc_MovementLinkObject_From()
+                    ) 
+        /*AND ( (inGoodsId <> (SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.Id = ioId))
+              (COALESCE (inGoodsKindId,0) <> COALESCE ((SELECT MILO
+                                                        FROM MovementItemLinkObject AS MILO
+                                                        WHERE MILO.MovementItemId = ioId
+                                                          AND MILO.DescId = zc_MILinkObject_GoodsKind()) , 0 ) )
+            ) */
+     THEN   
+         SELECT ObjectLink_GoodsByGoodsKind_GoodsReal.ChildObjectId     AS GoodsRealId
+              , ObjectLink_GoodsByGoodsKind_GoodsKindReal.ChildObjectId AS GoodsKindRealId
+        INTO vbGoodsRealId, vbGoodsKindRealId
+         FROM Object_GoodsByGoodsKind_View
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsReal
+                                   ON ObjectLink_GoodsByGoodsKind_GoodsReal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                  AND ObjectLink_GoodsByGoodsKind_GoodsReal.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsReal()
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindReal
+                                   ON ObjectLink_GoodsByGoodsKind_GoodsKindReal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                  AND ObjectLink_GoodsByGoodsKind_GoodsKindReal.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindReal()
+         WHERE Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
+           AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0);
+           
+         SELECT tmp.ObjectCode, tmp.ValueData
+       INTO outGoodsRealCode, outGoodsRealName
+         FROM Object AS tmp
+         WHERE tmp.Id = vbGoodsRealId;
+         outGoodsKindRealName := (SELECT tmp.ValueData FROM Object AS tmp WHERE tmp.Id = vbGoodsKindRealId)::TVarChar;
+     END IF;
+        
+     ---
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -164,6 +211,13 @@ BEGIN
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
+
+     -- сохранили связь с <Товар ((факт отгрузка))>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsReal(), ioId, vbGoodsRealId);
+     -- сохранили связь с <Виды товаров (факт отгрузка)>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindReal(), ioId, vbGoodsKindRealId);
+
+     
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
      -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
@@ -195,6 +249,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 02.10.22         * outGoodsRealName, outGoodsKindRealName
  26.07.22         * inCount
  27.04.15         * add inMovementId
  11.05.14                                        * change ioCountForPrice

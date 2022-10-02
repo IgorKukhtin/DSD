@@ -199,7 +199,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 45
           end
-                    object GoodsRealCode: TcxGridDBColumn [7]
+          object GoodsRealCode: TcxGridDBColumn [7]
             Caption = #1050#1086#1076' '#1090#1086#1074'.('#1092#1072#1082#1090' '#1086#1090#1075#1088')'
             DataBinding.FieldName = 'GoodsRealCode'
             HeaderAlignmentHorz = taCenter
@@ -786,6 +786,9 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -1143,6 +1146,9 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -1746,7 +1752,7 @@ inherited ReturnInForm: TReturnInForm
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 291
-        Width = 1304
+        Width = 8
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -6179,6 +6185,29 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'PricePromo'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealCode'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsKindRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindRealName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 392
@@ -6351,6 +6380,29 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'PricePromo'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealCode'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsKindRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindRealName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 312
@@ -6507,7 +6559,7 @@ inherited ReturnInForm: TReturnInForm
       end>
     PackSize = 1
     Left = 224
-    Top = 300
+    Top = 308
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>

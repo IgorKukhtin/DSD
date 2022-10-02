@@ -2,6 +2,8 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 585
   ClientWidth = 1370
+  ExplicitLeft = -344
+  ExplicitTop = -88
   ExplicitWidth = 1386
   ExplicitHeight = 624
   PixelsPerInch = 96
@@ -502,6 +504,7 @@ inherited Sale_OrderForm: TSale_OrderForm
           object GoodsRealCode: TcxGridDBColumn [36]
             Caption = #1050#1086#1076' '#1090#1086#1074'.('#1092#1072#1082#1090' '#1086#1090#1075#1088')'
             DataBinding.FieldName = 'GoodsRealCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1090#1086#1074'.('#1092#1072#1082#1090' '#1086#1090#1075#1088#1091#1079#1082#1072')'
@@ -4256,6 +4259,29 @@ inherited Sale_OrderForm: TSale_OrderForm
         ComponentItem = 'PricePromo'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealCode'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsKindRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindRealName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -4409,6 +4435,29 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = MasterCDS
         ComponentItem = 'BoxId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealCode'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsRealName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsKindRealName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindRealName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 64
