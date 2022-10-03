@@ -1391,7 +1391,8 @@ uses
   Report_SaleExternal_GoodsDialog in '..\..\Forms\Report\Report_SaleExternal_GoodsDialog.pas' {Report_SaleExternal_GoodsDialogForm: TParentForm},
   TelegramGroup in '..\..\Forms\Guides\TelegramGroup.pas' {TelegramGroupForm: TParentForm},
   TelegramGroupEdit in '..\..\Forms\Guides\TelegramGroupEdit.pas' {TelegramGroupEditForm: TParentForm},
-  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm};
+  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
+  Asset_DocGoods in '..\..\Forms\Guides\Asset_DocGoods.pas' {Asset_DocGoodsForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

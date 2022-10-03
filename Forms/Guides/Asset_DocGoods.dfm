@@ -1,7 +1,7 @@
-object AssetForm: TAssetForm
+object Asset_DocGoodsForm: TAsset_DocGoodsForm
   Left = 0
   Top = 0
-  Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072
+  Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' ('#1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074#1072#1088#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093')'
   ClientHeight = 346
   ClientWidth = 895
   Color = clBtnFace
@@ -12,9 +12,10 @@ object AssetForm: TAssetForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -48,6 +49,14 @@ object AssetForm: TAssetForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object ItemName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090
+        DataBinding.FieldName = 'ItemName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object isIrna: TcxGridDBColumn
         Caption = #1048#1088#1085#1072
         DataBinding.FieldName = 'isIrna'
@@ -265,23 +274,6 @@ object AssetForm: TAssetForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -294,27 +286,11 @@ object AssetForm: TAssetForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isIrna'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateDocGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -381,13 +357,17 @@ object AssetForm: TAssetForm
       Action = ProtocolOpenForm
       Category = 0
     end
-    object bbUpdate_isIrna: TdxBarButton
-      Action = macUpdate_isIrna
+    object bbLabel6: TdxBarControlContainerItem
+      Caption = 'New Item'
       Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
     end
-    object bbUpdateDocGoods: TdxBarButton
-      Action = macUpdateDocGoods
+    object bbUnit: TdxBarControlContainerItem
+      Caption = 'New Item'
       Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
     end
   end
   object ActionList: TActionList
@@ -503,6 +483,77 @@ object AssetForm: TAssetForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SerialNumber'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'SerialNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PassportNumber'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PassportNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Release'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Release'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MakerName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MakerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CarName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CarName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CarModelName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CarModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodUse'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PeriodUse'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -547,87 +598,9 @@ object AssetForm: TAssetForm
         end>
       isShowModal = False
     end
-    object actUpdate_isIrna: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isIrna
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isIrna
-        end>
-      Caption = 'actUpdate_isIrna'
-      ImageIndex = 66
-    end
-    object macUpdate_isIrna: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = macUpdate_isIrna_list
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1099#1073#1088#1072#1085#1085#1099#1093' '#1101#1083#1077#1084#1077#1085#1090#1086#1074' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1085#1072' '#1087#1088#1086#1090#1080#1074#1086#1087#1086#1083#1086#1078 +
-        #1085#1086#1077'?'
-      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1080#1079#1084#1077#1085#1077#1085#1086
-      Caption = 'macUpdate_isIrna'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1044#1072'/'#1053#1077#1090
-      ImageIndex = 66
-    end
-    object macUpdate_isIrna_list: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_isIrna
-        end>
-      View = cxGridDBTableView
-      Caption = 'macUpdate_isIrna_list'
-      ImageIndex = 66
-    end
-    object actUpdateDocGoods: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateDocGoods
-      StoredProcList = <
-        item
-          StoredProc = spUpdateDocGoods
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074'. '#1076#1086#1082'. '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074'. '#1076#1086#1082'. '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 79
-    end
-    object macUpdateDocGoods_list: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdateDocGoods
-        end>
-      View = cxGridDBTableView
-      Caption = 'macUpdateDocGoods_list'
-      ImageIndex = 79
-    end
-    object macUpdateDocGoods: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = macUpdateDocGoods_list
-        end>
-      QuestionBeforeExecute = #1044#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1080#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074#1072#1088#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093' '#1044#1072'/'#1053#1077#1090'"'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1080#1079#1084#1077#1085#1077#1085#1099
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074'. '#1076#1086#1082'. '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074'. '#1076#1086#1082'. '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 79
-    end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Asset'
+    StoredProcName = 'gpSelect_Object_Asset_DocGoods'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -690,63 +663,30 @@ object AssetForm: TAssetForm
     Left = 448
     Top = 112
   end
-  object spUpdate_isIrna: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Guide_Irna'
-    DataSets = <>
-    OutputType = otResult
+  object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'inId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
+        Name = 'MasterUnitId'
+        Value = ''
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisIrna'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'isIrna'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 432
-    Top = 160
-  end
-  object spUpdateDocGoods: TdsdStoredProc
-    StoredProcName = 'gpUpdateObject_isBoolean'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioParam'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'isDocGoods'
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDesc'
-        Value = 'zc_ObjectBoolean_Asset_DocGoods'
+        Name = 'MasterUnitName'
+        Value = ''
         DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 1
-    Left = 736
-    Top = 160
+    Left = 408
+    Top = 176
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+      end>
+    Left = 600
+    Top = 128
   end
 end

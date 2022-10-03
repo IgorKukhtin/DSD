@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
  INOUT ioPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
-    IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inAssetId             Integer   , -- ыработка на оборудовании
     IN inUnitId              Integer   , -- Подразделение (для МО)
     IN inStorageId           Integer   , -- Место хранения
     IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
@@ -153,6 +153,8 @@ BEGIN
      -- сохранили связь с <Партии товаров (для партии расхода если с МО)> - пока НЕ надо
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
 
+     -- сохранили связь с <Выработка на оборудовании>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
      IF inGoodsId <> 0 AND inGoodsKindId <> 0
      THEN
@@ -174,6 +176,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.10.22         * Asset
  02.08.17         * add inGoodsKindCompleteId
  29.05.15                                        * set lp
  26.07.14                                        * add inPartionGoodsDate and inUnitId and inStorageId and inPartionGoodsId and ioPartionGoods

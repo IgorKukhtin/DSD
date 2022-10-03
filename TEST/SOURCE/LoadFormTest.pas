@@ -1030,6 +1030,7 @@ end;
 
 procedure TLoadFormTest.LoadSendFormTest;
 begin
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
@@ -3546,6 +3547,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAsset_ObjectForm');
   //exit;
    }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_DocGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAsset_DocGoodsForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
