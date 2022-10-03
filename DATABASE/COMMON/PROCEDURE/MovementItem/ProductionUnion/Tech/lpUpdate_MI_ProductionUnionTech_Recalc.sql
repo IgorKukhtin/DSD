@@ -110,7 +110,7 @@ BEGIN
                                         ON MIFloat_AmountReceipt.MovementItemId =  MovementItem.Id
                                        AND MIFloat_AmountReceipt.DescId = zc_MIFloat_AmountReceipt()
             LEFT JOIN MovementItemFloat AS MIFloat_CountReal
-                                        ON MIFloat_CountReal.MovementItemId =  MovementItem.Id
+                                        ON MIFloat_CountReal.MovementItemId =  MovementItem.ParentId
                                        AND MIFloat_CountReal.DescId = zc_MIFloat_CountReal()
             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                              ON MILO_GoodsKind.MovementItemId = MovementItem.Id
