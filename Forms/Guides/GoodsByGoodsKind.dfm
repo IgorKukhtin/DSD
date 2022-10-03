@@ -96,7 +96,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 53
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -390,6 +390,8 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           object GoodsSubCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087'/'#1088')'
             DataBinding.FieldName = 'GoodsSubCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'-'#1088#1072#1089#1093#1086#1076')'
@@ -489,6 +491,8 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           object GoodsSubCode_Br: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087'.'#1092'./'#1088')'
             DataBinding.FieldName = 'GoodsSubCode_Br'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1085#1072' '#1092#1080#1083#1080#1072#1083#1072#1093' -'#1088#1072#1089#1093#1086#1076')'
@@ -529,6 +533,8 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           object GoodsPackCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1091#1087#1072#1082'. '#1075#1083#1072#1074#1085'.)'
             DataBinding.FieldName = 'GoodsPackCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1043#1083#1072#1074#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1074' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
@@ -579,11 +585,13 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           object GoodsRealCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.('#1092#1072#1082#1090' '#1086#1090#1075#1088#1091#1079#1082#1072')'
             DataBinding.FieldName = 'GoodsRealCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1092#1072#1082#1090' '#1086#1090#1075#1088#1091#1079#1082#1072')'
             Options.Editing = False
-            Width = 61
+            Width = 71
           end
           object GoodsRealName: TcxGridDBColumn
             AlternateCaption = #1058#1086#1074#1072#1088' ('#1092#1072#1082#1090' '#1086#1090#1075#1088#1091#1079#1082#1072')'
@@ -619,11 +627,10 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Width = 70
           end
           object MeasureRealName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.  ('#1091#1087#1072#1082'., '#1075#1083#1072#1074#1085#1099#1081')'
+            Caption = #1045#1076'. '#1080#1079#1084'. ('#1092#1072#1082#1090' '#1086#1090#1075#1088#1091#1079#1082#1072')'
             DataBinding.FieldName = 'MeasureRealName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1076#1083#1103' '#1043#1083#1072#1074#1085#1086#1075#1086' '#1058#1086#1074#1072#1088#1072' '#1074' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
             Options.Editing = False
             Width = 62
           end

@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
              , PeriodUse TFloat, Production TFloat, KW TFloat
+             , isDocGoods Boolean
              , isErased boolean) AS
 $BODY$BEGIN
    
@@ -58,7 +59,8 @@ $BODY$BEGIN
            , 0 :: TFloat            AS PeriodUse
            , 0 :: TFloat            AS Production
            , 0 :: TFloat            AS KW
-           , CAST (NULL AS Boolean) AS isErased
+           , FALSE                  AS isDocGoods
+           , CAST (FALSE AS Boolean) AS isErased
            
        FROM Object 
        WHERE Object.DescId = zc_Object_Asset();
@@ -98,6 +100,8 @@ $BODY$BEGIN
          , ObjectFloat_PeriodUse.ValueData  AS PeriodUse
          , COALESCE (ObjectFloat_Production.ValueData,0) :: TFloat AS Production
          , COALESCE (ObjectFloat_KW.ValueData,0)         :: TFloat AS KW
+         
+         , COALESCE (ObjectBoolean_DocGoods.ValueData, FALSE)     :: Boolean AS isDocGoods
          
          , Object_Asset.isErased            AS isErased
          
@@ -161,6 +165,11 @@ $BODY$BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_KW
                                 ON ObjectFloat_KW.ObjectId = Object_Asset.Id
                                AND ObjectFloat_KW.DescId = zc_ObjectFloat_Asset_KW()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_DocGoods
+                                  ON ObjectBoolean_DocGoods.ObjectId = Object_Asset.Id
+                                 AND ObjectBoolean_DocGoods.DescId = zc_ObjectBoolean_Asset_DocGoods()
+
        WHERE Object_Asset.Id = inId;
    END IF;
    
@@ -174,6 +183,7 @@ ALTER FUNCTION gpGet_Object_Asset(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.10.22         *
  29.04.20         * add Production
  10.09.18         * add Car
  11.02.14         * add wiki

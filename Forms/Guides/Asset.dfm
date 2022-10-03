@@ -57,6 +57,15 @@ object AssetForm: TAssetForm
         Options.Editing = False
         Width = 45
       end
+      object isDocGoods: TcxGridDBColumn
+        Caption = #1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074'. '#1076#1086#1082'.'
+        DataBinding.FieldName = 'isDocGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074#1072#1088#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093
+        Options.Editing = False
+        Width = 70
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
