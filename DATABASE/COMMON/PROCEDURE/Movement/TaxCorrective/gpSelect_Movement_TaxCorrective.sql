@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner Integer
-             , FromId Integer, FromName TVarChar, OKPO_From TVarChar, OKPO_Retail TVarChar, INN_From TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName_inf TVarChar, FromName TVarChar, OKPO_From TVarChar, OKPO_Retail TVarChar, INN_From TVarChar
+             , ToId Integer, ToName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
@@ -87,7 +88,8 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , zfConvert_StringToNumber (MovementString_InvNumberPartner.ValueData) AS InvNumberPartner
            , Object_From.Id                    		    AS FromId
-           , Object_From.ValueData             		    AS FromName
+           , Object_From.ValueData             		    AS FromName_inf
+           , ObjectHistory_JuridicalDetails_View.FullName AS FromName
            , ObjectHistory_JuridicalDetails_View.OKPO       AS OKPO_From
            , ObjectString_Retail_OKPO.ValueData             AS OKPO_Retail
            , CASE WHEN Movement.Id IN (-- Corr

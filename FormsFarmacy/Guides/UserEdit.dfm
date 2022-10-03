@@ -208,9 +208,25 @@
     TabOrder = 27
     Width = 166
   end
+  object cbLanguage: TcxComboBox
+    Left = 213
+    Top = 121
+    Properties.DropDownListStyle = lsFixedList
+    Properties.Items.Strings = (
+      'RU'
+      'UA')
+    TabOrder = 28
+    Text = 'RU'
+    Width = 185
+  end
+  object cxLabel9: TcxLabel
+    Left = 213
+    Top = 101
+    Caption = #1071#1079#1099#1082' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1103' '#1090#1086#1074#1072#1088#1072
+  end
   object ActionList: TActionList
-    Left = 269
-    Top = 72
+    Left = 325
+    Top = 64
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -372,10 +388,18 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguage'
+        Value = Null
+        Component = cbLanguage
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 205
-    Top = 80
+    Left = 317
+    Top = 128
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -523,6 +547,13 @@
         Name = 'InternshipConfirmation'
         Value = Null
         Component = edInternshipConfirmation
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Language'
+        Value = Null
+        Component = cbLanguage
         DataType = ftString
         MultiSelectSeparator = ','
       end>

@@ -542,6 +542,11 @@ object MainForm: TMainForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = cxGridDBColumn_Summa
+            end
+            item
+              Format = ' '#1045#1089#1083#1080' '#1089#1091#1084#1084#1072' '#1087#1077#1088#1074#1086#1075#1086' '#1079#1072#1082#1072#1079#1072' '#1073#1086#1083#1100#1096#1077' "1000" '#1075#1088#1085' - 2%'
+              Kind = skCount
+              Column = cxGridDBColumn_UnitName
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.IncSearch = True
@@ -554,29 +559,36 @@ object MainForm: TMainForm
           OptionsSelection.InvertSelect = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
           OptionsView.IndicatorWidth = 0
           object cxGridDBColumn_UnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
-            Width = 445
+            Width = 386
           end
           object cxGridDBColumn_Users: TcxGridDBColumn
             Caption = #1059#1095#1072#1089#1090#1074#1086#1074#1072#1083#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
             DataBinding.FieldName = 'Users'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 143
+            Width = 130
+          end
+          object cxGridDBColumn_CountChech: TcxGridDBColumn
+            Caption = #1050#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1082#1072#1079#1086#1074
+            DataBinding.FieldName = 'CountChech'
+            HeaderAlignmentHorz = taCenter
+            Width = 76
           end
           object cxGridDBColumn_Summa: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1080
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1084#1086#1073#1080#1083#1100#1085#1086#1077' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 108
+            Width = 109
           end
         end
         object cxGridLevel6: TcxGridLevel

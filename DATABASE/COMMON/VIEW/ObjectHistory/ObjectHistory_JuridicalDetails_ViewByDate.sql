@@ -21,6 +21,7 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_ViewByDate AS
        , ObjectString_MFO.ValueData                     AS MFO
        , COALESCE (ObjectHistoryString_Phone.ValueData, CAST ('' AS TVarChar)) AS Phone
        , COALESCE (ObjectHistoryString_InvNumberBranch.ValueData, CAST ('' AS TVarChar)) AS InvNumberBranch
+       , ObjectHistoryString_Name.ValueData             AS Name
 
   FROM ObjectHistory AS ObjectHistory_JuridicalDetails
 
@@ -63,6 +64,10 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_ViewByDate AS
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_InvNumberBranch
                                 ON ObjectHistoryString_InvNumberBranch.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                                AND ObjectHistoryString_InvNumberBranch.DescId = zc_ObjectHistoryString_JuridicalDetails_InvNumberBranch()
+
+  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_Name
+                                ON ObjectHistoryString_Name.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                               AND ObjectHistoryString_Name.DescId = zc_ObjectHistoryString_JuridicalDetails_Name() 
 
   WHERE ObjectHistory_JuridicalDetails.DescId = zc_ObjectHistory_JuridicalDetails()
  ;

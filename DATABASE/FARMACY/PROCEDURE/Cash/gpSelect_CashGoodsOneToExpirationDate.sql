@@ -19,6 +19,7 @@ $BODY$
   DECLARE vbUnitId     Integer;
   DECLARE vbUnitIdStr  TVarChar;
   DECLARE vbAreaId     Integer;
+  DECLARE vbLanguage   TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -32,8 +33,17 @@ BEGIN
      	vbUnitId := 0;
      END IF;
 
+     SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+     INTO vbLanguage
+     FROM Object AS Object_User
+                 
+          LEFT JOIN ObjectString AS ObjectString_Language
+                 ON ObjectString_Language.ObjectId = Object_User.Id
+                AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+               
+     WHERE Object_User.Id = vbUserId;    
 
-     RETURN QUERY
+    RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id, Container.ObjectId, Container.Amount
                           FROM Container
                           WHERE Container.DescId = zc_Container_Count()
@@ -64,12 +74,16 @@ BEGIN
 
      SELECT Container.ObjectId                                                AS ID
           , Object_Goods.ObjectCode                                           AS GoodsCode
-          , Object_Goods.ValueData                                            AS GoodsName
+          , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods.NameUkr, '') <> ''
+                 THEN Object_Goods.NameUkr
+                 ELSE Object_Goods.Name END                                   AS GoodsName
           , Container.Amount                                                  AS Amount
           , COALESCE (tmpExpirationDate.ValueData, zc_DateEnd()) :: TDateTime AS MinExpirationDate
      FROM tmpContainer AS Container
 
-          INNER JOIN Object AS Object_Goods ON Object_Goods.ID = Container.ObjectId
+          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
+          LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+
           LEFT JOIN tmpExpirationDate ON tmpExpirationDate.Containerid = Container.Id
      ORDER BY 5;
 

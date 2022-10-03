@@ -63,6 +63,9 @@ type
     spUpdate_isSupplierFailures: TdsdStoredProc;
     actUpdate_SetSupplierFailures: TdsdExecStoredProc;
     bbUpdate_SetSupplierFailures: TdxBarButton;
+    spUpdate_isSupplierFailures_Clear: TdsdStoredProc;
+    actUpdate_SetSupplierFailures_Clear: TdsdExecStoredProc;
+    bbUpdate_SetSupplierFailures_Clear: TdxBarButton;
   private
     { Private declarations }
   public

@@ -3726,13 +3726,16 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserCashForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserCashForm');
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditLanguageForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TUserEditLanguageForm');
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserForm');
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserHelsiEditForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
-    exit;
+ {   exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');

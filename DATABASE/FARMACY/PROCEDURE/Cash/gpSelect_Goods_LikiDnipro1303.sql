@@ -36,6 +36,7 @@ $BODY$
    DECLARE vbIndex Integer;
    DECLARE vbMorion Integer;   
    DECLARE vbisManual Boolean;   
+   DECLARE vbLanguage TVarChar;
 --   DECLARE vbQpack Integer;   
 BEGIN
 
@@ -76,6 +77,15 @@ BEGIN
         vbIndex := vbIndex + 1;
     END LOOP;    
  
+    SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+    INTO vbLanguage
+    FROM Object AS Object_User
+                 
+         LEFT JOIN ObjectString AS ObjectString_Language
+                ON ObjectString_Language.ObjectId = Object_User.Id
+               AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+    WHERE Object_User.Id = vbUserId;   
 /*       
     IF COALESCE (vbQpack, 0) = 0
     THEN
@@ -157,7 +167,9 @@ BEGIN
     -- Результат
     SELECT Min(tmpItem.Id)                                                                                     AS ID
          , vbMorion                                                                                            AS MorionCode
-         , Object_Goods_Main.Name                                                                              AS GoodsName  
+         , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods_Main.NameUkr, '') <> ''
+                THEN Object_Goods_Main.NameUkr
+                ELSE Object_Goods_Main.Name END                                                                AS GoodsName  
          , vbisManual                                                                                          AS isManual
          , Sum(tmpItem.Amount)::TFloat                                                                         AS count
          , Round(inPriceSale * 100 / (100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)), 2)::TFloat       AS retail_price_without_vat
@@ -220,6 +232,7 @@ BEGIN
        GROUP BY ObjectFloat_NDSKind_NDS.ValueData
               , MIString_PartionGoods.ValueData 
               , Object_Goods_Main.Name 
+              , Object_Goods_Main.NameUkr
               , COALESCE (tmpContainerPD.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd())
        ;
 

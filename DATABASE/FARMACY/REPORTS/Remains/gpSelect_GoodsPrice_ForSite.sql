@@ -1,16 +1,18 @@
--- Function: gpSelect_GoodsPrice_ForSite_Ol()
+-- Function: gpSelect_GoodsPrice_ForSite()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsPrice_ForSite(
-    IN inCategoryId       Integer     ,  -- Группа
-    IN inSortType         Integer     ,  -- Тип сортировка
-    IN inSortLang         TVarChar    ,  -- По названию
-    IN inStart            Integer     ,  -- Смещение
-    IN inLimit            Integer     ,  -- Количество строк
-    IN inProductId        Integer     ,  -- Только указанный товар
-    IN inSearch           TVarChar    ,  -- Фильтр для ILIKE
-    IN inSession          TVarChar       -- сессия пользователя
+    IN inCategoryId         Integer     ,  -- Группа
+    IN inSortType           Integer     ,  -- Тип сортировка
+    IN inSortLang           TVarChar    ,  -- По названию
+    IN inStart              Integer     ,  -- Смещение
+    IN inLimit              Integer     ,  -- Количество строк
+    IN inProductId          Integer     ,  -- Только указанный товар
+    IN inSearch             TVarChar    ,  -- Фильтр для ILIKE
+    IN inisDiscountExternal Boolean     ,  -- Показывать товар участвующий в дисконтной программе
+    IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id                Integer    -- Id товара
 
@@ -27,6 +29,8 @@ RETURNS TABLE (Id                Integer    -- Id товара
              , isPartionDate      boolean   -- Есть товар со сроком годности
 
              , FormDispensingId Integer     -- Форма отпуска
+             , FormDispensingName TVarChar
+             , FormDispensingNameUkr TVarChar
              , NumberPlates Integer         -- Кол-во пластин в упаковке  
              , QtyPackage Integer           -- Кол-во в упаковке
               )
@@ -124,7 +128,7 @@ BEGIN
                                 AND (Object_Goods_Retail.Id = inProductId OR COALESCE(inProductId, 0) = 0)
                                 AND COALESCE (inSearch, '') = '' OR 
                                     CASE WHEN lower(inSortLang) = 'uk' THEN Object_Goods_Main.NameUkr ELSE Object_Goods_Main.Name END ILIKE '%'||inSearch||'%'
-                                AND Object_Goods_Retail.Id NOT IN (SELECT tmpDiscountExternal.GoodsId FROM tmpDiscountExternal)
+                                AND (COALESCE(inisDiscountExternal, False) = TRUE OR Object_Goods_Retail.Id NOT IN (SELECT tmpDiscountExternal.GoodsId FROM tmpDiscountExternal))
                               )
           , tmpContainerRemainsPD AS (SELECT Container.ObjectId           AS GoodsId
                                            , SUM(Container.Amount)        AS Remains 
@@ -381,6 +385,8 @@ BEGIN
              , COALESCE(tmpContainerPDSum.RemainsPD, 0) <> 0                AS isPartionDate
 
              , Price_Site.FormDispensingId
+             , Object_FormDispensing.ValueData                              AS FormDispensingName
+             , ObjectString_FormDispensing_NameUkr.ValueData                AS NameUkr
              , Price_Site.NumberPlates
              , Price_Site.QtyPackage
              
@@ -398,6 +404,10 @@ BEGIN
              
              LEFT JOIN tmpContainerPDSum ON tmpContainerPDSum.GoodsId = Price_Site.GoodsId
 
+             LEFT JOIN Object AS Object_FormDispensing ON Object_FormDispensing.Id = Price_Site.FormDispensingId
+             LEFT JOIN ObjectString AS ObjectString_FormDispensing_NameUkr
+                                    ON ObjectString_FormDispensing_NameUkr.ObjectId = Object_FormDispensing.Id
+                                   AND ObjectString_FormDispensing_NameUkr.DescId = zc_ObjectString_FormDispensing_NameUkr()   
        ;       
 
 END;
@@ -414,4 +424,4 @@ $BODY$
 -- select *, null as img_url from gpSelect_GoodsPrice_ForSite(394759, 1, 'uk', 0, 8, 0, '', zfCalc_UserSite())
 
 
-select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'ru', 0, 8, 0, 'ОРАЛТЕК', zfCalc_UserSite())
+select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'ru', 0, 8, 0, 'моксо', False, zfCalc_UserSite())

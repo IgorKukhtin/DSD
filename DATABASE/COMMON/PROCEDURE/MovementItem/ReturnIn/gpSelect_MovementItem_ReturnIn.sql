@@ -22,6 +22,8 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , CountForPrice TFloat, ChangePercent TFloat, Price_Pricelist TFloat, Price_Pricelist_vat TFloat, isCheck_Pricelist Boolean
              , Count TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
+             , GoodsRealId Integer, GoodsRealCode Integer, GoodsRealName TVarChar
+             , GoodsKindRealId Integer, GoodsKindRealName  TVarChar
              , AssetId Integer, AssetName TVarChar
              , AmountSumm TFloat, AmountSummVat TFloat
              , MovementId_Partion Integer, PartionMovementName TVarChar
@@ -130,6 +132,8 @@ BEGIN
                            , MIFloat_MovementSale.ValueData  :: Integer    AS MovementId_sale
                            , MIString_PartionGoods.ValueData               AS PartionGoods
                            , MovementItem.isErased                         AS isErased
+                           , MILinkObject_GoodsReal.ObjectId                   AS GoodsRealId
+                           , COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) AS GoodsKindRealId
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                   AND MovementItem.DescId     = zc_MI_Master()
@@ -168,6 +172,13 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementSale
                                                        ON MIFloat_MovementSale.MovementItemId = MovementItem.Id
                                                       AND MIFloat_MovementSale.DescId = zc_MIFloat_MovementId()
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                                            ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsReal.DescId = zc_MILinkObject_GoodsReal()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                                            ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
                      )
 
          , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
@@ -262,6 +273,8 @@ BEGIN
                         , COALESCE (tmpMI.MovementId_sale, 0)  :: Integer             AS MovementId_sale
                         , tmpMI.PartionGoods                                          AS PartionGoods
                         , COALESCE (tmpMI.isErased, FALSE)                            AS isErased
+                        , tmpMI.GoodsRealId
+                        , tmpMI.GoodsKindRealId
                    FROM tmpMI
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
@@ -424,6 +437,13 @@ BEGIN
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Measure.ValueData   AS MeasureName
+
+           , 0                          AS GoodsRealId
+           , 0                          AS GoodsRealCode
+           , ''::TVarChar               AS GoodsRealName
+           , 0                          AS GoodsKindRealId
+           , ''::TVarChar               AS GoodsKindRealName
+
            , 0 ::Integer                AS AssetId
            , '' ::TVarChar              AS AssetName
            , CAST (NULL AS TFloat)      AS AmountSumm
@@ -516,18 +536,25 @@ BEGIN
                        THEN FALSE
                   ELSE TRUE
              END :: Boolean AS isCheck_Pricelist
-           , tmpResult.Count :: TFloat            AS Count
-           , 0  :: TFloat         		AS HeadCount
-           , tmpResult.PartionGoods        	AS PartionGoods
-           , Object_GoodsKind.Id        	AS GoodsKindId
-           , Object_GoodsKind.ValueData 	AS GoodsKindName
-           , Object_Measure.ValueData           AS MeasureName
-           , 0 :: Integer         		AS AssetId
-           , '' :: TVarChar         		AS AssetName
+           , tmpResult.Count :: TFloat      AS Count
+           , 0  :: TFloat                   AS HeadCount
+           , tmpResult.PartionGoods         AS PartionGoods
+           , Object_GoodsKind.Id            AS GoodsKindId
+           , Object_GoodsKind.ValueData     AS GoodsKindName
+           , Object_Measure.ValueData       AS MeasureName
+
+           , Object_GoodsReal.Id                        AS GoodsRealId
+           , Object_GoodsReal.ObjectCode                AS GoodsRealCode
+           , Object_GoodsReal.ValueData     ::TVarChar  AS GoodsRealName
+           , Object_GoodsKindReal.Id                    AS GoodsKindRealId
+           , Object_GoodsKindReal.ValueData ::TVarChar  AS GoodsKindRealName
+
+           , 0 :: Integer                   AS AssetId
+           , '' :: TVarChar                 AS AssetName
            , CASE WHEN tmpResult.CountForPrice > 0
                        THEN CAST (tmpResult.AmountPartner * tmpResult.Price / tmpResult.CountForPrice AS NUMERIC (16, 2))
                    ELSE CAST (tmpResult.AmountPartner * tmpResult.Price AS NUMERIC (16, 2))
-             END :: TFloat 		        AS AmountSumm
+             END :: TFloat                  AS AmountSumm
 
            , CASE WHEN tmpResult.CountForPrice > 0
                             THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST (tmpResult.Price * tmpResult.AmountPartner/tmpResult.CountForPrice AS NUMERIC (16, 2))
@@ -536,7 +563,7 @@ BEGIN
                             ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST (tmpResult.Price * tmpResult.AmountPartner AS NUMERIC (16, 2))
                                                                  ELSE CAST ((1 + vbVATPercent / 100) * CAST ((tmpResult.Price * tmpResult.AmountPartner) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                                  END
-             END :: TFloat 		        AS AmountSummVat
+             END :: TFloat                  AS AmountSummVat
 
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
@@ -615,6 +642,9 @@ BEGIN
             LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpResult.GoodsId
                                         AND tmpStickerProperty.GoodsKindId = tmpResult.GoodsKindId
                                         AND tmpStickerProperty.Ord         = 1
+
+            LEFT JOIN Object AS Object_GoodsReal     ON Object_GoodsReal.Id     = tmpResult.GoodsRealId
+            LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = tmpResult.GoodsKindRealId
            ;
      ELSE
 
@@ -642,6 +672,9 @@ BEGIN
                            , MIFloat_MovementSale.ValueData  :: Integer    AS MovementId_sale
                            , MIString_PartionGoods.ValueData               AS PartionGoods
                            , MovementItem.isErased                         AS isErased
+
+                           , MILinkObject_GoodsReal.ObjectId                   AS GoodsRealId
+                           , COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) AS GoodsKindRealId
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                   AND MovementItem.DescId     = zc_MI_Master()
@@ -679,7 +712,14 @@ BEGIN
                            -- это партия "продажа покупателю"
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementSale
                                                        ON MIFloat_MovementSale.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_MovementSale.DescId = zc_MIFloat_MovementId()
+                                                      AND MIFloat_MovementSale.DescId = zc_MIFloat_MovementId() 
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                                            ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsReal.DescId = zc_MILinkObject_GoodsReal()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                                            ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
                      )
 
          , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
@@ -774,6 +814,8 @@ BEGIN
                         , COALESCE (tmpMI.MovementId_sale, 0)  :: Integer             AS MovementId_sale
                         , tmpMI.PartionGoods                                          AS PartionGoods
                         , COALESCE (tmpMI.isErased, FALSE)                            AS isErased
+                        , tmpMI.GoodsRealId
+                        , tmpMI.GoodsKindRealId
                    FROM tmpMI
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
@@ -924,18 +966,25 @@ BEGIN
                        THEN FALSE
                   ELSE TRUE
              END :: Boolean AS isCheck_Pricelist
-           , tmpResult.Count  :: TFloat          AS Count
-           , 0  :: TFloat         		AS HeadCount
-           , tmpResult.PartionGoods        	AS PartionGoods
-           , Object_GoodsKind.Id        	AS GoodsKindId
-           , Object_GoodsKind.ValueData 	AS GoodsKindName
+           , tmpResult.Count  :: TFloat         AS Count
+           , 0  :: TFloat                       AS HeadCount
+           , tmpResult.PartionGoods             AS PartionGoods
+           , Object_GoodsKind.Id                AS GoodsKindId
+           , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_Measure.ValueData           AS MeasureName
-           , 0 :: Integer         		AS AssetId
-           , '' :: TVarChar         		AS AssetName
+
+           , Object_GoodsReal.Id                        AS GoodsRealId
+           , Object_GoodsReal.ObjectCode                AS GoodsRealCode
+           , Object_GoodsReal.ValueData     ::TVarChar  AS GoodsRealName
+           , Object_GoodsKindReal.Id                    AS GoodsKindRealId
+           , Object_GoodsKindReal.ValueData ::TVarChar  AS GoodsKindRealName
+
+           , 0 :: Integer                       AS AssetId
+           , '' :: TVarChar                     AS AssetName
            , CASE WHEN tmpResult.CountForPrice > 0
                        THEN CAST (tmpResult.AmountPartner * tmpResult.Price / tmpResult.CountForPrice AS NUMERIC (16, 2))
                    ELSE CAST (tmpResult.AmountPartner * tmpResult.Price AS NUMERIC (16, 2))
-             END :: TFloat 		        AS AmountSumm
+             END :: TFloat                      AS AmountSumm
 
            , CASE WHEN tmpResult.CountForPrice > 0
                             THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST (tmpResult.Price * tmpResult.AmountPartner/tmpResult.CountForPrice AS NUMERIC (16, 2))
@@ -1019,13 +1068,16 @@ BEGIN
             LEFT JOIN tmpMIChild ON tmpMIChild.MI_ParentId = tmpResult.MovementItemId
 
             LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpResult.GoodsId
-                                        AND tmpStickerProperty.GoodsKindId = tmpResult.GoodsKindId
+                                        AND tmpStickerProperty.GoodsKindId = tmpResult.GoodsKindId                              
                                         AND tmpStickerProperty.Ord         = 1
             LEFT JOIN tmpName_new ON tmpName_new.GoodsId = tmpResult.GoodsId
                                  AND COALESCE (tmpName_new.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
                                  AND tmpName_new.MovementId_sale = tmpResult.MovementId_sale 
 
             LEFT JOIN tmpOperDate_Sale ON tmpOperDate_Sale.ParentId = tmpResult.MovementItemId
+
+            LEFT JOIN Object AS Object_GoodsReal     ON Object_GoodsReal.Id     = tmpResult.GoodsRealId
+            LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = tmpResult.GoodsKindRealId
            ;
 
      END IF;

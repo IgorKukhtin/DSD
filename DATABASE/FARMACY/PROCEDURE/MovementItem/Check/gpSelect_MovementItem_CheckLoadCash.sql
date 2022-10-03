@@ -68,6 +68,7 @@ $BODY$
   DECLARE vbDate_3 TDateTime;
   DECLARE vbDate_1 TDateTime;
   DECLARE vbDate_0 TDateTime;
+  DECLARE vbLanguage TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -87,6 +88,16 @@ BEGIN
      INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
      FROM lpSelect_PartionDateKind_SetDate ();
 
+    SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+    INTO vbLanguage
+    FROM Object AS Object_User
+                 
+         LEFT JOIN ObjectString AS ObjectString_Language
+                ON ObjectString_Language.ObjectId = Object_User.Id
+               AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+    WHERE Object_User.Id = vbUserId;  
+    
     CREATE TEMP TABLE tmpMovementItem ON COMMIT DROP AS (
     WITH
        tmpMI AS (SELECT MovementItem.Id
@@ -364,7 +375,9 @@ BEGIN
            , MovementItem.ParentId
            , MovementItem.GoodsId
            , MovementItem.GoodsCode
-           , MovementItem.GoodsName
+           , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods_Main.NameUkr, '') <> ''
+                  THEN Object_Goods_Main.NameUkr
+                  ELSE Object_Goods_Main.Name END                                AS GoodsName
            , MovementItem.Amount
            , MovementItem.Price
            , MovementItem.AmountSumm

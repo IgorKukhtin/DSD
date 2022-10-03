@@ -19,7 +19,9 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , Count TFloat, HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar
              , PartionGoodsDate TDateTime
-             , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
+             , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar  
+             , GoodsRealId Integer, GoodsRealCode Integer, GoodsRealName TVarChar
+             , GoodsKindRealId Integer, GoodsKindRealName  TVarChar
              , AssetId Integer, AssetName TVarChar
              , BoxId Integer, BoxName TVarChar
              , AmountSumm TFloat
@@ -236,6 +238,9 @@ BEGIN
                                  , MILinkObject_Asset.ObjectId                   AS AssetId
                                  , MIFloat_PromoMovement.ValueData               AS MovementId_Promo
                                  , MovementItem.isErased                         AS isErased
+
+                                 , MILinkObject_GoodsReal.ObjectId                   AS GoodsRealId
+                                 , COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) AS GoodsKindRealId
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Master()
@@ -310,6 +315,13 @@ BEGIN
                                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                             ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                            AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                                                  ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsReal.DescId = zc_MILinkObject_GoodsReal()
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                                                  ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
                            )
            -- Связь с акциями для существующих MovementItem
         , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
@@ -425,7 +437,14 @@ BEGIN
            , CAST (NULL AS TDateTime)   AS PartionGoodsDate
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
-           , Object_Measure.ValueData   AS MeasureName
+           , Object_Measure.ValueData   AS MeasureName 
+
+           , 0                    AS GoodsRealId
+           , 0                    AS GoodsRealCode
+           , ''::TVarChar         AS GoodsRealName
+           , 0                    AS GoodsKindRealId
+           , ''::TVarChar         AS GoodsKindRealName
+
            , 0 ::Integer                AS AssetId
            , '' ::TVarChar              AS AssetName
            , 0 ::Integer                AS BoxId
@@ -587,6 +606,12 @@ BEGIN
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , Object_Measure.ValueData               AS MeasureName
 
+           , Object_GoodsReal.Id                        AS GoodsRealId
+           , Object_GoodsReal.ObjectCode                AS GoodsRealCode
+           , Object_GoodsReal.ValueData     ::TVarChar  AS GoodsRealName
+           , Object_GoodsKindReal.Id                    AS GoodsKindRealId
+           , Object_GoodsKindReal.ValueData ::TVarChar  AS GoodsKindRealName
+
            , Object_Asset.Id                        AS AssetId
            , Object_Asset.ValueData                 AS AssetName
 
@@ -699,7 +724,10 @@ BEGIN
                                             AND tmpGoodsByGoodsKindSub.GoodsKindId = tmpMI_Goods.GoodsKindId
 
             LEFT JOIN tmpMI_Tax ON tmpMI_Tax.GoodsId = tmpMI_Goods.GoodsId
-                               AND COALESCE (tmpMI_Tax.GoodsKindId,0) = COALESCE (tmpMI_Goods.GoodsKindId, 0)
+                               AND COALESCE (tmpMI_Tax.GoodsKindId,0) = COALESCE (tmpMI_Goods.GoodsKindId, 0) 
+
+            LEFT JOIN Object AS Object_GoodsReal     ON Object_GoodsReal.Id     = tmpMI_Goods.GoodsRealId
+            LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = tmpMI_Goods.GoodsKindRealId
            ;
      ELSE
 
@@ -760,7 +788,10 @@ BEGIN
                                  , MILinkObject_Box.ObjectId                     AS BoxId
                                  , MILinkObject_Asset.ObjectId                   AS AssetId
                                  , MIFloat_PromoMovement.ValueData               AS MovementId_Promo
-                                 , MovementItem.isErased                         AS isErased
+                                 , MovementItem.isErased                         AS isErased  
+
+                                 , MILinkObject_GoodsReal.ObjectId                   AS GoodsRealId
+                                 , COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) AS GoodsKindRealId
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Master()
@@ -836,7 +867,14 @@ BEGIN
 
                                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                             ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
-                                                           AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                                           AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()  
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                                                  ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsReal.DescId = zc_MILinkObject_GoodsReal()
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                                                  ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
                            )
            -- Связь с акциями для существующих MovementItem
         , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
@@ -954,6 +992,12 @@ BEGIN
                               , Object_GoodsKind.ValueData             AS GoodsKindName
                               , Object_Measure.ValueData               AS MeasureName
 
+                              , Object_GoodsReal.Id                        AS GoodsRealId
+                              , Object_GoodsReal.ObjectCode                AS GoodsRealCode
+                              , Object_GoodsReal.ValueData     ::TVarChar  AS GoodsRealName
+                              , Object_GoodsKindReal.Id                    AS GoodsKindRealId
+                              , Object_GoodsKindReal.ValueData ::TVarChar  AS GoodsKindRealName
+
                               , Object_Asset.Id                        AS AssetId
                               , Object_Asset.ValueData                 AS AssetName
 
@@ -1041,6 +1085,9 @@ BEGIN
 
 
                                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Goods.GoodsKindId
+
+                               LEFT JOIN Object AS Object_GoodsReal     ON Object_GoodsReal.Id     = tmpMI_Goods.GoodsRealId
+                               LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = tmpMI_Goods.GoodsKindRealId
 
                                LEFT JOIN Object AS Object_Box ON Object_Box.Id = tmpMI_Goods.BoxId
                                LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI_Goods.AssetId
@@ -1138,6 +1185,12 @@ BEGIN
            , tmpResult.GoodsKindName
            , tmpResult.MeasureName
 
+           , tmpResult.GoodsRealId
+           , tmpResult.GoodsRealCode
+           , tmpResult.GoodsRealName
+           , tmpResult.GoodsKindRealId
+           , tmpResult.GoodsKindRealName
+
            , tmpResult.AssetId
            , tmpResult.AssetName
 
@@ -1183,6 +1236,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.09.22         * GoodsReal
  26.07.22         * add Count
  30.03.22         *
  03.12.21         *

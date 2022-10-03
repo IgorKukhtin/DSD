@@ -39,6 +39,7 @@ $BODY$
   DECLARE vbDate_0 TDateTime;
   DECLARE vbDiscountExternal    boolean;
   DECLARE vbIlliquidUnitId Integer;
+  DECLARE vbLanguage TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -63,6 +64,16 @@ BEGIN
     SELECT Date_6, Date_3, Date_1, Date_0
     INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
     FROM lpSelect_PartionDateKind_SetDate ();
+
+    SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+    INTO vbLanguage
+    FROM Object AS Object_User
+                 
+         LEFT JOIN ObjectString AS ObjectString_Language
+                ON ObjectString_Language.ObjectId = Object_User.Id
+               AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+    WHERE Object_User.Id = vbUserId;    
 
     -- Текущий документ Неликвиды по подразделениям
     IF EXISTS(SELECT 1
@@ -193,7 +204,9 @@ BEGIN
 
     SELECT GoodsRemains.GoodsId                                              AS Id
          , Object_Goods_Main.ObjectCode
-         , Object_Goods_Main.Name
+         , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods_Main.NameUkr, '') <> ''
+                THEN Object_Goods_Main.NameUkr
+                ELSE Object_Goods_Main.Name END                              AS Name
          , GoodsRemains.MinExpirationDate
          , NULLIF(GoodsRemains.PartionDateKindId, 0)                         AS PartionDateKindId
          , Object_PartionDateKind.ValueData                                  AS PartionDateKindName

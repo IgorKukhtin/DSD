@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_ObjectHistory_JuridicalDetails(
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, StartDate TDateTime, BankName TVarChar, BankId Integer,
-               FullName TVarChar, JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar,
+               Name TVarChar, FullName TVarChar, JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar,
                NumberVAT TVarChar, AccounterName TVarChar, MainName TVarChar,
                BankAccount TVarChar, Phone TVarChar,
                InvNumberBranch TVarChar
@@ -28,7 +28,8 @@ BEGIN
              ObjectHistory_JuridicalDetails.Id                                              AS Id
            , COALESCE(ObjectHistory_JuridicalDetails.StartDate, Empty.StartDate)            AS StartDate
            , Object_Bank.ValueData                                                          AS BankName
-           , Object_Bank.Id                                                                 AS BankId
+           , Object_Bank.Id                                                                 AS BankId  
+           , ObjectHistoryString_JuridicalDetails_Name.ValueData                            AS Name
            , ObjectHistoryString_JuridicalDetails_FullName.ValueData                        AS FullName
            , ObjectHistoryString_JuridicalDetails_JuridicalAddress.ValueData                AS JuridicalAddress
            , ObjectHistoryString_JuridicalDetails_OKPO.ValueData                            AS OKPO
@@ -48,6 +49,11 @@ BEGIN
          ON ObjectHistoryLink_JuridicalDetails_Bank.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
         AND ObjectHistoryLink_JuridicalDetails_Bank.DescId = zc_ObjectHistoryLink_JuridicalDetails_Bank()
   LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectHistoryLink_JuridicalDetails_Bank.ObjectId
+
+  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Name
+                                ON ObjectHistoryString_JuridicalDetails_Name.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                               AND ObjectHistoryString_JuridicalDetails_Name.DescId = zc_ObjectHistoryString_JuridicalDetails_Name()
+
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_FullName
          ON ObjectHistoryString_JuridicalDetails_FullName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
         AND ObjectHistoryString_JuridicalDetails_FullName.DescId = zc_ObjectHistoryString_JuridicalDetails_FullName()
@@ -91,6 +97,7 @@ ALTER FUNCTION gpGet_ObjectHistory_JuridicalDetails (Integer, TDateTime, TVarCha
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.09.22         * Name
  07.04.16         * add InvNumberBranch 
  26.11.15         * add MainName
  18.02.14                        *

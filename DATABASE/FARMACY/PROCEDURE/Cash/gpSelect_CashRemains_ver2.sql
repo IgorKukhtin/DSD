@@ -87,6 +87,7 @@ $BODY$
    DECLARE vbSamples3 TFloat;
 
    DECLARE vbAreaId   Integer;
+   DECLARE vbLanguage TVarChar;
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -171,6 +172,16 @@ BEGIN
                             AND ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
 
     WHERE Object_Unit.Id = vbUnitId;
+    
+    SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+    INTO vbLanguage
+    FROM Object AS Object_User
+                 
+         LEFT JOIN ObjectString AS ObjectString_Language
+                ON ObjectString_Language.ObjectId = Object_User.Id
+               AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+    WHERE Object_User.Id = vbUserId;    
     
         
     -- ќбъ€вили новую сессию кассового места / обновили дату последнего обращени€
@@ -774,7 +785,9 @@ BEGIN
             CashSessionSnapShot.ObjectId,
             Object_Goods_Main.Id          AS GoodsId_main,
             Object_GoodsGroup.ValueData   AS GoodsGroupName,
-            Object_Goods_Main.Name,
+            CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods_Main.NameUkr, '') <> ''
+                 THEN Object_Goods_Main.NameUkr
+                 ELSE Object_Goods_Main.Name END AS Name,
             Object_Goods_Main.ObjectCode,
             CashSessionSnapShot.Remains,
             zfCalc_PriceCash(CashSessionSnapShot.Price, 

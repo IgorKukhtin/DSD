@@ -1,4 +1,4 @@
-unit UserEdit;
+unit UserEditLanguage;
 
 interface
 
@@ -11,15 +11,13 @@ uses
   cxTextEdit, dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox, cxDropDownEdit;
 
 type
-  TUserEditForm = class(TParentForm)
+  TUserEditLanguageForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
-    cxLabel3: TcxLabel;
-    edMember: TcxButtonEdit;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
@@ -27,29 +25,8 @@ type
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    MemberGuides: TdsdGuides;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
-    edPassword: TcxTextEdit;
-    cxLabel2: TcxLabel;
-    cxLabel4: TcxLabel;
-    edSign: TcxTextEdit;
-    edSeal: TcxTextEdit;
-    cxLabel5: TcxLabel;
-    edKey: TcxTextEdit;
-    cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
-    edProjectMobile: TcxTextEdit;
-    ceisProjectMobile: TcxCheckBox;
-    ceisSite: TcxCheckBox;
-    ceManagerPharmacy: TcxCheckBox;
-    edPasswordWages: TcxTextEdit;
-    cxLabel8: TcxLabel;
-    cbWorkingMultiple: TcxCheckBox;
-    ceNewUser: TcxCheckBox;
-    ceDismissedUser: TcxCheckBox;
-    ceInternshipCompleted: TcxCheckBox;
-    edInternshipConfirmation: TcxTextEdit;
     cbLanguage: TcxComboBox;
     cxLabel9: TcxLabel;
   private
@@ -63,7 +40,7 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TUserEditForm);
+  RegisterClass(TUserEditLanguageForm);
 
 
 end.

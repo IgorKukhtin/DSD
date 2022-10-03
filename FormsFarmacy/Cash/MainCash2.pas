@@ -649,6 +649,10 @@ type
     btnMCS: TcxButton;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
+    actUserEditLanguage: TdsdOpenForm;
+    N67: TMenuItem;
+    N68: TMenuItem;
+    acrRefreshName: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -815,6 +819,7 @@ type
     procedure TimerActiveAlertsTimer(Sender: TObject);
     procedure actOpenFilesToCheckExecute(Sender: TObject);
     procedure cxImageInstructionsClick(Sender: TObject);
+    procedure acrRefreshNameExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -15683,6 +15688,12 @@ begin
     freeAndNil(sp);
     LoadUnitConfig;
   end;
+end;
+
+procedure TMainCashForm2.acrRefreshNameExecute(Sender: TObject);
+begin
+  inherited;
+  PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 30);
 end;
 
 procedure TMainCashForm2.ActiveControlChanged(Sender: TObject);

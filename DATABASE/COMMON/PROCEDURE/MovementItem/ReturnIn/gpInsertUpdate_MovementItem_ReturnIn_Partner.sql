@@ -25,6 +25,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Partner(
    OUT outMemberExpName         TVarChar  , -- Экспедитор из Заявки стронней
    OUT outChangePercent         TFloat    , -- (-)% Скидки (+)% Наценки
    OUT outPricePromo            TFloat    , --
+   OUT outGoodsRealCode         Integer  , -- Товар (факт отгрузка)
+   OUT outGoodsRealName         TVarChar  , -- Товар (факт отгрузка)
+   OUT outGoodsKindRealName     TVarChar  , -- Вид товара (факт отгрузка)
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -69,8 +72,10 @@ BEGIN
      SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice, tmp.outAmountSumm
           , zfCalc_PromoMovementName (tmp.ioMovementId_Promo, NULL, NULL, NULL, NULL)
           , tmp.ioChangePercent
-          , tmp.outPricePromo
-            INTO ioId, ioPrice, ioCountForPrice, outAmountSumm, outMovementPromo, outChangePercent, outPricePromo
+          , tmp.outPricePromo     
+          , tmp.outGoodsRealCode, tmp.outGoodsRealName
+          , tmp.outGoodsKindRealName
+            INTO ioId, ioPrice, ioCountForPrice, outAmountSumm, outMovementPromo, outChangePercent, outPricePromo, outGoodsRealCode, outGoodsRealName, outGoodsKindRealName
      FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := ioId
                                               , inMovementId         := inMovementId
                                               , inGoodsId            := inGoodsId

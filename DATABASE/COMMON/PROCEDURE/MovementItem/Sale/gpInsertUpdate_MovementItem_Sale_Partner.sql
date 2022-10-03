@@ -17,7 +17,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_Partner(
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
-    IN inBoxId               Integer   , -- Ящики
+    IN inBoxId               Integer   , -- Ящики 
+   OUT outGoodsRealCode      Integer  , -- Товар (факт отгрузка)
+   OUT outGoodsRealName      TVarChar  , -- Товар (факт отгрузка)
+   OUT outGoodsKindRealName  TVarChar  , -- Вид товара (факт отгрузка)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -55,7 +58,9 @@ BEGIN
 
      -- сохранили
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
+          , tmp.outGoodsRealCode, tmp.outGoodsRealName, tmp.outGoodsKindRealName
             INTO ioId, ioCountForPrice, outAmountSumm
+               , outGoodsRealCode, outGoodsRealName, outGoodsKindRealName
      FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                           , inMovementId         := inMovementId
                                           , inGoodsId            := inGoodsId

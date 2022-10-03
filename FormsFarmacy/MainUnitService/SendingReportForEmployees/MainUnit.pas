@@ -94,6 +94,7 @@ type
     cxGridDBColumn_Users: TcxGridDBColumn;
     cxGridDBColumn_Summa: TcxGridDBColumn;
     cxGridLevel6: TcxGridLevel;
+    cxGridDBColumn_CountChech: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -244,7 +245,7 @@ begin
       qryReport.Close;
       qryReport.SQL.Text := qrySendList.FieldByName('SQL').AsString;
       qryReport.Open;
-      cxGridPopulMobileApplication.Height := 18 * (qryReport.RecordCount + 3);
+      cxGridPopulMobileApplication.Height := 18 * (qryReport.RecordCount + 4);
     except
       on E: Exception do Add_Log(E.Message);
     end;
@@ -329,15 +330,8 @@ begin
   begin
     if not qryReport.Active then Exit;
     if qryReport.IsEmpty then Exit;
-    if qrySendList.FieldByName('Id').AsInteger = 3 then
-    begin
-      Add_Log('Ќачало выгрузки <”частие сотрудников в попул€ризации мобильного приложени€ по аптекам>');
-      FMessage.Text := '”частие сотрудников в попул€ризации мобильного приложени€ по аптекам';
-    end else
-    begin
-      Add_Log('Ќачало выгрузки <”частие сотрудников в попул€ризации мобильного приложени€ по аптекам за (' + FormatDateTime('dddd', IncDay(Date, - 1)) + ')');
-      FMessage.Text := '”частие сотрудников в попул€ризации мобильного приложени€ по аптекам за (' + FormatDateTime('dddd', IncDay(Date, - 1)) + ')';
-    end;
+    Add_Log('Ќачало выгрузки <”частие сотрудников в попул€ризации мобильного приложени€ по аптекам за ' + FormatDateTime('mmmm yyyy', IncDay(Date, - 1)));
+    FMessage.Text := '”частие сотрудников в попул€ризации мобильного приложени€ по аптекам за ' + FormatDateTime('mmmm yyyy', IncDay(Date, - 1)) + 'г. ';
 
     bmp := TBitmap.Create;
     try
@@ -492,7 +486,7 @@ begin
     for I := 0 to High(Res) do if (Res[I] <> '') then
     try
 
-      if qrySendList.FieldByName('Id').AsInteger in [2, 3, 4, 6] then
+      if qrySendList.FieldByName('Id').AsInteger in [2, 3, 4, 6, 13] then
       begin
 
         if not FileExists(SavePath + FileName) then Break;

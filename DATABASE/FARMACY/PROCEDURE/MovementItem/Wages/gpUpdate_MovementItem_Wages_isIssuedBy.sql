@@ -13,6 +13,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbisWagesCheckTesting Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -35,7 +36,16 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
 
-    IF inisIssuedBy = FALSE AND vbOperDate >= '01.10.2019'  AND (
+    SELECT COALESCE(ObjectBoolean_CashSettings_WagesCheckTesting.ValueData, FALSE)  AS isWagesCheckTesting
+    INTO vbisWagesCheckTesting
+    FROM Object AS Object_CashSettings
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_WagesCheckTesting
+                                 ON ObjectBoolean_CashSettings_WagesCheckTesting.ObjectId = Object_CashSettings.Id 
+                                AND ObjectBoolean_CashSettings_WagesCheckTesting.DescId = zc_ObjectBoolean_CashSettings_WagesCheckTesting()
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;
+
+    IF vbisWagesCheckTesting = TRUE AND inisIssuedBy = FALSE AND vbOperDate >= '01.10.2019'  AND (
            EXISTS(SELECT MovementItem.ObjectId 
                   FROM MovementItem 
                        INNER JOIN ObjectLink AS ObjectLink_User_Member

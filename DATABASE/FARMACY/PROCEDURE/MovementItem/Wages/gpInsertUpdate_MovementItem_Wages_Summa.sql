@@ -32,6 +32,7 @@ $BODY$
    DECLARE vbPenaltyExam TFloat;
    DECLARE vbApplicationAward TFloat;
    DECLARE vbAmountCard TFloat;
+   DECLARE vbisWagesCheckTesting Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -55,6 +56,15 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Сумма нелеквидав должна быть меньше или равна нулю.';    
     END IF;
     
+    SELECT COALESCE(ObjectBoolean_CashSettings_WagesCheckTesting.ValueData, FALSE)  AS isWagesCheckTesting
+    INTO vbisWagesCheckTesting
+    FROM Object AS Object_CashSettings
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_WagesCheckTesting
+                                 ON ObjectBoolean_CashSettings_WagesCheckTesting.ObjectId = Object_CashSettings.Id 
+                                AND ObjectBoolean_CashSettings_WagesCheckTesting.DescId = zc_ObjectBoolean_CashSettings_WagesCheckTesting()
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;
+        
     IF EXISTS(SELECT 1 FROM MovementItem WHERE ID = ioId AND MovementItem.DescId = zc_MI_Sign())
     THEN
 
@@ -204,7 +214,7 @@ BEGIN
              INNER JOIN Movement ON Movement.Id = MovementItem.MovementId 
         WHERE MovementItem.ID = ioId;
       
-        IF inisIssuedBy = TRUE AND vbOperDate >= '01.10.2019' AND 
+        IF vbisWagesCheckTesting = TRUE AND inisIssuedBy = TRUE AND vbOperDate >= '01.10.2019' AND 
            NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) AND
            EXISTS(SELECT MovementItem.ObjectId 
                   FROM MovementItem 

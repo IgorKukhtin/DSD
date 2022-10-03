@@ -38,6 +38,7 @@ $BODY$
   DECLARE vbAreaId      Integer;
   DECLARE vbJuridicalId Integer;
   DECLARE vbPartnerMedicalId  Integer;
+  DECLARE vbLanguage TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -51,7 +52,16 @@ BEGIN
      	vbUnitId := 0;
      END IF;
 
-
+     SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+     INTO vbLanguage
+     FROM Object AS Object_User
+                 
+          LEFT JOIN ObjectString AS ObjectString_Language
+                 ON ObjectString_Language.ObjectId = Object_User.Id
+                AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+     WHERE Object_User.Id = vbUserId;   
+     
      RAISE notice '1 <%>', CLOCK_TIMESTAMP();
 
      SELECT ObjectLink_Unit_Juridical.ChildObjectId
@@ -449,7 +459,9 @@ BEGIN
      SELECT
               GoodsPriceAll.GoodsId             AS Id,
               Object_Goods.ObjectCode           AS GoodsCode,
-              Object_Goods.Name                 AS GoodsName,
+              CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods.NameUkr, '') <> ''
+                   THEN Object_Goods.NameUkr
+                   ELSE Object_Goods.Name END   AS GoodsName,
               Object_Juridical.ValueData        AS JuridicalName,
               Object_Contract.ValueData         AS ContractName,
               Object_Area.ValueData             AS AreaName,

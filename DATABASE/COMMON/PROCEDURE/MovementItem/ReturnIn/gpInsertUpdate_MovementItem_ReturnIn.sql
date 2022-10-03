@@ -26,7 +26,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
    OUT outMovementPromo         TVarChar  , --
    OUT outMemberExpName         TVarChar  , -- Экспедитор из Заявки стронней
    OUT outChangePercent         TFloat    , -- (-)% Скидки (+)% Наценки
-   OUT outPricePromo            TFloat    , --
+   OUT outPricePromo            TFloat    , -- 
+   OUT outGoodsRealCode         Integer  , -- Товар (факт отгрузка)
+   OUT outGoodsRealName         TVarChar  , -- Товар (факт отгрузка)
+   OUT outGoodsKindRealName     TVarChar  , -- Вид товара (факт отгрузка)
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -77,7 +80,9 @@ BEGIN
           , zfCalc_PromoMovementName (tmp.ioMovementId_Promo, NULL, NULL, NULL, NULL)
           , tmp.ioChangePercent
           , tmp.outPricePromo
-            INTO ioId, ioPrice, ioCountForPrice, outAmountSumm, outMovementPromo, outChangePercent, outPricePromo
+          , tmp.outGoodsRealCode, tmp.outGoodsRealName
+          , tmp.outGoodsKindRealName
+            INTO ioId, ioPrice, ioCountForPrice, outAmountSumm, outMovementPromo, outChangePercent, outPricePromo, outGoodsRealCode, outGoodsRealName, outGoodsKindRealName
 
      FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := ioId
                                               , inMovementId         := inMovementId
@@ -132,6 +137,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 02.10.22         *
  26.07.22         *
  14.05.18         *
  27.04.15         * add inMovementId_top/_MI

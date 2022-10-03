@@ -12,13 +12,14 @@ RETURNS TABLE (ORD Integer, id Integer,
                BranchDate TDateTime, Invnumber TVarChar, FromName TVarChar, ContractName TVarChar,
                PartionGoodsId Integer,
                ExpirationDateDialog TDateTime, AmountDialog TFloat,
-               Cat_5 boolean,  DatePartionGoodsCat5 TDateTime
+               Cat_5 boolean,  DatePartionGoodsCat5 TDateTime,
                Price TFloat
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+   DECLARE vbLanguage TVarChar;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -30,6 +31,15 @@ BEGIN
    END IF;
    vbUnitId := vbUnitKey::Integer;
 
+   SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+   INTO vbLanguage
+   FROM Object AS Object_User
+                 
+        LEFT JOIN ObjectString AS ObjectString_Language
+               ON ObjectString_Language.ObjectId = Object_User.Id
+              AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
+              
+   WHERE Object_User.Id = vbUserId;    
 
   RETURN QUERY
   WITH
@@ -61,11 +71,15 @@ BEGIN
                           AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                         )
                         
-  SELECT ROW_NUMBER()OVER(ORDER BY Object_Goods.ValueData)::Integer  AS ORD
+  SELECT ROW_NUMBER()OVER(ORDER BY CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods.NameUkr, '') <> ''
+                                        THEN Object_Goods.NameUkr
+                                        ELSE Object_Goods.Name END)::Integer  AS ORD
        , Container.ID
        , Object_Goods.ID                                    AS GoodsID
        , Object_Goods.ObjectCode                            AS GoodsCode
-       , Object_Goods.ValueData                             AS GoodsName
+       , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods.NameUkr, '') <> ''
+              THEN Object_Goods.NameUkr
+              ELSE Object_Goods.Name END                    AS GoodsName
        , Container.Amount                                   AS Amount
        , ObjectFloat_PartionGoods_PriceWithVAT.ValueData    AS PriceWithVAT
        , ObjectFloat_PartionGoods_ValueMin.ValueData        AS ValueMin
@@ -83,7 +97,8 @@ BEGIN
        , COALESCE(tmpObject_Price.Price,0)::TFloat                    AS Price
   FROM Container
 
-       LEFT JOIN Object AS Object_Goods ON Object_Goods.ID = Container.ObjectId
+       LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
+       LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
 
        LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                     AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
@@ -133,7 +148,7 @@ BEGIN
     AND Container.Amount > 0
  -- !!!
  -- AND 1=0
-  ORDER BY Object_Goods.ValueData;
+  ORDER BY 5;
 
 END;
 $BODY$
