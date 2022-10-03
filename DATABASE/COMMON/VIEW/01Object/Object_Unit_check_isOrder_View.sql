@@ -1,8 +1,8 @@
--- View: Object_Unit_check_isOrder_View
+-- View: Object_Unit_check_isOrder_View_test
 
--- DROP VIEW IF EXISTS Object_Unit_check_isOrder_View;
+-- DROP VIEW IF EXISTS Object_Unit_check_isOrder_View_test;
 
-CREATE OR REPLACE VIEW Object_Unit_check_isOrder_View AS
+CREATE OR REPLACE VIEW Object_Unit_check_isOrder_View_test AS
 
    SELECT Object_Unit.Id         AS UnitId
         , Object_Unit.ObjectCode AS UnitCode
@@ -12,7 +12,7 @@ CREATE OR REPLACE VIEW Object_Unit_check_isOrder_View AS
     --AND 1=0
    ;
 
-ALTER TABLE Object_Unit_check_isOrder_View OWNER TO postgres;
+ALTER TABLE Object_Unit_check_isOrder_View_test OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -22,4 +22,4 @@ ALTER TABLE Object_Unit_check_isOrder_View OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM Object_Unit_check_isOrder_View
+-- SELECT * FROM Object_Unit_check_isOrder_View_test

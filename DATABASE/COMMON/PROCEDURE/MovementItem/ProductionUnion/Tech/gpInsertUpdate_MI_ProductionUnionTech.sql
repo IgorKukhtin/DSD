@@ -149,6 +149,7 @@ BEGIN
                              , ObjectFloat_Value.ValueData                                    AS AmountReceipt
                              , COALESCE (ObjectBoolean_TaxExit.ValueData, FALSE)              AS isTaxExit
                              , COALESCE (ObjectBoolean_WeightMain.ValueData, FALSE)           AS isWeightMain
+                             , COALESCE (ObjectBoolean_Real.ValueData, FALSE)                 AS isReal
                              , ObjectFloat_Value_master.ValueData                             AS Amount_master
                         FROM ObjectLink AS ObjectLink_ReceiptChild_Receipt
                              INNER JOIN ObjectFloat AS ObjectFloat_Value_master
@@ -171,6 +172,9 @@ BEGIN
                              LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
                                                      ON ObjectBoolean_TaxExit.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                     AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
+                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Real
+                                                     ON ObjectBoolean_Real.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                    AND ObjectBoolean_Real.DescId   = zc_ObjectBoolean_ReceiptChild_Real()
                         WHERE ObjectLink_ReceiptChild_Receipt.ChildObjectId = inReceiptId
                           AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
                        )
@@ -203,16 +207,29 @@ BEGIN
                              , COALESCE (tmpMI_Child.GoodsId, tmpReceiptChild.GoodsId)             AS GoodsId
                              , COALESCE (tmpMI_Child.GoodsKindId, tmpReceiptChild.GoodsKindId)     AS GoodsKindId
                              , COALESCE (tmpMI_Child.GoodsKindCompleteId, 0)                       AS GoodsKindCompleteId
-                             , CASE WHEN tmpReceiptChild_old.GoodsId > 0 AND tmpReceiptChild.GoodsId IS NULL -- если менялась рецептура и товара из пред.рецептуры нет в новой рецептуре, тогда будет удаление (!!!но значение не менять!!!)
+                             , CASE -- если менялась рецептура и товара из пред.рецептуры нет в новой рецептуре, тогда будет удаление (!!!но значение не менять!!!)
+                                    WHEN tmpReceiptChild_old.GoodsId > 0 AND tmpReceiptChild.GoodsId IS NULL
                                          THEN tmpMI_Child.Amount
-                                    WHEN tmpReceipt_old.ReceiptId > 0 -- если менялась рецептура - все кол-ва по новой
-                                      OR tmpMI_Child.MovementItemId IS NULL -- или новый элемент
+                                    -- если менялась рецептура - все кол-ва по новой
+                                    -- или новый элемент
+                                    WHEN tmpReceipt_old.ReceiptId > 0
+                                      OR tmpMI_Child.MovementItemId IS NULL
                                          THEN COALESCE (inCuterCount, 0) * COALESCE (tmpReceiptChild.AmountReceipt, 0)
-                                    WHEN COALESCE (tmpMI_Child.AmountReceipt, -1) = 0  -- если <Количество по рецептуре на 1 кутер> в док. было введено = 0, тогда оставляем факт из Amount
+
+                                    -- если <Количество по рецептуре на 1 кутер> в док. было введено = 0, тогда оставляем факт из Amount
+                                    WHEN COALESCE (tmpMI_Child.AmountReceipt, -1) = 0
                                          THEN tmpMI_Child.Amount
+
+                                    --
+                                    WHEN vbMeasureId_master = zc_Measure_Sh()
+                                     AND inCountReal > 0 AND tmpReceiptChild.isReal = TRUE
+                                         THEN inCountReal * COALESCE (tmpMI_Child.AmountReceipt, 0) / tmpReceiptChild.Amount_master
+
                                     WHEN vbMeasureId_master = zc_Measure_Sh()
                                          THEN inAmount * COALESCE (tmpMI_Child.AmountReceipt, 0) / tmpReceiptChild.Amount_master
+
                                     ELSE COALESCE (inCuterCount, 0) * COALESCE (tmpMI_Child.AmountReceipt, 0) -- иначе пересчет по <Количество по рецептуре на 1 кутер> в док.
+
                                END AS Amount
 
                              , CASE WHEN tmpReceiptChild_old.GoodsId > 0 AND tmpReceiptChild.GoodsId IS NULL -- если менялась рецептура и товара из пред.рецептуры нет в новой рецептуре, тогда будет удаление (!!!но значение не менять!!!)
