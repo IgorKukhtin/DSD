@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isErased boolean, isLeaf boolean,
                isPartionDate boolean, isPartionGoodsKind boolean,
                isCountCount Boolean,
+               isPartionGP Boolean,
                Address TVarChar,
                Comment TVarChar
 ) AS
@@ -86,6 +87,7 @@ BEGIN
            , CAST (FALSE AS Boolean) AS isPartionDate
            , CAST (FALSE AS Boolean) AS isPartionGoodsKind 
            , CAST (FALSE AS Boolean) AS isCountCount
+           , CAST (FALSE AS Boolean) AS isPartionGP
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
 ;
@@ -142,6 +144,7 @@ BEGIN
            , ObjectBoolean_PartionDate.ValueData      AS isPartionDate
            , COALESCE (ObjectBoolean_PartionGoodsKind.ValueData, FALSE) :: Boolean AS isPartionGoodsKind
            , COALESCE (ObjectBoolean_CountCount.ValueData, FALSE)       :: Boolean AS isCountCount
+           , COALESCE (ObjectBoolean_PartionGP.ValueData, FALSE)        :: Boolean AS isPartionGP
            , ObjectString_Unit_Address.ValueData      AS Address
            , ObjectString_Unit_Comment.ValueData      AS Comment
 
@@ -199,6 +202,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_CountCount
                                     ON ObjectBoolean_CountCount.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_CountCount.DescId = zc_ObjectBoolean_Unit_CountCount()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGP
+                                    ON ObjectBoolean_PartionGP.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_PartionGP.DescId = zc_ObjectBoolean_Unit_PartionGP()
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_SheetWorkTime
                                  ON ObjectLink_Unit_SheetWorkTime.ObjectId = Object_Unit_View.Id
