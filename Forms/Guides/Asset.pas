@@ -73,6 +73,11 @@ type
     macUpdate_isIrna: TMultiAction;
     bbUpdate_isIrna: TdxBarButton;
     isDocGoods: TcxGridDBColumn;
+    spUpdateDocGoods: TdsdStoredProc;
+    actUpdateDocGoods: TdsdExecStoredProc;
+    macUpdateDocGoods_list: TMultiAction;
+    macUpdateDocGoods: TMultiAction;
+    bbUpdateDocGoods: TdxBarButton;
   private
     { Private declarations }
   public
