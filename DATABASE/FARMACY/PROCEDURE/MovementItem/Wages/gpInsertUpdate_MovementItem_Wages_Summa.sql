@@ -33,6 +33,7 @@ $BODY$
    DECLARE vbApplicationAward TFloat;
    DECLARE vbAmountCard TFloat;
    DECLARE vbisWagesCheckTesting Boolean;
+   DECLARE vbUserUpdateMarketing Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -57,11 +58,16 @@ BEGIN
     END IF;
     
     SELECT COALESCE(ObjectBoolean_CashSettings_WagesCheckTesting.ValueData, FALSE)  AS isWagesCheckTesting
+         , COALESCE(ObjectLink_CashSettings_UserUpdateMarketing.ChildObjectId, 0)   AS UserUpdateMarketing
     INTO vbisWagesCheckTesting
+       , vbUserUpdateMarketing 
     FROM Object AS Object_CashSettings
          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_WagesCheckTesting
                                  ON ObjectBoolean_CashSettings_WagesCheckTesting.ObjectId = Object_CashSettings.Id 
                                 AND ObjectBoolean_CashSettings_WagesCheckTesting.DescId = zc_ObjectBoolean_CashSettings_WagesCheckTesting()
+         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_UserUpdateMarketing
+                ON ObjectLink_CashSettings_UserUpdateMarketing.ObjectId = Object_CashSettings.Id
+               AND ObjectLink_CashSettings_UserUpdateMarketing.DescId = zc_ObjectLink_CashSettings_UserUpdateMarketing()
     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
     LIMIT 1;
         
@@ -180,7 +186,7 @@ BEGIN
         vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
       END IF;        
             
-      IF (vbMarketing <>  COALESCE (inMarketing, 0) AND vbUserId NOT IN (758920) OR
+      IF (vbMarketing <>  COALESCE (inMarketing, 0) AND vbUserId <> vbUserUpdateMarketing OR
          vbIlliquidAssets <>  COALESCE (inIlliquidAssets, 0)) AND
          NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), 12084491))
       THEN

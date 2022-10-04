@@ -96,6 +96,9 @@ type
     ceDeviationsPrice1303: TcxCurrencyEdit;
     cxLabel31: TcxLabel;
     cdWagesCheckTesting: TcxCheckBox;
+    edUserUpdateMarketing: TcxButtonEdit;
+    cxLabel32: TcxLabel;
+    UserUpdateMarketingGuides: TdsdGuides;
   private
     { Private declarations }
   public
