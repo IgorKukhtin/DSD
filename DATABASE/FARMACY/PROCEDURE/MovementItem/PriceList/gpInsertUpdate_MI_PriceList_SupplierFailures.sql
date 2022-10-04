@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_PriceList_SupplierFailures()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PriceList_SupplierFailures(Integer, TDateTime, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PriceList_SupplierFailures(Integer, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PriceList_SupplierFailures(Integer, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PriceList_SupplierFailures(
     IN inMovementId     Integer   ,     -- Документ
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PriceList_SupplierFailures(
     IN inJuridicalId    Integer   ,     -- Юр. лицо
     IN inContractId     Integer   ,     -- Договор
     IN inUnitId         Integer   ,     -- Аптека
+    IN inisRaiseError   Boolean   ,     -- Показывать ошибку
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -41,8 +43,13 @@ BEGIN
    
    IF NOT EXISTS(SELECT * FROM _tmpPriceList)
    THEN 
-     RAISE NOTICE 'Ошибка. Не найден товар в прайсе по регионам аптеки.';   
-     RETURN;
+     IF inisRaiseError = TRUE
+     THEN
+       RAISE EXCEPTION 'Ошибка. Не найден товар в прайсе по регионам аптеки.';   
+     ELSE
+       RAISE NOTICE 'Ошибка. Не найден товар в прайсе по регионам аптеки.';   
+       RETURN;
+     END IF;
    END IF;
 
    SELECT _tmpPriceList.Id
@@ -96,3 +103,5 @@ $BODY$
 */
 
 -- select * from gpInsertUpdate_MI_PriceList_SupplierFailures(inMovementId := 27711415 , inGoodsId := 162481 , inOperdate := ('05.05.2022')::TDateTime , inJuridicalId := 59611 , inContractId := 183358 , inUnitId := 13311246 ,  inSession := '3');
+
+select * from gpInsertUpdate_MI_PriceList_SupplierFailures(inMovementId := 29576702 , inGoodsId := 5591481 , inOperdate := ('04.10.2022')::TDateTime , inJuridicalId := 183351 , inContractId := 183419 , inUnitId := 18712420 , inisRaiseError := TRUE,  inSession := '3');

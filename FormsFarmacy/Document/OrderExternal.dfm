@@ -12,17 +12,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1227
     Height = 390
     ExplicitTop = 221
-    ExplicitWidth = 1222
+    ExplicitWidth = 1227
     ExplicitHeight = 390
     ClientRectBottom = 390
     ClientRectRight = 1227
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1222
+      ExplicitWidth = 1227
       ExplicitHeight = 366
       inherited cxGrid: TcxGrid
         Width = 1227
         Height = 366
-        ExplicitWidth = 1222
+        ExplicitWidth = 1227
         ExplicitHeight = 366
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -366,7 +366,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1227
     Height = 195
     TabOrder = 3
-    ExplicitWidth = 1222
+    ExplicitWidth = 1227
     ExplicitHeight = 195
     inherited edInvNumber: TcxTextEdit
       Left = 12
@@ -2297,6 +2297,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         Component = GuidesTo
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRaiseError'
+        Value = True
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
