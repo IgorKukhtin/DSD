@@ -7,7 +7,7 @@ inherited OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -15,19 +15,19 @@ inherited OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     Width = 1073
     Height = 436
     TabOrder = 3
+    ExplicitTop = 99
     ExplicitWidth = 1073
-    ExplicitHeight = 478
+    ExplicitHeight = 436
     ClientRectBottom = 436
     ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1073
-      ExplicitHeight = 478
+      ExplicitHeight = 436
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 436
-        ExplicitLeft = -3
         ExplicitWidth = 1073
-        ExplicitHeight = 478
+        ExplicitHeight = 436
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -527,7 +527,7 @@ inherited OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -609,7 +609,7 @@ inherited OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       end
       item
         Name = 'inisRemains'
-        Value = Null
+        Value = False
         Component = FormParams
         ComponentItem = 'isRemains'
         DataType = ftBoolean
@@ -833,21 +833,21 @@ inherited OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       end
       item
         Name = 'isRemains'
-        Value = Null
+        Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
