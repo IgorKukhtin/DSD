@@ -106,6 +106,10 @@ type
     isConfirmByPhone: TcxGridDBColumn;
     DateComing: TcxGridDBColumn;
     MobileDiscount: TcxGridDBColumn;
+    isMobileFirstOrder: TcxGridDBColumn;
+    UserReferalsName: TcxGridDBColumn;
+    UserUnitReferalsName: TcxGridDBColumn;
+    ApplicationAward: TcxGridDBColumn;
   private
     { Private declarations }
   public

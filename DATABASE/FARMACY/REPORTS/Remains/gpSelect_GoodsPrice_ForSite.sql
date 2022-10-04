@@ -126,8 +126,9 @@ BEGIN
                               WHERE Object_Goods_Main.isPublished = True
                                 AND (Object_Goods_Main.GoodsGroupId = inCategoryId OR COALESCE(inCategoryId, 0) = 0)
                                 AND (Object_Goods_Retail.Id = inProductId OR COALESCE(inProductId, 0) = 0)
-                                AND COALESCE (inSearch, '') = '' OR 
-                                    CASE WHEN lower(inSortLang) = 'uk' THEN Object_Goods_Main.NameUkr ELSE Object_Goods_Main.Name END ILIKE '%'||inSearch||'%'
+                                AND (COALESCE (inSearch, '') = '' OR 
+                                    Object_Goods_Main.Name ILIKE '%'||inSearch||'%' OR
+                                    Object_Goods_Main.NameUkr ILIKE '%'||inSearch||'%')
                                 AND (COALESCE(inisDiscountExternal, False) = TRUE OR Object_Goods_Retail.Id NOT IN (SELECT tmpDiscountExternal.GoodsId FROM tmpDiscountExternal))
                               )
           , tmpContainerRemainsPD AS (SELECT Container.ObjectId           AS GoodsId

@@ -48,6 +48,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UserReferalsName TVarChar, isConfirmByPhone Boolean, DateComing TDateTime 
              , MobileDiscount TFloat
              , isMobileFirstOrder Boolean 
+             , UserUnitReferalsName TVarChar, ApplicationAward TFloat
               )
 AS
 $BODY$
@@ -66,7 +67,38 @@ BEGIN
                           SELECT zc_Enum_Status_UnComplete() AS StatusId
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
-                         )
+                         ),
+            tmpEmployeeSchedule AS (SELECT DISTINCT
+                                           Movement.OperDate                        AS OperDate
+                                         , MovementItemMaster.ObjectId              AS UserId
+                                         , MILinkObject_Unit.ObjectId               AS UnitId
+                                        FROM Movement
+
+                                             INNER JOIN MovementItem AS MovementItemMaster
+                                                                     ON MovementItemMaster.MovementId = Movement.Id
+                                                                    AND MovementItemMaster.DescId = zc_MI_Master()
+
+                                             INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                               ON MILinkObject_Unit.MovementItemId = MovementItemMaster.Id
+                                                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+                                        WHERE Movement.OperDate BETWEEN date_trunc('Month', inStartDate) AND date_trunc('Month', inEndDate)
+                                          AND Movement.DescId = zc_Movement_EmployeeSchedule()
+                                          AND Movement.StatusId <> zc_Enum_Status_Erased()),
+            tmpCheckGoodsSpecial AS ( SELECT MovementItemContainer.MovementId
+                                           , SUM(ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2))      AS Summa
+                                      FROM MovementItemContainer
+                                      WHERE MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
+                                        AND MovementItemContainer.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
+                                        AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                        AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                        AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
+                                                                                        FROM Object_Goods_Retail
+                                                                                        WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
+                                                                                           OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
+                                      GROUP BY MovementItemContainer.MovementId)
+
+
 
          SELECT
              Movement_Check.Id
@@ -139,31 +171,42 @@ BEGIN
            , MovementDate_Coming.ValueData                                AS DateComing
            , COALESCE(MovementFloat_MobileDiscount.ValueData, 0)::TFloat  AS MobileDiscount
            , COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False)::Boolean    AS isMobileFirstOrder
+           , Object_UnitUserReferals.ValueData                                        AS UserUnitReferalsName
+           , CASE WHEN COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False) = True AND
+                       MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) - 
+                       COALESCE(tmpCheckGoodsSpecial.Summa, 0) >= 199.50 AND
+                       COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) <> 0 AND
+                       COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 AND
+                       Movement_Check.StatusId = zc_Enum_Status_Complete() THEN 
+                       CASE WHEN MovementFloat_TotalSumm.ValueData - COALESCE(tmpCheckGoodsSpecial.Summa, 0) > 1000 
+                            THEN ROUND((MovementFloat_TotalSumm.ValueData - COALESCE(tmpCheckGoodsSpecial.Summa, 0)) * 0.02, 2)
+                            ELSE 20 END END::TFloat  AS ApplicationAward
 
         FROM (SELECT Movement.*
-                   , MovementLinkObject_Unit.ObjectId                    AS UnitId
-                   , MovementLinkObject_CheckMember.ObjectId             AS MemberId
-                   , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
-              FROM Movement
-                   INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                                       , MovementLinkObject_Unit.ObjectId                    AS UnitId
+                                       , MovementLinkObject_CheckMember.ObjectId             AS MemberId
+                                       , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
+                                  FROM Movement
+                                       INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
 
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
 
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
-                                                ON MovementLinkObject_CheckMember.MovementId = Movement.Id
-                                               AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
+                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
+                                                                    ON MovementLinkObject_CheckMember.MovementId = Movement.Id
+                                                                   AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
 
-                   LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
-                                             ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                            AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-                   
-              WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
-                AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
-                AND Movement.DescId = zc_Movement_Check()
-                AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = TRUE
-           ) AS Movement_Check
+                                       LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                                 ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                                AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                       
+                                  WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
+                                    AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
+                                    AND Movement.DescId = zc_Movement_Check()
+                                    AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = TRUE
+                               ) AS Movement_Check
+        
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Check.StatusId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement_Check.UnitId
 
@@ -394,6 +437,16 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_MobileFirstOrder
                                       ON MovementBoolean_MobileFirstOrder.MovementId = Movement_Check.Id
                                      AND MovementBoolean_MobileFirstOrder.DescId = zc_MovementBoolean_MobileFirstOrder()
+
+            LEFT JOIN tmpEmployeeSchedule ON tmpEmployeeSchedule.OperDate = date_trunc('Month', Movement_Check.OperDate)
+                                         AND tmpEmployeeSchedule.UserId =MovementLinkObject_UserReferals.ObjectId 
+            LEFT JOIN Object AS Object_UnitUserReferals ON Object_UnitUserReferals.Id = tmpEmployeeSchedule.UnitId
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountExternal
+                                         ON MovementLinkObject_DiscountExternal.MovementId = Movement_Check.Id
+                                        AND MovementLinkObject_DiscountExternal.DescId = zc_MILinkObject_DiscountExternal()
+
+            LEFT JOIN tmpCheckGoodsSpecial ON tmpCheckGoodsSpecial.MovementId = Movement_Check.ID
       ;
 
 END;
@@ -411,4 +464,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_CheckSummCard (inStartDate:= '30.06.2020', inEndDate:= '30.06.2020', inIsErased := FALSE, inSession:= '3')
 
-select * from gpSelect_Movement_CheckSummCard(inStartDate := ('14.09.2021')::TDateTime , inEndDate := ('14.09.2021')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_Movement_CheckSummCard(inStartDate := ('14.09.2022')::TDateTime , inEndDate := ('14.09.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');
