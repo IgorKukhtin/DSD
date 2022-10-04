@@ -1824,10 +1824,10 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_AssortmentDialogForm');
     exit;
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementPriceList_CrossForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementPriceList_CrossForm');
- {   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementPriceListForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementPriceListForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementPriceListForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementPriceList_DialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementPriceList_DialogForm');
@@ -1980,12 +1980,12 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayUserForm');
-
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ByPartionGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ByPartionGoodsForm');
 

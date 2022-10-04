@@ -244,6 +244,10 @@ object MainForm: TMainForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 0
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grReport: TcxGrid
         Left = 0
         Top = 0
@@ -411,6 +415,10 @@ object MainForm: TMainForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1079#1072#1082#1072#1079#1086#1074' '#1087#1086' '#1045#1048#1062
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grChart2: TcxGrid
         Left = 0
         Top = 0
@@ -460,6 +468,10 @@ object MainForm: TMainForm
     object cxTabSheet3: TcxTabSheet
       Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080' '#1074' %'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -490,6 +502,10 @@ object MainForm: TMainForm
     object cxTabSheet4: TcxTabSheet
       Caption = #1056#1086#1089#1090'/'#1087#1072#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1086#1074' '#1084#1077#1089#1103#1094#1072' '#1082' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1084#1091' '#1084#1077#1089#1103#1094#1091' '#1074' %'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid3: TcxGrid
         Left = 0
         Top = 0
@@ -575,7 +591,7 @@ object MainForm: TMainForm
             Width = 130
           end
           object cxGridDBColumn_CountChech: TcxGridDBColumn
-            Caption = #1050#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1082#1072#1079#1086#1074
+            Caption = #1055#1077#1088#1074#1099#1093' '#1079#1072#1082#1072#1079#1086#1074
             DataBinding.FieldName = 'CountChech'
             HeaderAlignmentHorz = taCenter
             Width = 76

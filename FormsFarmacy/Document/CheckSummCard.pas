@@ -62,6 +62,9 @@ type
     MobileDiscount: TcxGridDBColumn;
     actCheckSiteInsert: TdsdOpenForm;
     dxBarButton2: TdxBarButton;
+    isMobileFirstOrder: TcxGridDBColumn;
+    UserUnitReferalsName: TcxGridDBColumn;
+    ApplicationAward: TcxGridDBColumn;
   private
     { Private declarations }
   public

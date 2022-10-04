@@ -52,7 +52,9 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                
                PriceSaleOOC1303 TFloat, 
                PriceSale1303 TFloat,
-               BrandSPName TVarChar
+               BrandSPName TVarChar,
+               
+               isSpecial boolean
 
                /*PartionDateKindId_check   Integer,
                Price_check               TFloat,
@@ -1216,6 +1218,8 @@ BEGIN
           , tmpGoodsSP_1303.PriceSaleIncome                        AS PriceSale1303
 
           , Object_BrandSP.ValueData                               AS BrandSPName
+          , COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 OR 
+            COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0                    AS isSpecial
 
           /*, CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , zfCalc_PriceCash(CashSessionSnapShot.Price, 
