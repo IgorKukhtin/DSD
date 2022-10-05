@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , DiscontSiteStart TDateTime, DiscontSiteEnd TDateTime, DiscontAmountSite TFloat, DiscontPercentSite TFloat, MultiplicityDiscontSite TFloat
              , isNotUploadSites Boolean
              , isPublishedSite Boolean
-             , Multiplicity TFloat, isMultiplicityError boolean
+             , Multiplicity TFloat, isMultiplicityError boolean, isStealthBonuses boolean
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -178,6 +178,7 @@ BEGIN
            , Object_Goods_Main.isPublishedSite                                   AS isPublishedSite
            , Object_Goods_Main.Multiplicity
            , Object_Goods_Main.isMultiplicityError
+           , Object_Goods_Main.isStealthBonuses
 
       FROM Object_Goods_Retail
 

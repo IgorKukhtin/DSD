@@ -1316,10 +1316,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_ReplaceSte2ListDif() RETURNS In
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_ReplaceSte2ListDif', 'Заменит текст шага 2 при добавлении в листы отказов' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ReplaceSte2ListDif');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_StealthBonuses() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_StealthBonuses'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_StealthBonuses', 'Стелс для бонусов мобильного приложения' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_StealthBonuses');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 05.10.22                                                                                                          * zc_ObjectBoolean_Goods_StealthBonuses
  05.10.22                                                                                                          * zc_ObjectBoolean_Unit_ReplaceSte2ListDif
  03.10.22         * zc_ObjectBoolean_Asset_DocGoods
                     zc_ObjectBoolean_Unit_PartionGP
