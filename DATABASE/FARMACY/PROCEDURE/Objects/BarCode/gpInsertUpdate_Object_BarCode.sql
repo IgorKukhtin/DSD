@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_BarCode()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BarCode (Integer, Integer, TVarChar, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BarCode (Integer, Integer, TVarChar, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BarCode(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BarCode(
     IN inDiscountWithVAT         TFloat    ,    -- Фиксированная скидка с НДС
     IN inDiscountWithoutVAT      TFloat    ,    -- Фиксированная скидка без НДС
     IN inisDiscountSite          Boolean   ,    -- Показывать цену на сайте
+    IN inisStealthBonuses        Boolean   ,    -- Стелс для бонусов мобильного приложения
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -53,6 +54,8 @@ BEGIN
 
    -- Показывать цену на сайте
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_BarCode_DiscountSite(), ioId, inisDiscountSite);
+   -- Стелс для бонусов мобильного приложения
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_BarCode_StealthBonuses(), ioId, inisStealthBonuses);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

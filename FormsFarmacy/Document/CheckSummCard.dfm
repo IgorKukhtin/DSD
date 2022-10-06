@@ -304,6 +304,22 @@ inherited CheckSummCardForm: TCheckSummCardForm
             HeaderAlignmentVert = vaCenter
             Width = 94
           end
+          object SiteWhoUpdate: TcxGridDBColumn
+            Caption = #1050#1090#1086' '#1080#1079#1084#1077#1085#1080#1083' '#1085#1072' '#1089#1072#1081#1090#1077
+            DataBinding.FieldName = 'SiteWhoUpdate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object SiteDateUpdate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1085#1072' '#1089#1072#1081#1090#1077
+            DataBinding.FieldName = 'SiteDateUpdate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
         end
       end
     end

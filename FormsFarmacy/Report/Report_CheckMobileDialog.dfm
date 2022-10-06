@@ -100,6 +100,13 @@ object Report_CheckMobileDialogForm: TReport_CheckMobileDialogForm
     TabOrder = 10
     Width = 108
   end
+  object cbDiscountExternal: TcxCheckBox
+    Left = 181
+    Top = 136
+    Caption = #1047#1072#1082#1072#1079#1099' '#1089' '#1044#1055
+    TabOrder = 11
+    Width = 108
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -174,6 +181,13 @@ object Report_CheckMobileDialogForm: TReport_CheckMobileDialogForm
         Name = 'isEmployeeMessage'
         Value = Null
         Component = cbEmployeeMessage
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDiscountExternal'
+        Value = Null
+        Component = cbDiscountExternal
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

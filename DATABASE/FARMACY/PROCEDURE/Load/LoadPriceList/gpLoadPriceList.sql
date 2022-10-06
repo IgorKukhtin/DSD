@@ -157,6 +157,7 @@ BEGIN
                   INNER JOIN tmpGoods ON tmpGoods.goodscode = LoadPriceListItem.GoodsCode
                           
                   LEFT JOIN MovementItem ON MovementItem.ObjectId = LoadPriceListItem.GoodsId AND MovementItem.MovementId = vbMovementId_pl
+                                        AND MovementItem.DescId = zc_MI_Master() 
                   /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                    ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
@@ -172,7 +173,9 @@ BEGIN
        AND MovementItem.ID NOT IN (SELECT  MovementItem.Id AS MovementItemId
                                    FROM LoadPriceListItem 
                                         JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId      
-                                        LEFT JOIN MovementItem ON MovementItem.ObjectId = LoadPriceListItem.GoodsId AND MovementItem.MovementId = vbMovementId_pl
+                                        LEFT JOIN MovementItem ON MovementItem.ObjectId = LoadPriceListItem.GoodsId 
+                                                              AND MovementItem.MovementId = vbMovementId_pl
+                                                              AND MovementItem.DescId = zc_MI_Master()
                                    WHERE LoadPriceListItem.GoodsId > 0 AND LoadPriceListItem.LoadPriceListId = inId);
                    
      -- сохранили протокол

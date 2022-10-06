@@ -65,6 +65,8 @@ type
     isMobileFirstOrder: TcxGridDBColumn;
     UserUnitReferalsName: TcxGridDBColumn;
     ApplicationAward: TcxGridDBColumn;
+    SiteWhoUpdate: TcxGridDBColumn;
+    SiteDateUpdate: TcxGridDBColumn;
   private
     { Private declarations }
   public

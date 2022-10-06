@@ -62,6 +62,7 @@ type
     DiscountProcent: TcxGridDBColumn;
     DiscountWithVAT: TcxGridDBColumn;
     DiscountWithoutVAT: TcxGridDBColumn;
+    isStealthBonuses: TcxGridDBColumn;
   private
     { Private declarations }
   public
