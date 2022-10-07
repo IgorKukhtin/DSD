@@ -131,6 +131,9 @@ type
     HeaderSaverSupplierFailures: THeaderSaver;
     spUpdate_isSupplierFailures: TdsdStoredProc;
     Layout: TcxGridDBColumn;
+    spUpdate_SupplierFailuresFalse: TdsdStoredProc;
+    actUpdate_SupplierFailuresFalse: TdsdExecStoredProc;
+    bbUpdate_SupplierFailuresFalse: TdxBarButton;
   private
     { Private declarations }
   public

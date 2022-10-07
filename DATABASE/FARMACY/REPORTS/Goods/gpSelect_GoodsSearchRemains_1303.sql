@@ -463,7 +463,7 @@ BEGIN
                                  , Max(COALESCE(MIFloat_PriceSample.ValueData, 
                                        CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN MIFloat_Price.ValueData
                                             ELSE (MIFloat_Price.ValueData * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData,1)/100))::TFloat 
-                                            END) * 1.08)::TFloat    AS PriceSale   -- цена отпускная 1303
+                                            END) * 1.1)::TFloat    AS PriceSale   -- цена отпускная 1303
                             FROM tmpIncome_Last 
                             
                                  LEFT JOIN MovementItem ON MovementItem.MovementId =  tmpIncome_Last.MovementId
@@ -689,4 +689,4 @@ $BODY$
 -- select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'Метамізол натрію' , inPartnerMedicalID := 0 ,  inSession := '3');
 
 
-select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'пента' , inPartnerMedicalID := 19076407 ,  inSession := '3');
+select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'НАКЛОФ' , inPartnerMedicalID := 0 ,  inSession := '3');

@@ -35,8 +35,11 @@ BEGIN
        END IF;
      END IF;
 
-     -- сохранили <Ёлемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, 0, NULL);
+     IF COALESCE (ioId, 0) = 0
+     THEN
+       -- сохранили <Ёлемент документа>
+       ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, 0, NULL);
+     END IF;
 
      -- сохранили свойство <ќтказ поставщика>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_SupplierFailures(), ioId, TRUE);

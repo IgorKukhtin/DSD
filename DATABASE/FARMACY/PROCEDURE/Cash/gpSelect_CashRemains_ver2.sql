@@ -671,6 +671,7 @@ BEGIN
                                              , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
                                              , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat  AS MaxPrice 
                                              , MAX(ObjectFloat_DiscountProcent.ValueData)::TFloat        AS DiscountProcent 
+                                             , COALESCE (ObjectBoolean_StealthBonuses.ValueData, False)  AS isStealthBonuses 
                                           FROM Object AS Object_BarCode
                                               INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
                                                                     ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
@@ -693,12 +694,17 @@ BEGIN
                                                                     ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
                                                                    AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()
                                                                    
+                                              LEFT JOIN ObjectBoolean AS ObjectBoolean_StealthBonuses
+                                                                      ON ObjectBoolean_StealthBonuses.ObjectId = Object_BarCode.Id
+                                                                     AND ObjectBoolean_StealthBonuses.DescId = zc_ObjectBoolean_BarCode_StealthBonuses()
+                                                                   
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False
                                           GROUP BY Object_Goods_Retail.GoodsMainId
                                                  , Object_Object.Id
                                                  , Object_Object.ValueData
-                                                 , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False))
+                                                 , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)
+                                                 , COALESCE (ObjectBoolean_StealthBonuses.ValueData, False))
                  , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
                                            , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
                                            , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId
@@ -1219,7 +1225,9 @@ BEGIN
 
           , Object_BrandSP.ValueData                               AS BrandSPName
           , COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 OR 
-            COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0                    AS isSpecial
+            COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0 OR
+            COALESCE (Object_Goods_Main.isStealthBonuses, False) OR
+            COALESCE (tmpGoodsDiscount.isStealthBonuses, False)    AS isSpecial
 
           /*, CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , zfCalc_PriceCash(CashSessionSnapShot.Price, 

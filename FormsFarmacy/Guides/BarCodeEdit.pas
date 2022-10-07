@@ -45,6 +45,7 @@ type
     cxLabel6: TcxLabel;
     ceDiscountWithoutVAT: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
+    cbStealthBonuses: TcxCheckBox;
   private
     { Private declarations }
   public

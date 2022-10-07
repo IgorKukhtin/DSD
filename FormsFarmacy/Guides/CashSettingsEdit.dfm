@@ -525,6 +525,22 @@ object CashSettingsEditForm: TCashSettingsEditForm
     TabOrder = 70
     Width = 338
   end
+  object edUserUpdateMarketing: TcxButtonEdit
+    Left = 587
+    Top = 449
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 71
+    Width = 293
+  end
+  object cxLabel32: TcxLabel
+    Left = 540
+    Top = 430
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1076#1083#1103' '#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1074' '#1047#1055' '#1089#1091#1084#1084#1099' '#1052#1072#1088#1082#1077#1090#1080#1085#1075#1072
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -856,6 +872,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserUpdateMarketingId'
+        Value = Null
+        Component = UserUpdateMarketingGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1129,6 +1153,21 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Component = cdWagesCheckTesting
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserUpdateMarketingId'
+        Value = Null
+        Component = UserUpdateMarketingGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserUpdateMarketingName'
+        Value = Null
+        Component = UserUpdateMarketingGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1186,5 +1225,34 @@ object CashSettingsEditForm: TCashSettingsEditForm
       end>
     Left = 789
     Top = 276
+  end
+  object UserUpdateMarketingGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUserUpdateMarketing
+    FormNameParam.Value = 'TUserNickForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUserNickForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UserUpdateMarketingGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UserUpdateMarketingGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 765
+    Top = 444
   end
 end

@@ -72,7 +72,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PharmacyManager TVarChar, PharmacyManagerPhone TVarChar
              , TelegramId TVarChar, isErrorRROToVIP Boolean, isShowMessageSite Boolean, isSupplementAddCash Boolean, isSupplementAdd30Cash Boolean
              , isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean
-             , SetDateRRO TVarChar, isAutospaceOS Boolean
+             , SetDateRRO TVarChar, isAutospaceOS Boolean, isReplaceSte2ListDif Boolean
              
 ) AS
 $BODY$
@@ -296,6 +296,8 @@ BEGIN
       
       , ObjectString_SetDateRROList.ValueData                                            AS SetDateRRO 
       , COALESCE (ObjectBoolean_AutospaceOS.ValueData, FALSE):: Boolean                  AS isAutospaceOS
+
+      , COALESCE (ObjectBoolean_ReplaceSte2ListDif.ValueData, FALSE):: Boolean           AS isReplaceSte2ListDif
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -779,6 +781,10 @@ BEGIN
         LEFT JOIN tmpContract AS tmpContract
                               ON tmpContract.JuridicalBasisId  = ObjectLink_Unit_Juridical.ChildObjectId
                              AND tmpContract.JuridicalId  =  ObjectLink_PartnerMedical_Juridical.ChildObjectId
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ReplaceSte2ListDif
+                                ON ObjectBoolean_ReplaceSte2ListDif.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ReplaceSte2ListDif.DescId = zc_ObjectBoolean_Unit_ReplaceSte2ListDif()
 
     WHERE Object_Unit.DescId = zc_Object_Unit()
       AND (inisShowAll = True OR Object_Unit.isErased = False)

@@ -58,6 +58,7 @@ type
     dxBarButton3: TdxBarButton;
     actReport_ConductedSalesMobile: TdsdOpenForm;
     bbReport_ConductedSalesMobile: TdxBarButton;
+    cbDiscountExternal: TcxCheckBox;
   private
     { Private declarations }
   public

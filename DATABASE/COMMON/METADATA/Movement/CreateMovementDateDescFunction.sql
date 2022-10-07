@@ -248,9 +248,14 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_Order() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_Order', 'Дата вставки в заказ' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Order');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_SiteDateUpdate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SiteDateUpdate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_SiteDateUpdate', 'Дата изменение на сайте' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SiteDateUpdate');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 04.10.22                                                                                                        * zc_MovementDate_SiteDateUpdate
  09.08.22                                                                                                        * zc_MovementDate_Order
  30.06.22                                                                                                        * zc_MovementDate_Message
  15.06.22                                                                                                        * zc_MovementDate_Coming

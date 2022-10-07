@@ -1308,15 +1308,27 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_WagesCheckTesting() RET
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_WagesCheckTesting', 'Контроль сдачи экзамен при выдача зарплаты' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_WagesCheckTesting');
 
-
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Asset_DocGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Asset_DocGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Asset(), 'zc_ObjectBoolean_Asset_DocGoods', 'Выбор в товарных документах' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Asset_DocGoods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_ReplaceSte2ListDif() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ReplaceSte2ListDif'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_ReplaceSte2ListDif', 'Заменит текст шага 2 при добавлении в листы отказов' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ReplaceSte2ListDif');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_StealthBonuses() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_StealthBonuses'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_StealthBonuses', 'Стелс для бонусов мобильного приложения' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_StealthBonuses');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_BarCode_StealthBonuses() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_BarCode_StealthBonuses'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_BarCode(), 'zc_ObjectBoolean_BarCode_StealthBonuses', 'Стелс для бонусов мобильного приложения' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_BarCode_StealthBonuses');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 05.10.22                                                                                                          * zc_ObjectBoolean_Goods_StealthBonuses, zc_ObjectBoolean_BarCode_StealthBonuses
+ 05.10.22                                                                                                          * zc_ObjectBoolean_Unit_ReplaceSte2ListDif
  03.10.22         * zc_ObjectBoolean_Asset_DocGoods
                     zc_ObjectBoolean_Unit_PartionGP
  30.09.22                                                                                                          * zc_ObjectBoolean_CashSettings_WagesCheckTesting

@@ -2860,10 +2860,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_InternetRepair_Unit() RETURNS Integer A
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_InternetRepair_Unit', 'Подразделение', zc_Object_InternetRepair(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InternetRepair_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CashSettings_UserUpdateMarketing() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_UserUpdateMarketing'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_CashSettings_UserUpdateMarketing', 'Сотрудник для редактирование в ЗП суммы Маркетинга', zc_Object_CashSettings(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_UserUpdateMarketing');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.10.22                                                                                      * zc_ObjectLink_CashSettings_UserUpdateMarketing
  12.09.22                                                                                      * zc_ObjectLink_InternetRepair_Unit
  12.08.22         * zc_ObjectLink_TradeMark_Retail
  08.08.22         * zc_ObjectLink_Retail_StickerHeader

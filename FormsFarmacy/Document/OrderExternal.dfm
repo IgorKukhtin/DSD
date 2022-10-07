@@ -12,17 +12,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1227
     Height = 390
     ExplicitTop = 221
-    ExplicitWidth = 1222
+    ExplicitWidth = 1227
     ExplicitHeight = 390
     ClientRectBottom = 390
     ClientRectRight = 1227
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1222
+      ExplicitWidth = 1227
       ExplicitHeight = 366
       inherited cxGrid: TcxGrid
         Width = 1227
         Height = 366
-        ExplicitWidth = 1222
+        ExplicitWidth = 1227
         ExplicitHeight = 366
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -366,7 +366,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1227
     Height = 195
     TabOrder = 3
-    ExplicitWidth = 1222
+    ExplicitWidth = 1227
     ExplicitHeight = 195
     inherited edInvNumber: TcxTextEdit
       Left = 12
@@ -988,6 +988,21 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       Caption = 'actUpdate_SetSupplierFailures'
     end
+    object actUpdate_SupplierFailuresFalse: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SupplierFailuresFalse
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SupplierFailuresFalse
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'"'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'"'
+      ImageIndex = 52
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1130,6 +1145,14 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_SupplierFailuresFalse'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbSupplierFailuresLoad'
         end
         item
@@ -1186,6 +1209,10 @@ inherited OrderExternalForm: TOrderExternalForm
     object bbSupplierFailuresLoad: TdxBarButton
       Action = mactSupplierFailuresLoad
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1090#1082#1072#1079#1086#1074' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+      Category = 0
+    end
+    object bbUpdate_SupplierFailuresFalse: TdxBarButton
+      Action = actUpdate_SupplierFailuresFalse
       Category = 0
     end
   end
@@ -2299,10 +2326,17 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRaiseError'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 176
-    Top = 424
+    Top = 416
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_OrderExternal_ImportSettings'
@@ -2393,5 +2427,62 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 1010
     Top = 384
+  end
+  object spUpdate_SupplierFailuresFalse: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PriceList_SupplierFailuresFalse'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerGoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperdate'
+        Value = 42132d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 464
   end
 end

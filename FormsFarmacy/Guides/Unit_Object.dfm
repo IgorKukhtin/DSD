@@ -1113,6 +1113,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 62
           end
+          object isReplaceSte2ListDif: TcxGridDBColumn
+            Caption = #1047#1072#1084#1077#1085#1080#1090' '#1090#1077#1082#1089#1090' '#1096#1072#1075#1072' 2 '#1074' '#1083#1080#1089#1090#1099' '#1086#1090#1082#1072#1079#1086#1074
+            DataBinding.FieldName = 'isReplaceSte2ListDif'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
@@ -4331,6 +4339,37 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_isShowActiveAlerts'
     end
+    object mactUpdate_isReplaceSte2ListDif: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isReplaceSte2ListDif
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1084#1077#1085#1080#1090' '#1090#1077#1082#1089#1090' '#1096#1072#1075#1072' 2 '#1087#1088#1080' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1080' '#1074' '#1083#1080#1089#1090#1099' '#1086#1090 +
+        #1082#1072#1079#1086#1074'"?'
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1084#1077#1085#1080#1090' '#1090#1077#1082#1089#1090' '#1096#1072#1075#1072' 2 '#1087#1088#1080' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1080' '#1074' '#1083#1080#1089#1090#1099' '#1086#1090 +
+        #1082#1072#1079#1086#1074'"'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1084#1077#1085#1080#1090' '#1090#1077#1082#1089#1090' '#1096#1072#1075#1072' 2 '#1087#1088#1080' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1080' '#1074' '#1083#1080#1089#1090#1099' '#1086#1090 +
+        #1082#1072#1079#1086#1074'"'
+      ImageIndex = 79
+    end
+    object actUpdate_isReplaceSte2ListDif: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isReplaceSte2ListDif
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isReplaceSte2ListDif
+        end>
+      Caption = 'actUpdate_isReplaceSte2ListDif'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -5138,6 +5177,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton40'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -5313,6 +5356,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton39: TdxBarButton
       Action = mactUpdate_SetDateRRO
+      Category = 0
+    end
+    object dxBarButton40: TdxBarButton
+      Action = mactUpdate_isReplaceSte2ListDif
       Category = 0
     end
   end
@@ -8615,5 +8662,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 288
     Top = 531
+  end
+  object spUpdate_isReplaceSte2ListDif: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isReplaceSte2ListDif'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReplaceSte2ListDif'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReplaceSte2ListDif'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 547
   end
 end

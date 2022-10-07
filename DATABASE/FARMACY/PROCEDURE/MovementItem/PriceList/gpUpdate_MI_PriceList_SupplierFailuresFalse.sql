@@ -1,16 +1,14 @@
--- Function: gpInsertUpdate_MI_PriceList_SupplierFailures()
+-- Function: gpUpdate_MI_PriceList_SupplierFailuresFalse()
 
---DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PriceList_SupplierFailures(Integer, TDateTime, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PriceList_SupplierFailures(Integer, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_PriceList_SupplierFailuresFalse(Integer, TDateTime, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PriceList_SupplierFailures(
+CREATE OR REPLACE FUNCTION gpUpdate_MI_PriceList_SupplierFailuresFalse(
     IN inMovementId     Integer   ,     -- Документ
     IN inGoodsId        Integer   ,     -- Товар
     IN inOperdate       TDateTime ,     -- на дату
     IN inJuridicalId    Integer   ,     -- Юр. лицо
     IN inContractId     Integer   ,     -- Договор
     IN inUnitId         Integer   ,     -- Аптека
-    IN inisRaiseError   Boolean   ,     -- Показывать ошибку
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -62,24 +60,32 @@ BEGIN
    FROM MovementProtocol 
    WHERE MovementProtocol.MovementId = inMovementId
      AND MovementProtocol.ProtocolData ILIKE '%Статус" FieldValue = "Проведен%';   
-      
-   IF NOT EXISTS(SELECT 1 
-                 FROM MovementItem
+
+
+   IF EXISTS(SELECT 1 
+             FROM MovementItem
                  
-                      INNER JOIN MovementItemBoolean ON MovementItemBoolean.MovementItemId = MovementItem.Id
-                                                     AND MovementItemBoolean.DescId = zc_MIBoolean_SupplierFailures()
-                                                     AND MovementItemBoolean.ValueData = TRUE
+                  LEFT JOIN MovementItemBoolean ON MovementItemBoolean.MovementItemId = MovementItem.Id
+                                                 AND MovementItemBoolean.DescId = zc_MIBoolean_SupplierFailures()
                    
-                 WHERE MovementItem.MovementId = vbPriceListId
-                   AND MovementItem.DescId = zc_MI_Child()
-                   AND MovementItem.ObjectId = inGoodsId)
+             WHERE MovementItem.MovementId = vbPriceListId
+               AND MovementItem.DescId = zc_MI_Child()
+               AND MovementItem.ObjectId = inGoodsId
+               AND COALESCE(MovementItemBoolean.ValueData, FALSE) = TRUE)
    THEN
 
-     PERFORM lpInsertUpdate_MovementItem_PriceList_Child(ioId           := 0
-                                                       , inMovementId   := vbPriceListId
-                                                       , inGoodsId      := inGoodsId
-                                                       , inDateStart    := vbDateStart
-                                                       , inUserId       := vbUserId);
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_SupplierFailures(), MovementItem.Id, FALSE)
+           , lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), MovementItem.Id, CURRENT_TIMESTAMP)
+           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), MovementItem.Id, vbUserId)
+     FROM MovementItem
+                 
+          LEFT JOIN MovementItemBoolean ON MovementItemBoolean.MovementItemId = MovementItem.Id
+                                       AND MovementItemBoolean.DescId = zc_MIBoolean_SupplierFailures()
+                   
+     WHERE MovementItem.MovementId = vbPriceListId
+       AND MovementItem.DescId = zc_MI_Child()
+       AND MovementItem.ObjectId = inGoodsId
+       AND COALESCE(MovementItemBoolean.ValueData, FALSE) = TRUE;
 
      -- !!!ВРЕМЕННО для ТЕСТА!!!
      IF inSession = zfCalc_UserAdmin()
@@ -88,7 +94,7 @@ BEGIN
      END IF;
 
    ELSE
-     RAISE EXCEPTION 'Ошибка. Отказ уже установлен.';      
+     RAISE EXCEPTION 'Ошибка. Отказ не найден.';      
    END IF;
    
 END;
@@ -99,9 +105,9 @@ $BODY$
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 22.02.22                                                       *
+ 05.10.22                                                       *
 */
 
--- select * from gpInsertUpdate_MI_PriceList_SupplierFailures(inMovementId := 27711415 , inGoodsId := 162481 , inOperdate := ('05.05.2022')::TDateTime , inJuridicalId := 59611 , inContractId := 183358 , inUnitId := 13311246 ,  inSession := '3');
+-- 
 
-select * from gpInsertUpdate_MI_PriceList_SupplierFailures(inMovementId := 29576702 , inGoodsId := 5591481 , inOperdate := ('04.10.2022')::TDateTime , inJuridicalId := 183351 , inContractId := 183419 , inUnitId := 18712420 , inisRaiseError := TRUE,  inSession := '3');
+select * from gpUpdate_MI_PriceList_SupplierFailuresFalse(inMovementId := 29582826 , inGoodsId := 2993183 , inOperdate := ('04.10.2022')::TDateTime , inJuridicalId := 410822 , inContractId := 410823 , inUnitId := 13711869 ,  inSession := '3');
