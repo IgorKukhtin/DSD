@@ -4,6 +4,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
   ClientWidth = 1073
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -41
   ExplicitWidth = 1089
   ExplicitHeight = 443
   PixelsPerInch = 96
@@ -75,6 +76,116 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPack_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPack_total_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackSecond_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackSecond_total_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackNext_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackNext_total_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackNextSecond_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackNextSecond_total_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackAllTotal_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackAllTotal_total_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_PACK_to
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_PACK_from
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNext
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNextSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNextTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountAllTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_CEH
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_CEH_Next
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_CEH
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -124,6 +235,116 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPack_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPack_total_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackSecond_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackSecond_total_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackNext_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackNext_total_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackNextSecond_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackNextSecond_total_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackAllTotal_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPackAllTotal_total_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_PACK_to
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_PACK_from
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = AmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = AmountTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = AmountNext
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = AmountNextSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = AmountNextTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = AmountAllTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = Remains_CEH
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = Remains_CEH_Next
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = Income_CEH
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -419,6 +640,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object Income_PACK_to_Child: TcxGridDBColumn
@@ -432,6 +654,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1060#1040#1050#1058' - '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1085#1072' '#1062#1077#1093' '#1059#1087#1072#1082#1086#1074#1082#1080
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object Income_PACK_from_Child: TcxGridDBColumn
@@ -445,6 +668,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1060#1040#1050#1058' - '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1062#1077#1093#1072' '#1059#1087#1072#1082#1086#1074#1082#1080
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object DiffPlus_PACK_from_Child: TcxGridDBColumn
@@ -457,6 +681,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object DiffMinus_PACK_from_Child: TcxGridDBColumn
@@ -469,6 +694,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object AmountPackTotal_Child: TcxGridDBColumn
@@ -481,6 +707,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object AmountPackSecond_Child: TcxGridDBColumn
@@ -493,6 +720,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object AmountPackSecond_total: TcxGridDBColumn
@@ -529,6 +757,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object Weight_Child: TcxGridDBColumn
@@ -541,6 +770,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object AmountPack_total: TcxGridDBColumn
@@ -568,6 +798,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object AmountPackAllTotal_Child_Sh: TcxGridDBColumn
@@ -580,6 +811,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object Amount_result_pack_Child: TcxGridDBColumn
@@ -592,6 +824,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object Amount_result_pack_Child_Sh: TcxGridDBColumn
@@ -604,6 +837,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object DayCountForecast_calc_Child: TcxGridDBColumn
@@ -616,6 +850,7 @@ inherited Report_OrderInternalPackRemainsForm: TReport_OrderInternalPackRemainsF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object AmountPackAllTotal_total: TcxGridDBColumn
