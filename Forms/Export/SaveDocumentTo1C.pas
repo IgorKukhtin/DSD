@@ -38,14 +38,17 @@ type
     ceInfoMoney: TcxButtonEdit;
     cxLabel5: TcxLabel;
     edPaidKind: TcxButtonEdit;
-    InfoMoneyGuides: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
+    GuidesInfoMoney: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
     spBillPeriod: TdsdStoredProc;
     actPeriodOpen: TdsdExecStoredProc;
     mactPeriodSave: TMultiAction;
     DataSource: TDataSource;
     cdsBillPeriod: TClientDataSet;
     DataSource1: TDataSource;
+    cxLabel6: TcxLabel;
+    edRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
   private
     { Private declarations }
   public
