@@ -292,6 +292,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptLevel_ShortName() RETURNS Inte
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ReceiptLevel_ShortName', zc_Object_ReceiptLevel(), 'Сокращенное обозначение' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptLevel_ShortName');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptLevel_ObjectDesc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptLevel_ObjectDesc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ReceiptLevel_ObjectDesc', zc_Object_ReceiptLevel(), 'вид справочника' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptLevel_ObjectDesc');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptService_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptService_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ReceiptService_Comment', zc_Object_ReceiptService(), 'Сокращенное обозначение' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptService_Comment');
@@ -323,6 +328,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 07.10.22         * zc_ObjectString_ReceiptLevel_ObjectDesc
  22.09.22                                                       * zc_ObjectString_ProdColor_Value
  21.04.21         * zc_ObjectString_ProductDocument_Comment
  20.04.21         * zc_ObjectString_DocTag_Comment

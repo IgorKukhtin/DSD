@@ -1,12 +1,14 @@
 -- Страна производитель
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptLevel (Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptLevel (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptLevel(
  INOUT ioId           Integer,       -- Ключ объекта <Страна >
  INOUT ioCode         Integer,       -- Код Объекта <Страна >
     IN inName         TVarChar,      -- Название объекта <Страна>
-    IN inShortName    TVarChar,      -- Краткое название
+    IN inShortName    TVarChar,      -- Краткое название 
+    IN inObjectDesc   TVarChar,      -- вид справочника
     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -36,7 +38,9 @@ BEGIN
 
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ReceiptLevel_ShortName(), ioId, inShortName);
-
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ReceiptLevel_ObjectDesc(), ioId, inObjectDesc);
+   
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -57,6 +61,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.11.22         *\
  11.12.20         *
 */
 
