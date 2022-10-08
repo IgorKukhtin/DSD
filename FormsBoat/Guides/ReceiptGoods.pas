@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
-  Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel;
+  Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel, dsdGuides, cxMaskEdit;
 
 type
   TReceiptGoodsForm = class(TParentForm)
@@ -204,6 +204,9 @@ type
     GoodsName_receipt_ch2: TcxGridDBColumn;
     Article_receipt_ch2: TcxGridDBColumn;
     ProdColorName_receipt_ch2: TcxGridDBColumn;
+    lbReceiptLevel: TcxLabel;
+    edReceiptLevel: TcxButtonEdit;
+    GuidesReceiptLevel: TdsdGuides;
   private
     { Private declarations }
   public
