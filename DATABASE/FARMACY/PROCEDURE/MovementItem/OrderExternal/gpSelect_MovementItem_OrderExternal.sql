@@ -265,7 +265,7 @@ BEGIN
                           )
    -- Отказы поставщиков
    , tmpSupplierFailures AS (SELECT DISTINCT SupplierFailures.GoodsJuridicalId AS GoodsId
-                             FROM gpSelect_PriceList_SupplierFailures(vbOperDate, inSession) AS SupplierFailures
+                             FROM gpSelect_PriceList_SupplierFailures(vbOperDate, False, inSession) AS SupplierFailures
                              WHERE SupplierFailures.JuridicalId = vbJuridicalId
                                AND SupplierFailures.ContractId = vbContractId
                                AND (COALESCE(SupplierFailures.AreaId, 0) = 0 OR COALESCE(SupplierFailures.AreaId, 0) IN 
@@ -452,4 +452,5 @@ $BODY$
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
 --
-select * from gpSelect_MovementItem_OrderExternal(inMovementId := 26562277  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_OrderExternal(inMovementId := 29591024 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

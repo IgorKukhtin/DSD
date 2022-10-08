@@ -500,6 +500,11 @@ type
     dxBarButton39: TdxBarButton;
     SetDateRRO: TcxGridDBColumn;
     isAutospaceOS: TcxGridDBColumn;
+    isReplaceSte2ListDif: TcxGridDBColumn;
+    spUpdate_isReplaceSte2ListDif: TdsdStoredProc;
+    mactUpdate_isReplaceSte2ListDif: TMultiAction;
+    actUpdate_isReplaceSte2ListDif: TdsdExecStoredProc;
+    dxBarButton40: TdxBarButton;
   private
     { Private declarations }
   public

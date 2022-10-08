@@ -2,7 +2,8 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
@@ -11,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inName                    TVarChar  , -- Название объекта <Подразделение>
     IN inisPartionDate           Boolean   , -- Партии даты в учете
     IN inisPartionGoodsKind      Boolean   , -- Партии по виду упаковки 
-    IN inisCountCount            Boolean   , -- Учет батонов
+    IN inisCountCount            Boolean   , -- Учет батонов 
+    IN inisPartionGP             Boolean   , -- Партии для ГП и Тушенки
     IN inParentId                Integer   , -- ссылка на подразделение
     IN inBranchId                Integer   , -- ссылка на филиал
     IN inBusinessId              Integer   , -- ссылка на бизнес
@@ -81,7 +83,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PartionGoodsKind(), ioId, inisPartionGoodsKind);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_CountCount(), ioId, inisCountCount);
-   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PartionGP(), ioId, inisPartionGP);
+      
    -- сохранили связь с <Подразделения>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Parent(), ioId, inParentId);
    -- сохранили связь с <Филиалы>
@@ -162,6 +166,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.10.22         * inisPartionGP
  27.07.22         * inisCountCount
  15.12.21         * add PersonalHead
                     dell PersonalSheetWorkTime

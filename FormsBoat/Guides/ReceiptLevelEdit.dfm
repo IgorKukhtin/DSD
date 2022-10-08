@@ -2,7 +2,7 @@ object ReceiptLevelEditForm: TReceiptLevelEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080'>'
-  ClientHeight = 197
+  ClientHeight = 230
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object ReceiptLevelEditForm: TReceiptLevelEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 152
+    Top = 197
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object ReceiptLevelEditForm: TReceiptLevelEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 152
+    Top = 197
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -70,6 +70,23 @@ object ReceiptLevelEditForm: TReceiptLevelEditForm
     Left = 10
     Top = 118
     TabOrder = 7
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 146
+    Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+  end
+  object edObjectDesc: TcxButtonEdit
+    Left = 10
+    Top = 164
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
     Width = 273
   end
   object ActionList: TActionList
@@ -139,9 +156,17 @@ object ReceiptLevelEditForm: TReceiptLevelEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inObjectDesc'
+        Value = Null
+        Component = edObjectDesc
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 96
+    Left = 128
     Top = 48
   end
   object FormParams: TdsdFormParams
@@ -188,6 +213,13 @@ object ReceiptLevelEditForm: TReceiptLevelEditForm
         Component = edShortName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectDesc'
+        Value = Null
+        Component = edObjectDesc
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160
@@ -211,5 +243,34 @@ object ReceiptLevelEditForm: TReceiptLevelEditForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 96
     Top = 96
+  end
+  object GuidesObjectDesc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edObjectDesc
+    FormNameParam.Value = 'TObjectDescForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TObjectDescForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesObjectDesc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = ''
+        Component = GuidesObjectDesc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 135
+    Top = 146
   end
 end

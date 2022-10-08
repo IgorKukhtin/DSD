@@ -34,7 +34,9 @@ inherited MainCashForm2: TMainCashForm2
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = CheckGridDBTableViewFocusedRecordChanged
         DataController.DataSource = CheckDS
-        DataController.KeyFieldNames = 'GoodsId;PartionDateKindId;NDSKindId;DivisionPartiesID;isPresent'
+        DataController.KeyFieldNames = 
+          'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionP' +
+          'artiesID;isPresent;isGoodsPresent'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -8322,10 +8324,7 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'PriceLoad'
         DataType = ftFloat
       end>
-    IndexDefs = <
-      item
-        Name = 'CheckCDSIndex1'
-      end>
+    IndexDefs = <>
     Params = <>
     StoreDefs = True
     BeforePost = CheckCDSBeforePost

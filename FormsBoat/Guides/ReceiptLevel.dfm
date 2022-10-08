@@ -12,20 +12,23 @@ object ReceiptLevelForm: TReceiptLevelForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = actChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 517
-    Height = 350
+    Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -69,6 +72,13 @@ object ReceiptLevelForm: TReceiptLevelForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 180
       end
+      object ObjectDesc: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+        DataBinding.FieldName = 'ObjectDesc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
@@ -102,6 +112,34 @@ object ReceiptLevelForm: TReceiptLevelForm
       GridView = cxGridDBTableView
     end
   end
+  object Panel5: TPanel
+    Left = 0
+    Top = 26
+    Width = 517
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = -755
+    ExplicitTop = 0
+    ExplicitWidth = 1272
+    object cxLabel12: TcxLabel
+      Left = 5
+      Top = 8
+      Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    end
+    object edObjectDesc: TcxButtonEdit
+      Left = 102
+      Top = 7
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 1
+      Width = 251
+    end
+  end
   object DataSource: TDataSource
     DataSet = MasterCDS
     Left = 104
@@ -109,6 +147,7 @@ object ReceiptLevelForm: TReceiptLevelForm
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 32
     Top = 128
@@ -279,6 +318,8 @@ object ReceiptLevelForm: TReceiptLevelForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
       StoredProc = spSelect
       StoredProcList = <
         item
@@ -480,10 +521,19 @@ object ReceiptLevelForm: TReceiptLevelForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inObjectDesc'
+        Value = Null
+        Component = GuidesObjectDesc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 216
-    Top = 88
+    Left = 32
+    Top = 192
   end
   object spErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ReceiptLevel'
@@ -534,6 +584,7 @@ object ReceiptLevelForm: TReceiptLevelForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -609,5 +660,57 @@ object ReceiptLevelForm: TReceiptLevelForm
     PackSize = 1
     Left = 392
     Top = 115
+  end
+  object RefreshDispatcher1: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesObjectDesc
+      end>
+    Left = 392
+    Top = 216
+  end
+  object GuidesObjectDesc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edObjectDesc
+    FormNameParam.Value = 'TObjectDescForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TObjectDescForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesObjectDesc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = 'zc_Object_Goods'
+        Component = GuidesObjectDesc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 224
+    Top = 29
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MasterObjectDesc'
+        Value = ''
+        Component = GuidesObjectDesc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 80
+    Top = 272
   end
 end

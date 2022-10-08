@@ -233,9 +233,14 @@ CREATE OR REPLACE FUNCTION zc_MovementString_ReportNumber() RETURNS Integer AS $
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_ReportNumber', 'Номер отчета' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_ReportNumber');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_SiteWhoUpdate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_SiteWhoUpdate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_SiteWhoUpdate', 'Кто изменил на сайте' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_SiteWhoUpdate');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 04.10.22                                                                      * zc_MovementString_SiteWhoUpdate
  07.05.22                                                                      * zc_MovementString_ReportNumber
  23.09.21                                                                      * zc_MovementString_CommentCustomer
  06.09.21                                                                      * zc_MovementString_CommentChecking

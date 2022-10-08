@@ -3,10 +3,10 @@
 DROP FUNCTION IF EXISTS gpGet_Object_ReceiptLevel (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ReceiptLevel(
-    IN inId          Integer,       -- 
+    IN inId          Integer,       --               
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar, ObjectDesc TVarChar) 
 AS
 $BODY$
 BEGIN
@@ -21,7 +21,8 @@ BEGIN
               0 :: Integer     AS Id
            , lfGet_ObjectCode(0, zc_Object_ReceiptLevel())   AS Code
            , '' :: TVarChar    AS Name
-           , '' :: TVarChar    AS ShortName
+           , '' :: TVarChar    AS ShortName 
+           , '' :: TVarChar    AS ObjectDesc
        ;
    ELSE
        RETURN QUERY
@@ -29,11 +30,15 @@ BEGIN
              Object_ReceiptLevel.Id         AS Id
            , Object_ReceiptLevel.ObjectCode AS Code
            , Object_ReceiptLevel.ValueData  AS Name
-           , COALESCE (ObjectString_ShortName.ValueData, NULL) :: TVarChar AS ShortName
+           , COALESCE (ObjectString_ShortName.ValueData, NULL)  :: TVarChar AS ShortName
+           , COALESCE (ObjectString_ObjectDesc.ValueData, NULL) :: TVarChar AS ObjectDesc
        FROM Object AS Object_ReceiptLevel
            LEFT JOIN ObjectString AS ObjectString_ShortName
                                   ON ObjectString_ShortName.ObjectId = Object_ReceiptLevel.Id
-                                 AND ObjectString_ShortName.DescId = zc_ObjectString_ReceiptLevel_ShortName()
+                                 AND ObjectString_ShortName.DescId = zc_ObjectString_ReceiptLevel_ShortName()     
+           LEFT JOIN ObjectString AS ObjectString_ObjectDesc
+                                  ON ObjectString_ObjectDesc.ObjectId = Object_ReceiptLevel.Id
+                                 AND ObjectString_ObjectDesc.DescId = zc_ObjectString_ReceiptLevel_ObjectDesc()
        WHERE Object_ReceiptLevel.Id = inId;
    END IF;
 
@@ -46,6 +51,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.22         *
  11.12.20         *
 */
 

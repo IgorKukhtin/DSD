@@ -247,7 +247,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 31
-    Width = 296
+    Width = 183
   end
   object cxLabel15: TcxLabel
     Left = 235
@@ -266,6 +266,16 @@
     Properties.DisplayFormat = ',0.###'
     TabOrder = 33
     Width = 101
+  end
+  object cbisDocGoods: TcxCheckBox
+    Left = 242
+    Top = 448
+    Hint = #1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074#1072#1088#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093
+    Caption = #1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074'. '#1076#1086#1082'.'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 34
+    Width = 117
   end
   object ActionList: TActionList
     Left = 344
@@ -437,6 +447,14 @@
         Value = Null
         Component = edKW
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDocGoods'
+        Value = Null
+        Component = cbisDocGoods
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -616,6 +634,13 @@
         Component = GuidesAssetType
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDocGoods'
+        Value = Null
+        Component = cbisDocGoods
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

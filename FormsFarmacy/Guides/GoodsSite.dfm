@@ -20,8 +20,6 @@ inherited GoodsSiteForm: TGoodsSiteForm
       inherited cxGrid: TcxGrid
         Width = 1178
         Height = 518
-        ExplicitLeft = 3
-        ExplicitTop = -3
         ExplicitWidth = 1178
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -437,6 +435,14 @@ inherited GoodsSiteForm: TGoodsSiteForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 87
+          end
+          object isStealthBonuses: TcxGridDBColumn
+            Caption = #1057#1090#1077#1083#1089' '#1076#1083#1103' '#1073#1086#1085#1091#1089#1086#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+            DataBinding.FieldName = 'isStealthBonuses'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
           end
         end
       end
@@ -1882,6 +1888,31 @@ inherited GoodsSiteForm: TGoodsSiteForm
         end>
       Caption = 'actExecUpdate_isMultiplicityError'
     end
+    object mactUpdate_isStealthBonuses: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isStealthBonuses
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1057#1090#1077#1083#1089' '#1076#1083#1103' '#1073#1086#1085#1091#1089#1086#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1057#1090#1077#1083#1089' '#1076#1083#1103' '#1073#1086#1085#1091#1089#1086#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1057#1090#1077#1083#1089' '#1076#1083#1103' '#1073#1086#1085#1091#1089#1086#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103'"'
+      ImageIndex = 79
+    end
+    object actUpdate_isStealthBonuses: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isStealthBonuses
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isStealthBonuses
+        end>
+      Caption = 'actUpdate_isStealthBonuses'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -2221,6 +2252,10 @@ inherited GoodsSiteForm: TGoodsSiteForm
         item
           Visible = True
           ItemName = 'dxBarButton19'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton29'
         end
         item
           Visible = True
@@ -2576,6 +2611,10 @@ inherited GoodsSiteForm: TGoodsSiteForm
     end
     object dxBarButton28: TdxBarButton
       Action = maUpdate_isMultiplicityError
+      Category = 0
+    end
+    object dxBarButton29: TdxBarButton
+      Action = mactUpdate_isStealthBonuses
       Category = 0
     end
   end
@@ -3822,8 +3861,8 @@ inherited GoodsSiteForm: TGoodsSiteForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 848
-    Top = 344
+    Left = 840
+    Top = 336
   end
   object spUpdate_PublishedAll: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_PublishedAll'
@@ -3885,5 +3924,31 @@ inherited GoodsSiteForm: TGoodsSiteForm
     PackSize = 1
     Left = 472
     Top = 112
+  end
+  object spUpdate_isStealthBonuses: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isStealthBonuses'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisStealthBonuses'
+        Value = True
+        Component = MasterCDS
+        ComponentItem = 'isStealthBonuses'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 400
   end
 end

@@ -44,6 +44,7 @@ type
     cbIsErased: TcxCheckBox;
     cbIsUnComplete: TcxCheckBox;
     cbEmployeeMessage: TcxCheckBox;
+    cbDiscountExternal: TcxCheckBox;
   private
     { Private declarations }
   public

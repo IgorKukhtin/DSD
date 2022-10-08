@@ -56,6 +56,8 @@ type
     actPrintRemainsLess: TdsdPrintAction;
     bbPrintRemainsLess: TdxBarButton;
     bbPrintRemainsLessUpak: TdxBarButton;
+    actOrderInternalPackRemainsOpen: TdsdOpenForm;
+    bbOrderInternalPackRemains: TdxBarButton;
   private
     { Private declarations }
   public

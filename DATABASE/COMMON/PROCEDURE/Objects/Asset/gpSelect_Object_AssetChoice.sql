@@ -16,6 +16,7 @@ RETURNS TABLE (ContainerId Integer, ItemName TVarChar, Id Integer, Code Integer,
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
              , PeriodUse TFloat, Production TFloat, KW TFloat
              , AmountRemains TFloat
+             , isDocGoods Boolean
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -95,6 +96,7 @@ BEGIN
          , COALESCE (ObjectFloat_KW.ValueData,0)         :: TFloat AS KW
 
          , tmpRemains.Amount      :: TFloat AS AmountRemains
+         , COALESCE (ObjectBoolean_DocGoods.ValueData, FALSE) :: Boolean AS isDocGoods
          , Object_Asset.isErased            AS isErased
          
      FROM tmpRemains
@@ -167,6 +169,10 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_KW
                                 ON ObjectFloat_KW.ObjectId = Object_Asset.Id
                                AND ObjectFloat_KW.DescId = zc_ObjectFloat_Asset_KW()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_DocGoods
+                                  ON ObjectBoolean_DocGoods.ObjectId = Object_Asset.Id
+                                 AND ObjectBoolean_DocGoods.DescId = zc_ObjectBoolean_Asset_DocGoods()
        ;  
 
 END;

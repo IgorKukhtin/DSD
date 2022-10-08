@@ -204,6 +204,11 @@ type
     actExecUpdate_isMultiplicityError: TdsdExecStoredProc;
     dxBarButton28: TdxBarButton;
     MultiplicityDiscontSite: TcxGridDBColumn;
+    spUpdate_isStealthBonuses: TdsdStoredProc;
+    isStealthBonuses: TcxGridDBColumn;
+    mactUpdate_isStealthBonuses: TMultiAction;
+    actUpdate_isStealthBonuses: TdsdExecStoredProc;
+    dxBarButton29: TdxBarButton;
   private
     { Private declarations }
   public

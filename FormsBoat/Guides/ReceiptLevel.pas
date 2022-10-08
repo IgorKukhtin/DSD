@@ -21,7 +21,9 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.ExtCtrls, cxContainer, dsdGuides, cxLabel, cxTextEdit, cxMaskEdit,
+  cxButtonEdit;
 
 type
   TReceiptLevelForm = class(TParentForm)
@@ -63,6 +65,13 @@ type
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdate: TdsdStoredProc;
+    ObjectDesc: TcxGridDBColumn;
+    Panel5: TPanel;
+    cxLabel12: TcxLabel;
+    RefreshDispatcher1: TRefreshDispatcher;
+    edObjectDesc: TcxButtonEdit;
+    GuidesObjectDesc: TdsdGuides;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

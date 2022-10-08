@@ -88,6 +88,7 @@ type
     cxLabel18: TcxLabel;
     edComment: TcxTextEdit;
     cbCountCount: TcxCheckBox;
+    cbPartionGP: TcxCheckBox;
   private
     { Private declarations }
   public

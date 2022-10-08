@@ -253,37 +253,30 @@ BEGIN
                           AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                         )
          -- Отложенные чеки
-       , tmpMovementCheck AS (SELECT Movement.Id
-                                   , Movement.InvNumber
-                                   , Movement.OperDate
+       , tmpMovementCheck AS (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate
                               FROM Movement
                               WHERE Movement.DescId = zc_Movement_Check()
                                 AND Movement.StatusId = zc_Enum_Status_UnComplete())
-       , tmpMovReserveId AS (SELECT DISTINCT Movement.Id
-                                           , Movement.InvNumber
-                                           , Movement.OperDate
-                             FROM tmpMovementCheck AS Movement
-                                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                                AND MovementLinkObject_Unit.ObjectId = vbUnitId
-                             )
        , tmpMovReserveAll AS (
                              SELECT Movement.Id
-                                  , Movement.InvNumber
-                                  , Movement.OperDate
                              FROM MovementBoolean AS MovementBoolean_Deferred
-                                  INNER JOIN tmpMovReserveId AS Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                  INNER JOIN tmpMovementCheck AS Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
                              WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
                                AND MovementBoolean_Deferred.ValueData = TRUE
                              UNION ALL
                              SELECT Movement.Id
-                                  , Movement.InvNumber
-                                  , Movement.OperDate
                              FROM MovementString AS MovementString_CommentError
-                                  INNER JOIN tmpMovReserveId AS Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                  INNER JOIN tmpMovementCheck AS Movement ON Movement.Id     = MovementString_CommentError.MovementId
                              WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
                                AND MovementString_CommentError.ValueData <> ''
+                             )
+       , tmpMovReserveId AS (SELECT DISTINCT Movement.Id, MovementCheck.InvNumber, MovementCheck.OperDate
+                             FROM tmpMovReserveAll AS Movement
+                                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                                AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                                   INNER JOIN tmpMovementCheck AS MovementCheck ON MovementCheck.ID = Movement.Id
                              )
        , tmpReserve AS (SELECT MovementItemMaster.ObjectId                                           AS GoodsId
                              , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId) AS NDSKindId
@@ -292,7 +285,7 @@ BEGIN
                              , COALESCE(MILinkObject_PartionDateKind.ObjectId, 0)                    AS PartionDateKindId
                              , SUM(COALESCE (MovementItemChild.Amount, MovementItemMaster.Amount))   AS Amount
                              , STRING_AGG(Movement.InvNumber||' от '||zfConvert_DateShortToString(Movement.OperDate), ',') AS CheckList
-                        FROM tmpMovReserveAll AS Movement
+                        FROM tmpMovReserveId AS Movement
 
                              INNER JOIN MovementItem AS MovementItemMaster
                                                      ON MovementItemMaster.MovementId = Movement.Id
@@ -336,7 +329,7 @@ BEGIN
                                , MILinkObject_DivisionParties.ObjectId
                                , MILinkObject_PartionDateKind.ObjectId
                         )
-
+                        
     SELECT GoodsRemains.ObjectId                                             AS Id
          , Object_Goods_Main.ObjectCode
          , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods_Main.NameUkr, '') <> ''
@@ -395,4 +388,5 @@ $BODY$
 */
 
 -- тест 
-SELECT * FROM gpSelect_CashGoodsBadTiming('3');
+
+select * from gpSelect_CashGoodsBadTiming( inSession := '10929825');

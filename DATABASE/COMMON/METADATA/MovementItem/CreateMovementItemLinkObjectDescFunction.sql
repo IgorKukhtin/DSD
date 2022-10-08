@@ -1,6 +1,6 @@
 --------------------------- !!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ÕŒ¬¿ﬂ —’≈Ã¿ !!!
---------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!!!!!!!!!!!!!!!!!!                
 
 CREATE OR REPLACE FUNCTION zc_MILinkObject_Account() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Account'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)

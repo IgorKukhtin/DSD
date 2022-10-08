@@ -460,6 +460,12 @@ procedure TListDiffAddGoodsForm.FormShow(Sender: TObject);
 begin
   if FGoodsId = 0 then Exit;
   FDiffKindId := 0;
+
+  if MainCashForm.UnitConfigCDS.FieldByName('isReplaceSte2ListDif').AsBoolean then
+  begin
+    Label9.Caption := 'ШАГ 2. Добавить в заказ';
+  end;
+
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
     try

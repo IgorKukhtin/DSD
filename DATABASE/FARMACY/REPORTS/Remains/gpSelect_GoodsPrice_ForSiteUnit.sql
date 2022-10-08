@@ -78,19 +78,45 @@ BEGIN
                                                    ON OL_Unit_Area.ObjectId = tmp.Id
                                                   AND OL_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
                         )
-          , tmpDiscountExternal AS (SELECT DISTINCT ObjectLink_BarCode_Goods.ChildObjectId  AS GoodsId
-                                    FROM Object AS Object_BarCode
-                                         LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
-                                                              ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
-                                                             AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
-                                         LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
-                                                              ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
-                                                             AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
-                                         LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+          , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId                           AS GoodsMainId
+                                      , Object_Object.Id                                          AS GoodsDiscountId
+                                      , Object_Object.ValueData                                   AS GoodsDiscountName
+                                      , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
+                                      , COALESCE(ObjectBoolean_StealthBonuses.ValueData, False)   AS isStealthBonuses 
+                                      /*, MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat  AS MaxPrice 
+                                      , MAX(ObjectFloat_DiscountProcent.ValueData)::TFloat        AS DiscountProcent*/ 
+                                 FROM Object AS Object_BarCode
+                                      INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                            ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                           AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                      INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = ObjectLink_BarCode_Goods.ChildObjectId
 
-                                    WHERE Object_BarCode.DescId = zc_Object_BarCode()
-                                      AND Object_BarCode.isErased = False
-                                      AND Object_Object.isErased = False)
+                                      LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                           ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                          AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                      LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId
+
+                                      LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
+                                                              ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id
+                                                             AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
+                                      LEFT JOIN ObjectBoolean AS ObjectBoolean_StealthBonuses
+                                                              ON ObjectBoolean_StealthBonuses.ObjectId = Object_BarCode.Id
+                                                             AND ObjectBoolean_StealthBonuses.DescId = zc_ObjectBoolean_BarCode_StealthBonuses()
+
+                                      /*LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                                            ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                                           AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
+                                                            ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
+                                                           AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()*/
+                                                                   
+                                 WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                   AND Object_BarCode.isErased = False
+                                 GROUP BY Object_Goods_Retail.GoodsMainId
+                                        , Object_Object.Id
+                                        , Object_Object.ValueData
+                                        , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)
+                                        , COALESCE(ObjectBoolean_StealthBonuses.ValueData, False))
           , tmpPrice_Site AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat     AS Price
                                    , Object_Goods_Retail.Id                     AS GoodsId
                                    , Object_Goods_Main.Name                     AS Name
@@ -102,20 +128,24 @@ BEGIN
                                    , Object_Goods_Retail.DiscontSiteEnd
                                    , Object_Goods_Retail.DiscontAmountSite
                                    , Object_Goods_Retail.DiscontPercentSite
-                                   , Object_Goods_Retail.SummaWages
-                                   , Object_Goods_Retail.PercentWages
                                    , Object_Goods_Main.FormDispensingId
                                    , Object_Goods_Main.NumberPlates
                                    , Object_Goods_Main.QtyPackage
+                                   , COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 OR 
+                                     COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0 OR
+                                     COALESCE(Object_Goods_Main.isStealthBonuses, FALSE) OR
+                                     COALESCE(tmpGoodsDiscount.isStealthBonuses, FALSE)  AS isStealthBonuses
                               FROM Object_Goods_Main AS Object_Goods_Main
 
                                    LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId  = Object_Goods_Main.Id
                                                                 AND Object_Goods_Retail.RetailId     = 4
 
+                                   LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
+
                                    LEFT JOIN ObjectLink AS Price_Goods
                                           ON Price_Goods.ChildObjectId = Object_Goods_Retail.Id
                                          AND Price_Goods.DescId = zc_ObjectLink_PriceSite_Goods()
-                                         AND Price_Goods.ChildObjectId NOT IN (SELECT tmpDiscountExternal.GoodsId FROM tmpDiscountExternal)
+                                         AND COALESCE (tmpGoodsDiscount.GoodsMainId, 0) = 0
 
                                    LEFT JOIN ObjectFloat AS Price_Value
                                           ON Price_Value.ObjectId = Price_Goods.ObjectId
@@ -124,9 +154,14 @@ BEGIN
                               WHERE Object_Goods_Main.isPublished = True
                                 AND (Object_Goods_Main.GoodsGroupId = inCategoryId OR COALESCE(inCategoryId, 0) = 0)
                                 AND (Object_Goods_Retail.Id = inProductId OR COALESCE(inProductId, 0) = 0)
-                                AND COALESCE (inSearch, '') = '' OR 
-                                    CASE WHEN lower(inSortLang) = 'uk' THEN Object_Goods_Main.NameUkr ELSE Object_Goods_Main.Name END ILIKE '%'||inSearch||'%'
-                                AND (COALESCE(inisDiscountExternal, False) = TRUE OR Object_Goods_Retail.Id NOT IN (SELECT tmpDiscountExternal.GoodsId FROM tmpDiscountExternal))
+                                AND (COALESCE (inSearch, '') = '' OR 
+                                    Object_Goods_Main.Name ILIKE '%'||inSearch||'%' OR
+                                    Object_Goods_Main.NameUkr ILIKE '%'||inSearch||'%')
+                                AND (COALESCE(inisDiscountExternal, False) = TRUE OR 
+                                    (COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 OR 
+                                     COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0 OR
+                                     COALESCE(Object_Goods_Main.isStealthBonuses, FALSE) OR
+                                     COALESCE(tmpGoodsDiscount.isStealthBonuses, FALSE)) = FALSE)
                               )
           , tmpObject_Price AS (SELECT CASE WHEN PriceSite_DiscontStart.ValueData IS NOT NULL
                                              AND PriceSite_DiscontEnd.ValueData IS NOT NULL  
@@ -238,40 +273,6 @@ BEGIN
                            WHERE Movement.DescId = zc_Movement_GoodsSP()
                              AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                           )
-          , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId                           AS GoodsMainId
-                                      , Object_Object.Id                                          AS GoodsDiscountId
-                                      , Object_Object.ValueData                                   AS GoodsDiscountName
-                                      , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
-                                      /*, MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat  AS MaxPrice 
-                                      , MAX(ObjectFloat_DiscountProcent.ValueData)::TFloat        AS DiscountProcent*/ 
-                                 FROM Object AS Object_BarCode
-                                      INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
-                                                            ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
-                                                           AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
-                                      INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = ObjectLink_BarCode_Goods.ChildObjectId
-
-                                      LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
-                                                           ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
-                                                          AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
-                                      LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId
-
-                                      LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
-                                                              ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id
-                                                             AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
-
-                                      /*LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
-                                                            ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
-                                                           AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
-                                      LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
-                                                            ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
-                                                           AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()*/
-                                                                   
-                                 WHERE Object_BarCode.DescId = zc_Object_BarCode()
-                                   AND Object_BarCode.isErased = False
-                                 GROUP BY Object_Goods_Retail.GoodsMainId
-                                        , Object_Object.Id
-                                        , Object_Object.ValueData
-                                        , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False))
           , tmpContainerPDSum AS (SELECT Container.GoodsId           AS GoodsId
                                        , SUM(Container.RemainsPD)    AS RemainsPD
                                   FROM tmpContainerPD AS Container
@@ -295,9 +296,7 @@ BEGIN
                                 COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) ::TFloat     AS Price
              , (tmpContainerAll.Remains - COALESCE (tmpContainerPD.Remains, 0))::TFloat          AS Remains
 
-             , COALESCE(tmpDiscountExternal.GoodsId, 0) <> 0 OR
-               COALESCE(Price_Site.SummaWages, 0) <> 0 OR 
-               COALESCE(Price_Site.PercentWages, 0) <> 0                    AS isDiscountExternal
+             , Price_Site.isStealthBonuses                                  AS isDiscountExternal
 
              , COALESCE(tmpContainerPDSum.RemainsPD, 0) <> 0                AS isPartionDate
 
@@ -321,17 +320,12 @@ BEGIN
 
              LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Price_Site.GoodsMainId
 
-             LEFT JOIN tmpDiscountExternal ON tmpDiscountExternal.GoodsId = Price_Site.GoodsId
-
              LEFT JOIN tmpContainerPDSum ON tmpContainerPDSum.GoodsId = Price_Site.GoodsId
 
              LEFT JOIN Object AS Object_FormDispensing ON Object_FormDispensing.Id = Price_Site.FormDispensingId
              LEFT JOIN ObjectString AS ObjectString_FormDispensing_NameUkr
                                     ON ObjectString_FormDispensing_NameUkr.ObjectId = Object_FormDispensing.Id
                                    AND ObjectString_FormDispensing_NameUkr.DescId = zc_ObjectString_FormDispensing_NameUkr()   
-
-        WHERE COALESCE (inSearch, '') = '' OR 
-              CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END ILIKE '%'||inSearch||'%'
 
         ORDER BY CASE WHEN COALESCE (tmpContainerAll.Remains, 0) = 0 THEN 1 ELSE 0 END 
                , CASE WHEN inSortType = 0 THEN Price_Site.Price END
@@ -355,4 +349,4 @@ $BODY$
 -- тест
 --
  
-SELECT * FROM gpSelect_GoodsPrice_ForSite_Ol (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'моксо', inUnitId := 13711869, inisDiscountExternal := True , inSession:= zfCalc_UserSite());
+SELECT * FROM gpSelect_GoodsPrice_ForSite_Ol (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Гептрал', inUnitId := 13711869, inisDiscountExternal := True , inSession:= zfCalc_UserSite());

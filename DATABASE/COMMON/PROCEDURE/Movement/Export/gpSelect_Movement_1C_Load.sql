@@ -1,12 +1,15 @@
 -- Function: gpSelect_Movement_1C_Load()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_1C_Load(
     IN inStartDate      TDateTime , --
     IN inEndDate        TDateTime , --
     IN inInfoMoneyId    Integer   ,
     IN inPaidKindId     Integer   ,
+    IN inRetailId       Integer   , --òîðãîâàÿ ñåòü
     IN inSession        TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (UnitId TVarChar,  VidDoc TVarChar, InvNumber TVarChar, OperDate TVarChar, ClientCode TVarChar, ClientName TVarChar,
@@ -174,7 +177,20 @@ BEGIN
                                                                                                      THEN MovementLinkObject_From.ObjectId
                                                                                                 ELSE ObjectLink_Partner_Juridical.ChildObjectId
                                                                                            END
-                               AND Movement.OperDate >= ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND Movement.OperDate < ObjectHistory_JuridicalDetails_ViewByDate.EndDate
+                               AND Movement.OperDate >= ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND Movement.OperDate < ObjectHistory_JuridicalDetails_ViewByDate.EndDate 
+                         
+                         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                              ON ObjectLink_Juridical_Retail.ObjectId = CASE WHEN Movement.DescId = zc_Movement_PriceCorrective()
+                                                                                                     THEN MovementLinkObject_From.ObjectId
+                                                                                                WHEN Movement.DescId = zc_Movement_TransferDebtOut()
+                                                                                                     THEN MovementLinkObject_To.ObjectId
+                                                                                                WHEN Movement.DescId = zc_Movement_TransferDebtIn()
+                                                                                                     THEN MovementLinkObject_From.ObjectId
+                                                                                                ELSE ObjectLink_Partner_Juridical.ChildObjectId
+                                                                                           END
+                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                    WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetailId
+                       OR COALESCE (inRetailId, 0) = 0
                         )
 
  , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.Id
@@ -452,11 +468,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 07.10.22         * add inRetailId
  13.09.22         * add ContractCode
  05.04.17         *
  20.07.14                                        * add zc_Movement_PriceCorrective
@@ -470,3 +487,4 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 -- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '01.11.2016', inEndDate:= '11.11.2016', inInfoMoneyId:= 8911, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '30.11.2017', inEndDate:= '30.11.2017', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin()) AS a--  WHERE InvNumber = '400883'
 -- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '14.09.2022', inEndDate:= '14.09.2022', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin()) AS a limit 10 -- WHERE InvNumber = '400883'
+-- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '14.09.2022', inEndDate:= '14.09.2022', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inRetailId := 0, inSession:= zfCalc_UserAdmin()) AS a limit 10 -- WHERE InvNumber = '400883'

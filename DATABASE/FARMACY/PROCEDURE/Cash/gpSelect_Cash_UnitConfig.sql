@@ -34,7 +34,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isRemovingPrograms Boolean, ExpressVIPConfirm Integer, isErrorRROToVIP Boolean, 
                LayoutFileCount Integer, LayoutFileID Integer, FilesToCheckCount Integer, FilesToCheckID Integer, 
                isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean,
-               MinPriceSale TFloat, DeviationsPrice1303 TFloat, SetDateRRO TDateTime, isSetDateRRO boolean, SetDateRROList TVarChar
+               MinPriceSale TFloat, DeviationsPrice1303 TFloat, SetDateRRO TDateTime, isSetDateRRO boolean, SetDateRROList TVarChar,
+               isReplaceSte2ListDif Boolean
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -418,6 +419,8 @@ BEGIN
        , ObjectString_SetDateRROList.ValueData LIKE '%'||zfConvert_DateToString (CURRENT_DATE)||'%'   AS isSetDateRRO 
        , ObjectString_SetDateRROList.ValueData                                            AS SetDateRROList 
 
+       , COALESCE (ObjectBoolean_ReplaceSte2ListDif.ValueData, FALSE):: Boolean           AS isReplaceSte2ListDif
+
    FROM Object AS Object_Unit
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashMCS
@@ -549,6 +552,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_SetDateRROList
                                ON ObjectString_SetDateRROList.ObjectId = Object_Unit.Id
                               AND ObjectString_SetDateRROList.DescId = zc_ObjectString_Unit_SetDateRROList()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ReplaceSte2ListDif
+                                ON ObjectBoolean_ReplaceSte2ListDif.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ReplaceSte2ListDif.DescId = zc_ObjectBoolean_Unit_ReplaceSte2ListDif()
 
         LEFT JOIN tmpLoyalty ON 1 = 1
         LEFT JOIN tmpLoyaltySaveMoney ON 1 = 1

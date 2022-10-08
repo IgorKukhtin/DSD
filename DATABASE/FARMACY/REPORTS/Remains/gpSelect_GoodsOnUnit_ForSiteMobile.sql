@@ -9,6 +9,9 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnit_ForSiteMobile(
 )
 RETURNS TABLE (Id                Integer
 
+             , Name              TVarChar   -- Название русское
+             , NameUkr           TVarChar   -- Название украинское если (есть)
+
              , deleted           Integer
 
              , UnitId            Integer   -- Аптека (информативно)
@@ -721,6 +724,9 @@ BEGIN
 
         SELECT Object_Goods.Id                                                     AS Id
 
+             , Object_Goods_Main.Name                                              AS Name
+             , Object_Goods_Main.NameUkr                                           AS NameUkr
+
              , CASE WHEN Object_Goods.isErased = TRUE THEN 1 ELSE 0 END::Integer   AS deleted
 
              , tmpList.UnitId                                                      AS UnitId
@@ -757,6 +763,9 @@ BEGIN
              , COALESCE(tmpList.Multiplicity, 0) :: TFloat AS Multiplicity
 
         FROM _tmpList AS tmpList 
+
+             LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id  = tmpList.GoodsId_retail
+             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
              LEFT JOIN tmpMI_Deferred ON tmpMI_Deferred.GoodsId = tmpList.GoodsId_retail
                                      AND tmpMI_Deferred.UnitId  = tmpList.UnitId
@@ -811,7 +820,7 @@ $BODY$
 -- тест
 
 
-SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '6307 ', zfCalc_UserSite()) AS p
+SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '56167', zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
- LEFT JOIN OBJECT AS OBJECT_Goods ON OBJECT_Goods.ID = p.Id;
+
  

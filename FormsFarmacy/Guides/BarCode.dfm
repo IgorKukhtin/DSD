@@ -27,6 +27,7 @@ object BarCodeForm: TBarCodeForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 224
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -149,6 +150,14 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
+      end
+      object isStealthBonuses: TcxGridDBColumn
+        Caption = #1057#1090#1077#1083#1089' '#1076#1083#1103' '#1073#1086#1085#1091#1089#1086#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+        DataBinding.FieldName = 'isStealthBonuses'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 109
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -434,7 +443,6 @@ object BarCodeForm: TBarCodeForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel: TdsdGridToExcel

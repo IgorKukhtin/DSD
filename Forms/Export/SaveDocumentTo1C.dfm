@@ -1,27 +1,27 @@
 inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
   ActiveControl = deStart
   Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074' 1'#1057
-  ClientHeight = 159
-  ClientWidth = 536
+  ClientHeight = 168
+  ClientWidth = 511
   AddOnFormData.RefreshAction = nil
   AddOnFormData.isSingle = False
-  ExplicitWidth = 542
-  ExplicitHeight = 188
+  ExplicitWidth = 517
+  ExplicitHeight = 197
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 148
-    Top = 93
+    Left = 169
+    Top = 137
     Action = MultiAction
-    ExplicitLeft = 148
-    ExplicitTop = 93
+    ExplicitLeft = 169
+    ExplicitTop = 137
   end
   inherited bbCancel: TcxButton
-    Left = 292
-    Top = 93
+    Left = 313
+    Top = 137
     Action = actClose
-    ExplicitLeft = 292
-    ExplicitTop = 93
+    ExplicitLeft = 313
+    ExplicitTop = 137
   end
   object deStart: TcxDateEdit [2]
     Left = 131
@@ -79,9 +79,26 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
     TabOrder = 9
     Width = 90
   end
+  object cxLabel6: TcxLabel [10]
+    Left = 48
+    Top = 94
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
+  end
+  object edRetail: TcxButtonEdit [11]
+    Left = 131
+    Top = 93
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 170
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 59
-    Top = 104
+    Left = 347
+    Top = 88
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -96,13 +113,13 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
           'Date')
       end
       item
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -387,7 +404,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -395,7 +412,15 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -415,7 +440,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
     DateEnd = deEnd
     Left = 472
   end
-  object InfoMoneyGuides: TdsdGuides
+  object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
@@ -427,22 +452,22 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 53
+    Left = 192
+    Top = 45
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -454,7 +479,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -463,7 +488,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -521,5 +546,35 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
   object DataSource1: TDataSource
     Left = 408
     Top = 128
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 200
+    Top = 93
   end
 end

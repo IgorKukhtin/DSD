@@ -158,6 +158,9 @@ type
     bbUpdateMaskReturnOut: TdxBarButton;
     actOpenFormOrderExternalChildSend: TdsdInsertUpdateAction;
     bbOpenFormOrderExtChildSend: TdxBarButton;
+    AssetName: TcxGridDBColumn;
+    AssetCode: TcxGridDBColumn;
+    actAssetChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

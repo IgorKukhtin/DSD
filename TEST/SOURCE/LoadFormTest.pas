@@ -1030,6 +1030,7 @@ end;
 
 procedure TLoadFormTest.LoadSendFormTest;
 begin
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
@@ -1082,11 +1083,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalBasisPackJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalBasisPackJournalForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackRemainsForm');
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackRemainsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackRemainsJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderInternalPackRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalPackRemainsForm');
   exit;
   //
 
@@ -2131,12 +2136,14 @@ end;
 
 procedure TLoadFormTest.LoadExternalForm;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveTaxDocumentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaveTaxDocumentForm');
   exit;
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveDocumentTo1CForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaveDocumentTo1CForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveMarketingDocumentTo1CForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaveMarketingDocumentTo1CForm');
 end;
@@ -3267,18 +3274,19 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PersonalForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_PersonalForm');
     exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
    /// exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
    exit;
@@ -3546,11 +3554,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAsset_ObjectForm');
   //exit;
    }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_DocGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAsset_DocGoodsForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetEditForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetTypeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetTypeEditForm'));

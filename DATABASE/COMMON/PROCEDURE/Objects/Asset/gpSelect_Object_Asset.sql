@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
              , PeriodUse TFloat, Production TFloat, KW TFloat
-             , isIrna Boolean
+             , isIrna Boolean, isDocGoods Boolean
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -62,6 +62,7 @@ BEGIN
          , COALESCE (ObjectFloat_KW.ValueData,0) :: TFloat AS KW
 
          , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
+         , COALESCE (ObjectBoolean_DocGoods.ValueData, FALSE)     :: Boolean AS isDocGoods
          , Object_Asset.isErased            AS isErased
          
      FROM Object AS Object_Asset
@@ -134,6 +135,10 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
                                   ON ObjectBoolean_Guide_Irna.ObjectId = Object_Asset.Id
                                  AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_DocGoods
+                                  ON ObjectBoolean_DocGoods.ObjectId = Object_Asset.Id
+                                 AND ObjectBoolean_DocGoods.DescId = zc_ObjectBoolean_Asset_DocGoods()
      WHERE Object_Asset.DescId = zc_Object_Asset()
 
       UNION ALL
@@ -176,6 +181,7 @@ BEGIN
          , NULL :: TFloat AS KW
 
          , FALSE AS isIrna
+         , FALSE AS isDocGoods
          , FALSE AS isErased
        ;  
 
@@ -187,6 +193,7 @@ ALTER FUNCTION gpSelect_Object_Asset(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.10.22         *
  04.05.22         *
  17.11.20         * add
  29.04.20         * add Production

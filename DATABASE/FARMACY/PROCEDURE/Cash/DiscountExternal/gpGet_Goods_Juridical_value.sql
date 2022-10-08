@@ -134,7 +134,8 @@ BEGIN
                 WHEN COALESCE(ObjectFloat_DiscountWithVAT.ValueData, 0) <> 0 
                 THEN COALESCE(ObjectFloat_DiscountWithVAT.ValueData, 0)
                 WHEN COALESCE(ObjectFloat_DiscountWithoutVAT.ValueData, 0) <> 0 
-                THEN ROUND(COALESCE(ObjectFloat_DiscountWithoutVAT.ValueData, 0) * (100 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData)) / 100, 2) END
+            --    THEN ROUND(COALESCE(ObjectFloat_DiscountWithoutVAT.ValueData, 0) * (100 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData)) / 100, 2) END
+                THEN COALESCE(ObjectFloat_DiscountWithoutVAT.ValueData, 0) END
     INTO outDiscountProcent, outDiscountSum
     FROM Object AS Object_BarCode
          INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods

@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , GoodsKindId_Complete Integer, GoodsKindName_Complete  TVarChar
              , InDate TDateTime, PartnerInName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
+             , AssetId Integer, AssetCode Integer, AssetName TVarChar
              , UnitName TVarChar
              , StorageName TVarChar
              , Price TFloat
@@ -155,6 +156,11 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
+
+           , CAST (NULL AS Integer)     AS AssetId
+           , CAST (NULL AS Integer)     AS AssetCode
+           , CAST (NULL AS TVarChar)    AS AssetName
+           
            , CAST (NULL AS TVarChar)    AS UnitName
            , CAST (NULL AS TVarChar)    AS StorageName
            , CAST (NULL AS TFloat)      AS Price
@@ -255,6 +261,10 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
+           
+           , Object_Asset.Id                       AS AssetId
+           , Object_Asset.ObjectCode               AS AssetCode
+           , Object_Asset.ValueData                AS AssetName
 
            , Object_Unit_partion.ValueData         AS UnitName
            , Object_Storage.ValueData              AS StorageName
@@ -309,6 +319,11 @@ BEGIN
                                             AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
             LEFT JOIN Object AS Object_Unit_partion ON Object_Unit_partion.Id = tmpMIContainer.UnitId
             LEFT JOIN Object AS Object_Storage      ON Object_Storage.Id      = tmpMIContainer.StorageId
@@ -355,6 +370,7 @@ BEGIN
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , COALESCE (MILO_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_Complete
                                  , COALESCE (MILinkObject_PartionGoods.ObjectId,0) AS PartionGoodsId
+                                 , MILinkObject_Asset.ObjectId                     AS AssetId
                                  , MovementItem.isErased
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -371,6 +387,10 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
                                                                   ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                                  ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                                              ON MIFloat_CountPack.MovementItemId = MovementItem.Id
@@ -496,6 +516,10 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
 
+           , Object_Asset.Id                       AS AssetId
+           , Object_Asset.ObjectCode               AS AssetCode
+           , Object_Asset.ValueData                AS AssetName
+
            , Object_Unit_partion.ValueData      AS UnitName
            , Object_Storage.ValueData           AS StorageName
            , tmpMIContainer.Price               AS Price
@@ -521,7 +545,7 @@ BEGIN
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = tmpMI_Goods.MovementItemId
             LEFT JOIN Object AS Object_Unit_partion ON Object_Unit_partion.Id = tmpMIContainer.UnitId
             LEFT JOIN Object AS Object_Storage      ON Object_Storage.Id      = tmpMIContainer.StorageId
-
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI_Goods.AssetId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -560,6 +584,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.10.22         * asset
  18.07.22         *
  08.02.22         *
  28.01.21         * PartionGoodsId

@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, BarCodeName TVarChar,
                GoodsId Integer, GoodsName TVarChar,
                ObjectId Integer, ObjectName TVarChar,
                MaxPrice TFloat, DiscountProcent TFloat, DiscountWithVAT TFloat, DiscountWithoutVAT TFloat, 
-               isDiscountSite Boolean,
+               isDiscountSite Boolean, isStealthBonuses Boolean,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -38,6 +38,7 @@ BEGIN
            , CAST (0 as TFloat)     AS DiscountWithoutVAT
 
            , False                  AS isDiscountSite
+           , False                  AS isStealthBonuses
 
            , CAST (NULL AS Boolean) AS isErased;
    
@@ -58,7 +59,8 @@ BEGIN
            , ObjectFloat_DiscountProcent.ValueData     AS DiscountProcent 
            , ObjectFloat_DiscountWithVAT.ValueData     AS DiscountWithVAT 
            , ObjectFloat_DiscountWithoutVAT.ValueData  AS DiscountWithoutVAT 
-           , COALESCE (ObjectBoolean_DiscountSite.ValueData, False)   AS isDiscountSite 
+           , COALESCE (ObjectBoolean_DiscountSite.ValueData, False)     AS isDiscountSite 
+           , COALESCE (ObjectBoolean_StealthBonuses.ValueData, False)   AS isStealthBonuses 
 
            , Object_BarCode.isErased     AS isErased
            
@@ -90,6 +92,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_DiscountSite
                                    ON ObjectBoolean_DiscountSite.ObjectId = Object_BarCode.Id
                                   AND ObjectBoolean_DiscountSite.DescId = zc_ObjectBoolean_BarCode_DiscountSite()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_StealthBonuses
+                                   ON ObjectBoolean_StealthBonuses.ObjectId = Object_BarCode.Id
+                                  AND ObjectBoolean_StealthBonuses.DescId = zc_ObjectBoolean_BarCode_StealthBonuses()
 
       WHERE Object_BarCode.Id = inId;
    END IF;

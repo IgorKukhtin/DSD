@@ -8,21 +8,21 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
+    Top = 64
     Width = 1170
-    Height = 421
+    Height = 416
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1170
     ExplicitHeight = 421
-    ClientRectBottom = 421
+    ClientRectBottom = 416
     ClientRectRight = 1170
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1170
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 1170
-        Height = 421
+        Height = 416
         ExplicitWidth = 1170
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -529,9 +529,9 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
   end
   inherited Panel: TPanel
     Width = 1170
-    Height = 33
+    Height = 38
     ExplicitWidth = 1170
-    ExplicitHeight = 33
+    ExplicitHeight = 38
     inherited deStart: TcxDateEdit
       Left = 109
       Top = 4
@@ -574,24 +574,31 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     end
     object cbIsUnComplete: TcxCheckBox
       Left = 738
-      Top = 5
+      Top = 0
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077
       TabOrder = 6
       Width = 161
     end
     object cbIsErased: TcxCheckBox
       Left = 900
-      Top = 5
+      Top = 0
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       TabOrder = 7
       Width = 145
     end
     object cbEmployeeMessage: TcxCheckBox
-      Left = 1033
-      Top = 5
+      Left = 738
+      Top = 17
       Caption = #1058#1086#1083#1100#1082#1086' '#1054#1057' '#1086#1090' '#1072#1087#1090#1077#1082#1080
       TabOrder = 8
       Width = 135
+    end
+    object cbDiscountExternal: TcxCheckBox
+      Left = 900
+      Top = 17
+      Caption = #1047#1072#1082#1072#1079#1099' '#1089' '#1044#1055
+      TabOrder = 9
+      Width = 108
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -697,6 +704,13 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
           Name = 'isEmployeeMessage'
           Value = Null
           Component = cbEmployeeMessage
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDiscountExternal'
+          Value = Null
+          Component = cbDiscountExternal
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -925,6 +939,14 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDiscountExternal'
+        Value = Null
+        Component = cbDiscountExternal
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 160
   end
@@ -1070,6 +1092,12 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       end
       item
         Component = cbEmployeeMessage
+      end
+      item
+        Component = cbDiscountExternal
+      end
+      item
+        Component = cbIsErased
       end>
     Left = 432
     Top = 216

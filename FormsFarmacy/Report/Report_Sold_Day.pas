@@ -81,6 +81,8 @@ type
     cxSplitter2: TcxSplitter;
     ChartItogDS: TDataSource;
     ChartItogCDS: TClientDataSet;
+    pcolFactAmountSaleIC: TcxDBPivotGridField;
+    FactAmountSaleIC: TcxGridDBColumn;
   private
     { Private declarations }
   public

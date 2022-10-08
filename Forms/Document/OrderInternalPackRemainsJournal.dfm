@@ -6,7 +6,7 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -822,6 +822,80 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actOrderInternalPackRemainsOpen: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetAfterExecute = True
+      Caption = #1047#1072#1103#1074#1082#1072' ('#1057#1088#1072#1074#1085#1077#1085#1080#1077')'
+      Hint = #1047#1072#1103#1074#1082#1072' ('#1057#1088#1072#1074#1085#1077#1085#1080#1077')'
+      ImageIndex = 25
+      FormName = 'TReport_OrderInternalPackRemainsForm'
+      FormNameParam.Value = 'TReport_OrderInternalPackRemainsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42736d
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -971,6 +1045,14 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         end
         item
           Visible = True
+          ItemName = 'bbOrderInternalPackRemains'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -985,9 +1067,6 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
     object bbPrintRemains: TdxBarButton
       Action = actPrintRemains
@@ -1010,6 +1089,10 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
       Action = actPrintRemainsLessUpak
       Category = 0
       ImageIndex = 16
+    end
+    object bbOrderInternalPackRemains: TdxBarButton
+      Action = actOrderInternalPackRemainsOpen
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

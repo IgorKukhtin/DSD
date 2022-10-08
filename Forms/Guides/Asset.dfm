@@ -57,6 +57,15 @@ object AssetForm: TAssetForm
         Options.Editing = False
         Width = 45
       end
+      object isDocGoods: TcxGridDBColumn
+        Caption = #1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074'. '#1076#1086#1082'.'
+        DataBinding.FieldName = 'isDocGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074#1072#1088#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093
+        Options.Editing = False
+        Width = 70
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -301,6 +310,18 @@ object AssetForm: TAssetForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateDocGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -362,6 +383,10 @@ object AssetForm: TAssetForm
     end
     object bbUpdate_isIrna: TdxBarButton
       Action = macUpdate_isIrna
+      Category = 0
+    end
+    object bbUpdateDocGoods: TdxBarButton
+      Action = macUpdateDocGoods
       Category = 0
     end
   end
@@ -563,6 +588,43 @@ object AssetForm: TAssetForm
       Caption = 'macUpdate_isIrna_list'
       ImageIndex = 66
     end
+    object actUpdateDocGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateDocGoods
+      StoredProcList = <
+        item
+          StoredProc = spUpdateDocGoods
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074'. '#1076#1086#1082'. '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074'. '#1076#1086#1082'. '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 79
+    end
+    object macUpdateDocGoods_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateDocGoods
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateDocGoods_list'
+      ImageIndex = 79
+    end
+    object macUpdateDocGoods: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateDocGoods_list
+        end>
+      QuestionBeforeExecute = #1044#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1080#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074#1072#1088#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093' '#1044#1072'/'#1053#1077#1090'"'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1080#1079#1084#1077#1085#1077#1085#1099
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074'. '#1076#1086#1082'. '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1073#1086#1088' '#1074' '#1090#1086#1074'. '#1076#1086#1082'. '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 79
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Asset'
@@ -652,6 +714,39 @@ object AssetForm: TAssetForm
       end>
     PackSize = 1
     Left = 432
+    Top = 160
+  end
+  object spUpdateDocGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_isBoolean'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioParam'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isDocGoods'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_ObjectBoolean_Asset_DocGoods'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
     Top = 160
   end
 end
