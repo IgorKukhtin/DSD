@@ -1463,8 +1463,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         item
           Action = actPrintSticker
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100' '
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1089#1090#1072#1090#1086#1082'+'#1044#1086#1083#1075'> '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100' '
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1089#1090#1072#1090#1086#1082'+'#1044#1086#1083#1075'> '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100
       ImageIndex = 15
     end
     object macAddGoodsPrintList_Rem: TMultiAction
@@ -1505,7 +1505,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Caption = 'actGet_User_curr'
     end
     object actUpdate_FloatValue_DS: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
@@ -1841,6 +1841,49 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' OLAP - '#1044#1040
       ImageIndex = 76
     end
+    object mactGoodsPrintList_two_Print: TMultiAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_GoodsPrint_Null
+        end
+        item
+          Action = macAddGoodsPrintList_two_Rem
+        end
+        item
+          Action = actGet_PrinterByUser
+        end
+        item
+          Action = actPrintSticker
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1089#1090#1072#1090#1086#1082'> '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100' '
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1089#1090#1072#1090#1086#1082'> '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100
+      ImageIndex = 22
+    end
+    object macAddGoodsPrintList_two_Rem: TMultiAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_FloatValue_DS_two
+        end>
+      View = cxGridDBTableView
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1089#1090#1072#1090#1086#1082'> '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100' '
+      ImageIndex = 15
+    end
+    object actUpdate_FloatValue_DS_two: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spUpdate_FloatValue_DS_two
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_FloatValue_DS_two
+        end>
+      Caption = 'actUpdate_FloatValue_DS_two'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2064,7 +2107,23 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGoodsPrintList_Print'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsPrintList_two_Print'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -2156,6 +2215,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object bbDelete_PartionGoods_ReportOLAP: TdxBarButton
       Action = actDelete_PartionGoods_ReportOLAP
+      Category = 0
+    end
+    object bbGoodsPrintList_two_Print: TdxBarButton
+      Action = mactGoodsPrintList_two_Print
       Category = 0
     end
   end
@@ -2868,5 +2931,31 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     PackSize = 1
     Left = 840
     Top = 288
+  end
+  object spUpdate_FloatValue_DS_two: TdsdStoredProc
+    StoredProcName = 'gpUpdate_FloatValue_DS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Remains'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_GoodsPrint'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 360
   end
 end

@@ -871,8 +871,8 @@ object MainForm: TMainForm
     end
     object cbSaleIntNal: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 233
+      Left = 6
+      Top = 226
       Width = 235
       Height = 17
       Caption = '3.1.'#1055#1088#1086#1076'.'#1087#1086#1082'. - '#1053#1040#1051
@@ -883,6 +883,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 8
+      Visible = False
     end
     object cbReturnOutBN: TCheckBox
       Tag = 20
@@ -901,8 +902,8 @@ object MainForm: TMainForm
     end
     object cbReturnInIntNal: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 252
+      Left = -3
+      Top = 243
       Width = 228
       Height = 17
       Caption = '3.2.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'. - '#1053#1040#1051
@@ -913,11 +914,12 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 10
+      Visible = False
     end
     object cbProductionUnion: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 299
+      Left = -3
+      Top = 266
       Width = 235
       Height = 17
       Caption = '4.1. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
@@ -928,11 +930,12 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 11
+      Visible = False
     end
     object cbProductionSeparate: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 319
+      Left = -3
+      Top = 282
       Width = 235
       Height = 17
       Caption = '4.2. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -943,11 +946,12 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 12
+      Visible = False
     end
     object cbLoss: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 342
+      Left = 6
+      Top = 289
       Width = 155
       Height = 17
       Caption = '5.2. '#1057#1087#1080#1089#1072#1085#1080#1077
@@ -958,11 +962,12 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 13
+      Visible = False
     end
     object cbInventory: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 365
+      Left = -3
+      Top = 305
       Width = 235
       Height = 17
       Caption = '6. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -973,11 +978,12 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 14
+      Visible = False
     end
     object cbOrderExternal: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 379
+      Left = 6
+      Top = 391
       Width = 120
       Height = 17
       Caption = '7.1. '#1047#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087'.'
@@ -1211,8 +1217,8 @@ object MainForm: TMainForm
       Visible = False
     end
     object cblTaxPF: TCheckBox
-      Left = 169
-      Top = 369
+      Left = 132
+      Top = 414
       Width = 63
       Height = 17
       Caption = 'PF'
@@ -1304,7 +1310,7 @@ object MainForm: TMainForm
     object cbPartner_Sale: TCheckBox
       Tag = 20
       Left = 25
-      Top = 271
+      Top = 251
       Width = 212
       Height = 17
       Caption = '!!!'#1085#1086#1074#1099#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'/'#1076#1086#1075#1086#1074#1086#1088#1072' '#1053#1040#1051'!!!'
@@ -1315,11 +1321,12 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 36
+      Visible = False
     end
     object cbOrderInternal: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 392
+      Left = -3
+      Top = 402
       Width = 120
       Height = 17
       Caption = '7.2. '#1047#1072#1103#1074#1082#1080' '#1087#1088'-'#1074#1086
@@ -1350,8 +1357,8 @@ object MainForm: TMainForm
     end
     object cbCash: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 408
+      Left = 1
+      Top = 415
       Width = 166
       Height = 17
       Caption = '8. '#1050#1072#1089#1089#1072' Int - '#1053#1040#1051
@@ -1366,8 +1373,8 @@ object MainForm: TMainForm
     end
     object cbLossGuide: TCheckBox
       Tag = 20
-      Left = 132
-      Top = 341
+      Left = 108
+      Top = 297
       Width = 108
       Height = 24
       Caption = '5.1. !!!'#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1089#1087#1080#1089#1072#1085#1080#1103'!!!'
@@ -1383,8 +1390,8 @@ object MainForm: TMainForm
     end
     object cbWeighingPartner: TCheckBox
       Tag = 20
-      Left = 120
-      Top = 379
+      Left = 123
+      Top = 391
       Width = 120
       Height = 17
       Caption = '9.1. '#1042#1079#1074#1077#1096'.'#1087#1086#1082#1091#1087'.'
@@ -1399,8 +1406,8 @@ object MainForm: TMainForm
     end
     object cbWeighingProduction: TCheckBox
       Tag = 20
-      Left = 120
-      Top = 392
+      Left = 123
+      Top = 398
       Width = 120
       Height = 17
       Caption = '9.2. '#1042#1079#1074#1077#1096'.'#1087#1088'-'#1074#1086
@@ -1549,6 +1556,62 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 52
+    end
+    object cbHistoryCost_8379: TCheckBox
+      Left = 5
+      Top = 340
+      Width = 150
+      Height = 17
+      Caption = 'HistoryCost-8379'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 53
+    end
+    object cbHistoryCost_0: TCheckBox
+      Left = 5
+      Top = 320
+      Width = 150
+      Height = 17
+      Caption = 'HistoryCost-0'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 54
+    end
+    object cbHistoryCost_8374: TCheckBox
+      Left = 5
+      Top = 360
+      Width = 150
+      Height = 17
+      Caption = 'HistoryCost-8374'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 55
+    end
+    object cbHistoryCost_oth: TCheckBox
+      Left = 5
+      Top = 380
+      Width = 150
+      Height = 17
+      Caption = 'HistoryCost-oth'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 56
     end
   end
   object CompleteDocumentPanel: TPanel
@@ -1699,7 +1762,7 @@ object MainForm: TMainForm
     object cbInsertHistoryCost: TCheckBox
       Tag = 100
       Left = 15
-      Top = 81
+      Top = 85
       Width = 194
       Height = 17
       Caption = #1057#1045#1041#1045#1057#1058#1054#1048#1052#1054#1057#1058#1068' '#1087#1086' '#1052#1045#1057#1071#1062#1040#1052
@@ -1747,7 +1810,7 @@ object MainForm: TMainForm
     end
     object cbLastComplete: TCheckBox
       Left = 15
-      Top = 61
+      Top = 64
       Width = 191
       Height = 17
       Caption = '!!!'#1073#1077#1079' '#1087#1088#1086#1074#1086#1076#1086#1082' C/C!!!'
@@ -2280,7 +2343,7 @@ object MainForm: TMainForm
     object cbOnlySale: TCheckBox
       Tag = 100
       Left = 15
-      Top = 103
+      Top = 104
       Width = 194
       Height = 17
       Caption = #1054#1044#1048#1053' '#1088#1072#1079' '#1042#1052#1045#1057#1058#1045' '#1089' '#1055#1088#1086#1076#1072#1078#1077#1081
@@ -2310,7 +2373,7 @@ object MainForm: TMainForm
     end
     object cbOnlyTwo: TCheckBox
       Left = 16
-      Top = 124
+      Top = 123
       Width = 217
       Height = 17
       Caption = '!!!'#1058#1054#1051#1068#1050#1054' '#8470'2 ('#1088#1091#1095#1085'. '#1088#1077#1078#1080#1084')!!!'
