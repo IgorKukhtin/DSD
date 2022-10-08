@@ -140,7 +140,12 @@
       FormNameParam.Value = 'TReceiptLevelForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'MasterObjectDesc'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actProductionPersonal: TdsdOpenForm [12]

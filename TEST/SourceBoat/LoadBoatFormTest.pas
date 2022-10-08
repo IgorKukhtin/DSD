@@ -162,6 +162,7 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckBooleanDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckBooleanDialogForm');
   exit;
@@ -178,8 +179,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
 
 //
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleForm'));
@@ -207,7 +211,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
-
+   }
 end;
 
 procedure TLoadFormTest.LoadLossFormTest;

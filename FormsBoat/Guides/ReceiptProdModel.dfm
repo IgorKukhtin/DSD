@@ -2204,6 +2204,13 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           ComponentItem = 'ReceiptLevelName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterObjectDesc'
+          Value = 'zc_Object_ReceiptProdModel'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2866,8 +2873,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 320
+    Left = 144
+    Top = 352
   end
   object spErasedProdColorPattern: TdsdStoredProc
     DataSets = <>

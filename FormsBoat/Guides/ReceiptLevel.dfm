@@ -15,6 +15,7 @@ object ReceiptLevelForm: TReceiptLevelForm
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = actChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -121,8 +122,13 @@ object ReceiptLevelForm: TReceiptLevelForm
     ExplicitLeft = -755
     ExplicitTop = 0
     ExplicitWidth = 1272
+    object cxLabel12: TcxLabel
+      Left = 5
+      Top = 8
+      Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    end
     object edObjectDesc: TcxButtonEdit
-      Left = 98
+      Left = 102
       Top = 7
       Properties.Buttons = <
         item
@@ -130,13 +136,8 @@ object ReceiptLevelForm: TReceiptLevelForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 0
-      Width = 253
-    end
-    object cxLabel12: TcxLabel
-      Left = 5
-      Top = 8
-      Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      TabOrder = 1
+      Width = 251
     end
   end
   object DataSource: TDataSource
@@ -146,6 +147,7 @@ object ReceiptLevelForm: TReceiptLevelForm
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 32
     Top = 128
@@ -523,14 +525,15 @@ object ReceiptLevelForm: TReceiptLevelForm
       item
         Name = 'inObjectDesc'
         Value = Null
-        Component = edObjectDesc
+        Component = GuidesObjectDesc
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 24
-    Top = 200
+    Left = 32
+    Top = 192
   end
   object spErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ReceiptLevel'
@@ -658,10 +661,20 @@ object ReceiptLevelForm: TReceiptLevelForm
     Left = 392
     Top = 115
   end
+  object RefreshDispatcher1: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesObjectDesc
+      end>
+    Left = 392
+    Top = 216
+  end
   object GuidesObjectDesc: TdsdGuides
     KeyField = 'Id'
     LookupControl = edObjectDesc
-    isShowModal = True
     FormNameParam.Value = 'TObjectDescForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -677,26 +690,27 @@ object ReceiptLevelForm: TReceiptLevelForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'Code'
+        Value = 'zc_Object_Goods'
+        Component = GuidesObjectDesc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 224
+    Top = 29
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MasterObjectDesc'
         Value = ''
         Component = GuidesObjectDesc
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 215
-    Top = 26
-  end
-  object RefreshDispatcher1: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = GuidesObjectDesc
-      end>
-    Left = 392
-    Top = 216
+    Left = 80
+    Top = 272
   end
 end

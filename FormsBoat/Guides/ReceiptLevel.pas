@@ -67,10 +67,11 @@ type
     spInsertUpdate: TdsdStoredProc;
     ObjectDesc: TcxGridDBColumn;
     Panel5: TPanel;
-    edObjectDesc: TcxButtonEdit;
     cxLabel12: TcxLabel;
-    GuidesObjectDesc: TdsdGuides;
     RefreshDispatcher1: TRefreshDispatcher;
+    edObjectDesc: TcxButtonEdit;
+    GuidesObjectDesc: TdsdGuides;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

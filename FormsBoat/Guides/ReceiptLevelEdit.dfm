@@ -262,7 +262,7 @@ object ReceiptLevelEditForm: TReceiptLevelEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'Code'
         Value = ''
         Component = GuidesObjectDesc
         ComponentItem = 'TextValue'
