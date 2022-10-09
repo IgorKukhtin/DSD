@@ -240,6 +240,10 @@ type
     ActionList: TActionList;
     actSendTelegramBot: TdsdSendTelegramBotAction;
     Button2: TButton;
+    cbHistoryCost_8379: TCheckBox;
+    cbHistoryCost_0: TCheckBox;
+    cbHistoryCost_8374: TCheckBox;
+    cbHistoryCost_oth: TCheckBox;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -607,9 +611,9 @@ begin
         DecodeTime(Present, Hour, Min, Sec, MSec);
         //
         if ((GroupId_branch = 0) and (((Hour = zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H<=23))))
-         or((GroupId_branch = 1) and (((Hour = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H<=23))))
-         or((GroupId_branch = 2) and (((Hour = zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H<=23))))
-         or((GroupId_branch = 3) and (((Hour = zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H<=23))))
+         or(((GroupId_branch = 1)or(cbHistoryCost_8379.Checked)) and (((Hour = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H<=23))))
+         or(((GroupId_branch = 2)or(cbHistoryCost_8374.Checked)) and (((Hour = zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H<=23))))
+         or(((GroupId_branch = 3)or(cbHistoryCost_oth.Checked))  and (((Hour = zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H<=23))))
          or((GroupId_branch = 4) and (((Hour = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H<=23))))
         then begin
             fEnabled:= false;
@@ -954,15 +958,26 @@ var
   Year, Month, Day, Hour, Min, Sec, MSec: Word;
   i : Integer;
 begin
+     //
+     cbHistoryCost_0.Checked   := (ParamStr(5) = 'h_0')or(ParamStr(6) = 'h_0')or(ParamStr(7) = 'h_0')or(ParamStr(8) = 'h_0')or(ParamStr(9) = 'h_0')or(ParamStr(10) = 'h_0')or(ParamStr(11) = 'h_0');
+     cbHistoryCost_8379.Checked:= (ParamStr(2) = 'h_8379')or(ParamStr(6) = 'h_8379')or(ParamStr(7) = 'h_8379')or(ParamStr(8) = 'h_8379')or(ParamStr(9) = 'h_8379')or(ParamStr(10) = 'h_8379')or(ParamStr(11) = 'h_8379');
+     cbHistoryCost_8374.Checked:= (ParamStr(2) = 'h_8374')or(ParamStr(6) = 'h_8374')or(ParamStr(7) = 'h_8374')or(ParamStr(8) = 'h_8374')or(ParamStr(9) = 'h_8374')or(ParamStr(10) = 'h_8374')or(ParamStr(11) = 'h_8374');
+     cbHistoryCost_oth.Checked := (ParamStr(2) = 'h_oth')or(ParamStr(6) = 'h_oth')or(ParamStr(7) = 'h_oth')or(ParamStr(8) = 'h_oth')or(ParamStr(9) = 'h_oth')or(ParamStr(10) = 'h_oth')or(ParamStr(11) = 'h_oth');
+     //
      try if Pos('br-', ParamStr(5)) = 1 then GroupId_branch:= StrToInt(Copy(ParamStr(5), 4, 2));
          BranchEdit.Text:= 'BranchId : ' + IntToStr(GroupId_branch);
-     except GroupId_branch:= -1;
+     except
+            if (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked)
+            then GroupId_branch:= 0
+            else GroupId_branch:= -1;
             BranchEdit.Text:= '!!!ERROR!!! BranchId : ???';
      end;
      //
      beginVACUUM:=0;
      beginVACUUM_ii:=0;
-     Timer.Enabled:= (ParamStr(2)='autoALL') and (BranchEdit.Text = 'BranchId : 0');
+     Timer.Enabled:= ((ParamStr(2)='autoALL') and (BranchEdit.Text = 'BranchId : 0'))
+                   or (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked)
+                  ;
      fStartProcess:= false;
      //
      Gauge.Visible:=false;
@@ -1194,7 +1209,7 @@ begin
   try
      fStartProcess:= TRUE;
      // !!!важно!!!
-     cbOnlySale.Checked:=  System.Pos('_SALE',ParamStr(2))>0;
+     cbOnlySale.Checked:=System.Pos('_SALE',ParamStr(2))>0;
 
      if (ParamStr(2)='autoPack_oneDay')
      then fBeginPack_oneDay;
@@ -1278,6 +1293,14 @@ begin
      if ParamStr(2)='autoReComplete'
      then begin
           end;
+
+     if  (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked)
+     then begin
+                cbInsertHistoryCost.Checked:= true;
+                cbOnlyTwo.Checked:= true;
+                Timer_Auto_PrimeCostTimer(Self);
+          end;
+
   finally
      fStartProcess:= FALSE;
   end;
@@ -1666,7 +1689,8 @@ begin
      end;}
      //
      //
-     if System.Pos('auto',ParamStr(2))<=0
+     if (System.Pos('auto',ParamStr(2))<=0)
+     and (not cbHistoryCost_8379.Checked and not cbHistoryCost_8374.Checked and not cbHistoryCost_oth.Checked)
      then begin
                if (cbInsertHistoryCost.Checked)
                then if MessageDlg('Действительно расчитать <СЕБЕСТОИМОСТЬ по МЕСЯЦАМ> за период с <'+DateToStr(StrToDate(StartDateCompleteEdit.Text))+'> по <'+DateToStr(StrToDate(EndDateCompleteEdit.Text))+'> ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
@@ -1739,7 +1763,9 @@ begin
      end;
      //
      //
-     if (saveMonth <> Month2) and ((ParamStr(6)<>'next-')) then begin
+     if (saveMonth <> Month2) and ((ParamStr(6)<>'next-'))
+     and (not cbHistoryCost_8379.Checked and not cbHistoryCost_8374.Checked and not cbHistoryCost_oth.Checked)
+     then begin
        pInsertHistoryCost_Period(calcEndDate+1,saveEndDate,TRUE);
        //
        tmpDate3:=NOw;
@@ -1761,7 +1787,8 @@ begin
      toZConnection.Connected:=false;
      if not cbOnlyOpen.Checked then fromZConnection.Connected:=false;
 
-     if System.Pos('auto',ParamStr(2))<=0
+     if (System.Pos('auto',ParamStr(2))<=0)
+     and (not cbHistoryCost_8379.Checked and not cbHistoryCost_8374.Checked and not cbHistoryCost_oth.Checked)
      then begin
                if (fStop)and(cbInsertHistoryCost.Checked) then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана НЕ полностью. Time=('+StrTime+').')
                else if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены. Time=('+StrTime+').')
@@ -2100,17 +2127,24 @@ begin
              //
              myLogMemo_add('HistoryCost:BranchId='+FieldByName('BranchId').AsString);
              //
-             toStoredProc.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
-             toStoredProc.Params.ParamByName('inEndDate').Value:=FieldByName('EndDate').AsDateTime;
-             toStoredProc.Params.ParamByName('inBranchId').Value:=FieldByName('BranchId').AsInteger;
-             toStoredProc.Params.ParamByName('inItearationCount').Value:=800;
-             toStoredProc.Params.ParamByName('inInsert').Value:=12345;//захардкодил
-             toStoredProc.Params.ParamByName('inDiffSumm').Value:=0.009;
-             //ShowMessage('pInsertHistoryCost');
-             if not myExecToStoredProc then exit;
+             if ((FieldByName('BranchId').AsInteger = 0)    and (cbHistoryCost_0.Checked))
+              or((FieldByName('BranchId').AsInteger = 8379) and (cbHistoryCost_8379.Checked))
+              or((FieldByName('BranchId').AsInteger = 8374) and (cbHistoryCost_8374.Checked))
+              or((FieldByName('BranchId').AsInteger <> 0) and (FieldByName('BranchId').AsInteger <> 8379) and (FieldByName('BranchId').AsInteger <> 8374) and (cbHistoryCost_oth.Checked))
+             then begin
+                 //
+                 toStoredProc.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
+                 toStoredProc.Params.ParamByName('inEndDate').Value:=FieldByName('EndDate').AsDateTime;
+                 toStoredProc.Params.ParamByName('inBranchId').Value:=FieldByName('BranchId').AsInteger;
+                 toStoredProc.Params.ParamByName('inItearationCount').Value:=800;
+                 toStoredProc.Params.ParamByName('inInsert').Value:=12345;//захардкодил
+                 toStoredProc.Params.ParamByName('inDiffSumm').Value:=0.009;
+                 //ShowMessage('pInsertHistoryCost');
+                 if not myExecToStoredProc then exit;
+                 //
+                 MyDelay(5 * 1000);
+             end;
              //
-             //
-             MyDelay(5 * 1000);
              //
              // vacuum
              for ii:= 0 to 25 do begin fBeginVACUUM;end;
@@ -2579,6 +2613,10 @@ begin
      //
      myLogMemo_add('start cbPack');
      //
+     cb100MSec.Checked:= true;
+     SessionIdEdit.Text:= '30000';
+     MyDelay(10 * 1000);
+     //
      DBGrid.DataSource.DataSet:=fromZQueryDate_recalc;
      //
      fromZConnection.Connected:=false;
@@ -2624,7 +2662,7 @@ begin
                  //
                  if cb100MSec.Checked
                  then begin
-                      try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
+                      try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=1000 then MSec_complete:=40000;except MSec_complete:=40000;end;
                       if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
                  end
                  else MyDelay(8 * 1000);
@@ -2670,6 +2708,8 @@ begin
              Application.ProcessMessages;
         end;
      end;
+     //
+     cb100MSec.Checked:= false;
      //
      myDisabledCB(cbPack);
      //

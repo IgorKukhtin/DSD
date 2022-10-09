@@ -28,8 +28,8 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                    ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
                                                   AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
-                         WHERE Object.ValueData = inValue
-                           AND Object.DescId = zc_Object_PartionGoods()
+                         WHERE Object.ValueData  = inValue
+                           AND Object.DescId     = zc_Object_PartionGoods()
                            AND ObjectLink_Unit.ObjectId              IS NULL -- т.е. вообще нет этого св-ва
                            AND ObjectLink_GoodsKindComplete.ObjectId IS NULL -- т.е. вообще нет этого св-ва
                         ); -- 80132
@@ -42,8 +42,8 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                    ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
                                                   AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
-                         WHERE Object.ValueData = inValue
-                           AND Object.DescId = zc_Object_PartionGoods()
+                         WHERE Object.ValueData  = inValue
+                           AND Object.DescId     = zc_Object_PartionGoods()
                            AND ObjectLink_Unit.ObjectId              IS NULL -- т.е. вообще нет этого св-ва
                            AND ObjectLink_GoodsKindComplete.ObjectId IS NULL -- т.е. вообще нет этого св-ва
                         );
@@ -91,7 +91,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertFind_Object_PartionGoods (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

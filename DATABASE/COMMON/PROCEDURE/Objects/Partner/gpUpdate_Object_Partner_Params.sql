@@ -59,7 +59,8 @@ BEGIN
    OR COALESCE (vbPersonalTradeId,0) <> COALESCE (inPersonalTradeId,0)
    OR COALESCE (vbPersonalMerchId,0) <> COALESCE (inPersonalMerchId,0)
    OR COALESCE (vbPrepareDayCount,0) <> COALESCE (inPrepareDayCount,0)
-   OR COALESCE (vbDocumentDayCount,0) <> COALESCE (inDocumentDayCount,0)
+   OR COALESCE (vbDocumentDayCount,0)<> COALESCE (inDocumentDayCount,0)
+   OR COALESCE (vbUnitId,0)          <> COALESCE (inUnitId,0)
    THEN
    
    -- проверка прав пользователя на вызов процедуры
@@ -84,6 +85,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalMerch(), ioId, inPersonalMerchId);
 
 
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Unit(), ioId, inUnitId);
+
+
    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (106597 )) -- Торговый отдел
    THEN
        -- сохранили связь с <>
@@ -99,9 +104,6 @@ BEGIN
         PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPrepareDayCount);
         -- сохранили свойство <Через сколько дней оформляется документально>
         PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount(), ioId, inDocumentDayCount);
-
-        -- сохранили связь с <>
-        PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Unit(), ioId, inUnitId);
 
    END IF;
    END IF; 

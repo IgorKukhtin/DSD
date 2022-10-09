@@ -130,6 +130,11 @@ type
     bbPart_isOlapNo_list: TdxBarButton;
     actDelete_PartionGoods_ReportOLAP: TdsdExecStoredProc;
     bbDelete_PartionGoods_ReportOLAP: TdxBarButton;
+    spUpdate_FloatValue_DS_two: TdsdStoredProc;
+    mactGoodsPrintList_two_Print: TMultiAction;
+    macAddGoodsPrintList_two_Rem: TMultiAction;
+    actUpdate_FloatValue_DS_two: TdsdExecStoredProc;
+    bbGoodsPrintList_two_Print: TdxBarButton;
   private
     { Private declarations }
   public

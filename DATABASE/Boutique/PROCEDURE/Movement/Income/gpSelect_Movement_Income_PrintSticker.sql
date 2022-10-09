@@ -173,6 +173,7 @@ BEGIN
                                        LEFT JOIN Object_GoodsPrint ON Object_GoodsPrint.InsertDate = tmp.InsertDate
                                                                   AND Object_GoodsPrint.UserId     = inUserId
                                   WHERE tmp.Ord = inGoodsPrintId AND inGoodsPrintId <> 0
+                                    AND Object_GoodsPrint.Amount > 0
                                  )
              , tmpList AS (SELECT tmp.Amount, GENERATE_SERIES (1, tmp.Amount :: Integer) AS Ord
                            FROM (SELECT DISTINCT tmpGoodsPrint.Amount FROM tmpGoodsPrint) AS tmp

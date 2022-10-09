@@ -35,7 +35,11 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- определяется уровень доступа
-   vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId);
+   vbObjectId_Constraint:= (SELECT DISTINCT Object_RoleAccessKeyGuide_View.JuridicalGroupId
+                            FROM Object_RoleAccessKeyGuide_View
+                            WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0
+                              AND vbUserId <> 8592877 -- Садикова М.А.
+                           );
    vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
 
 
@@ -130,10 +134,10 @@ BEGIN
    WHERE Object_Contract_View.JuridicalId = inJuridicalId
 --     AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
      AND Object_Contract_View.isErased = FALSE
-     AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+   /*  AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                               , 8359 -- 04-Услуги
                                                                )
-          OR vbIsConstraint = FALSE)
+          OR vbIsConstraint = FALSE)*/
      AND Object_Contract_View.EndDate_condition = zc_DateEnd()
 
   ;
