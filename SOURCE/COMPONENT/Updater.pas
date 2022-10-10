@@ -12,6 +12,7 @@ type
      class procedure UpdateProgram;
      class function UpdateProgramTest : boolean;
      class function ProgramLoadSuffics(aFileName: string) : String;
+     class function UpdateDll(aFileName: string) : Boolean;
   public
      class procedure AutomaticCheckConnect;
      class procedure AutomaticUpdateProgram;
@@ -614,6 +615,41 @@ begin
   end;
 end;
 
+class function TUpdater.UpdateDll(aFileName: string) : Boolean;
+var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
+begin
+  try
+    try
+      Application.ProcessMessages;
+
+      if FileExists(ExtractFilePath(ParamStr(0)) + aFileName + '.tmp') then SysUtils.DeleteFile(ExtractFilePath(ParamStr(0)) + aFileName + '.tmp');
+
+      if FileExists(ExtractFilePath(ParamStr(0)) + aFileName) then
+      begin
+        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(aFileName,
+                                   GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + aFileName, ''));
+        LocalVersionInfo := UnilWin.GetFileVersion(ExtractFilePath(ParamStr(0)) + aFileName);
+        result := (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+           ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow));
+      end else result := True;
+
+      if result then
+      begin
+        if FileExists(ExtractFilePath(ParamStr(0)) + aFileName) then RenameFile(ExtractFilePath(ParamStr(0)) + aFileName, ExtractFilePath(ParamStr(0)) + aFileName + '.tmp');
+        FileWriteString(ExtractFilePath(ParamStr(0)) + aFileName, TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName(aFileName), ''));
+      end;
+
+    except
+      on E: Exception do
+         TMessagesForm.Create(nil).Execute('Ќе работает автоматическое обновление.'#13#10'ќбратитесь к разработчику', E.Message);
+    end;
+
+  finally
+    if not FileExists(ExtractFilePath(ParamStr(0)) + aFileName) and FileExists(ExtractFilePath(ParamStr(0)) + aFileName)
+      then RenameFile(ExtractFilePath(ParamStr(0)) + aFileName + '.tmp', ExtractFilePath(ParamStr(0)) + aFileName);
+  end;
+end;
+
 class procedure TUpdater.UpdateProgram;
 var S : String;
 begin
@@ -635,10 +671,16 @@ begin
      FileWriteString(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('Upgrader4.exe'),
        GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe', '')));
 
-  //4. midas.dll грузим если надо
+  //4.0 midas.dll грузим если надо
   if (gc_ProgramName <> 'FDemo.exe') and (not FileExists(ExtractFilePath(ParamStr(0)) + 'midas.dll'))
   then
      FileWriteString(ExtractFilePath(ParamStr(0)) + 'midas.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('midas.dll'), ''));
+
+  //4.1. libeay32.dll грузим - дл€ SMS
+  if (gc_ProgramName = 'FarmacyCash.exe') then UpdateDll('libeay32.dll');
+
+  //4.2. ssleay32.dll грузим - дл€ SMS
+  if (gc_ProgramName = 'FarmacyCash.exe') then UpdateDll('ssleay32.dll');
 
   //5. «апускаем Upgrader дл€ замени EXE
   Execute(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe ' + ParamStr(0), ExtractFileDir(ParamStr(0)));
@@ -674,6 +716,12 @@ begin
   if (gc_ProgramName <> 'FDemo.exe') and (not FileExists(ExtractFilePath(ParamStr(0)) + 'midas.dll'))
   then
      FileWriteString(ExtractFilePath(ParamStr(0)) + 'midas.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('midas.dll'), ''));
+
+  //4.1. libeay32.dll грузим - дл€ SMS
+  if (gc_ProgramName = 'FarmacyCash.exe') then UpdateDll('libeay32.dll');
+
+  //4.2. ssleay32.dll грузим - дл€ SMS
+  if (gc_ProgramName = 'FarmacyCash.exe') then UpdateDll('ssleay32.dll');
 
   //5. «апускаем Upgrader дл€ замени EXE
   Execute(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe ' + ParamStr(0), ExtractFileDir(ParamStr(0)));

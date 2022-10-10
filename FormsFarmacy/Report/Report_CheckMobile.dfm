@@ -12,19 +12,19 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     Width = 1170
     Height = 416
     TabOrder = 3
-    ExplicitTop = 59
+    ExplicitTop = 64
     ExplicitWidth = 1170
-    ExplicitHeight = 421
+    ExplicitHeight = 416
     ClientRectBottom = 416
     ClientRectRight = 1170
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1170
-      ExplicitHeight = 421
+      ExplicitHeight = 416
       inherited cxGrid: TcxGrid
         Width = 1170
         Height = 416
         ExplicitWidth = 1170
-        ExplicitHeight = 421
+        ExplicitHeight = 416
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -880,6 +880,32 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         end>
       isShowModal = False
     end
+    object mactMovementSetErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actMovementSetErased
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1079#1072#1082#1072#1079#1099' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+      Caption = #1059#1076#1072#1083#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1099' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1059#1076#1072#1083#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1099' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 13
+    end
+    object actMovementSetErased: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementSetErased
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErased
+        end>
+      Caption = 'actMovementSetErased'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1015,6 +1041,14 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementSetErased'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -1052,6 +1086,10 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     end
     object bbReport_ConductedSalesMobile: TdxBarButton
       Action = actReport_ConductedSalesMobile
+      Category = 0
+    end
+    object bbMovementSetErased: TdxBarButton
+      Action = mactMovementSetErased
       Category = 0
     end
   end
@@ -1189,5 +1227,22 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     PackSize = 1
     Left = 424
     Top = 336
+  end
+  object spMovementSetErased: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_Check'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 312
   end
 end

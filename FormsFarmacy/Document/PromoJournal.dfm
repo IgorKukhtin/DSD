@@ -17,17 +17,17 @@ inherited PromoJournalForm: TPromoJournalForm
     Width = 776
     Height = 434
     TabOrder = 3
-    ExplicitWidth = 769
+    ExplicitWidth = 776
     ExplicitHeight = 434
     ClientRectBottom = 434
     ClientRectRight = 776
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 769
+      ExplicitWidth = 776
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 776
         Height = 434
-        ExplicitWidth = 769
+        ExplicitWidth = 776
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -160,13 +160,21 @@ inherited PromoJournalForm: TPromoJournalForm
             Options.Editing = False
             Width = 95
           end
+          object isNotUseSUN: TcxGridDBColumn
+            Caption = #1053#1077' '#1080#1089#1087#1086#1083#1100#1079'. '#1090#1086#1074#1072#1088' '#1074' '#1057#1059#1053
+            DataBinding.FieldName = 'isNotUseSUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 776
-    ExplicitWidth = 769
+    ExplicitWidth = 776
   end
   inherited ActionList: TActionList
     Left = 55
@@ -374,6 +382,31 @@ inherited PromoJournalForm: TPromoJournalForm
         end>
       Caption = 'actUpdate_Supplement'
     end
+    object mactUpdate_NotUseSUN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_NotUseSUN
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1057#1059#1053'"?'
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1053#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1057#1059#1053'"'
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1053#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1057#1059#1053'"'
+      ImageIndex = 80
+    end
+    object actUpdate_NotUseSUN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NotUseSUN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NotUseSUN
+        end>
+      Caption = 'actUpdate_NotUseSUN'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Promo'
@@ -487,6 +520,14 @@ inherited PromoJournalForm: TPromoJournalForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_NotUseSUN'
         end>
     end
     object bbOpenReportForm: TdxBarButton
@@ -508,6 +549,10 @@ inherited PromoJournalForm: TPromoJournalForm
     end
     object dxBarButton1: TdxBarButton
       Action = macUpdate_Supplement
+      Category = 0
+    end
+    object bbUpdate_NotUseSUN: TdxBarButton
+      Action = mactUpdate_NotUseSUN
       Category = 0
     end
   end
@@ -653,5 +698,31 @@ inherited PromoJournalForm: TPromoJournalForm
     PackSize = 1
     Left = 568
     Top = 200
+  end
+  object spUpdate_NotUseSUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_NotUseSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotUseSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotUseSUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 272
   end
 end
