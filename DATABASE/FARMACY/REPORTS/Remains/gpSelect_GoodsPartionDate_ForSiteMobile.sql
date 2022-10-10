@@ -88,7 +88,7 @@ BEGIN
          , MIN(p.Price_unit_sale_6)::TFloat
          , MAX(p.Price_unit_sale_6)::TFloat
 
-    FROM gpSelect_GoodsOnUnit_ForSiteMobile_Ol ('', inGoodsId::Text, inSession) AS p
+    FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', inGoodsId::Text, inSession) AS p
     GROUP BY p.Id, p.Name, p.NameUkr, p.deleted;
        
 END;

@@ -5431,7 +5431,7 @@ begin
       while not CheckCDS.Eof do
       begin
         if not CheckCDS.FieldByName('isPresent').AsBoolean and not CheckCDS.FieldByName('isGoodsPresent').AsBoolean and
-           (CheckCDS.FieldByName('PartionDateKindId').AsInteger = 0) and
+           ((CheckCDS.FieldByName('PartionDateKindId').AsInteger = 0) or (CheckCDS.FieldByName('PartionDateKindId').AsInteger = 11446717)) and
            RemainsCDS.Locate('Id', CheckCDS.FieldByName('GoodsId').AsInteger, []) and not RemainsCDS.FieldByName('isSpecial').AsBoolean  then
         begin
           if CheckCDS.FieldByName('PriceLoad').asCurrency > 0 then
@@ -5454,7 +5454,7 @@ begin
     begin
 
       if (nChangeSumma > 0) and not CheckCDS.FieldByName('isPresent').AsBoolean and not CheckCDS.FieldByName('isGoodsPresent').AsBoolean and
-         (CheckCDS.FieldByName('PartionDateKindId').AsInteger = 0) and
+         ((CheckCDS.FieldByName('PartionDateKindId').AsInteger = 0) or (CheckCDS.FieldByName('PartionDateKindId').AsInteger = 11446717)) and
          RemainsCDS.Locate('Id', CheckCDS.FieldByName('GoodsId').AsInteger, []) and not RemainsCDS.FieldByName('isSpecial').AsBoolean then
       begin
         if (CheckCDS.FieldByName('Amount').asCurrency <> 0) and (nSumAll > 0) then
