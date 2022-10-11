@@ -103,6 +103,9 @@ BEGIN
                                                   , inDiscountExternalId  := MILO_DiscountExternal.ObjectId        -- Проект дисконтных карт
                                                   , inDivisionPartiesID   := MILO_DivisionParties.ObjectId         -- Разделение партий в кассе для продажи
                                                   , inPresent             := COALESCE(MIBoolean_Present.ValueData, False)   -- Подарок
+                                                  , inJuridicalId         := MILinkObject_Juridical.ObjectId 
+                                                  , inGoodsPresentId      := COALESCE (MILinkObject_GoodsPresent.ObjectId, 0) 
+                                                  , inisGoodsPresent      := COALESCE (MIBoolean_GoodsPresent.ValueData, False)
                                                   , inList_UID            := ''     -- UID строки
                                                   , inUserSession	      := inSession
                                                   , inSession             := inSession)
@@ -128,6 +131,17 @@ BEGIN
                                        ON MIBoolean_Present.MovementItemId = MovementItem_Check_View.Id
                                       AND MIBoolean_Present.DescId = zc_MIBoolean_Present()
 
+         LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical
+                                          ON MILinkObject_Juridical.MovementItemId = MovementItem_Check_View.Id
+                                         AND MILinkObject_Juridical.DescId         = zc_MILinkObject_Juridical()
+
+         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsPresent
+                                          ON MILinkObject_GoodsPresent.MovementItemId = MovementItem_Check_View.Id
+                                         AND MILinkObject_GoodsPresent.DescId = zc_MILinkObject_GoodsPresent()
+         LEFT JOIN MovementItemBoolean AS MIBoolean_GoodsPresent
+                                       ON MIBoolean_GoodsPresent.MovementItemId = MovementItem_Check_View.Id
+                                      AND MIBoolean_GoodsPresent.DescId         = zc_MIBoolean_GoodsPresent()
+
     WHERE MovementItem_Check_View.MovementId = inMovementId
       AND MovementItem_Check_View.isErased = False
       AND MovementItem_Check_View.Amount > 0;
@@ -145,7 +159,7 @@ BEGIN
 
     PERFORM gpComplete_Movement_Check (outMovementId, inSession);
     
-  -- RAISE EXCEPTION 'Прошло.';
+    -- RAISE EXCEPTION 'Прошло.';
    
 END;
 $BODY$

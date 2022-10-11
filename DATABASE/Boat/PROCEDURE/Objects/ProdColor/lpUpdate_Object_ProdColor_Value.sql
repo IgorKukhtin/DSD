@@ -1,31 +1,28 @@
--- Торговая марка
+-- zc_Object_ProdColor
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColor_Value (TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_ProdColor_Value (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS lpUpdate_Object_ProdColor_Value (Integer, TVarChar, Integer);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Object_ProdColor_Value(
-    IN inId              Integer,       -- ключ объекта <Бренд>
+CREATE OR REPLACE FUNCTION lpUpdate_Object_ProdColor_Value(
+    IN inId              Integer,       -- ключ объекта
     IN inValue           TVarChar,      -- Значение цвета
-    IN inSession         TVarChar       -- сессия пользователя
+    IN inUserId          Integer        -- Пользователь
 )
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;
-   DECLARE vbIsInsert Boolean;  
    DECLARE vbColor_calc Integer;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ProdColor());
-   vbUserId:= lpGetUserBySession (inSession);
    
+   -- Проверка
    IF COALESCE (inId, 0) = 0
    THEN
-     RETURN;
+       RAISE EXCEPTION 'Ошибка. inId = <%>', inId;
    END IF;
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColor_Value(), inId, inValue);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdColor_Value(), inId, inValue);
    
    IF inValue <> ''
    THEN
@@ -43,11 +40,11 @@ BEGIN
       EXISTS(SELECT 1 FROM ObjectFloat
              WHERE ObjectId = inId AND DescId = zc_ObjectFloat_ProdColor_Value())
    THEN
-     PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ProdColor_Value(), inId, vbColor_calc);
+     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdColor_Value(), inId, vbColor_calc);
    END IF;
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inId, inUserId);
 
 END;
 $BODY$
@@ -61,4 +58,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Object_ProdColor_Value()
+-- SELECT * FROM lpUpdate_Object_ProdColor_Value()

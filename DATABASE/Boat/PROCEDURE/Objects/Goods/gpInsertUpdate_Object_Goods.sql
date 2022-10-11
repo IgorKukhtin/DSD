@@ -61,6 +61,8 @@ BEGIN
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
    vbUserId:= lpGetUserBySession (inSession);
 
+   --IF inComment NOT IN ('Korpus-SCconsole', 'Hypalon', 'Kreslo') THEN RAISE EXCEPTION 'Test.%inName = <%>%inArticle = <%>%inComment = <%>%inProdColorId = <%>', CHR (13), inName, CHR (13), inArticle, CHR (13), inComment, CHR (13), lfGet_Object_ValueData_sh (inProdColorId); END IF;
+
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 

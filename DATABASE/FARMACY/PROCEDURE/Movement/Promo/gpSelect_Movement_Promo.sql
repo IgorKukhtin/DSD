@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer
              , Comment TVarChar
              , Prescribe TVarChar
              , isSupplement Boolean
+             , isNotUseSUN Boolean
               )
 
 AS
@@ -61,6 +62,7 @@ BEGIN
             THEN 'Ожидает прописи'
             ELSE 'Прописано' END::TVarChar                                 AS Prescribe
           , COALESCE(MovementBoolean_Supplement.ValueData, FALSE)          AS isSupplement
+          , COALESCE(MovementBoolean_NotUseSUN.ValueData, FALSE)           AS isNotUseSUN
      FROM Movement 
         INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -108,6 +110,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_Supplement
                                   ON MovementBoolean_Supplement.MovementId =  Movement.Id
                                  AND MovementBoolean_Supplement.DescId = zc_MovementBoolean_Supplement()
+        LEFT JOIN MovementBoolean AS MovementBoolean_NotUseSUN
+                                  ON MovementBoolean_NotUseSUN.MovementId =  Movement.Id
+                                 AND MovementBoolean_NotUseSUN.DescId = zc_MovementBoolean_NotUseSUN()
 
      WHERE Movement.DescId = zc_Movement_Promo()
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
