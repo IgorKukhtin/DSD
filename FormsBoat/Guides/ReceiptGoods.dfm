@@ -3007,6 +3007,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsChildId'
+        Value = Null
+        Component = Child1CDS
+        ComponentItem = 'GoodsChildId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioValue'
         Value = Null
         Component = Child1CDS
@@ -3335,6 +3343,11 @@
         Name = 'inReceiptLevelId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsChildId'
+        Value = '0'
         MultiSelectSeparator = ','
       end
       item

@@ -176,9 +176,14 @@ BEGIN
                                                                  ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId  
                                                                 AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
                                                                 AND ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE
+
+                                           INNER JOIN Object_Goods_Retail AS RetailAll ON RetailAll.Id  = Container.ObjectId  
+                                           INNER JOIN Object_Goods_Main AS RetailMain ON RetailMain.Id  = RetailAll.GoodsMainId
+                                           
                                       WHERE Container.DescId = zc_Container_CountPartionDate()
                                         AND Container.Amount <> 0
                                         AND Container.WhereObjectId in (SELECT tmpUnit.Id FROM tmpUnit)
+                                        AND COALESCE(RetailMain.GoodsGroupId, 0) <> 394744
                                       GROUP BY Container.ObjectId  
                                       HAVING SUM(Container.Amount) > 0
                                      )
@@ -226,20 +231,29 @@ BEGIN
           , tmpContainerPD AS (SELECT Container.WhereObjectId      AS UnitId
                                     , Container.ObjectId           AS GoodsId
                                     , SUM(CASE WHEN ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE THEN Container.Amount ELSE 0 END)         AS Remains 
-                                    , SUM(CASE WHEN NOT (ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE)  THEN Container.Amount ELSE 0 END)  AS RemainsPD 
+                                    , SUM(CASE WHEN NOT (ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE) AND
+                                          COALESCE(ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE  THEN Container.Amount ELSE 0 END)  AS RemainsPD 
                                FROM Container
                                     INNER JOIN tmpData ON tmpData.GoodsId = Container.ObjectId
                                     INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                                   AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                                    INNER JOIN Object_Goods_Retail AS RetailAll ON RetailAll.Id  = Container.ObjectId  
+                                    INNER JOIN Object_Goods_Main AS RetailMain ON RetailMain.Id  = RetailAll.GoodsMainId
 
                                     INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
                                                           ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId  
                                                          AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
                                                          AND ObjectDate_ExpirationDate.ValueData < vbDate_6
 
+                                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                                                            ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId  
+                                                           AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
+                                           
                                WHERE Container.DescId = zc_Container_CountPartionDate()
                                  AND Container.Amount <> 0
                                  AND Container.WhereObjectId in (SELECT tmpUnit.Id FROM tmpUnit)
+                                 AND COALESCE(RetailMain.GoodsGroupId, 0) <> 394744
                                GROUP BY Container.WhereObjectId
                                       , Container.ObjectId  
                                HAVING SUM(Container.Amount) > 0
@@ -419,4 +433,11 @@ $BODY$
 -- select *, null as img_url from gpSelect_GoodsPrice_ForSite(394759, 1, 'uk', 0, 8, 0, '', zfCalc_UserSite())
 
 
-select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'ru', 0, 8, 0, 'Гептрал', True, zfCalc_UserSite())
+-- select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'ru', 0, 8, 0, 'Гептрал', True, zfCalc_UserSite())
+
+  select id, name as title, nameukr as  title_uk, price, remains as quantity, null as img_url, 
+            priceunitmin, priceunitmax, isdiscountexternal, numberplates, qtypackage, formdispensingname, 
+            ispartiondate
+            from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Бустрикс вак', true, zfCalc_UserSite())
+            
+            

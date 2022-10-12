@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
     IN inMaterialOptionsId   Integer   ,
     IN inReceiptLevelId_top  Integer   ,
     IN inReceiptLevelId      Integer   ,
+    IN inGoodsChildId        Integer   ,
  INOUT ioValue               TFloat    ,
  INOUT ioValue_service       TFloat    ,
     IN inIsEnabled           Boolean   ,
@@ -111,6 +113,8 @@ BEGIN
 
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel(), ioId, inReceiptLevelId);
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_GoodsChild(), ioId, inGoodsChildId);
 
        -- замена
        IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
