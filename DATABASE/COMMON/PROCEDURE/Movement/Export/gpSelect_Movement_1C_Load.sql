@@ -30,13 +30,22 @@ BEGIN
 
      --
      RETURN QUERY
-     WITH tmpInfoMoney AS (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+     WITH tmpInfoMoney AS (SELECT Object_InfoMoney_View.InfoMoneyId
+                           FROM Object_InfoMoney_View
+                           WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
+                             AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_10000() -- Основное сырье 
+                             AND inInfoMoneyId <> 0 
                           UNION
                            SELECT Object_InfoMoney_View_find.InfoMoneyId
                            FROM Object_InfoMoney_View
                                 LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_find ON Object_InfoMoney_View_find.InfoMoneyDestinationId = Object_InfoMoney_View.InfoMoneyDestinationId
                            WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
-                             AND Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+                             AND Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье 
+                             AND inInfoMoneyId <> 0
+                          UNION 
+                           SELECT Object_InfoMoney_View.InfoMoneyId
+                           FROM Object_InfoMoney_View
+                           WHERE inInfoMoneyId = 0
                           /*UNION
                            SELECT Object_InfoMoney_View.InfoMoneyId
                            FROM (SELECT 1 FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
