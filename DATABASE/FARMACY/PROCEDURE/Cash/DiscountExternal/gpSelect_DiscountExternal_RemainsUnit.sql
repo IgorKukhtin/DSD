@@ -52,7 +52,7 @@ BEGIN
                              , Object_BarCode.ObjectCode   AS Code
                              , Object_BarCode.ValueData    AS BarCodeName
                                
-                             , Object_Goods.Id             AS GoodsId
+                             , Object_Goods_Retail.Id      AS GoodsId
                              , Object_Goods.ObjectCode     AS GoodsCode
                              , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods.NameUkr, '') <> ''
                                     THEN Object_Goods.NameUkr

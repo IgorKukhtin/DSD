@@ -41,6 +41,11 @@ type
     actUpdate_Supplement: TdsdExecStoredProc;
     spUpdate_Supplement: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
+    isNotUseSUN: TcxGridDBColumn;
+    mactUpdate_NotUseSUN: TMultiAction;
+    actUpdate_NotUseSUN: TdsdExecStoredProc;
+    spUpdate_NotUseSUN: TdsdStoredProc;
+    bbUpdate_NotUseSUN: TdxBarButton;
   private
     { Private declarations }
   public

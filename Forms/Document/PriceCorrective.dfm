@@ -21,8 +21,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       inherited cxGrid: TcxGrid
         Width = 1042
         Height = 332
-        ExplicitLeft = 40
-        ExplicitTop = 24
         ExplicitWidth = 1042
         ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -3014,10 +3012,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceFrom'
+        Name = 'inPriceTax_calc'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PriceFrom'
+        ComponentItem = 'PriceTax_calc'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

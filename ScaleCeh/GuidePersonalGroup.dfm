@@ -174,7 +174,6 @@ object GuidePersonalGroupForm: TGuidePersonalGroupForm
       Align = alLeft
       Caption = #1050#1086#1076
       TabOrder = 0
-      ExplicitTop = -3
       object EditPersonalGroupCode: TEdit
         Left = 5
         Top = 17
@@ -247,10 +246,12 @@ object GuidePersonalGroupForm: TGuidePersonalGroupForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 408
     Top = 392

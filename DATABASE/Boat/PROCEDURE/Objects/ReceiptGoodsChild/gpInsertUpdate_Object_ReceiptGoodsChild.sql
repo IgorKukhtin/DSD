@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
@@ -13,9 +14,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
     IN inObjectId            Integer   ,
     IN inProdColorPatternId  Integer   ,
     IN inMaterialOptionsId   Integer   ,
+    IN inReceiptLevelId_top  Integer   ,
+    IN inReceiptLevelId      Integer   ,
  INOUT ioValue               TFloat    ,
  INOUT ioValue_service       TFloat    ,
     IN inIsEnabled           Boolean   ,
+   OUT outReceiptLevelName   TVarChar  ,
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -55,6 +59,12 @@ BEGIN
                                              , inProcedureName := 'gpInsertUpdate_Object_ReceiptGoodsChild'
                                              , inUserId        := vbUserId
                                               );
+   END IF;
+
+   -- переопределяем
+   IF COALESCE (inReceiptLevelId, 0) = 0
+   THEN
+       inReceiptLevelId := inReceiptLevelId_top;
    END IF;
 
 
@@ -99,6 +109,9 @@ BEGIN
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_MaterialOptions(), ioId, inMaterialOptionsId);
 
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel(), ioId, inReceiptLevelId);
+
        -- замена
        IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
        THEN
@@ -122,7 +135,8 @@ BEGIN
 
    END IF;
 
-
+   outReceiptLevelName :=  (SELECT Object.ValueData FROM Object WHERE Object.Id = inReceiptLevelId);
+   
    IF inIsEnabled = TRUE
    THEN
        -- сохранили протокол

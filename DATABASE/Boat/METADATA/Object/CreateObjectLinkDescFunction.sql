@@ -330,6 +330,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoodsChild_MaterialOptions() RET
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ReceiptGoodsChild_MaterialOptions', 'Категория Опций', zc_Object_ReceiptGoodsChild(), zc_Object_MaterialOptions() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_MaterialOptions');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel', 'Этап сборки', zc_Object_ReceiptGoodsChild(), zc_Object_ReceiptLevel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel');
+
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorGroup_ProdColorKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorGroup_ProdColorKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdColorGroup_ProdColorKind', 'Виды Boat Structure', zc_Object_ProdColorGroup(), zc_Object_ProdColorKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorGroup_ProdColorKind');
@@ -455,6 +461,7 @@ SELECT 'zc_ObjectLink_GoodsArticle_Goods', 'Артикул Комплектующие', zc_Object_Go
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.10.22        * zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel
  23.06.22        * zc_ObjectLink_ProdOptions_ProdColorPattern
  10.05.22        * zc_ObjectLink_Unit_ProfitLossDirection
  17.02.22        * zc_ObjectLink_Measure_MeasureCode

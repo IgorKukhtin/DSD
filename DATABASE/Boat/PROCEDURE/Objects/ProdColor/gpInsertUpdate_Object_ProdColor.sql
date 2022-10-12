@@ -1,12 +1,12 @@
--- Торговая марка
+-- zc_Object_ProdColor
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColor (Integer, Integer, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColor (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColor(
- INOUT ioId              Integer,       -- ключ объекта <Бренд>
- INOUT ioCode            Integer,       -- свойство <Код Бренда>
-    IN inName            TVarChar,      -- главное Название Бренда
+ INOUT ioId              Integer,       -- ключ объекта
+ INOUT ioCode            Integer,       -- Код
+    IN inName            TVarChar,      -- Название
     IN inComment         TVarChar,      -- 
     IN inValue           TVarChar,      --
     IN inSession         TVarChar       -- сессия пользователя
@@ -26,10 +26,10 @@ BEGIN
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-    -- Если код не установлен, определяем его как последний+1
+    -- Если код не установлен, определяем его как последний + 1
    vbCode_calc:= lfGet_ObjectCode (ioCode, zc_Object_ProdColor()); 
 
-   -- проверка прав уникальности для свойства <Наименование >
+   -- проверка прав уникальности для свойства <Название >
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdColor(), inName, vbUserId);
 
    -- сохранили <Объект>

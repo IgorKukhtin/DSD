@@ -85,6 +85,8 @@ BEGIN
      END IF;
 
 
+     -- RAISE EXCEPTION 'Ошибка. <%>.', inIsChild_Recalc;
+
      -- !!!Только если нужен пересчет!!!
      -- !!!еще добавить если в заказе только запчасти!!!
      IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Product() AND MLO.ObjectId > 0)
@@ -675,7 +677,7 @@ BEGIN
                                                                                       ||   '-' || LEFT (tmpColor_1.MaterialOptionsName, 2)
                                                                                         || '-' || tmpColor_1.ProdColorName
 
-                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus'
+                                                                                   /*WHEN ObjectString_Comment.ValueData ILIKE 'Korpus'
                                                                                    THEN
                                                                                         'AGL-' || Object_Model.ValueData
                                                                                       ||   '-' || tmpColor_1.ProdColorName
@@ -686,7 +688,23 @@ BEGIN
                                                                                                      '-' || tmpColor_2.ProdColorName
                                                                                                   || '-' || tmpColor_3.ProdColorName
                                                                                                        ELSE ''
-                                                                                                  END
+                                                                                                  END*/
+                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-Hull'
+                                                                                   THEN 
+                                                                                        'ПФ Корпус-'
+                                                                                      ||'AGL-' || Object_Model.ValueData
+                                                                                      ||   '-' || tmpColor_1.ProdColorName_goods
+
+                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-Deck'
+                                                                                   THEN
+                                                                                        'ПФ Палуба-'
+                                                                                      ||'AGL-' || Object_Model.ValueData
+                                                                                      ||   '-' || tmpColor_1.ProdColorName_goods
+                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-SCconsole'
+                                                                                   THEN
+                                                                                        'ПФ Сиденье-'
+                                                                                      ||'AGL-' || Object_Model.ValueData
+                                                                                      ||   '-' || tmpColor_1.ProdColorName_goods
 
                                                                                    WHEN ObjectString_Comment.ValueData ILIKE 'Kreslo'
                                                                                    THEN
@@ -711,7 +729,7 @@ BEGIN
                                                                                       ||   '-' || LEFT (tmpColor_1.MaterialOptionsName, 2)
                                                                                         || '-' || LEFT (tmpColor_1.ProdColorName, 1)
 
-                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus'
+                                                                                   /*WHEN ObjectString_Comment.ValueData ILIKE 'Korpus'
                                                                                    THEN
                                                                                         'AGL-' || Object_Model.ValueData
                                                                                       ||   '-' || tmpColor_1.ProdColorName
@@ -722,7 +740,24 @@ BEGIN
                                                                                                      '-' || tmpColor_2.ProdColorName
                                                                                                   || '-' || tmpColor_3.ProdColorName
                                                                                                        ELSE ''
-                                                                                                  END
+                                                                                                  END*/
+
+                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-Hull'
+                                                                                   THEN
+                                                                                        'AGL-' || Object_Model.ValueData
+                                                                                      ||   '-' || tmpColor_1.ProdColorName_goods
+
+                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-Deck'
+                                                                                   THEN
+                                                                                        'AGL-' || Object_Model.ValueData
+                                                                                      ||   '-' || tmpColor_1.ProdColorName_goods
+                                                                                      ||   '-' || '2'
+                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-SCconsole'
+                                                                                   THEN
+                                                                                        'AGL-' || Object_Model.ValueData
+                                                                                      ||   '-' || tmpColor_1.ProdColorName_goods
+                                                                                      ||   '-' || '3'
+
 
                                                                                    WHEN ObjectString_Comment.ValueData ILIKE 'Kreslo'
                                                                                    THEN
@@ -842,6 +877,9 @@ BEGIN
               WHERE ObjectString_Comment.ValueData ILIKE 'Hypalon'
                  OR ObjectString_Comment.ValueData ILIKE 'Teak'
                  OR ObjectString_Comment.ValueData ILIKE 'Korpus'
+                 OR ObjectString_Comment.ValueData ILIKE 'Korpus-Hull'
+                 OR ObjectString_Comment.ValueData ILIKE 'Korpus-Deck'
+                 OR ObjectString_Comment.ValueData ILIKE 'Korpus-SCconsole'
                  OR ObjectString_Comment.ValueData ILIKE 'Kreslo'
 
              ) AS tmpGoods

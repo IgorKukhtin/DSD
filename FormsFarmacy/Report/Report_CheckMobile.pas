@@ -59,6 +59,10 @@ type
     actReport_ConductedSalesMobile: TdsdOpenForm;
     bbReport_ConductedSalesMobile: TdxBarButton;
     cbDiscountExternal: TcxCheckBox;
+    spMovementSetErased: TdsdStoredProc;
+    mactMovementSetErased: TMultiAction;
+    actMovementSetErased: TdsdExecStoredProc;
+    bbMovementSetErased: TdxBarButton;
   private
     { Private declarations }
   public
