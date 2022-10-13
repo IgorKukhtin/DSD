@@ -434,6 +434,7 @@ end if;
            OR tmpMovement.PartnerId > 0
            OR vbIsConstraint = FALSE
            OR ObjectLink_Partner_PersonalTrade.ChildObjectId IS NULL
+           --OR ObjectHistory_JuridicalDetails_View.OKPO = '2840114093'
           )
       AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId        OR COALESCE (inRetailId, 0)        = 0)
       AND (ObjectLink_Partner_Route.ChildObjectId    = inRouteId         OR COALESCE (inRouteId, 0)         = 0)
