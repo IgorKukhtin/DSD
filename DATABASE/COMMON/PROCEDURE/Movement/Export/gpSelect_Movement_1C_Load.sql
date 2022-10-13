@@ -30,13 +30,22 @@ BEGIN
 
      --
      RETURN QUERY
-     WITH tmpInfoMoney AS (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+     WITH tmpInfoMoney AS (SELECT Object_InfoMoney_View.InfoMoneyId
+                           FROM Object_InfoMoney_View
+                           WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
+                             AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_10000() -- Основное сырье 
+                             AND inInfoMoneyId <> 0 
                           UNION
                            SELECT Object_InfoMoney_View_find.InfoMoneyId
                            FROM Object_InfoMoney_View
                                 LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_find ON Object_InfoMoney_View_find.InfoMoneyDestinationId = Object_InfoMoney_View.InfoMoneyDestinationId
                            WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
-                             AND Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+                             AND Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье 
+                             AND inInfoMoneyId <> 0
+                          UNION 
+                           SELECT Object_InfoMoney_View.InfoMoneyId
+                           FROM Object_InfoMoney_View
+                           WHERE inInfoMoneyId = 0
                           /*UNION
                            SELECT Object_InfoMoney_View.InfoMoneyId
                            FROM (SELECT 1 FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
@@ -73,7 +82,7 @@ BEGIN
                                                                                                                THEN zc_MovementLinkObject_PaidKindTo()
                                                                                                         ELSE zc_MovementLinkObject_PaidKind()
                                                                                                    END
-                                                      AND MovementLinkObject_PaidKind.ObjectId   = inPaidKindId
+                                                      --AND MovementLinkObject_PaidKind.ObjectId   = inPaidKindId
                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                       ON MovementLinkObject_Contract.MovementId  = Movement.Id
                                                      AND MovementLinkObject_Contract.DescId      = CASE WHEN Movement.DescId = zc_Movement_TransferDebtIn()
@@ -84,7 +93,8 @@ BEGIN
                                                                                                    END
                     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                       AND Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
-                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                      AND Movement.StatusId = zc_Enum_Status_Complete() 
+                      AND (MovementLinkObject_PaidKind.ObjectId   = inPaidKindId OR inPaidKindId = 0)
                    UNION
                     SELECT Movement.*, MovementDate_OperDatePartner.ValueData AS OperDatePartner
                          , MovementLinkObject_Contract.ObjectId AS ContractId
@@ -95,12 +105,13 @@ BEGIN
                          INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                                       AND MovementLinkObject_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
-                                                      AND MovementLinkObject_PaidKind.ObjectId   = inPaidKindId
+                                                      --AND MovementLinkObject_PaidKind.ObjectId   = inPaidKindId
                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                       ON MovementLinkObject_Contract.MovementId  = Movement.Id
                                                      AND MovementLinkObject_Contract.DescId      = zc_MovementLinkObject_Contract()
                     WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
-                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner() 
+                      AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
                    )
        , tmpMLO AS (SELECT MovementLinkObject.* FROM MovementLinkObject WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                    )

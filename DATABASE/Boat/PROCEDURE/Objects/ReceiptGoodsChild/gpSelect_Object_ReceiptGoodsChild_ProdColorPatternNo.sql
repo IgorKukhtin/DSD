@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo(
-    IN inIsShowAll   Boolean,       --
-    IN inIsErased    Boolean,       -- признак показать удаленные да / нет 
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inReceiptLevelId  Integer,
+    IN inIsShowAll       Boolean,       --
+    IN inIsErased        Boolean,       -- признак показать удаленные да / нет 
+    IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , Value TFloat, Value_service TFloat
@@ -23,6 +25,8 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , Comment_goods TVarChar
              , MeasureName TVarChar
              , MaterialOptionsId Integer, MaterialOptionsName TVarChar
+             , ReceiptLevelId Integer, ReceiptLevelName TVarChar
+             , GoodsChildId Integer, GoodsChildName TVarChar
 
                -- Цена вх. без НДС - Товар/Услуги
              , EKPrice TFloat
@@ -84,6 +88,12 @@ BEGIN
          , Object_MaterialOptions.Id          ::Integer  AS MaterialOptionsId
          , Object_MaterialOptions.ValueData   ::TVarChar AS MaterialOptionsName
 
+         , Object_ReceiptLevel.Id                        AS ReceiptLevelId
+         , Object_ReceiptLevel.ValueData      ::TVarChar AS ReceiptLevelName
+
+         , Object_GoodsChild.Id                          AS GoodsChildId
+         , Object_GoodsChild.ValueData        ::TVarChar AS GoodsChildName
+
            -- Цена вх. без НДС - Товар/Услуги
          , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
            -- расчет Цена вх. с НДС, до 2-х знаков - Товар/Услуги
@@ -126,6 +136,16 @@ BEGIN
                                ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
                               AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
           LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                               ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
+          LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptLevel.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
+                               ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+          LEFT JOIN Object AS Object_GoodsChild ON Object_GoodsChild.Id = ObjectLink_GoodsChild.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptGoodsChild.Id
@@ -186,6 +206,7 @@ BEGIN
       AND (Object_ReceiptGoodsChild.isErased = FALSE OR inIsErased = TRUE)
       -- без этой структуры
       AND ObjectLink_ProdColorPattern.ChildObjectId IS NULL
+      AND (ObjectLink_ReceiptLevel.ChildObjectId = inReceiptLevelId OR inReceiptLevelId = 0)
      ;
 END;
 $BODY$
@@ -199,4 +220,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (false, false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (0, false, false, zfCalc_UserAdmin())

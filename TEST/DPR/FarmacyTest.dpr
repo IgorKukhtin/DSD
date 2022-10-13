@@ -1264,7 +1264,8 @@ uses
   PhoneNoSeparatorDialog in '..\..\FormsFarmacy\System\PhoneNoSeparatorDialog.pas' {PhoneNoSeparatorDialogForm: TParentForm},
   UsersSiteProfile in '..\..\FormsFarmacy\System\UsersSiteProfile.pas' {UsersSiteProfileForm: TParentForm},
   UserCash in '..\..\FormsFarmacy\Guides\UserCash.pas' {UserCashForm: TParentForm},
-  UserEditLanguage in '..\..\FormsFarmacy\Guides\UserEditLanguage.pas' {UserEditLanguageForm: TParentForm};
+  UserEditLanguage in '..\..\FormsFarmacy\Guides\UserEditLanguage.pas' {UserEditLanguageForm: TParentForm},
+  Report_ApplicationAwardUser in '..\..\FormsFarmacy\Report\Report_ApplicationAwardUser.pas' {Report_ApplicationAwardUserForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

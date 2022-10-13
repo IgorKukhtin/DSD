@@ -906,6 +906,37 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         end>
       Caption = 'actMovementSetErased'
     end
+    object actReport_ApplicationAwardUser: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 
+        #1048#1090#1086#1075#1086#1074#1099#1081' '#1089#1074#1086#1076' '#1091#1095#1072#1089#1090#1080#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084' '#1074' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086 +
+        #1078#1077#1085#1080#1103
+      Hint = 
+        #1048#1090#1086#1075#1086#1074#1099#1081' '#1089#1074#1086#1076' '#1091#1095#1072#1089#1090#1080#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084' '#1074' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086 +
+        #1078#1077#1085#1080#1103
+      ImageIndex = 55
+      FormName = 'TReport_ApplicationAwardUserForm'
+      FormNameParam.Value = 'TReport_ApplicationAwardUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1028,6 +1059,10 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1090,6 +1125,10 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     end
     object bbMovementSetErased: TdxBarButton
       Action = mactMovementSetErased
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actReport_ApplicationAwardUser
       Category = 0
     end
   end

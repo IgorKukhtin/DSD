@@ -600,6 +600,21 @@
           Options.Editing = False
           Width = 60
         end
+        object ReceiptLevelName_ch1: TcxGridDBColumn
+          Caption = 'Level'
+          DataBinding.FieldName = 'ReceiptLevelName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormReceiptLevel_ch1
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 75
+        end
         object Article_ch1: TcxGridDBColumn
           Caption = 'Artikel Nr'
           DataBinding.FieldName = 'Article'
@@ -840,8 +855,6 @@
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = 2
-      ExplicitTop = 1
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -1286,6 +1299,26 @@
         125
         21)
       Width = 125
+    end
+    object lbReceiptLevel: TcxLabel
+      Left = 296
+      Top = 8
+      Hint = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
+      Caption = 'Level:'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edReceiptLevel: TcxButtonEdit
+      Left = 332
+      Top = 7
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 3
+      Width = 181
     end
   end
   object DataSource: TDataSource
@@ -2006,6 +2039,40 @@
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
+    end
+    object actChoiceFormReceiptLevel_ch1: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormReceiptLevel_ch1'
+      FormName = 'TReceiptLevelForm'
+      FormNameParam.Value = 'TReceiptLevelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'ReceiptLevelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'ReceiptLevelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterObjectDesc'
+          Value = 'zc_Object_ReceiptGoods'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actChoiceFormGoods_2: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2924,6 +2991,30 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inReceiptLevelId_top'
+        Value = Null
+        Component = GuidesReceiptLevel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptLevelId'
+        Value = Null
+        Component = Child1CDS
+        ComponentItem = 'ReceiptLevelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsChildId'
+        Value = Null
+        Component = Child1CDS
+        ComponentItem = 'GoodsChildId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioValue'
         Value = Null
         Component = Child1CDS
@@ -2946,6 +3037,13 @@
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outinReceiptLevelName'
+        Value = Null
+        Component = Child1CDS
+        ComponentItem = 'inReceiptLevelName'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -3154,6 +3252,14 @@
       end>
     Params = <
       item
+        Name = 'inReceiptLevelId'
+        Value = Null
+        Component = GuidesReceiptLevel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsShowAll'
         Value = Null
         Component = actShowAll_ch2
@@ -3225,6 +3331,23 @@
         Component = Child2CDS
         ComponentItem = 'MaterialOptionsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptLevelId_top'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptLevelId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsChildId'
+        Value = '0'
         MultiSelectSeparator = ','
       end
       item
@@ -3405,5 +3528,40 @@
     CheckBoxList = <>
     Left = 256
     Top = 152
+  end
+  object GuidesReceiptLevel: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReceiptLevel
+    FormNameParam.Value = 'TReceiptLevelForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReceiptLevelForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesReceiptLevel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesReceiptLevel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterObjectDesc'
+        Value = 'zc_Object_ReceiptGoods'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 392
   end
 end
