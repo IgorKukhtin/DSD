@@ -15,17 +15,17 @@ inherited Report_ApplicationAwardUserForm: TReport_ApplicationAwardUserForm
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 574
+    ExplicitWidth = 666
     ExplicitHeight = 421
     ClientRectBottom = 421
     ClientRectRight = 666
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 574
+      ExplicitWidth = 666
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 666
         Height = 421
-        ExplicitWidth = 574
+        ExplicitWidth = 666
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -320,6 +320,11 @@ inherited Report_ApplicationAwardUserForm: TReport_ApplicationAwardUserForm
             Options.Editing = False
             Width = 35
           end
+          object Color_Calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
     end
@@ -327,7 +332,7 @@ inherited Report_ApplicationAwardUserForm: TReport_ApplicationAwardUserForm
   inherited Panel: TPanel
     Width = 666
     Height = 33
-    ExplicitWidth = 574
+    ExplicitWidth = 666
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 109
@@ -547,6 +552,7 @@ inherited Report_ApplicationAwardUserForm: TReport_ApplicationAwardUserForm
       end>
     ColorRuleList = <
       item
+        BackGroundValueColumn = Color_Calc
         ColorValueList = <>
       end>
     Left = 384

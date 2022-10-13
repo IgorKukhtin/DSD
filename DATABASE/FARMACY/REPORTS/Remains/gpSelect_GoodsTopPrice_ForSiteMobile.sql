@@ -32,10 +32,10 @@ BEGIN
            , p.Price_unit_sale_1
            , p.Remains_1
       FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', inGoodsId::TVarChar, zfCalc_UserSite()) AS p
-      WHERE COALESCE(p.Remains_1, 0) >= 1
-        AND COALESCE(p.Price_unit, 0) > 0
+      WHERE /*COALESCE(p.Remains_1, 0) >= 1
+        AND */COALESCE(p.Price_unit, 0) > 0
         AND COALESCE(p.Price_unit_sale_1, 0) > 0
-      ORDER BY p.Price_unit, p.Remains_1 DESC
+      ORDER BY p.Price_unit_sale_1, p.Remains_1 DESC
       LIMIT 3;
     
     ELSEIF COALESCE (inPartionDateKindId, 0) = zc_Enum_PartionDateKind_3()
@@ -47,10 +47,10 @@ BEGIN
            , p.Price_unit_sale_3
            , p.Remains_3
       FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', inGoodsId::TVarChar, zfCalc_UserSite()) AS p
-      WHERE COALESCE(p.Remains_3, 0) >= 1
-        AND COALESCE(p.Price_unit, 0) > 0
+      WHERE /*COALESCE(p.Remains_3, 0) >= 1
+        AND */COALESCE(p.Price_unit, 0) > 0
         AND COALESCE(p.Price_unit_sale_3, 0) > 0
-      ORDER BY p.Price_unit, p.Remains_3 DESC
+      ORDER BY p.Price_unit_sale_3, p.Remains_3 DESC
       LIMIT 3;
     
     ELSEIF COALESCE (inPartionDateKindId, 0) = zc_Enum_PartionDateKind_6()
@@ -62,10 +62,10 @@ BEGIN
            , p.Price_unit_sale_6
            , p.Remains_6
       FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', inGoodsId::TVarChar, zfCalc_UserSite()) AS p
-      WHERE COALESCE(p.Remains_6, 0) >= 1
-        AND COALESCE(p.Price_unit, 0) > 0
+      WHERE /*COALESCE(p.Remains_6, 0) >= 1
+        AND */COALESCE(p.Price_unit, 0) > 0
         AND COALESCE(p.Price_unit_sale_6, 0) > 0
-      ORDER BY p.Price_unit, p.Remains_6 DESC
+      ORDER BY p.Price_unit_sale_6, p.Remains_6 DESC
       LIMIT 3;
     
     ELSE
@@ -76,9 +76,9 @@ BEGIN
            , p.Price_unit_sale
            , p.Remains
       FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', inGoodsId::TVarChar, zfCalc_UserSite()) AS p
-      WHERE COALESCE(p.Remains, 0) >= 1
-        AND COALESCE(p.Price_unit, 0) > 0
-      ORDER BY p.Price_unit, p.Remains DESC
+      WHERE /*COALESCE(p.Remains, 0) >= 1
+        AND */COALESCE(p.Price_unit, 0) > 0
+      ORDER BY p.Price_unit_sale, p.Remains DESC
       LIMIT 3;
     END IF;
        
@@ -94,4 +94,4 @@ $BODY$
 
 -- тест
 
-SELECT p.* FROM gpSelect_GoodsTopPrice_ForSiteMobile (14745441, zc_Enum_PartionDateKind_6(), zfCalc_UserSite()) AS p
+SELECT p.* FROM gpSelect_GoodsTopPrice_ForSiteMobile (2984945, zc_Enum_PartionDateKind_1(), zfCalc_UserSite()) AS p
