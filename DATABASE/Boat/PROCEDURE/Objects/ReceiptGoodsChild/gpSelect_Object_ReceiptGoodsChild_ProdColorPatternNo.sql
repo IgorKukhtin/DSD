@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , MeasureName TVarChar
              , MaterialOptionsId Integer, MaterialOptionsName TVarChar
              , ReceiptLevelId Integer, ReceiptLevelName TVarChar
+             , GoodsChildId Integer, GoodsChildName TVarChar
 
                -- Цена вх. без НДС - Товар/Услуги
              , EKPrice TFloat
@@ -90,6 +91,9 @@ BEGIN
          , Object_ReceiptLevel.Id                        AS ReceiptLevelId
          , Object_ReceiptLevel.ValueData      ::TVarChar AS ReceiptLevelName
 
+         , Object_GoodsChild.Id                          AS GoodsChildId
+         , Object_GoodsChild.ValueData        ::TVarChar AS GoodsChildName
+
            -- Цена вх. без НДС - Товар/Услуги
          , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
            -- расчет Цена вх. с НДС, до 2-х знаков - Товар/Услуги
@@ -137,6 +141,11 @@ BEGIN
                                ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
                               AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
           LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptLevel.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
+                               ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+          LEFT JOIN Object AS Object_GoodsChild ON Object_GoodsChild.Id = ObjectLink_GoodsChild.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptGoodsChild.Id
@@ -211,4 +220,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (false, false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (0, false, false, zfCalc_UserAdmin())

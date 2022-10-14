@@ -99,6 +99,8 @@ type
     edUserUpdateMarketing: TcxButtonEdit;
     cxLabel32: TcxLabel;
     UserUpdateMarketingGuides: TdsdGuides;
+    ceNormNewMobileOrders: TcxCurrencyEdit;
+    cxLabel33: TcxLabel;
   private
     { Private declarations }
   public

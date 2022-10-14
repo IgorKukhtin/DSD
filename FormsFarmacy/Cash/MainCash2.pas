@@ -5152,7 +5152,7 @@ begin
           CheckCDS.FieldByName('Summ').asCurrency;
         CheckCDS.Post;
       end
-      else if Self.FormParams.ParamByName('PriceLoad').Value > 0 then
+      else if CheckCDS.FieldByName('PriceLoad').asCurrency > 0 then
       begin
         CheckCDS.Edit;
         CheckCDS.FieldByName('Price').asCurrency := CheckCDS.FieldByName('PriceLoad').asCurrency;
@@ -6668,6 +6668,21 @@ begin
         CheckCDS.FieldByName('ChangePercent').asCurrency :=
           Self.FormParams.ParamByName('PromoCodeChangePercent').Value +
           Self.FormParams.ParamByName('SiteDiscount').Value;
+        CheckCDS.FieldByName('Summ').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        CheckCDS.Post;
+      end else if CheckCDS.FieldByName('PriceLoad').asCurrency > 0 then
+      begin
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('Price').asCurrency := CheckCDS.FieldByName('PriceLoad').asCurrency;
+        CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
         CheckCDS.FieldByName('Summ').asCurrency :=
           GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
           CheckCDS.FieldByName('Price').asCurrency,

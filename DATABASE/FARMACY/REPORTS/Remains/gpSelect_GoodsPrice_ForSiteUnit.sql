@@ -231,7 +231,12 @@ BEGIN
                                                           ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId  
                                                          AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
                                                          AND ObjectDate_ExpirationDate.ValueData <= vbDate_6
+
+                                    INNER JOIN Object_Goods_Retail AS RetailAll ON RetailAll.Id  = Container.ObjectId  
+                                    INNER JOIN Object_Goods_Main AS RetailMain ON RetailMain.Id  = RetailAll.GoodsMainId
+
                                WHERE Container.DescId = zc_Container_CountPartionDate()
+                                 AND COALESCE(RetailMain.GoodsGroupId, 0) <> 394744
                                  AND Container.Amount <> 0
                                  AND (Container.WhereObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
                                  AND Container.WhereObjectId in (SELECT tmpUnit.Id FROM tmpUnit)
@@ -349,4 +354,4 @@ $BODY$
 -- тест
 --
  
-SELECT * FROM gpSelect_GoodsPrice_ForSite_Ol (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Гептрал', inUnitId := 13711869, inisDiscountExternal := True , inSession:= zfCalc_UserSite());
+SELECT * FROM gpSelect_GoodsPrice_ForSite_Ol (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Бустрикс вак', inUnitId := 13711869, inisDiscountExternal := True , inSession:= zfCalc_UserSite());

@@ -840,6 +840,21 @@
           VisibleForCustomization = False
           Width = 30
         end
+        object GoodsChildName_ch1: TcxGridDBColumn
+          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1077#1083#1072
+          DataBinding.FieldName = 'GoodsChildName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormGoodsChild_1
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 111
+        end
       end
       object cxGridLevel1: TcxGridLevel
         GridView = cxGridDBTableViewCh1
@@ -2751,6 +2766,33 @@
         end>
       isShowModal = False
     end
+    object actChoiceFormGoodsChild_1: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormGoodsChild_1'
+      FormName = 'TUnion_Goods_ReceiptServiceForm'
+      FormNameParam.Value = 'TUnion_Goods_ReceiptServiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'GoodsChildId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'GoodsChildName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptGoods'
@@ -3003,6 +3045,14 @@
         Value = Null
         Component = Child1CDS
         ComponentItem = 'ReceiptLevelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsChildId'
+        Value = Null
+        Component = Child1CDS
+        ComponentItem = 'GoodsChildId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3335,6 +3385,11 @@
         Name = 'inReceiptLevelId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsChildId'
+        Value = '0'
         MultiSelectSeparator = ','
       end
       item

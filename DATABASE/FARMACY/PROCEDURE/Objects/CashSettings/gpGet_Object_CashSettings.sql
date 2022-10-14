@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MinPriceSale TFloat
              , DeviationsPrice1303 TFloat
              , isWagesCheckTesting Boolean
+             , NormNewMobileOrders Integer
              , UserUpdateMarketingId Integer
              , UserUpdateMarketingName TVarChar
              ) AS
@@ -97,6 +98,7 @@ BEGIN
         , ObjectFloat_CashSettings_MinPriceSale.ValueData                          AS MinPriceSale
         , ObjectFloat_CashSettings_DeviationsPrice1303.ValueData                   AS DeviationsPrice1303
         , COALESCE(ObjectBoolean_CashSettings_WagesCheckTesting.ValueData, FALSE)  AS isWagesCheckTesting
+        , ObjectFloat_CashSettings_NormNewMobileOrders.ValueData::Integer          AS NormNewMobileOrders
         , Object_UserUpdateMarketing.Id                                            AS UserUpdateMarketingId
         , Object_UserUpdateMarketing.ValueData                                     AS UserUpdateMarketingName
    FROM Object AS Object_CashSettings
@@ -226,6 +228,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DeviationsPrice1303
                               ON ObjectFloat_CashSettings_DeviationsPrice1303.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_DeviationsPrice1303.DescId = zc_ObjectFloat_CashSettings_DeviationsPrice1303()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_NormNewMobileOrders
+                              ON ObjectFloat_CashSettings_NormNewMobileOrders.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_NormNewMobileOrders.DescId = zc_ObjectFloat_CashSettings_NormNewMobileOrders()
 
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_UserUpdateMarketing
                ON ObjectLink_CashSettings_UserUpdateMarketing.ObjectId = Object_CashSettings.Id

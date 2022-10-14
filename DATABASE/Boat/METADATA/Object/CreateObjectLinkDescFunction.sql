@@ -458,9 +458,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsArticle_Goods() RETURNS Integer AS
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsArticle_Goods', 'Артикул Комплектующие', zc_Object_GoodsArticle(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsArticle_Goods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoodsChild_GoodsChild() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_GoodsChild'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptGoodsChild_GoodsChild', 'Комплектующие если по факту это сначала сборка этого Узела', zc_Object_ReceiptGoodsChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_GoodsChild');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 13.10.22                                                       * zc_ObjectLink_ReceiptGoodsChild_GoodsChild
  08.10.22        * zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel
  23.06.22        * zc_ObjectLink_ProdOptions_ProdColorPattern
  10.05.22        * zc_ObjectLink_Unit_ProfitLossDirection
