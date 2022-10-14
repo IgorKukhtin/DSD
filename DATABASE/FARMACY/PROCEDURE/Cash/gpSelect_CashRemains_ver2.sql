@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_CashRemains_ver2(
     IN inCashSessionId TVarChar,   -- —есси€ кассового места
     IN inSession       TVarChar    -- сесси€ пользовател€
 )
-RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsName TVarChar, GoodsCode Integer,
+RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsName TVarChar, GoodsCode Integer, MakerName TVarChar, 
                Remains TFloat, Price TFloat, PriceSP TFloat, PriceSaleSP TFloat, DiffSP1 TFloat, DiffSP2 TFloat, Reserved TFloat, MCSValue TFloat,
                AlternativeGroupId Integer, NDS TFloat,
                isFirst boolean, isSecond boolean, Color_calc Integer,
@@ -797,6 +797,9 @@ BEGIN
                  THEN Object_Goods_Main.NameUkr
                  ELSE Object_Goods_Main.Name END AS Name,
             Object_Goods_Main.ObjectCode,
+            CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods_Main.MakerNameUkr, '') <> ''
+                 THEN Object_Goods_Main.MakerNameUkr
+                 ELSE Object_Goods_Main.MakerName END AS MakerName,
             CashSessionSnapShot.Remains,
             zfCalc_PriceCash(CashSessionSnapShot.Price, 
                              CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR

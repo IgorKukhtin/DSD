@@ -230,6 +230,7 @@ BEGIN
                         )
           , tmpContainerPD AS (SELECT Container.WhereObjectId      AS UnitId
                                     , Container.ObjectId           AS GoodsId
+                                    , SUM(Container.Amount)        AS RemainsAll 
                                     , SUM(CASE WHEN ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE THEN Container.Amount ELSE 0 END)         AS Remains 
                                     , SUM(CASE WHEN NOT (ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE) AND
                                           COALESCE(ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE  THEN Container.Amount ELSE 0 END)  AS RemainsPD 
@@ -339,7 +340,7 @@ BEGIN
                                      
                                 WHERE Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                   AND Price_Goods.ChildObjectId in (SELECT tmpData.GoodsId FROM tmpData)    
-                                  AND tmpContainer.Remains > COALESCE (tmpContainerPD.Remains, 0)
+                                  AND tmpContainer.Remains > COALESCE (tmpContainerPD.RemainsAll, 0)
                                 GROUP BY Price_Goods.ChildObjectId 
                                 )
           , tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
@@ -435,9 +436,10 @@ $BODY$
 
 -- select *, null as img_url from gpSelect_GoodsPrice_ForSite(0, 1, 'ru', 0, 8, 0, 'Гептрал', True, zfCalc_UserSite())
 
-  select id, name as title, nameukr as  title_uk, price, remains as quantity, null as img_url, 
+/*  select id, name as title, nameukr as  title_uk, price, remains as quantity, null as img_url, 
             priceunitmin, priceunitmax, isdiscountexternal, numberplates, qtypackage, formdispensingname, 
             ispartiondate
-            from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Бустрикс вак', true, zfCalc_UserSite())
+            from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Бустрикс вак', true, zfCalc_UserSite())*/
             
             
+select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 14745441, null, false, zfCalc_UserSite())

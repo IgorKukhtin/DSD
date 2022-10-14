@@ -2205,12 +2205,17 @@ BEGIN
                                                  
              LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId  = _tmpRemains_Partion.UnitId
              
+             LEFT JOIN (SELECT tmp.GoodsId FROM gpSelect_Object_GoodsPromo(inOperDate := CURRENT_DATE , inRetailId := 4 , inSession := inUserId::TVarChar) AS tmp 
+                        WHERE tmp.isNotUseSUN = TRUE) AS tmpGoodsPromo ON tmpGoodsPromo.GoodsId = _tmpRemains_Partion.GoodsId
+             
         WHERE -- !!!Отключили парные!!!
               COALESCE ( _tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
 
           AND FLOOR(_tmpRemains_Partion.Amount) > 0
 
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+          
+          AND COALESCE(tmpGoodsPromo.GoodsId, 0) = 0
           
           AND (_tmpUnit_SUN.isOnlyTimingSUN = False OR _tmpRemains_Partion.ContainerDescId = zc_Container_CountPartionDate())
 
@@ -2491,8 +2496,12 @@ BEGIN
 
              LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId  = _tmpRemains_Partion.UnitId
 
+             LEFT JOIN (SELECT tmp.GoodsId FROM gpSelect_Object_GoodsPromo(inOperDate := CURRENT_DATE , inRetailId := 4 , inSession := inUserId::TVarChar) AS tmp 
+                        WHERE tmp.isNotUseSUN = TRUE) AS tmpGoodsPromo ON tmpGoodsPromo.GoodsId = _tmpRemains_Partion.GoodsId
+
         WHERE FLOOR(_tmpRemains_Partion.Amount - COALESCE (tmp.Amount, 0)) > 0
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+          AND COALESCE(tmpGoodsPromo.GoodsId, 0) = 0
           AND (_tmpUnit_SUN.isOnlyTimingSUN = False OR _tmpRemains_Partion.ContainerDescId = zc_Container_CountPartionDate())
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;

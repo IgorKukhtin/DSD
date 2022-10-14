@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION lpSelect_MovementItem_Promo_onDate(
 )
 RETURNS TABLE (MovementId Integer
              , JuridicalId Integer
+             , isNotUseSUN boolean
              , GoodsId Integer
              , ChangePercent TFloat
              , MakerID Integer
@@ -21,12 +22,13 @@ BEGIN
            RETURN QUERY
            WITH 
                 
-            tmpMovement AS (SELECT Movement.Id                                      AS MovementId
-                              , Movement.InvNumber                                  AS InvNumber
-                              , MovementLinkObject_Maker.ObjectId                   AS MakerID
-                              , COALESCE (MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent
-                              , MovementDate_EndPromo.ValueData                     AS EndPromo 
-                              , MovementLinkMovement_RelatedProduct.MovementChildId AS RelatedProductId
+            tmpMovement AS (SELECT Movement.Id                                        AS MovementId
+                              , Movement.InvNumber                                    AS InvNumber
+                              , MovementLinkObject_Maker.ObjectId                     AS MakerID
+                              , COALESCE (MovementFloat_ChangePercent.ValueData, 0)   AS ChangePercent
+                              , MovementDate_EndPromo.ValueData                       AS EndPromo 
+                              , MovementLinkMovement_RelatedProduct.MovementChildId   AS RelatedProductId
+                              , COALESCE(MovementBoolean_NotUseSUN.ValueData, FALSE)  AS isNotUseSUN
                          FROM Movement
                               INNER JOIN MovementDate AS MovementDate_StartPromo
                                                       ON MovementDate_StartPromo.MovementId = Movement.Id
@@ -44,14 +46,17 @@ BEGIN
                                                           AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
                               LEFT JOIN MovementLinkMovement AS MovementLinkMovement_RelatedProduct
                                                              ON MovementLinkMovement_RelatedProduct.MovementId = Movement.Id
-                                                            AND MovementLinkMovement_RelatedProduct.DescId = zc_MovementLinkMovement_RelatedProduct()
-                                                     
+                                                            AND MovementLinkMovement_RelatedProduct.DescId = zc_MovementLinkMovement_RelatedProduct()                                                     
+                              LEFT JOIN MovementBoolean AS MovementBoolean_NotUseSUN
+                                                        ON MovementBoolean_NotUseSUN.MovementId = Movement.Id
+                                                       AND MovementBoolean_NotUseSUN.DescId = zc_MovementBoolean_NotUseSUN()
 
                          WHERE Movement.StatusId = zc_Enum_Status_Complete()
                            AND Movement.DescId = zc_Movement_Promo()), 
             tmpMI AS (SELECT Movement.MovementId               AS MovementId
                            , Movement.InvNumber                AS InvNumber
                            , Movement.MakerID                  AS MakerID
+                           , Movement.isNotUseSUN              AS isNotUseSUN
                            , MI_Juridical.ObjectId             AS JuridicalId
                            , MI_Goods.ObjectId                 AS GoodsId
                            , Movement.ChangePercent            AS ChangePercent
@@ -70,6 +75,7 @@ BEGIN
                         
             SELECT tmp.MovementId
                  , tmp.JuridicalId
+                 , tmp.isNotUseSUN
                  , tmp.GoodsId        -- здесь товар "сети"
                  , tmp.ChangePercent :: TFloat AS ChangePercent
                  , tmp.MakerID
