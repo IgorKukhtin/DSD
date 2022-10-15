@@ -1263,6 +1263,36 @@
           HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' - '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1072' ('#1090#1086#1083#1100#1082#1086' '#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
           Width = 70
         end
+        object ReceiptLevelName_ch2: TcxGridDBColumn
+          Caption = 'Level'
+          DataBinding.FieldName = 'ReceiptLevelName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormReceiptLevel_ch2
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 74
+        end
+        object GoodsChildName_ch2: TcxGridDBColumn
+          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1077#1083#1072
+          DataBinding.FieldName = 'GoodsChildName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormGoodsChild_1
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 114
+        end
       end
       object cxGridLevel2: TcxGridLevel
         GridView = cxGridDBTableViewCh2
@@ -2793,6 +2823,67 @@
         end>
       isShowModal = False
     end
+    object actChoiceFormReceiptLevel_ch2: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormReceiptLevel_ch2'
+      FormName = 'TReceiptLevelForm'
+      FormNameParam.Value = 'TReceiptLevelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ReceiptLevelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ReceiptLevelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterObjectDesc'
+          Value = 'zc_Object_ReceiptGoods'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoiceFormGoodsChild_2: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormGoodsChild_1'
+      FormName = 'TUnion_Goods_ReceiptServiceForm'
+      FormNameParam.Value = 'TUnion_Goods_ReceiptServiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'GoodsChildId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'GoodsChildName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptGoods'
@@ -3384,12 +3475,17 @@
       item
         Name = 'inReceiptLevelId'
         Value = '0'
+        Component = Child2CDS
+        ComponentItem = 'ReceiptLevelId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsChildId'
         Value = '0'
+        Component = Child2CDS
+        ComponentItem = 'GoodsChildId'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

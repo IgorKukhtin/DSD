@@ -209,6 +209,14 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 108
           end
+          object GoodsGroupPromoName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1052#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            DataBinding.FieldName = 'GoodsGroupPromoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
           object isMarketToday: TcxGridDBColumn
             Caption = #1045#1089#1090#1100' '#1085#1072' '#1088#1099#1085#1082#1077' '#1089#1077#1075#1086#1076#1085#1103
             DataBinding.FieldName = 'isMarketToday'

@@ -14,6 +14,7 @@ RETURNS TABLE (MovementId Integer
              , MakerID Integer
              , InvNumber TVarChar
              , RelatedProductId Integer
+             , GoodsGroupPromoName TVarChar
               )
 AS
 $BODY$
@@ -61,6 +62,7 @@ BEGIN
                            , MI_Goods.ObjectId                 AS GoodsId
                            , Movement.ChangePercent            AS ChangePercent
                            , Movement.RelatedProductId         AS RelatedProductId
+                           , Object_GoodsGroupPromo.ValueData  AS GoodsGroupPromoName
                            , ROW_NUMBER() OVER (PARTITION BY MI_Juridical.ObjectId, MI_Goods.ObjectId ORDER BY MI_Juridical.ObjectId, MI_Goods.ObjectId, Movement.EndPromo DESC, Movement.MovementId DESC) AS Ord
                       FROM tmpMovement AS Movement
   
@@ -71,6 +73,12 @@ BEGIN
                            LEFT JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = Movement.MovementId
                                                                  AND MI_Juridical.DescId = zc_MI_Child()
                                                                  AND MI_Juridical.isErased = FALSE
+
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupPromo 
+                                                ON ObjectLink_Goods_GoodsGroupPromo.ObjectId = MI_Goods.ObjectId 
+                                               AND ObjectLink_Goods_GoodsGroupPromo.DescId = zc_ObjectLink_Goods_GoodsGroupPromo()
+                           LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
+
                      )
                         
             SELECT tmp.MovementId
@@ -79,8 +87,9 @@ BEGIN
                  , tmp.GoodsId        -- здесь товар "сети"
                  , tmp.ChangePercent :: TFloat AS ChangePercent
                  , tmp.MakerID
-                 , tmp.InvNumber               AS InvNumber
+                 , tmp.InvNumber                AS InvNumber
                  , tmp.RelatedProductId         AS RelatedProductId
+                 , tmp.GoodsGroupPromoName      AS GoodsGroupPromoName
             FROM tmpMI AS tmp
             WHERE tmp.Ord = 1 -- т.е. выбираем "последний"
             ;

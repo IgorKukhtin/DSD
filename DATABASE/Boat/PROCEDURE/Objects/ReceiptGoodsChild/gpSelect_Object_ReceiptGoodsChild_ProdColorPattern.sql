@@ -31,6 +31,8 @@ RETURNS TABLE (Id Integer, ReceiptGoodsId Integer
                -- Цвет /либо Comment из Boat Structure
              , ProdColorName TVarChar
              , MeasureName TVarChar
+             , ReceiptLevelId Integer, ReceiptLevelName TVarChar
+             , GoodsChildId Integer, GoodsChildName TVarChar
 
                -- Цена вх. без НДС
              , EKPrice TFloat
@@ -174,6 +176,12 @@ BEGIN
 
           , Object_Measure.ValueData                   AS MeasureName
 
+          , Object_ReceiptLevel.Id                        AS ReceiptLevelId
+          , Object_ReceiptLevel.ValueData      ::TVarChar AS ReceiptLevelName
+
+          , Object_GoodsChild.Id                          AS GoodsChildId
+          , Object_GoodsChild.ValueData        ::TVarChar AS GoodsChildName
+
             -- Цена вх. без НДС
           , ObjectFloat_EKPrice.ValueData                                                                 AS EKPrice
             -- Цена вх. с НДС, до 2-х знаков
@@ -244,6 +252,16 @@ BEGIN
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                               ON ObjectLink_ReceiptLevel.ObjectId = tmpProdColorPattern.ReceiptGoodsChildId
+                              AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
+          LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptLevel.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
+                               ON ObjectLink_GoodsChild.ObjectId = tmpProdColorPattern.ReceiptGoodsChildId
+                              AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+          LEFT JOIN Object AS Object_GoodsChild ON Object_GoodsChild.Id = ObjectLink_GoodsChild.ChildObjectId
+
           -- Цена вх. без НДС - Товар
           LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                 ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
@@ -264,3 +282,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPattern (FALSE, FALSE, zfCalc_UserAdmin())
+
+select * from gpSelect_Object_ReceiptGoodsChild_ProdColorPattern(inIsShowAll := 'False' , inIsErased := 'False' ,  inSession := '5');
