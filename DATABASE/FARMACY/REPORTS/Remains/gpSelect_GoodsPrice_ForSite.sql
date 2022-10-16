@@ -136,7 +136,13 @@ BEGIN
                                    , COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 OR 
                                      COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0 OR
                                      COALESCE(Object_Goods_Main.isStealthBonuses, FALSE) OR
-                                     COALESCE(tmpGoodsDiscount.isStealthBonuses, FALSE)  AS isStealthBonuses
+                                     COALESCE(tmpGoodsDiscount.isStealthBonuses, FALSE OR 
+                                     (COALESCE (Object_Goods_Retail.DiscontAmountSite, 0) > 0 OR
+                                     COALESCE (Object_Goods_Retail.DiscontPercentSite, 0) > 0) 
+                                     AND Object_Goods_Retail.DiscontSiteStart IS NOT NULL
+                                     AND Object_Goods_Retail.DiscontSiteEnd IS NOT NULL  
+                                     AND Object_Goods_Retail.DiscontSiteStart <= CURRENT_DATE
+                                     AND Object_Goods_Retail.DiscontSiteEnd >= CURRENT_DATE)  AS isStealthBonuses
                               FROM Object_Goods_Main AS Object_Goods_Main
 
                                    LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId  = Object_Goods_Main.Id
@@ -442,4 +448,4 @@ $BODY$
             from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Бустрикс вак', true, zfCalc_UserSite())*/
             
             
-select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 14745441, null, false, zfCalc_UserSite())
+select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Ливостор', false, zfCalc_UserSite())

@@ -111,22 +111,28 @@ BEGIN
             tmpCheckGoodsSpecial AS ( SELECT MovementItemContainer.MovementId
                                            , SUM(ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2))      AS Summa
                                       FROM MovementItemContainer
+
+                                           INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItemContainer.ObjectId_analyzer
+                                                                                        
+                                           INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+                                                                                             
+                                           LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
+                                                                     AND tmpGoodsDiscount.ORD = 1
+
                                       WHERE MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                                         AND MovementItemContainer.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                                         AND MovementItemContainer.MovementDescId = zc_Movement_Check()
                                         AND MovementItemContainer.DescId = zc_MIContainer_Count()
-                                        AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
-                                                                                        FROM Object_Goods_Retail
-                                                                                        
-                                                                                             INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
-                                                                                             
-                                                                                             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
-                                                                                                                       AND tmpGoodsDiscount.ORD = 1
-                                                                                        
-                                                                                        WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
-                                                                                           OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0
-                                                                                           OR COALESCE(Object_Goods_Main.isStealthBonuses, FALSE) = TRUE
-                                                                                           OR COALESCE(tmpGoodsDiscount.isStealthBonuses, FALSE) = TRUE)
+                                        AND (COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
+                                             OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0
+                                             OR COALESCE(Object_Goods_Main.isStealthBonuses, FALSE) = TRUE
+                                             OR COALESCE(tmpGoodsDiscount.isStealthBonuses, FALSE) = TRUE OR 
+                                               (COALESCE (Object_Goods_Retail.DiscontAmountSite, 0) > 0 OR
+                                               COALESCE (Object_Goods_Retail.DiscontPercentSite, 0) > 0) 
+                                               AND Object_Goods_Retail.DiscontSiteStart IS NOT NULL
+                                               AND Object_Goods_Retail.DiscontSiteEnd IS NOT NULL  
+                                               AND Object_Goods_Retail.DiscontSiteStart <= MovementItemContainer.OperDate
+                                               AND Object_Goods_Retail.DiscontSiteEnd >= MovementItemContainer.OperDate)
                                       GROUP BY MovementItemContainer.MovementId),
             tmpMovement_Check AS (SELECT Movement.*
                                     FROM Movement

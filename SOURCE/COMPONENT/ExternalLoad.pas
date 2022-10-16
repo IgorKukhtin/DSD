@@ -662,7 +662,7 @@ begin
         TClientDataSet(FDataSet).Close;
         TClientDataSet(FDataSet).FieldDefs.Clear;
 
-        for I := 1 to Cols do TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftString, 255);
+        for I := 1 to Cols do TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideString, 510);
         TClientDataSet(FDataSet).CreateDataSet;
 
         for I := FStartRecord to Rows do

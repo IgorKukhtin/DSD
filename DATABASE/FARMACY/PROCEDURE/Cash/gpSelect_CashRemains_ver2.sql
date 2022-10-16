@@ -1230,7 +1230,13 @@ BEGIN
           , COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 OR 
             COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0 OR
             COALESCE (Object_Goods_Main.isStealthBonuses, False) OR
-            COALESCE (tmpGoodsDiscount.isStealthBonuses, False)    AS isSpecial
+            COALESCE (tmpGoodsDiscount.isStealthBonuses, False) OR 
+            (COALESCE (Object_Goods_Retail.DiscontAmountSite, 0) > 0 OR
+            COALESCE (Object_Goods_Retail.DiscontPercentSite, 0) > 0) 
+            AND Object_Goods_Retail.DiscontSiteStart IS NOT NULL
+            AND Object_Goods_Retail.DiscontSiteEnd IS NOT NULL  
+            AND Object_Goods_Retail.DiscontSiteStart <= CURRENT_DATE
+            AND Object_Goods_Retail.DiscontSiteEnd >= CURRENT_DATE    AS isSpecial
 
           /*, CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , zfCalc_PriceCash(CashSessionSnapShot.Price, 
