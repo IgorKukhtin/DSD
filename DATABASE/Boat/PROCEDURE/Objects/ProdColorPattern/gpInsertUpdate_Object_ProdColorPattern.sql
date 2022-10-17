@@ -65,6 +65,12 @@ BEGIN
                        WHERE ObjectLink_Goods_ProdColor.ObjectId = inGoodsId
                          AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
                        );
+   -- тогда надо обнулить
+   IF vbProdColorName <> ''
+   THEN
+       ioComment:= '';
+   END IF;
+   
    -- проверка - если заполнен товар - выдавать сообщ об ошибке, иначе сохран€ть в св-во Comment
    IF COALESCE (ioProdColorName,'') <> '' AND COALESCE (ioProdColorName,'') <> COALESCE (vbProdColorName,'')
    THEN

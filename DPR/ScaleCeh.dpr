@@ -111,7 +111,8 @@ uses
   DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
   DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
   DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
-  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas';
+  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
+  GuideAsset in '..\ScaleCeh\GuideAsset.pas' {GuideAssetForm};
 
 {$R *.res}
 
@@ -157,6 +158,8 @@ begin
          Application.CreateForm(TGuideUnitForm, GuideUnitForm);
          Application.CreateForm(TGuidePersonalGroupForm, GuidePersonalGroupForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
+         Application.CreateForm(TGuideAssetForm, GuideAssetForm);
+         Application.CreateForm(TGuideAssetForm, GuideAssetForm);
 
   end
   else
@@ -195,6 +198,8 @@ begin
          Application.CreateForm(TGuideUnitForm, GuideUnitForm);
          Application.CreateForm(TGuidePersonalGroupForm, GuidePersonalGroupForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
+         Application.CreateForm(TGuideAssetForm, GuideAssetForm);
+         Application.CreateForm(TGuideAssetForm, GuideAssetForm);
 
   end;
   //

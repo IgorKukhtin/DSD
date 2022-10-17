@@ -86,7 +86,6 @@ BEGIN
                                                   -- !!!временно!!!
                                                   AND (Object_GoodsGroup.ValueData ILIKE '%hypalon%'
                                                     OR Object_GoodsGroup.ValueData ILIKE 'Fabric%'
-                                                    OR Object_GoodsGroup.Id = 5
                                                     OR Object_Goods.ObjectCode < 0
                                                       )
 

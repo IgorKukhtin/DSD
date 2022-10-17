@@ -229,6 +229,11 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
           Size = 9
         end
         item
+          Name = 'CODE'
+          DataType = ftString
+          Size = 10
+        end
+        item
           Name = 'GOODSNAME'
           DataType = ftString
           Size = 50

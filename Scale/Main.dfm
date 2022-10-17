@@ -797,7 +797,7 @@ object MainForm: TMainForm
         OnClick = bbSetAssetClick
       end
       object bbUpdateAsset: TSpeedButton
-        Left = 166
+        Left = 167
         Top = 2
         Width = 31
         Height = 29

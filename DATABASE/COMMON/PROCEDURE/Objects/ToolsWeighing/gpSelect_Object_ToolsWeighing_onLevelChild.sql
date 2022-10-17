@@ -125,7 +125,7 @@ BEGIN
            UNION SELECT 'isPartionDate'          AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isReason'               AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isPartionGoods_20103'   AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
-           UNION SELECT 'isAsset'                AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isAsset'                AS Name WHERE/*inIsCeh = FALSE AND*/ vbIsSticker = FALSE
            UNION SELECT 'isReReturnIn'           AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
            -- Режим ScaleCeh - маркировка/сортировка

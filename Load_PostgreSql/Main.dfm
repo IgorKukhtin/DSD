@@ -2460,8 +2460,10 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 0
       OnDblClick = PanelErrDblClick
+      ExplicitLeft = -4
+      ExplicitTop = 9
       object EditRepl1: TEdit
-        Left = 120
+        Left = 119
         Top = 17
         Width = 48
         Height = 21
@@ -2519,7 +2521,7 @@ object MainForm: TMainForm
         OnClick = cbSnapshotClick
       end
       object EditRepl_offset: TEdit
-        Left = 178
+        Left = 182
         Top = -4
         Width = 48
         Height = 21

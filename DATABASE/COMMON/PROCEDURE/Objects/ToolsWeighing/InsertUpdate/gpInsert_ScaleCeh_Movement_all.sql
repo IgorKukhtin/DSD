@@ -695,6 +695,10 @@ BEGIN
                                        THEN 0
                                   ELSE COALESCE (MILinkObject_StorageLine.ObjectId, 0)
                              END AS StorageLineId
+
+                           , COALESCE (MILinkObject_Asset.ObjectId, 0)           AS AssetId
+                           , COALESCE (MILinkObject_Asset_two.ObjectId, 0)       AS AssetId_two
+
                            , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
                                        -- Склад Реализации + Склад База ГП
                                    AND MLO_From.ObjectId IN (8459, 8458)
@@ -766,7 +770,14 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
                                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
-                     )
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                            ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
+                                                            ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
+                                                          
+                    )
            -- Результат
            SELECT CASE WHEN vbMovementDescId = zc_Movement_Loss()
                                  -- <Списание>
@@ -794,7 +805,8 @@ BEGIN
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
-                                                        , inAssetId             := NULL
+                                                        , inAssetId             := tmp.AssetId
+                                                        , inAssetId_two         := tmp.AssetId_two
                                                         , inUnitId              := NULL -- !!!не ошибка, здесь не формируется!!!
                                                         , inStorageId           := NULL
                                                         , inPartionGoodsId      := NULL
@@ -902,6 +914,8 @@ BEGIN
                      , tmp.GoodsId
                      , tmp.GoodsKindId
                      , tmp.StorageLineId
+                     , tmp.AssetId
+                     , tmp.AssetId_two
                      , tmp.PartionGoodsDate
                      , tmp.PartionGoods
                      , SUM (tmp.Amount)       AS Amount
@@ -930,6 +944,8 @@ BEGIN
                              END AS GoodsKindId
 
                            , COALESCE (MILinkObject_StorageLine.ObjectId, 0) AS StorageLineId
+                           , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
+                           , COALESCE (MILinkObject_Asset_two.ObjectId, 0)   AS AssetId_two
 
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
                                        THEN NULL
@@ -1033,6 +1049,12 @@ BEGIN
                                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                                                            AND vbMovementDescId                <> zc_Movement_Inventory()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                            ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
+                                                            ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -1052,6 +1074,9 @@ BEGIN
                            , tmpMI.GoodsId
                            , tmpMI.GoodsKindId
                            , tmpMI.StorageLineId
+                           , tmpMI.AssetId
+                           , tmpMI.AssetId_two
+
                            , tmpMI.PartionGoodsDate
                            , tmpMI.PartionGoods
 
@@ -1072,6 +1097,8 @@ BEGIN
                        , tmp.GoodsId
                        , tmp.GoodsKindId
                        , tmp.StorageLineId
+                       , tmp.AssetId
+                       , tmp.AssetId_two
                        , tmp.PartionGoodsDate
                        , tmp.PartionGoods
                        , tmp.myId -- если нет суммирования - каждое взвешивание в отдельной строчке

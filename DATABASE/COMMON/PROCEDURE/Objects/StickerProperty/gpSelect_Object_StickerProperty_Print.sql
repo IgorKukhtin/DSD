@@ -539,14 +539,14 @@ BEGIN
                                            THEN ', с≥ль' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value8.ValueData, 0)) || tmpLanguageParam.Value12
                                       ELSE ''
                                  END ||''
-                              -- к ал
-                              || CASE WHEN Sticker_Value4.ValueData > 0
-                                           THEN ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) ||  tmpLanguageParam.Value13 ||''
-                                      ELSE ''
-                                 END
                               -- кƒж
                               || CASE WHEN Sticker_Value5.ValueData <> 0
                                             THEN ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value5.ValueData, 0)) ||  tmpLanguageParam.Value17 ||''
+                                      ELSE ''
+                                 END
+                              -- к ал
+                              || CASE WHEN Sticker_Value4.ValueData > 0
+                                           THEN ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) ||  tmpLanguageParam.Value13 ||''
                                       ELSE ''
                                  END
 

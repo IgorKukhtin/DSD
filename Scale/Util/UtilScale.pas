@@ -132,11 +132,11 @@ type
   procedure Create_ParamsPersonalGroup(var Params:TParams);
   procedure Create_ParamsWorkProgress(var Params:TParams);
   procedure Create_ParamsArticleLoss(var Params:TParams);
+  procedure Create_ParamsAsset(var Params:TParams);
   procedure Create_ParamsGoodsLine(var Params:TParams);
   procedure Create_ParamsSubjectDoc(var Params:TParams);
   procedure Create_ParamsReason(var Params:TParams);
   procedure Create_ParamsUnit_OrderInternal(var Params:TParams);
-  procedure Create_ParamsAsset(var Params:TParams);
   procedure Create_ParamsReReturnIn(var Params:TParams);
   procedure Create_ParamsGuide(var Params:TParams);
 
@@ -333,6 +333,11 @@ begin
      ParamAdd(Params,'AssetCode',ftInteger);
      ParamAdd(Params,'AssetName',ftString);
      ParamAdd(Params,'AssetInvNumber',ftString);
+
+     ParamAdd(Params,'AssetId_two',ftInteger);
+     ParamAdd(Params,'AssetCode_two',ftInteger);
+     ParamAdd(Params,'AssetName_two',ftString);
+     ParamAdd(Params,'AssetInvNumber_two',ftString);
 
      ParamAdd(Params,'isReReturnIn',ftBoolean);
      ParamAdd(Params,'MovementId_reReturnIn',ftInteger);
@@ -597,6 +602,16 @@ begin
      end;
 end;
 {------------------------------------------------------------------------}
+procedure Create_ParamsAsset(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'MovementItemId', ftInteger);   //
+     ParamAdd(Params,'Id', ftInteger);   //
+     ParamAdd(Params,'Code', ftInteger); //
+     ParamAdd(Params,'Name', ftString);  //
+     ParamAdd(Params,'InvNumber', ftString);  //
+end;
+{------------------------------------------------------------------------}
 procedure Create_ParamsArticleLoss(var Params:TParams);
 begin
      Params:=nil;
@@ -686,15 +701,6 @@ begin
      ParamAdd(Params,'Code', ftInteger); //
      ParamAdd(Params,'Name', ftString);  //
      ParamAdd(Params,'ReturnKindName', ftString);  //
-end;
-{------------------------------------------------------------------------}
-procedure Create_ParamsAsset(var Params:TParams);
-begin
-     Params:=nil;
-     ParamAdd(Params,'Id', ftInteger);        //
-     ParamAdd(Params,'Code', ftInteger);      //
-     ParamAdd(Params,'Name', ftString);       //
-     ParamAdd(Params,'InvNumber', ftString);  //
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsReReturnIn(var Params:TParams);

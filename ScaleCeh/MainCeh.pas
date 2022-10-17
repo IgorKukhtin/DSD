@@ -298,6 +298,16 @@ type
     EditNumberKVK: TEdit;
     PersonalName_KVK: TcxGridDBColumn;
     NumberKVK: TcxGridDBColumn;
+    bbUpdateAsset: TSpeedButton;
+    AssetPanel: TPanel;
+    AssetLabel: TLabel;
+    EditAsset: TcxButtonEdit;
+    AssetName: TcxGridDBColumn;
+    Asset_twoPanel: TPanel;
+    Asset_twoLabel: TLabel;
+    EditAsset_two: TcxButtonEdit;
+    AssetName_two: TcxGridDBColumn;
+    bbUpdateAsset_two: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -390,6 +400,12 @@ type
     procedure EditNumberKVKExit(Sender: TObject);
     procedure EditNumberKVKKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure EditAssetPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure bbUpdateAssetClick(Sender: TObject);
+    procedure bbUpdateAsset_twoClick(Sender: TObject);
+    procedure EditAsset_twoPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
@@ -452,7 +468,7 @@ implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
-    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport, GuideSubjectDoc, GuidePersonalGroup, GuidePersonal
+    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport, GuideSubjectDoc, GuidePersonalGroup, GuidePersonal, GuideAsset
     ,IdIPWatch, LookAndFillSettings
     ,DialogBoxLight, DialogGoodsSeparate
     ,CommonData;
@@ -469,6 +485,18 @@ begin
      ParamsMI.ParamByName('StorageLineId').AsInteger := 0;
      ParamsMI.ParamByName('StorageLineName').AsString:= '';
      EditStorageLine.Text:= '';
+     //
+     ParamsMovement.ParamByName('AssetId').AsInteger:=0;
+     ParamsMovement.ParamByName('AssetCode').AsInteger:=9;
+     ParamsMovement.ParamByName('AssetName').AsString:='';
+     ParamsMovement.ParamByName('AssetInvNumber').AsString:='';
+     EditAsset.Text:= '';
+     //
+     ParamsMovement.ParamByName('AssetId_two').AsInteger:=0;
+     ParamsMovement.ParamByName('AssetCode_two').AsInteger:=9;
+     ParamsMovement.ParamByName('AssetName_two').AsString:='';
+     ParamsMovement.ParamByName('AssetInvNumber_two').AsString:='';
+     EditAsset_two.Text:= '';
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.Initialize_afterSave_MI;
@@ -1765,6 +1793,66 @@ begin
       lParams.Free;
 end;
 {------------------------------------------------------------------------}
+procedure TMainCehForm.EditAssetPropertiesButtonClick(Sender: TObject;  AButtonIndex: Integer);
+var lParams:TParams;
+begin
+     if ParamsMovement.ParamByName('isAsset').AsBoolean = FALSE
+     then begin
+               ShowMessage ('Ошибка.Для данного документ нет выбора <Оборудование - 1>.');
+               exit;
+     end;
+     //
+     Create_ParamsAsset(lParams);
+     lParams.ParamByName('Id').asInteger:=ParamsMovement.ParamByName('AssetId').asInteger;
+     lParams.ParamByName('Code').AsInteger:=0;
+     lParams.ParamByName('Name').asString:='';
+     lParams.ParamByName('InvNumber').asString:='';
+      //
+      if GuideAssetForm.Execute(lParams) then
+      begin
+           ParamsMovement.ParamByName('AssetId').AsInteger:=lParams.ParamByName('Id').AsInteger;
+           ParamsMovement.ParamByName('AssetCode').AsInteger:=lParams.ParamByName('Code').AsInteger;
+           ParamsMovement.ParamByName('AssetName').AsString:=lParams.ParamByName('Name').AsString;
+           ParamsMovement.ParamByName('AssetInvNumber').AsString:=lParams.ParamByName('InvNumber').AsString;
+           //
+           EditAsset.Text:= lParams.ParamByName('Name').AsString
+                     + ' ('+lParams.ParamByName('Code').AsString+')'
+                     + ' ('+lParams.ParamByName('InvNumber').AsString+')'
+                      ;
+      end;
+      lParams.Free;
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.EditAsset_twoPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
+var lParams:TParams;
+begin
+     if ParamsMovement.ParamByName('isAsset').AsBoolean = FALSE
+     then begin
+               ShowMessage ('Ошибка.Для данного документ нет выбора <Оборудование - 2>.');
+               exit;
+     end;
+     //
+     Create_ParamsAsset(lParams);
+     lParams.ParamByName('Id').asInteger:=ParamsMovement.ParamByName('AssetId_two').asInteger;
+     lParams.ParamByName('Code').AsInteger:=0;
+     lParams.ParamByName('Name').asString:='';
+     lParams.ParamByName('InvNumber').asString:='';
+      //
+      if GuideAssetForm.Execute(lParams) then
+      begin
+           ParamsMovement.ParamByName('AssetId_two').AsInteger:=lParams.ParamByName('Id').AsInteger;
+           ParamsMovement.ParamByName('AssetCode_two').AsInteger:=lParams.ParamByName('Code').AsInteger;
+           ParamsMovement.ParamByName('AssetName_two').AsString:=lParams.ParamByName('Name').AsString;
+           ParamsMovement.ParamByName('AssetInvNumber_two').AsString:=lParams.ParamByName('InvNumber').AsString;
+           //
+           EditAsset_two.Text:= lParams.ParamByName('Name').AsString
+                         + ' ('+lParams.ParamByName('Code').AsString+')'
+                         + ' ('+lParams.ParamByName('InvNumber').AsString+')'
+                          ;
+      end;
+      lParams.Free;
+end;
+{------------------------------------------------------------------------}
 procedure TMainCehForm.bbChoice_UnComleteClick(Sender: TObject);
 begin
      if GuideMovementCehForm.Execute(ParamsMovement,TRUE)//isChoice=TRUE
@@ -2708,7 +2796,15 @@ begin
        TColorRule(DBViewAddOn.ColorRuleList.Items[2]).BackGroundValueColumn:=nil;
        TColorRule(DBViewAddOn.ColorRuleList.Items[2]).ColorColumn:=nil;}
   end;
-
+  //
+  //
+  AssetPanel.Visible:= SettingMain.isAsset = TRUE;
+  Asset_twoPanel.Visible:= SettingMain.isAsset = TRUE;
+  bbUpdateAsset.Visible:= SettingMain.isAsset = TRUE;
+  bbUpdateAsset_two.Visible:= SettingMain.isAsset = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AssetName').Index].Visible:= SettingMain.isAsset = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AssetName_two').Index].Visible:= SettingMain.isAsset = TRUE;
+  //
   //global Initialize
   Create_Scale;
   Create_Light;
@@ -3702,6 +3798,75 @@ begin
           //
      end;
 end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbUpdateAssetClick(Sender: TObject);
+var execParams, execParams_two:TParams;
+begin
+     if ParamsMovement.ParamByName('isAsset').AsBoolean = FALSE then exit;
+     //
+     Create_ParamsAsset(execParams);
+     //
+     with execParams do
+     begin
+          ParamByName('Id').AsInteger:=ParamsMovement.ParamByName('AssetId').AsInteger;
+          ParamByName('Code').AsInteger:=0;
+          ParamByName('Name').asString:='';
+     end;
+     if GuideAssetForm.Execute(execParams)
+     then begin
+               execParams_two:=nil;
+               ParamAddValue(execParams_two,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+               ParamAddValue(execParams_two,'inDescCode',ftString,'zc_MILinkObject_Asset');
+               ParamAddValue(execParams_two,'inObjectId',ftInteger,execParams.ParamByName('Id').AsInteger);
+               //
+               if DMMainScaleCehForm.gpUpdate_Scale_MILinkObject(execParams_two) then
+               begin
+                    CDS.Edit;
+                    CDS.FieldByName('AssetId').AsInteger:=execParams.ParamByName('Id').AsInteger;
+                    CDS.FieldByName('AssetName').AsString:=execParams.ParamByName('Name').AsString;
+                    CDS.Post;
+               end;
+               //
+               execParams_two.Free;
+     end;
+     //
+     execParams.Free;
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbUpdateAsset_twoClick(Sender: TObject);
+var execParams, execParams_two:TParams;
+begin
+     if ParamsMovement.ParamByName('isAsset').AsBoolean = FALSE then exit;
+     //
+     Create_ParamsAsset(execParams);
+     //
+     with execParams do
+     begin
+          ParamByName('Id').AsInteger:=ParamsMovement.ParamByName('AssetId_two').AsInteger;
+          ParamByName('Code').AsInteger:=0;
+          ParamByName('Name').asString:='';
+     end;
+     if GuideAssetForm.Execute(execParams)
+     then begin
+               execParams_two:=nil;
+               ParamAddValue(execParams_two,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+               ParamAddValue(execParams_two,'inDescCode',ftString,'zc_MILinkObject_Asset_two');
+               ParamAddValue(execParams_two,'inObjectId',ftInteger,execParams.ParamByName('Id').AsInteger);
+               //
+               if DMMainScaleCehForm.gpUpdate_Scale_MILinkObject(execParams_two) then
+               begin
+                    CDS.Edit;
+                    CDS.FieldByName('AssetId_two').AsInteger:=execParams.ParamByName('Id').AsInteger;
+                    CDS.FieldByName('AssetName_two').AsString:=execParams.ParamByName('Name').AsString;
+                    CDS.Post;
+               end;
+               //
+               execParams_two.Free;
+     end;
+     //
+     execParams.Free;
+end;
+
 {------------------------------------------------------------------------}
 procedure TMainCehForm.actExitExecute(Sender: TObject);
 begin Close;end;

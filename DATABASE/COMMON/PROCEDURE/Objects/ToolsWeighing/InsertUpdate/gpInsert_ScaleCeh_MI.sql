@@ -3,7 +3,8 @@
 -- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_MI(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,8 +13,11 @@ CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_MI(
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inStorageLineId       Integer   , -- Линия пр-ва
     IN inPersonalId_KVK      Integer   , --
+    IN inAssetId             Integer   , --
+    IN inAssetId_two         Integer   , --
     IN inIsStartWeighing     Boolean   , -- Режим начала взвешивания
     IN inIsPartionGoodsDate  Boolean   , --
+    IN inIsAsset             Boolean   , --
     IN inOperCount           TFloat    , -- Количество
     IN inRealWeight          TFloat    , -- Реальный вес (без учета % скидки для кол-ва)
     IN inWeightTare          TFloat    , -- Вес тары
@@ -210,6 +214,13 @@ BEGIN
                                                           , inSession             := inSession
                                                            );
 
+
+     -- дописали св-во <Asset >
+     IF inIsAsset = TRUE
+     THEN
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), vbId, inAssetId);
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), vbId, inAssetId_two);
+     END IF;
 
      -- дописали св-во <Протокол Дата/время начало>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_StartBegin(), vbId, vbOperDate_StartBegin);

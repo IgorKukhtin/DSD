@@ -22,7 +22,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxCheckBox;
+  dxSkinXmas2008Blue;
 
 type
   TGuideAssetForm = class(TForm)
@@ -50,6 +50,11 @@ type
     actRefresh: TAction;
     actChoice: TAction;
     actExit: TAction;
+    InvNumber: TcxGridDBColumn;
+    AssetGroupName: TcxGridDBColumn;
+    MakerName: TcxGridDBColumn;
+    SerialNumber: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -168,9 +173,9 @@ begin
      then ActiveControl:=EditName
      else with Params_local do
           begin
-               ParamByName('Id').AsInteger      := CDS.FieldByName('Id').AsInteger;
-               ParamByName('Code').AsInteger    := CDS.FieldByName('Code').AsInteger;
-               ParamByName('Name').asString     := CDS.FieldByName('Name').asString;
+               ParamByName('Id').AsInteger:= CDS.FieldByName('Id').AsInteger;
+               ParamByName('Code').AsInteger:= CDS.FieldByName('Code').AsInteger;
+               ParamByName('Name').asString:= CDS.FieldByName('Name').asString;
                ParamByName('InvNumber').asString:= CDS.FieldByName('InvNumber').asString;
           end;
 end;
@@ -180,7 +185,7 @@ begin
      if fEnterCode then
        with CDS do begin
            //***Filtered:=false;
-           //***if trim(EditCode888887.Text)<>'' then begin Filtered:=false;Filtered:=true;end;
+           //***if trim(EditCode.Text)<>'' then begin Filtered:=false;Filtered:=true;end;
            Filtered:=false;
            Filtered:=true;
        end;
@@ -237,13 +242,13 @@ procedure TGuideAssetForm.EditNameKeyPress(Sender: TObject; var Key: Char);
 begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
 procedure TGuideAssetForm.actRefreshExecute(Sender: TObject);
-var GuideReasonId:String;
+var Id:String;
 begin
     with spSelect do begin
-        GuideReasonId:= DataSet.FieldByName('Id').AsString;
+        Id:= DataSet.FieldByName('Id').AsString;
         Execute;
-        if GuideReasonId <> '' then
-          DataSet.Locate('Id',GuideReasonId,[loCaseInsensitive]);
+        if Id <> '' then
+          DataSet.Locate('Id',Id,[loCaseInsensitive]);
     end;
 end;
 {------------------------------------------------------------------------------}
@@ -263,9 +268,7 @@ begin
 
   with spSelect do
   begin
-       if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
-       then StoredProcName:='gpSelect_Object_AssetToPlace'
-       else StoredProcName:='gpSelect_ScaleCeh_Asset';
+       StoredProcName:='gpSelect_ScaleCeh_Asset';
        OutputType:=otDataSet;
        Execute;
   end;

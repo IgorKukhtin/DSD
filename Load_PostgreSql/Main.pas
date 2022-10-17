@@ -611,9 +611,9 @@ begin
         DecodeTime(Present, Hour, Min, Sec, MSec);
         //
         if ((GroupId_branch = 0) and (((Hour = zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H<=23))))
-         or(((GroupId_branch = 1)or(cbHistoryCost_8379.Checked)) and (((Hour = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H<=23))))
-         or(((GroupId_branch = 2)or(cbHistoryCost_8374.Checked)) and (((Hour = zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H<=23))))
-         or(((GroupId_branch = 3)or(cbHistoryCost_oth.Checked))  and (((Hour = zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H<=23))))
+         or(((GroupId_branch = 1)or((cbHistoryCost_8379.Checked) and not(cbHistoryCost_0.Checked))) and (((Hour = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H<=23))))
+         or(((GroupId_branch = 2)or((cbHistoryCost_8374.Checked) and not(cbHistoryCost_0.Checked))) and (((Hour = zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H<=23))))
+         or(((GroupId_branch = 3)or((cbHistoryCost_oth.Checked)  and not(cbHistoryCost_0.Checked))) and (((Hour = zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H<=23))))
          or((GroupId_branch = 4) and (((Hour = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H<=23))))
         then begin
             fEnabled:= false;
@@ -967,7 +967,7 @@ begin
      try if Pos('br-', ParamStr(5)) = 1 then GroupId_branch:= StrToInt(Copy(ParamStr(5), 4, 2));
          BranchEdit.Text:= 'BranchId : ' + IntToStr(GroupId_branch);
      except
-            if (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked)
+            if (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked) and (not cbHistoryCost_0.Checked)
             then GroupId_branch:= 0
             else GroupId_branch:= -1;
             BranchEdit.Text:= '!!!ERROR!!! BranchId : ???';
@@ -976,7 +976,7 @@ begin
      beginVACUUM:=0;
      beginVACUUM_ii:=0;
      Timer.Enabled:= ((ParamStr(2)='autoALL') and (BranchEdit.Text = 'BranchId : 0'))
-                   or (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked)
+                  or (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked)
                   ;
      fStartProcess:= false;
      //
@@ -1184,11 +1184,14 @@ procedure TMainForm.StartProcess;
                UnitCodeSendOnPriceEdit.Text:='autoALL('+DateToStr(zc_Enum_GlobalConst_StartDate_Auto_PrimeCost)+')';
 
                //Привязка Возвраты
-               if GroupId_branch <=0 then cbReturnIn_Auto.Checked:=true;
+               if (GroupId_branch <=0) and (((not cbHistoryCost_8379.Checked) and (not cbHistoryCost_8374.Checked) and (not cbHistoryCost_oth.Checked)) or cbHistoryCost_0.Checked)
+               then cbReturnIn_Auto.Checked:=true;
                //Расчет акций
-               if GroupId_branch <=0 then cbPromo.Checked:=true;
+               if (GroupId_branch <=0) and (((not cbHistoryCost_8379.Checked) and (not cbHistoryCost_8374.Checked) and (not cbHistoryCost_oth.Checked)) or cbHistoryCost_0.Checked)
+               then cbPromo.Checked:=true;
                //Расчет Currency
-               if GroupId_branch <=0 then cbCurrency.Checked:=true;
+               if (GroupId_branch <=0) and (((not cbHistoryCost_8379.Checked) and (not cbHistoryCost_8374.Checked) and (not cbHistoryCost_oth.Checked)) or cbHistoryCost_0.Checked)
+               then cbCurrency.Checked:=true;
 
                //Проводим+Распроводим
                cbComplete.Checked:=true;
@@ -1294,7 +1297,7 @@ begin
      then begin
           end;
 
-     if  (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked)
+     if  (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked) and not (cbHistoryCost_0.Checked)
      then begin
                 cbInsertHistoryCost.Checked:= true;
                 cbOnlyTwo.Checked:= true;
@@ -2613,7 +2616,17 @@ begin
      //
      myLogMemo_add('start cbPack');
      //
-     cb100MSec.Checked:= true;
+     //
+     with fromZQueryDate_recalc,Sql do begin
+        Close;
+        Clear;
+        Add(' select DATE_TRUNC ('+FormatToVarCharServer_notNULL('MONTH')+', cast('+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+' as date)) as OperDate1'
+                 +', DATE_TRUNC ('+FormatToVarCharServer_notNULL('MONTH')+', cast('+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+' as date) + INTERVAL '+FormatToVarCharServer_notNULL('1 DAY')+') as OperDate2'
+           );
+        Open;
+        cb100MSec.Checked:= FieldByName('OperDate1').AsDateTime <> FieldByName('OperDate1').AsDateTime;
+     end;
+     //
      SessionIdEdit.Text:= '30000';
      MyDelay(10 * 1000);
      //
@@ -2662,7 +2675,7 @@ begin
                  //
                  if cb100MSec.Checked
                  then begin
-                      try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=1000 then MSec_complete:=40000;except MSec_complete:=40000;end;
+                      try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=500 then MSec_complete:=40 * 1000;except MSec_complete:=40 * 1000;end;
                       if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
                  end
                  else MyDelay(8 * 1000);
@@ -2675,7 +2688,7 @@ begin
                  //
                  if cb100MSec.Checked
                  then begin
-                      try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
+                      try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=3000;except MSec_complete:=3000;end;
                       if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
                  end
                  else MyDelay(4 * 1000);
@@ -2846,7 +2859,7 @@ begin
      if  (StrToDate (EndDateCompleteEdit.Text) < fromSqlZQuery.FieldByName('RetV').AsDateTime)
         and (ParamStr(2) <> '') and (ParamStr(4) <> '+')
      then cbReturnIn_Auto.Checked:= false // !!!за "предыдущий" - не надо!!!
-     else if ParamStr(2) <> ''
+     else if (ParamStr(2) <> '') and (((not cbHistoryCost_8379.Checked) and (not cbHistoryCost_8374.Checked) and (not cbHistoryCost_oth.Checked) or cbHistoryCost_0.Checked))
           then cbReturnIn_Auto.Checked:= true; // !!!надо!!!
 
      if (not cbReturnIn_Auto.Checked)or(not cbReturnIn_Auto.Enabled) then exit;

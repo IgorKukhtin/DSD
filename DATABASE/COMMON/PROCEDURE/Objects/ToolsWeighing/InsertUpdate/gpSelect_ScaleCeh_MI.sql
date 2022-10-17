@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ScaleCeh_MI(
     IN inSession         TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureId Integer, MeasureName TVarChar
-             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar, StorageLineName TVarChar
+             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar, StorageLineName TVarChar, AssetId  Integer, AssetName  TVarChar, AssetId_two  Integer, AssetName_two  TVarChar
              , isStartWeighing Boolean
              , Amount TFloat, AmountWeight TFloat, AmountOneWeight TFloat
              , RealWeight TFloat, RealWeightWeight TFloat
@@ -38,8 +38,10 @@ BEGIN
                   , MovementItem.ObjectId AS GoodsId
                   , MovementItem.Amount
 
-                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
                   , COALESCE (MILinkObject_StorageLine.ObjectId, 0) AS StorageLineId
+                  , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
+                  , COALESCE (MILinkObject_Asset_two.ObjectId, 0)   AS AssetId_two
 
                   , COALESCE (MIBoolean_StartWeighing.ValueData, FALSE) AS isStartWeighing
 
@@ -147,6 +149,12 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
                                                    ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                   ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_Asset.DescId         = zc_MILinkObject_Asset()
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
+                                                   ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_Asset_two.DescId         = zc_MILinkObject_Asset_two()
 
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
@@ -163,6 +171,11 @@ BEGIN
            , Object_GoodsKind.ObjectCode      AS GoodsKindCode
            , Object_GoodsKind.ValueData       AS GoodsKindName
            , Object_StorageLine.ValueData     AS StorageLineName
+
+           , Object_Asset.Id                 AS  AssetId
+           , (Object_Asset.ValueData || ' (' || Object_Asset.ObjectCode :: TVarChar || ')' || CASE WHEN ObjectString_Asset_InvNumber.ValueData  <> '' THEN ' (' || ObjectString_Asset_InvNumber.ValueData || ')'  ELSE '' END) :: TVarChar AS AssetName
+           , Object_Asset_two.Id                 AS  AssetId_two
+           , (Object_Asset_two.ValueData || ' (' || Object_Asset_two.ObjectCode :: TVarChar || ')' || CASE WHEN ObjectString_Asset_InvNumber_two.ValueData  <> '' THEN ' (' || ObjectString_Asset_InvNumber_two.ValueData || ')'  ELSE '' END) :: TVarChar AS AssetName_two
 
            , tmpMI.isStartWeighing :: Boolean AS isStartWeighing
 
@@ -227,6 +240,8 @@ BEGIN
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
             LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = tmpMI.StorageLineId
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
+            LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = tmpMI.AssetId_two
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
@@ -238,6 +253,13 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Asset_InvNumber
+                                   ON ObjectString_Asset_InvNumber.ObjectId = Object_Asset.Id
+                                  AND ObjectString_Asset_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
+            LEFT JOIN ObjectString AS ObjectString_Asset_InvNumber_two
+                                   ON ObjectString_Asset_InvNumber_two.ObjectId = Object_Asset_two.Id
+                                  AND ObjectString_Asset_InvNumber_two.DescId = zc_ObjectString_Asset_InvNumber()
 
             LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = tmpMI.MovementItemId_Partion
             LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId

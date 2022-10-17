@@ -1290,7 +1290,7 @@ BEGIN
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
-                                                        , inAssetId             := NULL
+                                                        , inAssetId             := tmp.AssetId
                                                         , inUnitId              := NULL -- !!!не ошибка, здесь не формируется!!!
                                                         , inStorageId           := NULL
                                                         , inPartionGoodsId      := NULL
