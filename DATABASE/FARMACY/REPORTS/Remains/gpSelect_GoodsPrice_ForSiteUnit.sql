@@ -134,7 +134,13 @@ BEGIN
                                    , COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 OR 
                                      COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0 OR
                                      COALESCE(Object_Goods_Main.isStealthBonuses, FALSE) OR
-                                     COALESCE(tmpGoodsDiscount.isStealthBonuses, FALSE)  AS isStealthBonuses
+                                     COALESCE(tmpGoodsDiscount.isStealthBonuses, FALSE) OR 
+                                     (COALESCE (Object_Goods_Retail.DiscontAmountSite, 0) > 0 OR
+                                     COALESCE (Object_Goods_Retail.DiscontPercentSite, 0) > 0) 
+                                     AND Object_Goods_Retail.DiscontSiteStart IS NOT NULL
+                                     AND Object_Goods_Retail.DiscontSiteEnd IS NOT NULL  
+                                     AND Object_Goods_Retail.DiscontSiteStart <= CURRENT_DATE
+                                     AND Object_Goods_Retail.DiscontSiteEnd >= CURRENT_DATE  AS isStealthBonuses
                               FROM Object_Goods_Main AS Object_Goods_Main
 
                                    LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId  = Object_Goods_Main.Id
@@ -354,4 +360,4 @@ $BODY$
 -- тест
 --
  
-SELECT * FROM gpSelect_GoodsPrice_ForSite_Ol (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Бустрикс вак', inUnitId := 13711869, inisDiscountExternal := True , inSession:= zfCalc_UserSite());
+SELECT * FROM gpSelect_GoodsPrice_ForSite_Ol (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Ливостор', inUnitId := 13711869, inisDiscountExternal := True , inSession:= zfCalc_UserSite());

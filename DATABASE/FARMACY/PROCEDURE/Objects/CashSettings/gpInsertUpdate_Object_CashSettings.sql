@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, 
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
                                                            Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, Integer, 
-                                                           Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, TVarChar);
+                                                           Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -44,6 +44,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inMinPriceSale               TFloat    ,     -- Минимальная цена товара при отпуске
     IN inDeviationsPrice1303        TFloat    ,     -- Процент отклонение от отпускной цены при отпуске по 1303
     IN inisWagesCheckTesting        Boolean   ,     -- Контроль сдачи экзамен при выдача зарплаты
+    IN inNormNewMobileOrders        Integer   ,     -- Норма по новым заказам мобильного приложения
     IN inUserUpdateMarketingId      Integer   ,     -- Сотрудник для редактирование в ЗП суммы Маркетинга
     IN inSession                    TVarChar        -- сессия пользователя
 )
@@ -159,6 +160,9 @@ BEGIN
    
      -- Процент отклонение от отпускной цены при отпуске по 1303
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_DeviationsPrice1303(), vbID, inDeviationsPrice1303);
+   
+     -- Норма по новым заказам мобильного приложения
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_NormNewMobileOrders(), vbID, inNormNewMobileOrders);
 
    -- Контроль сдачи экзамен при выдача зарплаты
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_WagesCheckTesting(), vbID, inisWagesCheckTesting);

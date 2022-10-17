@@ -207,6 +207,12 @@ type
     lbReceiptLevel: TcxLabel;
     edReceiptLevel: TcxButtonEdit;
     GuidesReceiptLevel: TdsdGuides;
+    GoodsChildName_ch1: TcxGridDBColumn;
+    actChoiceFormGoodsChild_1: TOpenChoiceForm;
+    ReceiptLevelName_ch2: TcxGridDBColumn;
+    GoodsChildName_ch2: TcxGridDBColumn;
+    actChoiceFormReceiptLevel_ch2: TOpenChoiceForm;
+    actChoiceFormGoodsChild_2: TOpenChoiceForm;
   private
     { Private declarations }
   public

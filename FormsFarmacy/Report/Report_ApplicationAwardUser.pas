@@ -42,6 +42,7 @@ type
     DCountCheck: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
+    Color_Calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

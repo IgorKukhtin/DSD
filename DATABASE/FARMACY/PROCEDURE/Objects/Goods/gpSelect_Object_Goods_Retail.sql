@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , CountPrice TFloat
              , Color_calc Integer
              , isPromo boolean
-             , MakerPromoName TVarChar
+             , MakerPromoName TVarChar, GoodsGroupPromoName TVarChar
              , isMarketToday Boolean
              , isNotMarion Boolean
              , LastPriceDate TDateTime, LastPriceOldDate TDateTime
@@ -67,6 +67,7 @@ BEGIN
      -- ћаркетинговый контракт
       WITH GoodsPromoAll AS (SELECT Object_Goods_Retail.GoodsMainId AS GoodsId  -- главный товар
                                   , Object_Maker.ValueData          AS MakerPromoName
+                                  , tmp.GoodsGroupPromoName
                                   , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Retail.GoodsMainId ORDER BY tmp.MovementId DESC) AS Ord
                              FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
                                   INNER JOIN Object_Goods_Retail AS Object_Goods_Retail
@@ -77,6 +78,7 @@ BEGIN
 
          , GoodsPromo AS (SELECT GoodsPromoAll.GoodsId
                                , GoodsPromoAll.MakerPromoName
+                               , GoodsPromoAll.GoodsGroupPromoName
                           FROM GoodsPromoAll 
                           WHERE GoodsPromoAll.Ord = 1
                             )
@@ -180,6 +182,7 @@ BEGIN
 
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END   AS isPromo
            , GoodsPromo.MakerPromoName
+           , GoodsPromo.GoodsGroupPromoName
 
            , CASE WHEN DATE_TRUNC ('DAY', Object_Goods_Main.LastPrice) = CURRENT_DATE THEN TRUE ELSE FALSE END AS isMarketToday
            , Object_Goods_Main.isNotMarion

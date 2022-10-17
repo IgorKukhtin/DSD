@@ -16,6 +16,8 @@ RETURNS TABLE (UserCode       Integer
              , CountCheck     Integer
              , CountCheckPrew Integer
              , DCountCheck    Integer
+             , Color_Calc     Integer
+
               )
 AS
 $BODY$
@@ -136,7 +138,14 @@ BEGIN
          tmpUserReferalsUnitPrew AS (SELECT tmpUserReferals.UserId
                                           , COUNT(*)::Integer                      AS CountCheck
                                      FROM tmpUserReferalsPrew AS tmpUserReferals
-                                     GROUP BY tmpUserReferals.UserId)
+                                     GROUP BY tmpUserReferals.UserId),
+         tmpCashSettings AS (SELECT COALESCE(ObjectFloat_CashSettings_NormNewMobileOrders.ValueData, 50)::TFloat   AS NormNewMobileOrders
+                             FROM Object AS Object_CashSettings
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_NormNewMobileOrders
+                                                        ON ObjectFloat_CashSettings_NormNewMobileOrders.ObjectId = Object_CashSettings.Id 
+                                                       AND ObjectFloat_CashSettings_NormNewMobileOrders.DescId = zc_ObjectFloat_CashSettings_NormNewMobileOrders()
+                             WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                             LIMIT 1) 
                                  
       SELECT Object_User.ObjectCode                           AS UserCode
            , Object_User.ValueData                            AS UserName
@@ -149,6 +158,9 @@ BEGIN
                   WHEN COALESCE(tmpUserReferalsUnit.CountCheck, 0) > COALESCE(tmpUserReferalsUnitPrew.CountCheck, 0) THEN 1
                   WHEN COALESCE(tmpUserReferalsUnit.CountCheck, 0) < COALESCE(tmpUserReferalsUnitPrew.CountCheck, 0) THEN 2
                   ELSE 3 END::INTEGER                         AS DCountCheck
+           , CASE WHEN COALESCE(tmpUserReferalsUnit.CountCheck, 0) >= tmpCashSettings.NormNewMobileOrders THEN zc_Color_Lime() 
+                  ELSE zc_Color_White() END                   AS Color_Calc
+
       FROM tmpEmployeeScheduleDey AS tmp
         
            LEFT JOIN tmpUserReferalsUnit ON tmpUserReferalsUnit.UserId = tmp.UserId
@@ -167,6 +179,8 @@ BEGIN
                                 ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
                                AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
            LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+           
+           LEFT JOIN tmpCashSettings ON 1 = 1
              
       ORDER BY COALESCE(tmpUserReferalsUnit.CountCheck, 0)  DESC, COALESCE(tmpUserReferalsUnitPrew.CountCheck, 0)  DESC;
 
@@ -184,4 +198,3 @@ $BODY$
 -- тест
 
 select * from gpReport_ApplicationAwardUser(inStartDate := ('10.10.2022')::TDateTime , inEndDate := ('31.10.2022')::TDateTime ,  inSession := '3');
-

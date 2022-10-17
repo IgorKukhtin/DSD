@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsPromo(
 )
 RETURNS TABLE (MovementId Integer, InvNumber_Full TVarChar
              , MakerId Integer, MakerName TVarChar
-             , JuridicalId Integer, JuridicalName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar, isNotUseSUN Boolean
              , MainGoodsId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , ChangePercent TFloat
               )
@@ -24,7 +24,8 @@ BEGIN
         RETURN QUERY
         WITH
         tmpGoodsPromoMain AS (SELECT DISTINCT tmp.* 
-                              FROM lpSelect_MovementItem_Promo_onDate(inOperDate:= inOperDate) AS tmp)
+                              FROM lpSelect_MovementItem_Promo_onDate(inOperDate:= inOperDate) AS tmp
+                              )
 
       -- товары сети 
       , tmpGoodsPromo AS (SELECT tmpGoodsPromoMain.*, ObjectLink_Child_retail.ChildObjectId AS GoodsId_retail
@@ -57,6 +58,7 @@ BEGIN
               , Object_Maker.ValueData          AS MakerName
               , Object_Juridical.Id             AS JuridicalId
               , Object_Juridical.ValueData      AS JuridicalName
+              , tmpGoodsPromo.isNotUseSUN       AS isNotUseSUN
               , tmpGoodsPromo.GoodsId           AS MainGoodsId
               , tmpGoodsPromo.GoodsId_retail    AS GoodsId
               , Object_Goods.ObjectCode         AS GoodsCode
@@ -84,4 +86,5 @@ $BODY$
  17.05.19         *
 */
 
---select * from gpSelect_Object_GoodsPromo(inOperDate := '01.05.2019' , inRetailId := 4 , inSession := '3');
+--
+select * from gpSelect_Object_GoodsPromo(inOperDate := CURRENT_DATE , inRetailId := 4 , inSession := '3');

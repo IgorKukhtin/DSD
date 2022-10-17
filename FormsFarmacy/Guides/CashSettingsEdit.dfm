@@ -527,7 +527,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object edUserUpdateMarketing: TcxButtonEdit
     Left = 587
-    Top = 449
+    Top = 472
     Properties.Buttons = <
       item
         Default = True
@@ -538,8 +538,25 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel32: TcxLabel
     Left = 540
-    Top = 430
+    Top = 453
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1076#1083#1103' '#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1074' '#1047#1055' '#1089#1091#1084#1084#1099' '#1052#1072#1088#1082#1077#1090#1080#1085#1075#1072
+  end
+  object ceNormNewMobileOrders: TcxCurrencyEdit
+    Left = 816
+    Top = 429
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    Properties.EditFormat = ',0'
+    TabOrder = 73
+    Width = 64
+  end
+  object cxLabel33: TcxLabel
+    Left = 540
+    Top = 430
+    Hint = 
+      #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
+      #1082#1080#1088#1086#1074#1082#1080
+    Caption = #1053#1086#1088#1084#1072' '#1087#1086' '#1085#1086#1074#1099#1084' '#1079#1072#1082#1072#1079#1072#1084' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
   end
   object ActionList: TActionList
     Left = 344
@@ -874,6 +891,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNormNewMobileOrders'
+        Value = Null
+        Component = ceNormNewMobileOrders
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUserUpdateMarketingId'
         Value = Null
         Component = UserUpdateMarketingGuides
@@ -1155,6 +1179,12 @@ object CashSettingsEditForm: TCashSettingsEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'NormNewMobileOrders'
+        Value = Null
+        Component = ceNormNewMobileOrders
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'UserUpdateMarketingId'
         Value = Null
         Component = UserUpdateMarketingGuides
@@ -1253,6 +1283,6 @@ object CashSettingsEditForm: TCashSettingsEditForm
         MultiSelectSeparator = ','
       end>
     Left = 765
-    Top = 444
+    Top = 467
   end
 end
