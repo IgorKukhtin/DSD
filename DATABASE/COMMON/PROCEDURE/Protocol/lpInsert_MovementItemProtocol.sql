@@ -61,12 +61,21 @@ BEGIN
     WHERE MovementItemDate.MovementItemId = inMovementItemId
       AND inIsErased IS NULL
    UNION
-    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemLinkObjectDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML
+    SELECT '<Field FieldName = "'
+        || zfStrToXmlStr (CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_Asset() AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_WeighingProduction())
+                                    THEN 'Оборудовании-1 (выработка)'
+                               ELSE MovementItemLinkObjectDesc.ItemName
+                          END)
+        || '" FieldValue = "'
+        || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL'))
+        || '"/>' AS FieldXML
          , 4 AS GroupId
          , MovementItemLinkObject.DescId
     FROM MovementItemLinkObject
          INNER JOIN MovementItemLinkObjectDesc ON MovementItemLinkObjectDesc.Id = MovementItemLinkObject.DescId
          LEFT JOIN Object ON Object.Id = MovementItemLinkObject.ObjectId
+         LEFT JOIN MovementItem ON MovementItem.Id = MovementItemLinkObject.MovementItemId
+         LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
     WHERE MovementItemLinkObject.MovementItemId = inMovementItemId
       AND inIsErased IS NULL
    UNION

@@ -270,7 +270,7 @@ BEGIN
                   ELSE 0
              END AS WeightOne     -- "вес 1 ед." = вес / кол-во батонов
            , tmpMI.PartionGoodsDate
-           , tmpMI.PartionGoods
+           , CASE WHEN tmpMI.PartionGoods <> '' THEN tmpMI.PartionGoods ELSE COALESCE (Object_Asset.ValueData, '') END :: TVarChar AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_Asset.Id                    AS AssetId
