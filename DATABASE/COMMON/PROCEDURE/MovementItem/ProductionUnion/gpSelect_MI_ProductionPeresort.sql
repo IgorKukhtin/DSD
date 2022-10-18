@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, LineNum Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , GoodsChildId Integer, GoodsChildCode Integer, GoodsChildName TVarChar, GoodsChildGroupNameFull TVarChar, MeasureChildName TVarChar
              , AmountOut TFloat, Amountin TFloat
+             , Amount_Remains TFloat
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
              , PartionGoodsChild TVarChar, PartionGoodsDateChild TDateTime
              , Comment TVarChar
@@ -45,7 +46,8 @@ BEGIN
             , CAST (NULL AS TVarchar)               AS MeasureChildName
 
             , CAST (NULL AS TFloat)                 AS AmountOut
-            , CAST (NULL AS TFloat)                 AS AmountIn            
+            , CAST (NULL AS TFloat)                 AS AmountIn
+            , CAST (NULL AS TFloat)                 AS Amount_Remains            
 
             , CAST (NULL AS TVarchar)               AS PartionGoods
             , CAST (NULL AS TDateTime)              AS PartionGoodsDate
@@ -112,8 +114,9 @@ BEGIN
             , ObjectString_GoodsChild_GoodsGroupFull.ValueData AS GoodsChildGroupNameFull
             , Object_MeasureChild.ValueData                    AS MeasureChildName
 
-            , MovementItemChild.Amount          AS AmountOut
-            , MovementItem.Amount               AS Amountin
+            , MovementItemChild.Amount            AS AmountOut
+            , MovementItem.Amount                 AS Amountin
+            , MIFloat_Remains.ValueData ::TFloat  AS Amount_Remains
 
             , MIString_PartionGoods.ValueData   AS PartionGoods
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
@@ -168,6 +171,10 @@ BEGIN
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                        AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+
+             LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                         ON MIFloat_Remains.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
 
              JOIN MovementItem AS MovementItemChild ON MovementItemChild.MovementId = inMovementId
                               AND MovementItemChild.ParentId   = MovementItem.Id
@@ -232,8 +239,9 @@ BEGIN
             , ObjectString_GoodsChild_GoodsGroupFull.ValueData AS GoodsChildGroupNameFull
             , Object_MeasureChild.ValueData                    AS MeasureChildName
 
-            , MovementItemChild.Amount          AS Amountout
-            , MovementItem.Amount               AS Amountin
+            , MovementItemChild.Amount            AS Amountout
+            , MovementItem.Amount                 AS Amountin
+            , MIFloat_Remains.ValueData ::TFloat  AS Amount_Remains
 
             , MIString_PartionGoods.ValueData   AS PartionGoods
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
@@ -286,6 +294,10 @@ BEGIN
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                        AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+
+             LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                         ON MIFloat_Remains.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
               
              JOIN MovementItem AS MovementItemChild ON MovementItemChild.MovementId = inMovementId
                                AND MovementItemChild.ParentId   = MovementItem.Id
@@ -342,6 +354,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 18.10.22         *
  31.03.15         * 
  11.12.14         *
 

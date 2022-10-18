@@ -45,7 +45,8 @@ BEGIN
             , CAST (NULL AS TFloat)                 AS CuterWeight
 
             , CAST (NULL AS TFloat)                 AS RealWeightShp
-            , CAST (NULL AS TFloat)                 AS RealWeightMsg
+            , CAST (NULL AS TFloat)                 AS RealWeightMsg  
+            , CAST (NULL AS TFloat)                 AS Amount_Remains
 
             , CAST (NULL AS Integer)                AS GoodsKindId
             , CAST (NULL AS Integer)                AS GoodsKindCode
@@ -136,7 +137,8 @@ BEGIN
             , MIFloat_CuterWeight.ValueData     AS CuterWeight
             
             , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
-            , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg
+            , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg 
+            , MIFloat_Remains.ValueData       ::TFloat  AS Amount_Remains
 
             , Object_GoodsKind.Id                 AS GoodsKindId
             , Object_GoodsKind.ObjectCode         AS GoodsKindCode
@@ -237,6 +239,10 @@ BEGIN
                                          ON MIFloat_RealWeightMsg.MovementItemId = MovementItem.Id
                                         AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
 
+             LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                         ON MIFloat_Remains.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id
                                           AND MIBoolean_PartionClose.DescId = zc_MIBoolean_PartionClose()
@@ -310,6 +316,7 @@ BEGIN
 
             , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
             , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg
+            , MIFloat_Remains.ValueData       ::TFloat  AS Amount_Remains
 
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
@@ -411,6 +418,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_RealWeightMsg
                                          ON MIFloat_RealWeightMsg.MovementItemId = MovementItem.Id
                                         AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                         ON MIFloat_Remains.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
 
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id

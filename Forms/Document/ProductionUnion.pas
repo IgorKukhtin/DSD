@@ -97,6 +97,7 @@ type
     spUpdate_MI_Close: TdsdStoredProc;
     actUpdateMI_Closed: TdsdExecStoredProc;
     bbUpdateMI_Closed: TdxBarButton;
+    Amount_Remains: TcxGridDBColumn;
   private
     { Private declarations }
   public

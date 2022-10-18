@@ -2,9 +2,8 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
   ClientHeight = 502
   ClientWidth = 1128
-  ExplicitTop = -80
   ExplicitWidth = 1144
-  ExplicitHeight = 537
+  ExplicitHeight = 541
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -289,7 +288,16 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 91
           end
-          object Comment: TcxGridDBColumn [18]
+          object Amount_Remains: TcxGridDBColumn [18]
+            Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'Amount_Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            Options.Editing = False
+            Width = 70
+          end
+          object Comment: TcxGridDBColumn [19]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -611,7 +619,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         end
         item
           Name = 'OperDatePartion'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionGoodsOperDate'
           DataType = ftDateTime
@@ -911,7 +919,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1198,43 +1206,11 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionPeresort_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 782
     Top = 400
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionPeresort_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 710
     Top = 376
   end
