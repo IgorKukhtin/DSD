@@ -889,8 +889,11 @@ begin
            Params.AddParam('inGoodsKindId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId').AsInteger);
            Params.AddParam('inStorageLineId', ftInteger, ptInput, execParamsMI.ParamByName('StorageLineId').AsInteger);
            Params.AddParam('inPersonalId_KVK', ftInteger, ptInput, execParamsMovement.ParamByName('PersonalId_KVK').AsInteger);
+           Params.AddParam('inAssetId', ftInteger, ptInput, execParamsMovement.ParamByName('AssetId').AsInteger);
+           Params.AddParam('inAssetId_two', ftInteger, ptInput, execParamsMovement.ParamByName('AssetId_two').AsInteger);
            Params.AddParam('inIsStartWeighing', ftBoolean, ptInput, execParamsMI.ParamByName('isStartWeighing').AsBoolean);
            Params.AddParam('inIsPartionGoodsDate', ftBoolean, ptInput, execParamsMovement.ParamByName('isPartionGoodsDate').AsBoolean);
+           Params.AddParam('inIsAsset', ftBoolean, ptInput, execParamsMovement.ParamByName('isAsset').AsBoolean);
            Params.AddParam('inOperCount', ftFloat, ptInput, execParamsMI.ParamByName('OperCount').AsFloat);
            Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
            Params.AddParam('inWeightTare', ftFloat, ptInput, execParamsMI.ParamByName('WeightTare').AsFloat);
@@ -1734,6 +1737,8 @@ end;
 function gpInitialize_SettingMain_Default: Boolean;
 begin
   SettingMain.isGoodsComplete:=GetArrayList_Value_byName(Default_Array,'isGoodsComplete') = AnsiUpperCase('TRUE');
+  //
+  SettingMain.isAsset:=GetArrayList_Value_byName(Default_Array,'isAsset') = AnsiUpperCase('TRUE');
   //
   if SettingMain.isCeh = TRUE then
   begin
