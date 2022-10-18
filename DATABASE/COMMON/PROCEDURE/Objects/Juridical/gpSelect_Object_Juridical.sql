@@ -370,6 +370,7 @@ BEGIN
                                     , 3754339 -- Àì³ê Óêðà¿íà Ï²² - 30603572
                                      )
            OR vbIsIrna = TRUE
+         --OR ObjectHistory_JuridicalDetails_View.OKPO = '2840114093'
          )
      AND (COALESCE (vbIsIrna, FALSE) = FALSE
      --OR (vbIsIrna = FALSE AND COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) = FALSE)

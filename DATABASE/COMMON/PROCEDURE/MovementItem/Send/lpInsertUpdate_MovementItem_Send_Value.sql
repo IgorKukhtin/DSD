@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Send_Value()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send_Value (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send_Value (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send_Value (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send_Value(
     IN inPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inAssetId_two         Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inUnitId              Integer   , -- Подразделение (для МО)
     IN inStorageId           Integer   , -- Место хранения
     IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
@@ -42,6 +44,9 @@ BEGIN
                                           , inPartionGoodsId      := inPartionGoodsId
                                           , inUserId              := inUserId
                                            ) AS tmp);
+
+     -- сохранили связь с <Оборудовании-2 (выработка)>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), ioId, inAssetId_two);
 
 END;
 $BODY$

@@ -10,7 +10,7 @@ uses
 
 type
 
-  TDataSetType = (dtDBF, dtXLS, dtMMO, dtODBC);
+  TDataSetType = (dtDBF, dtXLS, dtMMO, dtODBC, dtXLS_OLE);
 
   TExternalLoad = class(TExternalData)
   protected
@@ -165,7 +165,10 @@ begin
         if FileTypeName = 'MMO' then
            result := dtMMO
         else
-          raise Exception.Create('Тип файла "' + FileTypeName + '" не определен в программе');
+          if FileTypeName = 'Excel OLE' then
+             result := dtXLS_OLE
+          else
+            raise Exception.Create('Тип файла "' + FileTypeName + '" не определен в программе');
 end;
 
 { TFileExternalLoad }
@@ -251,7 +254,8 @@ begin
              FFileExtension := '*.dbf';
              FFileFilter := 'Файлы DBF (*.dbf)|*.dbf|';
            end;
-    dtXLS: begin
+    dtXLS, dtXLS_OLE:
+           begin
              FFileExtension := '*.xls';
              FFileFilter := 'Файлы выгрузки Excel|*.xls;*.xlsx|';
            end;
@@ -544,6 +548,10 @@ procedure TFileExternalLoad.Open(FileName: string);
 var strConn :  widestring;
     List: TStringList;
     ListName: string;
+    Cols: integer;
+    Rows: integer;
+    Excel, XLSheet: Variant;
+    I, J: Integer;
 begin
   case FDataSetType of
     dtMMO: CreateMMODataSet(FileName);
@@ -614,9 +622,6 @@ begin
       else strConn:='Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;' +
                'Data Source=' + FileName + ';' +
                'Extended Properties="Excel 8.0' + FExtendedProperties + ';IMEX=1;"';
-//      strConn:='Provider=Microsoft.ACE.OLEDB.12.0;Mode=Read;' +
-//               'Data Source=' + FileName + ';' +
-//               'Extended Properties="Excel 12.0' + FExtendedProperties + ';IMEX=1;"';
       if not Assigned(FAdoConnection) then begin
          FAdoConnection := TAdoConnection.Create(nil);
          FAdoConnection.LoginPrompt := false;
@@ -641,6 +646,42 @@ begin
       finally
         FreeAndNil(List);
       end;
+    end;
+    dtXLS_OLE: begin
+      FDataSet := TClientDataSet.Create(nil);
+      Excel:=CreateOleObject('Excel.Application');
+      try
+        Excel.Visible:=False;
+        Excel.Application.EnableEvents := False;
+        Excel.DisplayAlerts := False;
+        Excel.WorkBooks.Open(FileName);
+        XLSheet := Excel.Worksheets[1];
+        Cols := XLSheet.UsedRange.Columns.Count;
+        Rows := XLSheet.UsedRange.Rows.Count;
+
+        TClientDataSet(FDataSet).Close;
+        TClientDataSet(FDataSet).FieldDefs.Clear;
+
+        for I := 1 to Cols do TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideString, 510);
+        TClientDataSet(FDataSet).CreateDataSet;
+
+        for I := FStartRecord to Rows do
+        begin
+
+          TClientDataSet(FDataSet).Append;
+
+          for J := 1 to Cols do
+            TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Value;
+
+          TClientDataSet(FDataSet).Post;
+        end;
+
+      finally
+        Excel.Workbooks.Close;
+        Excel.Quit;
+        Excel:=Unassigned;
+      end;
+
     end;
   end;
   First;
@@ -685,7 +726,7 @@ var
   c, c1: char;
 begin
   result := AFieldName;
-  if (AImportSettings.FileType = dtXLS) and (not AImportSettings.HDR) then begin
+  if (AImportSettings.FileType in [dtXLS, dtXLS_OLE]) and (not AImportSettings.HDR) then begin
      if (length(AFieldName) = 1) then begin
         c := lowercase(AFieldName)[1];
         if CharInSet(c,['a'..'z']) then
@@ -924,7 +965,7 @@ var iFilesCount: Integer;
     TextMessage:String;
 begin
   case ImportSettings.FileType of
-    dtXLS, dtDBF, dtMMO: begin
+    dtXLS, dtDBF, dtMMO, dtXLS_OLE: begin
         saFound := TStringList.Create;
         try
           // Если директории нет, то пусть пользователь выбирает.
@@ -933,7 +974,7 @@ begin
              try
                //InitialDir := InitializeDirectory;
                //DefaultExt := FFileExtension;
-               if ImportSettings.FileType = dtXLS then
+               if ImportSettings.FileType in [dtXLS, dtXLS_OLE] then
                   Filter := '*.xls';
                if Execute then begin
                   saFound.Add(FileName);
@@ -946,7 +987,7 @@ begin
           end
           else begin
             case ImportSettings.FileType of
-               dtXLS: FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound, false);
+               dtXLS, dtXLS_OLE: FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound, false);
                dtMMO: FilesInDir('*.mmo', ImportSettings.Directory, iFilesCount, saFound, false);
                dtDBF: FilesInDir('*.dbf', ImportSettings.Directory, iFilesCount, saFound, false);
             end;
@@ -959,7 +1000,7 @@ begin
           for I := 0 to saFound.Count - 1 do
           begin
               // конвертируем формат для штрихкодов (только для Excel)
-              if ImportSettings.FileType = dtXLS then
+              if ImportSettings.FileType in [dtXLS, dtXLS_OLE] then
               begin
                 if Copy(saFound[i], 1, 3) = '..\' then
                   CheckExcelFloat(AnsiReplaceText(UpperCase(ExtractFilePath(Application.ExeName)),

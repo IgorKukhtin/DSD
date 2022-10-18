@@ -230,6 +230,7 @@ type
     isLeftTheMarket: TcxGridDBColumn;
     DateLeftTheMarket: TcxGridDBColumn;
     DateAddToOrder: TcxGridDBColumn;
+    GoodsGroupPromoName: TcxGridDBColumn;
   private
     { Private declarations }
   public

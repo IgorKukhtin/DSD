@@ -34,7 +34,7 @@ BEGIN
      -- IF inBranchId IN (8379, 3080683) THEN RETURN; END IF;
      -- IF inBranchId IN (0) THEN RETURN; END IF;
      
-     inItearationCount:=100;
+     -- inItearationCount:=100;
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
@@ -96,6 +96,7 @@ end if;
 
 -- inEndDate:= '27.03.2017';
 
+     CREATE TEMP TABLE _tmpErr (ContainerId Integer) ON COMMIT DROP;
      -- таблица - Список сущностей которые являются элементами с/с.
      CREATE TEMP TABLE _tmpMaster (ContainerId Integer, UnitId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpMaster_err (ContainerId Integer, UnitId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat) ON COMMIT DROP;
@@ -1042,6 +1043,9 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      WHILE vbItearation < inItearationCount AND vbCountDiff > 0
      LOOP
          -- !!!ВРЕМЕННО!!!
+         --INSERT INTO _tmpErr (ContainerId) SELECT _tmpMaster.ContainerId FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
+         --DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
+         -- !!!ВРЕМЕННО!!!
          --DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
          --UPDATE _tmpMaster SET  WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
 
@@ -1342,6 +1346,13 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
          -- запомнили время начала Следующего действия
          vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
+
+         INSERT INTO _tmpMaster (ContainerId, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm)
+          SELECT HistoryCost.ContainerId, 2, 1 * HistoryCost.Price, -1, 0, 0, 0, 0, 0, 0, 0
+          FROM _tmpErr
+               JOIN HistoryCost ON HistoryCost.ContainerId = _tmpErr.ContainerId
+                               AND HistoryCost.StartDate   = DATE_TRUNC ('MONTH', inStartDate - INTERVAL '1 DAY')
+          ;
 
          -- Сохраняем что насчитали - !!!кроме всех Филиалов!!!
          INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
@@ -1695,4 +1706,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2022', inEndDate:= '28.02.2022', inBranchId:= 0, inItearationCount:= 200, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2022', inEndDate:= '31.08.2022', inBranchId:= 8109544, inItearationCount:= 100, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2389081) -- ORDER BY ABS (Price) DESC
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.09.2022', inEndDate:= '30.09.2022', inBranchId:= 0, inItearationCount:= 100, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE CalcSummCurrent <> CalcSummNext ORDER BY ABS (Price) DESC -- ORDER BY ABS (Price) DESC

@@ -154,7 +154,13 @@ BEGIN
                                                                                         WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
                                                                                            OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0
                                                                                            OR COALESCE(Object_Goods_Main.isStealthBonuses, FALSE) = TRUE
-                                                                                           OR COALESCE(tmpGoodsDiscount.isStealthBonuses, FALSE) = TRUE)
+                                                                                           OR COALESCE(tmpGoodsDiscount.isStealthBonuses, FALSE) = TRUE
+                                                                                           OR (COALESCE (Object_Goods_Retail.DiscontAmountSite, 0) > 0 OR
+                                                                                               COALESCE (Object_Goods_Retail.DiscontPercentSite, 0) > 0) 
+                                                                                               AND Object_Goods_Retail.DiscontSiteStart IS NOT NULL
+                                                                                               AND Object_Goods_Retail.DiscontSiteEnd IS NOT NULL  
+                                                                                               AND Object_Goods_Retail.DiscontSiteStart <= CURRENT_DATE
+                                                                                               AND Object_Goods_Retail.DiscontSiteEnd >= CURRENT_DATE)
                                       GROUP BY MovementItemContainer.MovementId),
             tmpMovement_Check AS (SELECT Movement.*
                                   FROM Movement

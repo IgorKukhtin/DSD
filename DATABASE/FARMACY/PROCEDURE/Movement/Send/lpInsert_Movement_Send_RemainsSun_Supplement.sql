@@ -1510,7 +1510,12 @@ BEGIN
               , _tmpRemains_all_Supplement.GoodsId
               , _tmpRemains_all_Supplement.NeedCalc
          FROM _tmpRemains_all_Supplement
+
+              LEFT JOIN (SELECT tmp.GoodsId FROM gpSelect_Object_GoodsPromo(inOperDate := CURRENT_DATE , inRetailId := 4 , inSession := inUserId::TVarChar) AS tmp 
+                         WHERE tmp.isNotUseSUN = TRUE) AS tmpGoodsPromo ON tmpGoodsPromo.GoodsId = _tmpRemains_all_Supplement.GoodsId
+
          WHERE _tmpRemains_all_Supplement.NeedCalc > 0
+           AND COALESCE(tmpGoodsPromo.GoodsId, 0) = 0
          ORDER BY _tmpRemains_all_Supplement.NeedCalc DESC
                 , _tmpRemains_all_Supplement.UnitId
                 , _tmpRemains_all_Supplement.GoodsId;
@@ -1718,4 +1723,4 @@ $BODY$
 
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);
