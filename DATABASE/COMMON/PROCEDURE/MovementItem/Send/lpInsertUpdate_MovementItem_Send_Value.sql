@@ -38,7 +38,8 @@ BEGIN
                                           , ioPartionGoods        := inPartionGoods
                                           , inGoodsKindId         := inGoodsKindId
                                           , inGoodsKindCompleteId := NULL
-                                          , inAssetId             := inAssetId
+                                          , inAssetId             := inAssetId 
+                                          , inAssetId_two         := inAssetId_two
                                           , inUnitId              := inUnitId
                                           , inStorageId           := inStorageId
                                           , inPartionGoodsId      := inPartionGoodsId
@@ -46,7 +47,7 @@ BEGIN
                                            ) AS tmp);
 
      -- сохранили связь с <Оборудовании-2 (выработка)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), ioId, inAssetId_two);
+     --PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), ioId, inAssetId_two);
 
 END;
 $BODY$

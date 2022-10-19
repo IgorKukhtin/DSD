@@ -180,6 +180,8 @@ type
     ceComment: TcxTextEdit;
     cbisList: TcxCheckBox;
     PartionGoods: TcxGridDBColumn;
+    AssetName_two: TcxGridDBColumn;
+    AssetName: TcxGridDBColumn;
   private
   public
   end;

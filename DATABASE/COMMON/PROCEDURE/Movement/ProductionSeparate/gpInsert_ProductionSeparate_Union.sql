@@ -253,6 +253,7 @@ BEGIN
                                            , inGoodsKindId         := tmpListMI.GoodsKindId  :: Integer
                                            , inGoodsKindCompleteId := 0
                                            , inAssetId             := 0
+                                           , inAssetId_two         := 0
                                            , inUnitId              := 0
                                            , inStorageId           := 0
                                            , inPartionGoodsId      := 0

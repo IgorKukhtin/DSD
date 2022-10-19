@@ -268,10 +268,10 @@ begin
   LoadReportFromFile('Отчет Итог по покупателю (c отсрочкой)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c отсрочкой).fr3');
 
   LoadReportFromFile('Отчет Итог по покупателю (c отсрочкой365)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c отсрочкой365).fr3');
-  }
+
   LoadReportFromFile('Отчет Итог по покупателю (c отсрочкой365-накладные)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c отсрочкой365-накладные).fr3');
   exit;
-  {
+
   LoadReportFromFile('Обороты по юр лицам - покупатели(бухг)', ReportPath + '\Отчеты (финансы)\Обороты по юр лицам - покупатели(бухг).fr3');
   LoadReportFromFile('Обороты по юр лицам - покупатели(факт)', ReportPath + '\Отчеты (финансы)\Обороты по юр лицам - покупатели(факт).fr3');
   LoadReportFromFile('Обороты по контрагентам (факт)', ReportPath + '\Отчеты (финансы)\Обороты по контрагентам (факт).fr3');
@@ -327,11 +327,11 @@ begin
   exit;
 
   LoadReportFromFile('Продажа и возврат контрагенты', ReportPath + '\Отчеты (товарные)\Продажа и возврат контрагенты.fr3');
-  }
+
   LoadReportFromFile('Отчет движение по товару (для всех)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (для всех).fr3');
   LoadReportFromFile('Отчет движение по товару (склад ГП)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (склад ГП).fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет движение по товару (остаток)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (остаток).fr3');
   LoadReportFromFile('Отчет по товару по накладным', ReportPath + '\Отчеты (товарные)\Отчет по товару по накладным.fr3');
   LoadReportFromFile('Отчет движение по ОС', ReportPath + '\Отчеты (товарные)\Отчет движение по ОС.fr3');
@@ -494,12 +494,12 @@ begin
   LoadReportFromFile('Отчет - заявки (по Маршрутам-детально)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (по Маршрутам-детально).fr3');
   LoadReportFromFile('Отчет - заявки (по Маршрутам-итого)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (по Маршрутам-итого).fr3');
   LoadReportFromFile('Отчет - заявки (кросс)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (кросс).fr3');
-  }
+
   LoadReportFromFile('Отчет - заявки (Остатки)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (Остатки).fr3');
   exit;
   LoadReportFromFile('Отчет - заявки (по Маршрутам по дням)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (по Маршрутам по дням).fr3');
   exit;
-  {
+
   // Печатные формы накладных
 
    LoadReportFromFile('PrintMovement_ReestrIncome', ReportPath + '\Товарный Учет\PrintMovement_ReestrIncome.fr3');
@@ -619,8 +619,10 @@ begin
   exit;
 
   LoadReportFromFile('PrintMovement_SalePack21', ReportPath + '\Товарный Учет\PrintMovement_SalePack21.fr3');
+  }
   LoadReportFromFile('PrintMovement_Sale32294926', ReportPath + '\Товарный Учет\PrintMovement_Sale32294926.fr3');
-
+  exit;
+  {
   LoadReportFromFile('PrintMovement_Sale32490244', ReportPath + '\Товарный Учет\PrintMovement_Sale32490244.fr3');
    exit;
 

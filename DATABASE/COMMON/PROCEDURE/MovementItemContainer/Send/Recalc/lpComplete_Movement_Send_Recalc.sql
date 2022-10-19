@@ -142,6 +142,7 @@ BEGIN
                                           , inGoodsKindId         := NULL
                                           , inGoodsKindCompleteId := NULL
                                           , inAssetId             := NULL
+                                          , inAssetId_two         := NULL
                                           , inUnitId              := NULL
                                           , inStorageId           := NULL
                                           , inPartionGoodsId      := NULL

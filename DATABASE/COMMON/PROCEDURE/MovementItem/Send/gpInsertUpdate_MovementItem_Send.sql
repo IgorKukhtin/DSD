@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_Send()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -14,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioPartionGoods          TVarChar  , -- Партия товара/Инвентарный номер
     IN inGoodsKindId           Integer   , -- Виды товаров
     IN inGoodsKindCompleteId   Integer   , -- Виды товаров  ГП
-    IN inAssetId               Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inAssetId               Integer   , -- Основные средства 1(для которых закупается ТМЦ)
+    IN inAssetId_two           Integer   , -- Основные средства 2(для которых закупается ТМЦ)
     IN inUnitId                Integer   , -- Подразделение (для МО)
     IN inStorageId             Integer   , -- Место хранения
     IN inPartionGoodsId        Integer   , -- Партии товаров (для партии расхода если с МО)
@@ -43,6 +45,7 @@ BEGIN
                                           , inGoodsKindId         := inGoodsKindId
                                           , inGoodsKindCompleteId := inGoodsKindCompleteId
                                           , inAssetId             := inAssetId
+                                          , inAssetId_two         := inAssetId_two
                                           , inUnitId              := inUnitId
                                           , inStorageId           := inStorageId
                                           , inPartionGoodsId      := inPartionGoodsId
@@ -56,6 +59,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.10.22         * asset_two
  02.08.17         * add inGoodsKindCompleteId
  29.05.15                                        *
 */
