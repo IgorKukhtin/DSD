@@ -51,6 +51,18 @@ BEGIN
                        VALUES (ioId, inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId, inAccessKeyId) RETURNING Id INTO ioId;
      END IF;
 
+     --
+     IF ioId <=0
+     THEN
+         RAISE EXCEPTION 'Системная Ошибка.Ключ <%> <= 0. <%> № <%> от <%>.'
+                       , ioId
+                       , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inDescId)
+                       , inInvNumber
+                       , zfConvert_DateToString (inOperDate)
+                        ;
+     END IF;
+
+
   END IF;
 
 END;

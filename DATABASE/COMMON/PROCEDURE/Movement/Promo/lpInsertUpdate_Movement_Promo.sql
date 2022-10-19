@@ -75,7 +75,18 @@ BEGIN
     
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Promo(), inInvNumber, inOperDate, NULL, 0);
-    
+   
+    -- 
+    IF ioId <=0 -- OR inUserId = 5
+    THEN
+        RAISE EXCEPTION 'Ошибка.Ключ <%> <= 0. <%> № <%> от <%>.'
+                      , ioId
+                      , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Promo())
+                      , inInvNumber
+                      , zfConvert_DateToString (inOperDate)
+                       ;
+    END IF;
+ 
     -- сохранили связь с <От кого (подразделение)>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
     

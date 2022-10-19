@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_1C_Load(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UnitId TVarChar,  VidDoc TVarChar, InvNumber TVarChar, OperDate TVarChar, ClientCode TVarChar, ClientName TVarChar,
-               GoodsCode  TVarChar, GoodsName TVarChar, OperCount TVarChar, OperPrice TVarChar,
+               GoodsCode  TVarChar, Code  TVarChar, GoodsName TVarChar, OperCount TVarChar, OperPrice TVarChar,
                Tax TVarChar, Suma TVarChar, PDV TVarChar, SumaPDV TVarChar,
                ClientINN TVarChar, ClientOKPO TVarChar, CLIENTKIND TVarChar,
                InvNalog TVarChar, BillId TVarChar, EKSPCODE TVarChar, EXPName TVarChar,
@@ -262,6 +262,7 @@ BEGIN
            , Movement.PartnerName :: TVarChar                           AS ClientName
 
            , COALESCE (Object_GoodsByGoodsKind_View.Id, MIMaster.ObjectId) :: TVarChar AS GoodsCode
+           , Object_Goods.ObjectCode                       :: TVarChar AS Code
            , Object_Goods.ValueData                                    AS GoodsName
 
            , CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())

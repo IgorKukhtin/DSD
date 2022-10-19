@@ -223,6 +223,8 @@ BEGIN
          END IF;
 
          -- если обмен
+         IF NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_BankAccount())
+         THEN
          IF inAmountSumm <> 0 OR (EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Cash())
                              AND inCurrencyId <> COALESCE (inCurrencyPartnerId, 0)
                                 )
@@ -245,6 +247,7 @@ BEGIN
             -- Замена - расчет по курсу
             inAmountSumm  := inCurrencyPartnerValue * (inAmountIn + inAmountOut) / inParPartnerValue;*/
 
+         END IF;
          END IF;
 
           -- !!!определяется ТАК значение!!!

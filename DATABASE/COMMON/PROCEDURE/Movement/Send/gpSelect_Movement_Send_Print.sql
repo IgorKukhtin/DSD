@@ -157,6 +157,7 @@ BEGIN
                    , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
                    , MIString_PartionGoods.ValueData    AS PartionGoods
                    , MILinkObject_Asset.ObjectId        AS AssetId
+                   , MILinkObject_Asset_two.ObjectId    AS AssetId_two
                    , MILinkObject_PartionGoods.ObjectId AS PartionGoodsId
                    , SUM (MovementItem.Amount)          AS Amount
                    , SUM (COALESCE (MIFloat_Count.ValueData, 0))     AS Count
@@ -187,6 +188,9 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                     ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
+                                                    ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
                                                     ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
@@ -201,6 +205,7 @@ BEGIN
                      , MIDate_PartionGoods.ValueData
                      , MIString_PartionGoods.ValueData
                      , MILinkObject_Asset.ObjectId
+                     , MILinkObject_Asset_two.ObjectId
                      , MILinkObject_PartionGoods.ObjectId
              UNION ALL
               SELECT MovementItem.Id                    AS MovementItemId
@@ -209,6 +214,7 @@ BEGIN
                    , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
                    , MIString_PartionGoods.ValueData    AS PartionGoods
                    , MILinkObject_Asset.ObjectId        AS AssetId
+                   , MILinkObject_Asset_two.ObjectId    AS AssetId_two
                    , MILinkObject_PartionGoods.ObjectId AS PartionGoodsId
                    , MovementItem.Amount                AS Amount
                    , COALESCE (MIFloat_Count.ValueData, 0)     AS Count
@@ -239,6 +245,9 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                     ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
+                                                    ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
                                                     ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
@@ -270,7 +279,12 @@ BEGIN
                   ELSE 0
              END AS WeightOne     -- "вес 1 ед." = вес / кол-во батонов
            , tmpMI.PartionGoodsDate
-           , CASE WHEN tmpMI.PartionGoods <> '' THEN tmpMI.PartionGoods ELSE COALESCE (Object_Asset.ValueData, '') END :: TVarChar AS PartionGoods
+           , CASE WHEN tmpMI.PartionGoods <> ''
+                       THEN tmpMI.PartionGoods
+                  ELSE CASE WHEN Object_Asset_two.ValueData <> '' THEN '1)' ELSE '' END || COALESCE (Object_Asset.ValueData, '')
+                    || CASE WHEN Object_Asset_two.ValueData <> '' THEN CHR (13) || '2)' ||Object_Asset_two.ValueData ELSE '' END
+             END :: TVarChar AS PartionGoods
+
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_Asset.Id                    AS AssetId
@@ -299,7 +313,9 @@ BEGIN
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
-            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
+            LEFT JOIN Object AS Object_Asset     ON Object_Asset.Id     = tmpMI.AssetId
+            LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = tmpMI.AssetId_two
+            
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI.PartionGoodsId
             LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                   -- цена
                                                       AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()

@@ -415,6 +415,7 @@ BEGIN
  , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
                         , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
                         , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+                        , ObjectHistory_DiscountPeriodItem.Id                   AS ObjectHistoryId
                    FROM tmpDiscountList
                         INNER JOIN tmpOL1 AS ObjectLink_DiscountPeriodItem_Goods
                                               ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
@@ -509,7 +510,7 @@ BEGIN
            , Object_CompositionGroup.ValueData AS CompositionGroupName
            , Object_Composition.ValueData   AS CompositionName
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
-           , Object_LineFabrica.ValueData   AS LineFabricaName
+           , (COALESCE (Object_LineFabrica.ValueData, '') /*|| ' ' || tmpDiscount.ObjectHistoryId :: TVarChar*/)  :: TVarChar AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
            , tmpData.GoodsSizeId            AS GoodsSizeId
            , tmpData.GoodsSizeName      ::TVarChar AS GoodsSizeName
