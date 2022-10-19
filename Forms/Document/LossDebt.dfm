@@ -305,6 +305,21 @@ object LossDebtForm: TLossDebtForm
             Options.Editing = False
             Width = 30
           end
+          object JuridicalBasisName: TcxGridDBColumn
+            Caption = #1043#1083'. '#1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalBasisName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = JuridicalBasisChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -318,6 +333,15 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
+          end
+          object JuridicalBasisCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1075#1083'.'#1102#1088'.'#1083#1080#1094#1086')'
+            DataBinding.FieldName = 'JuridicalBasisCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
           end
           object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088'.'
@@ -1338,6 +1362,33 @@ object LossDebtForm: TLossDebtForm
         end>
       isShowModal = True
     end
+    object JuridicalBasisChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TJuridical_ObjectForm'
+      FormName = 'TJuridical_ObjectForm'
+      FormNameParam.Value = 'TJuridical_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalBasisId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalBasisName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object PartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1576,7 +1627,7 @@ object LossDebtForm: TLossDebtForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 304
+    Left = 312
     Top = 8
   end
   object PopupMenu: TPopupMenu
@@ -1613,6 +1664,14 @@ object LossDebtForm: TLossDebtForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalBasisId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1774,10 +1833,12 @@ object LossDebtForm: TLossDebtForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 352
     Top = 312
@@ -1906,7 +1967,7 @@ object LossDebtForm: TLossDebtForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime

@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+             , JuridicalBasisId Integer, JuridicalBasisCode Integer, JuridicalBasisName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , BranchId Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -49,6 +50,7 @@ BEGIN
                         GROUP BY MIContainer.MovementItemId
                         )
 
+
        SELECT 0  :: Integer                            AS Id
 
             , View_InfoMoney.InfoMoneyGroupName
@@ -66,7 +68,12 @@ BEGIN
             , Object_Juridical.ObjectCode              AS JuridicalCode
             , Object_Juridical.ValueData               AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO AS OKPO
-            , Object_JuridicalGroup.ValueData          AS JuridicalGroupName
+            , Object_JuridicalGroup.ValueData          AS JuridicalGroupName 
+            
+            , Object_JuridicalBasis.Id                 AS JuridicalBasisId
+            , Object_JuridicalBasis.ObjectCode         AS JuridicalBasisCode
+            , Object_JuridicalBasis.ValueData          AS JuridicalBasisName 
+                        
             , 0  :: Integer                   AS PartnerId
             , 0  :: Integer                   AS PartnerCode
             , '' :: TVarChar                  AS PartnerName
@@ -134,6 +141,7 @@ BEGIN
                                 AND tmpMI.ContractId = COALESCE (View_Contract.ContractId, 0)
                                 AND tmpMI.PaidKindId = COALESCE (Object_PaidKind.Id, 0)
 
+            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = COALESCE (View_Contract.JuridicalBasisId, zc_Juridical_Basis())
      WHERE Object_Juridical.DescId = zc_Object_Juridical()
        AND tmpMI.JuridicalId IS NULL
 
@@ -155,7 +163,12 @@ BEGIN
             , Object_Juridical.ObjectCode                      AS JuridicalCode
             , Object_Juridical.ValueData                       AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO         AS OKPO
-            , Object_JuridicalGroup.ValueData                  AS JuridicalGroupName
+            , Object_JuridicalGroup.ValueData                  AS JuridicalGroupName 
+
+            , Object_JuridicalBasis.Id                         AS JuridicalBasisId
+            , Object_JuridicalBasis.ObjectCode                 AS JuridicalBasisCode
+            , Object_JuridicalBasis.ValueData                  AS JuridicalBasisName     
+
             , Object_Partner.Id                                AS PartnerId
             , Object_Partner.ObjectCode                        AS PartnerCode
             , Object_Partner.ValueData                         AS PartnerName
@@ -279,6 +292,15 @@ BEGIN
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
             
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_JuridicalBasis
+                                             ON MILinkObject_JuridicalBasis.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_JuridicalBasis.DescId = zc_MILinkObject_JuridicalBasis()            
+            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = CASE WHEN COALESCE (MILinkObject_JuridicalBasis.ObjectId,0) <> 0
+                                                                                         THEN MILinkObject_JuridicalBasis.ObjectId
+                                                                                         ELSE COALESCE (View_Contract_InvNumber.JuridicalBasisId, zc_Juridical_Basis()) 
+                                                                                    END
+
       ;
 
      ELSE
@@ -311,6 +333,11 @@ BEGIN
             , Object_Juridical.ValueData                       AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO         AS OKPO
             , Object_JuridicalGroup.ValueData                  AS JuridicalGroupName
+            
+            , Object_JuridicalBasis.Id                         AS JuridicalBasisId
+            , Object_JuridicalBasis.ObjectCode                 AS JuridicalBasisCode
+            , Object_JuridicalBasis.ValueData                  AS JuridicalBasisName
+
             , Object_Partner.Id                                AS PartnerId
             , Object_Partner.ObjectCode                        AS PartnerCode
             , Object_Partner.ValueData                         AS PartnerName
@@ -436,6 +463,14 @@ BEGIN
                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_JuridicalBasis
+                                             ON MILinkObject_JuridicalBasis.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_JuridicalBasis.DescId = zc_MILinkObject_JuridicalBasis()            
+            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = CASE WHEN COALESCE (MILinkObject_JuridicalBasis.ObjectId,0) <> 0
+                                                                                         THEN MILinkObject_JuridicalBasis.ObjectId
+                                                                                         ELSE COALESCE (View_Contract_InvNumber.JuridicalBasisId, zc_Juridical_Basis()) 
+                                                                                    END
 
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
       ;

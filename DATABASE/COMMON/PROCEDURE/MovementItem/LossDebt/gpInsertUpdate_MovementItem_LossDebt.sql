@@ -2,15 +2,19 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer
                                                             , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                             , Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, Integer
+                                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                            , Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_LossDebt(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- ключ Документа
     IN inJuridicalId           Integer   , -- Юр.лицо
+    IN inJuridicalBasisId      Integer   , -- ГЛ Юр.лицо
     IN inPartnerId             Integer   , -- Контрагент
     IN inBranchId              Integer   , -- Филиал
     IN inContainerId           TFloat    , -- ContainerId
@@ -128,11 +132,12 @@ BEGIN
      ioId:= lpInsertUpdate_MovementItem_LossDebt (ioId                   := ioId
                                                 , inMovementId           := inMovementId
                                                 , inJuridicalId          := inJuridicalId
+                                                , inJuridicalBasisId     := inJuridicalBasisId
                                                 , inPartnerId            := inPartnerId
                                                 , inBranchId             := inBranchId
                                                 , inContainerId          := inContainerId
                                                 , inAmount               := 0
-                                                , inSumm                 := CASE WHEN 
+                                                , inSumm                 := vbSumm
                                                 , inCurrencyPartnerValue := inCurrencyPartnerValue
                                                 , inParPartnerValue      := inParPartnerValue
                                                 , inAmountCurrency       := CASE WHEN ioAmountCurrencyDebet  <> 0 THEN  1 * ioAmountCurrencyDebet
@@ -155,6 +160,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 19.10.22         * inJuridicalBasisId
  31.07.17         *
  07.09.14                                        * add inBranchId
  27.08.14                                        * add inPartnerId

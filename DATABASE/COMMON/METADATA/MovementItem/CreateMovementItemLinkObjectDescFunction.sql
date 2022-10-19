@@ -440,10 +440,14 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_GoodsPresent() RETURNS Integer AS $BO
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_GoodsPresent', 'Прикркпленный акционный товар' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_GoodsPresent');
   
-  
+CREATE OR REPLACE FUNCTION zc_MILinkObject_JuridicalBasis() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_JuridicalBasis'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_JuridicalBasis', 'Главное юр. лицо' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_JuridicalBasis');
+    
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 19.10.22         * zc_MILinkObject_JuridicalBasis
  30.09.22         * zc_MILinkObject_GoodsReal
                     zc_MILinkObject_GoodsKindReal
  10.09.22                                                                    * zc_MILinkObject_GoodsPresent

@@ -1,13 +1,15 @@
 -- Function: lpInsertUpdate_MovementItem_LossDebt ()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_LossDebt(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- ключ Документа
-    IN inJuridicalId           Integer   , -- Юр.лицо
+    IN inJuridicalId           Integer   , -- Юр.лицо  
+    IN inJuridicalBasisId      Integer   , -- ГЛ Юр.лицо
     IN inPartnerId             Integer   , -- Контрагент
     IN inBranchId              Integer   , -- Филиал
     IN inContainerId           TFloat    , -- ContainerId
@@ -75,12 +77,18 @@ BEGIN
                   AND MovementItem.DescId = zc_MI_Master()
                   AND (COALESCE (MILinkObject_Partner.ObjectId, 0) = COALESCE (inPartnerId, 0) OR inPaidKindId <> zc_Enum_PaidKind_SecondForm()) -- AND inPartnerId <> 0
                   AND (COALESCE (MILinkObject_Branch.ObjectId, 0) = COALESCE (inBranchId, 0) OR inPaidKindId <> zc_Enum_PaidKind_SecondForm()) -- AND inBranchId <> 0
-                  AND (COALESCE (MIFloat_ContainerId.ValueData,0) = COALESCE (inContainerId,0)
+                  AND COALESCE (MIFloat_ContainerId.ValueData,0) = COALESCE (inContainerId,0)
                   AND MovementItem.Id <> COALESCE (ioId, 0)
                   AND MovementItem.isErased = FALSE
                 )
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе уже существует <%>% <%> <%> <%>% <%> <%> <%>.Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), CASE WHEN inPartnerId <> 0 THEN ' <' || lfGet_Object_ValueData (inPartnerId) || '>' ELSE '' END, lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId), CASE WHEN inBranchId <> 0 THEN ' <' || lfGet_Object_ValueData (inBranchId) || '>' ELSE '' END, inJuridicalId, inPartnerId, inBranchId;
+         RAISE EXCEPTION 'Ошибка.В документе уже существует <%>% <%> <%> <%>% <%> <%> <%>.Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId)
+                                                                                                                  , CASE WHEN inPartnerId <> 0 THEN ' <' || lfGet_Object_ValueData (inPartnerId) || '>' ELSE '' END
+                                                                                                                  , lfGet_Object_ValueData (inPaidKindId)
+                                                                                                                  , lfGet_Object_ValueData (inInfoMoneyId)
+                                                                                                                  , lfGet_Object_ValueData (inContractId)
+                                                                                                                  , CASE WHEN inBranchId <> 0 THEN ' <' || lfGet_Object_ValueData (inBranchId) || '>' ELSE '' END
+                                                                                                                  , inJuridicalId, inPartnerId, inBranchId;
      END IF;
 
      -- проверка
@@ -170,6 +178,9 @@ BEGIN
      -- сохранили связь с <Валютой>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), ioId, inCurrencyId);     
 
+     -- сохранили связь с <гл юр лицо>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_JuridicalBasis(), ioId, inJuridicalBasisId);
+
      -- пересчитали Итоговые суммы по документу
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -183,6 +194,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 19.10.22         * inJuridicalBasisId
  19.04.16         *
  07.09.14                                        * add inBranchId
  27.08.14                                        * add inPartnerId
