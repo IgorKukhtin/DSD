@@ -3,6 +3,7 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
   ClientWidth = 927
   AddOnFormData.Params = FormParams
   ExplicitWidth = 943
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -588,6 +589,24 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 114
+          end
+          object AssetName: TcxGridDBColumn
+            Caption = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1054#1057'-1'
+            DataBinding.FieldName = 'AssetName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080'-1'
+            Options.Editing = False
+            Width = 80
+          end
+          object AssetName_two: TcxGridDBColumn
+            Caption = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1054#1057'-2'
+            DataBinding.FieldName = 'AssetName_two'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080'-2'
+            Options.Editing = False
+            Width = 80
           end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'

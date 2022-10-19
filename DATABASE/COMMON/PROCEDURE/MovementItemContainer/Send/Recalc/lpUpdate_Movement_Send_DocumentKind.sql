@@ -240,6 +240,7 @@ BEGIN
                                                  , inPartionGoods           := NULL
                                                  , inGoodsKindId            := tmp.GoodsKindId
                                                  , inAssetId                := NULL
+                                                 , inAssetId_two            := NULL
                                                  , inUnitId                 := NULL
                                                  , inStorageId              := NULL
                                                  , inPartionGoodsId         := NULL

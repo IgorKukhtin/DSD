@@ -1291,6 +1291,7 @@ BEGIN
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAssetId             := NULL
+                                                        , inAssetId_two         := NULL
                                                         , inUnitId              := NULL -- !!!не ошибка, здесь не формируется!!!
                                                         , inStorageId           := NULL
                                                         , inPartionGoodsId      := NULL

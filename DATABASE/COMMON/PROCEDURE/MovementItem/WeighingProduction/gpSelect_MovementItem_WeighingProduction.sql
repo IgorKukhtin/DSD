@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , UnitCode_KVK Integer
              , UnitName_KVK TVarChar
              , KVK TVarChar
+             , AssetName TVarChar, AssetName_two TVarChar
              , isErased Boolean
               )
 AS
@@ -96,6 +97,9 @@ BEGIN
            , Object_UnitKVK.ObjectCode       AS UnitCode_KVK
            , Object_UnitKVK.ValueData        AS UnitName_KVK
            , MIString_KVK.ValueData          AS KVK
+
+           , Object_Asset.ValueData          AS AssetName
+           , Object_Asset_two.ValueData      AS AssetName_two
 
            , MovementItem.isErased
 
@@ -222,6 +226,14 @@ BEGIN
                                         ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
                                        AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
+                                             ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
+            LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = MILinkObject_Asset_two.ObjectId
 ;
 
 END;
@@ -231,7 +243,8 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingProduction (Integer, Boolean, Boole
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.10.22         * asset
  16.09.21         *
  30.06.21         *
  26.05.17         * add StorageLine

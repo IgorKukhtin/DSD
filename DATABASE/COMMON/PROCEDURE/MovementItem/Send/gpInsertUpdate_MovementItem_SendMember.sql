@@ -40,7 +40,8 @@ BEGIN
                                           , ioPartionGoods        := ioPartionGoods
                                           , inGoodsKindId         := inGoodsKindId
                                           , inGoodsKindCompleteId := inGoodsKindCompleteId
-                                          , inAssetId             := inAssetId
+                                          , inAssetId             := inAssetId 
+                                          , inAssetId_two         := Null
                                           , inUnitId              := inUnitId
                                           , inStorageId           := inStorageId
                                           , inPartionGoodsId      := inPartionGoodsId

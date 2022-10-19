@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_Send()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -14,7 +15,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
  INOUT ioPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
-    IN inAssetId             Integer   , -- ыработка на оборудовании
+    IN inAssetId             Integer   , -- Выработка на оборудовании 1
+    IN inAssetId_two         Integer   , -- Выработка на оборудовании 2
     IN inUnitId              Integer   , -- Подразделение (для МО)
     IN inStorageId           Integer   , -- Место хранения
     IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
@@ -153,9 +155,11 @@ BEGIN
      -- сохранили связь с <Партии товаров (для партии расхода если с МО)> - пока НЕ надо
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
 
-     -- сохранили связь с <Выработка на оборудовании>
+     -- сохранили связь с <Выработка на оборудовании 1>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
-
+     -- сохранили связь с <Выработка на оборудовании 2>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), ioId, inAssetId_two);
+     
      IF inGoodsId <> 0 AND inGoodsKindId <> 0
      THEN
          -- создали объект <Связи Товары и Виды товаров>
@@ -176,6 +180,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.10.22         * inAssetId_two
  03.10.22         * Asset
  02.08.17         * add inGoodsKindCompleteId
  29.05.15                                        * set lp
