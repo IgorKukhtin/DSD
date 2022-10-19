@@ -1144,7 +1144,7 @@ BEGIN
                                      LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                                           ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectBoolean_ScaleCeh.ObjectId
                                                          AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                     LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, zc_Enum_GoodsKind_Main())
+                                     LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, /*0,*/ zc_Enum_GoodsKind_Main())
                                 WHERE ObjectBoolean_ScaleCeh.DescId    IN (zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh(), zc_ObjectBoolean_GoodsByGoodsKind_Order())
                                   AND ObjectBoolean_ScaleCeh.ValueData = TRUE
                                   AND inMovementId >= 0

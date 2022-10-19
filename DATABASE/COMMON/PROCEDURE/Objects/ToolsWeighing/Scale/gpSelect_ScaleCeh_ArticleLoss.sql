@@ -1,52 +1,50 @@
--- Function: gpSelect_ScaleCeh_ArticleLoss()
+-- Function: gpSelect_ScaleCeh_Asset()
 
-DROP FUNCTION IF EXISTS gpSelect_ScaleCeh_ArticleLoss (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ScaleCeh_Asset (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_ScaleCeh_ArticleLoss(
+CREATE OR REPLACE FUNCTION gpSelect_ScaleCeh_Asset(
     IN inSession          TVarChar      -- сессия пользователя
 )
-RETURNS TABLE (ArticleLossId   Integer
-             , ArticleLossCode Integer
-             , ArticleLossName TVarChar
-             , isErased        Boolean
+RETURNS TABLE (Id   Integer
+             , Code Integer
+             , Name TVarChar
+             , InvNumber TVarChar
+             , isErased  Boolean
               )
 AS
 $BODY$
    DECLARE vbUserId     Integer;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpGetUserBySession (inSession);
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
 
 
     -- Результат
     RETURN QUERY
-       SELECT Object_ArticleLoss.Id         AS ArticleLossId
-            , Object_ArticleLoss.ObjectCode AS ArticleLossCode
-            , Object_ArticleLoss.ValueData  AS ArticleLossName
-            , Object_ArticleLoss.isErased   AS isErased
+       SELECT Object_Asset.Id                   AS AssetId
+            , Object_Asset.ObjectCode           AS AssetCode
+            , Object_Asset.ValueData            AS AssetName
+            , ObjectString_InvNumber.ValueData  AS InvNumber
+            , Object_Asset.isErased             AS isErased
 
-       FROM Object AS Object_ArticleLoss
-            LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_ProfitLossDirection
-                                 ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = Object_ArticleLoss.Id
-                                AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
-            LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
-       WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
-         AND Object_ArticleLoss.ObjectCode <> 0
-         AND Object_ArticleLoss.isErased = FALSE
+       FROM Object AS Object_Asset
+            LEFT JOIN ObjectString AS ObjectString_InvNumber
+                                   ON ObjectString_InvNumber.ObjectId = Object_Asset.Id
+                                  AND ObjectString_InvNumber.DescId   = zc_ObjectString_Asset_InvNumber()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_DocGoods
+                                    ON ObjectBoolean_DocGoods.ObjectId = Object_Asset.Id
+                                   AND ObjectBoolean_DocGoods.DescId   = zc_ObjectBoolean_Asset_DocGoods()
+       WHERE Object_Asset.DescId = zc_Object_Asset()
+         AND Object_Asset.isErased = FALSE
          -- почти ВСЕ
-         AND ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId > 0
-         -- Общепроизводственные расходы
-         /*AND View_ProfitLossDirection.ProfitLossDirectionId IN (zc_Enum_ProfitLossDirection_20100() -- Содержание производства
-                                                              , zc_Enum_ProfitLossDirection_20400() -- Содержание Кухни
-                                                           -- , zc_Enum_ProfitLossDirection_20600() -- Отоварка
-                                                               )*/
+         AND (ObjectBoolean_DocGoods.ValueData = TRUE OR vbUserId = 5)
        ORDER BY 3
       ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_ScaleCeh_ArticleLoss (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_ScaleCeh_Asset (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -56,4 +54,4 @@ ALTER FUNCTION gpSelect_ScaleCeh_ArticleLoss (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_ScaleCeh_ArticleLoss (inSession:=zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_ScaleCeh_Asset (inSession:=zfCalc_UserAdmin())
