@@ -13,13 +13,13 @@ RETURNS TABLE (JuridicalId  Integer
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbError Text;
 
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderExternal());
      vbUserId := inSession;
-
 
     -- проверка
     IF NOT EXISTS(SELECT 1
@@ -36,6 +36,30 @@ BEGIN
        RAISE EXCEPTION 'Нет данных для отправки.';
     END IF;
 
+    -- проверка
+    IF EXISTS(SELECT T1.Id
+              FROM gpSelect_MI_OrderInternalPromo(inMovementId := inMovementId , inIsErased := 'False' ,  inSession := inSession) AS T1
+                                       
+                   LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = T1.GoodsId
+                   LEFT JOIN Object_Goods_Juridical ON Object_Goods_Juridical.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                                    AND Object_Goods_Juridical.JuridicalId = T1.JuridicalId
+
+              WHERE T1.Amount > 0
+                AND COALESCE(Object_Goods_Juridical.GoodsMainId, 0) = 0) 
+    THEN
+      SELECT string_agg(Chr(13)||'Поставщик: '||T1.JuridicalName||Chr(13)||''||T1.GoodsName, Chr(13))
+      INTO vbError
+      FROM gpSelect_MI_OrderInternalPromo(inMovementId := inMovementId , inIsErased := 'False' ,  inSession := inSession) AS T1
+                                       
+           LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = T1.GoodsId
+           LEFT JOIN Object_Goods_Juridical ON Object_Goods_Juridical.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                            AND Object_Goods_Juridical.JuridicalId = T1.JuridicalId
+
+      WHERE T1.Amount > 0
+        AND COALESCE(Object_Goods_Juridical.GoodsMainId, 0) = 0;
+    
+       RAISE EXCEPTION 'Нет товара поставщика утоваров:%', vbError;
+    END IF;
 
      
      -- Результат
@@ -66,4 +90,5 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternalPromo_ExportJuridical (Integer
 */
 
 -- тест
--- select * from gpSelect_MovementItem_OrderInternalPromo_ExportJuridical(inMovementId := 24178054 ,  inSession := '3');
+-- 
+select * from gpSelect_MovementItem_OrderInternalPromo_ExportJuridical(inMovementId := 29739305 ,  inSession := '3');

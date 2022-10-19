@@ -27,11 +27,18 @@ $BODY$
    DECLARE vbAmount TFloat;
    DECLARE vbStage boolean;
    DECLARE vbNotRename boolean;
+   DECLARE vbReceiptProdModel boolean;
    
    DECLARE vbColorPatternId Integer;
    DECLARE vbReceiptLevelId Integer;
    DECLARE vbProdColorPatternId Integer;
    DECLARE vbMaterialOptionsId Integer;
+   DECLARE vbCommentChild TVarChar;
+   DECLARE vbCommentMain TVarChar;
+   DECLARE vbComment TVarChar;
+   
+   DECLARE vbReceiptProdModelId Integer;
+   DECLARE vbReceiptProdModelChildId Integer;
 
    DECLARE vbArticleChild     TVarChar;  -- Артикул-результат
    DECLARE vbGoodsChildName   TVarChar;  -- Название-результат
@@ -45,8 +52,8 @@ BEGIN
    
    --
    IF COALESCE (TRIM (inGoodsName_child), '') = '' OR
-      POSITION(SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2) IN inArticle_child) = 1 OR
-      upper(TRIM(SPLIT_PART (inArticle, '-', 3))) NOT IN ('01', '02', '03', '*ICE WHITE', 'BEL') THEN RETURN; END IF;
+      POSITION(SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2) IN inArticle_child) = 1 AND inArticle NOT ILIKE '%basis%' OR
+      upper(TRIM(SPLIT_PART (inArticle, '-', 3))) NOT IN ('01', '02', '03', '*ICE WHITE', 'BEL', 'BASIS') THEN RETURN; END IF;
       
    -- Преобразуем количество
    IF inAmount = '' OR inAmount = '0'
@@ -66,6 +73,7 @@ BEGIN
    IF POSITION('AGL ' IN inArticle_child) = 1 THEN inArticle_child := REPLACE(inArticle_child, 'AGL ', 'AGL'); END IF;
    vbStage := False;
    vbNotRename := False;
+   vbReceiptProdModel := False;
    
    -- Ищем Шаблон Boat Structure
    SELECT Object_ColorPattern.Id
@@ -87,16 +95,18 @@ BEGIN
      vbArticleChild := inArticle;
      vbGoodsChildName := inGoodsName;
      vbGroupChildName := inGroupName;
+     vbCommentChild := 'HULL/DECK';
      vbStage := True;
 
      inGoodsName := 'Корпус '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2);
      inGroupName := 'Сборка корпуса';
      inArticle := SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||SPLIT_PART (inArticle, '-', 3);
+     vbCommentMain := 'HULL/DECK';
 
      IF inReplacement ILIKE 'ДА'
      THEN
-       SELECT Object_ProdColorPattern.id 
-       INTO vbProdColorPatternId
+       SELECT Object_ProdColorPattern.id, Object_ProdColorGroup.ValueData 
+       INTO vbProdColorPatternId, vbComment
        FROM Object AS Object_ProdColorPattern
 
             INNER JOIN ObjectLink AS ObjectLink_ColorPattern
@@ -118,28 +128,62 @@ BEGIN
          AND Object_ProdColorPattern.isErased = FALSE
          AND Object_ProdColorPattern.ValueData = '1'
          AND Object_ProdColorGroup.ValueData ILIKE '%'||TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))||'%';
+
+       SELECT MIN(ObjectLink_MaterialOptions.ChildObjectId)
+       INTO vbMaterialOptionsId
+       FROM Object AS Object_ReceiptGoodsChild
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                  ON ObjectLink_ProdColorPattern.ObjectId      = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                                 AND ObjectLink_ProdColorPattern.ChildObjectId = vbProdColorPatternId
+            INNER JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
+                            
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                  ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                 AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+            INNER JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+            INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                 ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+            LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId
+                            
+
+            -- Категория Опций
+            INNER JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                  ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+            LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+                                                 
+       WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+         AND Object_ReceiptGoodsChild.isErased = FALSE
+         AND Object_ProdColorPattern.ValueData = '1'
+         AND Object_ProdColorGroup.ValueData ILIKE '%'||TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))||'%';         
      END IF;
 
    ELSEIF (COALESCE (inReceiptLevelName, '') = '') AND SPLIT_PART (inArticle, '-', 3) = '01' AND SPLIT_PART (inArticle, '-', 4) = ''
    THEN
      inGoodsName := 'Корпус '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2);
      inGroupName := 'Сборка корпуса';    
+     vbCommentMain := 'HULL/DECK';
    ELSEIF SPLIT_PART (inArticle, '-', 3) = '01' AND SPLIT_PART (inArticle, '-', 4) = '02' -- Сборка сиденья
    THEN
      inReceiptLevelName := 'deck';
      vbArticleChild := inArticle;
      vbGoodsChildName := inGoodsName;
      vbGroupChildName := inGroupName;
+     vbCommentChild := 'DECK';
      vbStage := True;
 
      inGoodsName := 'Сиденье водителя '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2);
      inGroupName := 'Сборка сиденья';    
      inArticle := SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||SPLIT_PART (inArticle, '-', 4);
+     vbCommentMain := 'DECK';
 
      IF inReplacement ILIKE 'ДА'
      THEN
-       SELECT Object_ProdColorPattern.id 
-       INTO vbProdColorPatternId
+       SELECT Object_ProdColorPattern.id, Object_ProdColorGroup.ValueData  
+       INTO vbProdColorPatternId, vbComment
        FROM Object AS Object_ProdColorPattern
 
             INNER JOIN ObjectLink AS ObjectLink_ColorPattern
@@ -159,8 +203,39 @@ BEGIN
                                                           
        WHERE Object_ProdColorPattern.DescId = zc_Object_ProdColorPattern()
          AND Object_ProdColorPattern.isErased = FALSE
-         AND Object_ProdColorPattern.ValueData = 'farbe'
-         AND Object_ProdColorGroup.ValueData ILIKE 'Stitching Logo';
+         AND Object_ProdColorPattern.ValueData = '1'
+         AND Object_ProdColorGroup.ValueData ILIKE '%'||inReceiptLevelName||'%';
+
+       SELECT MIN(ObjectLink_MaterialOptions.ChildObjectId)
+       INTO vbMaterialOptionsId
+       FROM Object AS Object_ReceiptGoodsChild
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                  ON ObjectLink_ProdColorPattern.ObjectId      = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                                 AND ObjectLink_ProdColorPattern.ChildObjectId = vbProdColorPatternId
+            INNER JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
+                            
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                  ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                 AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+            INNER JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+            INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                 ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+            LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId
+                            
+
+            -- Категория Опций
+            INNER JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                  ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+            LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+                                                 
+       WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+         AND Object_ReceiptGoodsChild.isErased = FALSE
+         AND Object_ProdColorPattern.ValueData = '1'
+         AND Object_ProdColorGroup.ValueData ILIKE '%'||inReceiptLevelName||'%';
      END IF;
 
    ELSEIF SPLIT_PART (inArticle, '-', 3) = '02' AND SPLIT_PART (inArticle, '-', 4) = ''
@@ -168,11 +243,12 @@ BEGIN
      inReceiptLevelName := '';
      inGoodsName := 'Сиденье водителя '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2);
      inGroupName := 'Сборка сиденья';    
+     vbCommentMain := 'DECK';
 
      IF inReplacement ILIKE 'ДА'
      THEN
-       SELECT Object_ProdColorPattern.id 
-       INTO vbProdColorPatternId
+       SELECT Object_ProdColorPattern.id, Object_ProdColorGroup.ValueData  
+       INTO vbProdColorPatternId, vbComment
        FROM Object AS Object_ProdColorPattern
 
             INNER JOIN ObjectLink AS ObjectLink_ColorPattern
@@ -194,6 +270,37 @@ BEGIN
          AND Object_ProdColorPattern.isErased = FALSE
          AND Object_ProdColorPattern.ValueData = 'farbe'
          AND Object_ProdColorGroup.ValueData ILIKE 'Stitching Naht';
+
+       SELECT MIN(ObjectLink_MaterialOptions.ChildObjectId)
+       INTO vbMaterialOptionsId
+       FROM Object AS Object_ReceiptGoodsChild
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                  ON ObjectLink_ProdColorPattern.ObjectId      = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                                 AND ObjectLink_ProdColorPattern.ChildObjectId = vbProdColorPatternId
+            INNER JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
+                            
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                  ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                 AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+            INNER JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+            INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                 ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+            LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId
+                            
+
+            -- Категория Опций
+            INNER JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                  ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+            LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+                                                 
+       WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+         AND Object_ReceiptGoodsChild.isErased = FALSE
+         AND Object_ProdColorPattern.ValueData = 'farbe'
+         AND Object_ProdColorGroup.ValueData ILIKE 'Stitching Naht';
      END IF;
    ELSEIF SPLIT_PART (inArticle, '-', 3) = '01' AND SPLIT_PART (inArticle, '-', 4) = '03' -- Сборка капота
    THEN
@@ -201,16 +308,18 @@ BEGIN
      vbArticleChild := inArticle;
      vbGoodsChildName := inGoodsName;
      vbGroupChildName := inGroupName;
+     vbCommentChild := 'STEERING CONSOLE';
      vbStage := True;
 
      inGoodsName := 'Капот '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2);
      inGroupName := 'Сборка Капота';    
      inArticle := SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||SPLIT_PART (inArticle, '-', 4);
+     vbCommentMain := 'STEERING CONSOLE';
 
      IF inReplacement ILIKE 'ДА'
      THEN
-       SELECT Object_ProdColorPattern.id 
-       INTO vbProdColorPatternId
+       SELECT Object_ProdColorPattern.id, Object_ProdColorGroup.ValueData  
+       INTO vbProdColorPatternId, vbComment
        FROM Object AS Object_ProdColorPattern
 
             INNER JOIN ObjectLink AS ObjectLink_ColorPattern
@@ -232,6 +341,37 @@ BEGIN
          AND Object_ProdColorPattern.isErased = FALSE
          AND Object_ProdColorPattern.ValueData = '1'
          AND Object_ProdColorGroup.ValueData ILIKE '%Fiberglass Steering Console%';
+
+       SELECT MIN(ObjectLink_MaterialOptions.ChildObjectId)
+       INTO vbMaterialOptionsId
+       FROM Object AS Object_ReceiptGoodsChild
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                  ON ObjectLink_ProdColorPattern.ObjectId      = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                                 AND ObjectLink_ProdColorPattern.ChildObjectId = vbProdColorPatternId
+            INNER JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
+                            
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                  ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                 AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+            INNER JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+            INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                 ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+            LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId
+                            
+
+            -- Категория Опций
+            INNER JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                  ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+            LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+                                                 
+       WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+         AND Object_ReceiptGoodsChild.isErased = FALSE
+         AND Object_ProdColorPattern.ValueData = '1'
+         AND Object_ProdColorGroup.ValueData ILIKE '%Fiberglass Steering Console%';
      END IF;
 
    ELSEIF SPLIT_PART (inArticle, '-', 3) = '03' AND SPLIT_PART (inArticle, '-', 4) = ''
@@ -239,6 +379,7 @@ BEGIN
      inReceiptLevelName := '';
      inGoodsName := 'Капот '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2);
      inGroupName := 'Сборка Капота';    
+     vbCommentMain := 'STEERING CONSOLE';
    ELSEIF TRIM(SPLIT_PART (inArticle, '-', 3)) ILIKE '*ICE WHITE' -- Балоны
    THEN
      vbNotRename := True;  
@@ -247,8 +388,8 @@ BEGIN
      
      IF inReplacement ILIKE 'ДА'
      THEN
-       SELECT Object_ProdColorPattern.id 
-       INTO vbProdColorPatternId
+       SELECT Object_ProdColorPattern.id, Object_ProdColorGroup.ValueData  
+       INTO vbProdColorPatternId, vbComment
        FROM Object AS Object_ProdColorPattern
 
             INNER JOIN ObjectLink AS ObjectLink_ColorPattern
@@ -270,16 +411,47 @@ BEGIN
          AND Object_ProdColorPattern.isErased = FALSE
          AND Object_ProdColorPattern.ValueData ILIKE CASE WHEN inReceiptLevelName ILIKE 'fender' THEN 'moldings' ELSE inReceiptLevelName END
          AND Object_ProdColorGroup.ValueData ILIKE 'Hypalon';
+
+       SELECT MIN(ObjectLink_MaterialOptions.ChildObjectId)
+       INTO vbMaterialOptionsId
+       FROM Object AS Object_ReceiptGoodsChild
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                  ON ObjectLink_ProdColorPattern.ObjectId      = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                                 AND ObjectLink_ProdColorPattern.ChildObjectId = vbProdColorPatternId
+            INNER JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
+                            
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                  ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                 AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+            INNER JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+            INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                 ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+            LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId
+                            
+
+            -- Категория Опций
+            INNER JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                  ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+            LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+                                                 
+       WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+         AND Object_ReceiptGoodsChild.isErased = FALSE
+         AND Object_ProdColorPattern.ValueData ILIKE CASE WHEN inReceiptLevelName ILIKE 'fender' THEN 'moldings' ELSE inReceiptLevelName END
+         AND Object_ProdColorGroup.ValueData ILIKE 'Hypalon';
      END IF;
 
-   ELSEIF TRIM(SPLIT_PART (inArticle, '-', 3)) ILIKE 'BEL' -- Балоны
+   ELSEIF TRIM(SPLIT_PART (inArticle, '-', 3)) ILIKE 'BEL' -- Обивка
    THEN
      vbNotRename := True;  
      
      IF inReplacement ILIKE 'ДА'
      THEN
-       SELECT Object_ProdColorPattern.id 
-       INTO vbProdColorPatternId
+       SELECT Object_ProdColorPattern.id, Object_ProdColorGroup.ValueData  
+       INTO vbProdColorPatternId, vbComment
        FROM Object AS Object_ProdColorPattern
 
             INNER JOIN ObjectLink AS ObjectLink_ColorPattern
@@ -301,6 +473,99 @@ BEGIN
          AND Object_ProdColorPattern.isErased = FALSE
          AND Object_ProdColorPattern.ValueData ILIKE 'primary+secondary'
          AND Object_ProdColorGroup.ValueData ILIKE 'Upholstery';
+         
+       SELECT MIN(ObjectLink_MaterialOptions.ChildObjectId)
+       INTO vbMaterialOptionsId
+       FROM Object AS Object_ReceiptGoodsChild
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                  ON ObjectLink_ProdColorPattern.ObjectId      = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                                 AND ObjectLink_ProdColorPattern.ChildObjectId = vbProdColorPatternId
+            INNER JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
+                            
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                  ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                 AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+            INNER JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+            INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                 ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+            LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId
+                            
+
+            -- Категория Опций
+            INNER JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                  ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+            LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+                                                 
+       WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+         AND Object_ReceiptGoodsChild.isErased = FALSE
+         AND Object_ProdColorPattern.ValueData ILIKE 'primary+secondary'
+         AND Object_ProdColorGroup.ValueData ILIKE 'Upholstery';         
+     END IF;
+   ELSEIF TRIM(SPLIT_PART (inArticle, '-', 3)) ILIKE 'basis' -- Сборка лодки
+   THEN
+     vbNotRename := True;  
+     vbReceiptProdModel := True;
+     
+     IF inReplacement ILIKE 'ДА'
+     THEN
+       SELECT Object_ProdColorPattern.id, Object_ProdColorGroup.ValueData  
+       INTO vbProdColorPatternId, vbComment
+       FROM Object AS Object_ProdColorPattern
+
+            INNER JOIN ObjectLink AS ObjectLink_ColorPattern
+                                  ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                                 AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ProdColorPattern_ColorPattern()
+                                 AND ObjectLink_ColorPattern.ChildObjectId = vbColorPatternId
+                                                          
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                  ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                 AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+            INNER JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+                                                          
+            LEFT JOIN ObjectLink AS ObjectLink_ProdColorKind
+                                  ON ObjectLink_ProdColorKind.ObjectId = Object_ProdColorGroup.Id
+                                 AND ObjectLink_ProdColorKind.DescId = zc_ObjectLink_ProdColorGroup_ProdColorKind()
+            LEFT JOIN Object AS Object_ProdColorKind ON Object_ProdColorKind.Id = ObjectLink_ProdColorKind.ChildObjectId
+                                                          
+       WHERE Object_ProdColorPattern.DescId = zc_Object_ProdColorPattern()
+         AND Object_ProdColorPattern.isErased = FALSE
+         AND Object_ProdColorPattern.ValueData ILIKE '1'
+         AND Object_ProdColorGroup.ValueData ILIKE 'Teak';
+
+       SELECT MIN(ObjectLink_MaterialOptions.ChildObjectId)
+       INTO vbMaterialOptionsId
+       FROM Object AS Object_ReceiptGoodsChild
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                  ON ObjectLink_ProdColorPattern.ObjectId      = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                                 AND ObjectLink_ProdColorPattern.ChildObjectId = vbProdColorPatternId
+            INNER JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId
+                            
+            INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                  ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                 AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+            INNER JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+            INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                 ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+            LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId
+                            
+
+            -- Категория Опций
+            INNER JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                  ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                                 AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+            LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+                                                 
+       WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+         AND Object_ReceiptGoodsChild.isErased = FALSE
+         AND Object_ProdColorPattern.ValueData ILIKE '1'
+         AND Object_ProdColorGroup.ValueData ILIKE 'Teak';
      END IF;
    END IF;
 
@@ -337,7 +602,7 @@ BEGIN
             -- ВСЕГДА - создание/корректировка товара Child
             IF COALESCE (vbGoodsChildId, 0) = 0
             THEN
-            
+              
                raise notice 'Value 01: Не нашли Child 2'; 
 
                -- группа товара пробуем найти
@@ -367,7 +632,7 @@ BEGIN
                                                             , inASIN              := NULL     :: TVarChar
                                                             , inMatchCode         := NULL     :: TVarChar
                                                             , inFeeNumber         := NULL     :: TVarChar
-                                                            , inComment           := NULL     :: TVarChar
+                                                            , inComment           := vbCommentChild
                                                             , inIsArc             := FALSE    :: Boolean
                                                             , inFeet              := 0        :: TFloat
                                                             , inMetres            := 0        :: TFloat
@@ -408,7 +673,7 @@ BEGIN
      END IF;
 
      -- пробуем найти Товар - Master
-     IF COALESCE (inGoodsName, '') <> ''
+     IF COALESCE (inGoodsName, '') <> '' and vbReceiptProdModel = False
      THEN
 
          IF TRIM (inArticle) <> ''
@@ -467,7 +732,7 @@ BEGIN
                                                        , inASIN              := NULL     :: TVarChar
                                                        , inMatchCode         := NULL     :: TVarChar
                                                        , inFeeNumber         := NULL     :: TVarChar
-                                                       , inComment           := NULL     :: TVarChar
+                                                       , inComment           := vbCommentMain
                                                        , inIsArc             := FALSE    :: Boolean
                                                        , inFeet              := 0        :: TFloat
                                                        , inMetres            := 0        :: TFloat
@@ -516,7 +781,13 @@ BEGIN
          ELSE
 
             -- по названию
-            vbGoodsId_child := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ValueData = TRIM (inGoodsName_child));
+            vbGoodsId_child := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ValueData ILIKE TRIM (inGoodsName_child));
+         END IF;
+         
+         IF vbReceiptProdModel = TRUE AND COALESCE (vbGoodsId_child, 0) = 0 
+         THEN
+            -- по названию
+            vbGoodsId_child := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ValueData ILIKE TRIM (inGoodsName_child));
          END IF;
 
 
@@ -552,10 +823,10 @@ BEGIN
                                                              , inASIN             := NULL     :: TVarChar
                                                              , inMatchCode        := NULL     :: TVarChar
                                                              , inFeeNumber        := NULL     :: TVarChar
-                                                             , inComment          := NULL     :: TVarChar
+                                                             , inComment          := vbComment
                                                              , inIsArc            := FALSE    :: Boolean
-                                                             , inFeet              := 0        :: TFloat
-                                                             , inMetres            := 0        :: TFloat
+                                                             , inFeet             := 0        :: TFloat
+                                                             , inMetres           := 0        :: TFloat
                                                              , inAmountMin        := 0        :: TFloat
                                                              , inAmountRefer      := 0        :: TFloat
                                                              , inEKPrice          := 0        :: TFloat
@@ -581,97 +852,176 @@ BEGIN
             END IF;
      END IF;
 
-
-     --- ищем ReceiptGoods
-     vbReceiptGoodsId := (SELECT ObjectLink.ObjectId
-                          FROM ObjectLink
-                          WHERE ObjectLink.DescId        = zc_ObjectLink_ReceiptGoods_Object()
-                            AND ObjectLink.ChildObjectId = vbGoodsId
-                         );
-
-     -- ВСЕГДА создание/корректировка
-     IF COALESCE (vbReceiptGoodsId, 0) = 0 OR 1=1
+     IF vbReceiptProdModel = False
      THEN
-         -- если не нашли создаем
-         vbReceiptGoodsId :=  gpInsertUpdate_Object_ReceiptGoods (ioId               := vbReceiptGoodsId
-                                                                , inCode             := 0   :: Integer
-                                                                , inName             := TRIM (inGoodsName) :: TVarChar
-                                                                , inColorPatternId   := vbColorPatternId
-                                                                , inGoodsId          := vbGoodsId
-                                                                , inisMain           := TRUE     :: Boolean
-                                                                , inUserCode         := ''       :: TVarChar
-                                                                , inComment          := NULL     :: TVarChar
-                                                                , inSession          := inSession:: TVarChar
-                                                                 );
-     END IF;
+       --- ищем ReceiptGoods
+       vbReceiptGoodsId := (SELECT ObjectLink.ObjectId
+                            FROM ObjectLink
+                            WHERE ObjectLink.DescId        = zc_ObjectLink_ReceiptGoods_Object()
+                              AND ObjectLink.ChildObjectId = vbGoodsId
+                           );
+
+       -- ВСЕГДА создание/корректировка
+       IF COALESCE (vbReceiptGoodsId, 0) = 0 OR 1=1
+       THEN
+           -- если не нашли создаем
+           vbReceiptGoodsId :=  gpInsertUpdate_Object_ReceiptGoods (ioId               := vbReceiptGoodsId
+                                                                  , inCode             := 0   :: Integer
+                                                                  , inName             := TRIM (inGoodsName) :: TVarChar
+                                                                  , inColorPatternId   := vbColorPatternId
+                                                                  , inGoodsId          := vbGoodsId
+                                                                  , inisMain           := TRUE     :: Boolean
+                                                                  , inUserCode         := ''       :: TVarChar
+                                                                  , inComment          := NULL     :: TVarChar
+                                                                  , inSession          := inSession:: TVarChar
+                                                                   );
+       END IF;
 
 
-     IF COALESCE (inReceiptLevelName, '') <> '' AND COALESCE (vbGoodsChildId, 0) <> 0
-     THEN
+       IF COALESCE (inReceiptLevelName, '') <> '' AND COALESCE (vbGoodsChildId, 0) <> 0
+       THEN
+
+           -- Этап сборки пробуем найти
+           vbReceiptLevelId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ReceiptLevel() AND Object.ValueData = TRIM (inReceiptLevelName));
+
+           -- если нет такого Этап сборки
+           IF COALESCE (vbReceiptLevelId, 0) = 0
+           THEN
+                vbReceiptLevelId := (SELECT tmp.ioId
+                                     FROM gpInsertUpdate_Object_ReceiptLevel (ioId              := 0         :: Integer
+                                                                            , ioCode            := 0         :: Integer
+                                                                            , inName            := TRIM (inReceiptLevelName) ::TVarChar
+                                                                            , inShortName       := TRIM (inReceiptLevelName) ::TVarChar
+                                                                            , inObjectDesc      := 'zc_Object_ReceiptGoods'  ::TVarChar
+                                                                            , inSession         := inSession :: TVarChar
+                                                                             ) AS tmp);
+             END IF;
+       END IF;
+
+       -- ищем ReceiptGoodsChild
+       vbReceiptGoodsChildId := (SELECT Object_ReceiptGoodsChild.Id
+                                 FROM Object AS Object_ReceiptGoodsChild
+                                      INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                            ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                                           AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                                           AND ObjectLink_ReceiptGoods.ChildObjectId = vbReceiptGoodsId
+                                      INNER JOIN ObjectLink AS ObjectLink_Object
+                                                            ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
+                                                           AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                                           AND ObjectLink_Object.ChildObjectId = vbGoodsId_child
+                                      LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                                           ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
+                                                          AND ObjectLink_ReceiptLevel.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
+                                 WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+                                   AND Object_ReceiptGoodsChild.isErased = FALSE
+                                   AND COALESCE (ObjectLink_ReceiptLevel.ChildObjectId, 0) = COALESCE (vbReceiptLevelId, 0)
+                                 );
+                                 
+       IF COALESCE (vbReceiptGoodsChildId, 0) = 0 OR
+          NOT EXISTS (SELECT Object_ReceiptGoodsChild.Id
+                      FROM Object AS Object_ReceiptGoodsChild
+                           LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
+                                               AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                           LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                                               AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+                      WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+                        AND Object_ReceiptGoodsChild.ID = vbReceiptGoodsChildId
+                        AND COALESCE (ObjectLink_ProdColorPattern.ChildObjectId, 0) = COALESCE (vbProdColorPatternId, 0)
+                        and COALESCE (ObjectLink_MaterialOptions.ChildObjectId, 0) = COALESCE (vbMaterialOptionsId, 0))
+       THEN
+
+           -- если не нашли создаем или правим если надо
+           vbReceiptGoodsChildId := (SELECT tmp.ioId
+                                     FROM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := COALESCE (vbReceiptGoodsChildId,0) ::Integer
+                                                                                 , inComment            := ''                   ::TVarChar
+                                                                                 , inReceiptGoodsId     := vbReceiptGoodsId     ::Integer
+                                                                                 , inObjectId           := vbGoodsId_child      ::Integer
+                                                                                 , inProdColorPatternId := vbProdColorPatternId ::Integer
+                                                                                 , inMaterialOptionsId  := vbMaterialOptionsId  ::Integer
+                                                                                 , inReceiptLevelId_top := 0                    ::Integer
+                                                                                 , inReceiptLevelId     := vbReceiptLevelId     ::Integer
+                                                                                 , inGoodsChildId       := vbGoodsChildId       ::Integer
+                                                                                 , ioValue              := vbAmount             ::TFloat
+                                                                                 , ioValue_service      := 0                    ::TFloat
+                                                                                 , inIsEnabled          := TRUE                 ::Boolean
+                                                                                 , inSession            := inSession            ::TVarChar
+                                                                                  ) AS tmp);
+       END IF;
+     
+     ELSE
+     
+        -- поиск Шаблон сборка Модели
+       vbReceiptProdModelId := (SELECT Object.Id FROM Object 
+                                WHERE Object.DescId = zc_Object_ReceiptProdModel() 
+                                  AND Object.ValueData ILIKE '%'||SPLIT_PART (inArticle, '-', 2)||'-base%'
+                                  AND Object.isErased = False);
 
          -- Этап сборки пробуем найти
-         vbReceiptLevelId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ReceiptLevel() AND Object.ValueData = TRIM (inReceiptLevelName));
+       IF COALESCE ('01-Boat', '') <> ''
+       THEN
 
-         -- если нет такого Этап сборки
-         IF COALESCE (vbReceiptLevelId, 0) = 0
-         THEN
-              vbReceiptLevelId := (SELECT tmp.ioId
-                                   FROM gpInsertUpdate_Object_ReceiptLevel (ioId              := 0         :: Integer
-                                                                          , ioCode            := 0         :: Integer
-                                                                          , inName            := TRIM (inReceiptLevelName) ::TVarChar
-                                                                          , inShortName       := TRIM (inReceiptLevelName) ::TVarChar
-                                                                          , inObjectDesc      := 'zc_Object_ReceiptGoods'  ::TVarChar
-                                                                          , inSession         := inSession :: TVarChar
-                                                                           ) AS tmp);
-           END IF;
-     END IF;
+           -- Этап сборки пробуем найти
+           vbReceiptLevelId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ReceiptLevel() AND Object.ValueData = TRIM ('01-Boat'));
 
-     -- ищем ReceiptGoodsChild
-     vbReceiptGoodsChildId := (SELECT Object_ReceiptGoodsChild.Id
-                               FROM Object AS Object_ReceiptGoodsChild
-                                    INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
-                                                          ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
-                                                         AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
-                                                         AND ObjectLink_ReceiptGoods.ChildObjectId = vbReceiptGoodsId
-                                    INNER JOIN ObjectLink AS ObjectLink_Object
-                                                          ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
-                                                         AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
-                                                         AND ObjectLink_Object.ChildObjectId = vbGoodsId_child
-                                    LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
-                                                         ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
-                                                        AND ObjectLink_ReceiptLevel.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
-                               WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
-                                 AND Object_ReceiptGoodsChild.isErased = FALSE
-                                 AND COALESCE (ObjectLink_ReceiptLevel.ChildObjectId, 0) = COALESCE (vbReceiptLevelId, 0)
-                               );
-                               
-     IF COALESCE (vbReceiptGoodsChildId, 0) = 0 OR
-        NOT EXISTS (SELECT Object_ReceiptGoodsChild.Id
-                    FROM Object AS Object_ReceiptGoodsChild
-                         LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
-                                              ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
-                                             AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
-                    WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
-                      AND Object_ReceiptGoodsChild.ID = vbReceiptGoodsChildId
-                      AND COALESCE (ObjectLink_ProdColorPattern.ChildObjectId, 0) = COALESCE (vbProdColorPatternId, 0))
-     THEN
-         -- если не нашли создаем или правим если надо
-         vbReceiptGoodsChildId := (SELECT tmp.ioId
-                                   FROM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := COALESCE (vbReceiptGoodsChildId,0) ::Integer
-                                                                               , inComment            := ''                   ::TVarChar
-                                                                               , inReceiptGoodsId     := vbReceiptGoodsId     ::Integer
-                                                                               , inObjectId           := vbGoodsId_child      ::Integer
-                                                                               , inProdColorPatternId := vbProdColorPatternId ::Integer
-                                                                               , inMaterialOptionsId  := vbMaterialOptionsId  ::Integer
-                                                                               , inReceiptLevelId_top := 0                    ::Integer
-                                                                               , inReceiptLevelId     := vbReceiptLevelId     ::Integer
-                                                                               , inGoodsChildId       := vbGoodsChildId       ::Integer
-                                                                               , ioValue              := vbAmount             ::TFloat
-                                                                               , ioValue_service      := 0                    ::TFloat
-                                                                               , inIsEnabled          := TRUE                 ::Boolean
-                                                                               , inSession            := inSession            ::TVarChar
-                                                                                ) AS tmp);
+           -- если нет такого Этап сборки
+           IF COALESCE (vbReceiptLevelId, 0) = 0
+           THEN
+                vbReceiptLevelId := (SELECT tmp.ioId
+                                     FROM gpInsertUpdate_Object_ReceiptLevel (ioId              := 0         :: Integer
+                                                                            , ioCode            := 0         :: Integer
+                                                                            , inName            := TRIM ('01-Boat') ::TVarChar
+                                                                            , inShortName       := TRIM ('01-Boat') ::TVarChar
+                                                                            , inObjectDesc      := 'zc_Object_ReceiptProdModel'  ::TVarChar
+                                                                            , inSession         := inSession :: TVarChar
+                                                                             ) AS tmp);
+             END IF;
+       END IF;
+     
+       -- поиск ReceiptProdModelChild
+       vbReceiptProdModelChildId:= (SELECT Object_ReceiptProdModelChild.Id
+                                    FROM Object AS Object_ReceiptProdModelChild
+
+                                         INNER JOIN ObjectLink AS ObjectLink_ReceiptProdModel
+                                                               ON ObjectLink_ReceiptProdModel.ObjectId      = Object_ReceiptProdModelChild.Id
+                                                              AND ObjectLink_ReceiptProdModel.ChildObjectId = vbReceiptProdModelId
+                                                              AND ObjectLink_ReceiptProdModel.DescId        = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+
+                                         INNER JOIN ObjectLink AS ObjectLink_Object
+                                                               ON ObjectLink_Object.ObjectId      = Object_ReceiptProdModelChild.Id
+                                                              AND ObjectLink_Object.ChildObjectId = vbGoodsId_child
+                                                              AND ObjectLink_Object.DescId        = zc_ObjectLink_ReceiptProdModelChild_Object()
+
+                                    WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
+                                      AND Object_ReceiptProdModelChild.isErased = FALSE
+                                   );
+
+       --
+       IF COALESCE (vbReceiptProdModelChildID, 0) = 0
+       THEN
+
+         raise notice 'Value 05: Не нашли ReceiptProdModelChild'; 
+
+         vbReceiptProdModelChildID:= (SELECT tmp.ioId
+                                      FROM gpInsertUpdate_Object_ReceiptProdModelChild (ioId                 := COALESCE (vbReceiptProdModelChildId, 0)
+                                                                                      , inComment            := inGoodsName_child     ::TVarChar
+                                                                                      , inReceiptProdModelId := vbReceiptProdModelId  ::Integer
+                                                                                      , inObjectId           := vbGoodsId_child       ::Integer
+                                                                                      , inReceiptLevelId_top := vbReceiptLevelId      ::Integer
+                                                                                      , inReceiptLevelId     := (SELECT OL.ChildObjectId FROM ObjectLink AS OL 
+                                                                                                                 WHERE OL.ObjectId = COALESCE (vbReceiptProdModelChildId, 0) 
+                                                                                                                   AND OL.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel())
+                                                                                      , ioValue              := vbAmount              ::TFloat
+                                                                                      , ioValue_service      := 0                     ::TFloat
+                                                                                      , ioIsCheck            := FALSE
+                                                                                      , inSession            := inSession             ::TVarChar
+                                                                                       ) AS tmp);
+       END IF;
+    
      END IF;
+     
+     
    /*EXCEPTION
       WHEN OTHERS THEN GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;	
       RAISE EXCEPTION 'Ошибка <%> %Артикул-результат <%> %Название сборки <%> %Название-результат <%> %Группа-результат  <%> %Замена <%> %Артикул-комплект/узел <%> %Название-комплект/узел <%> %Группа-комплект/узел <%> %Количество <%>', 
@@ -689,12 +1039,13 @@ BEGIN
    END;*/
    
 
-/*   RAISE EXCEPTION 'Goods Main <%> <%> <%> <%> <%> %Goods child 2 <%> <%> <%> <%> <%> <%>  %Goods child <%> <%> <%> <%> <%> <%> <%> %ReceiptGoods <%> <%> %ReceiptGoodsChild <%> <%> <%> <%>', 
+  /* RAISE EXCEPTION 'Goods Main <%> <%> <%> <%> <%> %Goods child 2 <%> <%> <%> <%> <%> <%>  %Goods child <%> <%> <%> <%> <%> <%> <%> %ReceiptGoods <%> <%> %ReceiptGoodsChild <%> <%> <%> <%> %ReceiptProdModel <%> <%>', 
                inArticle, inGoodsName, inGroupName, vbGoodsId, vbGoodsGroupId, Chr(13), 
                inReceiptLevelName, vbArticleChild, vbGoodsChildName, vbGroupChildName, vbGoodsChildId, vbGroupChildId, Chr(13),
                inArticle_child, inGoodsName_child, vbGoodsId_child, inGroupName_child, vbGoodsGroupId_child, inAmount, vbAmount, Chr(13),
                vbReceiptGoodsId, vbColorPatternId, Chr(13),
-               vbReceiptGoodsChildId, vbReceiptLevelId, vbProdColorPatternId, vbMaterialOptionsId; 
+               vbReceiptGoodsChildId, vbReceiptLevelId, vbProdColorPatternId, vbMaterialOptionsId, Chr(13),
+               vbReceiptProdModelId, vbReceiptProdModelChildId; 
 
    RAISE EXCEPTION 'В работе'; */
 
@@ -711,6 +1062,4 @@ $BODY$
 */
 
 -- тест
--- 
-
--- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load('AGL-280-BEL-3302-ts', '', 'AGL-280-BEL-3302-tau-sch', 'комплект', 'ДА', 'BEL-3302', 'BELUGA', 'Fabric', '1 м.п.', zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load('AGL-280-*ICE WHITE - *NEPTUNE GREY', 'primary', 'AGL-280-*ICE WHITE - *NEPTUNE GREY', 'Сборка баллона', 'ДА', 'AGL 000032', 'ICE WHITE', 'Сборка баллона', '10 м.п.', zfCalc_UserAdmin())

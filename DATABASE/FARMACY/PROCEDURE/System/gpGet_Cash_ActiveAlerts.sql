@@ -24,6 +24,11 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
+    
+    outActiveAlerts := '';
+    outstartDate := Null;    
+    
+    Return;
 
     WITH tmpUkraineAlarm AS (SELECT UkraineAlarm.alertType, MIN(UkraineAlarm.startDate) AS startDate
                              FROM UkraineAlarm

@@ -572,8 +572,11 @@ BEGIN
                               INNER JOIN Object AS Object_CancelReason 
                                                 ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
                                                AND Object_CancelReason.ObjectCode = 2
-                                
-                                
+                                                                
+                              LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                                        ON MovementBoolean_MobileApplication.MovementId = Movement.Id
+                                                       AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+
                               LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                                       ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -597,6 +600,7 @@ BEGIN
                                  AND Movement.StatusId = zc_Enum_Status_Erased()
                                  AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
                                  AND Movement.OperDate >= '20.04.2021'
+                                 AND COALESCE (MovementBoolean_MobileApplication.ValueData, False) = False
                            )
          , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
                                         , MovementProtocol.OperDate 
@@ -712,6 +716,11 @@ BEGIN
                                                        ON MovementString_BayerPhone.MovementId = Movement.Id
                                                       AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
 
+                                                                
+                              LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                                        ON MovementBoolean_MobileApplication.MovementId = Movement.Id
+                                                       AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
                                                            ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
                                                           AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
@@ -723,6 +732,7 @@ BEGIN
                          WHERE Movement.DescId = zc_Movement_Check()
                            AND Movement.OperDate >= CURRENT_DATE - INTERVAL '20 DAY'
                            AND COALESCE (Object_CancelReason.ObjectCode, 0) <> 2
+                           AND COALESCE (MovementBoolean_MobileApplication.ValueData, False) = False
                            )
          , tmpMIAll AS (SELECT tmpMovement.*
                           , MovementItem.Id                 AS MovementItemId 

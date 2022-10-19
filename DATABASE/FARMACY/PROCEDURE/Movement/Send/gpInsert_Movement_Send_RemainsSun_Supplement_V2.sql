@@ -39,7 +39,7 @@ BEGIN
      CREATE TEMP TABLE _tmpUnit_SunExclusion_Supplement_V2 (UnitId_from Integer, UnitId_to Integer) ON COMMIT DROP;
 
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
-     CREATE TEMP TABLE _tmpRemains_all_Supplement_V2 (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, Layout TFloat, AmountRemains TFloat, AmountNotSend TFloat, 
+     CREATE TEMP TABLE _tmpRemains_all_Supplement_V2 (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, Layout TFloat, PromoUnit TFloat, AmountRemains TFloat, AmountNotSend TFloat, 
                                                       AmountSalesDay TFloat, Need TFloat, Give TFloat, AmountUse TFloat, 
                                                       MinExpirationDate TDateTime, isCloseMCS boolean) ON COMMIT DROP;
 
