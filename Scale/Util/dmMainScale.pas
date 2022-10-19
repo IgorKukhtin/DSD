@@ -203,6 +203,7 @@ begin
          ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
 
          ParamByName('isContractGoods').AsBoolean:= DataSet.FieldByName('isContractGoods').AsBoolean;
+         ParamByName('isAsset').asBoolean:= DataSet.FieldByName('isAsset').asBoolean;
 
          ParamByName('TotalSumm').asFloat:= DataSet.FieldByName('TotalSumm').asFloat;
 
