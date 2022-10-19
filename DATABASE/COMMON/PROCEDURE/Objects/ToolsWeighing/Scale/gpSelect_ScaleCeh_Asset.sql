@@ -25,6 +25,39 @@ BEGIN
 
     -- Результат
     RETURN QUERY
+       SELECT 0    :: Integer AS Id
+            , NULL :: Integer AS Code
+            , 'Значение "Пусто"' ::TVarChar   AS Name
+            , ''        ::TVarChar   AS DescName
+
+            , 0          AS MeasureId
+            , ''        ::TVarChar   AS MeasureName
+
+            , 0    :: Integer        AS AssetGroupId
+            , NULL :: Integer        AS AssetGroupCode
+            , ''        ::TVarChar   AS AssetGroupName
+
+            , 0    :: Integer  AS JuridicalId
+            , NULL :: Integer  AS JuridicalCode
+            , ''   :: TVarChar AS JuridicalName
+
+            , 0    :: Integer  AS MakerId
+            , NULL :: Integer  AS MakerCode
+            , ''   :: TVarChar AS MakerName
+         
+            , CAST (CURRENT_DATE AS TDateTime) AS Release
+         
+            , '' :: TVarChar AS InvNumber
+            , '' :: TVarChar AS FullName
+            , '' :: TVarChar AS SerialNumber
+            , '' :: TVarChar AS PassportNumber
+            , '' :: TVarChar AS Comment
+
+            , NULL :: TFloat AS PeriodUse
+
+            , FALSE  AS isErased
+
+      UNION All
      SELECT
            Object_Asset.Id             AS Id
          , Object_Asset.ObjectCode     AS Code
