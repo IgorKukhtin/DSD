@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyPartnerName TVarChar
              , Comment TVarChar
              , RetailId Integer, RetailName TVarChar
+             , JuridicalBasisId Integer, JuridicalBasisCode Integer, JuridicalBasisName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar, OKPO TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
@@ -167,8 +168,14 @@ BEGIN
 
            , Object_Retail.Id                               AS RetailId
            , Object_Retail.ValueData                        AS RetailName
+
+           , Object_JuridicalBasis.Id                       AS JuridicalBasisId
+           , Object_JuridicalBasis.ObjectCode               AS JuridicalBasisCode
+           , Object_JuridicalBasis.ValueData                AS JuridicalBasisName
+
            , Object_Juridical.ObjectCode                    AS JuridicalCode
            , Object_Juridical.ValueData                     AS JuridicalName
+
            , ObjectDesc.ItemName                            AS ItemName
            , ObjectHistory_JuridicalDetails_View.OKPO
            , Object_InfoMoney_View.InfoMoneyGroupName
@@ -222,7 +229,8 @@ BEGIN
             LEFT JOIN tmpMIС_ProfitLoss ON tmpMIС_ProfitLoss.MovementId = Movement.Id
             LEFT JOIN tmpProfitLoss_View ON tmpProfitLoss_View.ProfitLossId = tmpMIС_ProfitLoss.ProfitLossId
 
-            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                  AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
 
@@ -273,7 +281,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                          ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                         AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId  --Object_Contract_InvNumber_View
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -290,6 +298,14 @@ BEGIN
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset() 
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_JuridicalBasis
+                                             ON MILinkObject_JuridicalBasis.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_JuridicalBasis.DescId = zc_MILinkObject_JuridicalBasis()            
+            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = CASE WHEN MILinkObject_JuridicalBasis.ObjectId > 0
+                                                                                         THEN MILinkObject_JuridicalBasis.ObjectId
+                                                                                         ELSE COALESCE (View_Contract_InvNumber.JuridicalBasisId, zc_Juridical_Basis()) 
+                                                                                    END
+
             LEFT JOIN tmpCost ON tmpCost.MovementServiceId = Movement.Id 
       ;
   
@@ -300,6 +316,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.10.22         * JuridicalBasis
  04.10.21         * ProfitLoss...
  24.02.20         *
  28.01.19         * add inSettingsServiceId
