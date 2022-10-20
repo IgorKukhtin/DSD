@@ -52,7 +52,6 @@ BEGIN
    
    --
    IF COALESCE (TRIM (inGoodsName_child), '') = '' OR
-      POSITION(SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2) IN inArticle_child) = 1 AND inArticle NOT ILIKE '%basis%' OR
       upper(TRIM(SPLIT_PART (inArticle, '-', 3))) NOT IN ('01', '02', '03', '*ICE WHITE', 'BEL', 'BASIS') THEN RETURN; END IF;
       
    -- Преобразуем количество
@@ -567,6 +566,8 @@ BEGIN
          AND Object_ProdColorPattern.ValueData ILIKE '1'
          AND Object_ProdColorGroup.ValueData ILIKE 'Teak';
      END IF;
+   ELSE
+     RAISE EXCEPTION 'Ошибка Для <%> <%> не найдена обработка.', inArticle, inArticle_child;        
    END IF;
 
    IF inReplacement ILIKE 'ДА' AND COALESCE (vbProdColorPatternId, 0) = 0
@@ -1039,7 +1040,7 @@ BEGIN
    END;*/
    
 
-  /* RAISE EXCEPTION 'Goods Main <%> <%> <%> <%> <%> %Goods child 2 <%> <%> <%> <%> <%> <%>  %Goods child <%> <%> <%> <%> <%> <%> <%> %ReceiptGoods <%> <%> %ReceiptGoodsChild <%> <%> <%> <%> %ReceiptProdModel <%> <%>', 
+/*   RAISE EXCEPTION 'Goods Main <%> <%> <%> <%> <%> %Goods child 2 <%> <%> <%> <%> <%> <%>  %Goods child <%> <%> <%> <%> <%> <%> <%> %ReceiptGoods <%> <%> %ReceiptGoodsChild <%> <%> <%> <%> %ReceiptProdModel <%> <%>', 
                inArticle, inGoodsName, inGroupName, vbGoodsId, vbGoodsGroupId, Chr(13), 
                inReceiptLevelName, vbArticleChild, vbGoodsChildName, vbGroupChildName, vbGoodsChildId, vbGroupChildId, Chr(13),
                inArticle_child, inGoodsName_child, vbGoodsId_child, inGroupName_child, vbGoodsGroupId_child, inAmount, vbAmount, Chr(13),
@@ -1062,4 +1063,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load('AGL-280-*ICE WHITE - *NEPTUNE GREY', 'primary', 'AGL-280-*ICE WHITE - *NEPTUNE GREY', 'Сборка баллона', 'ДА', 'AGL 000032', 'ICE WHITE', 'Сборка баллона', '10 м.п.', zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load('AGL-280-01', '', 'Корпус AGL-280', 'Сборка корпуса', '', 'AGL-280-01-001', 'ПФ Корпус стеклопластиковый АGL-280', '', '1', zfCalc_UserAdmin())

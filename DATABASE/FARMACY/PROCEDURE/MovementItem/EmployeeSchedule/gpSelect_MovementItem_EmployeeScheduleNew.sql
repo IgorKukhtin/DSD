@@ -246,7 +246,7 @@ BEGIN
          Object_User.Id                                          AS UserID,
          Object_User.IsErased                                    AS IsErased,
          Object_Member.ObjectCode                                AS PersonalCode,
-         COALESCE (Object_Member.ValueData, Object_User.ValueData) AS PersonalName,
+         COALESCE (ObjectString_NameUkr.ValueData, Object_Member.ValueData, Object_User.ValueData) AS PersonalName,
          Object_Position.ValueData                               AS PositionName,
          CASE WHEN COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE) = TRUE
               THEN zfCalc_Color( 192, 192, 192)
@@ -525,6 +525,9 @@ BEGIN
                                  ON ObjectLink_User_Member.ObjectId = Object_User.Id
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
             INNER JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN ObjectString AS ObjectString_NameUkr
+                                   ON ObjectString_NameUkr.ObjectId = Object_Member.Id
+                                  AND ObjectString_NameUkr.DescId = zc_ObjectString_Member_NameUkr()
 
             INNER JOIN ObjectLink AS ObjectLink_Member_Position
                                  ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
@@ -706,7 +709,7 @@ BEGIN
          MovementItem.ObjectId                                   AS UserID,
          MovementItem.IsErased                                   AS IsErased,
          Object_Member.ObjectCode                                AS PersonalCode,
-         COALESCE (Object_Member.ValueData, Object_User.ValueData) AS PersonalName,
+         COALESCE (ObjectString_NameUkr.ValueData, Object_Member.ValueData, Object_User.ValueData) AS PersonalName,
          Object_Position.ValueData                               AS PositionName,
          CASE WHEN COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE) = TRUE
               THEN zfCalc_Color( 192, 192, 192)
@@ -1052,6 +1055,9 @@ BEGIN
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN ObjectString AS ObjectString_NameUkr
+                                   ON ObjectString_NameUkr.ObjectId = Object_Member.Id
+                                  AND ObjectString_NameUkr.DescId = zc_ObjectString_Member_NameUkr()
 
             LEFT JOIN ObjectLink AS ObjectLink_Member_Position
                                  ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
@@ -1394,7 +1400,7 @@ BEGIN
          MovementItem.ObjectId                                   AS UserID,
          MovementItem.IsErased                                   AS IsErased,
          Object_Member.ObjectCode                                AS PersonalCode,
-         COALESCE (Object_Member.ValueData, Object_User.ValueData) AS PersonalName,
+         COALESCE (ObjectString_NameUkr.ValueData, Object_Member.ValueData, Object_User.ValueData) AS PersonalName,
          Object_Position.ValueData                               AS PositionName,
          CASE WHEN COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE) = TRUE
               THEN zfCalc_Color( 192, 192, 192)
@@ -1740,6 +1746,9 @@ BEGIN
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN ObjectString AS ObjectString_NameUkr
+                                   ON ObjectString_NameUkr.ObjectId = Object_Member.Id
+                                  AND ObjectString_NameUkr.DescId = zc_ObjectString_Member_NameUkr()
 
             LEFT JOIN ObjectLink AS ObjectLink_Member_Position
                                  ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
@@ -2095,4 +2104,5 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeScheduleNew (Integer, TDateTime, Bo
 -- тест
 -- select * from gpSelect_MovementItem_EmployeeScheduleNew(inMovementId := 15869657 , inDate := ('01.10.2019')::TDateTime , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_EmployeeScheduleNew(inMovementId := 17692072 , inDate := ('01.08.2020')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_EmployeeScheduleNew(inMovementId := 26560770 , inDate := ('01.10.2022')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
