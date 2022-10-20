@@ -123,6 +123,7 @@ BEGIN
                             , COALESCE (MILinkObject_InfoMoney.ObjectId, 0) AS InfoMoneyId
                             , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
                             , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
+                            , COALESCE (MILinkObject_JuridicalBasis.ObjectId, 0) AS JuridicalBasisId
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     =  zc_MI_Master()
@@ -136,12 +137,17 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_JuridicalBasis
+                                                             ON MILinkObject_JuridicalBasis.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_JuridicalBasis.DescId = zc_MILinkObject_JuridicalBasis()            
                       ) AS tmpMI ON tmpMI.JuridicalId = Object_Juridical.Id
                                 AND tmpMI.InfoMoneyId = COALESCE (View_InfoMoney.InfoMoneyId, 0)
                                 AND tmpMI.ContractId = COALESCE (View_Contract.ContractId, 0)
                                 AND tmpMI.PaidKindId = COALESCE (Object_PaidKind.Id, 0)
+                                AND tmpMI.JuridicalBasisId = COALESCE (View_Contract.JuridicalBasisId, zc_Juridical_Basis())
 
             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = COALESCE (View_Contract.JuridicalBasisId, zc_Juridical_Basis())
+
      WHERE Object_Juridical.DescId = zc_Object_Juridical()
        AND tmpMI.JuridicalId IS NULL
 
@@ -296,7 +302,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_JuridicalBasis
                                              ON MILinkObject_JuridicalBasis.MovementItemId = MovementItem.Id
                                             AND MILinkObject_JuridicalBasis.DescId = zc_MILinkObject_JuridicalBasis()            
-            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = CASE WHEN COALESCE (MILinkObject_JuridicalBasis.ObjectId,0) <> 0
+            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = CASE WHEN MILinkObject_JuridicalBasis.ObjectId > 0
                                                                                          THEN MILinkObject_JuridicalBasis.ObjectId
                                                                                          ELSE COALESCE (View_Contract_InvNumber.JuridicalBasisId, zc_Juridical_Basis()) 
                                                                                     END
@@ -467,7 +473,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_JuridicalBasis
                                              ON MILinkObject_JuridicalBasis.MovementItemId = MovementItem.Id
                                             AND MILinkObject_JuridicalBasis.DescId = zc_MILinkObject_JuridicalBasis()            
-            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = CASE WHEN COALESCE (MILinkObject_JuridicalBasis.ObjectId,0) <> 0
+            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = CASE WHEN MILinkObject_JuridicalBasis.ObjectId > 0
                                                                                          THEN MILinkObject_JuridicalBasis.ObjectId
                                                                                          ELSE COALESCE (View_Contract_InvNumber.JuridicalBasisId, zc_Juridical_Basis()) 
                                                                                     END

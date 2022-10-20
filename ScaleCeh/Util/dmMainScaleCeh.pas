@@ -299,6 +299,7 @@ begin
            ParamByName('OrderExternal_InvNumber').asString := DataSet.FieldByName('InvNumber_Order').asString;
            ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
 
+           ParamByName('isKVK').asBoolean:= DataSet.FieldByName('isKVK').asBoolean;
            ParamByName('isAsset').asBoolean:= DataSet.FieldByName('isAsset').asBoolean;
 
          end;

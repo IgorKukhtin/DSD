@@ -63,6 +63,10 @@ BEGIN
                                                  ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
                                                 AND MILinkObject_PaidKind.ObjectId = inPaidKindId
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_JuridicalBasis
+                                                      ON MILinkObject_JuridicalBasis.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_JuridicalBasis.DescId = zc_MILinkObject_PaidKind()
+                                                
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
                                                       ON MILinkObject_Partner.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
@@ -80,15 +84,19 @@ BEGIN
                   AND COALESCE (MIFloat_ContainerId.ValueData,0) = COALESCE (inContainerId,0)
                   AND MovementItem.Id <> COALESCE (ioId, 0)
                   AND MovementItem.isErased = FALSE
+                  AND COALESCE (MILinkObject_JuridicalBasis.ObjectId, zc_Juridical_Basis()) = CASE WHEN inJuridicalBasisId > 0 THEN inJuridicalBasisId ELSE zc_Juridical_Basis() END
                 )
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе уже существует <%>% <%> <%> <%>% <%> <%> <%>.Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId)
-                                                                                                                  , CASE WHEN inPartnerId <> 0 THEN ' <' || lfGet_Object_ValueData (inPartnerId) || '>' ELSE '' END
-                                                                                                                  , lfGet_Object_ValueData (inPaidKindId)
-                                                                                                                  , lfGet_Object_ValueData (inInfoMoneyId)
-                                                                                                                  , lfGet_Object_ValueData (inContractId)
-                                                                                                                  , CASE WHEN inBranchId <> 0 THEN ' <' || lfGet_Object_ValueData (inBranchId) || '>' ELSE '' END
-                                                                                                                  , inJuridicalId, inPartnerId, inBranchId;
+         RAISE EXCEPTION 'Ошибка.В документе уже существует <%>% <%> <%> <%>% <%> <%> <%> <%> <%>.Дублирование запрещено.'
+                      , lfGet_Object_ValueData (inJuridicalId)
+                      , CASE WHEN inPartnerId <> 0 THEN ' <' || lfGet_Object_ValueData (inPartnerId) || '>' ELSE '' END
+                      , lfGet_Object_ValueData (inPaidKindId)
+                      , lfGet_Object_ValueData (inInfoMoneyId)
+                      , lfGet_Object_ValueData (inContractId)
+                      , CASE WHEN inBranchId <> 0 THEN ' <' || lfGet_Object_ValueData (inBranchId) || '>' ELSE '' END
+                      , lfGet_Object_ValueData (inJuridicalBasisId)
+                      , inJuridicalId, inPartnerId, inBranchId, inJuridicalBasisId
+                       ;
      END IF;
 
      -- проверка

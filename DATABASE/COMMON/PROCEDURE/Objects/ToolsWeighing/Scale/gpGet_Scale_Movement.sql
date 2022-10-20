@@ -45,6 +45,7 @@ RETURNS TABLE (MovementId       Integer
              , isTax           Boolean, CountTax        TFloat   -- Налоговая
 
              , isContractGoods Boolean
+             , isAsset        Boolean
 
              , MovementId_Order Integer
              , MovementDescId_Order Integer
@@ -357,6 +358,18 @@ BEGIN
                       WHERE Movement.DescId    = zc_Movement_ContractGoods()
                         AND Movement.StatusId  = zc_Enum_Status_Complete()
                      ) :: Boolean AS isContractGoods
+
+              -- определили <Asset>
+            , (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
+               FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'Scale_' || inBranchCode
+                                                     , inLevel2      := 'Movement'
+                                                     , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat_MovementDescNumber.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat_MovementDescNumber.ValueData :: Integer) :: TVarChar
+                                                     , inItemName    := 'isAsset'
+                                                     , inDefaultValue:= 'FALSE'
+                                                     , inSession     := inSession
+                                                      ) AS RetV
+                    ) AS tmp
+              ) :: Boolean AS isAsset
 
             , tmpMovement.MovementId_Order AS MovementId_Order
             , Movement_Order.DescId        AS MovementDescId_Order

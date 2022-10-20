@@ -18,10 +18,11 @@ RETURNS TABLE (MovementId       Integer
              , isProductionIn     Boolean
              , MovementDescNumber Integer
 
-             , isSticker_Ceh Boolean
-             , isSticker_KVK Boolean
+             , isSticker_Ceh  Boolean
+             , isSticker_KVK  Boolean
 
-             , isKVK         Boolean
+             , isKVK          Boolean
+             , isAsset        Boolean
 
              , MovementDescId Integer
              , FromId         Integer, FromCode         Integer, FromName       TVarChar
@@ -164,6 +165,18 @@ BEGIN
                                                       ) AS RetV
                     ) AS tmp
               ) :: Boolean AS isKVK
+
+              -- определили <Asset>
+            , (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
+               FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                     , inLevel2      := 'Movement'
+                                                     , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat_MovementDescNumber.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat_MovementDescNumber.ValueData :: Integer) :: TVarChar
+                                                     , inItemName    := 'isAsset'
+                                                     , inDefaultValue:= 'FALSE'
+                                                     , inSession     := inSession
+                                                      ) AS RetV
+                    ) AS tmp
+              ) :: Boolean AS isAsset
 
             , tmpMovement.MovementDescId :: Integer          AS MovementDescId
             , Object_From.Id                                 AS FromId
