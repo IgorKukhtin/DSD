@@ -871,6 +871,47 @@ BEGIN
      --
      -- курсор1 - все что можно распределить
      OPEN curPartion_next FOR
+        -- Income - за X дней - если приходило, 100дней без продаж уходить уже не может
+        WITH tmpIncome AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId
+                                , MovementItem.ObjectId            AS GoodsId
+                           FROM MovementDate AS MovementDate_Branch
+                                INNER JOIN Movement ON Movement.Id       = MovementDate_Branch.MovementId
+                                                   AND Movement.DescId   = zc_Movement_Income()
+                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                              ON MovementLinkObject_To.MovementId = Movement.Id
+                                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                -- отсечем ненужные подразделения
+                                INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId  = MovementLinkObject_To.ObjectId
+
+                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.DescId     = zc_MI_Master()
+                                                       AND MovementItem.isErased   = FALSE
+                                                       AND MovementItem.Amount     > 0
+                                -- !!!только для таких!!!
+                                INNER JOIN _tmpRemains_all_Supplement_V2 ON _tmpRemains_all_Supplement_V2.GoodsId = MovementItem.ObjectId
+                                                                        AND _tmpRemains_all_Supplement_V2.UnitId  = MovementLinkObject_To.ObjectId
+                                                          
+                                INNER JOIN ObjectFloat AS OF_DI            
+                                                       ON OF_DI.ObjectId  = MovementLinkObject_To.ObjectId
+                                                      AND OF_DI.DescId    = zc_ObjectFloat_Unit_Sun_v2Income()
+                                                      AND OF_DI.ValueData >= 0
+
+                           WHERE MovementDate_Branch.DescId     = zc_MovementDate_Branch()
+                             AND MovementDate_Branch.ValueData BETWEEN inOperDate - (
+                                                (SELECT MAX(OF_DI.ValueData)
+                                                 FROM ObjectFloat AS OF_DI            
+                                                 WHERE OF_DI.DescId    = zc_ObjectFloat_Unit_Sun_v2Income()
+                                                   AND OF_DI.ValueData >= 0) :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+
+                           GROUP BY MovementLinkObject_To.ObjectId
+                                  , MovementItem.ObjectId
+                           HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (OF_DI.ValueData :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                                 THEN MovementItem.Amount
+                                            ELSE 0
+                                       END) > 0
+                           )
+
         SELECT _tmpRemains_all_Supplement_V2.UnitId
              , _tmpRemains_all_Supplement_V2.GoodsId
              , _tmpRemains_all_Supplement_V2.Give
@@ -893,10 +934,14 @@ BEGIN
             LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun_Supplement_V2.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun_Supplement_V2
                       ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_all_Supplement_V2.GoodsId
 
+            LEFT JOIN tmpIncome ON tmpIncome.GoodsID = _tmpRemains_all_Supplement_V2.GoodsId
+                               AND tmpIncome.UnitId = _tmpRemains_all_Supplement_V2.UnitId  
+
        WHERE _tmpRemains_all_Supplement_V2.Give > 0
          AND COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) = 0
          AND COALESCE(_tmpSUN_Send_SupplementAll_V2.GoodsID, 0) = 0
          AND COALESCE (_tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
+         AND COALESCE(tmpIncome.GoodsID, 0) = 0
        ORDER BY _tmpRemains_all_Supplement_V2.Give DESC
               , _tmpRemains_all_Supplement_V2.UnitId
               , _tmpRemains_all_Supplement_V2.GoodsId
@@ -1215,4 +1260,4 @@ $BODY$
 
 -- 
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);

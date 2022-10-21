@@ -1202,7 +1202,47 @@ BEGIN
     
     UPDATE _tmpRemains_all_Supplement SET SurplusCalc = T1.Need
     FROM 
-       (SELECT _tmpRemains_all_Supplement.UnitId
+       (-- Income - за X дней - если приходило, 100дней без продаж уходить уже не может
+        WITH tmpIncome AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId
+                                , MovementItem.ObjectId            AS GoodsId
+                           FROM MovementDate AS MovementDate_Branch
+                                INNER JOIN Movement ON Movement.Id       = MovementDate_Branch.MovementId
+                                                   AND Movement.DescId   = zc_Movement_Income()
+                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                              ON MovementLinkObject_To.MovementId = Movement.Id
+                                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                -- отсечем ненужные подразделения
+                                INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId  = MovementLinkObject_To.ObjectId
+
+                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.DescId     = zc_MI_Master()
+                                                       AND MovementItem.isErased   = FALSE
+                                                       AND MovementItem.Amount     > 0
+                                -- !!!только для таких!!!
+                                INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = MovementItem.ObjectId
+                                                          
+                                INNER JOIN ObjectFloat AS OF_DI            
+                                                       ON OF_DI.ObjectId  = MovementLinkObject_To.ObjectId
+                                                      AND OF_DI.DescId    = zc_ObjectFloat_Unit_SunIncome()
+                                                      AND OF_DI.ValueData >= 0
+
+                           WHERE MovementDate_Branch.DescId     = zc_MovementDate_Branch()
+                             AND MovementDate_Branch.ValueData BETWEEN inOperDate - (
+                                                (SELECT MAX(OF_DI.ValueData)
+                                                 FROM ObjectFloat AS OF_DI            
+                                                 WHERE OF_DI.DescId    = zc_ObjectFloat_Unit_SunIncome()
+                                                   AND OF_DI.ValueData >= 0) :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+
+                           GROUP BY MovementLinkObject_To.ObjectId
+                                  , MovementItem.ObjectId
+                           HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (OF_DI.ValueData :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                                 THEN MovementItem.Amount
+                                            ELSE 0
+                                       END) > 0
+                           )
+       
+        SELECT _tmpRemains_all_Supplement.UnitId
              , _tmpRemains_all_Supplement.GoodsId
              , CASE WHEN COALESCE (_tmpRemains_all_Supplement.GiveAway, 0) > 0 THEN COALESCE (_tmpRemains_all_Supplement.GiveAway, 0) ELSE 
                - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
@@ -1290,6 +1330,9 @@ BEGIN
                                              AND _tmpSUN_Send_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId  
             LEFT JOIN _tmpSUN_Send_SupplementAll ON _tmpSUN_Send_SupplementAll.GoodsID = _tmpRemains_all_Supplement.GoodsId
                                                 AND _tmpSUN_Send_SupplementAll.UnitId = _tmpRemains_all_Supplement.UnitId  
+                                                
+            LEFT JOIN tmpIncome ON tmpIncome.GoodsID = _tmpRemains_all_Supplement.GoodsId
+                               AND tmpIncome.UnitId = _tmpRemains_all_Supplement.UnitId  
 
        WHERE CASE WHEN COALESCE (_tmpRemains_all_Supplement.GiveAway, 0) > 0 THEN COALESCE (_tmpRemains_all_Supplement.GiveAway, 0) ELSE 
                - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
@@ -1359,7 +1402,9 @@ BEGIN
            OR COALESCE(_tmpGoodsUnit_SUN_Supplement.UnitOutId, 0) = _tmpRemains_all_Supplement.UnitId)
          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
          AND COALESCE(_tmpSUN_Send_Supplement.GoodsID, 0) = 0
-         AND COALESCE(_tmpSUN_Send_Supplement.GoodsID, 0) = 0) AS T1
+         AND COALESCE(_tmpSUN_Send_Supplement.GoodsID, 0) = 0
+         --AND COALESCE(tmpIncome.GoodsID, 0) = 0
+         ) AS T1
          
     WHERE _tmpRemains_all_Supplement.UnitId = T1.UnitId
       AND _tmpRemains_all_Supplement.GoodsId = T1.GoodsId 

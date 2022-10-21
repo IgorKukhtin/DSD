@@ -1471,6 +1471,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         item
           Visible = True
+          ItemName = 'ppPrintStructureGoodsAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -1726,6 +1734,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     end
     object bbGridGoodsToExcel: TdxBarButton
       Action = actGridGoodsToExcel
+      Category = 0
+    end
+    object ppPrintStructureGoodsAll: TdxBarButton
+      Action = actPrintStructureGoodsAll
       Category = 0
     end
   end
@@ -2377,6 +2389,61 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actPrintStructureGoodsAll: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintStructureGoodsAll
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructureGoodsAll
+        end>
+      Caption = 'Print Structure and unit'
+      Hint = 'Print Structure and unit'
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'ReceiptLevelName;GoodsGroupNameFull;NPP;ObjectName'
+        end
+        item
+          DataSet = PrintItemsColorCDS
+          UserName = 'frxDBDMasterGoods'
+          IndexFieldNames = 'TitleReceipt;GroupBy;ObjectCode'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReceiptProdModelGoods_Structure'
+      ReportNameParam.Value = 'PrintReceiptProdModelGoods_Structure'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
     end
   end
   object spSelect: TdsdStoredProc
@@ -3285,5 +3352,40 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     PackSize = 1
     Left = 1136
     Top = 136
+  end
+  object spSelectPrintStructureGoodsAll: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ReceiptProdModelGoods_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsColorCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inReceiptProdModelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptLevelId'
+        Value = ''
+        Component = GuidesReceiptLevel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 184
   end
 end

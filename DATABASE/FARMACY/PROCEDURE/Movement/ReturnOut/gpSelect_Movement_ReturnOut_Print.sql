@@ -127,6 +127,13 @@ BEGIN
 
 
     OPEN Cursor2 FOR
+    WITH 
+    tmpMovement_ReturnOut AS (
+        SELECT
+            Movement_ReturnOut.Id
+          , Movement_ReturnOut.ToId
+        FROM Movement_ReturnOut_View AS Movement_ReturnOut
+        WHERE Movement_ReturnOut.Id = inMovementId)
     
         SELECT
             MI_ReturnOut.GoodsName
@@ -136,6 +143,8 @@ BEGIN
           , MIDate_ExpirationDate.ValueData            AS ExpirationDate
           , MIString_PartionGoods.ValueData            AS PartionGoods
           , ObjectString_Goods_Maker.ValueData         AS MakerName
+          
+          , COALESCE (Object_Goods_Juridical.Name, MI_ReturnOut.GoodsName) AS JuridicalName 
           
           , CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = TRUE 
                 THEN MI_ReturnOut.Price
@@ -160,8 +169,12 @@ BEGIN
         FROM
             MovementItem_ReturnOut_View AS MI_ReturnOut
 
+            LEFT JOIN tmpMovement_ReturnOut ON 1 = 1
+
             LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MI_ReturnOut.GoodsId
             LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+            LEFT JOIN Object_Goods_Juridical AS Object_Goods_Juridical ON Object_Goods_Juridical.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                            AND Object_Goods_Juridical.JuridicalId = tmpMovement_ReturnOut.ToId
 
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_Measure
                                        ON ObjectLink_Goods_Measure.ObjectId = MI_ReturnOut.GoodsId
@@ -222,4 +235,4 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut_Print (Integer,TVarChar) OWNER TO pos
 -- SELECT * FROM gpSelect_Movement_ReturnOut_Print (inMovementId := 570596, inSession:= '5');
 --select * from gpSelect_Movement_ReturnOut_Print(inMovementId := 12521745 ,  inSession := '3');
 
-select * from gpSelect_Movement_ReturnOut_Print(inMovementId := 25425883 ,  inSession := '3');
+select * from gpSelect_Movement_ReturnOut_Print(inMovementId := 29784939 ,  inSession := '3');

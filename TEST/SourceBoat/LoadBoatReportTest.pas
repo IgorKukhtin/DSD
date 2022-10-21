@@ -79,6 +79,7 @@ begin
     }
     LoadReportFromFile('PrintReceiptGoods_Structure', ReportPath + '\PrintReceiptGoods_Structure.fr3');
     //LoadReportFromFile('PrintReceiptProdModel_StructureGoods', ReportPath + '\PrintReceiptProdModel_StructureGoods.fr3');
+    LoadReportFromFile('PrintReceiptProdModelGoods_Structure', ReportPath + '\PrintReceiptProdModelGoods_Structure.fr3');
     LoadReportFromFile('PrintReceiptProdModel_Structure', ReportPath + '\PrintReceiptProdModel_Structure.fr3');
     exit;
     LoadReportFromFile('PrintProduct_StructureGoods', ReportPath + '\PrintProduct_StructureGoods.fr3');

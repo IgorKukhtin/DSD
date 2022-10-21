@@ -344,7 +344,7 @@ begin
         if (PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger = UpdateOrdersSiteMICDS.FieldByName('GoodsId').AsInteger) and
           (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency > UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
         begin
-          S := S + 'update pharm_orders set ext_changed = 1 where pharmacy_order_id = ' + UpdateOrdersSiteCDS.FieldByName('id').AsString;
+          S := 'update pharm_orders set ext_changed = 1 where pharmacy_order_id = ' + UpdateOrdersSiteCDS.FieldByName('id').AsString;
           Add_Log('SQL ' + S);
           actUpdatePharmOrderProducts.SQLParam.Value := S;
           actUpdatePharmOrderProducts.Execute;

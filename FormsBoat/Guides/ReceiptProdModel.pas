@@ -197,6 +197,9 @@ type
     MaterialOptionsName: TcxGridDBColumn;
     ProdColorName_pcp: TcxGridDBColumn;
     Comment_goods_ch1: TcxGridDBColumn;
+    actPrintStructureGoodsAll: TdsdPrintAction;
+    spSelectPrintStructureGoodsAll: TdsdStoredProc;
+    ppPrintStructureGoodsAll: TdxBarButton;
   private
     { Private declarations }
   public

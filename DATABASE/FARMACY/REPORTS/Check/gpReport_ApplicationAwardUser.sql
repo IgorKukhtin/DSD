@@ -36,17 +36,16 @@ BEGIN
      RETURN QUERY
      WITH tmpEmployeeScheduleDey AS (SELECT DISTINCT 
                                            MovementItemMaster.ObjectId              AS UserId
-                                         , MovementItemChild.ObjectId               AS UnitId
+                                         , MILinkObject_Unit.ObjectId               AS UnitId
                                         FROM Movement
 
                                              INNER JOIN MovementItem AS MovementItemMaster
                                                                      ON MovementItemMaster.MovementId = Movement.Id
                                                                     AND MovementItemMaster.DescId = zc_MI_Master()
 
-                                             INNER JOIN MovementItem AS MovementItemChild
-                                                                     ON MovementItemChild.MovementId = Movement.Id
-                                                                    AND MovementItemChild.ParentId = MovementItemMaster.Id
-                                                                    AND MovementItemChild.DescId = zc_MI_Child()
+                                             INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                               ON MILinkObject_Unit.MovementItemId = MovementItemMaster.Id
+                                                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
 
                                         WHERE Movement.OperDate = date_trunc('Month', inStartDate)
                                           AND Movement.DescId = zc_Movement_EmployeeSchedule()
@@ -197,4 +196,6 @@ $BODY$
 
 -- тест
 
-select * from gpReport_ApplicationAwardUser(inStartDate := ('10.10.2022')::TDateTime , inEndDate := ('31.10.2022')::TDateTime ,  inSession := '3');
+
+select * from gpReport_ApplicationAwardUser(inStartDate := ('01.10.2022')::TDateTime , inEndDate := ('31.10.2022')::TDateTime ,  inSession := '3');
+

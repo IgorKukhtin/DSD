@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_ReceiptProdModel_Print ()
+-- Function: gpSelect_Object_ReceiptProdModelGoods_Print ()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModel_Print (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelGoods_Print (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModel_Print(
+CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModelGoods_Print(
     IN inReceiptProdModelId           Integer   ,   --    
     IN inReceiptLevelId               Integer   ,   --    
     IN inSession                      TVarChar      -- сессия пользователя
@@ -13,6 +13,7 @@ $BODY$
     DECLARE vbUserId Integer;
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
+    DECLARE Cursor3 refcursor;
 
     DECLARE vbPriceWithVAT_pl    Boolean;
     DECLARE vbTaxKindValue_basis TFloat;
@@ -286,29 +287,210 @@ BEGIN
                             AND tmpPhoto1.Ord = 1
           LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
                                ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId   
- /*UNION
-     SELECT (1000 + ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptProdModelId ORDER BY Object_ProdColorPattern.ObjectCode ASC)) :: Integer AS NPP
-          , tmpProdColorPattern.Value         :: TFloat   AS Value
-          , 0  AS Value_service 
-          , Object_ReceiptLevel.ValueData  ::TVarChar AS ReceiptLevelName
+     ;
 
-          , Object_Goods.ObjectCode            ::Integer
-          , Object_Goods.ValueData             ::TVarChar
-          , ObjectString_EAN.ValueData          AS EAN
+     RETURN NEXT Cursor2;
+     
+     OPEN Cursor3 FOR  
+          WITH -- справочные элементы Boat Structure
+          -- элементы ReceiptProdModelChild
+          tmpReceiptProdModelChild AS(SELECT ObjectLink_ReceiptProdModel.ChildObjectId AS ReceiptProdModelId
+                                           , Object_ReceiptProdModelChild.Id           AS ReceiptProdModelChildId
+                                             -- элемент который будем раскладывать
+                                           , ObjectLink_Object.ChildObjectId           AS ObjectId
+                                             -- значение
+                                           , ObjectLink_ReceiptGoods.ObjectId          AS ReceiptGoodsId
 
-          , ObjectString_GoodsGroupFull.ValueData      AS GoodsGroupNameFull
-          , Object_GoodsGroup.ValueData                AS GoodsGroupName
-          , ObjectString_Article.ValueData             AS Article
-            -- значение Farbe
-          , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL THEN ObjectString_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
-          , Object_Measure.ValueData                   AS MeasureName
+                                           , (COALESCE(ObjectString_Article.ValueData, '')||
+                                              CASE WHEN COALESCE(ObjectString_Article.ValueData, '') <> '' AND COALESCE(Object_Goods.ValueData, '') <> '' THEN ' - ' ELSE '' END||
+                                              COALESCE(Object_Goods.ValueData, '')):: TVarChar AS TitleReceipt
+                                           
+                                      FROM Object AS Object_ReceiptProdModelChild
 
-          , ObjectBlob_GoodsPhoto_Data1.ValueData AS Photo1
-          , tmpPhoto1.FileName AS FileName1
-          , ObjectString_Goods_Comment.ValueData       AS GoodsComment
-            
+                                           LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                                                ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptProdModelChild.Id
+                                                               AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
+
+                                           -- шаблон ProdModel
+                                           INNER JOIN ObjectLink AS ObjectLink_ReceiptProdModel
+                                                                 ON ObjectLink_ReceiptProdModel.ObjectId = Object_ReceiptProdModelChild.Id
+                                                                AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                                           -- из чего собирается
+                                           INNER JOIN ObjectLink AS ObjectLink_Object
+                                                                 ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
+                                                                AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
+                                                                
+                                           -- Шаблон сборка Узла
+                                           INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                                 ON ObjectLink_ReceiptGoods.ChildObjectId = ObjectLink_Object.ChildObjectId
+                                                                AND ObjectLink_ReceiptGoods.DescId   = zc_ObjectLink_ReceiptGoods_Object()
+                                           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Object.ChildObjectId
+                                           
+                                           LEFT JOIN ObjectString AS ObjectString_Article
+                                                                  ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                                                 AND ObjectString_Article.DescId = zc_ObjectString_Article()
+
+                                      WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
+                                        AND Object_ReceiptProdModelChild.isErased = FALSE
+                                        AND ObjectLink_ReceiptProdModel.ChildObjectId = inReceiptProdModelId
+                                        AND (ObjectLink_ReceiptLevel.ChildObjectId = inReceiptLevelId OR inReceiptLevelId = 0)
+                                     )
+        , tmpObject AS (SELECT ObjectLink_ReceiptGoods_ColorPattern.ObjectId   AS ReceiptGoodsId
+                             , OL_ProdColorPattern_ColorPattern.ObjectId       AS ProdColorPatternId
+                        FROM ObjectLink AS ObjectLink_ReceiptGoods_ColorPattern
+                             -- получили Элементы Boat Structure
+                             INNER JOIN ObjectLink AS OL_ProdColorPattern_ColorPattern
+                                                   ON OL_ProdColorPattern_ColorPattern.ChildObjectId = ObjectLink_ReceiptGoods_ColorPattern.ChildObjectId
+                                                  AND OL_ProdColorPattern_ColorPattern.DescId        = zc_ObjectLink_ProdColorPattern_ColorPattern() 
+                             
+                        WHERE ObjectLink_ReceiptGoods_ColorPattern.DescId = zc_ObjectLink_ReceiptGoods_ColorPattern()
+                          AND ObjectLink_ReceiptGoods_ColorPattern.ObjectId in (SELECT DISTINCT tmpReceiptProdModelChild.ReceiptGoodsId FROM tmpReceiptProdModelChild)  
+                          and 1 =0
+                       )
+          -- существующие элементы Boat Structure
+        , tmpItems AS (SELECT Object_ReceiptGoodsChild.Id                     AS ReceiptGoodsChildId
+                            , ObjectLink_ReceiptGoods.ChildObjectId           AS ReceiptGoodsId
+                              -- Товар сборки
+                            , ObjectLink_ObjectMain.ChildObjectId             AS GoodsMainId
+                              -- если меняли на другой товар, не тот что в Boat Structure
+                            , ObjectLink_Object.ChildObjectId                 AS ObjectId
+                              -- нашли Элемент Boat Structure
+                            , ObjectLink_ProdColorPattern.ChildObjectId       AS ProdColorPatternId
+                              -- нашли Этап сборки
+                            , ObjectLink_ReceiptLevel.ChildObjectId           AS ReceiptLevelId
+                              -- нашли Комплектующие
+                            , ObjectLink_GoodsChild.ChildObjectId             AS GoodsChildId
+                              -- значение
+                            , ObjectFloat_Value.ValueData                     AS Value
+                              --
+                            , Object_ReceiptGoodsChild.ValueData              AS Comment
+                            , Object_ReceiptGoodsChild.isErased               AS isErased
+
+                       FROM Object AS Object_ReceiptGoodsChild  
+                            INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                 ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                                AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                                AND ObjectLink_ReceiptGoods.ChildObjectId in (SELECT DISTINCT tmpReceiptProdModelChild.ReceiptGoodsId FROM tmpReceiptProdModelChild)  
+                            LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                  ON ObjectLink_ProdColorPattern.ObjectId      = Object_ReceiptGoodsChild.Id
+                                                 AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                                               --  AND ObjectLink_ProdColorPattern.ChildObjectId > 0
+                            LEFT JOIN ObjectLink AS ObjectLink_ObjectMain
+                                                 ON ObjectLink_ObjectMain.ObjectId = ObjectLink_ReceiptGoods.ChildObjectId
+                                                AND ObjectLink_ObjectMain.DescId   = zc_ObjectLink_ReceiptGoods_Object() 
+
+                            LEFT JOIN ObjectLink AS ObjectLink_Object
+                                                 ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
+                                                AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object() 
+                            -- значение в сборке
+                            LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                  ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
+                                                 AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                            -- Этап сборки
+                            LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                                 ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
+                                                AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel() 
+                            -- 	Комплектующие
+                            LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                 ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
+                                                AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild() 
+                                                 
+                                                 
+                       WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+                         AND Object_ReceiptGoodsChild.isErased = FALSE  
+                         
+                      )
+          -- объединили все элементы Boat Structure
+        , tmpProdColorPattern AS
+                      (SELECT tmpItems.ReceiptGoodsChildId                                         AS ReceiptGoodsChildId
+                            , tmpItems.GoodsMainId                                                 AS GoodsMainId
+                            , tmpItems.ObjectId                                                    AS ObjectId
+                            , COALESCE (tmpItems.ReceiptGoodsId, tmpObject.ReceiptGoodsId)         AS ReceiptGoodsId
+
+                            , COALESCE (tmpItems.ProdColorPatternId, tmpObject.ProdColorPatternId) AS ProdColorPatternId
+                              -- нашли Этап сборки
+                            , tmpItems.ReceiptLevelId
+                              -- нашли Комплектующие
+                            , tmpItems.GoodsChildId
+
+                            , tmpItems.Value                                                       AS Value
+                            , tmpItems.Comment                                                     AS Comment
+                            , COALESCE (tmpItems.isErased, FALSE)                                  AS isErased
+                            , CASE WHEN tmpItems.ProdColorPatternId > 0 THEN TRUE ELSE FALSE END   AS isEnabled
+
+                       FROM tmpItems
+                            FULL JOIN tmpObject ON tmpObject.ReceiptGoodsId     = tmpItems.ReceiptGoodsId
+                                               AND tmpObject.ProdColorPatternId = tmpItems.ProdColorPatternId
+                      )
+     -- Результат
+     SELECT 
+     
+           tmpReceiptProdModelChild.ReceiptGoodsId
+         , tmpReceiptProdModelChild.TitleReceipt
+
+         , tmpProdColorPattern.Value  ::TFloat   AS Value
+         --, CASE WHEN Object_Goods.DescId <> zc_Object_ReceiptService() THEN tmpProdColorPattern.Value ELSE 0 END ::TFloat   AS Value
+         --, CASE WHEN Object_Goods.DescId =  zc_Object_ReceiptService() THEN tmpProdColorPattern.Value ELSE 0 END ::TFloat   AS Value_service
+
+          , Object_Goods.ObjectCode            ::Integer  AS ObjectCode
+          , CASE WHEN COALESCE (Object_Goods.ValueData,'') <> '' THEN Object_Goods.ValueData ELSE Object_ProdColorGroup.ValueData END ::TVarChar AS ObjectName
+       -- ,  Object_Goods.ValueData  ::TVarChar AS ObjectName
+
+         , ObjectString_EAN.ValueData                AS EAN
+
+         , ObjectString_GoodsGroupFull.ValueData ::TVarChar  AS GoodsGroupNameFull
+         , Object_GoodsGroup.ValueData           ::TVarChar  AS GoodsGroupName
+         , ObjectString_Article.ValueData        ::TVarChar  AS Article
+         --, Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
+         , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL THEN ObjectString_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
+         , Object_Measure.ValueData              ::TVarChar  AS MeasureName
+         , Object_ProdColorGroup.ValueData       AS  ProdColorGroupName
+          -- Этап сборки
+         , Object_ReceiptLevel.ValueData         ::TVarChar  AS ReceiptLevelName
+          -- Комплектующие
+         , Object_GoodsChild.ValueData           ::TVarChar  AS GoodsChildName
+         , ObjectString_ArticleChild.ValueData   ::TVarChar  AS ArticleChild
+         , Object_ProdColorPattern.ValueData     ::TVarChar  AS ProdColorPattern
+         
+         , Object_GoodsMain.ValueData           ::TVarChar  AS GoodsMainName
+
+         , COALESCE(Object_GoodsChild.ValueData,
+                    Object_GoodsMain.ValueData)    ::TVarChar  AS GoodsNameShow
+
+         , COALESCE(ObjectString_ArticleChild.ValueData,
+                    ObjectString_ArticleChildMain.ValueData)    ::TVarChar  AS ArticleShow
+
+         , COALESCE(Object_GoodsChildGroup.ValueData,
+                    Object_GoodsMainGroup.ValueData)    ::TVarChar  AS GoodsGroupNameShow
+         
+         , CASE WHEN COALESCE(tmpProdColorPattern.GoodsChildId, 0) = 0
+                THEN COALESCE(ObjectString_ArticleChildMain.ValueData, '')||
+                     CASE WHEN COALESCE(ObjectString_ArticleChildMain.ValueData, '') <> '' AND COALESCE(Object_ReceiptLevel.ValueData, '') <> '' THEN ' - ' ELSE '' END||
+                     COALESCE(Object_ReceiptLevel.ValueData, '')
+                ELSE COALESCE(ObjectString_ArticleChild.ValueData, '')||
+                     CASE WHEN COALESCE(ObjectString_ArticleChild.ValueData, '') <> '' AND COALESCE(Object_ReceiptLevel.ValueData, '') <> '' THEN ' - ' ELSE '' END||
+                     COALESCE(Object_ReceiptLevel.ValueData, '') END:: TVarChar AS TitleGroup
+                     
+         , COALESCE (tmpProdColorPattern.ReceiptLevelId, 1000000000)  :: Integer AS GroupBy
+
      FROM tmpProdColorPattern
+
+          INNER JOIN tmpReceiptProdModelChild ON tmpReceiptProdModelChild.ReceiptGoodsId = tmpProdColorPattern.ReceiptGoodsId
+
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId
+          
+
+          LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = tmpProdColorPattern.ReceiptLevelId
+          LEFT JOIN Object AS Object_GoodsChild ON Object_GoodsChild.Id = tmpProdColorPattern.GoodsChildId
+          LEFT JOIN Object AS Object_GoodsMain ON Object_GoodsMain.Id = tmpProdColorPattern.GoodsMainId
+
+          LEFT JOIN ObjectString AS ObjectString_ArticleChildMain
+                                 ON ObjectString_ArticleChildMain.ObjectId = tmpProdColorPattern.GoodsMainId
+                                AND ObjectString_ArticleChildMain.DescId = zc_ObjectString_Article()
+
+          LEFT JOIN ObjectString AS ObjectString_ArticleChild
+                                 ON ObjectString_ArticleChild.ObjectId = tmpProdColorPattern.GoodsChildId
+                                AND ObjectString_ArticleChild.DescId = zc_ObjectString_Article()
 
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
@@ -325,9 +507,9 @@ BEGIN
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods
                                ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
-                              AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorPattern_Goods()
+                              AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdColorPattern_Goods()
           -- !!!замена!!!
-          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpProdColorPattern.ObjectId, ObjectLink_Goods.ChildObjectId) AND Object_Goods.DescId = zc_Object_Goods()
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpProdColorPattern.ObjectId, ObjectLink_Goods.ChildObjectId)   
 
           --
           LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
@@ -345,7 +527,7 @@ BEGIN
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
                                ON ObjectLink_Goods_ProdColor.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
+                              AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
           LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -353,27 +535,26 @@ BEGIN
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsMainGroup
+                               ON ObjectLink_Goods_GoodsMainGroup.ObjectId = tmpProdColorPattern.GoodsMainId
+                              AND ObjectLink_Goods_GoodsMainGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN Object AS Object_GoodsMainGroup ON Object_GoodsMainGroup.Id = ObjectLink_Goods_GoodsMainGroup.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsChildGroup
+                               ON ObjectLink_Goods_GoodsChildGroup.ObjectId = tmpProdColorPattern.GoodsChildId
+                              AND ObjectLink_Goods_GoodsChildGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN Object AS Object_GoodsChildGroup ON Object_GoodsChildGroup.Id = ObjectLink_Goods_GoodsChildGroup.ChildObjectId
+
           LEFT JOIN ObjectString AS ObjectString_EAN
                                  ON ObjectString_EAN.ObjectId = Object_Goods.Id
-                                AND ObjectString_EAN.DescId = zc_ObjectString_EAN()
-          LEFT JOIN ObjectString AS ObjectString_Goods_Comment
-                                 ON ObjectString_Goods_Comment.ObjectId = Object_Goods.Id
-                                AND ObjectString_Goods_Comment.DescId = zc_ObjectString_Goods_Comment()
-
-          LEFT JOIN tmpPhoto AS tmpPhoto1
-                             ON tmpPhoto1.GoodsId = Object_Goods.Id
-                            AND tmpPhoto1.Ord = 1
-          LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
-                               ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId     
-
-          LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
-                               ON ObjectLink_ReceiptLevel.ObjectId = tmpProdColorPattern.ReceiptProdModelChildId
-                              AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
-          LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptLevel.ChildObjectId*/
-                               
-     ;
-
-     RETURN NEXT Cursor2;
+                                AND ObjectString_EAN.DescId = zc_ObjectString_EAN() 
+     ORDER BY tmpReceiptProdModelChild.TitleReceipt
+            , CASE WHEN COALESCE(Object_ReceiptLevel.ValueData, '') = '' THEN 1 ELSE 0 END
+            , Object_ReceiptLevel.ValueData
+            , Object_ProdColorPattern.ObjectCode ASC;
+     
+     RETURN NEXT Cursor3;
+     
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -385,6 +566,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptProdModel_Print (inReceiptProdModelId:= 122175, inReceiptLevelId:= 1, inSession:= zfCalc_UserAdmin())
+-- 
 
-select * from gpSelect_Object_ReceiptProdModel_Print(inReceiptProdModelId := 39753 , inReceiptLevelId := 0 ,  inSession := '5');
+select * from gpSelect_Object_ReceiptProdModelGoods_Print(inReceiptProdModelId := 39753 , inReceiptLevelId := 0,  inSession := '5');

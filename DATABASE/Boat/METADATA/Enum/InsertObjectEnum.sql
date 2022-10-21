@@ -4898,10 +4898,30 @@ BEGIN
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_ReceiptGoods');
 
     --Добавляем Итемы
+
+    vbImportTypeItemId := 0;
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inRecNum';
+    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
+                                                                inParamNumber   := 1, 
+                                                                inName          := 'inRecNum', 
+                                                                inParamType     := 'ftInteger', 
+                                                                inUserParamName := 'Строка загрузки',
+                                                                inImportTypeId  := vbImportTypeId, 
+                                                                inSession       := vbUserId::TVarChar);
+    vbImportSettingsItem := 0;
+    Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
+    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
+                                                      inName              := '%RECNO%',
+                                                      inImportSettingsId  := vbImportSettingId,
+                                                      inImportTypeItemsId := vbImportTypeItemId,
+                                                      inDefaultValue      := NULL::TVarCHar,
+                                                      inConvertFormatInExcel := FALSE ::Boolean,
+                                                      inSession           := vbUserId::TVarChar);
+
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inArticle';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 1, 
+                                                                inParamNumber   := 2, 
                                                                 inName          := 'inArticle', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Артикул-результат',
@@ -4920,7 +4940,7 @@ BEGIN
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inReceiptLevelName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 2, 
+                                                                inParamNumber   := 3, 
                                                                 inName          := 'inReceiptLevelName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Название сборки', 
@@ -4939,13 +4959,12 @@ BEGIN
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGoodsName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 3, 
+                                                                inParamNumber   := 4, 
                                                                 inName          := 'inGoodsName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Название-результат', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
-
 
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
@@ -4961,7 +4980,7 @@ BEGIN
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGroupName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 4, 
+                                                                inParamNumber   := 5, 
                                                                 inName          := 'inGroupName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Группа-результат', 
@@ -4980,7 +4999,7 @@ BEGIN
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inReplacement';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 5, 
+                                                                inParamNumber   := 6, 
                                                                 inName          := 'inReplacement', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Замена', 
@@ -4999,7 +5018,7 @@ BEGIN
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inArticle_child';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 6, 
+                                                                inParamNumber   := 7, 
                                                                 inName          := 'inArticle_child', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Артикул-комплект/узел', 
@@ -5017,7 +5036,7 @@ BEGIN
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGoodsName_child';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 7, 
+                                                                inParamNumber   := 8, 
                                                                 inName          := 'inGoodsName_child', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Название-комплект/узел', 
@@ -5036,7 +5055,7 @@ BEGIN
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGroupName_child';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 8, 
+                                                                inParamNumber   := 9, 
                                                                 inName          := 'inGroupName_child', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Группа-комплект/узел', 
@@ -5055,7 +5074,7 @@ BEGIN
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAmount';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 9, 
+                                                                inParamNumber   := 10, 
                                                                 inName          := 'inAmount', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Количество', 
@@ -5072,7 +5091,6 @@ BEGIN
                                                       inSession           := vbUserId::TVarChar);
 
 END $$;
-
 
 DO $$
     DECLARE vbKey TVarChar;

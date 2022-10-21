@@ -1,8 +1,9 @@
 --
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods_Load (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods_Load (INTEGER, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoods_Load(
+    IN inRecNum                INTEGER ,  -- Строка загрузки
     IN inArticle               TVarChar,  -- Артикул-результат
     IN inReceiptLevelName      TVarChar,  -- Название сборки
     IN inGoodsName             TVarChar,  -- Название-результат
@@ -86,7 +87,34 @@ BEGIN
    THEN
      RAISE EXCEPTION 'Ошибка Шаблон Boat Structure <%> не найден.', 'Agilis-'||TRIM(SPLIT_PART (inArticle, '-', 2));        
    END IF;
-                                    
+
+   -- Если первая строка загрузки удаляем все содержимое сборки модели
+   IF inRecNum = 1
+   THEN
+      -- поиск Шаблон сборка Модели
+     vbReceiptProdModelId := (SELECT Object.Id FROM Object 
+                              WHERE Object.DescId = zc_Object_ReceiptProdModel() 
+                                AND Object.ValueData ILIKE '%'||SPLIT_PART (inArticle, '-', 2)||'-base%'
+                                AND Object.isErased = False);
+                                
+     IF COALESCE (vbReceiptProdModelId, 0) = 0
+     THEN
+       RAISE EXCEPTION 'Ошибка Шаблон сборка Модели <%> не найден.', 'Agilis-'||TRIM(SPLIT_PART (inArticle, '-', 2));        
+     END IF;
+     
+     PERFORM gpUpdate_Object_isErased_ReceiptProdModelChild(inObjectId := Object_ReceiptProdModelChild.Id
+                                                          , inIsErased := TRUE
+                                                          , inSession  := inSession)
+     FROM Object AS Object_ReceiptProdModelChild
+          -- шаблон ProdModel
+          INNER JOIN ObjectLink AS ObjectLink_ReceiptProdModel
+                                ON ObjectLink_ReceiptProdModel.ObjectId = Object_ReceiptProdModelChild.Id
+                               AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                               AND ObjectLink_ReceiptProdModel.ChildObjectId = vbReceiptProdModelId
+     WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
+       AND Object_ReceiptProdModelChild.isErased = FALSE;
+   
+   END IF;                                    
 
    -- Если этапы сборки крпуса
    IF (COALESCE (inReceiptLevelName, '') <> '') AND SPLIT_PART (inArticle, '-', 3) = '01' AND SPLIT_PART (inArticle, '-', 4) = '001'
@@ -964,7 +992,7 @@ BEGIN
        THEN
 
            -- Этап сборки пробуем найти
-           vbReceiptLevelId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ReceiptLevel() AND Object.ValueData = TRIM ('01-Boat'));
+           vbReceiptLevelId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ReceiptLevel() AND Object.ValueData = TRIM (inReceiptLevelName));
 
            -- если нет такого Этап сборки
            IF COALESCE (vbReceiptLevelId, 0) = 0
@@ -972,8 +1000,8 @@ BEGIN
                 vbReceiptLevelId := (SELECT tmp.ioId
                                      FROM gpInsertUpdate_Object_ReceiptLevel (ioId              := 0         :: Integer
                                                                             , ioCode            := 0         :: Integer
-                                                                            , inName            := TRIM ('01-Boat') ::TVarChar
-                                                                            , inShortName       := TRIM ('01-Boat') ::TVarChar
+                                                                            , inName            := TRIM (inReceiptLevelName) ::TVarChar
+                                                                            , inShortName       := TRIM (inReceiptLevelName) ::TVarChar
                                                                             , inObjectDesc      := 'zc_Object_ReceiptProdModel'  ::TVarChar
                                                                             , inSession         := inSession :: TVarChar
                                                                              ) AS tmp);
@@ -997,7 +1025,18 @@ BEGIN
                                     WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
                                       AND Object_ReceiptProdModelChild.isErased = FALSE
                                    );
+       
+       -- Если удалено то востанавливаем                            
+       IF COALESCE (vbReceiptProdModelChildId, 0) <> 0
+          AND EXISTS (SELECT 1 FROM Object WHERE Object.ID = vbReceiptProdModelChildId AND Object.isErased = TRUE)
+       THEN
 
+         PERFORM gpUpdate_Object_isErased_ReceiptProdModelChild(inObjectId := vbReceiptProdModelChildId
+                                                              , inIsErased := FALSE
+                                                              , inSession  := inSession);
+       
+       END IF;                                    
+                                   
        --
        IF COALESCE (vbReceiptProdModelChildID, 0) = 0
        THEN
@@ -1046,9 +1085,9 @@ BEGIN
                inArticle_child, inGoodsName_child, vbGoodsId_child, inGroupName_child, vbGoodsGroupId_child, inAmount, vbAmount, Chr(13),
                vbReceiptGoodsId, vbColorPatternId, Chr(13),
                vbReceiptGoodsChildId, vbReceiptLevelId, vbProdColorPatternId, vbMaterialOptionsId, Chr(13),
-               vbReceiptProdModelId, vbReceiptProdModelChildId; 
+               vbReceiptProdModelId, vbReceiptProdModelChildId; */
 
-   RAISE EXCEPTION 'В работе'; */
+   -- RAISE EXCEPTION 'В работе'; 
 
 END;
 $BODY$
@@ -1063,4 +1102,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load('AGL-280-01', '', 'Корпус AGL-280', 'Сборка корпуса', '', 'AGL-280-01-001', 'ПФ Корпус стеклопластиковый АGL-280', '', '1', zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load(1, 'AGL-280-01', '', 'Корпус AGL-280', 'Сборка корпуса', '', 'AGL-280-01-001', 'ПФ Корпус стеклопластиковый АGL-280', '', '1', zfCalc_UserAdmin())
