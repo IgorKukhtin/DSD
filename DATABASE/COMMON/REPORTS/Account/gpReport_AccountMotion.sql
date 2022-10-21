@@ -28,7 +28,7 @@ RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, OperD
 
               , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
               , BusinessCode Integer, BusinessName TVarChar
-              , PaidKindName TVarChar, ContractName TVarChar
+              , PaidKindName TVarChar, ContractCode Integer, ContractName TVarChar
 
               , ObjectId_Direction Integer, ObjectCode_Direction Integer, ObjectName_Direction TVarChar
               , ObjectCode_Destination Integer, ObjectName_Destination TVarChar
@@ -75,7 +75,7 @@ BEGIN
 
               , tmp.JuridicalBasisCode, tmp.JuridicalBasisName
               , tmp.BusinessCode, tmp.BusinessName
-              , tmp.PaidKindName, tmp.ContractName
+              , tmp.PaidKindName, tmp.ContractCode, tmp.ContractName
 
               , tmp.ObjectId_Direction, tmp.ObjectCode_Direction, tmp.ObjectName_Direction
               , tmp.ObjectCode_Destination, tmp.ObjectName_Destination

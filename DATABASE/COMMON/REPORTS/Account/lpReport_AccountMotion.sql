@@ -27,7 +27,7 @@ RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, OperD
               , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
               , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
               , BusinessCode Integer, BusinessName TVarChar
-              , PaidKindName TVarChar, ContractName TVarChar
+              , PaidKindName TVarChar, ContractCode Integer, ContractName TVarChar
               , ObjectId_Direction Integer, ObjectCode_Direction Integer, ObjectName_Direction TVarChar
               , ObjectCode_Destination Integer, ObjectName_Destination TVarChar
               , DescName_Direction TVarChar
@@ -423,6 +423,7 @@ BEGIN
                          , tmpReport_All.UnitId_inf
                          , tmpReport_All.RouteId_inf
                          , tmpReport_All.ContainerId_inf
+                         , CASE WHEN inUserId = 5 THEN tmpReport_All.ContainerId ELSE 0 END AS ContainerId
 
                          , CLO_InfoMoneyDetail.ObjectId AS ObjectId_Detail
 
@@ -551,6 +552,7 @@ BEGIN
 
                            , CLO_InfoMoneyDetail.ObjectId
                            , tmpReport_All.GoodsKindId
+                           , CASE WHEN inUserId = 5 THEN tmpReport_All.ContainerId ELSE 0 END
                     )
 
 
@@ -570,10 +572,11 @@ BEGIN
          , Object_Business.ObjectCode        AS BusinessCode
          , Object_Business.ValueData         AS BusinessName
          , Object_PaidKind.ValueData         AS PaidKindName
-         , View_Contract_InvNumber.InvNumber AS ContractName
+         , View_Contract_InvNumber.ContractCode AS ContractCode
+         , View_Contract_InvNumber.InvNumber    AS ContractName
 
          , Object_Direction.Id             AS ObjectId_Direction
-         , CASE WHEN inUserId = 5 THEN tmpReport.ContainerId_inf ELSE Object_Direction.ObjectCode END :: Integer AS ObjectCode_Direction
+         , CASE WHEN inUserId = 5 THEN tmpReport.ContainerId ELSE Object_Direction.ObjectCode END :: Integer AS ObjectCode_Direction
          , (COALESCE (Object_Bank.ValueData || ' * ', '') || Object_Direction.ValueData || COALESCE (' * ' || Object_Currency.ValueData, '')) :: TVarChar AS ObjectName_Direction
          , Object_Destination.ObjectCode   AS ObjectCode_Destination
          , Object_Destination.ValueData    AS ObjectName_Destination

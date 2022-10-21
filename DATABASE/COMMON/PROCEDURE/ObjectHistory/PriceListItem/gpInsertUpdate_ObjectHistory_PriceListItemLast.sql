@@ -42,11 +42,13 @@ BEGIN
    THEN
        -- поиск в настройках "Доступ к прайсу"
        IF NOT EXISTS (SELECT 1 FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = vbUserId)
+          AND vbUserId <> 5
        THEN
            RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
 
        -- проверка в настройках "Доступ к прайсу" - что это именно тот Прайс
        ELSEIF NOT EXISTS (SELECT 1 FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = vbUserId AND MemberPriceList_View.PriceListId = inPriceListId)
+          AND vbUserId <> 5
        THEN
            RAISE EXCEPTION 'Ошибка. У пользователя <%>.%Нет прав корректировать прайс <%>.%Можно корректировать только такие Прайсы:% %'
                          , lfGet_Object_ValueData (vbUserId)
@@ -85,6 +87,32 @@ BEGIN
                                              )
    THEN
        RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+   END IF;
+
+   -- Проверка
+   IF COALESCE (inValue, 0) = 0
+  AND EXISTS (SELECT 1
+              FROM ObjectLink AS OL_Goods_InfoMoney
+                  INNER JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                   ON View_InfoMoney.InfoMoneyId = OL_Goods_InfoMoney.ChildObjectId
+                                                  AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                              , zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                                               )
+              WHERE OL_Goods_InfoMoney.ObjectId = inGoodsId
+                AND OL_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+             )
+   THEN
+           RAISE EXCEPTION 'Ошибка.Нет прав вводить цену = %.%Прайс = <%>%Товар = <%>%Вид = <%>%Дата = <%>'
+                         , zfConvert_FloatToString (COALESCE (inValue, 0)) || CASE WHEN inValue IS NULL THEN '*' ELSE '' END
+                         , CHR (13) 
+                         , lfGet_Object_ValueData (inPriceListId)
+                         , CHR (13) 
+                         , lfGet_Object_ValueData (inGoodsId)
+                         , CHR (13) 
+                         , lfGet_Object_ValueData (inGoodsKindId)
+                         , CHR (13) 
+                         , zfConvert_DateToString (inOperDate)
+                          ;
    END IF;
 
    -- !!!определяется!!!

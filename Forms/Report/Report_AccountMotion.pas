@@ -134,6 +134,7 @@ type
     GuidesMovementDesc: TdsdGuides;
     OperDatePartner: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
   private
   public
   end;
