@@ -6,7 +6,7 @@ inherited ServiceJournalForm: TServiceJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 451
+  ExplicitHeight = 452
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -243,6 +243,15 @@ inherited ServiceJournalForm: TServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 82
+          end
+          object JuridicalBasisName: TcxGridDBColumn
+            Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalBasisName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            Options.Editing = False
+            Width = 135
           end
           object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1102#1088'.'#1083'.)'
@@ -877,7 +886,8 @@ inherited ServiceJournalForm: TServiceJournalForm
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_Service'
-    Top = 160
+    Left = 80
+    Top = 168
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Service'
@@ -886,8 +896,8 @@ inherited ServiceJournalForm: TServiceJournalForm
       item
         DataSet = MasterCDS
       end>
-    Left = 80
-    Top = 176
+    Left = 120
+    Top = 200
   end
   inherited FormParams: TdsdFormParams
     Params = <

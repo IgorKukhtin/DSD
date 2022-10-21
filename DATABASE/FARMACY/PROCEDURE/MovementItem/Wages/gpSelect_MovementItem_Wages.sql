@@ -106,7 +106,7 @@ BEGIN
                  , NULL::TFloat                       AS AmountHand
 
                  , Object_Member.ObjectCode           AS MemberCode
-                 , Object_Member.ValueData            AS MemberName
+                 , COALESCE (ObjectString_NameUkr.ValueData, Object_Member.ValueData) AS MemberName
                  , Personal_View.PositionName         AS PositionName
                  , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
                  , Object_Unit.ID                     AS UnitID
@@ -126,6 +126,9 @@ BEGIN
                                        ON ObjectLink_User_Member.ObjectId = tmpMember.UserID
                                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                   INNER JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+                  LEFT JOIN ObjectString AS ObjectString_NameUkr
+                                         ON ObjectString_NameUkr.ObjectId = Object_Member.Id
+                                        AND ObjectString_NameUkr.DescId = zc_ObjectString_Member_NameUkr()
 
                   LEFT JOIN tmpPersonal_View AS Personal_View
                                              ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
@@ -173,7 +176,7 @@ BEGIN
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
                  , Object_Member.ObjectCode           AS MemberCode
-                 , Object_Member.ValueData            AS MemberName
+                 , COALESCE (ObjectString_NameUkr.ValueData, Object_Member.ValueData) AS MemberName
                  , Object_Position.ValueData          AS PositionName
                  , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
                  , Object_Unit.ID                     AS UnitID
@@ -202,6 +205,9 @@ BEGIN
                                        ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                   LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
+                  LEFT JOIN ObjectString AS ObjectString_NameUkr
+                                         ON ObjectString_NameUkr.ObjectId = Object_Member.Id
+                                        AND ObjectString_NameUkr.DescId = zc_ObjectString_Member_NameUkr()
 
                   LEFT JOIN ObjectLink AS ObjectLink_Member_Position
                                        ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
@@ -396,7 +402,7 @@ BEGIN
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
                  , Object_Member.ObjectCode           AS MemberCode
-                 , Object_Member.ValueData            AS MemberName
+                 , COALESCE (ObjectString_NameUkr.ValueData, Object_Member.ValueData) AS MemberName
                  , Object_Position.ValueData          AS PositionName
                  , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, False)  AS isManagerPharmacy
                  , Object_Unit.ID                     AS UnitID
@@ -424,6 +430,9 @@ BEGIN
                                        ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                   LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
+                  LEFT JOIN ObjectString AS ObjectString_NameUkr
+                                         ON ObjectString_NameUkr.ObjectId = Object_Member.Id
+                                        AND ObjectString_NameUkr.DescId = zc_ObjectString_Member_NameUkr()
 
                   LEFT JOIN ObjectLink AS ObjectLink_Member_Position
                                        ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
@@ -560,3 +569,5 @@ $BODY$
  21.08.19                                                        *
 */
 -- select * from gpSelect_MovementItem_Wages(inMovementId := 15869587   , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_Wages(inMovementId := 27991034 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

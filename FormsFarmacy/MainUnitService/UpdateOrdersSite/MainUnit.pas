@@ -318,7 +318,8 @@ begin
     PharmOrderProductsCDS.First;
     while not PharmOrderProductsCDS.Eof do
     begin
-      if PharmOrderProductsCDS.FieldByName('type_order').AsString = 'at_provider' then
+      if (PharmOrderProductsCDS.FieldByName('type_order').AsString = 'at_provider') or
+         (PharmOrderProductsCDS.FieldByName('type_order').AsString = 'in_site') then
       begin
         bGo := True;
         Break;

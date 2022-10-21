@@ -33,18 +33,18 @@ type
     ceOperDate: TcxDateEdit;
     ceAmountDebet: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    PaidKindGuides: TdsdGuides;
-    UnitGuides: TdsdGuides;
-    InfoMoneyGuides: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
+    GuidesUnit: TdsdGuides;
+    GuidesInfoMoney: TdsdGuides;
     ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
     cxLabel6: TcxLabel;
     GuidesFiller: TGuidesFiller;
     ceContract: TcxButtonEdit;
     cxLabel8: TcxLabel;
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
-    ContractGuides: TdsdGuides;
+    GuidesContract: TdsdGuides;
     ceAmountKredit: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     cxLabel9: TcxLabel;
@@ -54,19 +54,19 @@ type
     edInvNumber: TcxTextEdit;
     cePartner: TcxButtonEdit;
     cxLabel12: TcxLabel;
-    PartnerGuides: TdsdGuides;
+    GuidesPartner: TdsdGuides;
     cxLabel13: TcxLabel;
     ceIncomeCost: TcxButtonEdit;
-    IncomeCostGuides: TdsdGuides;
+    GuidesIncomeCost: TdsdGuides;
     cxLabel15: TcxLabel;
     ceInvoice: TcxButtonEdit;
-    InvoiceGuides: TdsdGuides;
+    GuidesInvoice: TdsdGuides;
     cxLabel14: TcxLabel;
     ceAsset: TcxButtonEdit;
-    AssetGuides: TdsdGuides;
+    GuidesAsset: TdsdGuides;
     cxLabel19: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
+    GuidesCurrencyPartner: TdsdGuides;
     cxLabel18: TcxLabel;
     edCurrencyPartnerValue: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
@@ -83,6 +83,9 @@ type
     ceCountKredit: TcxCurrencyEdit;
     cxLabel26: TcxLabel;
     ceSumma: TcxCurrencyEdit;
+    cxLabel24: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    GuidesJuridicalBasis: TdsdGuides;
   private
     { Private declarations }
   public

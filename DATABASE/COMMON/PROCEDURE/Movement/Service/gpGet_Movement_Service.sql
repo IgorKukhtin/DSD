@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , CountDebet TFloat, CountKredit TFloat, Price TFloat, Summa_calc TFloat
              , Comment TVarChar
+             , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
@@ -69,7 +70,11 @@ BEGIN
            , CAST (0 AS TFloat)               AS Price
            , CAST (0 AS TFloat)               AS Summa_calc
 
-           , ''::TVarChar                     AS Comment
+           , ''::TVarChar                     AS Comment 
+           
+           , 0                                AS JuridicalBasisId
+           , CAST ('' AS TVarChar)            AS JuridicalBasisName
+
            , 0                                AS JuridicalId
            , CAST ('' AS TVarChar)            AS JuridicalName
            , 0                                AS PartnerId
@@ -110,6 +115,7 @@ BEGIN
                           AND MovementFloat.ValueData = inMovementId_Value
                         GROUP BY MovementFloat.ValueData
                        ) 
+
        SELECT
              inMovementId                        AS Id
            , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
@@ -152,6 +158,9 @@ BEGIN
            , (MIFloat_Price.ValueData * CASE WHEN MIFloat_Count.ValueData < 0 THEN -1 * MIFloat_Count.ValueData ELSE MIFloat_Count.ValueData END) :: TFloat AS Summa_calc
 
            , MIString_Comment.ValueData          AS Comment
+
+           , Object_JuridicalBasis.Id            AS JuridicalBasisId
+           , Object_JuridicalBasis.ValueData     AS JuridicalBasisName
 
            , Object_Juridical.Id                 AS JuridicalId
            , Object_Juridical.ValueData          AS JuridicalName
@@ -198,8 +207,6 @@ BEGIN
                                     ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
-
-                                   
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -212,7 +219,6 @@ BEGIN
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
-            
             
             LEFT JOIN MovementLinkMovement AS MLM_Invoice
                                            ON MLM_Invoice.MovementId = Movement.Id
@@ -251,8 +257,8 @@ BEGIN
                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
             --LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber 
-                                                     ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_View AS View_Contract_InvNumber                                                       --Object_Contract_InvNumber_View
+                                           ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -268,6 +274,14 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset() 
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_JuridicalBasis
+                                             ON MILinkObject_JuridicalBasis.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_JuridicalBasis.DescId = zc_MILinkObject_JuridicalBasis()            
+            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = CASE WHEN MILinkObject_JuridicalBasis.ObjectId > 0
+                                                                                         THEN MILinkObject_JuridicalBasis.ObjectId
+                                                                                         ELSE COALESCE (View_Contract_InvNumber.JuridicalBasisId, zc_Juridical_Basis()) 
+                                                                                    END
 
             LEFT JOIN tmpCost ON tmpCost.MovementServiceId = Movement.Id 
             
