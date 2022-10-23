@@ -132,7 +132,12 @@ BEGIN
                                                                   , inIsErased:= 'FALSE', inIsShowAll:= 'FALSE', inSession:= inSession
                                                                    ) AS gpSelect
                             );
-
+/*
+IF COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = vbId), inOptName, '') = ''
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>', inId_site;
+END IF;
+*/
      -- сохранили
      vbId:= gpInsertUpdate_Object_ProdOptions (ioId                := vbId
                                              , inCode              := COALESCE ((SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbId), 0)

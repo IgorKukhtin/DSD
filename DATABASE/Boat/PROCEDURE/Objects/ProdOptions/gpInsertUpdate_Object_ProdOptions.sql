@@ -33,6 +33,11 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdOptions());
    vbUserId:= lpGetUserBySession (inSession);
+   
+   IF inId_Site = 'b400c'   THEN RAISE EXCEPTION 'Ошибка.<%>', inId_Site; END IF;
+   IF inId_Site = 'b400c_m' THEN RAISE EXCEPTION 'Ошибка.<%>', inId_Site; END IF;
+   IF inId_Site = 'b400d_m' THEN RAISE EXCEPTION 'Ошибка.<%>', inId_Site; END IF;
+
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;

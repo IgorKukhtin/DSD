@@ -281,6 +281,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPattern (FALSE, FALSE, zfCalc_UserAdmin())
-
-select * from gpSelect_Object_ReceiptGoodsChild_ProdColorPattern(inIsShowAll := 'False' , inIsErased := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPattern (inIsShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

@@ -772,5 +772,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ProdOptItems (0, true, false,true, zfCalc_UserAdmin())
--- 
-SELECT * FROM gpSelect_Object_ProdOptItems (0, false, false, false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdOptItems (0, false, false, false, zfCalc_UserAdmin())
