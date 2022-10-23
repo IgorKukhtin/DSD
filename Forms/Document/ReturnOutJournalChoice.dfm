@@ -166,6 +166,14 @@ inherited ReturnOutJournalChoiceForm: TReturnOutJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
           object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
