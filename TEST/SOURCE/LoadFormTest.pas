@@ -1522,11 +1522,13 @@ procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalChoiceForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
+  exit;
   // возврат поставщику от покупателя
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerForm');

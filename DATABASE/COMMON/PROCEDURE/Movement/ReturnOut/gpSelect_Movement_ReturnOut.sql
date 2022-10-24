@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CurrencyValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , JuridicalName_To TVarChar, OKPO_To TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
@@ -85,7 +85,8 @@ BEGIN
            , Object_To.ValueData                            AS ToName
            , Object_PaidKind.Id                             AS PaidKindId
            , Object_PaidKind.ValueData                      AS PaidKindName
-           , View_Contract_InvNumber.ContractId             AS ContractId
+           , View_Contract_InvNumber.ContractId             AS ContractId 
+           , View_Contract_InvNumber.ContractCode           AS ContractCode
            , View_Contract_InvNumber.InvNumber              AS ContractName
            , Object_JuridicalTo.ValueData                   AS JuridicalName_To
            , ObjectHistory_JuridicalDetails_View.OKPO       AS OKPO_To

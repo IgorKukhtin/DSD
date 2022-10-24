@@ -4,8 +4,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -104
-  ExplicitTop = -55
   ExplicitWidth = 1126
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -166,6 +164,14 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
           end
           object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
@@ -435,6 +441,9 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog [23]
       Category = 'DSDLib'
@@ -465,7 +474,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = edIsPartnerDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -520,7 +529,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       end
       item
         Name = 'inIsPartnerDate'
-        Value = 'False'
+        Value = False
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -727,7 +736,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       end
       item
         Name = 'inislastcomplete'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
