@@ -3,10 +3,10 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions_excel (TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions_excel(
-    IN inId_site         TVarChar  ,    -- 
-    IN inModelCode       TVarChar  ,    -- 
-    IN inOptName         TVarChar  ,    -- 
-    IN inMaterialOptions TVarChar  ,    -- 
+    IN inId_site         TVarChar  ,    --
+    IN inModelCode       TVarChar  ,    --
+    IN inOptName         TVarChar  ,    --
+    IN inMaterialOptions TVarChar  ,    --
     IN inSalePrice       TFloat    ,
     IN inCodeVergl       TVarChar  ,
     IN inSession         TVarChar       -- сессия пользователя
@@ -20,21 +20,21 @@ $BODY$
    DECLARE vbProdColorPatternId  Integer;
 BEGIN
 
-     -- Поиск     
+     -- Поиск
      vbModelId:= (SELECT Id FROM Object WHERE DescId = zc_Object_ProdModel() AND ValueData ILIKE inModelCode);
      IF COALESCE (vbModelId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.vbModelId is null <%>', inModelCode;
      END IF;
 
-     -- Поиск     
+     -- Поиск
      vbMaterialOptionsId := (SELECT Id FROM Object WHERE DescId = zc_Object_MaterialOptions() AND ValueData ILIKE inMaterialOptions);
      IF COALESCE (vbMaterialOptionsId, 0) = 0 AND TRIM (inMaterialOptions) <> ''
      THEN
          -- сохранили
          vbMaterialOptionsId:= lpInsertUpdate_Object (vbMaterialOptionsId, zc_Object_MaterialOptions(), lfGet_ObjectCode (0, zc_Object_MaterialOptions()), inMaterialOptions);
      END IF;
-     
+
 
      -- Поиск - 1
      IF 1 < (SELECT COUNT(*)
@@ -109,12 +109,14 @@ BEGIN
                    AND Object_ProdOptions.ValueData ILIKE (inOptName || '%')
                 );
      END IF;
-            
-   
+
+
      -- Поиск
      vbProdColorPatternId:= (SELECT MAX (CASE WHEN inOptName ILIKE 'Hypalon Primary'   AND gpSelect.ProdColorGroupName ILIKE 'Hypalon' AND  gpSelect.Name ILIKE 'primary'
                                                    THEN gpSelect.Id
                                               WHEN inOptName ILIKE 'Hypalon Secondary' AND gpSelect.ProdColorGroupName ILIKE 'Hypalon' AND  gpSelect.Name ILIKE 'secondary'
+                                                   THEN gpSelect.Id
+                                              WHEN inOptName ILIKE 'fender' AND gpSelect.ProdColorGroupName ILIKE 'Hypalon' AND  gpSelect.Name ILIKE 'fender'
                                                    THEN gpSelect.Id
                                               WHEN inOptName ILIKE 'Upholstery' AND gpSelect.ProdColorGroupName ILIKE 'Upholstery' AND  gpSelect.Name ILIKE '%primary%'
                                                    THEN gpSelect.Id
@@ -132,6 +134,7 @@ BEGIN
                                                                   , inIsErased:= 'FALSE', inIsShowAll:= 'FALSE', inSession:= inSession
                                                                    ) AS gpSelect
                             );
+
 /*
 IF COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = vbId), inOptName, '') = ''
 THEN
