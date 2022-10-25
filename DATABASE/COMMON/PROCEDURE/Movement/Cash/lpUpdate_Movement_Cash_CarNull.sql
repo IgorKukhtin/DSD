@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS lpUpdate_Movement_Cash_CarNull (Integer, Integer, Intege
 
 CREATE OR REPLACE FUNCTION lpUpdate_Movement_Cash_CarNull(
     IN inId                    Integer   , -- Ключ объекта <строка>
-    IN ininMovementId          Integer   , -- Ключ объекта <документ>
+    IN inMovementId            Integer   , -- Ключ объекта <документ>
     IN inUserId                Integer     -- Пользователь
 )
 RETURNS VOID
@@ -25,14 +25,14 @@ BEGIN
      --если документ проведен распроводим
      IF vbStatusId = zc_Enum_Status_Complete()
      THEN
-         PERFORM lpUnComplete_Movement (inMovementId := ioId
-                                      , inUserId     := vbUserId);
+         PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                      , inUserId     := inUserId);
      END IF;
      
       -- обнуляем АВТО
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Car(), inId, NULL);
 
-     --если документ был проведен - проводим
+     -- если документ был проведен - проводим
      IF vbStatusId = zc_Enum_Status_Complete()
      THEN
          -- создаются временные таблицы - для формирование данных для проводок
@@ -40,7 +40,7 @@ BEGIN
 
          -- проводим Документ
          PERFORM lpComplete_Movement_Cash (inMovementId := inMovementId
-                                         , inUserId     := vbUserId
+                                         , inUserId     := inUserId
                                           ); 
      END IF;
      
@@ -64,12 +64,18 @@ $BODY$
 
 /*   --обнуление переметра Авто
 
-SELECT ---Movement.Id
-       lpUpdate_Movement_Cash_CarNull (inMovementId:= Movement.Id, inId:= MovementItem.Id, inUserId = zfCalc_UserAdmin()::Integer)
+SELECT Movement.*, Object_InfoMoney.*
+    --, lpUpdate_Movement_Cash_CarNull (inMovementId:= Movement.Id, inId:= MovementItem.Id, inUserId = zfCalc_UserAdmin()::Integer)
 FROM Movement
     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                            AND MovementItem.DescId = zc_MI_Master()
                            AND MovementItem.isErased = False
+    INNER JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                      ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                     AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                     AND MILinkObject_InfoMoney.ObjectId <> zc_Enum_InfoMoney_20401()
+    INNER JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
+
     INNER JOIN MovementItemLinkObject AS MILinkObject_Car
                                       ON MILinkObject_Car.MovementItemId = MovementItem.Id
                                      AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
