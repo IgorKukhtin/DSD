@@ -41,6 +41,8 @@ RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull
              , BranchCode_from Integer, BranchName_from TVarChar, UnitCode_from Integer, UnitName_from TVarChar, PositionName_from TVarChar
              , BranchCode_to Integer, BranchName_to TVarChar, UnitCode_to Integer, UnitName_to TVarChar, PositionName_to TVarChar
              , OperDate  TDateTime, DayOfWeekName TVarChar, Invnumber TVarChar
+             , AssetId Integer, AssetCode Integer, AssetName TVarChar
+             , AssetId_two Integer, AssetCode_two Integer, AssetName_two TVarChar
              )
 AS
 $BODY$
@@ -160,11 +162,20 @@ BEGIN
                              )
   , tmpSend_ProfitLoss_mi AS (SELECT tmp.Id
                                    , MovementItem.Amount
+                                   , MILinkObject_Asset.ObjectId     AS AssetId
+                                   , 0 AS AssetId_two
+                                   --, MILinkObject_Asset_two.ObjectId AS AssetId_two
                               FROM (SELECT MAX(tmpSend_ProfitLoss.Id) AS Id, tmpSend_ProfitLoss.MovementItemId, tmpSend_ProfitLoss.MovementId FROM tmpSend_ProfitLoss GROUP BY tmpSend_ProfitLoss.MovementItemId, tmpSend_ProfitLoss.MovementId
                                    ) AS tmp
                                    LEFT JOIN MovementItem ON MovementItem.Id         = tmp.MovementItemId
                                                          AND MovementItem.MovementId = tmp.MovementId
-                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.DescId     = zc_MI_Master() 
+                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                                    ON MILinkObject_Asset.MovementItemId = tmp.MovementItemId
+                                                                   AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                   /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
+                                                                    ON MILinkObject_Asset_two.MovementItemId = tmp.MovementItemId
+                                                                   AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two() */
                              )
 
      , tmpCont AS (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
@@ -187,13 +198,23 @@ BEGIN
                         , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND (inDescId = zc_Movement_Loss() OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN CASE WHEN inDescId IN(zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_SendAsset()) THEN -1 ELSE 1 END * MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss_loss
                         , 0 AS Summ_ProfitLoss_send
  
-                        , 0 AS Amount_Send_pl
+                        , 0 AS Amount_Send_pl 
+                        
+                        , MILinkObject_Asset.ObjectId     AS AssetId
+                        , MILinkObject_Asset_two.ObjectId AS AssetId_two
  
                    FROM MovementItemContainer AS MIContainer
                         INNER JOIN _tmpUnit ON _tmpUnit.UnitId    = MIContainer.WhereObjectId_analyzer
                                            AND (_tmpUnit.UnitId_by = COALESCE (MIContainer.ObjectExtId_Analyzer, 0) OR _tmpUnit.UnitId_by = 0)
                                            AND _tmpUnit.isActive  = MIContainer.isActive
-
+                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                         ON MILinkObject_Asset.MovementItemId = MIContainer.MovementItemId
+                                                        AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                        --LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
+                                                         ON MILinkObject_Asset_two.MovementItemId = MIContainer.MovementItemId
+                                                        AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
+                        --LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = MILinkObject_Asset_two.ObjectId
                    WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                      AND MIContainer.MovementDescId = inDescId
                      AND COALESCE (MIContainer.AccountId,0) NOT IN (12102, zc_Enum_Account_100301 ()) -- œË·˚Î¸ ÚÂÍÛ˘Â„Ó ÔÂËÓ‰‡
@@ -206,6 +227,8 @@ BEGIN
                           , CASE WHEN inDescId = zc_Movement_Loss() THEN COALESCE (MIContainer.AnalyzerId, 0) ELSE 0 END
                           , MIContainer.ContainerId_Analyzer
                           , MIContainer.MovementId
+                          , MILinkObject_Asset.ObjectId
+                          , MILinkObject_Asset_two.ObjectId
                   UNION ALL 
                    SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
                         , MIContainer.MovementId
@@ -229,6 +252,8 @@ BEGIN
 
                         , SUM (COALESCE (tmpSend_ProfitLoss_mi.Amount, 0)) AS Amount_Send_pl
 
+                        , tmpSend_ProfitLoss_mi.AssetId
+                        , tmpSend_ProfitLoss_mi.AssetId_two
                    FROM tmpSend_ProfitLoss AS MIContainer
                         LEFT JOIN tmpSend_ProfitLoss_mi ON tmpSend_ProfitLoss_mi.Id = MIContainer.Id
                    GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
@@ -240,6 +265,8 @@ BEGIN
                           , CASE WHEN inDescId = zc_Movement_Loss() THEN COALESCE (MIContainer.AnalyzerId, 0) ELSE 0 END
                           , MIContainer.ContainerId_Analyzer
                           , MIContainer.MovementId
+                          , tmpSend_ProfitLoss_mi.AssetId
+                          , tmpSend_ProfitLoss_mi.AssetId_two
                    )
                    
      , tmpMovementString AS (SELECT MovementString.*
@@ -272,6 +299,9 @@ BEGIN
                       , CASE WHEN inisDateDoc = TRUE THEN Movement.OperDate ELSE NULL END   ::TDateTime AS OperDate
                       , CASE WHEN inisInvnumber = TRUE THEN Movement.Invnumber ELSE '' END  ::TVarChar  AS Invnumber
 
+                      , tmpCont.AssetId
+                      , tmpCont.AssetId_two
+                      
                       , SUM (tmpCont.AmountOut) AS AmountOut
                       , SUM (tmpCont.SummOut) AS SummOut
 
@@ -301,6 +331,8 @@ BEGIN
                         , tmpSubjectDoc.SubjectDocName
                         , CASE WHEN inisDateDoc = TRUE THEN Movement.OperDate ELSE NULL END
                         , CASE WHEN inisInvnumber = TRUE THEN Movement.Invnumber ELSE '' END
+                        , tmpCont.AssetId
+                        , tmpCont.AssetId_two
                  )
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -379,6 +411,13 @@ BEGIN
          , tmpWeekDay.DayOfWeekName_Full ::TVarChar  AS DayOfWeekName
          , tmpOperationGroup.Invnumber   ::TVarChar
 
+         , Object_Asset.Id                       AS AssetId
+         , Object_Asset.ObjectCode               AS AssetCode
+         , Object_Asset.ValueData                AS AssetName
+
+         , Object_Asset_two.Id                   AS AssetId_two
+         , Object_Asset_two.ObjectCode           AS AssetCode_two
+         , Object_Asset_two.ValueData            AS AssetName_two
      FROM (SELECT tmpContainer.ArticleLossId
                 , tmpContainer.ContainerId_Analyzer
                 , tmpContainer.UnitId
@@ -389,6 +428,10 @@ BEGIN
                 , tmpContainer.OperDate
                 , tmpContainer.Invnumber
                 , tmpContainer.Comment
+                
+                , tmpContainer.AssetId
+                , tmpContainer.AssetId_two
+
                 , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') AS SubjectDocName
                 --, tmpContainer.SubjectDocName          AS SubjectDocName
 
@@ -439,6 +482,9 @@ BEGIN
 
                       , tmpMI.OperDate
                       , tmpMI.Invnumber
+                      
+                      , tmpMI.AssetId
+                      , tmpMI.AssetId_two
 
                  FROM tmpMI
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI.GoodsId
@@ -458,7 +504,9 @@ BEGIN
                   , tmpContainer.Comment
                   , tmpContainer.OperDate
                   , tmpContainer.Invnumber
-                  , CASE WHEN inisSubjectDoc = TRUE THEN tmpContainer.SubjectDocName ELSE '' END
+                  , CASE WHEN inisSubjectDoc = TRUE THEN tmpContainer.SubjectDocName ELSE '' END 
+                  , tmpContainer.AssetId
+                  , tmpContainer.AssetId_two
           ) AS tmpOperationGroup
 
           LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpOperationGroup.GoodsId
@@ -523,7 +571,10 @@ BEGIN
                               AND ObjectLink_Unit_Branch_to.DescId   = zc_ObjectLink_Unit_Branch()
           LEFT JOIN Object AS Object_Branch_to ON Object_Branch_to.Id = ObjectLink_Unit_Branch_to.ChildObjectId
 
-          LEFT JOIN zfCalc_DayOfWeekName (tmpOperationGroup.OperDate) AS tmpWeekDay ON tmpOperationGroup.OperDate IS NOT NULL --1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpOperationGroup.OperDate) AS tmpWeekDay ON tmpOperationGroup.OperDate IS NOT NULL --1=1 
+          
+          LEFT JOIN Object AS Object_Asset     ON Object_Asset.Id     = tmpOperationGroup.AssetId
+          LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = tmpOperationGroup.AssetId_two
 
   ;
 
@@ -534,6 +585,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.10.22         * AssetId, AssetId_two
  17.12.21         * 
  29.04.20         * zc_Movement_SendAsset()
  13.02.20         *
