@@ -27,7 +27,12 @@ BEGIN
                                   , inUserId     := vbUserId);
 
      -- Поиск "Пересортица"
-     vbMovementId_Peresort:= (SELECT MLM.MovementId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production());
+     vbMovementId_Peresort:= (SELECT MLM.MovementId
+                              FROM MovementLinkMovement AS MLM
+                                   JOIN Movement ON Movement.Id       = MLM.MovementId
+                                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production()
+                             );
      -- Синхронно - Распровели
      IF vbMovementId_Peresort <> 0
      THEN

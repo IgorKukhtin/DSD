@@ -134,7 +134,7 @@ BEGIN
              , 0 AS BusinessId_ProfitLoss
 
                -- √лавное ёр.лицо всегда из договора
-             , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
+             , COALESCE (MILinkObject_JuridicalBasis.ObjectId, ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
 
              , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId -- здесь используетс€ (нужен дл€ следующей проводки)
              , 0 AS PositionId -- не используетс€
@@ -199,6 +199,9 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                               ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_JuridicalBasis
+                                              ON MILinkObject_JuridicalBasis.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_JuridicalBasis.DescId         = zc_MILinkObject_JuridicalBasis()
 
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId

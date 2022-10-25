@@ -30,30 +30,41 @@ BEGIN
      THEN
 
      -- Поиск "Пересортица" или "Обычный"
-     vbMovementId_Peresort:= (SELECT MLM.MovementId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production());
+     vbMovementId_Peresort:= (SELECT MLM.MovementId
+                              FROM MovementLinkMovement AS MLM
+                                   JOIN Movement ON Movement.Id       = MLM.MovementId
+                                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              WHERE MLM.MovementChildId = inMovementId
+                                AND MLM.DescId          = zc_MovementLinkMovement_Production()
+                             );
 
-     --таблица остатки для  inUnitId = 8459
+
+
+     -- таблица остатки для  inUnitId = 8459
      CREATE TEMP TABLE _tmpRemains (GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
-     
+     --
      INSERT INTO _tmpRemains (GoodsId, GoodsKindId, Amount)
         SELECT Container.ObjectId     AS GoodsId
              , CLO_GoodsKind.ObjectId AS GoodsKindId
-            , SUM (Container.Amount) AS Amount
+             , SUM (Container.Amount) AS Amount
         FROM Container
              INNER JOIN ContainerLinkObject AS CLO_Unit
                                             ON CLO_Unit.ContainerId = Container.Id
-                                           AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                           AND CLO_Unit.ObjectId = 8459    --  "Розподільчий комплекс"
+                                           AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                           AND CLO_Unit.ObjectId    = inUnitId
              LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                            ON CLO_GoodsKind.ContainerId = Container.Id
                                           AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
         WHERE Container.DescId = zc_Container_Count()
-          AND Container.Amount <> 0
+          AND Container.Amount > 0
+          --  !!!Розподільчий комплекс!!!
           AND inUnitId = 8459
-        GROUP BY Container.ObjectId, CLO_GoodsKind.ObjectId;
-     ---
-     
-     
+          -- !!!
+          AND COALESCE (vbMovementId_Peresort, 0) = 0
+        GROUP BY Container.ObjectId, CLO_GoodsKind.ObjectId
+       ;
+
+
      -- таблица - элементы
      CREATE TEMP TABLE _tmpItemPeresort_new (MovementItemId_to Integer, MovementItemId_from Integer
                                            , GoodsId_to Integer, GoodsKindId_to Integer
@@ -70,11 +81,9 @@ BEGIN
              , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId, 0) AS GoodsKindId_from
              , COALESCE (ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId, ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId, 0) AS ReceipId_to
              , COALESCE (ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId, 0)   AS ReceipId_gp_to
-             , CASE WHEN inUnitId <> 8459 OR vbMovementId_Peresort > 0 THEN SUM (_tmpItem.OperCount) 
-                    ELSE SUM (_tmpItem.OperCount) - COALESCE (_tmpRemains.Amount,0) 
-               END   AS Amount_to                                                                                                   
-               --для сохранения этого параметра 
-             , CASE WHEN inUnitId = 8459 AND COALESCE (vbMovementId_Peresort,0) = 0 THEN COALESCE (_tmpRemains.Amount,0) ELSE 0 END AS Amount_Remains
+             , SUM (_tmpItem.OperCount) - COALESCE (_tmpRemains.Amount, 0) AS Amount_to
+               -- для сохранения этого параметра
+             , COALESCE (_tmpRemains.Amount,0) AS Amount_Remains
         FROM _tmpItem
              INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                    ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = _tmpItem.GoodsId
@@ -99,24 +108,29 @@ BEGIN
                                   ON ObjectLink_GoodsByGoodsKind_Receipt_gp.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                  AND ObjectLink_GoodsByGoodsKind_Receipt_gp.DescId   = zc_ObjectLink_GoodsByGoodsKind_ReceiptGP()
 
-             LEFT JOIN _tmpRemains ON _tmpRemains.GoodsId = _tmpItem.GoodsId
+             LEFT JOIN _tmpRemains ON _tmpRemains.GoodsId     = _tmpItem.GoodsId
                                   AND _tmpRemains.GoodsKindId = _tmpItem.GoodsKindId
 
-        WHERE _tmpItem.GoodsId       <> ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
-           OR (_tmpItem.GoodsKindId  <> ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
-              AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0)
+        WHERE (_tmpItem.GoodsId       <> ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
+            OR (_tmpItem.GoodsKindId  <> ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
+               AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
+              ))
         GROUP BY _tmpItem.GoodsId
                , _tmpItem.GoodsKindId
                , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
                , ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
                , ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId
                , ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId
-               , COALESCE (_tmpRemains.Amount,0)
+               , COALESCE (_tmpRemains.Amount, 0)
+        HAVING SUM (_tmpItem.OperCount) - COALESCE (_tmpRemains.Amount, 0) > 0
                 ;
 
      -- !!! для филиалов - только одна схема, только для zc_ObjectLink_GoodsByGoodsKind_ReceiptGP !!!
-     IF NOT EXISTS (SELECT 1 FROM _tmpItemPeresort_new WHERE _tmpItemPeresort_new.ReceipId_gp_to > 0)
-     AND inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
+     IF (NOT EXISTS (SELECT 1 FROM _tmpItemPeresort_new WHERE _tmpItemPeresort_new.ReceipId_gp_to > 0)
+      AND inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
+        )
+     -- !!!Розподільчий комплекс!!!
+     OR (vbMovementId_Peresort > 0 AND inUnitId = 8459)
      THEN
          -- !!! ВЫХОД !!!
          RETURN;
@@ -161,8 +175,8 @@ BEGIN
                               INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                                               AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_30000()             -- Доходы
                                                               AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
-
         WHERE _tmpItemPeresort_new.ReceipId_to <> 0
+
        UNION ALL
         SELECT 0                                                      AS MovementItemId_to
              , 0                                                      AS MovementItemId_from
@@ -173,7 +187,7 @@ BEGIN
                -- т.к. надо будет отличать кол-во для ГП от других составляющих
              , -1 * _tmpItemPeresort_new.ReceipId_gp_to               AS ReceipId_to
              , -1 * _tmpItemPeresort_new.ReceipId_gp_to               AS ReceipId_gp_to
-               -- 
+               --
              , _tmpItemPeresort_new.Amount_to * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_to
         FROM _tmpItemPeresort_new
                               INNER JOIN ObjectFloat AS ObjectFloat_Value_master
@@ -202,7 +216,6 @@ BEGIN
                                                               AND (Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()             -- Доходы
                                                                 OR Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                                   )
-
         WHERE _tmpItemPeresort_new.ReceipId_gp_to <> 0
        ;
 
@@ -210,7 +223,7 @@ BEGIN
      IF EXISTS (SELECT 1 FROM _tmpItemPeresort_new) AND '01.10.2016' <= vbOperDate -- Дата когда стартанула схема вообще
      THEN
          -- нашли MovementItemId - Master
-         UPDATE _tmpItemPeresort_new SET MovementItemId_to   = tmpMI.MovementItemId_to
+         UPDATE _tmpItemPeresort_new SET MovementItemId_to = tmpMI.MovementItemId_to
          FROM (SELECT MovementItem.Id                                     AS MovementItemId_to
                     , MovementItem.ObjectId                               AS GoodsId_to
                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId_to
@@ -323,6 +336,15 @@ BEGIN
                                                                         , inIsPeresort     := CASE WHEN EXISTS (SELECT 1 FROM _tmpItemPeresort_new AS tmp WHERE tmp.ReceipId_to <> 0) THEN FALSE ELSE TRUE END
                                                                         , inUserId         := inUserId
                                                                          );
+
+IF inUserId = 5 AND 1=1
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>   <%>   <%>', vbMovementId_Peresort
+    , (select _tmpItemPeresort_new.Amount_to from _tmpItemPeresort_new)
+    , (select _tmpItemPeresort_new.Amount_Remains from _tmpItemPeresort_new)
+    ;
+END IF;
+
          -- сохранили свойство <автоматически сформирован>
          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), vbMovementId_Peresort, TRUE);
 
@@ -371,12 +393,12 @@ BEGIN
          WHERE _tmpItemPeresort_new.GoodsId_to     = tmpMI.GoodsId_to
            AND _tmpItemPeresort_new.GoodsKindId_to = tmpMI.GoodsKindId_to
           ;
-         
-         --отдельно для информации сохраняем обязательно факт остатка Amount_Remains 
+
+         --отдельно для информации сохраняем обязательно факт остатка Amount_Remains
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), _tmpItemPeresort_new.MovementItemId_to, Amount_Remains)
          FROM _tmpItemPeresort_new
          WHERE COALESCE(_tmpItemPeresort_new.Amount_Remains,0) <> 0;
-         
+
          -- сохранили элементы - Child
          PERFORM lpInsertUpdate_MI_ProductionUnion_Child
                                                   (ioId                     := _tmpItemPeresort_new.MovementItemId_from
@@ -452,6 +474,7 @@ BEGIN
 
      -- Админу только отладка
      if inUserId = 5 AND 1=0 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
