@@ -86,7 +86,7 @@ BEGIN
 
 
      -- проверка
-     IF   vbIsLossOnly = FALSE
+     IF vbIsLossOnly = FALSE
       AND EXISTS (SELECT MovementItem.MovementId
                   FROM MovementItem
                        INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
@@ -216,7 +216,7 @@ BEGIN
                -- Бизнес: нет
              , 0  AS BusinessId
                -- Главное Юр.лицо: всегда из договора
-             , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, zc_Juridical_Basis()) AS JuridicalId_Basis
+             , CASE WHEN MILinkObject_JuridicalBasis.ObjectId > 0 THEN MILinkObject_JuridicalBasis.ObjectId ELSE COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, zc_Juridical_Basis()) END AS JuridicalId_Basis
                -- Подразделение (затраты): нет
              , 0 AS UnitId
                -- еще одна аналитика для 2-ой формы и не наши компании
@@ -262,6 +262,9 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                               ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_JuridicalBasis
+                                              ON MILinkObject_JuridicalBasis.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_JuridicalBasis.DescId         = zc_MILinkObject_JuridicalBasis()
              LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                            ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                           AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
@@ -356,11 +359,9 @@ BEGIN
                                                              ON ContainerLO_Business.ContainerId = ContainerLO_Juridical.ContainerId
                                                             AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()
                                                             AND ContainerLO_Business.ObjectId = tmpMovementItem.BusinessId
-                                    JOIN ContainerLinkObject AS ContainerLO_Branch
-                                                             ON ContainerLO_Branch.ContainerId = ContainerLO_Juridical.ContainerId
-                                                            AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
-                                                            AND (ContainerLO_Branch.ObjectId = tmpMovementItem.BranchId
-                                                              OR tmpMovementItem.BranchId = 0)
+                                    LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
+                                                                  ON ContainerLO_Branch.ContainerId = ContainerLO_Juridical.ContainerId
+                                                                 AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                                     JOIN ContainerLinkObject AS ContainerLO_PartionMovement
                                                              ON ContainerLO_PartionMovement.ContainerId = ContainerLO_Juridical.ContainerId
                                                             AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
@@ -374,6 +375,9 @@ BEGIN
                                                                   ON ContainerLO_Partner.ContainerId = ContainerLO_Juridical.ContainerId
                                                                  AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Partner()
                                WHERE vbIsLossOnly = FALSE -- !!!только если НЕ списание!!!
+                                 AND (ContainerLO_Branch.ObjectId = tmpMovementItem.BranchId
+                                   OR tmpMovementItem.BranchId = 0
+                                     )
                                  /*AND ((ContainerLO_Branch.ObjectId IN (zc_Branch_Basis(), 0)
                                        AND inMovementId = 1110118  -- № 27 от 31.12.2014
                                       ) OR inMovementId <> 1110118) -- № 27 от 31.12.2014*/
@@ -499,6 +503,17 @@ BEGIN
      INSERT INTO _tmpListContainer (ContainerId, Amount, JuridicalId, PartnerId, BranchId, InfoMoneyId, PaidKindId, JuridicalId_Basis, PartionMovementId, BusinessId)
         SELECT tmpListContainer.ContainerId, tmpListContainer.Amount, tmpListContainer.JuridicalId, tmpListContainer.PartnerId, tmpListContainer.BranchId, tmpListContainer.InfoMoneyId, tmpListContainer.PaidKindId, tmpListContainer.JuridicalId_Basis, tmpListContainer.PartionMovementId, tmpListContainer.BusinessId
         FROM tmpListContainer;
+
+IF inUserId = 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>   %     %   %'
+    , (select _tmpListContainer.Amount from _tmpListContainer limit 1)
+    , (select count(*) from _tmpListContainer)
+    , (select count(*) from _tmpListMI)
+    , vbIsLossOnly
+    ;
+END IF;
+
 
      -- Нашли для забаланса
      UPDATE _tmpListContainer SET ContainerId_Asset = lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
