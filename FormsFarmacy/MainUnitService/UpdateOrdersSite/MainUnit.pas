@@ -356,6 +356,7 @@ begin
           (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency > UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
         begin
           S := S + ', quantity = ' + CurrToStr(UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency, FormatSettings) +
+                   ', old_quantity = ' + CurrToStr(UpdateOrdersSiteMICDS.FieldByName('AmountOrder ').AsCurrency, FormatSettings) +
                    ', amount = ' + CurrToStr(RoundTo(UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency * PharmOrderProductsCDS.FieldByName('price').AsCurrency, -2), FormatSettings);
         end;
 
