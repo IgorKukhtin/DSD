@@ -120,6 +120,8 @@ type
     dxBarButton1: TdxBarButton;
     DateInternshipCompleted: TcxGridDBColumn;
     Language: TcxGridDBColumn;
+    EducationName: TcxGridDBColumn;
+    isPhotosOnSite: TcxGridDBColumn;
   private
     { Private declarations }
   public
