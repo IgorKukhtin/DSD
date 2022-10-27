@@ -614,6 +614,20 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Update_LeftTheMarket', True, text_var1::TVarChar, vbUserId);
     END;
 
+    -- Сохранение "Доплата сотруднику за моб приложение"
+    BEGIN
+      IF date_part('MINUTE',  CURRENT_TIME)::Integer <= 15 
+      THEN
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ApplicationAward(), MC.Id, MC.ApplicationAward) 
+         FROM gpSelect_Movement_ApplicationAward(inStartDate := CURRENT_DATE - INTERVAL '5 DAY' , inEndDate := CURRENT_DATE + INTERVAL '1 DAY' , inSession := '3') AS MC
+         WHERE COALESCE(MC.ApplicationAward, 0) <> MC.ApplicationAwardSave;    
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Movement_ApplicationAward', True, text_var1::TVarChar, vbUserId);
+    END;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
