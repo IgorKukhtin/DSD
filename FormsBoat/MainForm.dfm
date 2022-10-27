@@ -143,6 +143,7 @@
       GuiParams = <
         item
           Name = 'MasterObjectDesc'
+          Value = Null
           DataType = ftString
           MultiSelectSeparator = ','
         end>

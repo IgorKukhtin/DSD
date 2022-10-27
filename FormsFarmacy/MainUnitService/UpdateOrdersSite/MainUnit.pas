@@ -338,11 +338,11 @@ begin
       UpdateOrdersSiteMICDS.Locate('GoodsId', PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger, []);
       if (PharmOrderProductsCDS.FieldByName('type_order').AsString = 'at_provider') or
         (PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger = UpdateOrdersSiteMICDS.FieldByName('GoodsId').AsInteger) and
-        (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency > UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
+        (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency <> UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
       begin
 
         if (PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger = UpdateOrdersSiteMICDS.FieldByName('GoodsId').AsInteger) and
-          (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency > UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
+          (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency <> UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
         begin
           S := 'update pharm_orders set ext_changed = 1 where pharmacy_order_id = ' + UpdateOrdersSiteCDS.FieldByName('id').AsString;
           Add_Log('SQL ' + S);
@@ -353,9 +353,10 @@ begin
         S := 'update pharm_order_products set type_order = ''in_site''';
 
         if (PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger = UpdateOrdersSiteMICDS.FieldByName('GoodsId').AsInteger) and
-          (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency > UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
+          (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency <> UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
         begin
           S := S + ', quantity = ' + CurrToStr(UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency, FormatSettings) +
+                   ', old_quantity = ' + CurrToStr(UpdateOrdersSiteMICDS.FieldByName('AmountOrder').AsCurrency, FormatSettings) +
                    ', amount = ' + CurrToStr(RoundTo(UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency * PharmOrderProductsCDS.FieldByName('price').AsCurrency, -2), FormatSettings);
         end;
 

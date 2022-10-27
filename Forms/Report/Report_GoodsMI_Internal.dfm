@@ -6,7 +6,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1199
-  ExplicitHeight = 390
+  ExplicitHeight = 391
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -318,7 +318,42 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1086#1074#1072#1088
             Width = 141
+          end
+          object AssetCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1074#1099#1088'. '#1085#1072' '#1086#1073#1086#1088#1091#1076'.1)'
+            DataBinding.FieldName = 'AssetCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AssetName: TcxGridDBColumn
+            Caption = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 1'
+            DataBinding.FieldName = 'AssetName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 1'
+            Options.Editing = False
+            Width = 70
+          end
+          object AssetCode_two: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1074#1099#1088'. '#1085#1072' '#1086#1073#1086#1088#1091#1076'.2)'
+            DataBinding.FieldName = 'AssetCode_two'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AssetName_two: TcxGridDBColumn
+            Caption = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 2'
+            DataBinding.FieldName = 'AssetName_two'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 2'
+            Options.Editing = False
+            Width = 70
           end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -1988,7 +2023,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inComment'
+        Name = 'inisComment'
         Value = Null
         Component = cbComment
         DataType = ftBoolean
