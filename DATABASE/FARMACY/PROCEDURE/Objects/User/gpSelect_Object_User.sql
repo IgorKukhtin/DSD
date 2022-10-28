@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , DateInternshipConfirmation TDateTime
              , Language TVarChar
              , isPhotosOnSite Boolean
+             , isActive Boolean
               )
 AS
 $BODY$
@@ -54,7 +55,19 @@ END IF;
                         FROM Object_Personal_View AS View_Personal
                         WHERE View_Personal.isErased = FALSE
                         GROUP BY View_Personal.MemberId
-                       )
+                       ),
+         tmpEmployeeSchedule AS (SELECT DISTINCT
+                                        MovementItemMaster.ObjectId              AS UserId
+                                 FROM Movement
+
+                                      INNER JOIN MovementItem AS MovementItemMaster
+                                                              ON MovementItemMaster.MovementId = Movement.Id
+                                                             AND MovementItemMaster.DescId = zc_MI_Master()
+
+                                 WHERE Movement.OperDate > date_trunc('Month', CURRENT_DATE) - INTERVAL '3 MONTH'
+                                   AND Movement.DescId = zc_Movement_EmployeeSchedule()
+                                   AND Movement.StatusId <> zc_Enum_Status_Erased())
+                                          
    SELECT 
          Object_User.Id                             AS Id
        , Object_User.ObjectCode                     AS Code
@@ -104,6 +117,8 @@ END IF;
        , COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
        
        , COALESCE (ObjectBoolean_PhotosOnSite.ValueData, FALSE)::Boolean           AS isPhotosOnSite
+       
+       , COALESCE (tmpEmployeeSchedule.UserId, 0) > 0                              AS isActive
        
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
@@ -208,6 +223,8 @@ END IF;
         LEFT JOIN ObjectBoolean AS ObjectBoolean_PhotosOnSite
                                 ON ObjectBoolean_PhotosOnSite.ObjectId = Object_User.Id
                                AND ObjectBoolean_PhotosOnSite.DescId = zc_ObjectBoolean_User_PhotosOnSite()
+                               
+        LEFT JOIN tmpEmployeeSchedule ON tmpEmployeeSchedule.UserId = Object_User.Id
               
    WHERE Object_User.DescId = zc_Object_User();
   

@@ -65,6 +65,7 @@ type
     acteSputnikContactsMessages: TdsdeSputnikContactsMessages;
     actPhoneNumberVerification: TdsdExecStoredProc;
     spPhoneNumberVerification: TdsdStoredProc;
+    cxTextEdit1: TcxTextEdit;
   private
   public
   end;

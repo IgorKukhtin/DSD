@@ -20,6 +20,7 @@ type
     FormParams: TdsdFormParams;
     edPhone: TcxMaskEdit;
     cxLabel1: TcxLabel;
+    cxTextEdit1: TcxTextEdit;
   private
     { Private declarations }
   public

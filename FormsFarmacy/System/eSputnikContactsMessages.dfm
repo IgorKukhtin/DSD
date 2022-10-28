@@ -25,18 +25,30 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
     Height = 31
     Align = alTop
     TabOrder = 0
+    ExplicitLeft = -1
     object cxLabel1: TcxLabel
       Left = 4
       Top = 6
       Caption = #1053#1086#1084#1077#1088' '#1090#1077#1083#1077#1092#1086#1085#1072':'
     end
     object edPhone: TcxMaskEdit
-      Left = 102
+      Left = 133
       Top = 5
       Properties.MaskKind = emkRegExpr
       Properties.EditMask = '\d\d\d\d\d\d\d\d\d\d\d\d'
       TabOrder = 1
       Width = 147
+    end
+    object cxTextEdit1: TcxTextEdit
+      Left = 111
+      Top = 5
+      Enabled = False
+      Properties.ReadOnly = True
+      StyleDisabled.Color = clWindow
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 2
+      Text = '38-'
+      Width = 25
     end
   end
   object cxGrid: TcxGrid

@@ -15,9 +15,9 @@ BEGIN
    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_User());
    vbUserId:= lpGetUserBySession (inSession);
 
-   outPhone := inPhone;
+   outPhone := '38'||inPhone;
    
-   IF SUBSTRING (inPhone, 1, 2) <> '38' OR length(inPhone) <> 12
+   IF SUBSTRING (outPhone, 1, 2) <> '38' OR length(outPhone) <> 12
    THEN
      RAISE EXCEPTION 'Ошибка. Номер телефона должен начинаться с <38> и количество цифр 12';
    END IF;
@@ -35,4 +35,4 @@ $BODY$
 
 -- тест
 -- 
-select * from gpSelect_PhoneNumberVerification ('380505532306', '3');
+select * from gpSelect_PhoneNumberVerification ('0505532306', '3');

@@ -25,7 +25,7 @@ object PhoneNoSeparatorDialogForm: TPhoneNoSeparatorDialogForm
     Caption = 'Ok'
     Default = True
     ModalResult = 1
-    TabOrder = 0
+    TabOrder = 1
   end
   object cxButton2: TcxButton
     Left = 210
@@ -34,20 +34,31 @@ object PhoneNoSeparatorDialogForm: TPhoneNoSeparatorDialogForm
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
-    TabOrder = 1
+    TabOrder = 2
   end
   object edPhone: TcxMaskEdit
-    Left = 126
+    Left = 149
     Top = 45
     Properties.MaskKind = emkRegExpr
-    Properties.EditMask = '\d\d\d\d\d\d\d\d\d\d\d\d'
-    TabOrder = 2
-    Width = 147
+    Properties.EditMask = '\d\d\d\d\d\d\d\d\d\d'
+    TabOrder = 0
+    Width = 129
   end
   object cxLabel1: TcxLabel
     Left = 28
     Top = 46
     Caption = #1053#1086#1084#1077#1088' '#1090#1077#1083#1077#1092#1086#1085#1072':'
+  end
+  object cxTextEdit1: TcxTextEdit
+    Left = 127
+    Top = 45
+    Enabled = False
+    Properties.ReadOnly = True
+    StyleDisabled.Color = clWindow
+    StyleDisabled.TextColor = clWindowText
+    TabOrder = 4
+    Text = '38-'
+    Width = 25
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 215
