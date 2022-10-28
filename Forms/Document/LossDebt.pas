@@ -132,6 +132,8 @@ type
     actInsert_MI_LossDebt_70000: TdsdExecStoredProc;
     bb: TdxBarButton;
     JuridicalBasisChoiceForm: TOpenChoiceForm;
+    actMovementItemProtocolOpenForm: TdsdOpenForm;
+    bbMIProtocolOpenForm: TdxBarButton;
   private
   public
   end;

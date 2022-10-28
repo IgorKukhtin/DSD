@@ -1393,7 +1393,10 @@ uses
   TelegramGroupEdit in '..\..\Forms\Guides\TelegramGroupEdit.pas' {TelegramGroupEditForm: TParentForm},
   GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
   Asset_DocGoods in '..\..\Forms\Guides\Asset_DocGoods.pas' {Asset_DocGoodsForm: TParentForm},
-  Report_OrderInternalPackRemains in '..\..\Forms\Report\Report_OrderInternalPackRemains.pas' {Report_OrderInternalPackRemainsForm: TParentForm};
+  Report_OrderInternalPackRemains in '..\..\Forms\Report\Report_OrderInternalPackRemains.pas' {Report_OrderInternalPackRemainsForm: TParentForm},
+  Member_ContainerByDebt in '..\..\Forms\Guides\Member_ContainerByDebt.pas' {Member_ContainerByDebtForm: TParentForm},
+  SendDebtMember in '..\..\Forms\Document\SendDebtMember.pas' {SendDebtMemberForm: TParentForm},
+  SendDebtMemberJournal in '..\..\Forms\Document\SendDebtMemberJournal.pas' {SendDebtMemberJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

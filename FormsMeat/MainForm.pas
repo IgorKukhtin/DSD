@@ -1408,6 +1408,8 @@ type
     miReport_SaleExternal_Goods: TMenuItem;
     actTelegramGroup: TdsdOpenForm;
     miTelegramGroup: TMenuItem;
+    actSendDebtMember: TdsdOpenForm;
+    miSendDebtMember: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
