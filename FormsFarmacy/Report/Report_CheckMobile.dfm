@@ -937,6 +937,40 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         end>
       isShowModal = False
     end
+    object actOpenChoiceUserNick: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenChoiceUserNick'
+      FormName = 'TUserNickForm'
+      FormNameParam.Value = 'TUserNickForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UserReferalsId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdate_UserReferals: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actOpenChoiceUserNick
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_UserReferals
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_UserReferals
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1095#1072#1089#1090#1074#1091#1102#1097#1077#1075#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1095#1072#1089#1090#1074#1091#1102#1097#1077#1075#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      ImageIndex = 74
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1084,6 +1118,14 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         item
           Visible = True
           ItemName = 'bbMovementSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_UserReferals'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -1129,6 +1171,10 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     end
     object dxBarButton4: TdxBarButton
       Action = actReport_ApplicationAwardUser
+      Category = 0
+    end
+    object bbUpdate_UserReferals: TdxBarButton
+      Action = actUpdate_UserReferals
       Category = 0
     end
   end
@@ -1207,33 +1253,24 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       end>
     Left = 344
   end
-  object spUpdate_Price_MCSIsClose: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Price_MCSIsClose'
+  object spUpdate_UserReferals: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_UserReferals'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inUnitId'
+        Name = 'inMovementId'
         Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
+        Component = MasterCDS
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inUserReferalsId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMCSIsClose'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MCSIsClose'
-        DataType = ftBoolean
+        Component = FormParams
+        ComponentItem = 'UserReferalsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1283,5 +1320,15 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     PackSize = 1
     Left = 688
     Top = 312
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'UserReferalsId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 112
+    Top = 320
   end
 end

@@ -28,6 +28,31 @@ BEGIN
 
      -- Результат
      OPEN Cursor1 FOR
+          WITH -- существующие элементы Boat Structure
+          tmpItems AS (SELECT Object_ReceiptGoodsChild.Id                     AS ReceiptGoodsChildId
+
+                       FROM Object AS Object_ReceiptGoodsChild  
+                            INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                  ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                                 AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                                 AND ObjectLink_ReceiptGoods.ChildObjectId = inReceiptGoodsId
+                            INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                  ON ObjectLink_ProdColorPattern.ObjectId      = Object_ReceiptGoodsChild.Id
+                                                 AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                                               --  AND ObjectLink_ProdColorPattern.ChildObjectId > 0
+                            INNER JOIN ObjectLink AS ObjectLink_ObjectMain
+                                                  ON ObjectLink_ObjectMain.ObjectId = ObjectLink_ReceiptGoods.ChildObjectId
+                                                 AND ObjectLink_ObjectMain.DescId   = zc_ObjectLink_ReceiptGoods_Object() 
+                            -- 	Комплектующие
+                            INNER JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                  ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
+                                                 AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild() 
+                                                 
+                                                 
+                       WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+                         AND Object_ReceiptGoodsChild.isErased = FALSE  
+                       LIMIT 1  
+                      )
 
      SELECT
            Object_ReceiptGoods.Id         AS Id
@@ -67,6 +92,8 @@ BEGIN
          , tmpInfo.Footer3        ::TVarChar AS Footer3
          , tmpInfo.Footer4        ::TVarChar AS Footer4
          
+         , COALESCE (tmpItems.ReceiptGoodsChildId, 0) <> 0  AS isGoodsChild
+         
      FROM Object AS Object_ReceiptGoods
           LEFT JOIN ObjectString AS ObjectString_Code
                                  ON ObjectString_Code.ObjectId = Object_ReceiptGoods.Id
@@ -104,6 +131,8 @@ BEGIN
           LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
 
           LEFT JOIN Object_Product_PrintInfo_View AS tmpInfo ON 1=1
+
+          LEFT JOIN tmpItems AS tmpItems ON 1=1
 
      WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
        AND Object_ReceiptGoods.Id = inReceiptGoodsId
@@ -248,11 +277,11 @@ BEGIN
 
          , CASE WHEN COALESCE(tmpProdColorPattern.GoodsChildId, 0) = 0
                 THEN COALESCE(ObjectString_ArticleChildMain.ValueData, '')||
-                     CASE WHEN COALESCE(ObjectString_ArticleChildMain.ValueData, '') <> '' AND COALESCE(Object_ReceiptLevel.ValueData, '') <> '' THEN ' - ' ELSE '' END||
-                     COALESCE(Object_ReceiptLevel.ValueData, '')
+                     CASE WHEN COALESCE(ObjectString_ArticleChildMain.ValueData, '') <> '' AND COALESCE(Object_GoodsMain.ValueData, '') <> '' THEN ' - ' ELSE '' END||
+                     COALESCE(Object_GoodsMain.ValueData, '')
                 ELSE COALESCE(ObjectString_ArticleChild.ValueData, '')||
-                     CASE WHEN COALESCE(ObjectString_ArticleChild.ValueData, '') <> '' AND COALESCE(Object_ReceiptLevel.ValueData, '') <> '' THEN ' - ' ELSE '' END||
-                     COALESCE(Object_ReceiptLevel.ValueData, '') END:: TVarChar AS TitleGroup
+                     CASE WHEN COALESCE(ObjectString_ArticleChild.ValueData, '') <> '' AND COALESCE(Object_GoodsChildGroup.ValueData, '') <> '' THEN ' - ' ELSE '' END||
+                     COALESCE(Object_GoodsChildGroup.ValueData, '') END:: TVarChar AS TitleGroup
      FROM tmpProdColorPattern
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId
 

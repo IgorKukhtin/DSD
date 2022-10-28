@@ -106,6 +106,14 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 61
       end
+      object EducationName: TcxGridDBColumn
+        Caption = #1057#1087#1077#1094#1080#1072#1083#1100#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'EducationName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
       object isSite: TcxGridDBColumn
         Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
         DataBinding.FieldName = 'isSite'
@@ -271,6 +279,14 @@ object UserForm: TUserForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 95
+      end
+      object isPhotosOnSite: TcxGridDBColumn
+        Caption = #1060#1086#1090#1086' '#1085#1072' '#1089#1072#1081#1090#1077
+        DataBinding.FieldName = 'isPhotosOnSite'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 58
       end
     end
     object cxGridLevel: TcxGridLevel

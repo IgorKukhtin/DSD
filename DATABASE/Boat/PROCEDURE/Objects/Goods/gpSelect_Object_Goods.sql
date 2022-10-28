@@ -158,6 +158,7 @@ BEGIN
          , tmpGoods_limit AS (SELECT Object_Goods.*
                               FROM Object AS Object_Goods
                               WHERE Object_Goods.DescId = zc_Object_Goods()
+                              --AND Object_Goods.ObjectCode < 0
                               --AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
                             --ORDER BY Object_Goods.Id ASC
                               ORDER BY CASE WHEN vbUserId = 5 THEN Object_Goods.Id ELSE 0 END ASC, Object_Goods.Id DESC
@@ -170,6 +171,7 @@ BEGIN
                         FROM Object AS Object_Goods
                         WHERE Object_Goods.DescId = zc_Object_Goods()
                           AND Object_Goods.Id IN (SELECT DISTINCT tmpReceiptGoods.GoodsId FROM tmpReceiptGoods)
+                          AND Object_Goods.ObjectCode < 0
                        UNION
                         SELECT Object_Goods.*
                         FROM Object AS Object_Goods
@@ -185,7 +187,9 @@ BEGIN
                                                       OR Object_Goods.ObjectCode < 0
                                                       OR Object_Goods.ValueData ILIKE '%от%'
                                                       OR Object_GoodsGroup.ValueData ILIKE '%от%'
+                                                      OR Object_Goods.ValueData ILIKE '%ndige Inspektionsluke%'
                                                         )
+                                                  --AND Object_Goods.ObjectCode < 0
                         WHERE Object_Goods.DescId = zc_Object_Goods()
                         --AND inIsLimit_100 = TRUE
                        )

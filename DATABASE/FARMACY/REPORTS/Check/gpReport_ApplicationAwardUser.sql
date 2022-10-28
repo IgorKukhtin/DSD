@@ -50,33 +50,6 @@ BEGIN
                                         WHERE Movement.OperDate = date_trunc('Month', inStartDate)
                                           AND Movement.DescId = zc_Movement_EmployeeSchedule()
                                           AND Movement.StatusId <> zc_Enum_Status_Erased()),
-         tmpCheckGoodsSpecial AS (SELECT MovementItemContainer.MovementId
-                                         , SUM(ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2))      AS Summa
-                                         , SUM(CASE WHEN MovementItemContainer.OperDate >= '16.06.2021'
-                                                     AND (COALESCE(MovementString_InvNumberOrder.ValueData, '') <> ''
-                                                      OR COALESCE(MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0
-                                                     AND MovementItemContainer.OperDate < '03.08.2021')
-                                                    THEN ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2) 
-                                                    ELSE 0 END)                                                                AS SummaSite
-                                    FROM MovementItemContainer
-
-                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
-                                                                      ON MovementLinkObject_CheckSourceKind.MovementId =  MovementItemContainer.MovementId
-                                                                     AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
-
-                                         LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                                                  ON MovementString_InvNumberOrder.MovementId = MovementItemContainer.MovementId
-                                                                 AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-
-                                    WHERE MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate) - INTERVAL '1 MONTH'
-                                      AND MovementItemContainer.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
-                                      AND MovementItemContainer.MovementDescId = zc_Movement_Check()
-                                      AND MovementItemContainer.DescId = zc_MIContainer_Count()
-                                      AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
-                                                                                      FROM Object_Goods_Retail
-                                                                                      WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
-                                                                                         OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
-                                    GROUP BY MovementItemContainer.MovementId),                                          
          tmpMovement AS (SELECT Movement.OperDate
                               , Movement.Id
                               , MLO_UserReferals.ObjectId                           AS UserId
@@ -86,6 +59,7 @@ BEGIN
                               INNER JOIN MovementLinkObject AS MLO_UserReferals
                                                             ON MLO_UserReferals.DescId = zc_MovementLinkObject_UserReferals()
                                                            AND MLO_UserReferals.MovementId = Movement.Id
+                                                           AND COALESCE (MLO_UserReferals.ObjectId, 0) > 0
 
                               INNER JOIN MovementBoolean AS MovementBoolean_MobileFirstOrder
                                                          ON MovementBoolean_MobileFirstOrder.MovementId = Movement.Id
@@ -107,14 +81,15 @@ BEGIN
                                                            ON MovementLinkObject_DiscountExternal.MovementId = Movement.Id
                                                           AND MovementLinkObject_DiscountExternal.DescId = zc_MILinkObject_DiscountExternal()
 
-                              LEFT JOIN tmpCheckGoodsSpecial ON tmpCheckGoodsSpecial.MovementId = Movement.ID
+                              LEFT JOIN MovementFloat AS MovementFloat_ApplicationAward
+                                                      ON MovementFloat_ApplicationAward.MovementId =  Movement.Id
+                                                     AND MovementFloat_ApplicationAward.DescId = zc_MovementFloat_ApplicationAward()
 
                          WHERE Movement.DescId = zc_Movement_Check()
                            AND Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate) - INTERVAL '1 MONTH'
                            AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
-                           AND COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 
                            AND Movement.StatusId = zc_Enum_Status_Complete()
-                           AND (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) - COALESCE(tmpCheckGoodsSpecial.Summa, 0)) >= 199.50),
+                           AND COALESCE (MovementFloat_ApplicationAward.ValueData, 0) > 0),
          tmpUserReferals AS (SELECT Movement.OperDate
                                   , Movement.UserId
                              FROM tmpMovement AS Movement
@@ -198,4 +173,3 @@ $BODY$
 
 
 select * from gpReport_ApplicationAwardUser(inStartDate := ('01.10.2022')::TDateTime , inEndDate := ('31.10.2022')::TDateTime ,  inSession := '3');
-

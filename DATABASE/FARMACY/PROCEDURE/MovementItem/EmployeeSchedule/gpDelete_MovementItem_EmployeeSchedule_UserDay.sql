@@ -19,6 +19,7 @@ BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     IF NOT EXISTS(SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+       AND vbUserId NOT IN (3, 758920, 4183126, 9383066, 8037524)
     THEN
       RAISE EXCEPTION 'Удаление вам запрещено, обратитесь к системному администратору.';
     END IF;

@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , User_ TVarChar, UserSign TVarChar, UserSeal TVarChar, UserKey TVarChar
              , BranchCode Integer, BranchName TVarChar
              , UnitCode Integer, UnitName TVarChar
-             , PositionName TVarChar
+             , PositionName TVarChar, EducationName TVarChar
              , ProjectMobile TVarChar
              , Foto TVarChar
              , BillNumberMobile Integer
@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , InternshipConfirmation TVarChar
              , DateInternshipConfirmation TDateTime
              , Language TVarChar
+             , isPhotosOnSite Boolean
               )
 AS
 $BODY$
@@ -72,6 +73,7 @@ END IF;
        , Object_Unit.ObjectCode                     AS UnitCode
        , Object_Unit.ValueData                      AS UnitName
        , Object_Position.ValueData                  AS PositionName
+       , Object_Education.ValueData                 AS EducationName
 
        , ObjectString_ProjectMobile.ValueData       AS ProjectMobile
        , ObjectString_Foto.ValueData                AS Foto
@@ -100,6 +102,8 @@ END IF;
               ELSE 'Подтверждено сотрудником' END::TVarChar                        AS InternshipConfirmation
        , ObjectDate_User_InternshipConfirmation.ValueData                          AS DateInternshipConfirmation
        , COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
+       
+       , COALESCE (ObjectBoolean_PhotosOnSite.ValueData, FALSE)::Boolean           AS isPhotosOnSite
        
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
@@ -157,6 +161,11 @@ END IF;
                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Member_Education
+                             ON ObjectLink_Member_Education.ObjectId = Object_Member.Id
+                            AND ObjectLink_Member_Education.DescId = zc_ObjectLink_Member_Education()
+        LEFT JOIN Object AS Object_Education ON Object_Education.Id = ObjectLink_Member_Education.ChildObjectId
+
         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
         LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
@@ -195,6 +204,10 @@ END IF;
         LEFT JOIN ObjectDate AS ObjectDate_User_InternshipConfirmation
                              ON ObjectDate_User_InternshipConfirmation.ObjectId = Object_User.Id
                             AND ObjectDate_User_InternshipConfirmation.DescId = zc_ObjectDate_User_InternshipConfirmation()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_PhotosOnSite
+                                ON ObjectBoolean_PhotosOnSite.ObjectId = Object_User.Id
+                               AND ObjectBoolean_PhotosOnSite.DescId = zc_ObjectBoolean_User_PhotosOnSite()
               
    WHERE Object_User.DescId = zc_Object_User();
   

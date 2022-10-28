@@ -133,8 +133,11 @@ BEGIN
        RETURN QUERY
        SELECT MovementFloat_DayCount.ValueData::Integer            AS DayCount
             , 20::TFloat
-            , 10::TFloat
-            , CASE WHEN vbDateStart < '01.06.2021' THEN 7 ELSE 5 END::TFloat
+            , CASE WHEN vbDateStart < '01.11.2022' THEN 10
+                   ELSE 8 END::TFloat
+            , CASE WHEN vbDateStart < '01.06.2021' THEN 7 
+                   WHEN vbDateStart < '01.11.2022' THEN 5
+                   ELSE 4 END::TFloat
             , CASE WHEN vbDateStart < '01.06.2021' THEN 500 ELSE 250 END::TFloat
             , 250::TFloat
        FROM Movement
@@ -179,4 +182,4 @@ $BODY$
 
 -- тест select * from gpReport_GetIlliquidReductionPlanUser(inStartDate := ('27.04.2021')::TDateTime , inSession := '3');
 
-select * from gpReport_GetIlliquidReductionPlanUser(inStartDate := ('06.06.2021')::TDateTime ,  inSession := '3');
+select * from gpReport_GetIlliquidReductionPlanUser(inStartDate := CURRENT_DATE ,  inSession := '4279294');
