@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer
              , Message TBlob
              , Function TVarChar
              , Form TVarChar
+             , isAtEveryEntry Boolean
              )
 AS
 $BODY$
@@ -54,6 +55,7 @@ BEGIN
           , Null::TBlob                                      AS Message
           , Null::TVarChar                                   AS Function
           , Null::TVarChar                                   AS Form
+          , False::Boolean                                   AS isPharmacist
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
     ELSE
@@ -62,18 +64,19 @@ BEGIN
             Movement.Id
           , Movement.InvNumber
           , Movement.OperDate
-          , Object_Status.ObjectCode                              AS StatusCode
-          , Object_Status.ValueData                               AS StatusName
-          , MovementDate_DateEndPUSH.ValueData                    AS DateEndPUSH
-          , MovementFloat_Replays.ValueData::Integer              AS Replays  
-          , COALESCE(MovementBoolean_Daily.ValueData, False)      AS Daily
-          , COALESCE(MovementBoolean_Poll.ValueData, False)       AS isPoll
-          , COALESCE(MovementBoolean_Pharmacist.ValueData, False) AS isPharmacist
-          , Object_Retail.ID                                      AS RetailId
-          , Object_Retail.ValueData                               AS RetailName 
-          , MovementBlob_Message.ValueData                        AS Message
-          , MovementString_Function.ValueData                     AS Function  
-          , MovementString_Form.ValueData                         AS Form  
+          , Object_Status.ObjectCode                                AS StatusCode
+          , Object_Status.ValueData                                 AS StatusName
+          , MovementDate_DateEndPUSH.ValueData                      AS DateEndPUSH
+          , MovementFloat_Replays.ValueData::Integer                AS Replays  
+          , COALESCE(MovementBoolean_Daily.ValueData, False)        AS Daily
+          , COALESCE(MovementBoolean_Poll.ValueData, False)         AS isPoll
+          , COALESCE(MovementBoolean_Pharmacist.ValueData, False)   AS isPharmacist
+          , Object_Retail.ID                                        AS RetailId
+          , Object_Retail.ValueData                                 AS RetailName 
+          , MovementBlob_Message.ValueData                          AS Message
+          , MovementString_Function.ValueData                       AS Function  
+          , MovementString_Form.ValueData                           AS Form  
+          , COALESCE(MovementBoolean_AtEveryEntry.ValueData, False) AS isAtEveryEntry
 
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -109,6 +112,11 @@ BEGIN
                                       ON MovementBoolean_Poll.MovementId = Movement.Id
                                      AND MovementBoolean_Poll.DescId = zc_MovementBoolean_Poll()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_AtEveryEntry
+                                      ON MovementBoolean_AtEveryEntry.MovementId = Movement.Id
+                                     AND MovementBoolean_AtEveryEntry.DescId = zc_MovementBoolean_AtEveryEntry()
+
+
             LEFT JOIN MovementString AS MovementString_Function
                                      ON MovementString_Function.MovementId = Movement.Id
                                     AND MovementString_Function.DescId = zc_MovementString_Function()
@@ -141,4 +149,3 @@ ALTER FUNCTION gpGet_Movement_EmployeeSchedule (Integer, TDateTime, TVarChar) OW
 */
 
 -- select * from gpGet_Movement_PUSH(inMovementId := 17829304 , inOperDate := ('30.04.2021')::TDateTime ,  inSession := '3');
-

@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer
              , Replays Integer
              , Daily Boolean
              , isPoll Boolean
+             , isAtEveryEntry Boolean
              , Message TBlob
 
              , InsertName TVarChar, InsertDate TDateTime
@@ -52,6 +53,7 @@ BEGIN
           , COALESCE(MovementFloat_Replays.ValueData, 1)::Integer      AS Replays  
           , COALESCE(MovementBoolean_Daily.ValueData, False)           AS Daily
           , COALESCE(MovementBoolean_Poll.ValueData, False)            AS isPoll
+          , COALESCE(MovementBoolean_AtEveryEntry.ValueData, False)    AS isAtEveryEntry
 
           , COALESCE(NULLIF(MovementString_Function.ValueData, ''), NULLIF(MovementBlob_Message.ValueData, ''), MovementString_Form.ValueData)::TBlob AS Message
 
@@ -59,6 +61,7 @@ BEGIN
           , MovementDate_Insert.ValueData                              AS InsertDate
           , Object_Update.ValueData                                    AS UpdateName
           , MovementDate_Update.ValueData                              AS UpdateDate
+          
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -90,6 +93,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Poll
                                       ON MovementBoolean_Poll.MovementId = Movement.Id
                                      AND MovementBoolean_Poll.DescId = zc_MovementBoolean_Poll()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_AtEveryEntry
+                                      ON MovementBoolean_AtEveryEntry.MovementId = Movement.Id
+                                     AND MovementBoolean_AtEveryEntry.DescId = zc_MovementBoolean_AtEveryEntry()
 
             LEFT JOIN MovementString AS MovementString_Function
                                      ON MovementString_Function.MovementId = Movement.Id

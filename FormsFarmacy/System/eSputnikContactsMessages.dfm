@@ -457,7 +457,8 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      AfterAction = dsdeSputnikContactsMessages1
+      AfterAction = acteSputnikContactsMessages
+      BeforeAction = actPhoneNumberVerification
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -501,7 +502,7 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object dsdeSputnikContactsMessages1: TdsdeSputnikContactsMessages
+    object acteSputnikContactsMessages: TdsdeSputnikContactsMessages
       Category = 'DSDLib'
       MoveParams = <>
       DataStartParam.Value = Null
@@ -525,11 +526,23 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
       PasswordParam.DataType = ftString
       PasswordParam.MultiSelectSeparator = ','
       PhoneParam.Value = ''
-      PhoneParam.Component = edPhone
+      PhoneParam.Component = FormParams
+      PhoneParam.ComponentItem = 'Phone'
       PhoneParam.DataType = ftString
       PhoneParam.MultiSelectSeparator = ','
       DataSet = ClientDataSet
-      Caption = 'dsdeSputnikContactsMessages1'
+      Caption = 'acteSputnikContactsMessages'
+    end
+    object actPhoneNumberVerification: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spPhoneNumberVerification
+      StoredProcList = <
+        item
+          StoredProc = spPhoneNumberVerification
+        end>
+      Caption = 'actPhoneNumberVerification'
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -612,6 +625,12 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Phone'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 480
     Top = 200
@@ -633,6 +652,31 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
     ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 360
+    Top = 296
+  end
+  object spPhoneNumberVerification: TdsdStoredProc
+    StoredProcName = 'gpSelect_PhoneNumberVerification'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPhone'
+        Value = Null
+        Component = edPhone
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPhone'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Phone'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 200
     Top = 296
   end
 end

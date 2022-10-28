@@ -1,8 +1,10 @@
 -- Function: gpGet_PUSH_Cash(TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_PUSH_Cash(TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_PUSH_Cash(TVarChar);
+DROP FUNCTION IF EXISTS gpGet_PUSH_Cash(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_PUSH_Cash(
+    IN inisStart     Boolean  ,     -- Первый запуск после входа
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Text TBlob, isPoll boolean,
@@ -727,7 +729,9 @@ BEGIN
                               AND (COALESCE(MovementBoolean_Pharmacist.ValueData, False) = FALSE OR vbPositionCode = 1)
                               AND (COALESCE (MLO_Retail.ObjectId, 0) = 0 OR MLO_Retail.ObjectId = vbRetailId)
                               AND (COALESCE(MovementItemUnit.MovementId, 0) = 0 OR COALESCE(MovementItem_Child.ObjectId, 0) = vbUnitId)
-                              AND (COALESCE (MovementBoolean_Daily.ValueData, FALSE) = FALSE
+                              AND (COALESCE (inisStart, False) = TRUE
+                                   OR
+                                   COALESCE (MovementBoolean_Daily.ValueData, FALSE) = FALSE
                                    AND COALESCE(MovementFloat_Replays.ValueData, 1) >
                                        COALESCE ((SELECT MovementItem.Amount
                                                   FROM MovementItem
@@ -838,4 +842,4 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- 
-SELECT * FROM gpGet_PUSH_Cash('3')
+SELECT * FROM gpGet_PUSH_Cash(True, '3')

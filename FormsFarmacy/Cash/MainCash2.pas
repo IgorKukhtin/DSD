@@ -2868,6 +2868,7 @@ var
 
       if not gc_User.Local then
         try
+          spGet_PUSH_Cash.ParamByName('inisStart').Value := ARun;
           spGet_PUSH_Cash.Execute;
           TimerPUSH.Interval := 1000;
         except
@@ -2937,7 +2938,6 @@ begin
       ShowPUSHMessageCash('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Кристине.'#13#10 +
                           'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!', cResult);
 
-      ShowPUSHMessageCash('При нажатии правой кнопки мыши на табличной части FCash вы можете ознакомиться с весомым функционалом программы. '#13#10#13#10 +'Ознакомьтесь!', cResult);
       Load_PUSH(True);
     end
     else if UnitConfigCDS.Active and
@@ -13635,7 +13635,8 @@ begin
     end else
     begin
       spActiveAlerts.ParamByName('outActiveAlerts').Value := '';
-      spActiveAlerts.ParamByName('outstartDate').Value := Null;
+      spActiveAlerts.ParamByName('outStartDate').Value := Null;
+      spActiveAlerts.ParamByName('outShowPUSH').Value := False;
       spActiveAlerts.Execute;
 
       if FActiveAlerts <> spActiveAlerts.ParamByName('outActiveAlerts').Value then
@@ -13649,16 +13650,20 @@ begin
             lblActiveAlerts.Hint := '!! !! !! Увага! Оголошено тривогу, всім пройти в укриття !! !! !!'#13#13 + FormatDateTime('HH:NN', FActiveAlertsDate);
             lblActiveAlerts.Caption := '!!!';
 
-            APoint := lblActiveAlerts.ClientToScreen(Point(0, btnVIP.ClientHeight));
-            FHint := THintWindow.Create(Self);
-            FHint.Canvas.Font.Size := FHint.Font.Size * 3 div 2;
-            FHint.Canvas.Font.Style := FHint.Font.Style + [fsBold];
-            FHint.ActivateHint(TRect.Create(APoint.X, APoint.Y, APoint.X + 400, APoint.Y + 100),  lblActiveAlerts.Hint);
+            if spActiveAlerts.ParamByName('outShowPUSH').Value = TRUE then
+            begin
 
-            Application.Hint := lblActiveAlerts.Hint;
-            Application.ActivateHint(APoint);
-            Application.Hint := '';
-          end;
+              APoint := lblActiveAlerts.ClientToScreen(Point(0, btnVIP.ClientHeight));
+              FHint := THintWindow.Create(Self);
+              FHint.Canvas.Font.Size := FHint.Font.Size * 3 div 2;
+              FHint.Canvas.Font.Style := FHint.Font.Style + [fsBold];
+              FHint.ActivateHint(TRect.Create(APoint.X, APoint.Y, APoint.X + 400, APoint.Y + 100),  lblActiveAlerts.Hint);
+
+              Application.Hint := lblActiveAlerts.Hint;
+              Application.ActivateHint(APoint);
+              Application.Hint := '';
+            end;
+           end;
           FActiveAlerts := spActiveAlerts.ParamByName('outActiveAlerts').Value;
         end else
         begin
@@ -13668,11 +13673,14 @@ begin
           lblActiveAlerts.Caption := '';
           lblActiveAlerts.Hint := 'Тревоги нет';
 
-          APoint := lblActiveAlerts.ClientToScreen(Point(0, btnVIP.ClientHeight));
-          FHint := THintWindow.Create(Self);
-          FHint.Canvas.Font.Size := FHint.Font.Size * 3 div 2;
-          FHint.Canvas.Font.Style := FHint.Font.Style + [fsBold];
-          FHint.ActivateHint(TRect.Create(APoint.X, APoint.Y, APoint.X + 400, APoint.Y + 100),  'Увага! ВІДБІЙ ТРИВОГИ'#13#13 + FormatDateTime('HH:NN', Now));
+          if spActiveAlerts.ParamByName('outShowPUSH').Value = TRUE then
+          begin
+            APoint := lblActiveAlerts.ClientToScreen(Point(0, btnVIP.ClientHeight));
+            FHint := THintWindow.Create(Self);
+            FHint.Canvas.Font.Size := FHint.Font.Size * 3 div 2;
+            FHint.Canvas.Font.Style := FHint.Font.Style + [fsBold];
+            FHint.ActivateHint(TRect.Create(APoint.X, APoint.Y, APoint.X + 400, APoint.Y + 100),  'Увага! ВІДБІЙ ТРИВОГИ'#13#13 + FormatDateTime('HH:NN', Now));
+          end;
         end;
 
       end;

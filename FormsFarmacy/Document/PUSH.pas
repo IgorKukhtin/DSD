@@ -74,6 +74,7 @@ type
     cxLabel7: TcxLabel;
     ViewsLastDay: TcxGridDBColumn;
     ViewsCurrDay: TcxGridDBColumn;
+    cbAtEveryEntry: TcxCheckBox;
   private
     { Private declarations }
   public

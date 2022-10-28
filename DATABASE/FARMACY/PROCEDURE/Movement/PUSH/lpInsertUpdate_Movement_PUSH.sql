@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PUSH(
     IN inisPharmacist          Boolean    , -- Только фармацевтам
     IN inRetailId              Integer    , -- Только для торговая сети 
     IN inForm                  TVarChar   , -- Открывать форму если функция возвращает не пусто
+    IN inisAtEveryEntry        Boolean    , -- При каждом входе в кассу
     IN inUserId                Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -43,6 +44,9 @@ BEGIN
 
     -- сохранили свойство <Только фармацевтам>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Pharmacist(), ioId, inisPharmacist);
+
+    -- сохранили свойство <При каждом входе в кассу>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_AtEveryEntry(), ioId, inisAtEveryEntry);
 
     -- сохранили свойство <Пользователь (Только для торговая сети )>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Retail(), ioId, inRetailId);

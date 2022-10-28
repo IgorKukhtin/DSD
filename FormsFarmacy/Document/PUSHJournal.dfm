@@ -90,6 +90,14 @@ inherited PUSHJournalForm: TPUSHJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
+          object isAtEveryEntry: TcxGridDBColumn
+            Caption = #1055#1088#1080' '#1082#1072#1078#1076#1086#1084' '#1074#1093#1086#1076#1077
+            DataBinding.FieldName = 'isAtEveryEntry'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
           object colMessageText: TcxGridDBColumn
             Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
             DataBinding.FieldName = 'Message'
@@ -314,7 +322,7 @@ inherited PUSHJournalForm: TPUSHJournalForm
     Params = <
       item
         Name = 'inMovementId'
-        Value = 41640d
+        Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -327,11 +335,6 @@ inherited PUSHJournalForm: TPUSHJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Id'
-        Value = False
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'InvNumber'
         Value = Null
         DataType = ftString
@@ -339,7 +342,7 @@ inherited PUSHJournalForm: TPUSHJournalForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -355,60 +358,32 @@ inherited PUSHJournalForm: TPUSHJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalCount'
+        Name = 'DateEndPUSH'
         Value = Null
-        DataType = ftFloat
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSumm'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalSummPrimeCost'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
+        Name = 'Replays'
         Value = Null
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitName'
+        Name = 'Daily'
         Value = Null
-        DataType = ftString
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalId'
+        Name = 'isPoll'
         Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalName'
+        Name = 'isAtEveryEntry'
         Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Comment'
-        Value = Null
-        DataType = ftString
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

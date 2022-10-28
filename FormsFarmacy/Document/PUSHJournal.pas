@@ -26,6 +26,7 @@ type
     colReplays: TcxGridDBColumn;
     cjlDaily: TcxGridDBColumn;
     colisPoll: TcxGridDBColumn;
+    isAtEveryEntry: TcxGridDBColumn;
   private
     { Private declarations }
   public

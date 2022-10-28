@@ -109,9 +109,6 @@ inherited PUSHForm: TPUSHForm
     object tsChild: TcxTabSheet
       Caption = #1044#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -275,7 +272,7 @@ inherited PUSHForm: TPUSHForm
     end
     object chbDaily: TcxCheckBox
       Left = 8
-      Top = 149
+      Top = 147
       Caption = #1055#1086#1074#1090'. '#1077#1078#1077#1076#1085#1077#1074#1085#1086
       TabOrder = 3
       Width = 125
@@ -293,7 +290,7 @@ inherited PUSHForm: TPUSHForm
     end
     object chbPoll: TcxCheckBox
       Left = 8
-      Top = 164
+      Top = 162
       Caption = #1054#1087#1088#1086#1089
       TabOrder = 15
       Width = 67
@@ -320,7 +317,7 @@ inherited PUSHForm: TPUSHForm
     end
     object chbPharmacist: TcxCheckBox
       Left = 8
-      Top = 180
+      Top = 177
       Caption = #1058#1086#1083#1100#1082#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1072#1084
       TabOrder = 18
       Width = 152
@@ -335,6 +332,13 @@ inherited PUSHForm: TPUSHForm
       Left = 166
       Top = 171
       Caption = #1054#1090#1082#1088#1099#1074#1072#1090#1100' '#1089#1088#1072#1079#1091' '#1092#1086#1088#1084#1091
+    end
+    object cbAtEveryEntry: TcxCheckBox
+      Left = 8
+      Top = 193
+      Caption = #1055#1088#1080' '#1082#1072#1078#1076#1086#1084' '#1074#1093#1086#1076#1077' '#1074' '#1082#1072#1089#1089#1091
+      TabOrder = 21
+      Width = 157
     end
   end
   inherited ActionList: TActionList
@@ -652,7 +656,7 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -688,7 +692,7 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Name = 'DateEndPUSH'
-        Value = 'NULL'
+        Value = Null
         Component = edDateEndPUSH
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -755,6 +759,13 @@ inherited PUSHForm: TPUSHForm
         Component = edForm
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAtEveryEntry'
+        Value = Null
+        Component = cbAtEveryEntry
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 272
@@ -788,7 +799,7 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Name = 'inDateEndPUSH'
-        Value = 'NULL'
+        Value = Null
         Component = edDateEndPUSH
         DataType = ftDateTime
         ParamType = ptInput
@@ -842,7 +853,7 @@ inherited PUSHForm: TPUSHForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'RetailId'
+        Name = 'inRetailId'
         Value = Null
         Component = GuidesRetail
         ParamType = ptInput
@@ -853,6 +864,14 @@ inherited PUSHForm: TPUSHForm
         Value = Null
         Component = edForm
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAtEveryEntry'
+        Value = Null
+        Component = cbAtEveryEntry
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -914,6 +933,9 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Control = edForm
+      end
+      item
+        Control = cbAtEveryEntry
       end>
     Left = 208
     Top = 233
@@ -1149,6 +1171,7 @@ inherited PUSHForm: TPUSHForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1160,6 +1183,7 @@ inherited PUSHForm: TPUSHForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 382

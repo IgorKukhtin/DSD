@@ -1,9 +1,9 @@
 -- Function: gpSelect_GoodsPrice_ForSite()
 
 --DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite_Ol (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite_Ol (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_GoodsPrice_ForSite_Ol(
+CREATE OR REPLACE FUNCTION gpSelect_GoodsPrice_ForSite(
     IN inCategoryId         Integer     ,  -- Группа
     IN inSortType           Integer     ,  -- Тип сортировка
     IN inSortLang           TVarChar    ,  -- По названию
@@ -31,6 +31,7 @@ RETURNS TABLE (Id                Integer    -- Id товара
              , FormDispensingNameUkr TVarChar
              , NumberPlates Integer         -- Кол-во пластин в упаковке  
              , QtyPackage Integer           -- Кол-во в упаковке
+             , Multiplicity TFloat          -- Минимальная кратность при отпуске
               )
 AS
 $BODY$
@@ -131,6 +132,7 @@ BEGIN
                                    , Object_Goods_Main.FormDispensingId
                                    , Object_Goods_Main.NumberPlates
                                    , Object_Goods_Main.QtyPackage
+                                   , Object_Goods_Main.Multiplicity
                                    , COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 OR 
                                      COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0 OR
                                      COALESCE(Object_Goods_Main.isStealthBonuses, FALSE) OR
@@ -316,6 +318,7 @@ BEGIN
              , ObjectString_FormDispensing_NameUkr.ValueData                AS NameUkr
              , Price_Site.NumberPlates
              , Price_Site.QtyPackage
+             , Price_Site.Multiplicity
              
         FROM tmpPrice_Site AS Price_Site         
 
@@ -360,4 +363,4 @@ $BODY$
 -- тест
 --
  
-SELECT * FROM gpSelect_GoodsPrice_ForSite_Ol (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Ливостор', inUnitId := 13711869, inisDiscountExternal := True , inSession:= zfCalc_UserSite());
+SELECT * FROM gpSelect_GoodsPrice_ForSite (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Аффида', inUnitId := 13711869, inisDiscountExternal := True , inSession:= zfCalc_UserSite());

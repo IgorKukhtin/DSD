@@ -9298,7 +9298,14 @@ inherited MainCashForm2: TMainCashForm2
       item
         DataSet = PUSHDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inisStart'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 768
     Top = 56
@@ -11431,6 +11438,12 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'outstartDate'
         Value = Null
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowPUSH'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

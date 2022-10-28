@@ -62,7 +62,9 @@ type
     bbUpdate: TdxBarButton;
     text: TcxGridDBColumn;
     edPhone: TcxMaskEdit;
-    dsdeSputnikContactsMessages1: TdsdeSputnikContactsMessages;
+    acteSputnikContactsMessages: TdsdeSputnikContactsMessages;
+    actPhoneNumberVerification: TdsdExecStoredProc;
+    spPhoneNumberVerification: TdsdStoredProc;
   private
   public
   end;
