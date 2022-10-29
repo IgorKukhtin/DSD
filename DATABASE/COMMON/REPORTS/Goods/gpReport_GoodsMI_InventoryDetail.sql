@@ -45,6 +45,19 @@ BEGIN
      -- !!!определяется!!!
      vbIsGroup:= (inSession = '');
 
+
+     -- Бурмага М.Ф. + Гармаш С.М. + Горб Т.Г.
+     IF vbUserId IN (5308086, 651642, 439887)
+        AND inUnitId NOT IN (8458) -- Склад База ГП
+        AND inUnitId NOT IN (8451) -- ЦЕХ упаковки
+     THEN
+         RAISE EXCEPTION 'Ошибка.У пользователя <%> Нет прав формировать отчет для подразделения <%>'
+                       , lfGet_Object_ValueData_sh (vbUserId)
+                       , CASE WHEN inUnitId = 0 THEN '' ELSE lfGet_Object_ValueData_sh (inUnitId) END
+                        ;
+     END IF;
+
+
      /*IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoods')
      THEN
          DELETE FROM _tmpGoods;
