@@ -1188,6 +1188,11 @@ end;
 
 procedure TLoadFormTest.LoadSendDebtFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtMemberForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendDebtMemberForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtMemberJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendDebtMemberJournalForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendDebtForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtJournalForm'));
@@ -3837,6 +3842,9 @@ end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ContainerByDebtForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMember_ContainerByDebtForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGenderEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGenderEditForm');

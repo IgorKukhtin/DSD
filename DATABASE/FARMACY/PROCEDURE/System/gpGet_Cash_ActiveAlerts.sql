@@ -5,6 +5,7 @@
 CREATE OR REPLACE FUNCTION gpGet_Cash_ActiveAlerts(
    OUT outActiveAlerts     TVarChar ,  --
    OUT outstartDate        TDateTime, 
+   OUT outShowPUSH         Boolean  , 
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -26,7 +27,8 @@ BEGIN
     vbUnitId := vbUnitKey::Integer;
     
     outActiveAlerts := '';
-    outstartDate := Null;    
+    outstartDate := Null;   
+    outShowPUSH := False; 
     
     Return;
 

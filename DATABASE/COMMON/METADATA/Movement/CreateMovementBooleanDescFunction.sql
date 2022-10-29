@@ -436,9 +436,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_NotUseSUN() RETURNS integer AS $BO
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_NotUseSUN', 'Не использовать товар в СУН'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_NotUseSUN');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_AtEveryEntry() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_AtEveryEntry'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_AtEveryEntry', 'При каждом входе в кассу'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_AtEveryEntry');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 28.10.22                                                                                   * zc_MovementBoolean_AtEveryEntry
  07.09.22                                                                                   * zc_MovementBoolean_NotUseSUN
  07.09.22                                                                                   * zc_MovementBoolean_MobileFirstOrder
  01.09.22                                                                                   * zc_MovementBoolean_EmployeeMessage

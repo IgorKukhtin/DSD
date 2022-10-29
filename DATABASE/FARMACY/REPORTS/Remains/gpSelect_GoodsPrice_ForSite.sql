@@ -33,6 +33,7 @@ RETURNS TABLE (Id                Integer    -- Id товара
              , FormDispensingNameUkr TVarChar
              , NumberPlates Integer         -- Кол-во пластин в упаковке  
              , QtyPackage Integer           -- Кол-во в упаковке
+             , Multiplicity TFloat          -- Минимальная кратность при отпуске
               )
 AS
 $BODY$
@@ -133,6 +134,7 @@ BEGIN
                                    , Object_Goods_Main.FormDispensingId
                                    , Object_Goods_Main.NumberPlates
                                    , Object_Goods_Main.QtyPackage
+                                   , Object_Goods_Main.Multiplicity
                                    , COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 OR 
                                      COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0 OR
                                      COALESCE(Object_Goods_Main.isStealthBonuses, FALSE) OR
@@ -217,6 +219,7 @@ BEGIN
                              , tmpGoods.FormDispensingId
                              , tmpGoods.NumberPlates
                              , tmpGoods.QtyPackage
+                             , tmpGoods.Multiplicity
                               
                         FROM tmpPrice_Site AS tmpGoods 
                         
@@ -407,6 +410,7 @@ BEGIN
              , ObjectString_FormDispensing_NameUkr.ValueData                AS NameUkr
              , Price_Site.NumberPlates
              , Price_Site.QtyPackage
+             , Price_Site.Multiplicity
              
         FROM tmpData AS Price_Site         
 
@@ -448,4 +452,4 @@ $BODY$
             from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Бустрикс вак', true, zfCalc_UserSite())*/
             
             
-select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Ливостор', false, zfCalc_UserSite())
+select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Аффида', false, zfCalc_UserSite())

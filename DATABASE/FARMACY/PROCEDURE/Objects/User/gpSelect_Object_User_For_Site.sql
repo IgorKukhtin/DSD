@@ -35,7 +35,7 @@ BEGIN
      RETURN QUERY
        WITH tmpUserAll AS (SELECT Object_User.Id                    AS Id
                                 , Object_User.ValueData
-                                , zfConvert_StringToNumber (lpGet_DefaultValue('zc_Object_Unit', Object_User.Id)) AS UnitId
+                                , zfConvert_StringToNumber (lpGet_DefaultValue('-zc_Object_Unit', Object_User.Id)) AS UnitId
                                 , COALESCE (ObjectBoolean_Site.ValueData, FALSE)       AS isSite
                            FROM Object AS Object_User 
                                                                 
@@ -55,7 +55,7 @@ BEGIN
                              , ObjectString_Foto.ValueData       AS Foto
                              , Object_Education.ValueData        AS EducationName
                              , ObjectString_Education_NameUkr.ValueData  AS EducationNameUkr
-                             , zfConvert_StringToNumber (lpGet_DefaultValue('zc_Object_Unit', Object_User.Id)) AS UnitId
+                             , zfConvert_StringToNumber (lpGet_DefaultValue('-zc_Object_Unit', Object_User.Id)) AS UnitId
                              , ObjectDate_Personal_In.ValueData AS DateIn
                              , Object_User.isSite
                         FROM tmpUserAll AS Object_User 
@@ -149,4 +149,4 @@ $BODY$
 -- тест
 -- 
 
-SELECT * FROM gpSelect_Object_User_For_Site (inUnitId:= 375626, inSession:= '3'); -- Аптека_1 пр_Героев_40 WHERE DateAction >= '08.09.2017'
+SELECT * FROM gpSelect_Object_User_For_Site (inUnitId:= 0, inSession:= '3');

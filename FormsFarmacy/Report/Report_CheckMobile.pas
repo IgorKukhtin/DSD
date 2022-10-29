@@ -37,7 +37,7 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    spUpdate_Price_MCSIsClose: TdsdStoredProc;
+    spUpdate_UserReferals: TdsdStoredProc;
     bbMoneyBoxSun: TdxBarButton;
     cbIsUnComplete: TcxCheckBox;
     cbIsErased: TcxCheckBox;
@@ -65,6 +65,10 @@ type
     bbMovementSetErased: TdxBarButton;
     actReport_ApplicationAwardUser: TdsdOpenForm;
     dxBarButton4: TdxBarButton;
+    FormParams: TdsdFormParams;
+    actUpdate_UserReferals: TdsdExecStoredProc;
+    actOpenChoiceUserNick: TOpenChoiceForm;
+    bbUpdate_UserReferals: TdxBarButton;
   private
     { Private declarations }
   public

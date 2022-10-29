@@ -121,47 +121,6 @@ BEGIN
                                         WHERE Movement.OperDate BETWEEN date_trunc('Month', inStartDate) AND date_trunc('Month', inEndDate)
                                           AND Movement.DescId = zc_Movement_EmployeeSchedule()
                                           AND Movement.StatusId <> zc_Enum_Status_Erased()),
-            tmpCheckGoodsSpecial AS ( SELECT MovementItemContainer.MovementId
-                                           , SUM(ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2))      AS Summa
-                                           , SUM(CASE WHEN MovementItemContainer.OperDate >= '16.06.2021'
-                                                       AND (COALESCE(MovementString_InvNumberOrder.ValueData, '') <> ''
-                                                        OR COALESCE(MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0
-                                                       AND MovementItemContainer.OperDate < '03.08.2021')
-                                                      THEN ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2) 
-                                                      ELSE 0 END)                                                                AS SummaSite
-                                      FROM MovementItemContainer
-
-                                           LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
-                                                                        ON MovementLinkObject_CheckSourceKind.MovementId =  MovementItemContainer.MovementId
-                                                                       AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
-
-                                           LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                                                    ON MovementString_InvNumberOrder.MovementId = MovementItemContainer.MovementId
-                                                                   AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-
-                                      WHERE MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
-                                        AND MovementItemContainer.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
-                                        AND MovementItemContainer.MovementDescId = zc_Movement_Check()
-                                        AND MovementItemContainer.DescId = zc_MIContainer_Count()
-                                        AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
-                                                                                        FROM Object_Goods_Retail
-                                                                                        
-                                                                                             INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
-                                                                                             
-                                                                                             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
-                                                                                                                       AND tmpGoodsDiscount.ORD = 1
-                                                                                        
-                                                                                        WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
-                                                                                           OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0
-                                                                                           OR COALESCE(Object_Goods_Main.isStealthBonuses, FALSE) = TRUE
-                                                                                           OR COALESCE(tmpGoodsDiscount.isStealthBonuses, FALSE) = TRUE
-                                                                                           OR (COALESCE (Object_Goods_Retail.DiscontAmountSite, 0) > 0 OR
-                                                                                               COALESCE (Object_Goods_Retail.DiscontPercentSite, 0) > 0) 
-                                                                                               AND Object_Goods_Retail.DiscontSiteStart IS NOT NULL
-                                                                                               AND Object_Goods_Retail.DiscontSiteEnd IS NOT NULL  
-                                                                                               AND Object_Goods_Retail.DiscontSiteStart <= CURRENT_DATE
-                                                                                               AND Object_Goods_Retail.DiscontSiteEnd >= CURRENT_DATE)
-                                      GROUP BY MovementItemContainer.MovementId),
             tmpMovement_Check AS (SELECT Movement.*
                                   FROM Movement
                                        INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
@@ -185,35 +144,6 @@ BEGIN
                                  ),
             tmpMovementLinkObject AS (SELECT * FROM MovementLinkObject WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_Check.Id FROM tmpMovement_Check)
                                      ),
-            tmpMI_Check AS (SELECT Movement.Id      AS MovementId
-                                 , MovementItem.Id  AS MovementItemId
-                                 , MovementItem.Amount
-                            FROM tmpMovement_Check AS Movement
-
-                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                        AND MovementItem.DescId = zc_MI_Master()
-                                                        AND MovementItem.isErased = False
-
-                                 INNER JOIN MovementItemLinkObject AS MI_PartionDateKind
-                                                                   ON MI_PartionDateKind.MovementItemId = MovementItem.Id
-                                                                  AND MI_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
-                                                                  AND MI_PartionDateKind.ObjectId <> zc_Enum_PartionDateKind_Good()
-
-                         ),                                          
-            tmpMI AS (SELECT MovementItem.MovementId
-                           , SUM(COALESCE(ROUND(MovementItem.Amount * MIFloat_Price.ValueData, 2), 0))::TFloat       AS Summa
-                           , SUM(COALESCE(ROUND(MovementItem.Amount * MIFloat_PriceSale.ValueData, 2), 0))::TFloat   AS SummaSale
-                      FROM tmpMI_Check AS MovementItem
- 
-                           LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                       ON MIFloat_Price.MovementItemId = MovementItem.MovementItemId
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                           LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                                       ON MIFloat_PriceSale.MovementItemId = MovementItem.MovementItemId
-                                                      AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-                                                            
-                      GROUP BY MovementItem.MovementId
-                      ),
             tmpMovementDiscount AS (SELECT DISTINCT MovementItemContainer.MovementId
                                     FROM tmpGoodsDiscountTools 
                                      
@@ -300,15 +230,9 @@ BEGIN
            , MovementDate_Coming.ValueData                                AS DateComing
            , CASE WHEN Movement_Check.StatusId = zc_Enum_Status_Complete() THEN MovementFloat_MobileDiscount.ValueData END::TFloat AS MobileDiscount
            
-           , CASE WHEN COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False) = True AND
-                       MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) - 
-                       COALESCE(tmpMI.SummaSale, 0) - COALESCE(tmpCheckGoodsSpecial.Summa, 0) >= 199.50 AND
-                       COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) <> 0 AND
-                       COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 AND
-                       Movement_Check.StatusId = zc_Enum_Status_Complete() THEN 
-                       CASE WHEN MovementFloat_TotalSumm.ValueData - COALESCE(tmpMI.Summa, 0) - COALESCE(tmpCheckGoodsSpecial.Summa, 0) > 1000 
-                            THEN ROUND((MovementFloat_TotalSumm.ValueData - COALESCE(tmpMI.Summa, 0) - COALESCE(tmpCheckGoodsSpecial.Summa, 0)) * 0.02, 2)
-                            ELSE 20 END END::TFloat  AS ApplicationAward
+           , CASE WHEN Movement_Check.StatusId = zc_Enum_Status_Complete() 
+                   AND COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) > 0
+                  THEN MovementFloat_ApplicationAward.ValueData END::TFloat           AS ApplicationAward
            
            , Movement_Check.isEmployeeMessage                             AS isEmployeeMessage
            
@@ -386,6 +310,9 @@ BEGIN
              LEFT JOIN tmpMovementFloat AS MovementFloat_MobileDiscount
                                      ON MovementFloat_MobileDiscount.MovementId =  Movement_Check.Id
                                     AND MovementFloat_MobileDiscount.DescId = zc_MovementFloat_MobileDiscount()
+             LEFT JOIN MovementFloat AS MovementFloat_ApplicationAward
+                                     ON MovementFloat_ApplicationAward.MovementId =  Movement_Check.Id
+                                    AND MovementFloat_ApplicationAward.DescId = zc_MovementFloat_ApplicationAward()
 
              LEFT JOIN tmpMovementString AS MovementString_InvNumberOrder
                                       ON MovementString_InvNumberOrder.MovementId = Movement_Check.Id
@@ -577,10 +504,6 @@ BEGIN
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_DiscountExternal
                                          ON MovementLinkObject_DiscountExternal.MovementId = Movement_Check.Id
                                         AND MovementLinkObject_DiscountExternal.DescId = zc_MILinkObject_DiscountExternal()
-
-            LEFT JOIN tmpCheckGoodsSpecial ON tmpCheckGoodsSpecial.MovementId = Movement_Check.ID
-            
-            LEFT JOIN tmpMI ON tmpMI.MovementId = Movement_Check.ID
                         
       ;
 

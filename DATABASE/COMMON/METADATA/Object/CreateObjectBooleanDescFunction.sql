@@ -1324,9 +1324,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_BarCode_StealthBonuses() RETURNS Int
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_BarCode(), 'zc_ObjectBoolean_BarCode_StealthBonuses', 'Стелс для бонусов мобильного приложения' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_BarCode_StealthBonuses');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_User_PhotosOnSite() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_PhotosOnSite'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectBoolean_User_PhotosOnSite', 'Фото на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_PhotosOnSite');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 27.10.22                                                                                                          * zc_ObjectBoolean_User_PhotosOnSite
  05.10.22                                                                                                          * zc_ObjectBoolean_Goods_StealthBonuses, zc_ObjectBoolean_BarCode_StealthBonuses
  05.10.22                                                                                                          * zc_ObjectBoolean_Unit_ReplaceSte2ListDif
  03.10.22         * zc_ObjectBoolean_Asset_DocGoods

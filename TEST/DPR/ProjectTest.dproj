@@ -4850,6 +4850,18 @@
 				<Form>Report_OrderInternalPackRemainsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Member_ContainerByDebt.pas">
+				<Form>Member_ContainerByDebtForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SendDebtMember.pas">
+				<Form>SendDebtMemberForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SendDebtMemberJournal.pas">
+				<Form>SendDebtMemberJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

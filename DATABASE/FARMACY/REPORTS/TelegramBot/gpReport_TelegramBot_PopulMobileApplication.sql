@@ -68,40 +68,11 @@ BEGIN
                                  , SUM(CASE WHEN tmpBoard.PositionCode <> 1 THEN 1 ELSE 0 END) AS CountUser2
                             FROM tmpBoard
                             GROUP BY tmpBoard.UnitId),
-           tmpCheckGoodsSpecial AS (SELECT MovementItemContainer.MovementId
-                                           , SUM(ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2))      AS Summa
-                                           , SUM(CASE WHEN MovementItemContainer.OperDate >= '16.06.2021'
-                                                       AND (COALESCE(MovementString_InvNumberOrder.ValueData, '') <> ''
-                                                        OR COALESCE(MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0
-                                                       AND MovementItemContainer.OperDate < '03.08.2021')
-                                                      THEN ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2) 
-                                                      ELSE 0 END)                                                                AS SummaSite
-                                      FROM MovementItemContainer
-
-                                           LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
-                                                                        ON MovementLinkObject_CheckSourceKind.MovementId =  MovementItemContainer.MovementId
-                                                                       AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
-
-                                           LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                                                    ON MovementString_InvNumberOrder.MovementId = MovementItemContainer.MovementId
-                                                                   AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-
-                                      WHERE MovementItemContainer.OperDate >= DATE_TRUNC ('month', DATE_TRUNC ('month', CURRENT_DATE) - INTERVAL '1 DAY')
-                                        AND MovementItemContainer.OperDate < DATE_TRUNC ('month', CURRENT_DATE) 
-                                        AND MovementItemContainer.MovementDescId = zc_Movement_Check()
-                                        AND MovementItemContainer.DescId = zc_MIContainer_Count()
-                                        AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
-                                                                                        FROM Object_Goods_Retail
-                                                                                        WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
-                                                                                           OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
-                                      GROUP BY MovementItemContainer.MovementId),
            tmpUserReferals AS (SELECT Movement.OperDate
                                     , MLO_UserReferals.ObjectId                           AS UserId
                                     , tmpBoard.UnitId                                     AS UnitId
                                     , tmpBoard.PositionCode                               AS PositionCode
-                                    , CASE WHEN MovementFloat_TotalSumm.ValueData - COALESCE(tmpCheckGoodsSpecial.Summa, 0) > 1000 
-                                           THEN ROUND((MovementFloat_TotalSumm.ValueData - COALESCE(tmpCheckGoodsSpecial.Summa, 0)) * 0.02, 2)
-                                           ELSE 20 END::TFloat  AS ApplicationAward
+                                    , MovementFloat_ApplicationAward.ValueData            AS ApplicationAward
                                FROM Movement
                                
                                     INNER JOIN MovementLinkObject AS MLO_UserReferals
@@ -130,15 +101,15 @@ BEGIN
                                                                  ON MovementLinkObject_DiscountExternal.MovementId = Movement.Id
                                                                 AND MovementLinkObject_DiscountExternal.DescId = zc_MILinkObject_DiscountExternal()
  
-                                    LEFT JOIN tmpCheckGoodsSpecial ON tmpCheckGoodsSpecial.MovementId = Movement.ID
+                                    LEFT JOIN MovementFloat AS MovementFloat_ApplicationAward
+                                                            ON MovementFloat_ApplicationAward.MovementId =  Movement.Id
+                                                           AND MovementFloat_ApplicationAward.DescId = zc_MovementFloat_ApplicationAward()
  
                                WHERE Movement.DescId = zc_Movement_Check()
                                  AND Movement.OperDate >= DATE_TRUNC ('month', DATE_TRUNC ('month', CURRENT_DATE) - INTERVAL '1 DAY')
                                  AND Movement.OperDate < DATE_TRUNC ('month', CURRENT_DATE) 
-                                 AND COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 
                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                 AND (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) - 
-                                      COALESCE(tmpCheckGoodsSpecial.Summa, 0)) >= 199.50),
+                                 AND COALESCE (MovementFloat_ApplicationAward.ValueData, 0) > 0),
            tmpUserReferalsUnit AS (SELECT tmpUserReferals.UnitId
                                         , COUNT(*)                               AS CountChech
                                         , COUNT(DISTINCT tmpUserReferals.UserId) AS CountUser

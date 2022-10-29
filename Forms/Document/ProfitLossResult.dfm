@@ -4,7 +4,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
   ClientWidth = 823
   AddOnFormData.isSingle = True
   ExplicitWidth = 839
-  ExplicitHeight = 505
+  ExplicitHeight = 509
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
