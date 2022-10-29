@@ -127,7 +127,7 @@ BEGIN
  ;
 
    -- сохранили
-   PERFORM lpInsertUpdate_MovementItem_OrderExternal (ioId                 := 0 :: integer
+   PERFORM gpInsertUpdate_MovementItem_OrderExternal (ioId                 := 0 :: integer
                                                     , inMovementId         := inMovementId
                                                     , inGoodsId            := tmpMI.GoodsId
                                                     , inAmount             := COALESCE (tmpMI.Amount,0) :: TFloat 
@@ -135,7 +135,7 @@ BEGIN
                                                     , inGoodsKindId        := tmpMI.GoodsKindId
                                                     , ioPrice              := tmpMI.Price
                                                     , ioCountForPrice      := tmpMI.CountForPrice
-                                                    , inUserId             := vbUserId
+                                                    , inSession            := inSession
                                                     )
      FROM tmpMI
     ;

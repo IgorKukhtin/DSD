@@ -156,7 +156,7 @@ BEGIN
 
      -- сохранили <Ёлемент документа>
      SELECT tmp.ioId INTO ioMovementItemId
-     FROM lpInsertUpdate_MovementItem_OrderExternal (ioId                 := ioMovementItemId
+     FROM gpInsertUpdate_MovementItem_OrderExternal (ioId                 := ioMovementItemId
                                                    , inMovementId         := ioId
                                                    , inGoodsId            := vbGoodsId
                                                    , inAmount             := inAmount
@@ -164,7 +164,7 @@ BEGIN
                                                    , inGoodsKindId        := vbGoodsKindId
                                                    , ioPrice              := inPrice -- vbPrice
                                                    , ioCountForPrice      := 1       -- vbCountForPrice
-                                                   , inUserId             := vbUserId
+                                                   , inSession            := inSession
                                                     ) AS tmp;
 
 END;

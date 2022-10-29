@@ -58,7 +58,7 @@ BEGIN
                                                 ) AS tmp;
 
    -- записываем строки OrderExternalGoods документа
-   PERFORM lpInsertUpdate_MovementItem_OrderExternal (ioId                 := 0
+   PERFORM gpInsertUpdate_MovementItem_OrderExternal (ioId                 := 0
                                                     , inMovementId         := vbMovementId
                                                     , inGoodsId            := tmp.GoodsId
                                                     , inAmount             := tmp.Amount
@@ -66,7 +66,7 @@ BEGIN
                                                     , inGoodsKindId        := tmp.GoodsKindId
                                                     , ioPrice              := tmp.Price
                                                     , ioCountForPrice      := tmp.CountForPrice
-                                                    , inUserId             := vbUserId
+                                                    , inSession            := inSession
                                                      ) 
    FROM gpSelect_MovementItem_OrderExternal (ioId, vbPriceListId, inOperDate, False, False, inSession)  AS tmp;
 
