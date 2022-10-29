@@ -218,8 +218,18 @@ BEGIN
      -- дописали св-во <Asset >
      IF inIsAsset = TRUE
      THEN
+         IF inBranchCode = 101
+        AND vbUnitId = 8451
+        AND vbToId  IN (8459, 8458) -- Розподільчий комплекс + Склад База ГП
+        AND COALESCE (inAssetId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не определено значение <Оборудование - 1>.';
+         END IF;
+
+         --
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), vbId, inAssetId);
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), vbId, inAssetId_two);
+
      END IF;
 
      -- дописали св-во <Протокол Дата/время начало>

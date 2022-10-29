@@ -34,7 +34,7 @@ BEGIN
      -- IF inBranchId IN (8379, 3080683) THEN RETURN; END IF;
      -- IF inBranchId IN (0) THEN RETURN; END IF;
      
-     -- inItearationCount:=100;
+     inItearationCount:=80;
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
