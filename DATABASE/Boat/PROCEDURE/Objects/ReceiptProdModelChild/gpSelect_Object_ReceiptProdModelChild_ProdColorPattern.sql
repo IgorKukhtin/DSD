@@ -70,7 +70,7 @@ BEGIN
 
           -- раскладываем ReceiptProdModelChild
         , tmpProdColorPattern AS (SELECT tmpReceiptProdModelChild.ReceiptProdModelId     AS ReceiptProdModelId
-                                       , Object_ReceiptGoodsChild.Id                     AS ReceiptGoodsChildId
+                                       , MAX (Object_ReceiptGoodsChild.Id)               AS ReceiptGoodsChildId
                                        , Object_ReceiptGoodsChild.ValueData              AS Comment
                                        , Object_ReceiptGoodsChild.isErased               AS isErased
                                          -- если меняли на другой товар, не тот что в Boat Structure
@@ -80,7 +80,7 @@ BEGIN
                                          -- Категория Опций
                                        , ObjectLink_MaterialOptions.ChildObjectId        AS MaterialOptionsId
                                          -- умножили
-                                       , tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData AS Value
+                                       , SUM (tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData) AS Value
                                   FROM tmpReceiptProdModelChild
                                        -- нашли его в сборке узлов
                                        INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
@@ -115,6 +115,15 @@ BEGIN
                                        LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                              ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                                             AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                                  GROUP BY tmpReceiptProdModelChild.ReceiptProdModelId
+                                         , Object_ReceiptGoodsChild.ValueData
+                                         , Object_ReceiptGoodsChild.isErased
+                                           -- если меняли на другой товар, не тот что в Boat Structure
+                                         , ObjectLink_Object.ChildObjectId
+                                           -- нашли Элемент Boat Structure
+                                         , ObjectLink_ProdColorPattern.ChildObjectId
+                                           -- Категория Опций
+                                         , ObjectLink_MaterialOptions.ChildObjectId
                                  )
 
      -- Результат
