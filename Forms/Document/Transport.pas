@@ -279,6 +279,11 @@ type
     spSelectPrintCost: TdsdStoredProc;
     actPrintCost: TdsdPrintAction;
     bbPrintCost: TdxBarButton;
+    spUpdateChangePriceUser: TdsdStoredProc;
+    actUpdateChangePriceUser: TdsdDataSetRefresh;
+    actUpdateChangePriceUserDialog: TExecuteDialog;
+    macUpdateChangePriceUserDialog: TMultiAction;
+    bbUpdateChangePriceUserDialog: TdxBarButton;
   private
   public
   end;

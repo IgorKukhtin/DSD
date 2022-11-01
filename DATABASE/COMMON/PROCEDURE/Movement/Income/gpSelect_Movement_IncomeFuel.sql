@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeFuel(
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaster TVarChar, OperDateMaster TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
-             , PriceWithVAT Boolean, VATPercent TFloat, ChangePrice TFloat
+             , PriceWithVAT Boolean
+             , isChangePriceUser Boolean -- Ручная скидка в цене (да/нет)
+             , VATPercent TFloat, ChangePrice TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , JuridicalName_from TVarChar, FromName TVarChar, ToName TVarChar, ItemName TVarChar
              , PaidKindName TVarChar
@@ -85,6 +87,7 @@ BEGIN
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
 
            , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
+           , COALESCE (MovementBoolean_ChangePriceUser.ValueData, FALSE) AS isChangePriceUser
            , MovementFloat_VATPercent.ValueData          AS VATPercent
            , MovementFloat_ChangePrice.ValueData         AS ChangePrice
 
@@ -313,6 +316,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+            LEFT JOIN MovementBoolean AS MovementBoolean_ChangePriceUser
+                                      ON MovementBoolean_ChangePriceUser.MovementId =  Movement.Id
+                                     AND MovementBoolean_ChangePriceUser.DescId = zc_MovementBoolean_ChangePriceUser()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -417,6 +424,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 01.11.22         * add isChangePriceUser
  07.10.16         * add inJuridicalBasisId
  15.01.16         * add               
  10.02.14                                        * add убрал !!!САМОЕ НЕКРАСИВОЕ РЕШЕНИЕ!!!, т.к. AccessKeyId будет достаточно

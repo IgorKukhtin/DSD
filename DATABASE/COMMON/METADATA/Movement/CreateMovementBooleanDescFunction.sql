@@ -127,6 +127,9 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_Export() RETURNS integer AS $BODY$
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Export', 'Сформирована Выгрузка (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Export');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_ChangePriceUser() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_ChangePriceUser'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_ChangePriceUser', 'Ручная скидка в цене (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ChangePriceUser');
 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Аптека
@@ -443,6 +446,7 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 01.11.22         * zc_MovementBoolean_ChangePriceUser
  28.10.22                                                                                   * zc_MovementBoolean_AtEveryEntry
  07.09.22                                                                                   * zc_MovementBoolean_NotUseSUN
  07.09.22                                                                                   * zc_MovementBoolean_MobileFirstOrder

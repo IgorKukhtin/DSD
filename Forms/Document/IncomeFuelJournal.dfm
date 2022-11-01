@@ -403,6 +403,15 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
+      object isChangePriceUser: TcxGridDBColumn
+        Caption = #1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isChangePriceUser'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+        Width = 88
+      end
       object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
@@ -1107,7 +1116,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1142,7 +1151,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1798,10 +1807,13 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end
@@ -1840,7 +1852,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       end
       item
         Name = 'inIsLastComplete'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1881,7 +1893,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       end
       item
         Name = 'inisSign'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1941,7 +1953,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       end
       item
         Name = 'inisSign'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

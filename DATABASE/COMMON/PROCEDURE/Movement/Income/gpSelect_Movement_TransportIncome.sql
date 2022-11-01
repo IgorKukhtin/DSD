@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportIncome(
 )
 RETURNS TABLE (MovementId Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
-             , PriceWithVAT Boolean, VATPercent TFloat, ChangePrice TFloat
+             , PriceWithVAT Boolean
+             , isChangePriceUser Boolean -- Ручная скидка в цене (да/нет)
+             , VATPercent TFloat, ChangePrice TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar, PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
              , RouteId Integer, RouteName TVarChar
              , MovementItemId Integer
@@ -61,6 +63,7 @@ BEGIN
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
 
            , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
+           , COALESCE (MovementBoolean_ChangePriceUser.ValueData, FALSE) AS isChangePriceUser
            , MovementFloat_VATPercent.ValueData          AS VATPercent
            , MovementFloat_ChangePrice.ValueData         AS ChangePrice
 
@@ -101,15 +104,20 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_ChangePriceUser
+                                      ON MovementBoolean_ChangePriceUser.MovementId = Movement.Id
+                                     AND MovementBoolean_ChangePriceUser.DescId = zc_MovementBoolean_ChangePriceUser()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -182,6 +190,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.11.22         * add isChangePriceUser
  31.10.13                                        * add OperDatePartner
  26.10.13                                        * add MIContainer_Count.isActive = TRUE
  23.10.13                                        * add zfConvert_StringToNumber
@@ -192,4 +201,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_TransportIncome (inParentId:= 688, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
- select * from gpSelect_Movement_TransportIncome (inParentId := 15468824 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '10909');
+-- select * from gpSelect_Movement_TransportIncome (inParentId := 15468824 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '10909');

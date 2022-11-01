@@ -963,22 +963,28 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome20202JournalForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-  {
+  }
   //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangePriceUserDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChangePriceUserDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeFuelForm');
+
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeFuelJournalForm');
   //
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartionGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartionGoodsJournalForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerJournalForm'));
@@ -988,6 +994,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
+  }
 end;
 procedure TLoadFormTest.LoadIncomeAssetFormTest;
 begin
@@ -1815,14 +1822,14 @@ begin
  {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportRouteJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportRouteJournalForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportForm');
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportJournalForm');
   exit;
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportJournalChoiceForm');
   }
 end;

@@ -1396,7 +1396,8 @@ uses
   Report_OrderInternalPackRemains in '..\..\Forms\Report\Report_OrderInternalPackRemains.pas' {Report_OrderInternalPackRemainsForm: TParentForm},
   Member_ContainerByDebt in '..\..\Forms\Guides\Member_ContainerByDebt.pas' {Member_ContainerByDebtForm: TParentForm},
   SendDebtMember in '..\..\Forms\Document\SendDebtMember.pas' {SendDebtMemberForm: TParentForm},
-  SendDebtMemberJournal in '..\..\Forms\Document\SendDebtMemberJournal.pas' {SendDebtMemberJournalForm: TParentForm};
+  SendDebtMemberJournal in '..\..\Forms\Document\SendDebtMemberJournal.pas' {SendDebtMemberJournalForm: TParentForm},
+  ChangePriceUserDialog in '..\..\Forms\System\ChangePriceUserDialog.pas' {ChangePriceUserDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
