@@ -25,7 +25,6 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
     Height = 31
     Align = alTop
     TabOrder = 0
-    ExplicitLeft = -1
     object cxLabel1: TcxLabel
       Left = 4
       Top = 6
@@ -35,7 +34,7 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
       Left = 133
       Top = 5
       Properties.MaskKind = emkRegExpr
-      Properties.EditMask = '\d\d\d\d\d\d\d\d\d\d\d\d'
+      Properties.EditMask = '\d\d\d\d\d\d\d\d\d\d'
       TabOrder = 1
       Width = 147
     end
@@ -608,6 +607,7 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
     RefreshAction = actRefresh
     ComponentList = <
       item
+        Component = edPhone
       end>
     Left = 488
     Top = 48

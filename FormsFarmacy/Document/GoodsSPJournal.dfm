@@ -15,17 +15,17 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
     Width = 990
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 910
+    ExplicitWidth = 990
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 990
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 910
+      ExplicitWidth = 990
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 990
         Height = 478
-        ExplicitWidth = 910
+        ExplicitWidth = 990
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -113,7 +113,7 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
   end
   inherited Panel: TPanel
     Width = 990
-    ExplicitWidth = 910
+    ExplicitWidth = 990
     inherited deStart: TcxDateEdit
       EditValue = 43101d
     end
@@ -372,6 +372,81 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actGetImportSettingHelsi: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingHelsiId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingHelsiId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091'  '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')'
+    end
+    object actDoLoadHelsi: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingHelsiId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inOperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object macStartLoadHelsi: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = axtExecuteDateDialog
+        end
+        item
+          Action = actGetImportSettingHelsi
+        end
+        item
+          Action = actDoLoadHelsi
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100'  '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')'
+      ImageIndex = 30
+      WithoutNext = True
+    end
+    object axtExecuteDateDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 43101d
+          Component = FormParams
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -483,6 +558,10 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     inherited bbInsertMask: TdxBarButton
@@ -498,6 +577,11 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1080' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Visible = ivAlways
       ImageIndex = 67
+    end
+    object dxBarButton1: TdxBarButton
+      Action = macStartLoadHelsi
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100'  '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')'
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -613,6 +697,18 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingHelsiId'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -657,5 +753,39 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
     PackSize = 1
     Left = 535
     Top = 248
+  end
+  object spGetImportSettingHelsiId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TGoodsSPJournalForm;zc_Object_ImportSetting_GoodsSPMovementHelsi' +
+          'Full'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingHelsiId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 336
   end
 end

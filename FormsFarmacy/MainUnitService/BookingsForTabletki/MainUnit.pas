@@ -515,7 +515,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  TabletkiAPI.Free;
+  if Assigned(TabletkiAPI) then TabletkiAPI.Free;
 end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);

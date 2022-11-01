@@ -3007,7 +3007,8 @@ begin
           PUSHDS.FieldByName('isSpecialLighting').AsBoolean,
           PUSHDS.FieldByName('TextColor').AsInteger,
           PUSHDS.FieldByName('Color').AsInteger,
-          PUSHDS.FieldByName('isBold').AsBoolean) then
+          PUSHDS.FieldByName('isBold').AsBoolean) or
+          PUSHDS.FieldByName('isAtEveryEntry').AsBoolean then
         begin
           if PUSHDS.FieldByName('Id').AsInteger > 1000 then
           try
@@ -14553,6 +14554,8 @@ begin
   try
     if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
     SalePromoGoodsCalcCDS.CreateDataSet;
+    SalePromoGoodsCalcCDS.Filtered := False;
+    SalePromoGoodsCalcCDS.Filter := '';
 
     CheckCDS.First;
     while not CheckCDS.Eof do
@@ -14639,6 +14642,11 @@ begin
   CheckCDS.DisableConstraints;
   try
 
+    if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
+    SalePromoGoodsCalcCDS.CreateDataSet;
+    SalePromoGoodsCalcCDS.Filtered := False;
+    SalePromoGoodsCalcCDS.Filter := '';
+
     // Может уже распраделено
     CheckCDS.First;
     while not CheckCDS.Eof do
@@ -14690,9 +14698,6 @@ begin
     end;
 
     if not SalePromoGoodsCalcCDS.IsEmpty then Exit;
-
-    if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
-    SalePromoGoodsCalcCDS.CreateDataSet;
 
     // Отметим все подарки и сохраним количества их
     CheckCDS.First;

@@ -34,7 +34,7 @@ object UsersSiteProfileForm: TUsersSiteProfileForm
       Left = 102
       Top = 5
       Properties.MaskKind = emkRegExpr
-      Properties.EditMask = '\d\d\d\d\d\d\d\d\d\d\d\d'
+      Properties.EditMask = '\d\d\d\d\d\d\d\d\d\d'
       TabOrder = 1
       Width = 147
     end

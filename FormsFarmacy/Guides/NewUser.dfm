@@ -125,6 +125,13 @@ object NewUserForm: TNewUserForm
     TabOrder = 14
     Width = 149
   end
+  object ceisSite: TcxCheckBox
+    Left = 105
+    Top = 8
+    Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
+    TabOrder = 15
+    Width = 82
+  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 276
     Top = 135
@@ -454,6 +461,14 @@ object NewUserForm: TNewUserForm
         Name = 'inisInternshipCompleted'
         Value = Null
         Component = ceInternshipCompleted
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSite'
+        Value = Null
+        Component = ceisSite
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

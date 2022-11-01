@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_NewUser()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarCharm, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_NewUser(
  INOUT ioId                     Integer ,      -- Id
@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_NewUser(
     IN inLogin                  TVarChar,      -- Логин 
     IN inPassword               TVarChar,      -- Пароль 
     IN inisInternshipCompleted  Boolean ,    -- Стажировка проведена
+    IN inisSite                 Boolean   ,    -- признак - Для сайта
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
@@ -108,6 +109,7 @@ BEGIN
                                          , inMemberId              := vbMember
                                          , inisNewUser             := True
                                          , inisInternshipCompleted := inisInternshipCompleted
+                                         , inisSite                := inisSite
                                          , inSession               := inSession);
                                          
    PERFORM gpInsertUpdate_Object_UserRole(ioId	     := 0
@@ -140,7 +142,7 @@ BEGIN
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
