@@ -5,7 +5,7 @@
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1378
-  ExplicitHeight = 425
+  ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -468,6 +468,14 @@
             HeaderHint = #1060#1080#1079'. '#1086#1073#1084#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 46
+          end
+          object SectionName: TcxGridDBColumn
+            Caption = #1057#1077#1075#1084#1077#1085#1090
+            DataBinding.FieldName = 'SectionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
           end
           object AreaName: TcxGridDBColumn
             Caption = #1056#1077#1075#1080#1086#1085
@@ -2402,8 +2410,8 @@
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 328
-    Top = 170
+    Left = 312
+    Top = 202
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'

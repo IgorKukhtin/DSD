@@ -39,6 +39,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
              , RetailName TVarChar, RetailReportName TVarChar
+             , SectionId Integer, SectionName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar, PartnerCategory TFloat
              , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar/*, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar*/
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
@@ -431,6 +432,8 @@ BEGIN
             , 0 :: Integer AS BusinessId, 0 :: Integer AS BusinessCode, '' :: TVarChar AS BusinessName 
             , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName
             , gpReport.RetailName, gpReport.RetailReportName
+            , Object_Section.Id                 AS SectionId
+            , Object_Section.ValueData          AS SectionName
             , gpReport.AreaName, gpReport.PartnerTagName, gpReport.PartnerCategory
             , gpReport.Address, gpReport.RegionName, gpReport.ProvinceName, gpReport.CityKindName, gpReport.CityName
             , gpReport.PartnerId, gpReport.PartnerCode, gpReport.PartnerName
@@ -472,6 +475,12 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
                                   ON ObjectBoolean_RealEx.ObjectId = gpReport.ContractId
                                  AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Section
+                               ON ObjectLink_Juridical_Section.ObjectId = gpReport.JuridicalId
+                              AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
+          LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
+
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
               , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
@@ -496,6 +505,8 @@ BEGIN
               , gpReport.PaidKindName
               , gpReport.OperDate
               , gpReport.DayOfWeekName_Full
+              , Object_Section.Id
+              , Object_Section.ValueData
                ;
        --
        RETURN;
@@ -832,8 +843,10 @@ BEGIN
           , Object_Juridical.ValueData       AS JuridicalName
           /*, '' :: TVarChar                   AS OKPO*/
 
-          , Object_Retail.ValueData       AS RetailName
-          , Object_RetailReport.ValueData AS RetailReportName
+          , Object_Retail.ValueData          AS RetailName
+          , Object_RetailReport.ValueData    AS RetailReportName
+          , Object_Section.Id                AS SectionId
+          , Object_Section.ValueData         AS SectionName
 
           , View_Partner_Address.AreaName
           , View_Partner_Address.PartnerTagName
@@ -999,6 +1012,11 @@ BEGIN
                               AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
           LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Section
+                               ON ObjectLink_Juridical_Section.ObjectId = Object_Juridical.Id
+                              AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
+          LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
@@ -1038,6 +1056,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.11.22         * add Section
  15.03.22         *
  28.12.21         * add OperDate
  25.08.21         * add PaidKind
@@ -1081,4 +1100,4 @@ $BODY$
 Склад Приход / Расход по дате склад
 */
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inIsDate:= false, inSession:= zfCalc_UserAdmin());
