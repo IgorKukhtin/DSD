@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSPHelsi_From_ExcelFull(
 
     IN inMedicalProgramSPId  TVarChar  ,    -- Медицинская программа (A)
 
-    IN inCountSPMin          TVarChar  ,    -- Мінімальна кількість форм випуску до продажу (AV)
+    IN inCountSPMin          TVarChar  ,    -- Мінімальна кількість форм випуску до продажу (AW)
     IN inCountSP             TVarChar  ,    -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект) (AX)
 
     IN inPriceSP             TVarChar  ,    -- Референтна ціна за уп, грн (Соц. проект) (BJ)
@@ -372,7 +372,7 @@ $BODY$
 
      inMedicalProgramSPId  := 'e9c6beeb-b19f-4b97-b42a-020c5c996c56',    -- Медицинская программа (A)
 
-     inCountSPMin          := '1',    -- Мінімальна кількість форм випуску до продажу (AV)
+     inCountSPMin          := '1',    -- Мінімальна кількість форм випуску до продажу (AW)
      inCountSP             := '5',    -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект) (AX)
 
      inPriceSP             := '1740.2',    -- Референтна ціна за уп, грн (Соц. проект) (BJ)

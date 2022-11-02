@@ -439,6 +439,7 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
           Name = 'inOperDate'
           Value = 43101d
           Component = FormParams
+          ComponentItem = 'inOperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','

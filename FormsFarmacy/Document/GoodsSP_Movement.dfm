@@ -2133,6 +2133,15 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         ComponentItem = 'GoodsID'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIdSP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IdSP'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 512
@@ -2158,6 +2167,15 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIdSP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IdSP'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
