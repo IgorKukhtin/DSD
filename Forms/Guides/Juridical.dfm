@@ -433,6 +433,14 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 80
       end
+      object SectionName: TcxGridDBColumn
+        Caption = #1057#1077#1075#1084#1077#1085#1090
+        DataBinding.FieldName = 'SectionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object isDiscountPrice: TcxGridDBColumn
         Caption = #1055#1077#1095'. '#1094#1077#1085#1091' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         DataBinding.FieldName = 'isDiscountPrice'

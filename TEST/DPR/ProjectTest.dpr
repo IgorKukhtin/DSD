@@ -1397,7 +1397,9 @@ uses
   Member_ContainerByDebt in '..\..\Forms\Guides\Member_ContainerByDebt.pas' {Member_ContainerByDebtForm: TParentForm},
   SendDebtMember in '..\..\Forms\Document\SendDebtMember.pas' {SendDebtMemberForm: TParentForm},
   SendDebtMemberJournal in '..\..\Forms\Document\SendDebtMemberJournal.pas' {SendDebtMemberJournalForm: TParentForm},
-  ChangePriceUserDialog in '..\..\Forms\System\ChangePriceUserDialog.pas' {ChangePriceUserDialogForm: TParentForm};
+  ChangePriceUserDialog in '..\..\Forms\System\ChangePriceUserDialog.pas' {ChangePriceUserDialogForm: TParentForm},
+  Section in '..\..\Forms\Guides\Section.pas' {SectionForm: TParentForm},
+  SectionEdit in '..\..\Forms\Guides\SectionEdit.pas' {SectionEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

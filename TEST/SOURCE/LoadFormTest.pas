@@ -191,6 +191,7 @@ type
     procedure LoadRouteSortingFormTest;
     procedure LoadRateFuelKindFormTest;
     procedure LoadNameBeforeFormTest;
+    procedure LoadSectionFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSaleAssetFormTest;
     procedure LoadSaleExternalFormTest;
@@ -3992,7 +3993,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindSummDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindSummDialogForm');
   //
-
 end;
 
 procedure TLoadFormTest.LoadSmsSettingsFormTest;
@@ -4003,6 +4003,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSmsSettingsEditForm');
 end;
 
+procedure TLoadFormTest.LoadSectionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSectionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSectionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSectionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSectionEditForm');
+end;
 
 procedure TLoadFormTest.LoadStaffListFormTest;
 begin

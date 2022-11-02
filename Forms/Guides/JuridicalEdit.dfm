@@ -7,20 +7,20 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 39
-    Top = 564
+    Left = 32
+    Top = 568
     Action = InsertUpdateGuides
     TabOrder = 7
-    ExplicitLeft = 39
-    ExplicitTop = 564
+    ExplicitLeft = 32
+    ExplicitTop = 568
   end
   inherited bbCancel: TcxButton
     Left = 150
-    Top = 564
+    Top = 566
     Action = actFormClose
     TabOrder = 8
     ExplicitLeft = 150
-    ExplicitTop = 564
+    ExplicitTop = 566
   end
   object edName: TcxTextEdit [2]
     Left = 5
@@ -140,8 +140,6 @@
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitLeft = -3
-        ExplicitTop = 21
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -641,16 +639,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 18
-    Width = 272
+    Width = 136
   end
   object cxLabel15: TcxLabel [18]
-    Left = 5
-    Top = 472
+    Left = 148
+    Top = 430
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
   end
   object cePriceListPromo: TcxButtonEdit [19]
-    Left = 6
-    Top = 489
+    Left = 148
+    Top = 449
     Properties.Buttons = <
       item
         Default = True
@@ -659,21 +657,21 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 21
-    Width = 272
+    Width = 129
   end
   object cxLabel16: TcxLabel [20]
     Left = 5
-    Top = 511
+    Top = 475
     Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
   end
   object cxLabel17: TcxLabel [21]
     Left = 150
-    Top = 511
+    Top = 475
     Caption = #1044#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1072#1082#1094#1080#1080
   end
   object edEndPromo: TcxDateEdit [22]
     Left = 150
-    Top = 529
+    Top = 493
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -683,7 +681,7 @@
   end
   object edStartPromo: TcxDateEdit [23]
     Left = 5
-    Top = 529
+    Top = 493
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -709,8 +707,8 @@
     Width = 272
   end
   object cxLabel20: TcxLabel [26]
-    Left = 5
-    Top = 349
+    Left = 8
+    Top = 345
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
   end
   object ceRetail: TcxButtonEdit [27]
@@ -758,7 +756,7 @@
     Left = 8
     Top = 140
     Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1094#1077#1085#1091' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 36
+    TabOrder = 35
     Width = 241
   end
   object cbisNotRealGoods: TcxCheckBox [33]
@@ -768,13 +766,30 @@
     TabOrder = 37
     Width = 272
   end
+  object cxLabel25: TcxLabel [34]
+    Left = 5
+    Top = 518
+    Caption = #1057#1077#1075#1084#1077#1085#1090
+  end
+  object edSection: TcxButtonEdit [35]
+    Left = 5
+    Top = 537
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 39
+    Width = 272
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
     Top = 144
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 64
-    Top = 314
+    Left = 112
+    Top = 330
   end
   inherited ActionList: TActionList
     Left = 375
@@ -1571,7 +1586,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
+    Left = 192
     Top = 298
   end
   object dxBarManager: TdxBarManager
@@ -1711,8 +1726,8 @@
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 48
-    Top = 8
+    Left = 40
+    Top = 16
   end
   object PartnerDS: TDataSource
     DataSet = PartnerCDS
@@ -2175,5 +2190,35 @@
     PackSize = 1
     Left = 568
     Top = 344
+  end
+  object GuidesSection: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSection
+    FormNameParam.Value = 'TSectionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSectionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSection
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSection
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 104
+    Top = 527
   end
 end

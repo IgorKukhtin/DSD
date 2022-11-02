@@ -1014,6 +1014,9 @@ INSERT INTO ObjectDesc (Code, ItemName)
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_TelegramGroup', 'Группа телеграм' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TelegramGroup');
 
+ CREATE OR REPLACE FUNCTION zc_Object_Section() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Section'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_Section', 'Сегмент' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Section');
 
  
 
@@ -1631,6 +1634,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 02.11.22         * zc_Object_Section
  12.09.22                                                                                        * zc_Object_InternetRepair
  08.08.22         * zc_Object_StickerHeader
  28.07.22                                                                                        * zc_Object_GoodsWhoCan, zc_Object_GoodsMethodAppl, zc_Object_GoodsSignOrigin
