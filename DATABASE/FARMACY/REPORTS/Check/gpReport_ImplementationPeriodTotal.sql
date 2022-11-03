@@ -33,6 +33,7 @@ BEGIN
               
   outTotal := zfCalc_MarketingPlan_Scale (vbScaleCalcMarketingPlanID
                                         , inOperDate
+                                        , inUnitId
                                         , inTotalExecutionLine
                                         , inAmountTheFineTab
                                         , inBonusAmountTab); 
