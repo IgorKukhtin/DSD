@@ -78,6 +78,8 @@ BEGIN
      IF (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary' OR inTitle ILIKE 'moldings' OR inTitle ILIKE 'upholstery' OR inTitle ILIKE 'teak' )
      THEN
          -- если стандарт
+         IF inValue2 ILIKE 'Basic' AND inTitle ILIKE 'moldings' THEN inValue2:= 'NEPTUNE GREY'; END IF;
+         -- если стандарт
          IF inValue2 ILIKE 'Basic' AND (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary') THEN inValue2:= ''; END IF;
          --
          -- если и ключ кривой
@@ -124,10 +126,10 @@ BEGIN
      END IF;
 
 
-     /*IF inTitle ILIKE 'hypalon_secondary'
-     THEN
-         RAISE EXCEPTION 'Ошибка.<%>.', inTitle;
-     END IF;*/
+--     IF inTitle ILIKE 'moldings'
+--     THEN
+--         RAISE EXCEPTION 'Ошибка.<%>.', inTitle;
+--     END IF;
 
 
      -- замена - временно
@@ -791,7 +793,7 @@ BEGIN
              IF COALESCE (vbProdColorId, 0) = 0
              THEN vbProdColorId:= (SELECT gpInsertUpdate.ioId
                                    FROM gpInsertUpdate_Object_ProdColor (ioId     := 0
-                                                                       , ioCode   := 1 + COALESCE ((SELECT MAX (Object.ObjectCode) FROM Object WHERE Object.DescId = zc_Object_ProdColor()), 0)
+                                                                       , ioCode   := 0
                                                                        , inName   := vbColor_title
                                                                        , inComment:= ''
                                                                        , inValue  := vbColor
@@ -800,10 +802,15 @@ BEGIN
              ELSEIF vbColor <> ''
              THEN
                  -- обновили значение Цвета если он есть
-                 PERFORM lpUpdate_Object_ProdColor_Value (inId     := vbProdColorId
+                 PERFORM lpUpdate_Object_ProdColor_Value (inId     := Object.Id
                                                         , inValue  := vbColor
                                                         , inUserId := vbUserId
-                                                         );
+                                                         )
+                 FROM Object
+                 WHERE Object.DescId = zc_Object_ProdColor()
+                   AND Object.ValueData ILIKE vbColor_title
+                ;
+
              END IF;
 
          END IF;
@@ -813,6 +820,7 @@ BEGIN
          IF vbProdColorPatternId > 0
             AND (inTitle ILIKE 'hypalon_primary'
               OR inTitle ILIKE 'hypalon_secondary'
+              OR inTitle ILIKE 'moldings'
               OR inTitle ILIKE 'upholstery'
               OR inTitle ILIKE 'hull'
               OR inTitle ILIKE 'deck'
@@ -850,7 +858,7 @@ BEGIN
                                                               AND TRIM (Object_Goods.ValueData) ILIKE 'hypalon'
                               WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
                                 -- с таким Цветом
-                                AND OL_ProdColor.ChildObjectId = vbProdColorId
+                                AND OL_ProdColor.ChildObjectId IN (SELECT vbProdColorId UNION SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
                              )
                       THEN
                           RAISE EXCEPTION 'Ошибка.Найдено несколько % с таким цветом = <%>.'
@@ -859,15 +867,24 @@ BEGIN
                                          ;
                       END IF;
                       -- 1.2. нашли Hypalon через цвет
-                      vbGoodsId:= (SELECT Object_Goods.Id
-                                   FROM ObjectLink AS OL_ProdColor
-                                        JOIN Object AS Object_Goods ON Object_Goods.Id               = OL_ProdColor.ObjectId
-                                                                   AND Object_Goods.isErased         = FALSE
-                                                                   AND TRIM (Object_Goods.ValueData) ILIKE 'hypalon'
-                                   WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
-                                     -- с таким Цветом
-                                     AND OL_ProdColor.ChildObjectId = vbProdColorId
-                                  );
+                      vbGoodsId:= COALESCE ((SELECT Object_Goods.Id
+                                             FROM ObjectLink AS OL_ProdColor
+                                                  JOIN Object AS Object_Goods ON Object_Goods.Id               = OL_ProdColor.ObjectId
+                                                                             AND Object_Goods.isErased         = FALSE
+                                                                             AND TRIM (Object_Goods.ValueData) ILIKE 'hypalon'
+                                             WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
+                                               -- с таким Цветом
+                                               AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
+                                            )
+                                          , (SELECT Object_Goods.Id
+                                             FROM ObjectLink AS OL_ProdColor
+                                                  JOIN Object AS Object_Goods ON Object_Goods.Id               = OL_ProdColor.ObjectId
+                                                                             AND Object_Goods.isErased         = FALSE
+                                                                             AND TRIM (Object_Goods.ValueData) ILIKE 'hypalon'
+                                             WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
+                                               -- с таким Цветом
+                                               AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = TRUE)
+                                           ));
 
                       -- 1.3. Создаем
                       IF COALESCE (vbGoodsId, 0) = 0
@@ -946,26 +963,46 @@ BEGIN
                   ELSEIF inTitle ILIKE 'upholstery'
                   THEN
                       -- 2.1. нашли Комплектующее через Article + цвет + информативно GoodsName = MaterialOptions
-                      vbGoodsId:= (SELECT Object_Goods.Id
-                                   FROM ObjectLink AS OL_ProdColor
-                                        JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
-                                                                   AND Object_Goods.isErased = FALSE
-                                                                   -- GoodsName = MaterialOptions
-                                                                   --***AND CASE WHEN inTitle2 ILIKE 'material_title' THEN inValue2
-                                                                   --***         WHEN inTitle3 ILIKE 'material_title' THEN inValue3
-                                                                   --***  --END ILIKE (TRIM (Object_Goods.ValueData))
-                                                                   --***    END ILIKE (TRIM (Object_Goods.ValueData) || '%')
-                                        JOIN ObjectString AS ObjectString_Article
-                                                          ON ObjectString_Article.ObjectId = OL_ProdColor.ObjectId
-                                                         AND ObjectString_Article.DescId   = zc_ObjectString_Article()
-                                                         AND ObjectString_Article.ValueData ILIKE CASE WHEN inTitle5 ILIKE 'code' THEN inValue5
-                                                                                                       WHEN inTitle6 ILIKE 'code' THEN inValue6
-                                                                                                       WHEN inTitle7 ILIKE 'code' THEN inValue7
-                                                                                                  END
-                                   WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
-                                     -- с таким Цветом
-                                     AND OL_ProdColor.ChildObjectId = vbProdColorId
-                                  );
+                      vbGoodsId:= COALESCE ((SELECT Object_Goods.Id
+                                             FROM ObjectLink AS OL_ProdColor
+                                                  JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
+                                                                             AND Object_Goods.isErased = FALSE
+                                                                             -- GoodsName = MaterialOptions
+                                                                             --***AND CASE WHEN inTitle2 ILIKE 'material_title' THEN inValue2
+                                                                             --***         WHEN inTitle3 ILIKE 'material_title' THEN inValue3
+                                                                             --***  --END ILIKE (TRIM (Object_Goods.ValueData))
+                                                                             --***    END ILIKE (TRIM (Object_Goods.ValueData) || '%')
+                                                  JOIN ObjectString AS ObjectString_Article
+                                                                    ON ObjectString_Article.ObjectId = OL_ProdColor.ObjectId
+                                                                   AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+                                                                   AND ObjectString_Article.ValueData ILIKE CASE WHEN inTitle5 ILIKE 'code' THEN inValue5
+                                                                                                                 WHEN inTitle6 ILIKE 'code' THEN inValue6
+                                                                                                                 WHEN inTitle7 ILIKE 'code' THEN inValue7
+                                                                                                            END
+                                             WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
+                                               -- с таким Цветом
+                                               AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
+                                            )
+                                          , (SELECT Object_Goods.Id
+                                             FROM ObjectLink AS OL_ProdColor
+                                                  JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
+                                                                             AND Object_Goods.isErased = FALSE
+                                                                             -- GoodsName = MaterialOptions
+                                                                             --***AND CASE WHEN inTitle2 ILIKE 'material_title' THEN inValue2
+                                                                             --***         WHEN inTitle3 ILIKE 'material_title' THEN inValue3
+                                                                             --***  --END ILIKE (TRIM (Object_Goods.ValueData))
+                                                                             --***    END ILIKE (TRIM (Object_Goods.ValueData) || '%')
+                                                  JOIN ObjectString AS ObjectString_Article
+                                                                    ON ObjectString_Article.ObjectId = OL_ProdColor.ObjectId
+                                                                   AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+                                                                   AND ObjectString_Article.ValueData ILIKE CASE WHEN inTitle5 ILIKE 'code' THEN inValue5
+                                                                                                                 WHEN inTitle6 ILIKE 'code' THEN inValue6
+                                                                                                                 WHEN inTitle7 ILIKE 'code' THEN inValue7
+                                                                                                            END
+                                             WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
+                                               -- с таким Цветом
+                                               AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = TRUE)
+                                           ));
 
                       -- 2.2. Создаем
                       IF COALESCE (vbGoodsId, 0) = 0
@@ -1026,8 +1063,8 @@ BEGIN
                                           ;
                       END IF;
 
-                  -- Корпус + Палуба + Консоль рулевого управления
-                  ElSEIF inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
+                  -- moldings + Корпус + Палуба + Консоль рулевого управления
+                  ElSEIF inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole' OR inTitle ILIKE 'moldings'
                   THEN
                       -- 2.1. Проверка
                       IF 1 < (SELECT COUNT(*)
@@ -1036,30 +1073,40 @@ BEGIN
                                                               AND Object_Goods.isErased = FALSE
                               WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
                                 -- с таким Цветом
-                                AND OL_ProdColor.ChildObjectId = vbProdColorId
+                                AND OL_ProdColor.ChildObjectId IN (SELECT vbProdColorId UNION SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
                              )
                       THEN
-                          RAISE EXCEPTION 'Ошибка.Найдено несколько видов сырья для <%> с цветом = <%>.'
+                          RAISE EXCEPTION 'Ошибка.Найдено несколько видов сырья для <%> с цветом = <%>.<%>'
                                         , inTitle
                                         , vbColor_title
+                                        , vbProdColorId
                                          ;
                       END IF;
                       -- 2.2. нашли Комплектующее через цвет
-                      vbGoodsId:= (SELECT Object_Goods.Id
-                                   FROM ObjectLink AS OL_ProdColor
-                                        JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
-                                                                   AND Object_Goods.isErased  = FALSE
-                                   WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
-                                     -- с таким Цветом
-                                     AND OL_ProdColor.ChildObjectId = vbProdColorId
-                                  );
+                      vbGoodsId:= COALESCE ((SELECT Object_Goods.Id
+                                             FROM ObjectLink AS OL_ProdColor
+                                                  JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
+                                                                             AND Object_Goods.isErased  = FALSE
+                                             WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
+                                               -- с таким Цветом
+                                               AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
+                                            )
+                                          , (SELECT Object_Goods.Id
+                                             FROM ObjectLink AS OL_ProdColor
+                                                  JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
+                                                                             AND Object_Goods.isErased  = FALSE
+                                             WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
+                                               -- с таким Цветом
+                                               AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = TRUE)
+                                           ));
 
                       -- 2.3. Проверка
                       IF COALESCE (vbGoodsId, 0) = 0
                       THEN
-                          RAISE EXCEPTION 'Ошибка.Не найдено сырье для <%> с цветом = <%>.Необходимо его добавить вручную как <AGL-601>.'
+                          RAISE EXCEPTION 'Ошибка.Не найдено сырье для <%> с цветом = <%>.Необходимо его добавить вручную как <%> или <%>.'
                                         , inTitle
                                         , vbColor_title
+                                        , lfGet_Object_ValueData (252217), lfGet_Object_ValueData (6357)
                                          ;
                       END IF;
 
@@ -1069,7 +1116,7 @@ BEGIN
 
 
          ELSE
-             -- 6.2.3. Иначе Товар в опциях
+             -- 6.2.3. Иначе Товар ЭТО опция
              vbGoodsId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbProdOptionsId  AND OL.DescId = zc_ObjectLink_ProdOptions_Goods());
 
          END IF;
@@ -1080,6 +1127,15 @@ BEGIN
             -- и это Boat Structure
             AND vbProdColorPatternId > 0
          THEN
+             -- Проверка
+             IF EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbProdColorPatternId AND OL.DescId = zc_ObjectLink_ProdColorPattern_Goods() AND OL.ChildObjectId > 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не найдено Комплектующее = <%> с таким цветом = <%>.'
+                                , lfGet_Object_ValueData_sh((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbProdColorPatternId AND OL.DescId = zc_ObjectLink_ProdColorPattern_Goods()))
+                                , vbColor_title
+                                 ;
+             END IF;
+
              -- 6.3. нашли цвет Для примечания Boat Structure
              vbComment:= vbColor_title;
              -- 6.3. Проверка
@@ -1206,31 +1262,53 @@ vbProdOptItemsId
 
      END IF;*/
 
-         -- 6.4. сохранили
-         vbProdOptItemsId:= (SELECT gpInsertUpdate.ioId
-                             FROM gpInsertUpdate_Object_ProdOptItems (ioId                     := vbProdOptItemsId
-                                                                    , inCode                   := COALESCE ((SELECT Object.ObjectCode  FROM Object WHERE Object.Id = vbProdOptItemsId), 0)
-                                                                    , inProductId              := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioMovementId_OrderClient AND MLO.DescId = zc_MovementLinkObject_Product())
-                                                                    , ioProdOptionsId          := vbProdOptionsId
-                                                                    , inProdOptPatternId       := COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbProdOptItemsId AND OL.DescId = zc_ObjectLink_ProdOptItems_ProdOptPattern()), 0)
-                                                                    , inProdColorPatternId     := vbProdColorPatternId
-                                                                    , inMaterialOptionsId      := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbProdOptionsId  AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions())
-                                                                    , inMovementId_OrderClient := ioMovementId_OrderClient
-                                                                    , ioGoodsId                := vbGoodsId
-                                                                    , inAmount                 := 1
-                                                                    , inPriceIn                := 0
-                                                                    , inPriceOut               := CASE WHEN inTitle2 ILIKE 'price' THEN zfConvert_StringToFloat (inValue2)
-                                                                                                       WHEN inTitle3 ILIKE 'price' THEN zfConvert_StringToFloat (inValue3)
-                                                                                                       WHEN inTitle4 ILIKE 'price' THEN zfConvert_StringToFloat (inValue4)
-                                                                                                       WHEN inTitle5 ILIKE 'price' THEN zfConvert_StringToFloat (inValue5)
-                                                                                                       WHEN inTitle6 ILIKE 'price' THEN zfConvert_StringToFloat (inValue6)
-                                                                                                       ELSE 0
-                                                                                                  END
-                                                                    , inDiscountTax            := 0
-                                                                    , inPartNumber             := ''
-                                                                    , inComment                := vbComment
-                                                                    , inSession                := inSession
-                                                                     ) AS gpInsertUpdate);
+         -- только если отличается от "базы"
+         IF NOT EXISTS (SELECT 1
+                        FROM gpSelect_Object_ProdColorItems (inMovementId_OrderClient:= ioMovementId_OrderClient, inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession
+                                                            ) AS gpSelect
+                        WHERE -- товар соответствует
+                              COALESCE (gpSelect.GoodsId_Receipt, 0) = COALESCE (vbGoodsId, 0)
+                          -- Категория Опций
+                          AND COALESCE (gpSelect.MaterialOptionsId_Receipt, 0) = COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbProdOptionsId AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()), 0)
+                          -- цвет через Примечание
+                          AND CASE WHEN COALESCE (gpSelect.GoodsId_Receipt, 0) > 0 THEN '' ELSE COALESCE (gpSelect.Comment, '') END = COALESCE (vbComment, '')
+                          -- Boat Structure
+                          AND gpSelect.ProdColorPatternId = vbProdColorPatternId
+                          -- если это Boat Structure
+                          AND vbProdColorPatternId > 0
+                          -- если опция еще не создавалась
+                          AND COALESCE (vbProdOptItemsId, 0) = 0
+                       )
+
+         THEN
+             -- 6.4. сохранили
+             vbProdOptItemsId:= (SELECT gpInsertUpdate.ioId
+                                 FROM gpInsertUpdate_Object_ProdOptItems (ioId                     := vbProdOptItemsId
+                                                                        , inCode                   := COALESCE ((SELECT Object.ObjectCode  FROM Object WHERE Object.Id = vbProdOptItemsId), 0)
+                                                                        , inProductId              := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioMovementId_OrderClient AND MLO.DescId = zc_MovementLinkObject_Product())
+                                                                        , ioProdOptionsId          := vbProdOptionsId
+                                                                        , inProdOptPatternId       := COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbProdOptItemsId AND OL.DescId = zc_ObjectLink_ProdOptItems_ProdOptPattern()), 0)
+                                                                        , inProdColorPatternId     := vbProdColorPatternId
+                                                                        , inMaterialOptionsId      := -- Значение для опции vbProdOptionsId
+                                                                                                      (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbProdOptionsId AND OL.DescId = zc_ObjectLink_ProdOptions_MaterialOptions())
+                                                                        , inMovementId_OrderClient := ioMovementId_OrderClient
+                                                                        , ioGoodsId                := vbGoodsId
+                                                                        , inAmount                 := 1
+                                                                        , inPriceIn                := 0
+                                                                        , inPriceOut               := CASE WHEN inTitle2 ILIKE 'price' THEN zfConvert_StringToFloat (inValue2)
+                                                                                                           WHEN inTitle3 ILIKE 'price' THEN zfConvert_StringToFloat (inValue3)
+                                                                                                           WHEN inTitle4 ILIKE 'price' THEN zfConvert_StringToFloat (inValue4)
+                                                                                                           WHEN inTitle5 ILIKE 'price' THEN zfConvert_StringToFloat (inValue5)
+                                                                                                           WHEN inTitle6 ILIKE 'price' THEN zfConvert_StringToFloat (inValue6)
+                                                                                                           ELSE 0
+                                                                                                      END
+                                                                        , inDiscountTax            := 0
+                                                                        , inPartNumber             := ''
+                                                                        , inComment                := vbComment
+                                                                        , inSession                := inSession
+                                                                         ) AS gpInsertUpdate);
+         END IF;
+
      END IF;
 
 

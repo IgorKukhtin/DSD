@@ -56,7 +56,7 @@ BEGIN
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         AND MIContainer.IsActive = TRUE
                         AND MIContainer.Amount <> 0
-                        AND (MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
+                        AND (MIContainer.ObjectIntId_Analyzer IN (zc_GoodsKind_WorkProgress(), zc_GoodsKind_Basis()) -- ограничение что это п/ф ГП
                               -- !!!захардкодил!!!
                           /*OR (MIContainer.WhereObjectId_Analyzer = 951601 -- ЦЕХ упаковки мясо
                           AND MIContainer.AnalyzerId             = 951601 -- ЦЕХ упаковки мясо
@@ -122,6 +122,11 @@ BEGIN
                          SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS tmpSelect
                          WHERE inFromId NOT IN (951601, 981821) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо
                            AND tmpSelect.UnitId NOT IN (133049)-- "Склад реализации мясо"
+                           /*AND (tmpSelect.UnitId NOT IN (133049)-- "Склад реализации мясо"
+                             OR (inFromId         = 8448    -- ЦЕХ деликатесов
+                             AND tmpSelect.UnitId = 133049) -- Склад реализации мясо
+                               )*/
+                           
                         UNION
                          -- "ЦЕХ колбаса+дел-сы"
                          SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmpSelect

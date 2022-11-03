@@ -21,10 +21,10 @@ RETURNS TABLE (MovementId_OrderClient Integer
              , ProdOptPatternId Integer, ProdOptPatternName TVarChar
              , MaterialOptionsId Integer, MaterialOptionsName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-               -- Boat Structure 
+               -- Boat Structure
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
                -- Шаблон Boat Structure
-             , ColorPatternId Integer, ColorPatternName TVarChar 
+             , ColorPatternId Integer, ColorPatternName TVarChar
 
              , isSale Boolean
              , isEnabled Boolean
@@ -52,7 +52,7 @@ RETURNS TABLE (MovementId_OrderClient Integer
              , SalePriceWVAT  TFloat
                --
              , Sale_summ TFloat, SaleWVAT_summ TFloat
-             
+
                -- Кол-во для сборки узла
              , AmountBasis TFloat
                -- кол опций
@@ -108,7 +108,7 @@ BEGIN
 
                                    , lpSelect.isMain
 
-                              FROM lpSelect_Object_ReceiptProdModelChild_detail (vbUserId) AS lpSelect
+                              FROM lpSelect_Object_ReceiptProdModelChild_detail (inIsGroup:= TRUE, inUserId:= vbUserId) AS lpSelect
                               -- с такой строктурой
                               WHERE lpSelect.ProdColorPatternId > 0
                               -- ВСЕ шаблоны
@@ -132,7 +132,7 @@ BEGIN
                                    , tmpProdColorPattern_all.EKPrice
 
                               FROM ObjectLink AS ObjectLink_ReceiptProdModel_master
-                              
+
                                    INNER JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id       = ObjectLink_ReceiptProdModel_master.ChildObjectId
                                                                             -- !!!ВСЕ!!!
                                                                             -- AND Object_ReceiptProdModel.isErased = FALSE
@@ -196,7 +196,7 @@ BEGIN
                                    , 0 AS ReceiptProdModelId
                                      -- как правило !!установлена!!
                                    , COALESCE (ObjectLink_Model.ChildObjectId, 0) AS ModelId
-                                     -- 
+                                     --
                                    , ObjectLink_Goods.ChildObjectId               AS GoodsId
                                    , Object_ProdColor.Id                          AS ProdColorId
                                    , Object_ProdColor.ValueData                   AS ProdColorName
@@ -333,7 +333,7 @@ BEGIN
                                                     ON ObjectDate_DateSale.ObjectId = Object_Product.Id
                                                    AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()
                                -- Заказы клиента
-                               LEFT JOIN tmpOrderClient ON tmpOrderClient.ProductId = Object_Product.Id 
+                               LEFT JOIN tmpOrderClient ON tmpOrderClient.ProductId = Object_Product.Id
 
                           WHERE Object_Product.DescId = zc_Object_Product()
                            AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
@@ -365,7 +365,7 @@ BEGIN
                                       ELSE tmpProdOptions.ProdColorName
 
                                  END AS ProdColorName
-                                 
+
                                , ObjectString_ProdColorValue.ValueData  AS ProdColorValue
                                , ObjectFloat_Value.ValueData::Integer   AS Color_ProdColorValue
 
@@ -378,7 +378,7 @@ BEGIN
                                  -- Цена вх. без НДС - Комплектующие - факт
                                , ObjectFloat_EKPrice.ValueData AS EKPrice
 
-                               , tmpProdOptions.ProdColorPatternId 
+                               , tmpProdOptions.ProdColorPatternId
                                , tmpProdOptions.MaterialOptionsId
 
 
@@ -414,10 +414,10 @@ BEGIN
                                            zfCalc_SummWVAT (tmpPriceBasis.ValuePrice, tmpProduct.VATPercent)
 
                                  END AS SalePriceWVAT
-                                 
+
                                , tmpProduct.MovementId_OrderClient
                                , tmpProduct.VATPercent
-                               
+
                                , COALESCE (ObjectFloat_Count.ValueData, 0) AS Amount
 
                           FROM Object AS Object_ProdOptItems
@@ -453,11 +453,11 @@ BEGIN
                                                     ON ObjectLink_Goods_ProdColor.ObjectId = ObjectLink_Goods.ChildObjectId
                                                    AND ObjectLink_Goods_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
                                LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
-                               
+
                                -- Значение цвета
                                LEFT JOIN ObjectString AS ObjectString_ProdColorValue
                                                       ON ObjectString_ProdColorValue.ObjectId = Object_ProdColor.Id
-                                                     AND ObjectString_ProdColorValue.DescId   =zc_ObjectString_ProdColor_Value()                               
+                                                     AND ObjectString_ProdColorValue.DescId   =zc_ObjectString_ProdColor_Value()
                                LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                      ON ObjectFloat_Value.ObjectId = Object_ProdColor.Id
                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ProdColor_Value()
@@ -506,11 +506,11 @@ BEGIN
 
                          , tmpProdOptItems.ProdColorPatternId
                          , tmpProdOptItems.ProdColorId
-                         , tmpProdOptItems.ProdColorName  
+                         , tmpProdOptItems.ProdColorName
                          , tmpProdOptItems.ProdColorValue
                          , tmpProdOptItems.Color_ProdColorValue
                          , tmpProdOptItems.MaterialOptionsId
-                         
+
                            -- % скидки
                          , tmpProdOptItems.DiscountTax
 
@@ -574,7 +574,7 @@ BEGIN
                       -- если нужны все
                       AND inIsShowAll = TRUE
                       -- или так или есть связь с комплектующим ?
-                      AND tmpProdOptions.SalePrice > 0
+                      AND (tmpProdOptions.SalePrice > 0 OR tmpProdOptions.GoodsId > 0)
                    )
          -- свойства для GoodsId
        , tmpGoods AS (SELECT tmpObject.GoodsId                          AS GoodsId
@@ -610,7 +610,7 @@ BEGIN
        , tmpProdColor AS (SELECT Object_ProdColor.ValueData      AS Name
                                , ObjectString_Value.ValueData    AS Value
                                , COALESCE(ObjectFloat_Value.ValueData, zc_Color_White())::Integer  AS Color_Value
-                               , ROW_NUMBER() OVER (PARTITION BY upper(Object_ProdColor.ValueData) ORDER BY Object_ProdColor.isErased DESC, Object_ProdColor.Id DESC) AS Ord 
+                               , ROW_NUMBER() OVER (PARTITION BY upper(Object_ProdColor.ValueData) ORDER BY Object_ProdColor.isErased DESC, Object_ProdColor.Id DESC) AS Ord
                            FROM Object AS Object_ProdColor
                               LEFT JOIN ObjectString AS ObjectString_Value
                                                      ON ObjectString_Value.ObjectId = Object_ProdColor.Id
@@ -619,9 +619,9 @@ BEGIN
                                                     ON ObjectFloat_Value.ObjectId = Object_ProdColor.Id
                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_ProdColor_Value()
                            WHERE Object_ProdColor.DescId = zc_Object_ProdColor()
-                         )  
-                     
-                     
+                         )
+
+
      -- Результат
      SELECT
            tmpRes.MovementId_OrderClient
@@ -748,14 +748,14 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_ProdOptions_CodeVergl
                                 ON ObjectFloat_ProdOptions_CodeVergl.ObjectId = Object_ProdOptions.Id
                                AND ObjectFloat_ProdOptions_CodeVergl.DescId = zc_ObjectFloat_ProdOptions_CodeVergl()
-                               
-          LEFT JOIN tmpProdColor AS ProdColorName 
-                                 ON ProdColorName.Name ILIKE tmpRes.ProdColorName
-                                AND ProdColorName.Ord = 1 
 
-          LEFT JOIN tmpProdColor AS ProdColorComent 
+          LEFT JOIN tmpProdColor AS ProdColorName
+                                 ON ProdColorName.Name ILIKE tmpRes.ProdColorName
+                                AND ProdColorName.Ord = 1
+
+          LEFT JOIN tmpProdColor AS ProdColorComent
                                  ON ProdColorComent.Name ILIKE ObjectString_Comment.ValueData
-                                AND ProdColorComent.Ord = 1 
+                                AND ProdColorComent.Ord = 1
     ;
 
 END;

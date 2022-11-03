@@ -130,10 +130,26 @@ BEGIN
            AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child();
 
         -- проверка
-        IF COALESCE (vbTotalSumm_tax,0) < COALESCE (vbTotalSumm_corr,0)
+        IF COALESCE (vbTotalSumm_tax,0) < COALESCE (vbTotalSumm_corr,0) OR inUserId = 5
         THEN
+            --
+            outMessageText:= 'Ошибка.Сумма <' || zfConvert_FloatToString (vbTotalSumm_corr) || '>'
+                          || ' по всем документам ' || (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_TaxCorrective())
+                          || ' больше чем сумма <' || zfConvert_FloatToString (vbTotalSumm_tax) || '>'
+                          || ' в документе <' || (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax()) || '>'
+                          || ' № <' || (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = vbMovementId_tax AND MS.DescId = zc_MovementString_InvNumberPartner()) || '>'
+                          || ' от <' || zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_tax)) || '>.'
+                          || CHR (13) || 'Проведение невозможно.'
+                            ;
+            -- Распроводим Документ
+            PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                         , inUserId     := vbUserId);
+
+            --
+            RETURN;
+
             -- RAISE EXCEPTION 'Ошибка.Сумма налоговой <%> меньше суммы корректировок <%>', vbTotalSumm_tax, vbTotalSumm_corr;
-            RAISE EXCEPTION 'Ошибка.Сумма <%> по всем документам % больше чем сумма <%> в документе <%> № <%> от <%>.%Проведение невозможно.'
+          /*RAISE EXCEPTION 'Ошибка.Сумма <%> по всем документам % больше чем сумма <%> в документе <%> № <%> от <%>.%Проведение невозможно.'
                            , zfConvert_FloatToString (vbTotalSumm_corr)
                            , (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective())
                            , zfConvert_FloatToString (vbTotalSumm_tax)
@@ -141,8 +157,9 @@ BEGIN
                            , (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = vbMovementId_tax AND MS.DescId = zc_MovementString_InvNumberPartner())
                            , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_tax))
                            , CHR (13)
-                            ;
+                            ;*/
         END IF;
+
      END IF;
 
 END;

@@ -103,12 +103,12 @@ BEGIN
 
                                       WHERE ObjectLink_ReceiptProdModel_master.DescId = zc_ObjectLink_Product_ReceiptProdModel()
                                      )
-          -- раскладываем ReceiptProdModelChild - для каждой ModelId
-        , tmpProdColorPattern AS (SELECT tmpReceiptProdModelChild.ProductId                AS ProductId
-                                       , tmpReceiptProdModelChild.ModelId                  AS ModelId
-                                       , tmpReceiptProdModelChild.ReceiptProdModelId       AS ReceiptProdModelId
-                                       , tmpReceiptProdModelChild.ReceiptProdModelChildId  AS ReceiptProdModelChildId
-                                       , Object_ReceiptGoodsChild.Id                       AS ReceiptGoodsChildId
+          -- раскладываем ReceiptProdModelChild - для каждой ModelId - ***объединили
+        , tmpProdColorPattern AS (SELECT tmpReceiptProdModelChild.ProductId                      AS ProductId
+                                       , tmpReceiptProdModelChild.ModelId                        AS ModelId
+                                       , tmpReceiptProdModelChild.ReceiptProdModelId             AS ReceiptProdModelId
+                                       , MAX (tmpReceiptProdModelChild.ReceiptProdModelChildId)  AS ReceiptProdModelChildId
+                                       , MAX (Object_ReceiptGoodsChild.Id)                       AS ReceiptGoodsChildId
                                          -- всегда Цвет - у ReceiptGoodsChild or у Boat Structure  (когда нет GoodsId)
                                        , CASE WHEN Object_ReceiptGoodsChild.ValueData <> '' THEN Object_ReceiptGoodsChild.ValueData ELSE ObjectString_ProdColorPattern_Comment.ValueData END AS Comment
                                          -- если меняли на другой товар, не тот что в Boat Structure
@@ -118,7 +118,7 @@ BEGIN
                                          -- Категория Опций
                                        , ObjectLink_MaterialOptions.ChildObjectId          AS MaterialOptionsId
                                          -- умножили
-                                       , tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData AS Value
+                                       , SUM (tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData) AS Value
 
                                   FROM tmpReceiptProdModelChild
                                        -- нашли его в сборке узлов
@@ -158,6 +158,17 @@ BEGIN
                                        LEFT JOIN ObjectString AS ObjectString_ProdColorPattern_Comment
                                                               ON ObjectString_ProdColorPattern_Comment.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
                                                              AND ObjectString_ProdColorPattern_Comment.DescId   = zc_ObjectString_ProdColorPattern_Comment()
+                                  GROUP BY tmpReceiptProdModelChild.ProductId
+                                         , tmpReceiptProdModelChild.ModelId
+                                         , tmpReceiptProdModelChild.ReceiptProdModelId
+                                           -- всегда Цвет - у ReceiptGoodsChild or у Boat Structure  (когда нет GoodsId)
+                                         , CASE WHEN Object_ReceiptGoodsChild.ValueData <> '' THEN Object_ReceiptGoodsChild.ValueData ELSE ObjectString_ProdColorPattern_Comment.ValueData END
+                                           -- если меняли на другой товар, не тот что в Boat Structure
+                                         , ObjectLink_Object.ChildObjectId
+                                           -- нашли Элемент Boat Structure
+                                         , ObjectLink_ProdColorPattern.ChildObjectId
+                                           -- Категория Опций
+                                         , ObjectLink_MaterialOptions.ChildObjectId
                                  )
       -- ??ВСЕ?? документы Заказ Клиента
     , tmpOrderClient AS (SELECT Movement.Id                              AS MovementId
@@ -203,11 +214,11 @@ BEGIN
                      AND (Object_Product.isErased = FALSE OR inIsErased = TRUE)
                    )
 
-     -- существующие элементы Boat Structure
-   , tmpRes_all AS (SELECT Object_ProdColorItems.Id         AS Id
-                         , Object_ProdColorItems.ObjectCode AS Code
-                         , Object_ProdColorItems.ValueData  AS Name
-                         , Object_ProdColorItems.isErased   AS isErased
+     -- существующие элементы Boat Structure - ***объединили
+   , tmpRes_all AS (SELECT (Object_ProdColorItems.Id)         AS Id
+                         , (Object_ProdColorItems.ObjectCode) AS Code
+                         , (Object_ProdColorItems.ValueData)  AS Name
+                         , Object_ProdColorItems.isErased         AS isErased
 
                          , ObjectLink_Product.ChildObjectId          AS ProductId
                          , tmpProduct.ReceiptProdModelId             AS ReceiptProdModelId
@@ -246,6 +257,16 @@ BEGIN
                     WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems()
                      AND (Object_ProdColorItems.isErased = FALSE OR inIsErased = TRUE)
                      AND (tmpProduct.MovementId_OrderClient = inMovementId_OrderClient OR inMovementId_OrderClient = 0)
+
+                    /*GROUP BY Object_ProdColorItems.isErased
+                           , ObjectLink_Product.ChildObjectId
+                           , tmpProduct.ReceiptProdModelId
+                           , ObjectLink_Goods.ChildObjectId
+                           , ObjectLink_ProdColorPattern.ChildObjectId
+                           , ObjectLink_MaterialOptions.ChildObjectId
+                           , tmpProduct.MovementId_OrderClient
+                             -- test
+                           , Object_ProdColorItems.Id*/
                    )
        , tmpRes AS (SELECT tmpRes_all.Id
                          , tmpRes_all.Code
@@ -287,9 +308,9 @@ BEGIN
                      FROM tmpRes_all
                           LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ProductId                        = tmpRes_all.ProductId
                                                        AND tmpProdColorPattern.ProdColorPatternId               = tmpRes_all.ProdColorPatternId
-                                                     -- !!!без этого условия  
+                                                     -- !!!без этого условия
                                                      --AND COALESCE (tmpProdColorPattern.MaterialOptionsId, 0)  = COALESCE (tmpRes_all.MaterialOptionsId, 0)
-                                                     -- 
+                                                     --
                                                      --AND tmpProdColorPattern.ModelId                          = tmpProduct.ModelId
                                                      --AND tmpProdColorPattern.ReceiptProdModelId               = tmpRes_all.ReceiptProdModelId
 
@@ -339,9 +360,9 @@ BEGIN
      -- Результат
      SELECT
            Object_ProdColorItems.MovementId_OrderClient
-         , Object_ProdColorItems.Id    AS Id
-         , Object_ProdColorItems.Code  AS Code
-         , Object_ProdColorItems.Name  AS Name
+         , Object_ProdColorItems.Id     :: Integer   AS Id
+         , Object_ProdColorItems.Code   :: Integer   AS Code
+         , Object_ProdColorItems.Name   :: TVarChar  AS Name
          , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_ProdColorPattern.ObjectCode ASC, Object_ProdColorPattern.Id ASC) :: Integer AS NPP
 
            -- "иногда" - цвет
@@ -478,7 +499,7 @@ BEGIN
                                     ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ProdColorPattern_ColorPattern.ChildObjectId
                                    AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
                LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
-               
+
           --
           LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
                                  ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id

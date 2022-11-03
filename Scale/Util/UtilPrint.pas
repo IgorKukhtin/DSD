@@ -471,9 +471,11 @@ begin
                                         then Print_ProductionUnion(MovementId,MovementId_by)
 
                                         else begin ShowMessage ('Ошибка.Форма печати <Накладная> не найдена.');exit;end;
-          except
-                ShowMessage('Ошибка.Печать <Накладная> не сформирована.');
-                exit;
+          except on E:Exception do begin
+                  //ShowMessage('Ошибка.Печать <Накладная> не сформирована.');
+                  ShowMessage(E.Message);
+                  exit;
+                end;
           end;
      Result:=true;
 end;
