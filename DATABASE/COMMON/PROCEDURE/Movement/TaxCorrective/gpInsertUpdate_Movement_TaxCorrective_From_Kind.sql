@@ -1130,4 +1130,4 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3409416, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
 -- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3449385, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
 -- select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 16691011 , inDocumentTaxKindId := 566452 , inDocumentTaxKindId_inf := 566452 , inStartDateTax := NULL , inIsTaxLink := 'True' ,  inSession := '5');
-select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 22528897 , inDocumentTaxKindId := 0 , inDocumentTaxKindId_inf := 0 , inStartDateTax := ('01.12.2021')::TDateTime , inIsTaxLink := 'True' ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+-- select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 22528897 , inDocumentTaxKindId := 0 , inDocumentTaxKindId_inf := 0 , inStartDateTax := ('01.12.2021')::TDateTime , inIsTaxLink := 'True' ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

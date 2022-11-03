@@ -7,7 +7,8 @@ DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Text, Boolean, Boolean);
 DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Text, Boolean, Boolean);
 DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Integer, Text, Boolean, Boolean);
 -- DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Integer, Integer, Text, Boolean, Boolean);
-DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Integer, Integer, Text, Boolean, Boolean, Boolean);
+-- DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Integer, Integer, Text, Boolean, Boolean, Boolean);
+DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Integer, Integer, Text, Boolean, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION zfCalc_Text_parse(
     IN inStickerFileId Integer,
@@ -17,7 +18,8 @@ CREATE OR REPLACE FUNCTION zfCalc_Text_parse(
     IN inValue         Text,
     IN inIsLength      Boolean,
     IN inIsLimit       Boolean, -- т.к. Раньше УМОВИ ... были в 8-ой строке, НУЖЕН был сдвиг вниз, т.е. в Info добавлялись пустые строки
-    IN inIs70_70       Boolean   -- 
+    IN inIs70_70       Boolean,  -- 
+    IN inUserId        Integer
 )
 RETURNS Text
 AS
@@ -290,6 +292,16 @@ BEGIN
                -- || CASE WHEN inIsLength = TRUE THEN '*' || (vbIndex + vbLen) :: TVarChar || '*' || LENGTH (inValue) :: TVarChar ELSE '' END
                  ;
 
+IF inUserId = 5 and vbLine = 3 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>', 
+                 CASE WHEN vbLine = 1 THEN '' ELSE CHR (13) END
+               || CASE WHEN vbLen < 1000 THEN REPEAT (' ', inAddLeft) ELSE '' END
+               || TRIM (SUBSTRING (inValue FROM vbIndex + 1 FOR vbLen))
+               || CASE WHEN inIsLength = TRUE THEN ' ' || LENGTH ( TRIM (SUBSTRING (inValue FROM vbIndex + 1 FOR vbLen))) :: TVarChar || '-' || (vbLine + inAddLine) :: TVarChar ELSE '' END
+               ;
+END IF;
+
        -- сдвинули на один
        IF SUBSTRING (inValue FROM vbIndex + vbLen + 2 FOR 1) IN ('~') THEN vbIndex:= vbIndex + 1; END IF;
 
@@ -313,4 +325,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM zfCalc_Text_parse (inStickerFileId:= 0, inTradeMarkId:= 1, inAddLeft:= 0, inAddLine:= 0, inValue:= 'asdsadasdasdasdasdasdasdasdasdasd', inIsLength:= TRUE, inIsLimit:= TRUE, inIs70_70:= TRUE)
+-- SELECT * FROM zfCalc_Text_parse (inStickerFileId:= 0, inTradeMarkId:= 1, inAddLeft:= 0, inAddLine:= 0, inValue:= 'asdsadasdasdasdasdasdasdasdasdasd', inIsLength:= TRUE, inIsLimit:= TRUE, inIs70_70:= TRUE, inUserId:= 5)

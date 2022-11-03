@@ -63,16 +63,12 @@ AND NOT EXISTS (SELECT 1
          -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка
           IF NOT EXISTS (SELECT 1
                          FROM ObjectBoolean AS ObjectBoolean_Order
-                              LEFT JOIN ObjectBoolean AS ObjectBoolean_NotMobile
-                                                      ON ObjectBoolean_NotMobile.ObjectId = ObjectBoolean_Order.ObjectId
-                                                     AND ObjectBoolean_NotMobile.DescId   = zc_ObjectBoolean_GoodsByGoodsKind_NotMobile()
                               INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
                          WHERE ObjectBoolean_Order.ValueData = TRUE
                            AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                            AND Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
                            AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
-                           AND COALESCE (ObjectBoolean_NotMobile.ValueData, FALSE) = FALSE
-                         )  
+                        )  
                AND EXISTS (SELECT 1 FROM ObjectLink AS OL
                                     WHERE OL.ObjectId = inGoodsId
                                       AND OL.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -82,13 +78,13 @@ AND NOT EXISTS (SELECT 1
                                                               )
                           )
          THEN
-              RAISE EXCEPTION 'У товара <%>%<%>%не установлено свойство <Используется в заявках>=Да.%№ % от % % %'
+              RAISE EXCEPTION 'Ошибка.У товара <%>%<%>%не установлено свойство <Используется в заявках>=Да.% % № % от % % %'
                              , lfGet_Object_ValueData (inGoodsId)
                              , CHR (13)
                              , lfGet_Object_ValueData_sh (inGoodsKindId)
                              , CHR (13)
                              , CHR (13)
-                           --, (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal())
+                             , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal())
                              , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
                              , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
                              , CHR (13)

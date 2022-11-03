@@ -553,6 +553,7 @@ BEGIN
                                , inIsLength
                                , FALSE -- теперь НЕ используется
                                , inIs70_70
+                               , vbUserId
                                 ) AS Info
 
               --

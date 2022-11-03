@@ -41,7 +41,57 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Товар не определен.';
      END IF;
 
-     ---Проверка zc_ObjectBoolean_GoodsByGoodsKind_Order для подразделений из Object_Unit_check_isOrder_View
+     -- Проверка zc_ObjectBoolean_GoodsByGoodsKind_Order
+     IF EXISTS (SELECT 1
+                FROM MovementLinkObject AS MLO
+                WHERE MLO.MovementId = inMovementId
+                  AND MLO.DescId = zc_MovementLinkObject_To()
+                  AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View_two AS tt)
+               )
+AND NOT EXISTS (SELECT 1
+                FROM MovementLinkObject AS MLO
+                     INNER JOIN ObjectString AS ObjectString_GLNCode
+                                             ON ObjectString_GLNCode.ObjectId  = MLO.ObjectId
+                                            AND ObjectString_GLNCode.DescId    IN (zc_ObjectString_Partner_GLNCode(), zc_ObjectString_Partner_GLNCodeJuridical())
+                                            AND ObjectString_GLNCode.ValueData <> ''
+                WHERE MLO.MovementId = inMovementId
+                  AND MLO.DescId = zc_MovementLinkObject_From()
+               )
+-- AND inUserId IN (5, 6604558, 8056474)
+     THEN
+         -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка
+          IF NOT EXISTS (SELECT 1
+                         FROM ObjectBoolean AS ObjectBoolean_Order
+                              INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
+                         WHERE ObjectBoolean_Order.ValueData = TRUE
+                           AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                           AND Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
+                           AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
+                        )  
+               AND EXISTS (SELECT 1 FROM ObjectLink AS OL
+                                    WHERE OL.ObjectId = inGoodsId
+                                      AND OL.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                      AND OL.ChildObjectId IN (zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                           --, zc_Enum_InfoMoney_30102() -- Тушенка
+                                                             , zc_Enum_InfoMoney_20901() -- Ирна
+                                                              )
+                          )
+         THEN
+              RAISE EXCEPTION 'Ошибка.Для товара <%>% указан неверный вид = <%>.'
+                             , lfGet_Object_ValueData (inGoodsId)
+                             , CHR (13)
+                             , lfGet_Object_ValueData_sh (inGoodsKindId)
+                             /*, CHR (13)
+                             , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_ReturnIn())
+                             , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                             , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
+                             , CHR (13)
+                             , (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())*/
+                              ;
+         END IF;
+     END IF;
+
+     -- Проверка zc_ObjectBoolean_GoodsByGoodsKind_Order для подразделений из Object_Unit_check_isOrder_View
      IF EXISTS (SELECT 1
                 FROM MovementLinkObject AS MLO 
                 WHERE MLO.MovementId = inMovementId

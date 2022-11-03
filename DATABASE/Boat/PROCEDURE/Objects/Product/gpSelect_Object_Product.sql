@@ -315,8 +315,8 @@ BEGIN
                                            --
                                          , lpSelect.ProdColorPatternId
                                        --, lpSelect.ProdOptionsId
-
-                                    FROM lpSelect_Object_ReceiptProdModelChild_detail (vbUserId) AS lpSelect
+                                       
+                                    FROM lpSelect_Object_ReceiptProdModelChild_detail (inIsGroup:= TRUE, inUserId:= vbUserId) AS lpSelect
                                          JOIN tmpProduct ON tmpProduct.ReceiptProdModelId = lpSelect.ReceiptProdModelId
                                    )
         -- существующие Элементы Boat Structure - у Лодки - если была замена, в базовой стоимости НЕ будем учитываем

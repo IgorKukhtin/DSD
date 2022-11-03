@@ -64,23 +64,24 @@ BEGIN
        FROM Object AS Object_TaxKind
            LEFT JOIN Object AS Object_Model ON Object_Model.Id = inProModelId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Brand
-                               ON ObjectLink_Brand.ObjectId = Object_Model.Id
-                              AND ObjectLink_Brand.DescId = zc_ObjectLink_ProdModel_Brand()
-          LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Brand
+                                ON ObjectLink_Brand.ObjectId = Object_Model.Id
+                               AND ObjectLink_Brand.DescId = zc_ObjectLink_ProdModel_Brand()
+           LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_ProdEngine
-                               ON ObjectLink_ProdEngine.ObjectId = Object_Model.Id
-                              AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
-          LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_ProdEngine
+                                ON ObjectLink_ProdEngine.ObjectId = Object_Model.Id
+                               AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
+           LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
-                               ON ObjectLink_ColorPattern.ChildObjectId = Object_Model.Id
-                              AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ColorPattern_Model()
-          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                                ON ObjectLink_ColorPattern.ChildObjectId = Object_Model.Id
+                               AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ColorPattern_Model()
+           LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ObjectId
 
        WHERE Object_TaxKind.Id = zc_Enum_TaxKind_Basis()
       ;
+
    ELSE
      RETURN QUERY
      SELECT

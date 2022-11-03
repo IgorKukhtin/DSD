@@ -88,9 +88,9 @@ BEGIN
     ;
 
      -- очень важная проверка
-    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete() --OR vbUserId = 5
     THEN
-        IF vbStatusId = zc_Enum_Status_Erased()
+        IF vbStatusId = zc_Enum_Status_Erased() OR vbUserId = 5
         THEN
             RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
         END IF;
@@ -99,7 +99,7 @@ BEGIN
             RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
         END IF;
         -- это уже странная ошибка
-       -- RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
+        -- RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
     END IF;
 
 
