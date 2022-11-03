@@ -44,6 +44,7 @@ type
     actShowPUSHMessageInfo: TdsdShowPUSHMessage;
     spPUSHInfo: TdsdStoredProc;
     ceInternshipCompleted: TcxCheckBox;
+    ceisSite: TcxCheckBox;
   private
     { Private declarations }
   public

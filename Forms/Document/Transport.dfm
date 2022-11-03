@@ -1344,6 +1344,16 @@
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
+          object clincisChangePriceUser: TcxGridDBColumn
+            Caption = #1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isChangePriceUser'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 88
+          end
           object clincPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'
@@ -1611,7 +1621,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 11
     Width = 147
   end
   object edCommentStop: TcxTextEdit
@@ -1636,6 +1646,20 @@
       item
         Name = 'MasterPositionId'
         Value = '8466 '
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePrice'
+        Value = '0'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isChangePriceUser'
+        Value = 'false'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1729,6 +1753,20 @@
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
+    end
+    object actUpdateChangePriceUser: TdsdDataSetRefresh
+      Category = 'Update'
+      MoveParams = <>
+      StoredProc = spUpdateChangePriceUser
+      StoredProcList = <
+        item
+          StoredProc = spUpdateChangePriceUser
+        end>
+      Caption = 'actUpdateChangePriceUser'
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 43
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -2818,6 +2856,72 @@
       Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' "'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1086' '#1087#1088#1080#1095#1080#1085#1072#1093' '#1087#1088#1086#1089#1090#1086#1103'"'
       Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' "'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1086' '#1087#1088#1080#1095#1080#1085#1072#1093' '#1087#1088#1086#1089#1090#1086#1103'"'
       ImageIndex = 77
+    end
+    object actUpdateChangePriceUserDialog: TExecuteDialog
+      Category = 'Update'
+      MoveParams = <>
+      Caption = 'actUpdateChangePriceUserDialog'
+      ImageIndex = 43
+      FormName = 'TChangePriceUserDialogForm'
+      FormNameParam.Value = 'TChangePriceUserDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ChangePrice'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'ChangePrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isChangePriceUser'
+          Value = False
+          Component = FormParams
+          ComponentItem = 'isChangePriceUser'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ChangePrice'
+          Value = Null
+          Component = IncomeCDS
+          ComponentItem = 'ChangePrice'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isChangePriceUser'
+          Value = Null
+          Component = IncomeCDS
+          ComponentItem = 'isChangePriceUser'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateChangePriceUserDialog: TMultiAction
+      Category = 'Update'
+      TabSheet = cxTabSheetIncome
+      MoveParams = <>
+      Enabled = False
+      ActionList = <
+        item
+          Action = actUpdateChangePriceUserDialog
+        end
+        item
+          Action = actUpdateChangePriceUser
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077'>'
+      ImageIndex = 43
     end
   end
   object MasterDS: TDataSource
@@ -4009,6 +4113,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdateChangePriceUserDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -4185,6 +4297,10 @@
     end
     object bbPrintCost: TdxBarButton
       Action = actPrintCost
+      Category = 0
+    end
+    object bbUpdateChangePriceUserDialog: TdxBarButton
+      Action = macUpdateChangePriceUserDialog
       Category = 0
     end
   end
@@ -4979,5 +5095,40 @@
     PackSize = 1
     Left = 967
     Top = 272
+  end
+  object spUpdateChangePriceUser: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_IncomeFuel_ChangePriceUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = IncomeCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePrice'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'ChangePrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChangePriceUser'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'isChangePriceUser'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 208
+    Top = 473
   end
 end

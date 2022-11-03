@@ -1505,9 +1505,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_User_Language() RETURNS Integer AS $B
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_User_Language', zc_Object_User(), 'Язык справочников кассы' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Language');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_IdSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_IdSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Goods_IdSP', zc_Object_Goods(), 'ID лікарського засобу в СП' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_IdSP');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 31.10.22                                                                                                         * zc_ObjectString_Goods_IdSP
  30.09.22                                                                                                         * zc_ObjectString_User_Language
  20.09.22         * zc_ObjectString_TelegramGroup_Id
                     zc_ObjectString_TelegramGroup_BotToken

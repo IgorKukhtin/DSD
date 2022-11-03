@@ -151,6 +151,9 @@ type
     cbisNotRealGoods: TcxCheckBox;
     cxLabel24: TcxLabel;
     edName_history: TcxDBTextEdit;
+    GuidesSection: TdsdGuides;
+    cxLabel25: TcxLabel;
+    edSection: TcxButtonEdit;
   private
     { Private declarations }
   public

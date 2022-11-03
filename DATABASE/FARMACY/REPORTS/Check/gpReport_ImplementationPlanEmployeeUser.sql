@@ -589,6 +589,7 @@ BEGIN
 --              tmpResult.BonusAmountTab - tmpResult.AmountTheFineTab ELSE 0 END
      UPDATE tmpResult SET Total = zfCalc_MarketingPlan_Scale (UnitCategory.ScaleCalcMarketingPlanID
                                                             , vbDateStart
+                                                            , tmpResult.UnitId
                                                             , tmpResult.TotalExecutionLine
                                                             , tmpResult.AmountTheFineTab
                                                             , tmpResult.BonusAmountTab) 

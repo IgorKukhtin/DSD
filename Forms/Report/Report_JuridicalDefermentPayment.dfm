@@ -5,7 +5,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1139
-  ExplicitHeight = 409
+  ExplicitHeight = 410
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,7 +22,6 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       inherited cxGrid: TcxGrid
         Width = 1123
         Height = 314
-        ExplicitTop = 16
         ExplicitWidth = 1123
         ExplicitHeight = 314
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -210,6 +209,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             HeaderHint = #1060#1080#1083#1080#1072#1083' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1055' '#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1044#1086#1075#1086#1074#1086#1088')'
             Options.Editing = False
             Width = 85
+          end
+          object SectionName: TcxGridDBColumn
+            Caption = #1057#1077#1075#1084#1077#1085#1090
+            DataBinding.FieldName = 'SectionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
           end
           object JuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072

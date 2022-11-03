@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_User_Lite()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User_Lite (Integer, TVarChar, TVarChar, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User_Lite (Integer, TVarChar, TVarChar, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User_Lite(
  INOUT ioId                     Integer   ,    -- ключ объекта <Пользователь> 
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User_Lite(
     IN inMemberId               Integer   ,    -- физ. лицо
     IN inisNewUser              Boolean   ,    -- Новый сотрудник
     IN inisInternshipCompleted  Boolean ,    -- Стажировка проведена
+    IN inisSite                 Boolean   ,    -- признак - Для сайта
     IN inSession                TVarChar       -- сессия пользователя
 )
   RETURNS Integer 
@@ -64,6 +65,9 @@ BEGIN
        END IF;     
      END IF;
    END IF;
+
+   -- свойство <Для сайта>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_Site(), ioId, inisSite);
    
    -- Ведение протокола
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

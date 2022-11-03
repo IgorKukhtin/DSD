@@ -989,17 +989,6 @@ object MainForm: TMainForm
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
     end
-    object actUpdate_BuyerForSiteBonus: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_BuyerForSite_Bonus
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_BuyerForSite_Bonus
-        end>
-      Caption = 'actUpdate_BuyerForSiteBonus'
-    end
     object actSelect_BuyerForSite_BonusAdd: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1010,6 +999,17 @@ object MainForm: TMainForm
           StoredProc = spSelect_BuyerForSite_BonusAdd
         end>
       Caption = 'actSelect_BuyerForSite_BonusAdd'
+    end
+    object actUpdate_BuyerForSiteBonus: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_BuyerForSite_Bonus
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_BuyerForSite_Bonus
+        end>
+      Caption = 'actUpdate_BuyerForSiteBonus'
     end
     object actUpdatePharmUsersProfile: TdsdForeignData
       Category = 'DSDLib'
@@ -1091,6 +1091,83 @@ object MainForm: TMainForm
       DataSource = BuyerForSiteBonusAddDS
       Caption = #1050#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1073#1086#1085#1091#1089#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
       Hint = #1050#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1073#1086#1085#1091#1089#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+    end
+    object actPharmUserPhoto: TdsdForeignData
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actSite_Param
+      ZConnection.ControlsCodePage = cCP_UTF16
+      ZConnection.ClientCodepage = 'utf8'
+      ZConnection.Catalog = ''
+      ZConnection.Properties.Strings = (
+        'codepage=utf8')
+      ZConnection.HostName = ''
+      ZConnection.Port = 0
+      ZConnection.Database = ''
+      ZConnection.User = ''
+      ZConnection.Password = ''
+      ZConnection.Protocol = 'mysql-5'
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'MySQL_Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'MySQL_Port'
+      PortParam.MultiSelectSeparator = ','
+      UserNameParam.Value = Null
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'MySQL_Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'MySQL_Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DataBase.Value = Null
+      DataBase.Component = FormParams
+      DataBase.ComponentItem = 'MySQL_DataBase'
+      DataBase.DataType = ftString
+      DataBase.MultiSelectSeparator = ','
+      SQLParam.Value = ''
+      SQLParam.DataType = ftString
+      SQLParam.MultiSelectSeparator = ','
+      DataSet = PharmUserPhotoCDS
+      Params = <>
+      UpdateFields = <>
+      JsonParam.Value = ''
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+        end>
+      ShowGaugeForm = False
+      Caption = #1053#1072#1083#1080#1095#1080#1077' '#1092#1086#1090#1086' '#1085#1072' '#1089#1072#1081#1090#1077
+      Hint = #1053#1072#1083#1080#1095#1080#1077' '#1092#1086#1090#1086' '#1085#1072' '#1089#1072#1081#1090#1077
+    end
+    object actUpdate_User_PhotosOnSite: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_User_PhotosOnSite
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_User_PhotosOnSite
+        end>
+      Caption = 'actUpdate_User_PhotosOnSite'
+    end
+    object mactUpdate_User_PhotosOnSite: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_User_PhotosOnSite
+        end>
+      DataSource = PharmUserPhotoDS
+      Caption = #1054#1073#1085#1086#1074#1083#1077#1085#1080#1077' '#1085#1072#1083#1080#1095#1080#1103' '#1092#1086#1090#1086' '#1085#1072' '#1089#1072#1081#1090#1077
+      Hint = #1054#1073#1085#1086#1074#1083#1077#1085#1080#1077' '#1085#1072#1083#1080#1095#1080#1103' '#1092#1086#1090#1086' '#1085#1072' '#1089#1072#1081#1090#1077
     end
   end
   object FormParams: TdsdFormParams
@@ -1390,5 +1467,40 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 1048
     Top = 429
+  end
+  object PharmUserPhotoCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 64
+    Top = 421
+  end
+  object spUpdate_User_PhotosOnSite: TdsdStoredProc
+    StoredProcName = 'gpUpdate_User_PhotosOnSite'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = PharmUserPhotoCDS
+        ComponentItem = 'postgres_pharmacist_id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPhotosOnSite'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 421
+  end
+  object PharmUserPhotoDS: TDataSource
+    DataSet = PharmUserPhotoCDS
+    Left = 176
+    Top = 420
   end
 end

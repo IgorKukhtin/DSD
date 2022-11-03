@@ -1,10 +1,11 @@
 -- Function: gpUpdate_MI_GoodsSP_ClearGoods()
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_GoodsSP_ClearGoods (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_GoodsSP_ClearGoods (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_GoodsSP_ClearGoods(
     IN inId                  Integer   ,    --  люч объекта <Ёлемент документа>
     IN inMovementId          Integer   ,    -- »дентификатор документа
+    IN inIdSP                TVarChar  ,    -- ID л≥кар. засобу (AQ)
     IN inSession             TVarChar       -- сесси€ пользовател€
 )
 RETURNS VOID
@@ -12,7 +13,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
-   DECLARE vbOperDate_StartBegin TDateTime;
+   DECLARE vbOperDateStart TDateTime;
+   DECLARE vbOperDateEnd TDateTime;
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     vbUserId := inSession;
@@ -34,6 +36,55 @@ BEGIN
     THEN
         RAISE EXCEPTION '—в€зь не установлена.';
     END IF;    
+
+    SELECT MovementDate_OperDateStart.ValueData
+         , MovementDate_OperDateEnd.ValueData
+    INTO vbOperDateStart, vbOperDateEnd
+    FROM Movement
+         INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                 ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+
+         INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                 ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+
+    WHERE Movement.DescId = zc_Movement_GoodsSP()
+      AND Movement.Id = inMovementId;
+
+    PERFORM gpUpdate_Goods_IdSP(inGoodsMainId := MovementItem.ObjectId , inIdSP := '',  inSession := inSession)
+    FROM MovementItem 
+    WHERE MovementItem.ID = inId
+      AND COALESCE(MovementItem.ObjectId, 0) <> 0; 
+
+    UPDATE MovementItem SET MovementItem.ObjectId = 0
+    WHERE MovementItem.ID IN
+       (SELECT MovementItem.ID
+        FROM Movement
+             INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                     ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                    AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                    AND MovementDate_OperDateStart.ValueData  >= vbOperDateStart
+
+             INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                     ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                    AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                    AND MovementDate_OperDateEnd.ValueData  <= vbOperDateEnd
+
+             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = FALSE
+                                    AND COALESCE (MovementItem.ObjectId, 0) <> 0
+
+             -- ID л≥карського засобу
+             INNER JOIN MovementItemString AS MIString_IdSP
+                                           ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                          AND MIString_IdSP.DescId = zc_MIString_IdSP()
+                                          AND MIString_IdSP.ValueData = inIdSP
+
+        WHERE Movement.DescId = zc_Movement_GoodsSP()
+          AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+          AND Movement.Id <> inMovementId);
 
     -- сохранили <Ёлемент документа>
     PERFORM lpInsertUpdate_MovementItem (inId, zc_MI_Master(), 0, inMovementId, 0, NULL, zc_Enum_Process_Auto_PartionClose());

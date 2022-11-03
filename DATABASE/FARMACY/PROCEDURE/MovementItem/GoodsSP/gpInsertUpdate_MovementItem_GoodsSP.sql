@@ -1,24 +1,5 @@
 -- Function: gpInsert_MovementItem_GoodsSP()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Float, TFloat, TFloat
-                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer,  Integer, Integer, Integer, Integer
-                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer,  Integer, Integer, Integer, Integer
-                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer,  Integer, Integer, Integer, Integer
-                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer,  Integer, Integer, Integer, Integer
-                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
-                                                           , TVarChar, TVarChar, TVarChar, TVarChar);
-
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer,  Integer, Integer, Integer, Integer
                                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
@@ -63,11 +44,117 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
-   DECLARE vbOperDate_StartBegin TDateTime;
+   DECLARE vbOperDateStart TDateTime;
+   DECLARE vbOperDateEnd TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
 
+    IF COALESCE (inIdSP, '') = '' OR length(inIdSP) <> 36
+    THEN
+      RAISE EXCEPTION 'Не заполнено <ID лікар. засобу> или неправельный формат <%>', inIdSP;
+    END IF;
+    
+
+    IF COALESCE (ioId, 0) <> 0 AND
+       COALESCE (inIdSP, '') <> COALESCE ((SELECT MovementItemString.ObjectId 
+                                           FROM MovementItemString 
+                                           WHERE MovementItemString.MovementItemID = ioId
+                                             AND MovementItemString.DescId = zc_MIString_IdSP()), 0)
+    THEN
+      RAISE EXCEPTION 'Изменение <ID лікар. засобу> запрещено.';
+    END IF;
+    
+    IF COALESCE (inGoodsId, 0) <> COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.ID = ioId), 0)
+    THEN
+
+       SELECT MovementDate_OperDateStart.ValueData
+            , MovementDate_OperDateEnd.ValueData
+       INTO vbOperDateStart, vbOperDateEnd
+       FROM Movement
+            INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                    ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                   AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+
+            INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                    ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                   AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+
+       WHERE Movement.DescId = zc_Movement_GoodsSP()
+         AND Movement.Id = inMovementId;
+    
+      IF COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.ID = ioId), 0) <> 0
+      THEN
+        PERFORM gpUpdate_Goods_IdSP(inGoodsMainId := MovementItem.ObjectId , inIdSP := '',  inSession := inSession)
+        FROM MovementItem 
+        WHERE MovementItem.ID = ioId
+          AND COALESCE(MovementItem.ObjectId, 0) <> 0; 
+
+        UPDATE MovementItem SET MovementItem.ObjectId = 0
+        WHERE MovementItem.ID IN
+           (SELECT MovementItem.ID
+            FROM Movement
+                 INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                         ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                        AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                        AND MovementDate_OperDateStart.ValueData  >= vbOperDateStart
+
+                 INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                         ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                        AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                        AND MovementDate_OperDateEnd.ValueData  <= vbOperDateEnd
+
+                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                        AND MovementItem.DescId     = zc_MI_Master()
+                                        AND MovementItem.isErased   = FALSE
+                                        AND COALESCE (MovementItem.ObjectId, 0) <> 0
+
+                 -- ID лікарського засобу
+                 INNER JOIN MovementItemString AS MIString_IdSP
+                                               ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                              AND MIString_IdSP.DescId = zc_MIString_IdSP()
+                                              AND MIString_IdSP.ValueData = inIdSP
+
+            WHERE Movement.DescId = zc_Movement_GoodsSP()
+              AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+              AND Movement.Id <> inMovementId);
+
+      END IF;
+      
+      IF COALESCE (inGoodsId, 0) <> 0 THEN 
+        PERFORM gpUpdate_Goods_IdSP(inGoodsMainId := inGoodsId , inIdSP := inIdSP,  inSession := inSession); 
+        
+        UPDATE MovementItem SET MovementItem.ObjectId = inGoodsId
+        WHERE MovementItem.ID IN
+           (SELECT MovementItem.ID
+            FROM Movement
+                 INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                         ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                        AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                        AND MovementDate_OperDateStart.ValueData  >= vbOperDateStart
+
+                 INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                         ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                        AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                        AND MovementDate_OperDateEnd.ValueData  <= vbOperDateEnd
+
+                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                        AND MovementItem.DescId     = zc_MI_Master()
+                                        AND MovementItem.isErased   = FALSE
+                                        AND COALESCE (MovementItem.ObjectId, 0) <> inGoodsId
+
+                 -- ID лікарського засобу
+                 INNER JOIN MovementItemString AS MIString_IdSP
+                                               ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                              AND MIString_IdSP.DescId = zc_MIString_IdSP()
+                                              AND MIString_IdSP.ValueData = inIdSP
+
+            WHERE Movement.DescId = zc_Movement_GoodsSP()
+              AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+              AND Movement.Id <> inMovementId);
+      END IF;
+    END IF;
+       
     -- сохранить запись
     ioId := lpInsertUpdate_MovementItem_GoodsSP (ioId                  := COALESCE(ioId,0)
                                                , inMovementId          := inMovementId

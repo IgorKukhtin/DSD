@@ -19,7 +19,9 @@ uses
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, UtilTelegram,
   cxDataControllerConditionalFormattingRulesManagerDialog, dxDateRanges,
-  dxBarBuiltInMenu, cxGridChartView, cxGridDBChartView, JPEG, ZStoredProcedure;
+  dxBarBuiltInMenu, cxGridChartView, cxGridDBChartView, JPEG, ZStoredProcedure,
+  cxMemo, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdHTTP,
+  IdURI, System.JSON;
 
 type
   TMainForm = class(TForm)
@@ -95,6 +97,10 @@ type
     cxGridDBColumn_Summa: TcxGridDBColumn;
     cxGridLevel6: TcxGridLevel;
     cxGridDBColumn_CountChech: TcxGridDBColumn;
+    cxTabSheet6: TcxTabSheet;
+    cxMessage: TcxMemo;
+    IdHTTP: TIdHTTP;
+    IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -124,6 +130,7 @@ type
   public
     { Public declarations }
     procedure Add_Log(AMessage:String);
+    function GetdsdeSputnikBalance(AName, APassword : String) : String;
 
     procedure AllDriver;
   end;
@@ -152,6 +159,43 @@ begin
     CloseFile(F);
   end;
   except
+  end;
+end;
+
+function TMainForm.GetdsdeSputnikBalance(AName, APassword : String) : String;
+  var  S : String; jsonItem : TJSONObject;
+begin
+  IdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
+  IdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
+
+  try
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.CustomHeaders.Clear;
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.Accept := 'application/json';
+    IdHTTP.Request.AcceptEncoding := 'gzip, deflate';
+    IdHTTP.Request.Connection := 'keep-alive';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.BasicAuthentication := True;
+    IdHTTP.Request.Username := AName;
+    IdHTTP.Request.Password := APassword;
+    IdHTTP.Request.UserAgent:='';
+
+    try
+      S := IdHTTP.Get(TIdURI.URLEncode('https://esputnik.com/api/v1/balance'));
+
+      if IdHTTP.ResponseCode = 200 then
+      begin
+        jsonItem := TJSONObject.ParseJSONValue(S) as TJSONObject;
+        if jsonItem.Get('activityStatus').JsonValue.Value = 'DELIVERED' then
+           Result := jsonItem.Get('text').JsonValue.Value;
+      end else ShowMessage(IdHTTP.ResponseText);
+
+    except  on E: Exception do
+       ShowMessage('Ошибка получения истории сообщений для контакта: ' + E.Message);
+    end;
+
+  finally
   end;
 end;
 
@@ -236,6 +280,10 @@ begin
   cxGridDBChartView2.DataController.DataSource := Nil;
   cxGridDBChartView3.DataController.DataSource := Nil;
 
+  if qrySendList.FieldByName('Id').AsInteger in [14] then
+  begin
+    cxMessage.Text := GetdsdeSputnikBalance('info@neboley.dp.ua', 'Max1256937841');
+  end else
   if qrySendList.FieldByName('Id').AsInteger in [13] then
   begin
     cxPageControl1.Properties.ActivePage := cxTabSheet5;

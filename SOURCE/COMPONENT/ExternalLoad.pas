@@ -662,18 +662,28 @@ begin
         TClientDataSet(FDataSet).Close;
         TClientDataSet(FDataSet).FieldDefs.Clear;
 
-        for I := 1 to Cols do TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideString, 510);
+        for I := 1 to Cols do TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideString, 255);
         TClientDataSet(FDataSet).CreateDataSet;
 
-        for I := FStartRecord to Rows do
-        begin
+        with TGaugeFactory.GetGauge('Получение данныч из файла экселя', 1, Rows - FStartRecord) do begin
+          Start;
+          try
+            for I := FStartRecord to Rows do
+            begin
 
-          TClientDataSet(FDataSet).Append;
+              TClientDataSet(FDataSet).Append;
 
-          for J := 1 to Cols do
-            TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Value;
+              for J := 1 to Cols do
+                if Copy(Excel.Cells[I, J].Formula, 1, 1) = '=' then
+                  TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Value
+                else TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Text;
 
-          TClientDataSet(FDataSet).Post;
+              TClientDataSet(FDataSet).Post;
+              IncProgress;
+            end;
+          finally
+            Finish
+          end;
         end;
 
       finally

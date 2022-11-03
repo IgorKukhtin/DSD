@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, RetailName_main TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+             , SectionId Integer, SectionName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -130,6 +131,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.22         * add Section
  12.11.21         *
  05.07.21         * add lp + inStartDate_sale, inEndDate_sale
  13.09.14                                        * add inJuridicalGroupId

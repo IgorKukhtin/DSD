@@ -75,6 +75,8 @@ type
     actUsersSiteProfile: TdsdOpenForm;
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
+    actProtocolOpenForm: TdsdOpenForm;
+    dxBarButton4: TdxBarButton;
   private
   public
   end;

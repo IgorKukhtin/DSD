@@ -177,6 +177,7 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     JuridicalName_from: TcxGridDBColumn;
+    isChangePriceUser: TcxGridDBColumn;
   private
   public
   end;

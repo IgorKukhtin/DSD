@@ -242,6 +242,14 @@ object IncomeFuelForm: TIncomeFuelForm
       TabOrder = 26
       Width = 163
     end
+    object edChangePriceUser: TcxCheckBox
+      Left = 874
+      Top = 23
+      Caption = #1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 179
+    end
   end
   object PageControl: TcxPageControl
     Left = 0
@@ -1077,6 +1085,14 @@ object IncomeFuelForm: TIncomeFuelForm
         end
         item
           Visible = True
+          ItemName = 'bbOpdateChangePriceUser'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbSignProtocolOpenForm'
         end
         item
@@ -1197,6 +1213,10 @@ object IncomeFuelForm: TIncomeFuelForm
     end
     object bbInsertUpdateMISignNo: TdxBarButton
       Action = actInsertUpdateMISignNo
+      Category = 0
+    end
+    object bbOpdateChangePriceUser: TdxBarButton
+      Action = macUpdateChangePriceUserDialog
       Category = 0
     end
   end
@@ -1769,6 +1789,66 @@ object IncomeFuelForm: TIncomeFuelForm
       Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 58
     end
+    object actUpdateChangePriceUser: TdsdDataSetRefresh
+      Category = 'Update'
+      MoveParams = <>
+      StoredProc = spUpdateChangePriceUser
+      StoredProcList = <
+        item
+          StoredProc = spUpdateChangePriceUser
+        end>
+      Caption = 'actUpdateChangePriceUser'
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 43
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object actUpdateChangePriceUserDialog: TExecuteDialog
+      Category = 'Update'
+      MoveParams = <>
+      Caption = 'actUpdateChangePriceUserDialog'
+      ImageIndex = 43
+      FormName = 'TChangePriceUserDialogForm'
+      FormNameParam.Value = 'TChangePriceUserDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ChangePrice'
+          Value = Null
+          Component = edChangePrice
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isChangePriceUser'
+          Value = Null
+          Component = edChangePriceUser
+          DataType = ftBoolean
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateChangePriceUserDialog: TMultiAction
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateChangePriceUserDialog
+        end
+        item
+          Action = actUpdateChangePriceUser
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077'>'
+      ImageIndex = 43
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1895,7 +1975,7 @@ object IncomeFuelForm: TIncomeFuelForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInputOutput
@@ -2045,6 +2125,7 @@ object IncomeFuelForm: TIncomeFuelForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2057,6 +2138,8 @@ object IncomeFuelForm: TIncomeFuelForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 2
       end>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 488
     Top = 287
   end
@@ -2111,7 +2194,7 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -2331,7 +2414,7 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2402,7 +2485,7 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2548,6 +2631,13 @@ object IncomeFuelForm: TIncomeFuelForm
         Name = 'DistanceReal'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isChangePriceUser'
+        Value = Null
+        Component = edChangePriceUser
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2830,10 +2920,13 @@ object IncomeFuelForm: TIncomeFuelForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 288
     Top = 431
   end
@@ -2871,7 +2964,7 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -3250,10 +3343,13 @@ object IncomeFuelForm: TIncomeFuelForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 256
     Top = 199
   end
@@ -3279,10 +3375,13 @@ object IncomeFuelForm: TIncomeFuelForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 864
     Top = 335
   end
@@ -3329,7 +3428,7 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'inisSign'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3353,7 +3452,7 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'inisSign'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3397,5 +3496,38 @@ object IncomeFuelForm: TIncomeFuelForm
     PackSize = 1
     Left = 599
     Top = 392
+  end
+  object spUpdateChangePriceUser: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_IncomeFuel_ChangePriceUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePrice'
+        Value = Null
+        Component = edChangePrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChangePriceUser'
+        Value = Null
+        Component = edChangePriceUser
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 377
   end
 end

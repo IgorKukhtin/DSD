@@ -131,6 +131,7 @@ type
     macUpdate_isIrna_list: TMultiAction;
     macUpdate_isIrna: TMultiAction;
     bbUpdate_isIrna: TdxBarButton;
+    SectionName: TcxGridDBColumn;
   private
     { Private declarations }
   public

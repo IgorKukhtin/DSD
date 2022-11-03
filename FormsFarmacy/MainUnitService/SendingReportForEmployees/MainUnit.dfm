@@ -235,7 +235,7 @@ object MainForm: TMainForm
     Height = 445
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet5
+    Properties.ActivePage = cxTabSheet6
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 441
     ClientRectLeft = 4
@@ -244,10 +244,6 @@ object MainForm: TMainForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 0
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grReport: TcxGrid
         Left = 0
         Top = 0
@@ -415,10 +411,6 @@ object MainForm: TMainForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1079#1072#1082#1072#1079#1086#1074' '#1087#1086' '#1045#1048#1062
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grChart2: TcxGrid
         Left = 0
         Top = 0
@@ -468,10 +460,6 @@ object MainForm: TMainForm
     object cxTabSheet3: TcxTabSheet
       Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080' '#1074' %'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -502,10 +490,6 @@ object MainForm: TMainForm
     object cxTabSheet4: TcxTabSheet
       Caption = #1056#1086#1089#1090'/'#1087#1072#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1086#1074' '#1084#1077#1089#1103#1094#1072' '#1082' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1084#1091' '#1084#1077#1089#1103#1094#1091' '#1074' %'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid3: TcxGrid
         Left = 0
         Top = 0
@@ -610,6 +594,24 @@ object MainForm: TMainForm
         object cxGridLevel6: TcxGridLevel
           GridView = cxGridDBTableView3
         end
+      end
+    end
+    object cxTabSheet6: TcxTabSheet
+      Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
+      ImageIndex = 5
+      object cxMessage: TcxMemo
+        Left = 0
+        Top = 0
+        Align = alClient
+        Lines.Strings = (
+          'cxMessage')
+        TabOrder = 0
+        ExplicitLeft = 208
+        ExplicitTop = 120
+        ExplicitWidth = 185
+        ExplicitHeight = 89
+        Height = 417
+        Width = 1027
       end
     end
   end
@@ -734,5 +736,32 @@ object MainForm: TMainForm
         Name = 'inError'
         ParamType = ptInput
       end>
+  end
+  object IdHTTP: TIdHTTP
+    IOHandler = IdSSLIOHandlerSocketOpenSSL
+    ProxyParams.BasicAuthentication = False
+    ProxyParams.ProxyPort = 0
+    Request.ContentLength = -1
+    Request.ContentRangeEnd = -1
+    Request.ContentRangeStart = -1
+    Request.ContentRangeInstanceLength = -1
+    Request.Accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    Request.BasicAuthentication = False
+    Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    Request.Ranges.Units = 'bytes'
+    Request.Ranges = <>
+    HTTPOptions = [hoForceEncodeParams]
+    Left = 76
+    Top = 329
+  end
+  object IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL
+    MaxLineAction = maException
+    Port = 0
+    DefaultPort = 0
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 76
+    Top = 393
   end
 end

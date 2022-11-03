@@ -7,36 +7,36 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
     IN inName        TVarChar,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                DayTaxSummary TFloat,
                GLNCode TVarChar,
                isCorporate Boolean,  isTaxSummary Boolean, isDiscountPrice Boolean, isPriceWithVAT Boolean,
                isOrderMin Boolean, isNotRealGoods Boolean,
-               JuridicalGroupId Integer, JuridicalGroupName TVarChar,  
+               JuridicalGroupId Integer, JuridicalGroupName TVarChar,
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                RetailId Integer, RetailName TVarChar,
                RetailReportId Integer, RetailReportName TVarChar,
-               InfoMoneyId Integer, InfoMoneyName TVarChar, 
-               PriceListId Integer, PriceListName TVarChar, 
+               InfoMoneyId Integer, InfoMoneyName TVarChar,
+               PriceListId Integer, PriceListName TVarChar,
                PriceListPromoId Integer, PriceListPromoName TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
                isVatPrice Boolean,
-               VatPriceDate TDateTime
-
+               VatPriceDate TDateTime,
+               SectionId Integer, SectionName TVarChar
                ) AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Object_Juridical());
-     
+
    IF COALESCE (inId, 0) = 0
    THEN
        RETURN QUERY 
        SELECT
-             CAST (0 as Integer)    AS Id
-           , 0 ::Integer  AS Code -- lfGet_ObjectCode(0, zc_Object_Juridical())
+             CAST (0 as Integer)      AS Id
+           , 0 ::Integer              AS Code -- lfGet_ObjectCode(0, zc_Object_Juridical())
            --, inName                 AS NAME
-           , '' ::TVarChar          AS NAME
+           , '' ::TVarChar            AS NAME
 
            , CAST (0 as TFloat)       AS DayTaxSummary
 
@@ -59,7 +59,7 @@ BEGIN
 
            , CAST (0 as Integer)    AS RetailReportId 
            , CAST ('' as TVarChar)  AS RetailReportName 
-                      
+ 
            , CAST (0 as Integer)    AS InfoMoneyId
            , CAST ('' as TVarChar)  AS InfoMoneyName
            
@@ -74,6 +74,9 @@ BEGIN
            
            , CAST (false as Boolean)   AS isVatPrice 
            , NULL         :: TDateTime AS VatPriceDate
+
+           , CAST (0 as Integer)    AS SectionId
+           , CAST ('' as TVarChar)  AS SectionName
            ;
    ELSE
        RETURN QUERY 
@@ -86,28 +89,28 @@ BEGIN
 
            , ObjectString_GLNCode.ValueData      AS GLNCode
            , ObjectBoolean_isCorporate.ValueData AS isCorporate
-           , COALESCE (ObjectBoolean_isTaxSummary.ValueData, False::Boolean)     AS isTaxSummary        
-           , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, False::Boolean)  AS isDiscountPrice   
+           , COALESCE (ObjectBoolean_isTaxSummary.ValueData, False::Boolean)     AS isTaxSummary
+           , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, False::Boolean)  AS isDiscountPrice
            , COALESCE (ObjectBoolean_isPriceWithVAT.ValueData, False::Boolean)   AS isPriceWithVAT
            , COALESCE (ObjectBoolean_isOrderMin.ValueData, False::Boolean)       AS isOrderMin
            , COALESCE (ObjectBoolean_isNotRealGoods.ValueData, False::Boolean)   AS isNotRealGoods
            , Object_JuridicalGroup.Id         AS JuridicalGroupId
            , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
            
-           , Object_GoodsProperty.Id         AS GoodsPropertyId
-           , Object_GoodsProperty.ValueData  AS GoodsPropertyName
+           , Object_GoodsProperty.Id          AS GoodsPropertyId
+           , Object_GoodsProperty.ValueData   AS GoodsPropertyName
            
-           , Object_Retail.Id                AS RetailId
-           , Object_Retail.ValueData         AS RetailName
+           , Object_Retail.Id                 AS RetailId
+           , Object_Retail.ValueData          AS RetailName
 
-           , Object_RetailReport.Id          AS RetailReportId
-           , Object_RetailReport.ValueData   AS RetailReportName
+           , Object_RetailReport.Id           AS RetailReportId
+           , Object_RetailReport.ValueData    AS RetailReportName
            
            , Object_InfoMoney_View.InfoMoneyId
            , Object_InfoMoney_View.InfoMoneyName_all AS InfoMoneyName
            
-           , Object_PriceList.Id         AS PriceListId 
-           , Object_PriceList.ValueData  AS PriceListName 
+           , Object_PriceList.Id              AS PriceListId 
+           , Object_PriceList.ValueData       AS PriceListName 
 
            , Object_PriceListPromo.Id         AS PriceListPromoId 
            , Object_PriceListPromo.ValueData  AS PriceListPromoName 
@@ -117,6 +120,9 @@ BEGIN
 
            , COALESCE (ObjectBoolean_isVatPrice.ValueData, FALSE) :: Boolean   AS isVatPrice
            , COALESCE (ObjectDate_VatPrice.ValueData, NULL)       :: TDateTime AS VatPriceDate
+
+           , Object_Section.Id                AS SectionId
+           , Object_Section.ValueData         AS SectionName
        FROM Object AS Object_Juridical
            LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary 
                                  ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id 
@@ -199,9 +205,13 @@ BEGIN
                                 ON ObjectLink_Juridical_PriceListPromo.ObjectId = Object_Juridical.Id 
                                AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
            LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Juridical_PriceListPromo.ChildObjectId
-           
+
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Section
+                                ON ObjectLink_Juridical_Section.ObjectId = Object_Juridical.Id
+                               AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
+           LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
        WHERE Object_Juridical.Id = inId;
-   END IF;      
+   END IF;
   
 END;
 $BODY$
@@ -211,6 +221,7 @@ ALTER FUNCTION gpGet_Object_Juridical (Integer, TVarChar, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.22         * add Section
  30.09.22         * 
  06.05.20         * add isVatPrice, VatPriceDate
  24.10.19         * isOrderMin

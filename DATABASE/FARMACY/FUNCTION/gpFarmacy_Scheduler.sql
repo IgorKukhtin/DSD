@@ -511,13 +511,13 @@ BEGIN
       END;          
       
       -- Премия за приложение
-      BEGIN
+/*      BEGIN
          PERFORM gpSelect_Movement_Wages_ApplicationAward(inOperDate := CURRENT_DATE,  inSession := inSession);
       EXCEPTION
          WHEN others THEN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Movement_Wages_ApplicationAward', True, text_var1::TVarChar, vbUserId);
-      END;    
+      END;    */
       
     END IF;    
 
@@ -539,13 +539,13 @@ BEGIN
       END;         
 
       -- Премия за приложение за предыдущий месяц
-      BEGIN
+      /*BEGIN
          PERFORM gpSelect_Movement_Wages_ApplicationAward(inOperDate := CURRENT_DATE - INTERVAL '10 DAY',  inSession := inSession);
       EXCEPTION
          WHEN others THEN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Movement_Wages_ApplicationAward', True, text_var1::TVarChar, vbUserId);
-      END;    
+      END;    */
     END IF;    
 
     IF date_part('DAY',  CURRENT_DATE)::Integer = 4 AND date_part('HOUR',  CURRENT_TIME)::Integer = 21 AND 

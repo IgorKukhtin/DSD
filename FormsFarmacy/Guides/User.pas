@@ -122,6 +122,7 @@ type
     Language: TcxGridDBColumn;
     EducationName: TcxGridDBColumn;
     isPhotosOnSite: TcxGridDBColumn;
+    isActive: TcxGridDBColumn;
   private
     { Private declarations }
   public

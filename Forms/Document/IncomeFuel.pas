@@ -206,6 +206,12 @@ type
     sgOperDate: TcxGridDBColumn;
     sclisErased: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
+    spUpdateChangePriceUser: TdsdStoredProc;
+    edChangePriceUser: TcxCheckBox;
+    actUpdateChangePriceUser: TdsdDataSetRefresh;
+    actUpdateChangePriceUserDialog: TExecuteDialog;
+    macUpdateChangePriceUserDialog: TMultiAction;
+    bbOpdateChangePriceUser: TdxBarButton;
   private
   public
   end;

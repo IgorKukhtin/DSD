@@ -128,6 +128,12 @@ type
     mactUpdatePharmUsersProfile: TMultiAction;
     spUpdate_BuyerForSite_BonusAdded: TdsdStoredProc;
     actUpdate_BuyerForSite_BonusAdded: TdsdExecStoredProc;
+    actPharmUserPhoto: TdsdForeignData;
+    PharmUserPhotoCDS: TClientDataSet;
+    spUpdate_User_PhotosOnSite: TdsdStoredProc;
+    actUpdate_User_PhotosOnSite: TdsdExecStoredProc;
+    mactUpdate_User_PhotosOnSite: TMultiAction;
+    PharmUserPhotoDS: TDataSource;
     procedure btnAllClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -200,9 +206,11 @@ procedure TMainForm.btnAllClick(Sender: TObject);
 var ini: TIniFile; DateStart : TDateTime;
 begin
   Add_Log('-----------------');
-  Add_Log('Запуск обработки заазов.');
+  Add_Log('Запуск обработки.');
 
   DateStart := Now;
+
+  Add_Log('Oбработка заазов.');
 
   if actSelect_UpdateOrdersSite.Execute then maDo.Execute;
 
@@ -221,6 +229,10 @@ begin
   Add_Log('Загрузка "Коректировка бонуса покупателей".');
 
   if actSelect_BuyerForSite_BonusAdd.Execute then mactUpdatePharmUsersProfile.Execute;
+
+  Add_Log('Загрузка "Наличия фото на сайте".');
+
+  if actPharmUserPhoto.Execute then mactUpdate_User_PhotosOnSite.Execute;
 
   Add_Log('Выполнено.');
 
@@ -279,6 +291,13 @@ begin
                                          '     left join tmpUser ON tmpUser.user_id =  users_profile.user_id '#13 +
                                          'where COALESCE (tmpUser.user_id, 0) <> 0';
 
+  actPharmUserPhoto.SQLParam.Value := 'select pharm_pharmacist.postgres_pharmacist_id '#13 +
+                                      'from pharm_pharmacist '#13 +
+                                      '     left join files_managed ON files_managed.id = pharm_pharmacist.avatar_fid '#13 +
+                                      'where pharm_pharmacist.postgres_pharmacist_id is not null '#13 +
+                                      '  and files_managed.filename is not null '#13 +
+                                      '  and files_managed.filesize > 0 '#13 +
+                                      '  and files_managed.updated_at > CURRENT_DATE() - 10';
 
   if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
   begin

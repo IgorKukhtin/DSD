@@ -15,7 +15,7 @@ BEGIN
    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_User());
    vbUserId:= lpGetUserBySession (inSession);
 
-   outPhone := '+'||SUBSTRING(inPhone, 1, 2)||'('||SUBSTRING(inPhone, 3, 3)||') '||SUBSTRING(inPhone, 6, 3)||'-'||SUBSTRING(inPhone, 9, 4);
+   outPhone := '+38'||'('||SUBSTRING(inPhone, 1, 3)||') '||SUBSTRING(inPhone, 4, 3)||'-'||SUBSTRING(inPhone, 7, 4);
 
 END;
 $BODY$
@@ -30,4 +30,5 @@ $BODY$
 
 -- тест
 -- 
-select * from gpSelect_UsersSiteProfile_Phone ('380672892502', '3');
+
+select * from gpSelect_UsersSiteProfile_Phone(inPhone := '0971392480' ,  inSession := '3');

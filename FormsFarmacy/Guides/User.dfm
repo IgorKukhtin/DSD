@@ -288,6 +288,14 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 58
       end
+      object isActive: TcxGridDBColumn
+        Caption = #1044#1077#1081#1089#1090#1074'. '#1089#1086#1090#1088'.'
+        DataBinding.FieldName = 'isActive'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

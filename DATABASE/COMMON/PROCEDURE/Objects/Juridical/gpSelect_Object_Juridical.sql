@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                PriceListId_Prior Integer, PriceListName_Prior TVarChar,
                PriceListId_30103 Integer, PriceListName_30103 TVarChar,
                PriceListId_30201 Integer, PriceListName_30201 TVarChar,
+               SectionId Integer, SectionName TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
                GUID TVarChar, isGUID Boolean,
                isBranchAll Boolean,
@@ -204,6 +205,9 @@ BEGIN
        , Object_PriceList_30201.Id         AS PriceListId_30201
        , Object_PriceList_30201.ValueData  AS PriceListName_30201
 
+       , Object_Section.Id                 AS SectionId
+       , Object_Section.ValueData          AS SectionName
+
        --, ObjectDate_StartPromo.ValueData AS StartPromo
        , NULL :: TDateTime                 AS StartPromo
        --, ObjectDate_EndPromo.ValueData   AS EndPromo
@@ -356,6 +360,10 @@ BEGIN
                             AND ObjectLink_Juridical_PriceList_30201.DescId = zc_ObjectLink_Juridical_PriceList30201()
         LEFT JOIN Object AS Object_PriceList_30201 ON Object_PriceList_30201.Id = ObjectLink_Juridical_PriceList_30201.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Section
+                             ON ObjectLink_Juridical_Section.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
+        LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                               , 8359 -- 04-Услуги
                                                                )
@@ -387,6 +395,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.11.22         * add Section
  30.09.22         *
  04.05.22         *
  30.01.22

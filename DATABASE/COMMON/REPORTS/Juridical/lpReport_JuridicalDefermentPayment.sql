@@ -13,7 +13,9 @@ CREATE OR REPLACE FUNCTION lpReport_JuridicalDefermentPayment(
     IN inJuridicalGroupId Integer   , --
     IN inUserId           Integer    -- сессия пользователя
 )
-RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, RetailName_main TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+RETURNS TABLE (AccountId Integer, AccountName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, RetailName_main TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+             , SectionId Integer, SectionName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -125,7 +127,9 @@ BEGIN
                                       )
         , tmpJuridical AS (SELECT lfSelect_Object_Juridical_byGroup.JuridicalId FROM lfSelect_Object_Juridical_byGroup (inJuridicalGroupId) AS lfSelect_Object_Juridical_byGroup WHERE inJuridicalGroupId <> 0)
 
-     SELECT a.AccountId, a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
+     SELECT a.AccountId, a.AccountName
+             , a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
+             , a.SectionId, a.SectionName
              , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
              , a.BranchId, a.BranchCode, a.BranchName
              , a.PaidKindId, a.PaidKindName
@@ -156,6 +160,8 @@ BEGIN
             , COALESCE (Object_Retail.ValueData, 'прочие') :: TVarChar AS RetailName_main
             , ObjectHistory_JuridicalDetails_View.OKPO
             , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+            , Object_Section.Id          AS SectionId
+            , Object_Section.ValueData   AS SectionName
             , Object_Partner.Id          AS PartnerId
             , Object_Partner.ObjectCode  AS PartnerCode
             , Object_Partner.ValueData   AS PartnerName
@@ -440,7 +446,13 @@ BEGIN
                     LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
          
                     LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = RESULT.JuridicalGroupId
-         
+
+                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_Section
+                                         ON ObjectLink_Juridical_Section.ObjectId = Object_Juridical.Id
+                                        AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
+                    LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
+
+
                     -- Отв за договор - сотрудник
                     LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                          ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Contract_Personal.ChildObjectId
@@ -486,6 +498,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.22         * add Section
  17.12.21         * add InfoMoneyId
  12.11.21         *
  05.07.21         * add lp + inStartDate_sale, inEndDate_sale

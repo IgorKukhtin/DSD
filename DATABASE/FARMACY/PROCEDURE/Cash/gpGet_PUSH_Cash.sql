@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_PUSH_Cash(
     IN inisStart     Boolean  ,     -- Первый запуск после входа
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Text TBlob, isPoll boolean,
+RETURNS TABLE (Id Integer, Text TBlob, isPoll boolean, isAtEveryEntry Boolean,
                FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar,
                isFormOpen boolean, isFormLoad boolean, isExecStoredProc boolean, 
                isSpecialLighting Boolean, TextColor Integer, Color Integer, isBold Boolean)
@@ -54,7 +54,8 @@ BEGIN
 
     CREATE TEMP TABLE _PUSH (Id  Integer
                            , Text TBlob
-                           , isPoll boolean
+                           , isPoll boolean Not Null Default False
+                           , isAtEveryEntry boolean Not Null Default False
                            , FormName TVarChar
                            , Button TVarChar
                            , Params TVarChar
@@ -659,6 +660,7 @@ BEGIN
       , tmpMovementPUSH AS (SELECT Movement.Id                                                     AS ID
                                  , PUSH_Message.Message                                            AS Message
                                  , COALESCE(MovementBoolean_Poll.ValueData, False)                 AS isPoll
+                                 , COALESCE(MovementBoolean_AtEveryEntry.ValueData, False)         AS isAtEveryEntry
                                  , PUSH_Message.FormName                                           AS FormName
                                  , PUSH_Message.Button                                             AS Button
                                  , PUSH_Message.Params                                             AS Params
@@ -691,6 +693,10 @@ BEGIN
                                  LEFT JOIN MovementBoolean AS MovementBoolean_Pharmacist
                                                            ON MovementBoolean_Pharmacist.MovementId = Movement.Id
                                                           AND MovementBoolean_Pharmacist.DescId = zc_MovementBoolean_Pharmacist()
+
+                                 LEFT JOIN MovementBoolean AS MovementBoolean_AtEveryEntry
+                                                           ON MovementBoolean_AtEveryEntry.MovementId = Movement.Id
+                                                          AND MovementBoolean_AtEveryEntry.DescId = zc_MovementBoolean_AtEveryEntry()
 
                                  LEFT JOIN MovementLinkObject AS MLO_Retail
                                                               ON MLO_Retail.MovementId = Movement.Id
@@ -768,11 +774,12 @@ BEGIN
                             )
 
 
-   INSERT INTO _PUSH (Id, Text, isPoll, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad)
+   INSERT INTO _PUSH (Id, Text, isPoll, isAtEveryEntry, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad)
    SELECT
           tmpMovementPUSH.Id
         , tmpMovementPUSH.Message                                            AS Message
         , tmpMovementPUSH.isPoll                                             AS isPoll
+        , tmpMovementPUSH.isAtEveryEntry                                     AS isAtEveryEntry
         , tmpMovementPUSH.FormName                                           AS FormName
         , tmpMovementPUSH.Button                                             AS Button
         , tmpMovementPUSH.Params                                             AS Params
@@ -785,11 +792,12 @@ BEGIN
    
  /*  IF vbUserId = 3
    THEN
-     INSERT INTO _PUSH (Id, Text, isPoll, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad)
+     INSERT INTO _PUSH (Id, Text, isPoll, isAtEveryEntry, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad)
      SELECT
           1111111                          AS Id
         , ''                               AS Message
         , False                            AS isPoll
+        , False                            AS isAtEveryEntry
         , 'TCheckHelsiSignPUSHForm'        AS FormName
         , ''                               AS Button
         , ''                               AS Params
@@ -803,6 +811,7 @@ BEGIN
      SELECT _PUSH.Id                                  AS Id
           , _PUSH.Text                                AS Text
           , COALESCE(_PUSH.isPoll, False)             AS isPoll
+          , COALESCE(_PUSH.isAtEveryEntry, False)     AS isAtEveryEntry
           , _PUSH.FormName                            AS FormName
           , _PUSH.Button                              AS Button
           , _PUSH.Params                              AS Params
@@ -842,4 +851,4 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- 
-SELECT * FROM gpGet_PUSH_Cash(True, '3')
+SELECT * FROM gpGet_PUSH_Cash(False, '3')
