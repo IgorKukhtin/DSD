@@ -1533,12 +1533,13 @@ end;
 
 procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalChoiceForm');
-   {
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
   exit;
@@ -1547,7 +1548,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerJournalForm');
+  }
 end;
+
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
 
