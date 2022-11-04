@@ -935,13 +935,14 @@ end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;
 begin
+{
   //Настройки импорта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportSettingsForm');
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportGroupForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadFlagFromMedocForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLoadFlagFromMedocForm');
 
@@ -1533,12 +1534,13 @@ end;
 
 procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalChoiceForm');
-   {
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
   exit;
@@ -1547,7 +1549,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerJournalForm');
+  }
 end;
+
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
 

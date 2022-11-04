@@ -947,6 +947,14 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
