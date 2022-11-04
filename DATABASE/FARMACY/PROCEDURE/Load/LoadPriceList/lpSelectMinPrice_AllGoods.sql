@@ -64,6 +64,8 @@ BEGIN
     inObjectId:= ABS (inObjectId);
 
     vbPercentСhange := COALESCE((SELECT tmp.PercentСhange FROM gpSelect_Object_ExchangeRates(False, inUserId::TVarChar) AS tmp WHERE tmp.OperDate = CURRENT_DATE), 0);
+    
+    vbPercentСhange := 0;
 
     -- Нашли у Аптеки "Главное юр лицо"
     SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId FROM Object_Unit_View WHERE Object_Unit_View.Id = inUnitId;
@@ -702,4 +704,3 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 -- 
 SELECT * FROM lpSelectMinPrice_AllGoods (183289 , 4, 3)
 ; 
-

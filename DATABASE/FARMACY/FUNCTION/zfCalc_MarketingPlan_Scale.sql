@@ -39,30 +39,29 @@ BEGIN
     THEN
       vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
                       WHEN ROUND(inTotalExecutionLine, 2) < 55 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 85 THEN inBonusAmountTab - inAmountTheFineTab
+                      WHEN ROUND(inTotalExecutionLine, 2) < 85 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
                       ELSE inBonusAmountTab END;      
     ELSEIF vbUnitCategoryCode = 3 -- B
     THEN
       vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 35 THEN - inAmountTheFineTab / 2  
                       WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN inBonusAmountTab - inAmountTheFineTab
+                      WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
                       ELSE inBonusAmountTab END;          
     ELSEIF vbUnitCategoryCode = 5 -- C
     THEN
       vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
                       WHEN ROUND(inTotalExecutionLine, 2) < 42 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 75 THEN inBonusAmountTab - inAmountTheFineTab
+                      WHEN ROUND(inTotalExecutionLine, 2) < 75 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
                       ELSE inBonusAmountTab END;              
     ELSEIF vbUnitCategoryCode = 8 -- D
     THEN
       vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 25 THEN - inAmountTheFineTab / 2  
                       WHEN ROUND(inTotalExecutionLine, 2) < 37 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 60 THEN inBonusAmountTab - inAmountTheFineTab
+                      WHEN ROUND(inTotalExecutionLine, 2) < 60 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
                       ELSE inBonusAmountTab END;              
     END IF;
     
     IF vbTotal < 0 AND vbisAP = TRUE THEN vbTotal := 0; END IF;
-    IF vbTotal < 0 THEN vbTotal := vbTotal / 2; END IF;
                                        
   ELSEIF  date_trunc('month', inOperDate) >= '01.04.2022' and date_trunc('month', inOperDate) <= '01.05.2022'
   THEN

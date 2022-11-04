@@ -152,6 +152,8 @@ BEGIN
     
     vbPercent—hange := COALESCE((SELECT tmp.Percent—hange FROM gpSelect_Object_ExchangeRates(False, inSession) AS tmp 
                                  WHERE tmp.OperDate = CURRENT_DATE AND COALESCE (inUnitId_to, 0) = 0), 0);
+                                 
+    vbPercent—hange := 0;
 
   RETURN QUERY
     WITH DD

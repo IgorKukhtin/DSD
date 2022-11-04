@@ -55,7 +55,7 @@ BEGIN
 
     PERFORM gpUpdate_Goods_IdSP(inGoodsMainId := inGoodsId , inIdSP := inIdSP,  inSession := inSession); 
         
-    UPDATE MovementItem SET MovementItem.ObjectId = inGoodsId
+    UPDATE MovementItem SET ObjectId = inGoodsId
     WHERE MovementItem.ID IN
        (SELECT MovementItem.ID
         FROM Movement

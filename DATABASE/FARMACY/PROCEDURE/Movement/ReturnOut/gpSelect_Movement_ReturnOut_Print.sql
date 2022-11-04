@@ -133,7 +133,28 @@ BEGIN
             Movement_ReturnOut.Id
           , Movement_ReturnOut.ToId
         FROM Movement_ReturnOut_View AS Movement_ReturnOut
-        WHERE Movement_ReturnOut.Id = inMovementId)
+        WHERE Movement_ReturnOut.Id = inMovementId),
+    tmpMI AS (SELECT MI_ReturnOut.*
+                              
+                   , COALESCE (Object_Goods_Juridical.Name, MI_ReturnOut.GoodsName) AS JuridicalName 
+                                                 
+                   , Object_Goods.MorionCode
+                    
+                   , ROW_NUMBER() OVER (PARTITION BY MI_ReturnOut.Id ORDER BY Object_Goods_Juridical.Id) AS Ord
+
+                 FROM
+                     MovementItem_ReturnOut_View AS MI_ReturnOut
+
+                     LEFT JOIN tmpMovement_ReturnOut ON 1 = 1
+
+                     LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MI_ReturnOut.GoodsId
+                     LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                     LEFT JOIN Object_Goods_Juridical AS Object_Goods_Juridical ON Object_Goods_Juridical.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                                     AND Object_Goods_Juridical.JuridicalId = tmpMovement_ReturnOut.ToId
+
+
+                 WHERE MI_ReturnOut.MovementId = inMovementId
+                   AND MI_ReturnOut.isErased = FALSE)
     
         SELECT
             MI_ReturnOut.GoodsName
@@ -144,7 +165,7 @@ BEGIN
           , MIString_PartionGoods.ValueData            AS PartionGoods
           , ObjectString_Goods_Maker.ValueData         AS MakerName
           
-          , COALESCE (Object_Goods_Juridical.Name, MI_ReturnOut.GoodsName) AS JuridicalName 
+          , MI_ReturnOut.JuridicalName 
           
           , CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = TRUE 
                 THEN MI_ReturnOut.Price
@@ -165,16 +186,10 @@ BEGIN
 
           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
           
-          , Object_Goods.MorionCode
+          , MI_ReturnOut.MorionCode
+          
         FROM
-            MovementItem_ReturnOut_View AS MI_ReturnOut
-
-            LEFT JOIN tmpMovement_ReturnOut ON 1 = 1
-
-            LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MI_ReturnOut.GoodsId
-            LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
-            LEFT JOIN Object_Goods_Juridical AS Object_Goods_Juridical ON Object_Goods_Juridical.GoodsMainId = Object_Goods_Retail.GoodsMainId
-                                            AND Object_Goods_Juridical.JuridicalId = tmpMovement_ReturnOut.ToId
+            tmpMI AS MI_ReturnOut
 
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_Measure
                                        ON ObjectLink_Goods_Measure.ObjectId = MI_ReturnOut.GoodsId
@@ -214,8 +229,7 @@ BEGIN
                             AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
-        WHERE MI_ReturnOut.MovementId = inMovementId
-          AND MI_ReturnOut.isErased = FALSE;
+        WHERE MI_ReturnOut.Ord = 1;
 
     RETURN NEXT Cursor2;
 END;
