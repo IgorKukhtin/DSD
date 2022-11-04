@@ -1403,6 +1403,12 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_GoodsByGoodsKind_Br() RETURNS I
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_PersonalTransport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_PersonalTransport' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PersonalTransport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_PersonalTransport' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- Загрузка mic_2022_11_03 из файла
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_mic_2022_11_03() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_mic_2022_11_03' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_mic_2022_11_03() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_mic_2022_11_03' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+
+
 -- !!!
 -- !!! Статус Топливные карты
 -- !!!
@@ -1417,6 +1423,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_CardFuelKind_Damaged () RETURNS Integer AS $B
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 03.11.22         * Загрузка mic_2022_11_03 из файла
  01.09.22         * Загрузка Начислений за проезд 
  07.06.22         * zc_Enum_ImportType_GoodsByGoodsKind_Br
  06.06.22         * add zc_Enum_ImportType_PersonalServiceSMER

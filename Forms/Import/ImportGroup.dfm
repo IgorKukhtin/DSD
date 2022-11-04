@@ -1,20 +1,20 @@
 inherited ImportGroupForm: TImportGroupForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 345
-  ClientWidth = 583
+  ClientWidth = 641
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 591
-  ExplicitHeight = 377
+  ExplicitWidth = 657
+  ExplicitHeight = 384
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 583
+    Width = 641
     Height = 319
     ExplicitWidth = 583
     ExplicitHeight = 319
     ClientRectBottom = 319
-    ClientRectRight = 583
+    ClientRectRight = 641
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 583
       ExplicitHeight = 319
@@ -50,11 +50,12 @@ inherited ImportGroupForm: TImportGroupForm
       object cxGrid1: TcxGrid
         Left = 276
         Top = 0
-        Width = 307
+        Width = 365
         Height = 319
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 307
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -360,6 +361,45 @@ inherited ImportGroupForm: TImportGroupForm
         end>
       Caption = 'actRefreshMovementItemLastPriceList_View'
     end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_mic
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_mic
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object macLoadExcel_mic: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' mic_2022_11_03 '#1080#1079' Excel ?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel mic_2022_11_03'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel mic_2022_11_03'
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -397,6 +437,10 @@ inherited ImportGroupForm: TImportGroupForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -406,6 +450,22 @@ inherited ImportGroupForm: TImportGroupForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoadExcel_mic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -446,6 +506,10 @@ inherited ImportGroupForm: TImportGroupForm
     end
     object bbLoadAllPrice: TdxBarButton
       Action = macGUILoadPrice
+      Category = 0
+    end
+    object bbLoadExcel_mic: TdxBarButton
+      Action = macLoadExcel_mic
       Category = 0
     end
   end
@@ -546,10 +610,13 @@ inherited ImportGroupForm: TImportGroupForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 416
     Top = 184
   end
@@ -612,5 +679,54 @@ inherited ImportGroupForm: TImportGroupForm
     PackSize = 1
     Left = 512
     Top = 184
+  end
+  object spGetImportSetting_mic: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'Tmic_2022_11_03Form;zc_Object_ImportSetting_mic_2022_11_03'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 64
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 584
+    Top = 120
   end
 end
