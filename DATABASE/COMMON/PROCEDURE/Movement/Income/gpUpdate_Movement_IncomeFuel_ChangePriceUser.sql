@@ -1,6 +1,6 @@
 -- Function: gpUpdate_Movement_IncomeFuel_ChangePriceUser()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_IncomeFuel_ChangePriceUser(Integer, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_IncomeFuel_ChangePriceUser (Integer, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_IncomeFuel_ChangePriceUser(
     IN inId                  Integer   , -- Ключ объекта <Документ>
@@ -12,15 +12,12 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyId Integer;
    DECLARE vbStatusId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_IncomeFuel_ChangePriceUser());
-     -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_Update_Movement_IncomeFuel_ChangePriceUser());
 
-     --текущий статус документа
+     -- текущий статус документа
      vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inId);
      
      IF vbStatusId = zc_Enum_Status_Complete()
@@ -37,21 +34,21 @@ BEGIN
      PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_ChangePrice(), inId, inChangePrice);
 
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
-
-
      -- 5.3. проводим Документ
      IF vbStatusId = zc_Enum_Status_Complete()
      THEN
-          --
-          PERFORM gpComplete_Movement_Income (inMovementId, FALSE, inSession);
+          -- создаются временные таблицы - для формирование данных для проводок
+          PERFORM lpComplete_Movement_Income_CreateTemp();
+          -- Проводим Документ
+          PERFORM lpComplete_Movement_Income (inMovementId     := inMovementId
+                                            , inUserId         := vbUserId
+                                            , inIsLastComplete := TRUE
+                                             );
      END IF;
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
