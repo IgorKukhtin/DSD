@@ -69,6 +69,9 @@ type
     actUpdate_UserReferals: TdsdExecStoredProc;
     actOpenChoiceUserNick: TOpenChoiceForm;
     bbUpdate_UserReferals: TdxBarButton;
+    spUpdate_MobileFirstOrder: TdsdStoredProc;
+    actUpdate_MobileFirstOrder: TdsdExecStoredProc;
+    bbUpdate_MobileFirstOrder: TdxBarButton;
   private
     { Private declarations }
   public

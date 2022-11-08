@@ -57,7 +57,7 @@ BEGIN
     WHERE MovementItem.ID = inId
       AND COALESCE(MovementItem.ObjectId, 0) <> 0; 
 
-    UPDATE MovementItem SET MovementItem.ObjectId = 0
+    UPDATE MovementItem SET ObjectId = 0
     WHERE MovementItem.ID IN
        (SELECT MovementItem.ID
         FROM Movement

@@ -971,6 +971,20 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1095#1072#1089#1090#1074#1091#1102#1097#1077#1075#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
       ImageIndex = 74
     end
+    object actUpdate_MobileFirstOrder: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MobileFirstOrder
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MobileFirstOrder
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1077#1088#1074#1072#1103' '#1087#1086#1082#1091#1087#1082#1072'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1077#1088#1074#1072#1103' '#1087#1086#1082#1091#1087#1082#1072'"'
+      ImageIndex = 80
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1126,6 +1140,18 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         item
           Visible = True
           ItemName = 'bbUpdate_UserReferals'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_MobileFirstOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -1175,6 +1201,10 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     end
     object bbUpdate_UserReferals: TdxBarButton
       Action = actUpdate_UserReferals
+      Category = 0
+    end
+    object bbUpdate_MobileFirstOrder: TdxBarButton
+      Action = actUpdate_MobileFirstOrder
       Category = 0
     end
   end
@@ -1330,5 +1360,31 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       end>
     Left = 112
     Top = 320
+  end
+  object spUpdate_MobileFirstOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_MobileFirstOrder_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMobileFirstOrder'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMobileFirstOrder'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 328
   end
 end

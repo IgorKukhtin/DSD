@@ -73,6 +73,14 @@ BEGIN
 
     -- сохранили свойство <Цена>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), inMovementItemID, inPrice);
+    
+    IF EXISTS (SELECT * FROM MovementItemFloat 
+               WHERE MovementItemFloat.MovementItemId = inMovementItemID 
+                 AND MovementItemFloat.DescId = zc_MIFloat_PriceLoad())
+    THEN
+      -- сохранили свойство <Цена загруженная>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceLoad(), inMovementItemID, inPrice);
+    END IF;
 
     -- сохранили свойство <% Скидки>
     IF vbChangePercent NOT IN (50, 100)
