@@ -5019,7 +5019,7 @@ BEGIN
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 1, 
                                                                 inName          := 'inId', 
-                                                                inParamType     := 'ftInteger', 
+                                                                inParamType     := 'ftString', 
                                                                 inUserParamName := 'Id',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := lfGet_User_Session (vbUserId));

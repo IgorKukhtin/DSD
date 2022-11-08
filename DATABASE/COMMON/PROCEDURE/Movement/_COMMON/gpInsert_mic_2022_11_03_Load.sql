@@ -1,9 +1,10 @@
 -- Function: gpInsert_mic_2022_11_03_Load()
 
 DROP FUNCTION IF EXISTS gpInsert_mic_2022_11_03_Load (Integer, Integer, Integer, Integer, TFloat, TDateTime, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_mic_2022_11_03_Load (TVarChar, Integer, Integer, Integer, TFloat, TDateTime, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_mic_2022_11_03_Load(
-    IN inId                      Integer   ,
+    IN inId                      TVarChar    ,
     IN inDescId                  Integer   ,
     IN inMovementId              Integer   ,
     IN inContainerId             Integer   , 
@@ -27,14 +28,23 @@ CREATE OR REPLACE FUNCTION gpInsert_mic_2022_11_03_Load(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbId BigInt;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Insert_mic_2022_11_03_load());
      vbUserId := lpGetUserBySession (inSession);
 
-     IF COALESCE (inId,0) = 0 THEN RETURN; END IF;
+     vbId:= inId :: BigInt;
+
+     -- IF COALESCE (inId,0) = 0 THEN RETURN; END IF;
+     IF COALESCE (vbId, 0) = 0
+     THEN RAISE EXCEPTION 'Ошибка.Id = <%>  MovementId = <%> MovementItemId = <%> ContainerId = <%>.'
+                        , inId, inMovementId, inMovementItemId, inContainerId
+                         ;
+     END IF;
      
-     IF EXISTS (SELECT 1 FROM mic_2022_11_03 WHERE mic_2022_11_03.Id = inId) THEN RETURN; END IF;
+     IF EXISTS (SELECT 1 FROM mic_2022_11_03 WHERE mic_2022_11_03.Id = vbId) THEN RETURN; END IF;
      
      INSERT INTO mic_2022_11_03 (Id, DescId, MovementId, ContainerId, Amount
                                , OperDate, MovementItemId, ParentId, isActive
@@ -42,7 +52,7 @@ BEGIN
                                , ObjectId_Analyzer, WhereObjectId_Analyzer
                                , ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                , ContainerIntId_Analyzer, AccountId_Analyzer)
-      VALUES (inId, inDescId, inMovementId, inContainerId, inAmount
+      VALUES (vbId, inDescId, inMovementId, inContainerId, inAmount
             , inOperDate, inMovementItemId, inParentId, inisActive
             , inMovementDescId, inAnalyzerId, inAccountId
             , inObjectId_Analyzer, inWhereObjectId_Analyzer
@@ -61,4 +71,4 @@ $BODY$
 */
 
 -- тест
---  DELETE FROM  mic_2022_11_03
+-- TRUNCATE TABLE mic_2022_11_03;

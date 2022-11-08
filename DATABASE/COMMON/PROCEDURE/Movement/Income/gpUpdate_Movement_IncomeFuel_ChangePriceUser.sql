@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_IncomeFuel_ChangePriceUser (Integer, T
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_IncomeFuel_ChangePriceUser(
     IN inId                  Integer   , -- Ключ объекта <Документ>
     IN inChangePrice         TFloat    , -- Скидка в цене
-    IN inisChangePriceUser   Boolean   , -- Ручная скидка в цене (да/нет)
+    IN inIsChangePriceUser   Boolean   , -- Ручная скидка в цене (да/нет)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID
@@ -23,12 +23,12 @@ BEGIN
      IF vbStatusId = zc_Enum_Status_Complete()
      THEN
          --распроводим документ
-         PERFORM lpUnComplete_Movement (inMovementId := ioId
+         PERFORM lpUnComplete_Movement (inMovementId := inId
                                       , inUserId     := vbUserId);
      END IF;
 
      -- сохранили свойство <Ручная скидка в цене (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_ChangePriceUser(), inId, inisChangePriceUser);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_ChangePriceUser(), inId, inIsChangePriceUser);
      
      -- сохранили свойство <Скидка в цене>
      PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_ChangePrice(), inId, inChangePrice);
@@ -40,10 +40,12 @@ BEGIN
           -- создаются временные таблицы - для формирование данных для проводок
           PERFORM lpComplete_Movement_Income_CreateTemp();
           -- Проводим Документ
-          PERFORM lpComplete_Movement_Income (inMovementId     := inMovementId
+          PERFORM lpComplete_Movement_Income (inMovementId     := inId
                                             , inUserId         := vbUserId
                                             , inIsLastComplete := TRUE
                                              );
+     ELSE
+          PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
      END IF;
 
 END;
