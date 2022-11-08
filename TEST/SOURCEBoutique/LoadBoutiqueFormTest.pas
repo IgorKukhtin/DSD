@@ -682,14 +682,15 @@ end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemDialogForm');
 
@@ -700,6 +701,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListTaxDialogForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadPositionFormTest;

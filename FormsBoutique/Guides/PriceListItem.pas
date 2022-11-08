@@ -119,6 +119,21 @@ type
     bbPrintSticker_fp: TdxBarButton;
     OperPriceList: TcxGridDBColumn;
     cbDiscountDelete: TcxCheckBox;
+    cxLabel10: TcxLabel;
+    edGoodsPrint: TcxButtonEdit;
+    GuidesGoodsPrint: TdsdGuides;
+    spGet_GoodsPrint_Null: TdsdStoredProc;
+    spGet_User_curr: TdsdStoredProc;
+    spInsertUpdate_GoodsPrint: TdsdStoredProc;
+    spUpdate_FloatValue_DS: TdsdStoredProc;
+    spSelectPrintStickerList: TdsdStoredProc;
+    actGet_GoodsPrint_Null: TdsdExecStoredProc;
+    actUpdate_FloatValue_DS: TdsdExecStoredProc;
+    actInsertUpdate_GoodsPrint: TdsdExecStoredProc;
+    macAddGoodsPrintList_Rem: TMultiAction;
+    actPrintStickerList: TdsdPrintAction;
+    mactGoodsPrintList_Print: TMultiAction;
+    bbGoodsPrintList_Print: TdxBarButton;
   private
     { Private declarations }
   public

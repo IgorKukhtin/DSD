@@ -191,7 +191,7 @@ type
     macInsertUpdate_Price_List: TMultiAction;
     macInsertUpdate_Price: TMultiAction;
     ExecuteDialogPriceTax: TExecuteDialog;
-    bb: TdxBarButton;
+    bbInsertUpdate_Price: TdxBarButton;
   private
   public
   end;

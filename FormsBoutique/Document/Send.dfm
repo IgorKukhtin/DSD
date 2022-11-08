@@ -3,7 +3,7 @@ object SendForm: TSendForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 497
-  ClientWidth = 895
+  ClientWidth = 979
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,25 +21,28 @@ object SendForm: TSendForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 115
-    Width = 895
+    Width = 979
     Height = 382
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 895
     ClientRectBottom = 382
-    ClientRectRight = 895
+    ClientRectRight = 979
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 895
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 895
+        Width = 979
         Height = 358
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 895
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -686,11 +689,12 @@ object SendForm: TSendForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 895
+    Width = 979
     Height = 89
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
+    ExplicitWidth = 895
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -1030,7 +1034,7 @@ object SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbInsertUpdate_Price'
         end
         item
           Visible = True
@@ -1212,7 +1216,7 @@ object SendForm: TSendForm
       Action = actPrintAllPrice
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbInsertUpdate_Price: TdxBarButton
       Action = macInsertUpdate_Price
       Category = 0
     end
