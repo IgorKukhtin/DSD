@@ -65,6 +65,7 @@ BEGIN
                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
      WHERE Movement.Id = inMovementId;
 
+
      IF inShowAll = TRUE
      THEN
         -- Показываем ВСЕ
@@ -140,7 +141,7 @@ BEGIN
                              , Object_PartionGoods.GoodsInfoId
                              , Object_PartionGoods.LineFabricaId
                              , Object_PartionGoods.LabelId
-                             , Object_PartionGoods.GoodsSizeId
+                             , COALESCE (CLO_GoodsSize.ObjectId , Object_PartionGoods.GoodsSizeId) AS GoodsSizeId
                              , Object_PartionGoods.BrandId
                              , Object_PartionGoods.PeriodId
                              , Object_PartionGoods.PeriodYear
@@ -160,6 +161,9 @@ BEGIN
                              LEFT JOIN ContainerLinkObject AS CLO_Client
                                                            ON CLO_Client.ContainerId = Container.Id
                                                           AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                             LEFT JOIN ContainerLinkObject AS CLO_GoodsSize
+                                                           ON CLO_GoodsSize.ContainerId = Container.Id
+                                                          AND CLO_GoodsSize.DescId      = zc_ContainerLinkObject_GoodsSize()
                              LEFT JOIN tmpCurrency AS tmp ON 1=0
                       WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
                        )
@@ -187,6 +191,7 @@ BEGIN
      -- остатки
    , tmpContainer AS (SELECT Container.ObjectId
                            , Container.PartionId
+                           , CLO_GoodsSize.ObjectId AS GoodsSizeId
                            , SUM (COALESCE(Container.Amount, 0)) AS Amount
                       FROM tmpMI
                            INNER JOIN Container ON Container.PartionId     = tmpMI.PartionId
@@ -200,9 +205,13 @@ BEGIN
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                           LEFT JOIN ContainerLinkObject AS CLO_GoodsSize
+                                                         ON CLO_GoodsSize.ContainerId = Container.Id
+                                                        AND CLO_GoodsSize.DescId      = zc_ContainerLinkObject_GoodsSize()
                       WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
                       GROUP BY Container.ObjectId
                              , Container.PartionId
+                             , CLO_GoodsSize.ObjectId
                      )
      --- сезонная скидка
    , tmpDiscountList AS (SELECT DISTINCT vbUnitId_From AS UnitId, tmpPartion.GoodsId FROM tmpPartion
@@ -283,7 +292,8 @@ BEGIN
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
 
                , 0 :: Integer AS ContainerId
-               , zc_PriceList_Basis()                  AS PriceListId-- !!!Базовай Прайс!!!
+               , zc_PriceList_Basis() AS PriceListId -- !!!Базовай Прайс!!!
+
                , FALSE                                 AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END AS isOlap
 
@@ -363,8 +373,8 @@ BEGIN
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
 
                , 0 :: Integer AS ContainerId
-               , zc_PriceList_Basis()                  AS PriceListId-- !!!Базовай Прайс!!!
-               
+               , zc_PriceList_Basis() AS PriceListId -- !!!Базовай Прайс!!!
+
                , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END    AS isOlap
 
@@ -390,7 +400,7 @@ BEGIN
                 LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = Object_PartionGoods.GoodsInfoId
                 LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
                 LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
-                LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
+                LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = COALESCE (Container_From.GoodsSizeId, Object_PartionGoods.GoodsSizeId)
                 LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
                 LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
 
@@ -474,6 +484,7 @@ BEGIN
                      )
         , tmpContainer AS (SELECT Container.ObjectId
                                 , Container.PartionId
+                                , CLO_GoodsSize.ObjectId AS GoodsSizeId
                                 , SUM (COALESCE(Container.Amount, 0)) AS Amount
                            FROM tmpMI
                                 INNER JOIN Container ON Container.PartionId     = tmpMI.PartionId
@@ -487,9 +498,13 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Client
                                                               ON CLO_Client.ContainerId = Container.Id
                                                              AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                                LEFT JOIN ContainerLinkObject AS CLO_GoodsSize
+                                                              ON CLO_GoodsSize.ContainerId = Container.Id
+                                                             AND CLO_GoodsSize.DescId      = zc_ContainerLinkObject_GoodsSize()
                            WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
                            GROUP BY Container.ObjectId
                                   , Container.PartionId
+                                  , CLO_GoodsSize.ObjectId
                           )
      
          ---сезонная скидка
@@ -572,8 +587,8 @@ BEGIN
 
              --, Container_From.Id  AS ContainerId
                , 0 :: Integer AS ContainerId
-               , zc_PriceList_Basis()                  AS PriceListId-- !!!Базовай Прайс!!!
-               
+               , zc_PriceList_Basis() AS PriceListId -- !!!Базовай Прайс!!!
+
                , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END    AS isOlap
                , tmpMI.isErased
@@ -593,7 +608,7 @@ BEGIN
                 LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = Object_PartionGoods.GoodsInfoId
                 LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
                 LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
-                LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
+                LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = COALESCE (Container_From.GoodsSizeId, Object_PartionGoods.GoodsSizeId)
                 LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
                 LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
 
