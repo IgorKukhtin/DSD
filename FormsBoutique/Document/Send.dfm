@@ -2,8 +2,8 @@ object SendForm: TSendForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
-  ClientHeight = 437
-  ClientWidth = 876
+  ClientHeight = 497
+  ClientWidth = 895
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,14 +21,14 @@ object SendForm: TSendForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 115
-    Width = 876
-    Height = 322
+    Width = 895
+    Height = 382
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 322
-    ClientRectRight = 876
+    ClientRectBottom = 382
+    ClientRectRight = 895
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -36,8 +36,8 @@ object SendForm: TSendForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 876
-        Height = 298
+        Width = 895
+        Height = 358
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -686,7 +686,7 @@ object SendForm: TSendForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 876
+    Width = 895
     Height = 89
     Align = alTop
     BevelOuter = bvNone
@@ -704,7 +704,7 @@ object SendForm: TSendForm
       Caption = #8470' '#1076#1086#1082'.'
     end
     object edOperDate: TcxDateEdit
-      Left = 87
+      Left = 85
       Top = 23
       EditValue = 42160d
       Properties.SaveTime = False
@@ -1030,6 +1030,14 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -1202,6 +1210,10 @@ object SendForm: TSendForm
     end
     object bbPrintAllPrice: TdxBarButton
       Action = actPrintAllPrice
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macInsertUpdate_Price
       Category = 0
     end
   end
@@ -2477,6 +2489,79 @@ object SendForm: TSendForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actInsertUpdate_Price: TdsdExecStoredProc
+      Category = 'Update_Price'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Price
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Price
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091
+    end
+    object macInsertUpdate_Price_List: TMultiAction
+      Category = 'Update_Price'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_Price
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091' ('#1074#1093'.'#1094#1077#1085#1072' * '#1082#1086#1101#1092'.)'
+      ImageIndex = 76
+    end
+    object macInsertUpdate_Price: TMultiAction
+      Category = 'Update_Price'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogPriceTax
+        end
+        item
+          Action = macInsertUpdate_Price_List
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1062#1077#1085#1099' '#1073#1091#1076#1091#1090' '#1086#1073#1085#1086#1074#1083#1077#1085#1099', '#1087#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      InfoAfterExecute = #1054#1073#1085#1086#1074#1083#1077#1085#1080#1077' '#1094#1077#1085' '#1086#1082#1086#1085#1095#1077#1085#1086'.'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091' ('#1074#1093'.'#1094#1077#1085#1072' * '#1082#1086#1101#1092'.)'
+      ImageIndex = 76
+    end
+    object ExecuteDialogPriceTax: TExecuteDialog
+      Category = 'Update_Price'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092'. '#1086#1090' '#1074#1093'. '#1094#1077#1085#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092'. '#1086#1090' '#1074#1093'. '#1094#1077#1085#1099
+      ImageIndex = 35
+      FormName = 'TDiscountPersentDialogForm'
+      FormNameParam.Value = 'TDiscountPersentDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ParamValue'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'PriceTax'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParamName'
+          Value = #1050#1086#1101#1092#1092'. '#1086#1090' '#1074#1093'. '#1094#1077#1085#1099
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3207,8 +3292,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 134
-    Top = 343
+    Left = 110
+    Top = 359
   end
   object spInsertUpdate_Discount: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_DiscountPeriodItemLast'
@@ -3582,7 +3667,7 @@ object SendForm: TSendForm
     DateStart = deStart
     DateEnd = deEnd
     Left = 840
-    Top = 88
+    Top = 112
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -3709,5 +3794,72 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 759
     Top = 200
+  end
+  object spInsertUpdate_Price: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Send_Price'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'PriceListId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42856d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTax'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'PriceTax'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
+    Top = 411
   end
 end

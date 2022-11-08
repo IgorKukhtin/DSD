@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer
              , CurrencyValue TFloat, ParValue TFloat
              , DiscountTax_From TFloat, DiscountTax_To TFloat
              , ContainerId Integer
+             , PriceListId Integer
              , isProtocol Boolean
              , isOlap Boolean
              , isErased Boolean
@@ -63,7 +64,6 @@ BEGIN
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
      WHERE Movement.Id = inMovementId;
-
 
      IF inShowAll = TRUE
      THEN
@@ -283,7 +283,7 @@ BEGIN
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
 
                , 0 :: Integer AS ContainerId
-
+               , zc_PriceList_Basis()                  AS PriceListId-- !!!Базовай Прайс!!!
                , FALSE                                 AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END AS isOlap
 
@@ -363,7 +363,8 @@ BEGIN
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
 
                , 0 :: Integer AS ContainerId
-
+               , zc_PriceList_Basis()                  AS PriceListId-- !!!Базовай Прайс!!!
+               
                , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END    AS isOlap
 
@@ -571,7 +572,8 @@ BEGIN
 
              --, Container_From.Id  AS ContainerId
                , 0 :: Integer AS ContainerId
-
+               , zc_PriceList_Basis()                  AS PriceListId-- !!!Базовай Прайс!!!
+               
                , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END    AS isOlap
                , tmpMI.isErased

@@ -186,6 +186,12 @@ type
     TotalSummPriceListTo_start: TcxGridDBColumn;
     OperPriceListTo_start: TcxGridDBColumn;
     NPP: TcxGridDBColumn;
+    spInsertUpdate_Price: TdsdStoredProc;
+    actInsertUpdate_Price: TdsdExecStoredProc;
+    macInsertUpdate_Price_List: TMultiAction;
+    macInsertUpdate_Price: TMultiAction;
+    ExecuteDialogPriceTax: TExecuteDialog;
+    bb: TdxBarButton;
   private
   public
   end;
