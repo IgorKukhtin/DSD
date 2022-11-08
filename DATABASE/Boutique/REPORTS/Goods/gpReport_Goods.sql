@@ -78,7 +78,7 @@ BEGIN
                                  , Container.ObjectId              AS GoodsId
                                  , Container.PartionId             AS PartionId
                                  , CLO_PartionMI.ObjectId          AS PartionId_mi
-                                 , Object_PartionGoods.GoodsSizeId AS GoodsSizeId
+                                 , COALESCE (CLO_GoodsSize.ObjectId, Object_PartionGoods.GoodsSizeId) AS GoodsSizeId
                                  , Container.Amount
                                  , CASE WHEN CLO_Client.ObjectId IS NULL THEN FALSE ELSE TRUE END AS isClient
                             FROM tmpWhere
@@ -91,8 +91,11 @@ BEGIN
                                                                                AND CLO_PartionMI.DescId      = zc_ContainerLinkObject_PartionMI()
                                  LEFT JOIN ContainerLinkObject AS CLO_Client ON CLO_Client.ContainerId = Container.Id
                                                                             AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsSize
+                                                               ON CLO_GoodsSize.ContainerId = Container.Id
+                                                              AND CLO_GoodsSize.DescId      = zc_ContainerLinkObject_GoodsSize()
                                  LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
-                            WHERE ((Object_PartionGoods.GoodsSizeId    = inGoodsSizeId AND inIsGoodsSizeAll = FALSE) OR (inIsGoodsSizeAll = TRUE))
+                            WHERE ((COALESCE (CLO_GoodsSize.ObjectId, Object_PartionGoods.GoodsSizeId) = inGoodsSizeId AND inIsGoodsSizeAll = FALSE) OR (inIsGoodsSizeAll = TRUE))
                               AND (-- (Object_PartionGoods.MovementItemId = inPartionId   AND inIsPartionAll = FALSE)
                                    inIsPartionAll = FALSE
                                 OR (inIsPartionAll = TRUE AND (Object_PartionGoods.MovementId = inMovementId OR inMovementId = 0 )))

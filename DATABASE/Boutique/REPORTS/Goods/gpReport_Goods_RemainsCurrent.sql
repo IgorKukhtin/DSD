@@ -165,7 +165,7 @@ BEGIN
                            , Object_PartionGoods.PartnerId
                            , Object_PartionGoods.PeriodYear
 
-                           , Object_PartionGoods.GoodsSizeId
+                           , COALESCE (CLO_GoodsSize.ObjectId, Object_PartionGoods.GoodsSizeId) AS GoodsSizeId
                            , Object_PartionGoods.MeasureId
                            , Object_PartionGoods.GoodsGroupId
                            , Object_PartionGoods.CompositionId
@@ -197,6 +197,9 @@ BEGIN
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                           LEFT JOIN ContainerLinkObject AS CLO_GoodsSize
+                                                         ON CLO_GoodsSize.ContainerId = Container.Id
+                                                        AND CLO_GoodsSize.DescId      = zc_ContainerLinkObject_GoodsSize()
                            -- Дебиторы + покупатели + Товары
                            LEFT JOIN Container AS Container_SummDebt
                                                ON Container_SummDebt.ParentId = Container.Id
