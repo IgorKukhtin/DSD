@@ -23,6 +23,11 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalRate());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     PERFORM lpCheck_UserRole_8813637 (vbUserId);
+
+
      -- Результат
      RETURN QUERY
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId

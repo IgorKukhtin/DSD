@@ -42,6 +42,10 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     PERFORM lpCheck_UserRole_8813637 (vbUserId);
+
+
      -- Блокируем ему просмотр
      IF vbUserId IN (/*9457    -- Климентьев К.И.
                    , */6131893 -- Черняєва О.А.

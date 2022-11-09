@@ -83,8 +83,17 @@ BEGIN
          -- Проведение документов - нет проверки по филиалу
          AND NOT EXISTS  (SELECT 1 FROM Object_Role_Process_View WHERE Object_Role_Process_View.ProcessId = zc_Enum_Process_UpdateMovement_Branch() AND Object_Role_Process_View.UserId = inUserId)
       THEN
-          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на удаление документа № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
+          IF NOT EXISTS (SELECT 1
+                         FROM MovementString AS MovementString_GUID
+                         WHERE MovementString_GUID.MovementId = inMovementId
+                           AND MovementString_GUID.DescId     = zc_MovementString_GUID() 
+                           AND MovementString_GUID.ValueData  <> ''
+                        )
+          THEN
+              RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на удаление документа № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
+          END IF;
       END IF;
+
   ELSE
   IF vbDescId = zc_Movement_Tax()
   THEN 
