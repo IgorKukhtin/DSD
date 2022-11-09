@@ -37,15 +37,28 @@ RETURNS TABLE (InvNumber Integer, OperDate TDateTime
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbIsUserRole_8813637 Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MIContainer_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     vbIsUserRole_8813637:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = 8813637);
+
      -- Менется признак
      inIsDestination:= inIsDestination OR inIsParentDetail OR inIsInfoMoneyDetail;
      -- Менется признак
      inIsParentDetail:= inIsParentDetail OR inIsInfoMoneyDetail;
+     
+     -- !!!Ограничение просмотра данных ЗП!!!
+     IF vbIsUserRole_8813637 = TRUE
+     THEN
+           inIsDestination    :=  FALSE;
+           inIsParentDetail   :=  FALSE;
+           inIsInfoMoneyDetail:=  FALSE;
+     END IF;
+           
 
      -- !!!проводки только у Админа!!!
      IF 1 = 1 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898, 76933, 14604 )) -- Отчеты (управленческие) + Клиент банк-ввод документов + Касса Днепр
