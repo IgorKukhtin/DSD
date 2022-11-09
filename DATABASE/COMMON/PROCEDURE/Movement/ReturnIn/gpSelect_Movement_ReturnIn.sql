@@ -78,6 +78,12 @@ BEGIN
      -- !!!Хлеб!!!
      vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = vbUserId);
 
+     -- 
+     IF inStartDate < DATE_TRUNC ('YEAR', inEndDate) - INTERVAL '2 YEAR'
+     THEN
+         RAISE EXCEPTION 'Ошибка. Период с <%> по <%> слишком большой.', zfConvert_DateToString (inStartDate), zfConvert_DateToString (inEndDate);
+     END IF;
+
 
      -- Результат
      RETURN QUERY

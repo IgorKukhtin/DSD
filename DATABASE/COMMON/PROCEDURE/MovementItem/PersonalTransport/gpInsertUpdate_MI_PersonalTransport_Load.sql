@@ -23,16 +23,27 @@ BEGIN
 
      IF COALESCE (inAmount,0) = 0 THEN RETURN; END IF;
      
-     --находим физ.лицо
-     vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND  UPPER (TRIM(Object.ValueData)) =  UPPER (TRIM (inPersonalName)));
+     -- поиск
+     vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE  TRIM (inPersonalName));
      
+     -- поиск-2
      IF COALESCE (vbMemberId,0) = 0
      THEN 
-          RAISE EXCEPTION 'Ошибка.Не найдено Физ.лицо <%> Сумма компенсации = <%>.', inPersonalName, zfConvert_FloatToString (inAmount);
+         vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE  TRIM (REPLACE (inPersonalName, '`', CHR (39))));
+     END IF;
+     -- поиск-3
+     IF COALESCE (vbMemberId,0) = 0
+     THEN 
+         vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE  TRIM (REPLACE (inPersonalName, CHR (39), '`')));
+     END IF;
+
+     IF COALESCE (vbMemberId,0) = 0
+     THEN 
+          RAISE EXCEPTION 'Ошибка.Не найдено Физ.лицо <%> Сумма компенсации = <%>.<%>', inPersonalName, zfConvert_FloatToString (inAmount), REPLACE (inPersonalName, '`', CHR (39));
      END IF; 
      
      --находим должность
-     vbPositionId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Position() AND  UPPER (Object.ValueData) =  UPPER(TRIM (inPositionName)));
+     vbPositionId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Position() AND  (Object.ValueData) ILIKE TRIM (inPositionName));
      
      IF COALESCE (vbPositionId,0) = 0
      THEN 
