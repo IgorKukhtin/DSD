@@ -43,6 +43,14 @@ BEGIN
          LEFT JOIN gpSelect_Object_Calendar (vbStartDate, vbEndDate, inSession) AS tmpCalendar ON tmpCalendar.Value = tt.OperDate
         ;
 
+     -- Сотрудники тек.подразделения
+     CREATE TEMP TABLE tmpListPersonal ON COMMIT DROP AS 
+        SELECT Object_Personal_View.*
+        FROM Object_Personal_View
+        WHERE Object_Personal_View.UnitId = inUnitId
+        ;
+
+
      -- уволенные сотрудники в период табеля
      CREATE TEMP TABLE tmpListOut ON COMMIT DROP AS 
         SELECT Object_Personal_View.MemberId
@@ -671,7 +679,8 @@ BEGIN
                , tmpTotal.Amount_3 ::TFloat
                , tmpTotal.Amount_4 ::TFloat
                , tmpTotal.Amount_5 ::TFloat
-               , tmpTotal.Amount_6 ::TFloat
+               , tmpTotal.Amount_6 ::TFloat 
+               , tmpListPersonal.PersonalId
                  '
                || vbFieldNameText ||
         ' FROM
@@ -802,6 +811,12 @@ BEGIN
          --возьмем отсюда дату увольнения
          LEFT JOIN tmpListOut ON COALESCE(tmpListOut.PositionId, 0)         = D.Key[2]
                              AND COALESCE(tmpListOut.MemberId, 0)           = D.Key[1]
+         --получить Id сотрудника
+         LEFT JOIN tmpListPersonal ON tmpListPersonal.MemberId        = D.Key[1]
+                                  AND COALESCE(tmpListPersonal.PositionId, 0)      = D.Key[2]
+                                  AND COALESCE(tmpListPersonal.PositionLevelId, 0) = D.Key[3]
+                                  AND COALESCE(tmpListPersonal.PersonalGroupId, 0) = D.Key[4]
+                                  AND COALESCE(tmpListPersonal.StorageLineId, 0)   = D.Key[5]
 
         '
       /*ORDER BY Object_Member.ValueData

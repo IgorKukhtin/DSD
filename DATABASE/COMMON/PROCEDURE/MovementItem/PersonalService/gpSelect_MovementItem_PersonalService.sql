@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
+             , MemberId_Personal Integer
              , INN TVarChar, Code1C TVarChar, Card TVarChar, CardSecond TVarChar
              , CardIBAN TVarChar, CardIBANSecond TVarChar
              , isMain Boolean, isOfficial Boolean, DateOut TDateTime, DateIn TDateTime
@@ -329,6 +330,7 @@ BEGIN
             , Object_Personal.Id                            AS PersonalId
             , Object_Personal.ObjectCode                    AS PersonalCode
             , Object_Personal.ValueData                     AS PersonalName
+            , tmpAll.MemberId_Personal
             , ObjectString_Member_INN.ValueData             AS INN
             , ObjectString_Code1C.ValueData                 AS Code1C
             , ObjectString_Member_Card.ValueData            AS Card

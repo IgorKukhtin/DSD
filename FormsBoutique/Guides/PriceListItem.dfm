@@ -27,7 +27,6 @@ object PriceListItemForm: TPriceListItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 86
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -435,7 +434,6 @@ object PriceListItemForm: TPriceListItemForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 1044
     object cxLabel1: TcxLabel
       Left = 26
       Top = 11
@@ -2405,7 +2403,7 @@ object PriceListItemForm: TPriceListItemForm
     Top = 224
   end
   object spInsertUpdate_GoodsPrint: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_GoodsPrint'
+    StoredProcName = 'gpInsertUpdate_Object_GoodsPrint_NoPartion'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2434,24 +2432,10 @@ object PriceListItemForm: TPriceListItemForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'PartionId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inGoodsId'
         Value = '0'
         Component = ClientDataSet
         ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsSizeId'
-        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
