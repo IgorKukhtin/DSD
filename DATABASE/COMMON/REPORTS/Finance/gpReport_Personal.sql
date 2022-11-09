@@ -48,6 +48,11 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     PERFORM lpCheck_UserRole_8813637 (vbUserId);
+
+
      -- Блокируем ему просмотр
      IF vbUserId = 9457 -- Климентьев К.И.
      THEN

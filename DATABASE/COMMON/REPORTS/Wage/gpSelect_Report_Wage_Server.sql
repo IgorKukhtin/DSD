@@ -81,6 +81,10 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := lpGetUserBySession (inSession);
 
+    -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+    PERFORM lpCheck_UserRole_8813637 (vbUserId);
+
+
     -- определяется уровень доступа
     vbObjectId_Constraint_Branch:= COALESCE ((SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0), 0);
     -- определяется уровень доступа

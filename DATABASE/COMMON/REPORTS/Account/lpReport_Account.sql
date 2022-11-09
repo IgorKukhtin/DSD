@@ -49,6 +49,7 @@ AS
 $BODY$
    DECLARE vbIsMovement Boolean;
    DECLARE vbIsAll Boolean;
+   DECLARE vbIsUserRole_8813637 Boolean;
 BEGIN
 
      -- Блокируем ему просмотр
@@ -58,6 +59,10 @@ BEGIN
          RETURN;
      END IF;
      
+
+     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     vbIsUserRole_8813637:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = 8813637);
+
 
      -- !!!
      vbIsAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId);
@@ -512,7 +517,9 @@ BEGIN
                                               )
                            END
        LEFT JOIN Object AS Object_Destination ON Object_Destination.Id
-                         = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) -- AND tmpReport.ObjectId_Destination > 0 AND tmpReport.ObjectId_Direction > 0
+                         = CASE WHEN vbIsUserRole_8813637 = TRUE
+                                     THEN 0
+                                WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) -- AND tmpReport.ObjectId_Destination > 0 AND tmpReport.ObjectId_Direction > 0
                                      THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Destination ELSE /*tmpReport.ObjectId_Destination*/ tmpReport.ObjectId_Direction END
                                 ELSE COALESCE (tmpReport.ObjectId_Destination
                                              , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.MoneyPlaceId_inf ELSE tmpReport.ObjectId_inf END

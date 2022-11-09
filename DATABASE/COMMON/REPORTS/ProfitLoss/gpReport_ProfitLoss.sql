@@ -39,10 +39,16 @@ RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, P
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsUserRole_8813637 Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_ProfitLoss());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     vbIsUserRole_8813637:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 8813637);
+
 
      -- Блокируем ему просмотр
      IF vbUserId = 9457 -- Климентьев К.И.
@@ -464,7 +470,7 @@ BEGIN
            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Detail ON View_InfoMoney_Detail.InfoMoneyId = tmpReport.InfoMoneyId_Detail
                                                                    -- AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
-           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.ObjectId_inf
+           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN vbIsUserRole_8813637 = TRUE THEN 0 ELSE tmpReport.ObjectId_inf END
 
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
@@ -562,7 +568,7 @@ BEGIN
            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Detail ON View_InfoMoney_Detail.InfoMoneyId = tmpReport.InfoMoneyId_Detail
                                                                    -- AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
-           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.ObjectId_inf
+           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN vbIsUserRole_8813637 = TRUE THEN 0 ELSE tmpReport.ObjectId_inf END
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
