@@ -71,12 +71,13 @@ BEGIN
                                  , Container.ObjectId       AS AccountId
                                  , Container.Amount         AS Amount
                                  , CLO_Cash.ObjectId        AS CashId
-                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_CashSend() THEN CLO_Cash.ObjectId ELSE MILO_InfoMoney.ObjectId END AS InfoMoneyId 
+                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_CashSend() THEN MIContainer.ObjectIntId_analyzer ELSE MILO_InfoMoney.ObjectId END AS InfoMoneyId 
                                  , MIContainer.MovementDescId
                                  
                                  , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
                                  , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
-                                 , SUM (CASE WHEN (MIContainer.OperDate > inEndDate) THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Amount_summ
+                                 , SUM (CASE WHEN (MIContainer.OperDate > inEndDate) THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Amount_summ                                                       
+
                             FROM Container
                                  INNER JOIN ContainerLinkObject AS CLO_Cash
                                                                 ON CLO_Cash.ContainerId = Container.Id
@@ -95,7 +96,9 @@ BEGIN
                                    , Container.Amount
                                    , CLO_Cash.ObjectId  
                                    , MILO_InfoMoney.ObjectId
+                                   , MIContainer.ObjectIntId_analyzer
                                    , MIContainer.MovementDescId
+                                   
                            )
 
    , tmpMIContainer_rem AS (SELECT tmpMIContainer_all.ContainerId
@@ -120,6 +123,7 @@ BEGIN
                              , 0 AS AmountRemainsStart
                              , 0 AS AmountRemainsEnd
                              , tmpMIContainer_all.MovementDescId
+
                         FROM tmpMIContainer_all
                         WHERE (tmpMIContainer_all.InfoMoneyId IN (SELECT tmp.InfoMoneyId FROM tmpInfoMoney AS tmp) OR inInfoMoneyId = 0)
                           AND (tmpMIContainer_all.AmountDebet <> 0
@@ -136,6 +140,7 @@ BEGIN
                              , tmpMIContainer_rem.AmountRemainsStart
                              , tmpMIContainer_rem.AmountRemainsEnd
                              , 0 AS MovementDescId
+
                         FROM tmpMIContainer_rem
                        )
        -- Результат
