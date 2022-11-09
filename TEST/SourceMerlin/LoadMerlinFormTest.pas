@@ -310,14 +310,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitRentForm');
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitRentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitRentDialogForm');
-}
-exit;
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashBalanceDialogtForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashBalanceForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitBalanceDialogtForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitBalanceForm'));
