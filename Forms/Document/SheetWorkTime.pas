@@ -114,6 +114,10 @@ type
     macMovementItemProtocolOpenForm: TMultiAction;
     actGet_byProtocol: TdsdExecStoredProc;
     WorkTimeKindName_key: TcxGridDBBandedColumn;
+    actOpenProtocolMember: TdsdOpenForm;
+    actOpenProtocolPersonal: TdsdOpenForm;
+    bbOpenProtocolMember: TdxBarButton;
+    bbOpenProtocolPersonal: TdxBarButton;
   private
   public
   end;

@@ -780,6 +780,18 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenProtocolPersonal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenProtocolMember'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExel'
         end
         item
@@ -847,6 +859,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object bbMovementItemProtocolOpenForm: TdxBarButton
       Action = macMovementItemProtocolOpenForm
+      Category = 0
+    end
+    object bbOpenProtocolMember: TdxBarButton
+      Action = actOpenProtocolMember
+      Category = 0
+    end
+    object bbOpenProtocolPersonal: TdxBarButton
+      Action = actOpenProtocolPersonal
       Category = 0
     end
   end
@@ -1524,6 +1544,66 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end>
       Caption = 'actGet_byProtocol'
       ImageIndex = 34
+    end
+    object actOpenProtocolMember: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' <'#1060#1080#1079'.'#1083#1080#1094#1086'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' <'#1060#1080#1079'.'#1083#1080#1094#1086'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenProtocolPersonal: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource

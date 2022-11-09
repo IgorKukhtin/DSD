@@ -267,6 +267,10 @@ type
     cxLabel8: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
+    actOpenProtocolMember: TdsdOpenForm;
+    actOpenProtocolPersonal: TdsdOpenForm;
+    bbOpenProtocolMember: TdxBarButton;
+    bbOpenProtocolPersonal: TdxBarButton;
   private
     { Private declarations }
   public

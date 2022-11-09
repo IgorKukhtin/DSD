@@ -1,27 +1,27 @@
 inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 749
-  ClientWidth = 1028
-  ExplicitWidth = 1044
+  ClientWidth = 1021
+  ExplicitWidth = 1037
   ExplicitHeight = 788
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 1028
+    Width = 1021
     Height = 634
     ExplicitTop = 115
-    ExplicitWidth = 1370
+    ExplicitWidth = 1028
     ExplicitHeight = 634
     ClientRectBottom = 634
-    ClientRectRight = 1028
+    ClientRectRight = 1021
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1370
+      ExplicitWidth = 1028
       ExplicitHeight = 610
       inherited cxGrid: TcxGrid
-        Width = 1028
+        Width = 1021
         Height = 215
-        ExplicitWidth = 1370
+        ExplicitWidth = 1028
         ExplicitHeight = 215
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -1354,12 +1354,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 220
-        Width = 1028
+        Width = 1021
         Height = 161
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 1370
+        ExplicitWidth = 1028
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDs
@@ -1728,22 +1728,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxSplitterChild: TcxSplitter
         Left = 0
         Top = 215
-        Width = 1028
+        Width = 1021
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 1370
+        ExplicitWidth = 1028
       end
       object cxGrid2: TcxGrid
         Left = 0
         Top = 387
-        Width = 1028
+        Width = 1021
         Height = 138
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 3
         Visible = False
-        ExplicitWidth = 1370
+        ExplicitWidth = 1028
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MessageDS
@@ -1885,24 +1885,24 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 381
-        Width = 1028
+        Width = 1021
         Height = 6
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid2
         Visible = False
-        ExplicitWidth = 1370
+        ExplicitWidth = 1028
       end
       object ExportXmlGrid: TcxGrid
         Left = 0
         Top = 525
-        Width = 1028
+        Width = 1021
         Height = 85
         Align = alBottom
         TabOrder = 5
         Visible = False
-        ExplicitWidth = 1370
+        ExplicitWidth = 1028
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1934,17 +1934,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 1028
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1370
+        Width = 1021
         Height = 610
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitWidth = 1028
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -2030,17 +2029,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 1028
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
-        Width = 1370
+        Width = 1021
         Height = 610
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 1028
         object cxGridDBTableViewChild_all: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_all
@@ -2364,10 +2362,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1028
+    Width = 1021
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 1370
+    ExplicitWidth = 1028
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -3253,6 +3251,36 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097'. '#1082' '#1047#1055'" '#1087#1086' "'#1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078'. '#1089' '#1047#1055'"'
       ImageIndex = 39
     end
+    object actOpenProtocolPersonal: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actPersonalServiceJournalChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -3765,6 +3793,36 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
       ImageIndex = 60
     end
+    object actOpenProtocolMember: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' <'#1060#1080#1079'.'#1083#1080#1094#1086'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' <'#1060#1080#1079'.'#1083#1080#1094#1086'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId_Personal'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -4018,6 +4076,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenProtocolPersonal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenProtocolMember'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -4124,6 +4194,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbStartLoad_SMER: TdxBarButton
       Action = macStartLoad_SMER
+      Category = 0
+    end
+    object bbOpenProtocolMember: TdxBarButton
+      Action = actOpenProtocolMember
+      Category = 0
+    end
+    object bbOpenProtocolPersonal: TdxBarButton
+      Action = actOpenProtocolPersonal
       Category = 0
     end
   end
