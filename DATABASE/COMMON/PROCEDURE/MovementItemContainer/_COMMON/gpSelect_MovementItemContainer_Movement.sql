@@ -44,7 +44,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
-     vbIsUserRole_8813637:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = 8813637);
+     vbIsUserRole_8813637:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 8813637);
 
      -- Менется признак
      inIsDestination:= inIsDestination OR inIsParentDetail OR inIsInfoMoneyDetail;

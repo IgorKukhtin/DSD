@@ -32,13 +32,13 @@ BEGIN
                                    ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_PersonalServiceList.ObjectId
                                   AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
          WHERE ObjectLink_Personal_PersonalServiceList.ObjectId = (SELECT MovementItemLinkObject.ObjectId
-                                                                                              FROM MovementItem
-                                                                                                   LEFT JOIN MovementItemLinkObject
-                                                                                                          ON MovementItemLinkObject.MovementItemId = MovementItem.Id
-                                                                                                         AND MovementItemLinkObject.DescId = zc_MILinkObject_MoneyPlace()
-                                                                                              WHERE MovementItem.MovementId = inMovementId
-                                                                                                AND MovementItem.DescId = zc_MI_Master()
-                                                                                             )
+                                                                   FROM MovementItem
+                                                                        LEFT JOIN MovementItemLinkObject
+                                                                               ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                                                              AND MovementItemLinkObject.DescId = zc_MILinkObject_MoneyPlace()
+                                                                   WHERE MovementItem.MovementId = inMovementId
+                                                                     AND MovementItem.DescId = zc_MI_Master()
+                                                                  )
                                       AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
         ;
          -- !!!ВРЕМЕННО!!! - сохранили связь с <Ведомости начисления> + <Должность>
@@ -698,9 +698,13 @@ BEGIN
                       AND ObjectBoolean.ValueData = FALSE
                       AND ObjectBoolean.ObjectId  = (SELECT _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.IsMaster = FALSE AND _tmpItem.ObjectDescId = 0 AND _tmpItem.InfoMoneyId > 0 LIMIT 1)
                     )
+        AND vbOperDate_currency >= '01.01.2020'
      THEN
-         RAISE EXCEPTION 'Ошибка.Для статьи <%> нельзя проводить затраты по оплате.Необходимо заполнить <От кого, кому>.'
+         RAISE EXCEPTION 'Ошибка.Для статьи <%> нельзя проводить затраты по оплате.Необходимо заполнить <От кого, кому>.%№ <%> от <%>.'
                         , lfGet_Object_ValueData_sh ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.IsMaster = FALSE AND _tmpItem.ObjectDescId = 0 AND _tmpItem.InfoMoneyId > 0 LIMIT 1))
+                        , CHR (13)
+                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                        , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId)
                          ;
      END IF;
      -- Проверка
@@ -979,7 +983,7 @@ BEGIN
      END IF; -- !!!Курсовая разница!!!
 
      -- Проверка
-     IF inUserId = 5 AND 1=0
+     IF inUserId = 5 AND 1=1
      THEN
          RAISE EXCEPTION 'Ошибка.Admin vbSumm_diff = <%> '
                         , vbSumm_diff
