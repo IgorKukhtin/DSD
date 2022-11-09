@@ -4876,7 +4876,7 @@ BEGIN
                                                                 inParamNumber   := 2,
                                                                 inName          := 'inPersonalName', 
                                                                 inParamType     := 'ftString', 
-                                                                inUserParamName := 'ФИО сотридника',
+                                                                inUserParamName := 'ФИО сотрудника',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := lfGet_User_Session (vbUserId));
     vbImportSettingsItem := 0;
