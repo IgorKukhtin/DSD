@@ -99,12 +99,19 @@ BEGIN
                                        ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_PriceListItem_Goods.ChildObjectId
                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
 
+                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_PriceListItem_Goods.ChildObjectId
+
               WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                 AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListFromId
                 AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
                 -- если заполнены  переносить данные только по этим товарам
                 AND (ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId OR inGoodsGroupId = 0)
                 AND (ObjectLink_Goods_InfoMoney.ChildObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
+                --
+                AND Object_Goods.isErased = FALSE
+                AND (Object_Goods.ObjectCode <> 0 OR ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0)
+                -- !!!
+                AND ObjectHistoryFloat_PriceListItem_Value.ValueData  > 0.01
              ;
 
 -- !!! ВРЕМЕННО !!!

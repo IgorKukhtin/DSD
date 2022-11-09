@@ -136,7 +136,10 @@ BEGIN
                                                 , inPartnerId            := inPartnerId
                                                 , inBranchId             := inBranchId
                                                 , inContainerId          := inContainerId
-                                                , inAmount               := 0
+                                                , inAmount               := CASE WHEN ioAmountDebet  <> 0 THEN  1 * ioAmountDebet
+                                                                                 WHEN ioAmountKredit <> 0 THEN -1 * ioAmountKredit
+                                                                                 ELSE 0
+                                                                            END
                                                 , inSumm                 := vbSumm
                                                 , inCurrencyPartnerValue := inCurrencyPartnerValue
                                                 , inParPartnerValue      := inParPartnerValue

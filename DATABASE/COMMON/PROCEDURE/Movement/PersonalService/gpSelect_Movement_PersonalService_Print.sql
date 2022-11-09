@@ -23,6 +23,11 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalService());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     PERFORM lpCheck_UserRole_8813637 (vbUserId);
+
+
      -- Блокируем ему просмотр
      IF 1=0 AND vbUserId = 9457 -- Климентьев К.И.
      THEN
@@ -889,7 +894,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Movement_PersonalService_Print (Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

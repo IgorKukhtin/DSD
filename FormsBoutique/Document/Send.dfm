@@ -27,14 +27,12 @@ object SendForm: TSendForm
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 895
     ClientRectBottom = 382
     ClientRectRight = 979
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 895
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -42,7 +40,6 @@ object SendForm: TSendForm
         Height = 358
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 895
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -694,7 +691,6 @@ object SendForm: TSendForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitWidth = 895
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -1500,8 +1496,8 @@ object SendForm: TSendForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_SendPODIUM'
-      ReportNameParam.Value = 'PrintMovement_SendPODIUM'
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1568,8 +1564,8 @@ object SendForm: TSendForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_SendPODIUM'
-      ReportNameParam.Value = 'PrintMovement_SendPODIUM'
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''

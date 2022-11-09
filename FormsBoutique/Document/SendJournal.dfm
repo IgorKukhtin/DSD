@@ -745,8 +745,8 @@ object SendJournalForm: TSendJournalForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_SendPODIUM'
-      ReportNameParam.Value = 'PrintMovement_SendPODIUM'
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -808,8 +808,8 @@ object SendJournalForm: TSendJournalForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_SendPODIUM'
-      ReportNameParam.Value = 'PrintMovement_SendPODIUM'
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -840,7 +840,7 @@ object SendJournalForm: TSendJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -905,7 +905,7 @@ object SendJournalForm: TSendJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1273,7 +1273,7 @@ object SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inStartProtocol'
-        Value = 'NULL'
+        Value = Null
         Component = deStartProtocol
         DataType = ftDateTime
         ParamType = ptInput
@@ -1281,7 +1281,7 @@ object SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inEndProtocol'
-        Value = 'NULL'
+        Value = Null
         Component = deEndProtocol
         DataType = ftDateTime
         ParamType = ptInput
@@ -1418,10 +1418,12 @@ object SendJournalForm: TSendJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216

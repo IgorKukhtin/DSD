@@ -23,13 +23,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalService());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- Блокируем ему просмотр
-  /*   IF vbUserId = 9457 -- Климентьев К.И.
-     THEN
-         vbUserId:= NULL;
-         RETURN;
-     END IF;
-*/
+
+     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     PERFORM lpCheck_UserRole_8813637 (vbUserId);
+
 
      IF zc_Enum_Status_Erased() = (SELECT StatusId FROM Movement WHERE Id = inMovementId)
      THEN
