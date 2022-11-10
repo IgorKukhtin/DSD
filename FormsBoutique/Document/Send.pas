@@ -177,14 +177,7 @@ type
     bbPrintSticker: TdxBarButton;
     actPrintAllPrice: TdsdPrintAction;
     bbPrintAllPrice: TdxBarButton;
-    TotalSummPriceListTo: TcxGridDBColumn;
-    TotalSummPriceListBalance: TcxGridDBColumn;
-    TotalSummPriceListToBalance: TcxGridDBColumn;
     CurrencyName_pl: TcxGridDBColumn;
-    CurrencyName_pl_to: TcxGridDBColumn;
-    TotalSummPriceListToBalance_start: TcxGridDBColumn;
-    TotalSummPriceListTo_start: TcxGridDBColumn;
-    OperPriceListTo_start: TcxGridDBColumn;
     NPP: TcxGridDBColumn;
     spInsertUpdate_Price: TdsdStoredProc;
     actInsertUpdate_Price: TdsdExecStoredProc;

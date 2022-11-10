@@ -785,14 +785,6 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintSticker_fp'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGoodsPrintList_Print'
         end
         item
