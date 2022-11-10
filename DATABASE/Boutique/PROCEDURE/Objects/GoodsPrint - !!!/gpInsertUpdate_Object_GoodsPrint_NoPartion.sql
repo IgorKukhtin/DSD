@@ -39,12 +39,11 @@ BEGIN
                                                  AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                WHERE Container.DescId        = zc_Container_Count()
                  AND (Container.WhereObjectId = inUnitId)
-                 AND Container.Amount       <> 0
+                 AND Container.Amount        > 0
                  AND Container.ObjectId       = inGoodsId
                GROUP BY Container.PartionId
                       , Container.ObjectId
                       , Container.WhereObjectId
-               HAVING SUM (Container.Amount) <> 0 
                ) AS tmpPart
                LEFT JOIN lpInsertUpdate_Object_GoodsPrint (ioOrd       := ioOrd
                                                          , ioUserId    := ioUserId
