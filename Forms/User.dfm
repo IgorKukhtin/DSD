@@ -15,6 +15,7 @@ object UserForm: TUserForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -26,6 +27,8 @@ object UserForm: TUserForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitLeft = 320
+    ExplicitTop = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -542,6 +545,18 @@ object UserForm: TUserForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_UserRole_forMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -617,11 +632,28 @@ object UserForm: TUserForm
       Action = macUpdate_PhoneAuthent
       Category = 0
     end
+    object bbUpdate_UserRole_forMask: TdxBarButton
+      Action = macUpdate_UserRole_byMask
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 288
     Top = 64
+    object actRefresh_Role: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUserRole
+      StoredProcList = <
+        item
+          StoredProc = spUserRole
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -988,6 +1020,57 @@ object UserForm: TUserForm
       Caption = 'actUpdate_PhoneAuthent'
       ImageIndex = 41
     end
+    object ChoiceUser_mask: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TUser_ObjectForm'
+      ImageIndex = 27
+      FormName = 'TUser_ObjectForm'
+      FormNameParam.Value = 'TUser_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UserId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object macUpdate_UserRole_byMask: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ChoiceUser_mask
+        end
+        item
+          Action = actUpdate_UserRole_byMask
+        end
+        item
+          Action = actRefresh_Role
+        end>
+      QuestionBeforeExecute = #1042#1099#1073#1088#1072#1090#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' '#1076#1083#1103' '#1082#1086#1087#1080#1088#1086#1074#1072#1085#1080#1103' '#1056#1086#1083#1077#1081'?'
+      InfoAfterExecute = #1056#1086#1083#1080' '#1089#1082#1086#1087#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1056#1086#1083#1080
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1056#1086#1083#1080
+      ImageIndex = 27
+    end
+    object actUpdate_UserRole_byMask: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_UserRole_byMask
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_UserRole_byMask
+        end>
+      Caption = 'Update_UserRole_byMask'
+      ImageIndex = 27
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_User'
@@ -1046,8 +1129,8 @@ object UserForm: TUserForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 72
-    Top = 120
+    Left = 88
+    Top = 152
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
@@ -1324,5 +1407,35 @@ object UserForm: TUserForm
     PackSize = 1
     Left = 40
     Top = 208
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 704
+    Top = 80
+  end
+  object spUpdate_UserRole_byMask: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_UserRole_byMask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inuserid'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inuserid_mask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 136
   end
 end
