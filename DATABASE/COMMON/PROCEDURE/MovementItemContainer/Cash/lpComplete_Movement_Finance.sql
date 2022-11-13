@@ -74,9 +74,9 @@ BEGIN
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NULL
                                                            THEN zc_Enum_AccountDirection_40100() -- касса
 
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Member()
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Member() OR _tmpItem.MovementDescId = zc_Movement_SendDebtMember()
                                                            THEN zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Personal()
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Personal() AND _tmpItem.MovementDescId <> zc_Movement_SendDebtMember()
                                                            THEN zc_Enum_AccountDirection_70500() -- Заработная плата
 
                                                       WHEN COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = TRUE
@@ -738,6 +738,7 @@ end if;
                                                                              )
 
                                             WHEN _tmpItem.ObjectDescId = zc_Object_Member() -- Подотчет
+                                              OR _tmpItem.MovementDescId = zc_Movement_SendDebtMember()
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
@@ -759,6 +760,7 @@ end if;
                                                                              )
 
                                             WHEN _tmpItem.ObjectDescId = zc_Object_Personal() -- ЗП
+                                             AND _tmpItem.MovementDescId <> zc_Movement_SendDebtMember()
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
