@@ -25,6 +25,12 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Object_User());
 
 
+   IF vbUserId = 8790175 
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав.';
+   END IF;
+
+
    IF COALESCE (inId, 0) = 0
    THEN
        RETURN QUERY 
