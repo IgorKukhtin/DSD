@@ -40,44 +40,45 @@ BEGIN
      -- проверка
      IF (COALESCE (inMemberFromId, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено <Физ.лицо лицо (Дебет)>.';
+         RAISE EXCEPTION 'Ошибка. Не установлено <Физ.лицо лицо (Кредит)>.';
      END IF;
      -- проверка
      IF (COALESCE (inInfoMoneyFromId, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено <УП статья назначения (Дебет)>.';
+         RAISE EXCEPTION 'Ошибка. Не установлено <УП статья назначения (Кредит)>.';
      END IF;
      -- проверка
-     IF (COALESCE (inCarFromId, 0) = 0)
+   /*IF (COALESCE (inCarFromId, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено <Авто (Дебет)>.';
+         RAISE EXCEPTION 'Ошибка. Не установлено <Авто (Кредит)>.';
      END IF;
      -- проверка
      IF (COALESCE (inJuridicalBasisFromId, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено <Гл.юр.лицо (Дебет)>.';
+         RAISE EXCEPTION 'Ошибка. Не установлено <Гл.юр.лицо (Кредит)>.';
      END IF;
 
      -- проверка
      IF (COALESCE (inMemberToId, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено <Физ.лицо (Кредит)>.';
+         RAISE EXCEPTION 'Ошибка. Не установлено <Физ.лицо (Дебет)>.';
      END IF;
      -- проверка
      IF (COALESCE (inInfoMoneyToId, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено <УП статья назначения (Кредит)>.';
+         RAISE EXCEPTION 'Ошибка. Не установлено <УП статья назначения (Дебет)>.';
      END IF;
      -- проверка
      IF (COALESCE (inCarToId, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено <Авто (Кредит)>.';
+         RAISE EXCEPTION 'Ошибка. Не установлено <Авто (Дебет)>.';
      END IF;
      -- проверка
      IF (COALESCE (inJuridicalBasisToId, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено <Гл.юр.лицо (Кредит)>.';
-     END IF;
+         RAISE EXCEPTION 'Ошибка. Не установлено <Гл.юр.лицо (Дебет)>.';
+     END IF;*/
+
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -96,7 +97,7 @@ BEGIN
      -- сохранили свойство <Комментарий>
      PERFORM lpInsertUpdate_MovementString(zc_MovementString_Comment(), ioId, inComment);
    
-     -- сохранили <Главный Элемент документа>
+     -- сохранили <Элемент> - Кредит
      ioMasterId := lpInsertUpdate_MovementItem (ioMasterId, zc_MI_Master(), inMemberFromId, ioId, inAmount, NULL);
 
      -- сохранили связь с <Авто ОТ >
@@ -115,8 +116,8 @@ BEGIN
   
 
 
-     -- сохранили <Второй Элемент документа>
-     ioChildId := lpInsertUpdate_MovementItem (ioChildId, zc_MI_Child(), inMemberToId, ioId, inAmount, NULL);
+     -- сохранили <Элемент> - Дебет
+     ioChildId := lpInsertUpdate_MovementItem (ioChildId, zc_MI_Child(), CASE WHEN inMemberToId > 0 THEN inMemberToId ELSE inMemberFromId END, ioId, inAmount, NULL);
 
      -- сохранили связь с <авто КОМУ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Car(), ioChildId, inCarToId);
@@ -125,7 +126,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_JuridicalBasis(), ioChildId, inJuridicalBasisToId);
 
      -- сохранили связь с <Статьи назначения КОМУ>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioChildId, inInfoMoneyToId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioChildId, CASE WHEN inInfoMoneyToId > 0 THEN inInfoMoneyToId ELSE inInfoMoneyFromId END);
 
      -- сохранили связь с <Филиал КОМУ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), ioChildId, inBranchToId);
