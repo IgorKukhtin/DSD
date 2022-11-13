@@ -219,167 +219,188 @@ object SendDebtMemberJournalForm: TSendDebtMemberJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1077#1076#1080#1090
         Width = 31
       end
       object MemberFromName: TcxGridDBColumn
-        Caption = #1054#1090' '#1050#1086#1075#1086' ('#1044')'
+        Caption = #1054#1090' '#1082#1086#1075#1086' ('#1050')'
         DataBinding.FieldName = 'MemberFromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1077#1076#1080#1090
         Width = 120
-      end
-      object BranchFromName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083' ('#1044')'
-        DataBinding.FieldName = 'BranchFromName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object JuridicalBasisFromName: TcxGridDBColumn
-        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086'('#1044')'
-        DataBinding.FieldName = 'JuridicalBasisFromName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086' ('#1044')'
-        Width = 80
-      end
-      object CarFromName: TcxGridDBColumn
-        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1044')'
-        DataBinding.FieldName = 'CarFromName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 91
-      end
-      object InfoMoneyFromCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055' ('#1044')'
-        DataBinding.FieldName = 'InfoMoneyFromCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object InfoMoneyGroupFromName: TcxGridDBColumn
-        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1044')'
-        DataBinding.FieldName = 'InfoMoneyGroupFromName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object InfoMoneyDestinationFromName: TcxGridDBColumn
-        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1044')'
-        DataBinding.FieldName = 'InfoMoneyDestinationFromName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object InfoMoneyFromName: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1044')'
-        DataBinding.FieldName = 'InfoMoneyFromName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 140
-      end
-      object InfoMoneyFromName_all: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' ('#1044')'
-        DataBinding.FieldName = 'InfoMoneyFromName_all'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 140
-      end
-      object MemberToCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' ('#1050')'
-        DataBinding.FieldName = 'MemberToCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 43
-      end
-      object MemberToName: TcxGridDBColumn
-        Caption = #1050#1086#1084#1091' ('#1050')'
-        DataBinding.FieldName = 'MemberToName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 120
-      end
-      object CarToName: TcxGridDBColumn
-        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1050')'
-        DataBinding.FieldName = 'CarToName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 37
-      end
-      object BranchToName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083' ('#1050')'
-        DataBinding.FieldName = 'BranchToName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object JuridicalBasisToName: TcxGridDBColumn
-        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086' ('#1050')'
-        DataBinding.FieldName = 'JuridicalBasisToName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object InfoMoneyToCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055' ('#1050')'
-        DataBinding.FieldName = 'InfoMoneyToCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object InfoMoneyGroupToName: TcxGridDBColumn
-        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1050')'
-        DataBinding.FieldName = 'InfoMoneyGroupToName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object InfoMoneyDestinationToName: TcxGridDBColumn
-        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1050')'
-        DataBinding.FieldName = 'InfoMoneyDestinationToName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object InfoMoneyToName: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1050')'
-        DataBinding.FieldName = 'InfoMoneyToName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 140
-      end
-      object InfoMoneyToName_all: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' ('#1050')'
-        DataBinding.FieldName = 'InfoMoneyToName_all'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 140
       end
       object ItemFromName: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1044')'
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1050')'
         DataBinding.FieldName = 'ItemFromName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1077#1076#1080#1090
         Width = 55
       end
+      object BranchFromName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1050')'
+        DataBinding.FieldName = 'BranchFromName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1077#1076#1080#1090
+        Width = 80
+      end
+      object JuridicalBasisFromName: TcxGridDBColumn
+        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086' ('#1050')'
+        DataBinding.FieldName = 'JuridicalBasisFromName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1077#1076#1080#1090
+        Width = 100
+      end
+      object CarFromName: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1050')'
+        DataBinding.FieldName = 'CarFromName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1077#1076#1080#1090
+        Options.Editing = False
+        Width = 80
+      end
+      object InfoMoneyFromCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055' ('#1050')'
+        DataBinding.FieldName = 'InfoMoneyFromCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1077#1076#1080#1090
+        Width = 55
+      end
+      object InfoMoneyGroupFromName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1050')'
+        DataBinding.FieldName = 'InfoMoneyGroupFromName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1077#1076#1080#1090
+        Width = 60
+      end
+      object InfoMoneyDestinationFromName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1050')'
+        DataBinding.FieldName = 'InfoMoneyDestinationFromName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1077#1076#1080#1090
+        Width = 60
+      end
+      object InfoMoneyFromName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1050')'
+        DataBinding.FieldName = 'InfoMoneyFromName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1077#1076#1080#1090
+        Width = 140
+      end
+      object InfoMoneyFromName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' ('#1050')'
+        DataBinding.FieldName = 'InfoMoneyFromName_all'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1077#1076#1080#1090
+        Width = 140
+      end
+      object MemberToCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1044')'
+        DataBinding.FieldName = 'MemberToCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1073#1077#1090
+        Width = 43
+      end
+      object MemberToName: TcxGridDBColumn
+        Caption = #1050#1086#1084#1091' ('#1044')'
+        DataBinding.FieldName = 'MemberToName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1073#1077#1090
+        Width = 120
+      end
       object ItemToName: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1050')'
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1044')'
         DataBinding.FieldName = 'ItemToName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1073#1077#1090
         Width = 55
+      end
+      object CarToName: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1044')'
+        DataBinding.FieldName = 'CarToName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1073#1077#1090
+        Width = 80
+      end
+      object BranchToName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1044')'
+        DataBinding.FieldName = 'BranchToName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1073#1077#1090
+        Width = 80
+      end
+      object JuridicalBasisToName: TcxGridDBColumn
+        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086' ('#1044')'
+        DataBinding.FieldName = 'JuridicalBasisToName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1073#1077#1090
+        Width = 80
+      end
+      object InfoMoneyToCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055' ('#1044')'
+        DataBinding.FieldName = 'InfoMoneyToCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1073#1077#1090
+        Width = 55
+      end
+      object InfoMoneyGroupToName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1044')'
+        DataBinding.FieldName = 'InfoMoneyGroupToName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1073#1077#1090
+        Width = 60
+      end
+      object InfoMoneyDestinationToName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1044')'
+        DataBinding.FieldName = 'InfoMoneyDestinationToName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1073#1077#1090
+        Width = 60
+      end
+      object InfoMoneyToName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1044')'
+        DataBinding.FieldName = 'InfoMoneyToName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1073#1077#1090
+        Width = 140
+      end
+      object InfoMoneyToName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' ('#1044')'
+        DataBinding.FieldName = 'InfoMoneyToName_all'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1073#1077#1090
+        Width = 140
       end
     end
     object cxGridLevel: TcxGridLevel

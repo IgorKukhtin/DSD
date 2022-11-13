@@ -40,12 +40,12 @@
   object cxLabel2: TcxLabel [5]
     Left = 8
     Top = 241
-    Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1044#1077#1073#1077#1090')'
+    Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1050#1088#1077#1076#1080#1090')'
   end
   object cxLabel5: TcxLabel [6]
     Left = 8
     Top = 191
-    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1044#1077#1073#1077#1090')'
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1050#1088#1077#1076#1080#1090')'
   end
   object ceCarFrom: TcxButtonEdit [7]
     Left = 8
@@ -95,7 +95,7 @@
   object cxLabel6: TcxLabel [11]
     Left = 8
     Top = 51
-    Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1044#1077#1073#1077#1090')'
+    Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1050#1088#1077#1076#1080#1090')'
   end
   object cxLabel10: TcxLabel [12]
     Left = 8
@@ -124,7 +124,7 @@
   object cxLabel3: TcxLabel [16]
     Left = 312
     Top = 51
-    Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1050#1088#1077#1076#1080#1090')'
+    Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1044#1077#1073#1077#1090')'
   end
   object ceMemberTo: TcxButtonEdit [17]
     Left = 313
@@ -141,7 +141,7 @@
   object cxLabel7: TcxLabel [18]
     Left = 312
     Top = 191
-    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1050#1088#1077#1076#1080#1090')'
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1044#1077#1073#1077#1090')'
   end
   object ceInfoMoneyTo: TcxButtonEdit [19]
     Left = 312
@@ -158,7 +158,7 @@
   object cxLabel9: TcxLabel [20]
     Left = 312
     Top = 241
-    Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1050#1088#1077#1076#1080#1090')'
+    Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1044#1077#1073#1077#1090')'
   end
   object ceCarTo: TcxButtonEdit [21]
     Left = 312
@@ -187,7 +187,7 @@
   object cxLabel12: TcxLabel [23]
     Left = 8
     Top = 96
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086' ('#1044#1077#1073#1077#1090')'
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086' ('#1050#1088#1077#1076#1080#1090')'
   end
   object ceJuridicalBasisTo: TcxButtonEdit [24]
     Left = 313
@@ -204,7 +204,7 @@
   object cxLabel13: TcxLabel [25]
     Left = 312
     Top = 96
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086' ('#1050#1088#1077#1076#1080#1090')'
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086' ('#1044#1077#1073#1077#1090')'
   end
   object ceBranchFrom: TcxButtonEdit [26]
     Left = 8
@@ -221,7 +221,7 @@
   object cxLabel14: TcxLabel [27]
     Left = 8
     Top = 141
-    Caption = #1060#1080#1083#1080#1072#1083' ('#1044#1077#1073#1077#1090')'
+    Caption = #1060#1080#1083#1080#1072#1083' ('#1050#1088#1077#1076#1080#1090')'
   end
   object ceBranchTo: TcxButtonEdit [28]
     Left = 312
@@ -816,15 +816,11 @@
       item
         Name = 'MasterMemberId'
         Value = 0
-        Component = GuidesMemberFrom
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterMemberName'
         Value = ''
-        Component = GuidesMemberFrom
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -992,15 +988,11 @@
       item
         Name = 'MasterMemberId'
         Value = 0
-        Component = GuidesMemberTo
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterMemberName'
         Value = ''
-        Component = GuidesMemberTo
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>

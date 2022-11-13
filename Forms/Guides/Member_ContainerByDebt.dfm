@@ -2,7 +2,7 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090')>'
-  ClientHeight = 544
+  ClientHeight = 490
   ClientWidth = 965
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,12 +22,13 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
     Left = 0
     Top = 26
     Width = 965
-    Height = 518
+    Height = 464
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 518
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -73,9 +74,7 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -105,6 +104,7 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
       object AmountKredit: TcxGridDBColumn
@@ -114,6 +114,7 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
       object Amount: TcxGridDBColumn
@@ -124,6 +125,7 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object InfoMoneyCode: TcxGridDBColumn
@@ -131,6 +133,7 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
         DataBinding.FieldName = 'InfoMoneyCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 45
       end
       object InfoMoneyName: TcxGridDBColumn
@@ -138,11 +141,19 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object InfoMoneyName_all: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
         DataBinding.FieldName = 'InfoMoneyName_all'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -154,6 +165,7 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object BranchName: TcxGridDBColumn
@@ -161,6 +173,7 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object CarName: TcxGridDBColumn
@@ -168,21 +181,24 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
         DataBinding.FieldName = 'CarName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object JuridicalBasisName: TcxGridDBColumn
-        Caption = #1043#1083'.'#1102#1088'. '#1083#1080#1094#1086
+        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalBasisName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Options.Editing = False
+        Width = 120
       end
       object AccountName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090
         DataBinding.FieldName = 'AccountName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Options.Editing = False
+        Width = 200
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -198,6 +214,7 @@ object Member_ContainerByDebtForm: TMember_ContainerByDebtForm
         Caption = #1048#1076#1077#1090#1085'. '#1043#1083'.'#1102#1088'. '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalBasisId'
         Visible = False
+        Options.Editing = False
         VisibleForCustomization = False
         Width = 70
       end
