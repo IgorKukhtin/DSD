@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer
              , TotalSumm TFloat
              , TotalSummBalance TFloat
              , TotalSummPriceList TFloat
+             , PriceTax TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , DiscountTax_From TFloat, DiscountTax_To TFloat
              , ContainerId Integer
@@ -283,6 +284,15 @@ BEGIN
                , 0                          :: TFloat AS TotalSummBalance
                , 0                          :: TFloat AS TotalSummPriceList
 
+               -- % наценки
+               , CAST (CASE WHEN (tmpPartion.OperPrice * tmpMI.CurrencyValue / CASE WHEN COALESCE (tmpMI.ParValue,0) <> 0 THEN COALESCE (tmpMI.ParValue,1) ELSE 1 END)
+                                  <> 0
+                            THEN (100 * tmpPartion.OperPriceList
+                                / (tmpPartion.OperPrice * tmpMI.CurrencyValue / CASE WHEN COALESCE (tmpMI.ParValue,0) <> 0 THEN COALESCE (tmpMI.ParValue,1) ELSE 1 END)
+                                  - 100)
+                            ELSE 0
+                       END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
+                   
                , tmpPartion.CurrencyValue   ::TFloat
                , tmpPartion.ParValue        ::TFloat
 
@@ -361,8 +371,17 @@ BEGIN
                , tmpMI.OperPriceList       ::TFloat
 
                , tmpMI.TotalSumm           ::TFloat
-               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
+               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN COALESCE (tmpMI.ParValue,1) ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
                , tmpMI.TotalSummPriceList  ::TFloat
+
+               -- % наценки
+               , CAST (CASE WHEN (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN COALESCE (tmpMI.ParValue,1) ELSE 1 END)
+                                  <> 0
+                            THEN (100 * tmpMI.TotalSummPriceList
+                                / (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN COALESCE (tmpMI.ParValue,1) ELSE 1 END)
+                                  - 100)
+                            ELSE 0
+                       END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
     
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat
@@ -576,7 +595,16 @@ BEGIN
                , tmpMI.TotalSumm           ::TFloat
                , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
                , tmpMI.TotalSummPriceList  ::TFloat
-    
+
+              -- % наценки
+              , CAST (CASE WHEN (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN COALESCE (tmpMI.ParValue,1) ELSE 1 END)
+                                 <> 0
+                           THEN (100 * tmpMI.TotalSummPriceList
+                               / (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN COALESCE (tmpMI.ParValue,1) ELSE 1 END)
+                                 - 100)
+                           ELSE 0
+                      END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
+
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat
  

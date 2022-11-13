@@ -11,7 +11,17 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit, cxSplitter,
   Vcl.ExtCtrls, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, cxCurrencyEdit;
+  dxSkinsdxBarPainter, cxCurrencyEdit, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TUserForm = class(TParentForm)
@@ -97,6 +107,12 @@ type
     macUpdate_PhoneAuthent: TMultiAction;
     actUpdate_PhoneAuthent: TdsdExecStoredProc;
     bbUpdate_PhoneAuthent: TdxBarButton;
+    FormParams: TdsdFormParams;
+    spUpdate_UserRole_byMask: TdsdStoredProc;
+    actUpdate_UserRole_byMask: TdsdExecStoredProc;
+    macUpdate_UserRole_byMask: TMultiAction;
+    bbUpdate_UserRole_forMask: TdxBarButton;
+    actRefresh_Role: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
@@ -111,3 +127,5 @@ initialization
   RegisterClass(TUserForm);
 
 end.
+
+    OpenChoiceForm1: TOpenChoiceForm;

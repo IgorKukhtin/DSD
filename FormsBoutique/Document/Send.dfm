@@ -556,6 +556,18 @@ object SendForm: TSendForm
             VisibleForCustomization = False
             Width = 50
           end
+          object PriceTax: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094'.'
+            DataBinding.FieldName = 'PriceTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
+            Options.Editing = False
+            Width = 56
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView

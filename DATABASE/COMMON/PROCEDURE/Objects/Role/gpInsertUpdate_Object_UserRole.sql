@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_UserRole (Integer, Integer, Integer, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_UserRole (Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_UserRole (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_UserRole(
  INOUT ioId	        Integer   ,     -- ключ объекта связи 
