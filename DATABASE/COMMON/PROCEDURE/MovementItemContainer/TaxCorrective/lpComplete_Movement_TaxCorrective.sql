@@ -130,7 +130,7 @@ BEGIN
            AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child();
 
         -- проверка
-        IF COALESCE (vbTotalSumm_tax,0) < COALESCE (vbTotalSumm_corr,0) OR inUserId = 5
+        IF COALESCE (vbTotalSumm_tax,0) < COALESCE (vbTotalSumm_corr,0) --OR inUserId = 5
         THEN
             --
             outMessageText:= 'Ошибка.Сумма <' || zfConvert_FloatToString (vbTotalSumm_corr) || '>'
@@ -143,7 +143,7 @@ BEGIN
                             ;
             -- Распроводим Документ
             PERFORM lpUnComplete_Movement (inMovementId := inMovementId
-                                         , inUserId     := vbUserId);
+                                         , inUserId     := inUserId);
 
             --
             RETURN;
