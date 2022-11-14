@@ -30,6 +30,7 @@ RETURNS TABLE (OperDate                   TDateTime
              , GoodsCode                  Integer
              , GoodsName                  TVarChar
              , GoodsKindName              TVarChar
+             , MeasureName                TVarChar
 
              , AmountStart_Weight_sum            TFloat
              , AmountEnd_Weight_sum              TFloat
@@ -263,7 +264,7 @@ BEGIN
            , DATE_TRUNC ('YEAR', tmpData.OperDate) ::TVarChar AS Year
 
            , Object_Unit.ObjectCode          AS UnitCode
-           , Object_Unit.ValueData           AS UnitName  
+           , Object_Unit.ValueData           AS UnitName 
 
            , tmpGoodsParam.GoodsGroupNameFull
            , tmpGoodsParam.GoodsGroupAnalystName
@@ -275,7 +276,8 @@ BEGIN
            , tmpGoodsParam.GoodsName_main
            , Object_Goods.ObjectCode          AS GoodsCode
            , Object_Goods.ValueData           AS GoodsName  
-           , Object_GoodsKind.ValueData       AS GoodsKindName
+           , Object_GoodsKind.ValueData       AS GoodsKindName  
+           , Object_Measure.ValueData         AS MeasureName
 
            , SUM (tmpData.AmountStart_inf) OVER(PARTITION BY tmpData.UnitId, tmpData.GoodsId, tmpData.GoodsKindId, tmpData.OperDate) :: TFloat AS AmountStart_sum
            , SUM (tmpData.AmountEnd_inf)   OVER(PARTITION BY tmpData.UnitId, tmpData.GoodsId, tmpData.GoodsKindId, tmpData.OperDate) :: TFloat AS AmountEnd_sum
@@ -367,10 +369,11 @@ BEGIN
 
         FROM tmpData
 
-             LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpData.GoodsId
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
        
              LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpData.GoodsId
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpGoodsParam.MeasureId
              
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
 
@@ -384,8 +387,9 @@ $BODY$
 /* -------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.11.22         *
  17.07.18         *
 */
 
 -- ÚÂÒÚ-
- -- select * from gpReport_RemainsOLAPTable(inStartDate := ('01.01.2019')::TDateTime , inEndDate := ('02.01.2019')::TDateTime , inGoodsGroupId := 0 , inGoodsId := 0 , inUnitId := 0 , inIsDay := 'True' ,  inSession := '5');
+-- select * from gpReport_RemainsOLAPTable(inStartDate := ('01.01.2019')::TDateTime , inEndDate := ('02.01.2019')::TDateTime , inUnitId:= 0, inGoodsGroupId := 0 , inGoodsId := 0 , inIsDay := FALSE , inIsMonth:=FALSE , inSession := '5');

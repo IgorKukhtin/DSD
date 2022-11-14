@@ -202,6 +202,15 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       Visible = True
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
+    object pvMeasureName: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1045#1076'.'#1048#1079#1084'.'
+      DataBinding.FieldName = 'MeasureName'
+      Visible = True
+      UniqueName = #1057#1086#1089#1090#1072#1074
+    end
     object pvGoodsGroupNameFull: TcxDBPivotGridField
       AreaIndex = 5
       IsCaptionAssigned = True
@@ -1231,7 +1240,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
         end
         item
           Name = 'isDay'
-          Value = 'False'
+          Value = False
           Component = cbIsDay
           DataType = ftBoolean
           ParamType = ptInput
@@ -1313,7 +1322,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       end
       item
         Name = 'inisMonth'
-        Value = 'False'
+        Value = False
         Component = cbisMonth
         DataType = ftBoolean
         ParamType = ptInput
