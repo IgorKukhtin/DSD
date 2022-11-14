@@ -110,6 +110,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
   public
   end;

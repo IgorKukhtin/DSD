@@ -1198,6 +1198,7 @@ end;
 
 procedure TLoadFormTest.LoadSendDebtFormTest;
 begin
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendDebtMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtMemberJournalForm'));
@@ -1205,6 +1206,7 @@ begin
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendDebtForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendDebtJournalForm');
 end;

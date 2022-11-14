@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_SendDebtMember()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendDebtMember (TDateTime, TDateTime, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_SendDebtMember (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_SendDebtMember (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendDebtMember(
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , --
-    IN inJuridicalBasisId Integer   , -- Главное юр.лицо
+    IN inJuridicalBasisId Integer   , -- Главное юр.лицо 
+    IN inIsErased         Boolean   , -- показывать удаленные Да/Нет
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
@@ -43,8 +45,15 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-       WITH tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View)
-          , tmpMovement AS (SELECT * FROM Movement WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_SendDebtMember())
+       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+                    UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                    UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                         )
+          , tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View)
+          , tmpMovement AS (SELECT Movement.* 
+                            FROM Movement 
+                                JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_SendDebtMember())
           , tmpMI AS (SELECT * FROM MovementItem WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement))
           , tmpMILO AS (SELECT * FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
           , tmpMIFloat AS (SELECT * FROM MovementItemFloat WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
@@ -97,7 +106,7 @@ BEGIN
 
             , MI_Master.Amount                   :: TFloat AS Amount
            
-       FROM Movement
+       FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementString AS MovementString_Comment
@@ -172,8 +181,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.11.22         * add inIsErased
  27.10.22         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SendDebtMember (inStartDate:= '01.10.2022', inEndDate:= '01.10.2022', inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_SendDebtMember (inStartDate:= '01.10.2022', inEndDate:= '01.12.2022', inJuridicalBasisId:= 0, inIsErased:= false, inSession:= zfCalc_UserAdmin())
