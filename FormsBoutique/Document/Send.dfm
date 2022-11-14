@@ -2000,20 +2000,6 @@ object SendForm: TSendForm
           ComponentItem = 'Amount'
           DataType = ftFloat
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperPriceListReal'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperPriceListTo'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperPriceListTo_start'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperPriceListTo_start'
-          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -3104,12 +3090,12 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioAmount'
+        Name = 'inAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Remains'
         DataType = ftFloat
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -3117,24 +3103,6 @@ object SendForm: TSendForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioOperPriceListTo_start'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPriceListTo_start'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioOperPriceListTo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPriceListTo'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
