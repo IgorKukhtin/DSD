@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member_ContainerByDebt(
     IN inIsShowAll   Boolean,       --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, DescName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
@@ -71,11 +71,18 @@ BEGIN
                AND (CLO_Member.ObjectId = inMemberId OR ObjectLink_Member.ObjectId = inMemberId OR COALESCE (inMemberId, 0) = 0)
                AND CLO_Goods.ContainerId IS NULL
             )
+     , tmpMember AS (SELECT *
+                     FROM Object
+                     WHERE Object.DescId = zc_Object_Member()
+                       AND Object.isErased = FALSE 
+                    )
+
 
        -- Результат
        SELECT Object_Member.Id
             , Object_Member.ObjectCode         AS Code
             , Object_Member.ValueData          AS Name
+            , ObjectDesc.ItemName              AS DescName
             , View_InfoMoney.InfoMoneyId
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
@@ -100,6 +107,7 @@ BEGIN
             , CASE WHEN tmpContainer.Amount <> 0 THEN FALSE ELSE TRUE END :: Boolean AS isErased
        FROM tmpContainer
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpContainer.MemberId
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpContainer.BranchId
             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = tmpContainer.JuridicalBasisId
             LEFT JOIN Object_Account_View             ON Object_Account_View.AccountId = tmpContainer.AccountId
@@ -110,6 +118,33 @@ BEGIN
                                  ON Car_CarModel.ObjectId = Object_Car.Id
                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+      UNION
+       SELECT Object_Member.Id
+            , Object_Member.ObjectCode         AS Code
+            , Object_Member.ValueData          AS Name
+            , ObjectDesc.ItemName              AS DescName
+            , 0              AS InfoMoneyId
+            , 0              AS InfoMoneyCode
+            , '' :: TVarChar AS InfoMoneyName
+            , '' :: TVarChar AS InfoMoneyName_all
+            , 0              AS BranchId
+            , 0              AS BranchCode
+            , '' :: TVarChar AS BranchName
+            , 0              AS JuridicalBasisId
+            , '' :: TVarChar AS JuridicalBasisName              
+            , 0              AS AccountId
+            , '' :: TVarChar AS AccountName
+            , 0              AS CarId
+            , '' :: TVarChar AS CarName
+            , 0  ::TFloat    AS AmountDebet
+            , 0  ::TFloat    AS AmountKredit
+            , 0  ::TFloat    AS Amount
+            , TRUE:: Boolean AS isErased
+       FROM tmpMember AS Object_Member
+           LEFT JOIN tmpContainer ON tmpContainer.MemberId = Object_Member.Id
+           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
+       WHERE tmpContainer.MemberId IS NULL    
+         AND inIsShowAll = TRUE
       ;
   
 END;
