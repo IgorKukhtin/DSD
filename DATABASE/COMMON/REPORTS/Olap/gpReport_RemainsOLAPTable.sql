@@ -62,6 +62,9 @@ RETURNS TABLE (OperDate                   TDateTime
              , AmountTotalIn_Weight              TFloat
              , AmountTotalOut_Weight             TFloat
 
+             , AmountStart_sh             TFloat
+             , AmountEnd_sh               TFloat
+             
              , AmountStart                TFloat
              , AmountEnd                  TFloat
              , AmountIncome               TFloat
@@ -264,7 +267,7 @@ BEGIN
            , DATE_TRUNC ('YEAR', tmpData.OperDate) ::TVarChar AS Year
 
            , Object_Unit.ObjectCode          AS UnitCode
-           , Object_Unit.ValueData           AS UnitName 
+           , Object_Unit.ValueData           AS UnitName
 
            , tmpGoodsParam.GoodsGroupNameFull
            , tmpGoodsParam.GoodsGroupAnalystName
@@ -279,8 +282,8 @@ BEGIN
            , Object_GoodsKind.ValueData       AS GoodsKindName  
            , Object_Measure.ValueData         AS MeasureName
 
-           , SUM (tmpData.AmountStart_inf) OVER(PARTITION BY tmpData.UnitId, tmpData.GoodsId, tmpData.GoodsKindId, tmpData.OperDate) :: TFloat AS AmountStart_sum
-           , SUM (tmpData.AmountEnd_inf)   OVER(PARTITION BY tmpData.UnitId, tmpData.GoodsId, tmpData.GoodsKindId, tmpData.OperDate) :: TFloat AS AmountEnd_sum
+           , SUM (tmpData.AmountStart_inf) OVER(PARTITION BY tmpData.UnitId, tmpData.GoodsId, tmpData.GoodsKindId, tmpData.OperDate) :: TFloat AS AmountStart_sum    --AmountStart_Weight_sum
+           , SUM (tmpData.AmountEnd_inf)   OVER(PARTITION BY tmpData.UnitId, tmpData.GoodsId, tmpData.GoodsKindId, tmpData.OperDate) :: TFloat AS AmountEnd_sum      --AmountEnd_Weight_sum
            --, (tmpData.AmountStart_sum            * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountStart_Weight_sum
            --, (tmpData.AmountEnd_sum              * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountEnd_Weight_sum
            , (tmpData.AmountStart                * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS AmountStart_Weight
@@ -323,6 +326,9 @@ BEGIN
              - tmpData.AmountSale_40208
              + tmpData.AmountLoss
              + tmpData.AmountProductionOut) * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END )):: TFloat AS AmountTotalOut_Weight
+
+           , (tmpData.AmountStart                * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN 1 ELSE 0 END ))  :: TFloat AS AmountStart_sh
+           , (tmpData.AmountEnd                  * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN 1 ELSE 0 END ))  :: TFloat AS AmountEnd_sh
 
            , tmpData.AmountStart                  :: TFloat AS AmountStart
            , tmpData.AmountEnd                    :: TFloat AS AmountEnd
