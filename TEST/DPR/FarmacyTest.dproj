@@ -2077,8 +2077,6 @@
 				<Form>CashSummaForDeyFormForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
-			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\DiffKind.pas">
 				<Form>DiffKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3603,8 +3601,6 @@
 				<Form>Report_Check_SP_ForDPSSForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201011.pas"/>
-			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_PromoBonusEstimate.pas">
 				<Form>Report_Check_PromoBonusEstimateForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4350,18 +4346,6 @@
 				<Form>GoodsSPRegistry_1303Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\MCRequestAllDialog.pas">
-				<Form>MCRequestAllDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\MCRequestShowPUSH.pas">
-				<Form>MCRequestShowPUSHForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\MCRequestInfoPUSH.pas">
-				<Form>MCRequestInfoPUSHForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsCategoryCopy.pas">
 				<Form>GoodsCategoryCopyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4598,6 +4582,20 @@
 				<Form>Report_ApplicationAwardUserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201011.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201012.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201111.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201112.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201212.pas"/>
+			<DCCReference Include="..\..\SOURCE\DialogPswSms.pas">
+				<Form>DialogPswSmsForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\dsdPlaySound.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

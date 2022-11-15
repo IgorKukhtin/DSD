@@ -616,8 +616,6 @@ uses
   EmployeeScheduleJournal in '..\..\FormsFarmacy\Document\EmployeeScheduleJournal.pas' {EmployeeScheduleJournalForm: TParentForm},
   EmployeeSchedule in '..\..\FormsFarmacy\Document\EmployeeSchedule.pas' {EmployeeScheduleForm: TParentForm},
   CashSummaForDey in '..\..\FormsFarmacy\Cash\CashSummaForDey.pas' {CashSummaForDeyFormForm: TParentForm},
-  Medoc_J1201010 in '..\..\SOURCE\MeDOC\Medoc_J1201010.pas',
-  Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas',
   DiffKind in '..\..\FormsFarmacy\Guides\DiffKind.pas' {DiffKindForm: TParentForm},
   DiffKindEdit in '..\..\FormsFarmacy\Guides\DiffKindEdit.pas' {DiffKindEditForm: TParentForm},
   CheckCash in '..\..\FormsFarmacy\Cash\CheckCash.pas' {CheckCashForm: TParentForm},
@@ -1013,8 +1011,6 @@ uses
   MedicKashtan in '..\..\FormsFarmacy\Guides\MedicKashtan.pas' {MedicKashtanForm: TParentForm},
   Report_Check_SP_ForDPSSDialog in '..\..\FormsFarmacy\Report\Report_Check_SP_ForDPSSDialog.pas' {Report_Check_SP_ForDPSSDialogForm: TParentForm},
   Report_Check_SP_ForDPSS in '..\..\FormsFarmacy\Report\Report_Check_SP_ForDPSS.pas' {Report_Check_SP_ForDPSSForm: TParentForm},
-  Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
-  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
   Report_Check_PromoBonusEstimate in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusEstimate.pas' {Report_Check_PromoBonusEstimateForm: TParentForm},
   Report_FinalSUAProtocol in '..\..\FormsFarmacy\Report\Report_FinalSUAProtocol.pas' {Report_FinalSUAProtocolForm: TParentForm},
   Report_Check_CorrectMarketing in '..\..\FormsFarmacy\Report\Report_Check_CorrectMarketing.pas' {Report_Check_CorrectMarketingForm: TParentForm},
@@ -1204,9 +1200,6 @@ uses
   KindOutSP_1303 in '..\..\FormsFarmacy\Guides\KindOutSP_1303.pas' {KindOutSP_1303Form: TParentForm},
   GoodsSPRegistry_1303Journal in '..\..\FormsFarmacy\Document\GoodsSPRegistry_1303Journal.pas' {GoodsSPRegistry_1303JournalForm: TParentForm},
   GoodsSPRegistry_1303 in '..\..\FormsFarmacy\Document\GoodsSPRegistry_1303.pas' {GoodsSPRegistry_1303Form: TParentForm},
-  MCRequestAllDialog in '..\..\FormsFarmacy\Guides\MCRequestAllDialog.pas' {MCRequestAllDialogForm: TParentForm},
-  MCRequestShowPUSH in '..\..\FormsFarmacy\Guides\MCRequestShowPUSH.pas' {MCRequestShowPUSHForm: TParentForm},
-  MCRequestInfoPUSH in '..\..\FormsFarmacy\Guides\MCRequestInfoPUSH.pas' {MCRequestInfoPUSHForm: TParentForm},
   GoodsCategoryCopy in '..\..\FormsFarmacy\Guides\GoodsCategoryCopy.pas' {GoodsCategoryCopyForm: TParentForm},
   ExpressVIPConfirm in '..\..\FormsFarmacy\Document\ExpressVIPConfirm.pas' {ExpressVIPConfirmForm: TParentForm},
   GoodsCategoryAddGoods in '..\..\FormsFarmacy\Guides\GoodsCategoryAddGoods.pas' {GoodsCategoryAddGoodsForm: TParentForm},
@@ -1265,7 +1258,19 @@ uses
   UsersSiteProfile in '..\..\FormsFarmacy\System\UsersSiteProfile.pas' {UsersSiteProfileForm: TParentForm},
   UserCash in '..\..\FormsFarmacy\Guides\UserCash.pas' {UserCashForm: TParentForm},
   UserEditLanguage in '..\..\FormsFarmacy\Guides\UserEditLanguage.pas' {UserEditLanguageForm: TParentForm},
-  Report_ApplicationAwardUser in '..\..\FormsFarmacy\Report\Report_ApplicationAwardUser.pas' {Report_ApplicationAwardUserForm: TParentForm};
+  Report_ApplicationAwardUser in '..\..\FormsFarmacy\Report\Report_ApplicationAwardUser.pas' {Report_ApplicationAwardUserForm: TParentForm},
+  DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
+  Medoc_J1201010 in '..\..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
+  Medoc_J1201012 in '..\..\SOURCE\MeDOC\Medoc_J1201012.pas',
+  Medoc_J1201111 in '..\..\SOURCE\MeDOC\Medoc_J1201111.pas',
+  Medoc_J1201112 in '..\..\SOURCE\MeDOC\Medoc_J1201112.pas',
+  Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
+  Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas',
+  DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
+  dsdPlaySound in '..\..\SOURCE\dsdPlaySound.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

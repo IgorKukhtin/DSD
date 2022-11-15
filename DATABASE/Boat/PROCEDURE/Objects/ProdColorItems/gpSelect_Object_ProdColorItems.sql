@@ -1,4 +1,4 @@
- -- Function: gpSelect_Object_ProdColorItems()
+-- Function: gpSelect_Object_ProdColorItems()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorItems (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorItems (Boolean, Boolean, TVarChar);
