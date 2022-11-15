@@ -38,7 +38,8 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isUkrainianTranslation boolean
              , MakerName TVarChar, MakerNameUkr TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
              , Dosage TVarChar, Volume TVarChar, GoodsWhoCanName TVarChar, GoodsMethodApplId integer, GoodsMethodApplName TVarChar, GoodsSignOriginId  integer,  GoodsSignOriginName TVarChar
-             , isLeftTheMarket boolean, DateLeftTheMarket TDateTime, DateAddToOrder TDateTime
+             , isLeftTheMarket boolean, DateLeftTheMarket TDateTime, DateAddToOrder TDateTime 
+             , UKTZED_main TVarChar
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -236,7 +237,8 @@ BEGIN
 
            , Object_Goods_Main.isLeftTheMarket
            , Object_Goods_Main.DateLeftTheMarket
-           , Object_Goods_Main.DateAddToOrder
+           , Object_Goods_Main.DateAddToOrder 
+           , ObjectString_Goods_UKTZED_main.ValueData :: TVarChar AS UKTZED_main
 
       FROM Object_Goods_Retail
 
@@ -266,6 +268,9 @@ BEGIN
            
            LEFT JOIN tmpGoodsMainWhoCan ON tmpGoodsMainWhoCan.ID = Object_Goods_Retail.GoodsMainId
 
+           LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_main
+                                  ON ObjectString_Goods_UKTZED_main.ObjectId = Object_Goods_Retail.Id
+                                 AND ObjectString_Goods_UKTZED_main.DescId = zc_ObjectString_Goods_UKTZED_main()
       WHERE Object_Goods_Retail.RetailId = vbObjectId
       ;
 
@@ -278,6 +283,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 15.11.22         * UKTZED_main
  12.08.21                                                                     * перенос СУН в отдельную форму
  22.09.20                                                                     * isExceptionUKTZED
  25.05.20         * dell LimitSUN_T1

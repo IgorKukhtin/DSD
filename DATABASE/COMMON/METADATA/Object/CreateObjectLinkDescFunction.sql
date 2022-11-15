@@ -2023,8 +2023,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Area_TelegramGroup() RETURNS Integer AS
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Area_TelegramGroup', 'Группа телеграм', zc_Object_Area(), zc_Object_TelegramGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Area_TelegramGroup');
     
-    
-    
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberReport_From() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberReport_From'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MemberReport_From', 'от кого', zc_Object_MemberReport(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberReport_From');
+ 
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberReport_To() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberReport_To'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MemberReport_To', 'Кому', zc_Object_MemberReport(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberReport_To');
+      
+  CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberReport_Member() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberReport_Member'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MemberReport_Member', 'Физ.лицо', zc_Object_MemberReport(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberReport_Member');
     
     
 --!!! АПТЕКА
@@ -2873,6 +2883,9 @@ SELECT 'zc_ObjectLink_CashSettings_UserUpdateMarketing', 'Сотрудник для редактир
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 14.11.22         * zc_ObjectLink_MemberReport_From
+                    zc_ObjectLink_MemberReport_To
+                    zc_ObjectLink_MemberReport_Member
  04.10.22                                                                                      * zc_ObjectLink_CashSettings_UserUpdateMarketing
  12.09.22                                                                                      * zc_ObjectLink_InternetRepair_Unit
  12.08.22         * zc_ObjectLink_TradeMark_Retail

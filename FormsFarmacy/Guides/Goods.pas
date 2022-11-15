@@ -231,6 +231,7 @@ type
     DateLeftTheMarket: TcxGridDBColumn;
     DateAddToOrder: TcxGridDBColumn;
     GoodsGroupPromoName: TcxGridDBColumn;
+    UKTZED_main: TcxGridDBColumn;
   private
     { Private declarations }
   public

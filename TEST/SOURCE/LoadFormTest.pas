@@ -1198,6 +1198,7 @@ end;
 
 procedure TLoadFormTest.LoadSendDebtFormTest;
 begin
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendDebtMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtMemberJournalForm'));
@@ -1205,6 +1206,7 @@ begin
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendDebtForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendDebtJournalForm');
 end;
@@ -2442,12 +2444,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_OrderDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_OrderDialogForm');
   //exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOLAPTableForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOLAPTableDialogForm');
-
+   exit;
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Insert_RemainsOLAPTableForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Insert_RemainsOLAPTableForm');
   exit;
