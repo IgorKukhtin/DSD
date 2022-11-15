@@ -147,6 +147,13 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
         Options.Editing = False
         Width = 250
       end
+      object CodeUKTZED: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1050#1058' '#1047#1045#1044
+        DataBinding.FieldName = 'CodeUKTZED'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
