@@ -75,6 +75,7 @@ type
     actStartLoad_Price: TMultiAction;
     dsdStoredProc1: TdsdStoredProc;
     actTest: TdsdExecStoredProc;
+    CodeUKTZED: TcxGridDBColumn;
   private
     { Private declarations }
   public

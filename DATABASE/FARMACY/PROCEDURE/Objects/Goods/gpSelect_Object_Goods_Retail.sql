@@ -149,7 +149,10 @@ BEGIN
                                FROM tmpGoodsMainWhoCanAll AS Object_Goods_Main
                                GROUP BY Object_Goods_Main.Id
                                )
-
+      , tmpUKTZED_main AS (SELECT ObjectString_Goods_UKTZED_main.*
+                           FROM ObjectString AS ObjectString_Goods_UKTZED_main
+                           WHERE ObjectString_Goods_UKTZED_main.DescId = zc_ObjectString_Goods_UKTZED_main() 
+                           )
 
       SELECT Object_Goods_Retail.Id
            , Object_Goods_Retail.GoodsMainId
@@ -268,7 +271,7 @@ BEGIN
            
            LEFT JOIN tmpGoodsMainWhoCan ON tmpGoodsMainWhoCan.ID = Object_Goods_Retail.GoodsMainId
 
-           LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_main
+           LEFT JOIN tmpUKTZED_main AS ObjectString_Goods_UKTZED_main
                                   ON ObjectString_Goods_UKTZED_main.ObjectId = Object_Goods_Retail.Id
                                  AND ObjectString_Goods_UKTZED_main.DescId = zc_ObjectString_Goods_UKTZED_main()
       WHERE Object_Goods_Retail.RetailId = vbObjectId
