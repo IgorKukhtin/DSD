@@ -223,7 +223,8 @@ BEGIN
            , Object_GoodsKind_Parent.ValueData           AS GoodsKindName_Parent
            , Object_GoodsKindComplete_Parent.ValueData   AS GoodsKindCompleteName_Parent
 
-           , (tmpChild.Amount_out * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS Amount_out_Weight
+         --, (tmpChild.Amount_out * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS Amount_out_Weight
+           , tmpChild.Amount_out :: TFloat AS Amount_out_Weight
            , CAST (tmpResult.Summ1 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price1
            , CAST (tmpResult.Summ2 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price2
            , CAST (tmpResult.Summ3 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price3
@@ -325,8 +326,15 @@ BEGIN
 
           LEFT JOIN (SELECT tmpChildReceiptTable.ReceiptId_parent
                           , tmpChildReceiptTable.ReceiptId
-                          , SUM (tmpChildReceiptTable.Amount_out ) AS Amount_out
+                        --, SUM (tmpChildReceiptTable.Amount_out ) AS Amount_out
+                          , SUM (tmpChildReceiptTable.Amount_out * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS Amount_out
                      FROM tmpChildReceiptTable
+                          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                ON ObjectFloat_Weight.ObjectId = tmpChildReceiptTable.GoodsId_out
+                                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                               ON ObjectLink_Goods_Measure.ObjectId = tmpChildReceiptTable.GoodsId_out
+                                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                      WHERE tmpChildReceiptTable.ReceiptId_from <> 0
                      GROUP BY tmpChildReceiptTable.ReceiptId_parent
                             , tmpChildReceiptTable.ReceiptId
