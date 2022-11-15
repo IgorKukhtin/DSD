@@ -39,7 +39,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , MakerName TVarChar, MakerNameUkr TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
              , Dosage TVarChar, Volume TVarChar, GoodsWhoCanName TVarChar, GoodsMethodApplId integer, GoodsMethodApplName TVarChar, GoodsSignOriginId  integer,  GoodsSignOriginName TVarChar
              , isLeftTheMarket boolean, DateLeftTheMarket TDateTime, DateAddToOrder TDateTime 
-             , UKTZED_main TVarChar
+--           , UKTZED_main TVarChar
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -238,7 +238,7 @@ BEGIN
            , Object_Goods_Main.isLeftTheMarket
            , Object_Goods_Main.DateLeftTheMarket
            , Object_Goods_Main.DateAddToOrder 
-           , ObjectString_Goods_UKTZED_main.ValueData :: TVarChar AS UKTZED_main
+--         , CASE WHEN vbUserId = 3 THEN ObjectString_Goods_UKTZED_main.ValueData ELSE '' END :: TVarChar AS UKTZED_main
 
       FROM Object_Goods_Retail
 
@@ -272,6 +272,7 @@ BEGIN
                                   ON ObjectString_Goods_UKTZED_main.ObjectId = Object_Goods_Retail.Id
                                  AND ObjectString_Goods_UKTZED_main.DescId = zc_ObjectString_Goods_UKTZED_main()
       WHERE Object_Goods_Retail.RetailId = vbObjectId
+    --LIMIT CASE WHEN vbUserId = 3 THEN 100 ELSE 200000 END
       ;
 
 END;
@@ -321,5 +322,4 @@ $BODY$
 -- тест
 --SELECT * FROM gpSelect_Object_Goods_Retail (inContractId := 0, inRetailId := 0, inSession := '3')
 -- select * from gpSelect_Object_Goods_Retail (inContractId := 183257, inRetailId := 4, inSession := '59591')
-
-select * from gpSelect_Object_Goods_Retail(inContractId := 0 , inRetailId := 0 ,  inSession := '3');
+-- select * from gpSelect_Object_Goods_Retail(inContractId := 0 , inRetailId := 0 ,  inSession := '3');
