@@ -5,7 +5,7 @@
 			<FrameworkType>VCL</FrameworkType>
 			<MainSource>GetEmailMMO.dpr</MainSource>
 			<Base>True</Base>
-			<Config Condition="'$(Config)'==''">Release</Config>
+			<Config Condition="'$(Config)'==''">Debug</Config>
 			<Platform Condition="'$(Platform)'==''">Win32</Platform>
 			<TargetedPlatforms>1</TargetedPlatforms>
 			<AppType>Application</AppType>
@@ -166,20 +166,41 @@
 			<DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\StatusXML.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
 			<DCCReference Include="..\FormsFarmacy\MainUnitService\GetEmail\sevenzip.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
 			<DCCReference Include="..\FormsFarmacy\MainUnitService\GetEmail\Main.pas">
 				<Form>MainForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
+			<DCCReference Include="..\TEST\SOURCE\zLibUtil.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdTranslator.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\PUSHMessage.pas">
+				<Form>PUSHMessageForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201011.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201012.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201111.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201112.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201212.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
-			<DCCReference Include="..\TEST\SOURCE\zLibUtil.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDocCOM.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
+			<DCCReference Include="..\SOURCE\DialogPswSms.pas">
+				<Form>DialogPswSmsForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\MeDOC\MEDOC_TLB.pas"/>
 			<None Include="ModelSupport_GetEmailMMO\default.txaPackage"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

@@ -10,7 +10,7 @@ uses
   Data.DB, Datasnap.DBClient, Vcl.Samples.Gauges, Vcl.ExtCtrls, Vcl.ActnList,
   dsdAction, ExternalLoad, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack,
   IdSSL, IdSSLOpenSSL, IdIMAP4, dsdInternetAction, ZAbstractRODataset,
-  ZAbstractDataset, ZDataset, ZAbstractConnection, ZConnection, System.Actions;
+  ZAbstractDataset, ZDataset, ZAbstractConnection, ZConnection;
 
 const SAVE_LOG = true;
 
@@ -1335,7 +1335,7 @@ begin
                AddToLog('start all VACUUM');
                //
                // Container
-               lVACUUM ('VACUUM FULL Container');
+{               lVACUUM ('VACUUM FULL Container');
                lVACUUM ('VACUUM ANALYZE Container');
                // CashSessionSnapShot - !!! 180 MIN !!!
                lVACUUM ('delete from CashSessionSnapShot WHERE CashSessionId IN (select Id from CashSession WHERE lastConnect < CURRENT_TIMESTAMP - INTERVAL ' + chr(39) + '180 MIN' + chr(39) + ')');
@@ -1371,7 +1371,7 @@ begin
                lVACUUM ('VACUUM ANALYZE pg_catalog.pg_proc');
                //
                // !!!main!!!
-               lVACUUM ('VACUUM');
+               lVACUUM ('VACUUM');}
                lVACUUM ('VACUUM ANALYZE');
                //
                //

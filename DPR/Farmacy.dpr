@@ -105,7 +105,15 @@ uses
   Cash_FP3530T_NEW in '..\FormsFarmacy\Cash\Cash_FP3530T_NEW.pas',
   FP3141_TLB in '..\FormsFarmacy\Cash\FP3141_TLB.pas',
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
-  LoadingFarmacyCash in '..\FormsFarmacy\Guides\LoadingFarmacyCash.pas' {LoadingFarmacyCashForm};
+  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
+  DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
+  Medoc_J1201011 in '..\SOURCE\MeDOC\Medoc_J1201011.pas',
+  Medoc_J1201012 in '..\SOURCE\MeDOC\Medoc_J1201012.pas',
+  Medoc_J1201111 in '..\SOURCE\MeDOC\Medoc_J1201111.pas',
+  Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas',
+  Medoc_J1201112 in '..\SOURCE\MeDOC\Medoc_J1201112.pas',
+  Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas';
 
 {$R *.res}
 
