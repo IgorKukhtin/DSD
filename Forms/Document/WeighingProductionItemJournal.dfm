@@ -252,6 +252,14 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Options.Editing = False
         Width = 55
       end
+      object BranchCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1060#1080#1083#1080#1072#1083#1072
+        DataBinding.FieldName = 'BranchCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object MovementDescNumber: TcxGridDBColumn
         Caption = #8470' '#1086#1087#1077#1088'.'
         DataBinding.FieldName = 'MovementDescNumber'

@@ -28,6 +28,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
              , Comment TVarChar
+             , BranchCode Integer
+
              , DocumentKindId Integer, DocumentKindName TVarChar
              , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
@@ -145,7 +147,8 @@ BEGIN
              , Object_User.ValueData           AS UserName
              
              , MovementString_Comment.ValueData AS Comment
-
+             , MovementFloat_BranchCode.ValueData ::Integer AS BranchCode
+             --
              , Object_DocumentKind.Id          AS DocumentKindId
              , Object_DocumentKind.ValueData   AS DocumentKindName
              , Object_GoodsTypeKind.Id         AS GoodsTypeKindId
@@ -217,6 +220,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
                                     ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
+
+            LEFT JOIN MovementFloat AS MovementFloat_BranchCode
+                                    ON MovementFloat_BranchCode.MovementId = Movement.Id
+                                   AND MovementFloat_BranchCode.DescId = zc_MovementFloat_BranchCode()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
                                       ON MovementBoolean_isIncome.MovementId = Movement.Id
@@ -414,6 +421,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 15.11.22         *
  06.09.21         *
  08.02.21         * Comment
  17.08.20         *

@@ -181,6 +181,8 @@ type
     actPrintStikerKVK: TdsdPrintAction;
     bbPrintStikerKVK: TdxBarButton;
     cbisList: TcxCheckBox;
+    edBranchCode: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
   private
   public
   end;
