@@ -748,7 +748,7 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAdditionalEditForm'));
@@ -826,11 +826,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRetailDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsRetailDialogForm');
     exit;
-
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_BarCodeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_BarCodeForm');
-    //exit;
-
+    exit;
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAllForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllRetailForm'));
@@ -1045,10 +1045,11 @@ end;
 
 procedure TLoadFormTest.LoadLoadFormTest;
 begin
+{
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemains_1303Form'));
     TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromRemains_1303Form');
 
-   {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoad_AddForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListLoad_AddForm');
 
@@ -1081,8 +1082,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TColorForm');
   exit;
   //
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsBarCodeForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsBarCodeForm');}
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsBarCodeForm');
 
 end;
 
