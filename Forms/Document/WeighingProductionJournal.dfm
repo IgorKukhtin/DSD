@@ -354,8 +354,13 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
       end
       object cxGridDBTableViewColumn1: TcxGridDBColumn
         DataBinding.FieldName = 'StartWeighing'
+        Visible = False
+        Width = 70
       end
       object cxGridDBTableViewColumn2: TcxGridDBColumn
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
