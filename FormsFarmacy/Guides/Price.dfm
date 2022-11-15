@@ -14,7 +14,6 @@ inherited PriceForm: TPriceForm
     Height = 57
     Align = alTop
     TabOrder = 6
-    ExplicitWidth = 829
     object deOperDate: TcxDateEdit
       Left = 662
       Top = 32
@@ -77,17 +76,17 @@ inherited PriceForm: TPriceForm
     Width = 817
     Height = 339
     ExplicitTop = 83
-    ExplicitWidth = 829
+    ExplicitWidth = 817
     ExplicitHeight = 339
     ClientRectBottom = 339
     ClientRectRight = 817
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 829
+      ExplicitWidth = 817
       ExplicitHeight = 339
       inherited cxGrid: TcxGrid
         Width = 817
         Height = 339
-        ExplicitWidth = 829
+        ExplicitWidth = 817
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -177,6 +176,14 @@ inherited PriceForm: TPriceForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -1254,8 +1261,8 @@ inherited PriceForm: TPriceForm
     Top = 208
   end
   inherited MasterCDS: TClientDataSet
-    Left = 8
-    Top = 144
+    Left = 0
+    Top = 192
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Price'
