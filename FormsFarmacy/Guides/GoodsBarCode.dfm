@@ -3,7 +3,7 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
   Top = 0
   Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076#1099' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1077#1081
   ClientHeight = 406
-  ClientWidth = 789
+  ClientWidth = 815
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,13 +18,14 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 789
+    Width = 815
     Height = 380
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 789
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -145,14 +146,15 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
         DataBinding.FieldName = 'ErrorText'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 250
+        Width = 240
       end
       object CodeUKTZED: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1050#1058' '#1047#1045#1044
+        Caption = #1050#1086#1076' '#1059#1050#1058' '#1047#1045#1044' (main)'
         DataBinding.FieldName = 'CodeUKTZED'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 90
       end
     end
     object cxGridLevel: TcxGridLevel
