@@ -1017,6 +1017,11 @@ INSERT INTO ObjectDesc (Code, ItemName)
  CREATE OR REPLACE FUNCTION zc_Object_Section() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Section'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Section', 'Сегмент' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Section');
+ 
+
+ CREATE OR REPLACE FUNCTION zc_Object_MemberReport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MemberReport'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MemberReport', 'Доступ к Просмотру Отчетов по подразделениям' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MemberReport');
 
  
 
@@ -1634,6 +1639,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 14.11.22         * zc_Object_MemberReport
  02.11.22         * zc_Object_Section
  12.09.22                                                                                        * zc_Object_InternetRepair
  08.08.22         * zc_Object_StickerHeader

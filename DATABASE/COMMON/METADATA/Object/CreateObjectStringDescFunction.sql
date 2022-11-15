@@ -166,6 +166,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_UKTZED() RETURNS Integer AS $BO
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Goods_UKTZED', zc_Object_Goods(), 'Код товару згідно з УКТ ЗЕД' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_UKTZED');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_UKTZED_main() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_UKTZED_main'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Goods_UKTZED_main', zc_Object_Goods(), 'Код товару згідно з УКТ ЗЕД' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_UKTZED_main');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_DKPP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_DKPP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Goods_DKPP', zc_Object_Goods(), 'Послуги згідно з ДКПП' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_DKPP');
@@ -953,6 +958,12 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_TelegramGroup_BotToken', zc_object_TelegramGroup(), 'Токен отправителя телеграм бота в рассылке Акций' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TelegramGroup_BotToken');
 
 
+ CREATE OR REPLACE FUNCTION zc_ObjectString_MemberReport_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberReport_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_MemberReport_Comment', zc_object_MemberReport(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberReport_Comment');
+
+
+
 ---!!! Аптека
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_Code() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Code'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1512,6 +1523,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 14.11.22         * zc_ObjectString_MemberReport_Comment
  31.10.22                                                                                                         * zc_ObjectString_Goods_IdSP
  30.09.22                                                                                                         * zc_ObjectString_User_Language
  20.09.22         * zc_ObjectString_TelegramGroup_Id

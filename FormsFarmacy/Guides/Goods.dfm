@@ -74,6 +74,14 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 110
           end
+          object UKTZED_main: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1050#1058' '#1047#1045#1044' (main)'
+            DataBinding.FieldName = 'UKTZED_main'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 115
+          end
           object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1085#1072' '#1088#1091#1089'. '#1103#1079#1099#1082#1077')'
             DataBinding.FieldName = 'Name'

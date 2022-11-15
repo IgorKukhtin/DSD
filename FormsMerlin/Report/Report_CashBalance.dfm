@@ -661,7 +661,7 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
         item
           DataSet = ClientDataSet
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'MovementDescName;InfoMoneyName'
+          IndexFieldNames = 'CashName;MovementDescName;InfoMoneyName'
         end>
       Params = <
         item
