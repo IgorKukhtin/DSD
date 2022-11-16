@@ -26,6 +26,7 @@ object WeighingProductionForm: TWeighingProductionForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 6
     object edInvNumber: TcxTextEdit
       Left = 113
       Top = 23
@@ -193,7 +194,7 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object edInvNumber_parent: TcxTextEdit
       Left = 192
-      Top = 62
+      Top = 61
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 20
@@ -279,20 +280,20 @@ object WeighingProductionForm: TWeighingProductionForm
       Width = 108
     end
     object cxLabel19: TcxLabel
-      Left = 278
+      Left = 473
       Top = 81
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 277
+      Left = 472
       Top = 96
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 31
-      Width = 278
+      Width = 319
     end
     object cbisList: TcxCheckBox
-      Left = 561
+      Left = 795
       Top = 96
       Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
       Caption = #1048#1085#1074#1077#1085#1090'. '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
@@ -301,6 +302,26 @@ object WeighingProductionForm: TWeighingProductionForm
       ShowHint = True
       TabOrder = 32
       Width = 129
+    end
+    object edBranchCode: TcxCurrencyEdit
+      Left = 9
+      Top = 96
+      Enabled = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 3
+      Properties.DisplayFormat = ',0.'
+      Properties.ReadOnly = True
+      TabOrder = 33
+      Width = 179
+    end
+    object cxLabel21: TcxLabel
+      Left = 9
+      Top = 81
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+      Caption = #1050#1086#1076' '#1060#1080#1083#1080#1072#1083#1072
+      ParentShowHint = False
+      ShowHint = True
     end
   end
   object cxPageControl: TcxPageControl
@@ -800,7 +821,7 @@ object WeighingProductionForm: TWeighingProductionForm
     Enabled = False
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 80
+    Width = 83
   end
   object cxLabel13: TcxLabel
     Left = 946
@@ -870,12 +891,12 @@ object WeighingProductionForm: TWeighingProductionForm
     Width = 160
   end
   object cxLabel20: TcxLabel
-    Left = 8
+    Left = 192
     Top = 81
     Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
   end
   object ed: TcxButtonEdit
-    Left = 8
+    Left = 192
     Top = 96
     Enabled = False
     Properties.Buttons = <
@@ -885,7 +906,7 @@ object WeighingProductionForm: TWeighingProductionForm
       end>
     Properties.ReadOnly = True
     TabOrder = 17
-    Width = 264
+    Width = 270
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2355,8 +2376,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 728
-    Top = 72
+    Left = 536
+    Top = 32
   end
   object GuidesGoodsTypeKind: TdsdGuides
     KeyField = 'Id'
@@ -2641,7 +2662,7 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 150
-    Top = 88
+    Left = 286
+    Top = 96
   end
 end

@@ -26,7 +26,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
              , PersonalGroupId Integer, PersonalGroupName TVarChar, UnitName_PersonalGroup TVarChar
-             , Comment TVarChar
+             , Comment TVarChar 
+             , BranchCode Integer
               )
 AS
 $BODY$
@@ -105,6 +106,8 @@ BEGIN
              , Object_PersonalGroup.ValueData  AS PersonalGroupName
              , Object_Unit_PersonalGroup.ValueData AS UnitName_PersonalGroup
              , MovementString_Comment.ValueData AS Comment
+
+             , MovementFloat_BranchCode.ValueData ::Integer AS BranchCode
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_WeighingProduction()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -152,6 +155,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
                                     ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
+
+            LEFT JOIN MovementFloat AS MovementFloat_BranchCode
+                                    ON MovementFloat_BranchCode.MovementId = Movement.Id
+                                   AND MovementFloat_BranchCode.DescId = zc_MovementFloat_BranchCode()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -217,6 +224,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 15.11.22         * add BranchCode
  06.09.21         * isList
  08.02.21         * Comment
  17.08.20         *

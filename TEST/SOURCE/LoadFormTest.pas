@@ -3860,6 +3860,12 @@ end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberReportEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberReportEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberReportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberReportForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ContainerByDebtForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ContainerByDebtForm');
   exit;
@@ -4397,7 +4403,7 @@ end;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
-   exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
 

@@ -166,6 +166,14 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         Options.Editing = False
         Width = 91
       end
+      object BranchCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1060#1080#1083#1080#1072#1083#1072
+        DataBinding.FieldName = 'BranchCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object OperDate_parent: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
         DataBinding.FieldName = 'OperDate_parent'
@@ -346,8 +354,13 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
       end
       object cxGridDBTableViewColumn1: TcxGridDBColumn
         DataBinding.FieldName = 'StartWeighing'
+        Visible = False
+        Width = 70
       end
       object cxGridDBTableViewColumn2: TcxGridDBColumn
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel

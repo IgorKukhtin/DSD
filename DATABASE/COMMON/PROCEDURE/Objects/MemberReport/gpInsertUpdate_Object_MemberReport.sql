@@ -34,7 +34,7 @@ BEGIN
                  INNER JOIN ObjectLink AS ObjectLink_Member
                                        ON ObjectLink_Member.ObjectId = Object_MemberReport.Id
                                       AND ObjectLink_Member.DescId = zc_ObjectLink_MemberReport_Member()
-                                      AND ObjectLink_.ChildObjectId = inMemberId
+                                      AND ObjectLink_Member.ChildObjectId = inMemberId
             WHERE Object_MemberReport.DescId = zc_Object_MemberReport()
                AND Object_MemberReport.Id <> ioId
             );

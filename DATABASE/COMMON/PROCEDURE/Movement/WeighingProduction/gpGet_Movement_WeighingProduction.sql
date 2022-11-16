@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
              , SubjectDocId Integer, SubjectDocCode Integer, SubjectDocName TVarChar
              , PersonalGroupId Integer, PersonalGroupName TVarChar
-             , Comment TVarChar
+             , Comment TVarChar 
+             , BranchCode Integer
               )
 AS
 $BODY$
@@ -86,7 +87,7 @@ BEGIN
              , CAST ('' AS TVarChar) AS PersonalGroupName
 
              , CAST ('' AS TVarChar) AS Comment
-
+             , 0   ::Integer         AS BranchCode
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
        RETURN QUERY
@@ -141,6 +142,8 @@ BEGIN
              , Object_PersonalGroup.ValueData             AS PersonalGroupName
 
              , MovementString_Comment.ValueData           AS Comment
+             
+             , MovementFloat_BranchCode.ValueData ::Integer AS BranchCode
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
@@ -170,6 +173,9 @@ BEGIN
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
             LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData
 
+            LEFT JOIN MovementFloat AS MovementFloat_BranchCode
+                                    ON MovementFloat_BranchCode.MovementId = Movement.Id
+                                   AND MovementFloat_BranchCode.DescId = zc_MovementFloat_BranchCode()
 
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
                                     ON MovementFloat_WeighingNumber.MovementId = Movement.Id
@@ -240,6 +246,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 15.11.22         * 
  06.09.21         *
  03.03.20         * Add Order
  24.11.16         *

@@ -1399,7 +1399,9 @@ uses
   SendDebtMemberJournal in '..\..\Forms\Document\SendDebtMemberJournal.pas' {SendDebtMemberJournalForm: TParentForm},
   ChangePriceUserDialog in '..\..\Forms\System\ChangePriceUserDialog.pas' {ChangePriceUserDialogForm: TParentForm},
   Section in '..\..\Forms\Guides\Section.pas' {SectionForm: TParentForm},
-  SectionEdit in '..\..\Forms\Guides\SectionEdit.pas' {SectionEditForm: TParentForm};
+  SectionEdit in '..\..\Forms\Guides\SectionEdit.pas' {SectionEditForm: TParentForm},
+  MemberReport in '..\..\Forms\Guides\MemberReport.pas' {MemberReportForm: TParentForm},
+  MemberReportEdit in '..\..\Forms\Guides\MemberReportEdit.pas' {MemberReportEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

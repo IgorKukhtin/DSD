@@ -132,6 +132,7 @@ type
     bbOpenDocument: TdxBarButton;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     cxGridDBTableViewColumn2: TcxGridDBColumn;
+    BranchCode: TcxGridDBColumn;
   private
   public
   end;

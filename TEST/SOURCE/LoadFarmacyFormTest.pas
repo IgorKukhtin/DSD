@@ -2992,7 +2992,7 @@ begin
  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceForm');
-
+   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCS_LiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMCS_LiteForm');
   exit;

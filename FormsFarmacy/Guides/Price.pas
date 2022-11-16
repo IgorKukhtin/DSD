@@ -113,6 +113,7 @@ type
     PercentMarkupSP: TcxGridDBColumn;
     actReport_Object_Price_MCS_Year: TdsdOpenForm;
     dxBarButton8: TdxBarButton;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public
