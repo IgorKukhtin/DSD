@@ -436,8 +436,7 @@ object MainForm: TMainForm
       'COALESCE (isReport7, FALSE) = TRUE OR'
       'COALESCE (isUnPlanned, FALSE) = TRUE) AND'
       'COALESCE (Mail, '#39#39') <> '#39#39
-      ')'
-      '')
+      ')')
     Params = <>
     Left = 144
     Top = 384

@@ -1067,6 +1067,7 @@ begin
   RepType := TMenuItem(Sender).Tag;
   SetDateParams;
 
+  //DateStart:=StrToDate('04.11.2022');
   //DateEnd:=StrToDate('04.11.2022');
   //or Id = 15451717
 
