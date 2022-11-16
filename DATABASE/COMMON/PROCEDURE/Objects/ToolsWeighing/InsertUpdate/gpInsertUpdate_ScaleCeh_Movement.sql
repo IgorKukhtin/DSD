@@ -103,6 +103,12 @@ BEGIN
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_List(), inId, inIsListInventory);
      END IF;
 
+     -- дописали свойство <Код Филиала>
+     IF NOT EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_BranchCode())
+     THEN
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_BranchCode(), inId, inBranchCode);
+     END IF;
+
 
      -- Результат
      RETURN QUERY

@@ -218,7 +218,7 @@ BEGIN
      -- дописали св-во <Asset >
      IF inIsAsset = TRUE
      THEN
-         IF inBranchCode = 101
+         IF inBranchCode IN (1, 101)
         AND vbUnitId = 8451
         AND vbToId  IN (8459, 8458) -- Розподільчий комплекс + Склад База ГП
         AND COALESCE (inAssetId, 0) = 0
