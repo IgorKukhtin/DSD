@@ -278,8 +278,6 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
   inherited DataPanel: TPanel
     Width = 1043
     TabOrder = 3
-    ExplicitLeft = -184
-    ExplicitTop = -16
     ExplicitWidth = 1043
     inherited edInvNumber: TcxTextEdit
       Left = 182
@@ -364,10 +362,42 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
+    object actGetImportSettingDel: TdsdExecStoredProc [1]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_del
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_del
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091'  '#1080#1079' '#1092#1072#1081#1083#1072
+    end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actInsertMI: TdsdExecStoredProc [6]
+    object macStartLoadDel: TMultiAction [4]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingDel
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1044#1072#1085#1085#1099'e '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1076#1072#1083#1077#1085#1099'?'
+      Caption = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091'  '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091'  '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 37
+      WithoutNext = True
+    end
+    object actInsertMI: TdsdExecStoredProc [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -432,7 +462,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
           StoredProc = spGet
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -862,6 +892,14 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
         end
         item
           Visible = True
+          ItemName = 'bbStartLoadDel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton4'
         end
         item
@@ -942,6 +980,10 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
     end
     object dxBarButton4: TdxBarButton
       Action = actSetGoods
+      Category = 0
+    end
+    object bbStartLoadDel: TdxBarButton
+      Action = macStartLoadDel
       Category = 0
     end
   end
@@ -1863,5 +1905,39 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
     PackSize = 1
     Left = 392
     Top = 344
+  end
+  object spGetImportSettingId_del: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TGoodsSPSearch_1303DelForm;zc_Object_ImportSetting_GoodsSPSearch' +
+          '_1303Del'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 984
+    Top = 224
   end
 end

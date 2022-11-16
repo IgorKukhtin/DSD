@@ -41,7 +41,7 @@ BEGIN
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inCol, NULL);
+    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), COALESCE (inGoodsId, inMovementId, inCol, NULL);
     
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ValiditySP(), ioId, inValiditySP);
@@ -53,7 +53,7 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ExchangeRate(), ioId, inExchangeRate);
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OrderNumberSP(), ioId, inOrderNumberSP);
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OrderNumberSP(), ioId, inOrderNumberSP::TFloat);
 
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_CodeATX(), ioId, inCodeATX);

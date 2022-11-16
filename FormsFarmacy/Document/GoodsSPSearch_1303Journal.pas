@@ -39,8 +39,10 @@ type
     ExecuteDialog: TExecuteDialog;
     bbUpdate_OperDateList: TdxBarButton;
     actInsertMask1: TdsdInsertUpdateAction;
-    actInsertMaskMulti: TMultiAction;
+    macInsertMovement_Mask: TMultiAction;
     ChoiceGuides: TdsdChoiceGuides;
+    spInsertMovement_Mask: TdsdStoredProc;
+    actInsertMovement_Mask: TdsdExecStoredProc;
   private
     { Private declarations }
   public

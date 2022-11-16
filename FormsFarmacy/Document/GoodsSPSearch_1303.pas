@@ -86,6 +86,10 @@ type
     DoubleId: TcxGridDBColumn;
     actGoodsMainEdit: TOpenChoiceForm;
     spUpdate_Goods: TdsdStoredProc;
+    spGetImportSettingId_del: TdsdStoredProc;
+    actGetImportSettingDel: TdsdExecStoredProc;
+    macStartLoadDel: TMultiAction;
+    bbStartLoadDel: TdxBarButton;
   private
     { Private declarations }
   public
