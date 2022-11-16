@@ -370,6 +370,7 @@ object MainForm: TMainForm
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
     Port = 5432
     Protocol = 'postgresql-9'
     Left = 136
