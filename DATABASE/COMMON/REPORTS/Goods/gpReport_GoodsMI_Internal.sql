@@ -58,6 +58,20 @@ BEGIN
       -- определяется уровень доступа
       vbIsBranch:= COALESCE (0 < (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), FALSE);
 
+      -- Маховская М.В.
+      IF vbUserId IN (439917)
+         AND (inFromId <> 8451 -- ЦЕХ упаковки 
+           OR inToId   <> 8459 -- Розподільчий комплекс
+             )
+      THEN
+          RAISE EXCEPTION 'Ошибка.В параметрах отчета может быть выбрано только От кого = <%> и Кому = <%>'
+                         , lfGet_Object_ValueData_sh (8451)
+                         , lfGet_Object_ValueData_sh (8459)
+                          ;
+      END IF;
+
+
+
      /*IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoods')
      THEN
          DELETE FROM _tmpGoods;
