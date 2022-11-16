@@ -411,8 +411,8 @@ object MainForm: TMainForm
       'FROM gpSelect_Object_Maker( '#39'3'#39')'
       'WHERE'
       
-        '(SendPlan <= CURRENT_TIMESTAMP AND (COALESCE(AmountDay, 0) NOT I' +
-        'N (0, 25) OR COALESCE(AmountMonth, 0) <> 0) OR'
+        '((SendPlan <= CURRENT_TIMESTAMP AND (COALESCE(AmountDay, 0) NOT ' +
+        'IN (0, 25) OR COALESCE(AmountMonth, 0) <> 0) OR'
       
         'SendReal < CURRENT_DATE AND COALESCE(AmountDay, 0) = 25 AND DATE' +
         '_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'5 DAY'#39') = 1 OR'
@@ -435,7 +435,9 @@ object MainForm: TMainForm
         ') = TRUE OR'
       'COALESCE (isReport7, FALSE) = TRUE OR'
       'COALESCE (isUnPlanned, FALSE) = TRUE) AND'
-      'COALESCE (Mail, '#39#39') <> '#39#39';')
+      'COALESCE (Mail, '#39#39') <> '#39#39
+      ')'
+      '')
     Params = <>
     Left = 144
     Top = 384

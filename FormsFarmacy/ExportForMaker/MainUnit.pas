@@ -1067,6 +1067,11 @@ begin
   RepType := TMenuItem(Sender).Tag;
   SetDateParams;
 
+  //DateEnd:=StrToDate('04.11.2022');
+  //or Id = 15451717
+
+  Add_Log('Период формирования с ' + DateToStr(DateStart) +' по ' + DateToStr(DateEnd));
+
   case RepType of
     0 : ReportIncome(DateStart, DateEnd);
     1 : ReportCheck(DateStart, DateEnd);
