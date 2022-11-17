@@ -42,8 +42,23 @@ BEGIN
                 FROM MovementLinkObject AS MLO 
                 WHERE MLO.MovementId = inMovementId
                   AND MLO.DescId   IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To())
-                  AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View_test AS tt)
+                  AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View_two AS tt)
                 )
+       OR (EXISTS (SELECT 1
+                FROM MovementLinkObject AS MLO 
+                WHERE MLO.MovementId = inMovementId
+                  AND MLO.DescId   IN (zc_MovementLinkObject_From())
+                  -- Склад База ГП + Склад База ГП (Ирна)
+                  AND MLO.ObjectId IN (8458, 8020714 )
+                )
+       AND EXISTS (SELECT 1
+                FROM MovementLinkObject AS MLO 
+                WHERE MLO.MovementId = inMovementId
+                  AND MLO.DescId   IN (zc_MovementLinkObject_To())
+                  -- Склад База ГП + Склад База ГП (Ирна)
+                  AND MLO.ObjectId IN (8458, 8020714 )
+                )
+         )
      THEN   
          -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка
          IF NOT EXISTS (SELECT 1
@@ -54,6 +69,21 @@ BEGIN
                           AND Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
                           AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
                         )
+        -- если товара и вид товара нет в пересортице как расход - тогда ошиибка
+        AND NOT EXISTS (SELECT 1
+                        FROM ObjectBoolean AS ObjectBoolean_Order
+                             INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                   ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId      = ObjectBoolean_Order.ObjectId
+                                                  AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+                                                  AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = inGoodsId
+                             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                  ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectBoolean_Order.ObjectId
+                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+                        WHERE ObjectBoolean_Order.ValueData = TRUE
+                          AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                          AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) = COALESCE (inGoodsKindId,0)
+                       )
+                        
               AND EXISTS (SELECT 1 FROM ObjectLink AS OL
                                    WHERE OL.ObjectId = inGoodsId
                                      AND OL.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -63,7 +93,7 @@ BEGIN
                                                              )
                          )
          THEN
-             RAISE EXCEPTION 'Ошибка.%У товара <%> <%>%не установлено свойство <Используется в заявках>=Да.% % № % от % % %'
+             /*RAISE EXCEPTION 'Ошибка.%У товара <%> <%>%не установлено свойство <Используется в заявках>=Да.% % № % от % % %'
                             , CHR (13)
                             , lfGet_Object_ValueData (inGoodsId)
                             , lfGet_Object_ValueData_sh (inGoodsKindId)
@@ -75,7 +105,12 @@ BEGIN
                             , CHR (13)
                             , (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                  || ' =>'  || (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
-                            ;
+                            ;*/
+              RAISE EXCEPTION 'Ошибка.Для товара <%>% указан неверный вид = <%>.'
+                             , lfGet_Object_ValueData (inGoodsId)
+                             , CHR (13)
+                             , lfGet_Object_ValueData_sh (inGoodsKindId)
+                              ;
          END IF;
      END IF;
 
