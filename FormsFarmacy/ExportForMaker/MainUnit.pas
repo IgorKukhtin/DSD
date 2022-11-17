@@ -27,7 +27,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxDateUtils;
 
 type
   TMainForm = class(TForm)
@@ -83,6 +83,9 @@ type
     qryClearUnPlanned: TZQuery;
     isQuarterAdd: TcxGridDBColumn;
     is4MonthAdd: TcxGridDBColumn;
+    EditId: TEdit;
+    StartDateEdit: TcxDateEdit;
+    EndDateEdit: TcxDateEdit;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -1025,7 +1028,7 @@ begin
         DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
         DateStart := StartOfTheMonth(DateEnd);
         if qryMaker.FieldByName('AmountMonthSend').AsInteger > 1 then
-          DateStart := IncMonth(DateStart, 1 - qryMaker.FieldByName('AmountMonthSend').AsInteger);
+          DateStart := System.SysUtils.IncMonth(DateStart, 1 - qryMaker.FieldByName('AmountMonthSend').AsInteger);
       end;
     end;
 
@@ -1034,7 +1037,7 @@ begin
     begin
       FormQuarterFile := True;
       DateEndQuarter := DateEnd;
-      DateStartQuarter := IncMonth(StartOfTheMonth(DateEndQuarter), - 2);
+      DateStartQuarter := System.SysUtils.IncMonth(StartOfTheMonth(DateEndQuarter), - 2);
     end;
 
     if qryMaker.FieldByName('is4Month').AsBoolean and (MonthOf(qryMaker.FieldByName('SendPlan').AsDateTime) in [1, 5, 9]) and
@@ -1042,20 +1045,20 @@ begin
     begin
       Form4MonthFile := True;
       DateEnd4Month := DateEnd;
-      DateStart4Month := IncMonth(StartOfTheMonth(DateEnd4Month), - 3);
+      DateStart4Month := System.SysUtils.IncMonth(StartOfTheMonth(DateEnd4Month), - 3);
     end;
 
 
     if qryMaker.FieldByName('isQuarterAdd').AsBoolean then
     begin
-      DateEndQuarterAdd := StartOfTheDay(EndOfTheMonth(IncMonth(DateEnd, 1)));
-      DateStartQuarterAdd := IncMonth(StartOfTheMonth(DateEndQuarterAdd), - 2);
+      DateEndQuarterAdd := StartOfTheDay(EndOfTheMonth(System.SysUtils.IncMonth(DateEnd, 1)));
+      DateStartQuarterAdd := System.SysUtils.IncMonth(StartOfTheMonth(DateEndQuarterAdd), - 2);
     end;
 
     if qryMaker.FieldByName('is4MonthAdd').AsBoolean then
     begin
-      DateEnd4MonthAdd := StartOfTheDay(EndOfTheMonth(IncMonth(DateEnd, 1)));
-      DateStart4MonthAdd := IncMonth(StartOfTheMonth(DateEnd4MonthAdd), - 3);
+      DateEnd4MonthAdd := StartOfTheDay(EndOfTheMonth(System.SysUtils.IncMonth(DateEnd, 1)));
+      DateStart4MonthAdd := System.SysUtils.IncMonth(StartOfTheMonth(DateEnd4MonthAdd), - 3);
     end;
 
   end;
@@ -1067,11 +1070,28 @@ begin
   RepType := TMenuItem(Sender).Tag;
   SetDateParams;
 
-  //DateStart:=StrToDate('04.11.2022');
-  //DateEnd:=StrToDate('04.11.2022');
-  //or Id = 15451717
+  //!!!только для ручного режима!!!
+  if trim (EditId.Text) <> '' then
+  begin
+       DateStart:=StrToDate(StartDateEdit.Text);
+       DateEnd:=StrToDate(EndDateEdit.Text);
+       //
+       //ShowMessage(qryMaker.SQL[23-1]);
+       qryMaker.Close;
+       qryMaker.SQL.Add('');
+       qryMaker.SQL[23]:= ' or Id = ' + EditId.Text;
+       qryMaker.Open;
+       //
+       //DateStart:=StrToDate('16.11.2022');
+       //DateEnd:=StrToDate('16.11.2022');
+       //or Id = 15451717 // Дансон фарма (вакцина)
+       //or Id = 13648288 // Фармак + 3605620, 3623593
+  end;
 
-  Add_Log('Период формирования с ' + DateToStr(DateStart) +' по ' + DateToStr(DateEnd));
+
+  Add_Log('');
+  Add_Log('');
+  //Add_Log('Период формирования с ' + DateToStr(DateStart) +' по ' + DateToStr(DateEnd));
 
   case RepType of
     0 : ReportIncome(DateStart, DateEnd);
@@ -1411,7 +1431,9 @@ begin
   try
     try
       ExportGridToExcel(SavePath + FileName, grReportMaker);
+      Add_Log(qryMaker.FieldByName('Name').AsString);
       Add_Log('Отчет выгрузили :'+ SavePath + FileName);
+      Add_Log('');
     except
       on E: Exception do
       begin
@@ -1485,6 +1507,12 @@ var
   Ini: TIniFile;
 begin
   Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'ExportForMaker.ini');
+
+  //!!!только для ручного режима!!!
+  StartDateEdit.Date:= Date;
+  EndDateEdit.Date:= Date;
+  EditId.Text:= '';
+
 
   try
     SavePath := Trim(Ini.ReadString('Options', 'Path', ExtractFilePath(Application.ExeName)));

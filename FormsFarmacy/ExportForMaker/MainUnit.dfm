@@ -95,6 +95,26 @@ object MainForm: TMainForm
       TabOrder = 0
       OnClick = btnAllMakerClick
     end
+    object EditId: TEdit
+      Left = 146
+      Top = 2
+      Width = 66
+      Height = 21
+      TabOrder = 5
+      Text = 'EditId'
+    end
+    object StartDateEdit: TcxDateEdit
+      Left = 216
+      Top = 1
+      TabOrder = 6
+      Width = 81
+    end
+    object EndDateEdit: TcxDateEdit
+      Left = 303
+      Top = 1
+      TabOrder = 7
+      Width = 81
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
