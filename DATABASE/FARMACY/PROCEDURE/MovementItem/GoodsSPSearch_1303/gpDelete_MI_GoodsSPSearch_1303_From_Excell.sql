@@ -59,7 +59,7 @@ BEGIN
           LEFT JOIN MovementItemLinkObject AS MI_KindOutSP_1303
                                            ON MI_KindOutSP_1303.MovementItemId = MovementItem.Id
                                           AND MI_KindOutSP_1303.DescId = zc_MILinkObject_KindOutSP_1303()
-                                          AND MI_KindOutSP_1303.ObjectId = vbKindOutSP_1303Id
+
           LEFT JOIN Object AS Object_KindOutSP_1303 ON Object_KindOutSP_1303.Id = MI_KindOutSP_1303.ObjectId
 
           LEFT JOIN MovementItemLinkObject AS MI_CountSP_1303
@@ -73,12 +73,12 @@ BEGIN
           LEFT JOIN Object AS Object_MakerCountrySP_1303 ON Object_MakerCountrySP_1303.Id = MI_MakerCountrySP_1303.ObjectId 
 
      WHERE MovementItem.MovementId = inMovementId
-       AND COALESCE(Object_IntenalSP_1303.ValueData, '') = TRIM(inIntenalSP_1303Name) 
-       AND COALESCE(Object_BrandSP_1303.ValueData, '')   = TRIM(inBrandSPName)
-       AND COALESCE(Object_Dosage_1303.ValueData, '')    = TRIM(inDosage_1303Name)
-       AND COALESCE(Object_KindOutSP_1303.ValueData, '') = TRIM(inKindOutSP_1303Name)
-       AND COALESCE(Object_CountSP_1303.ValueData, '')   = TRIM(inCountSP_1303Name)
-       AND COALESCE(Object_MakerCountrySP_1303.ValueData, '') = TRIM(inMakerCountrySP_1303Name)
+       AND zfCalc_Text_replace (COALESCE(Object_IntenalSP_1303.ValueData, ''), ' ','') = zfCalc_Text_replace(inIntenalSP_1303Name, ' ','') 
+       AND zfCalc_Text_replace (COALESCE(Object_BrandSP_1303.ValueData, ''), ' ','')   = zfCalc_Text_replace(inBrandSPName, ' ','')
+       AND zfCalc_Text_replace (COALESCE(Object_Dosage_1303.ValueData, ''), ' ','')    = zfCalc_Text_replace(inDosage_1303Name, ' ','')
+       AND zfCalc_Text_replace (COALESCE(Object_KindOutSP_1303.ValueData, ''), ' ','') = zfCalc_Text_replace(inKindOutSP_1303Name, ' ','')
+       AND zfCalc_Text_replace (COALESCE(Object_CountSP_1303.ValueData, ''), ' ','')   = zfCalc_Text_replace(inCountSP_1303Name, ' ','')
+       AND zfCalc_Text_replace (COALESCE(Object_MakerCountrySP_1303.ValueData, ''), ' ','') = zfCalc_Text_replace(inMakerCountrySP_1303Name, ' ','')
      Limit 1 -- на всякий случай
      ;
       
@@ -91,7 +91,7 @@ BEGIN
        UPDATE MovementItem SET isErased = True WHERE MovementItem.Id = vbId AND MovementItem.isErased = FALSE;
      END IF;
      */
-     RAISE EXCEPTION 'Удалить <%>.', vbId;
+     RAISE EXCEPTION 'Удалить <%> <%>.', vbId, inIntenalSP_1303Name;
   
 END;
 $BODY$

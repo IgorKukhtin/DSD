@@ -90,6 +90,7 @@ type
     actGetImportSettingDel: TdsdExecStoredProc;
     macStartLoadDel: TMultiAction;
     bbStartLoadDel: TdxBarButton;
+    actDoLoadDel: TExecuteImportSettingsAction;
   private
     { Private declarations }
   public

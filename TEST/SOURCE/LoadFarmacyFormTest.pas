@@ -2809,10 +2809,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPSearch_1303JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPSearch_1303JournalForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPSearch_1303Form'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPSearch_1303Form');
-
+    exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsSPSearch_1303Form'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsSPSearch_1303Form');
 

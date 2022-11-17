@@ -374,10 +374,27 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
       Caption = 'actGetImportSetting'
       Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091'  '#1080#1079' '#1092#1072#1081#1083#1072
     end
+    object actDoLoadDel: TExecuteImportSettingsAction [2]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object macStartLoadDel: TMultiAction [4]
+    object macStartLoadDel: TMultiAction [5]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -385,7 +402,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
           Action = actGetImportSettingDel
         end
         item
-          Action = actDoLoad
+          Action = actDoLoadDel
         end
         item
           Action = actRefreshMI
@@ -397,7 +414,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
       ImageIndex = 37
       WithoutNext = True
     end
-    object actInsertMI: TdsdExecStoredProc [8]
+    object actInsertMI: TdsdExecStoredProc [9]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -462,7 +479,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
           StoredProc = spGet
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [17]
+    object actGoodsKindChoice: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1780,8 +1797,8 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 912
-    Top = 240
+    Left = 888
+    Top = 224
   end
   object spClearGoods: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_GoodsSPSearch_1303_ClearGoods'
