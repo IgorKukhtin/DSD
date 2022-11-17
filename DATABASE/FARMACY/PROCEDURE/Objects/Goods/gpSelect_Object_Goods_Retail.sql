@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , LastPriceDate TDateTime, LastPriceOldDate TDateTime
              , CountDays TFloat, CountDays_inf TFloat
              , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime
+             --, UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
              , MorionCode Integer, BarCode TVarChar, isErrorBarCode Boolean, BarCode_Color  Integer --, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
@@ -199,8 +199,8 @@ BEGIN
 
            , COALESCE(Object_Insert.ValueData, '')         ::TVarChar  AS InsertName
            , Object_Goods_Retail.DateInsert                            AS InsertDate
-           , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
-           , Object_Goods_Retail.DateUpdate                            AS UpdateDate
+         --, COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
+         --, Object_Goods_Retail.DateUpdate                            AS UpdateDate
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
 
            , Object_Goods_Main.MorionCode
