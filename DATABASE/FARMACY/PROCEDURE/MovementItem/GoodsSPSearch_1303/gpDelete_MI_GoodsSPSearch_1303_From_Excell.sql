@@ -89,6 +89,13 @@ BEGIN
        --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SP(), vbGoodsId, FALSE);
        --удаляем строку
        UPDATE MovementItem SET isErased = True WHERE MovementItem.Id = vbId AND MovementItem.isErased = FALSE;
+     ELSE
+       RAISE EXCEPTION 'Ошибка. Не найдена строка %<%>%<%>%<%>%<%>%<%>%<%>.', CHR(13), inIntenalSP_1303Name       --перенос строки в сообщении
+                                                                            , CHR(13), inBrandSPName
+                                                                            , CHR(13), inKindOutSP_1303Name
+                                                                            , CHR(13), inDosage_1303Name
+                                                                            , CHR(13), inCountSP_1303Name
+                                                                            , CHR(13), inMakerCountrySP_1303Name;
      END IF;
 
     -- RAISE EXCEPTION 'Удалить <%> <%>.', vbId, inIntenalSP_1303Name;
