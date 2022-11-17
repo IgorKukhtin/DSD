@@ -161,19 +161,6 @@ inherited GoodsSPSearch_1303JournalForm: TGoodsSPSearch_1303JournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actInsertMaskMulti: TMultiAction [6]
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actInsertMask1
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
-      ImageIndex = 54
-    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TGoodsSPSearch_1303Form'
       FormNameParam.Value = 'TGoodsSPSearch_1303Form'
@@ -342,6 +329,34 @@ inherited GoodsSPSearch_1303JournalForm: TGoodsSPSearch_1303JournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actInsertMovement_Mask: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMovement_Mask
+      StoredProcList = <
+        item
+          StoredProc = spInsertMovement_Mask
+        end>
+      Caption = 'actInsertMovement_Mask'
+      ImageIndex = 54
+    end
+    object macInsertMovement_Mask: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMovement_Mask
+        end
+        item
+          Action = actUpdate
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -411,6 +426,14 @@ inherited GoodsSPSearch_1303JournalForm: TGoodsSPSearch_1303JournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -456,7 +479,7 @@ inherited GoodsSPSearch_1303JournalForm: TGoodsSPSearch_1303JournalForm
         end>
     end
     inherited bbInsertMask: TdxBarButton
-      Action = actInsertMaskMulti
+      Action = macInsertMovement_Mask
     end
     object bbPrint: TdxBarButton
       Action = actPrint
@@ -627,5 +650,32 @@ inherited GoodsSPSearch_1303JournalForm: TGoodsSPSearch_1303JournalForm
     PackSize = 1
     Left = 535
     Top = 248
+  end
+  object spInsertMovement_Mask: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_GoodsSPSearch_1303_Mask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42951d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'ioId'
+    Left = 282
+    Top = 312
   end
 end
