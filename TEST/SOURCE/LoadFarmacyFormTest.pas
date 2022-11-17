@@ -478,6 +478,7 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckRedForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckRedForm');
 
@@ -491,7 +492,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_RefusalConfirmedForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheck_RefusalConfirmedForm');
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicForSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicForSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicForSaleEditForm'));
@@ -511,7 +512,8 @@ begin
  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalForm');
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
+  exit;
+  {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalUserForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceDeferredCheckForm'));

@@ -83,15 +83,15 @@ BEGIN
      ;
       
       --усли нашли такую строку метим на удаление                      
-     /*IF EXISTS (SELECT MovementItem.Id FROM MovementItem WHERE MovementItem.Id = vbId AND MovementItem.isErased = FALSE)
+     IF EXISTS (SELECT MovementItem.Id FROM MovementItem WHERE MovementItem.Id = vbId AND MovementItem.isErased = FALSE)
      THEN 
        -- убираем свойство с товара
        --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SP(), vbGoodsId, FALSE);
        --удал€ем строку
        UPDATE MovementItem SET isErased = True WHERE MovementItem.Id = vbId AND MovementItem.isErased = FALSE;
      END IF;
-     */
-     RAISE EXCEPTION '”далить <%> <%>.', vbId, inIntenalSP_1303Name;
+
+    -- RAISE EXCEPTION '”далить <%> <%>.', vbId, inIntenalSP_1303Name;
   
 END;
 $BODY$

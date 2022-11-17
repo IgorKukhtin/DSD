@@ -1010,6 +1010,43 @@ inherited CheckJournalForm: TCheckJournalForm
         end>
       isShowModal = False
     end
+    object actUpdate_InsertDate: TdsdExecStoredProc
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_InsertDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_InsertDate
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1085#1072' '#1044#1072#1090#1091' '#1095#1077#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1072#1090#1091' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1085#1072' '#1044#1072#1090#1091' '#1095#1077#1082#1072
+      ImageIndex = 50
+    end
+    object macUpdate_InsertDate_list: TMultiAction
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_InsertDate
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1072#1090#1091' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1085#1072' '#1044#1072#1090#1091' '#1095#1077#1082#1072
+      ImageIndex = 50
+    end
+    object macUpdate_InsertDate: TMultiAction
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_InsertDate_list
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1072#1090#1091' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1085#1072' '#1044#1072#1090#1091' '#1095#1077#1082#1072
+      ImageIndex = 67
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Check'
@@ -1127,6 +1164,14 @@ inherited CheckJournalForm: TCheckJournalForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_InsertDate'
         end>
     end
     inherited bbInsert: TdxBarButton
@@ -1150,6 +1195,10 @@ inherited CheckJournalForm: TCheckJournalForm
     end
     object dxBarButton1: TdxBarButton
       Action = actCashSummaForDey
+      Category = 0
+    end
+    object bbUpdate_InsertDate: TdxBarButton
+      Action = macUpdate_InsertDate
       Category = 0
     end
   end
@@ -1254,7 +1303,7 @@ inherited CheckJournalForm: TCheckJournalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 360
+    Left = 440
     Top = 24
   end
   object rdUnit: TRefreshDispatcher
@@ -1350,5 +1399,34 @@ inherited CheckJournalForm: TCheckJournalForm
     PackSize = 1
     Left = 648
     Top = 232
+  end
+  object spUpdate_InsertDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_InsertDate'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    Params = <
+      item
+        Name = 'inId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 203
   end
 end

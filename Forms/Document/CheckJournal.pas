@@ -110,6 +110,11 @@ type
     UserReferalsName: TcxGridDBColumn;
     UserUnitReferalsName: TcxGridDBColumn;
     ApplicationAward: TcxGridDBColumn;
+    spUpdate_InsertDate: TdsdStoredProc;
+    actUpdate_InsertDate: TdsdExecStoredProc;
+    macUpdate_InsertDate_list: TMultiAction;
+    macUpdate_InsertDate: TMultiAction;
+    bbUpdate_InsertDate: TdxBarButton;
   private
     { Private declarations }
   public
