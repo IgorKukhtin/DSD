@@ -73,6 +73,7 @@ BEGIN
           LEFT JOIN Object AS Object_MakerCountrySP_1303 ON Object_MakerCountrySP_1303.Id = MI_MakerCountrySP_1303.ObjectId 
 
      WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.IsErased = False
        AND zfCalc_Text_replace (COALESCE(Object_IntenalSP_1303.ValueData, ''), ' ','') = zfCalc_Text_replace(inIntenalSP_1303Name, ' ','') 
        AND zfCalc_Text_replace (COALESCE(Object_BrandSP_1303.ValueData, ''), ' ','')   = zfCalc_Text_replace(inBrandSPName, ' ','')
        AND zfCalc_Text_replace (COALESCE(Object_Dosage_1303.ValueData, ''), ' ','')    = zfCalc_Text_replace(inDosage_1303Name, ' ','')
