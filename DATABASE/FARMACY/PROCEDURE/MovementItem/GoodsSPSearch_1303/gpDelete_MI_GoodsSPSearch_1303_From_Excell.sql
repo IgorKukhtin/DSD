@@ -73,12 +73,14 @@ BEGIN
           LEFT JOIN Object AS Object_MakerCountrySP_1303 ON Object_MakerCountrySP_1303.Id = MI_MakerCountrySP_1303.ObjectId 
 
      WHERE MovementItem.MovementId = inMovementId
-       AND zfCalc_Text_replace (COALESCE(Object_IntenalSP_1303.ValueData, ''), ' ','') = zfCalc_Text_replace(inIntenalSP_1303Name, ' ','') 
-       AND zfCalc_Text_replace (COALESCE(Object_BrandSP_1303.ValueData, ''), ' ','')   = zfCalc_Text_replace(inBrandSPName, ' ','')
-       AND zfCalc_Text_replace (COALESCE(Object_Dosage_1303.ValueData, ''), ' ','')    = zfCalc_Text_replace(inDosage_1303Name, ' ','')
-       AND zfCalc_Text_replace (COALESCE(Object_KindOutSP_1303.ValueData, ''), ' ','') = zfCalc_Text_replace(inKindOutSP_1303Name, ' ','')
-       AND zfCalc_Text_replace (COALESCE(Object_CountSP_1303.ValueData, ''), ' ','')   = zfCalc_Text_replace(inCountSP_1303Name, ' ','')
-       AND zfCalc_Text_replace (COALESCE(Object_MakerCountrySP_1303.ValueData, ''), ' ','') = zfCalc_Text_replace(inMakerCountrySP_1303Name, ' ','')
+       AND MovementItem.DescId = zc_MI_Master()
+       --AND MovementItem.IsErased = False
+       AND UPPER(zfCalc_Text_replace (COALESCE(Object_IntenalSP_1303.ValueData, ''), ' ','')) = UPPER(zfCalc_Text_replace(inIntenalSP_1303Name, ' ','')) 
+       AND UPPER(zfCalc_Text_replace (COALESCE(Object_BrandSP_1303.ValueData, ''), ' ',''))   = UPPER(zfCalc_Text_replace(inBrandSPName, ' ',''))
+       AND UPPER(zfCalc_Text_replace (COALESCE(Object_Dosage_1303.ValueData, ''), ' ',''))    = UPPER(zfCalc_Text_replace(inDosage_1303Name, ' ',''))
+       AND UPPER(zfCalc_Text_replace (COALESCE(Object_KindOutSP_1303.ValueData, ''), ' ','')) = UPPER(zfCalc_Text_replace(inKindOutSP_1303Name, ' ',''))
+       AND UPPER(zfCalc_Text_replace (COALESCE(Object_CountSP_1303.ValueData, ''), ' ',''))   = UPPER(zfCalc_Text_replace(inCountSP_1303Name, ' ',''))
+       AND UPPER(zfCalc_Text_replace (COALESCE(Object_MakerCountrySP_1303.ValueData, ''), ' ','')) = UPPER(zfCalc_Text_replace(inMakerCountrySP_1303Name, ' ',''))
      Limit 1 -- на всякий случай
      ;
       
@@ -89,13 +91,17 @@ BEGIN
        --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SP(), vbGoodsId, FALSE);
        --удаляем строку
        UPDATE MovementItem SET isErased = True WHERE MovementItem.Id = vbId AND MovementItem.isErased = FALSE;
-     ELSE
-       RAISE EXCEPTION 'Ошибка. Не найдена строка % %<%>%<%>%<%>%<%>%<%>%<%>.', CHR(13),Chr(10), inIntenalSP_1303Name       --перенос строки в сообщении
-                                                                              , CHR(13), inBrandSPName
-                                                                              , CHR(13), inKindOutSP_1303Name
-                                                                              , CHR(13), inDosage_1303Name
-                                                                              , CHR(13), inCountSP_1303Name
-                                                                              , CHR(13), inMakerCountrySP_1303Name;
+     END IF;
+
+     -- если не нашли сообщение
+     IF NOT EXISTS (SELECT MovementItem.Id FROM MovementItem WHERE MovementItem.Id = vbId)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не найдена строка % %<%>%<%>%<%>%<%>%<%>%<%>.', CHR(13),Chr(10), inIntenalSP_1303Name       --перенос строки в сообщении
+                                                                                , CHR(13), inBrandSPName
+                                                                                , CHR(13), inKindOutSP_1303Name
+                                                                                , CHR(13), inDosage_1303Name
+                                                                                , CHR(13), inCountSP_1303Name
+                                                                                , CHR(13), inMakerCountrySP_1303Name;
      END IF;
 
     -- RAISE EXCEPTION 'Удалить <%> <%>.', vbId, inIntenalSP_1303Name;

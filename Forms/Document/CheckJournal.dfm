@@ -1011,7 +1011,7 @@ inherited CheckJournalForm: TCheckJournalForm
       isShowModal = False
     end
     object actUpdate_InsertDate: TdsdExecStoredProc
-      Category = 'isSUN'
+      Category = 'InsertDate'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_InsertDate
@@ -1024,7 +1024,7 @@ inherited CheckJournalForm: TCheckJournalForm
       ImageIndex = 50
     end
     object macUpdate_InsertDate_list: TMultiAction
-      Category = 'isSUN'
+      Category = 'InsertDate'
       MoveParams = <>
       ActionList = <
         item
@@ -1035,7 +1035,7 @@ inherited CheckJournalForm: TCheckJournalForm
       ImageIndex = 50
     end
     object macUpdate_InsertDate: TMultiAction
-      Category = 'isSUN'
+      Category = 'InsertDate'
       MoveParams = <>
       ActionList = <
         item
@@ -1044,7 +1044,10 @@ inherited CheckJournalForm: TCheckJournalForm
         item
           Action = actRefresh
         end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1057#1086#1079#1076#1072#1085#1080#1103' '#1085#1072' '#1076#1072#1090#1091' '#1063#1077#1082#1072'? '
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1086#1073#1085#1086#1074#1083#1077#1085#1099
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1072#1090#1091' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1085#1072' '#1044#1072#1090#1091' '#1095#1077#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1072#1090#1091' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1085#1072' '#1044#1072#1090#1091' '#1095#1077#1082#1072
       ImageIndex = 67
     end
   end
