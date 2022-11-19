@@ -1175,6 +1175,10 @@ inherited CheckJournalForm: TCheckJournalForm
         item
           Visible = True
           ItemName = 'bbUpdate_InsertDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbInsert: TdxBarButton
@@ -1405,11 +1409,8 @@ inherited CheckJournalForm: TCheckJournalForm
   end
   object spUpdate_InsertDate: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check_InsertDate'
-    DataSet = MasterCDS
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end>
+    DataSets = <>
+    OutputType = otResult
     Params = <
       item
         Name = 'inId'
