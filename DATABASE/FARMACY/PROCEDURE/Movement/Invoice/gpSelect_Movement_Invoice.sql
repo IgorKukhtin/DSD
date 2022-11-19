@@ -289,7 +289,7 @@ BEGIN
                                                   
                                LEFT JOIN impMIncome_NDS AS MI_Income ON MI_Income.Id      = tmpMIC_Info.MIIncomeId     
                                                                                        
-                         GROUP BY Movement_Check.InvoiceId, MI_Income.NDSKindId 
+                         GROUP BY Movement_Check.InvoiceId, COALESCE(MI_Income.NDSKindId, zc_Enum_NDSKind_Medical())
                          HAVING  SUM (CASE WHEN Movement_Check.DescId = zc_Movement_Check()
                                            THEN COALESCE (MIFloat_SummChangePercent.ValueData, 0)
                                            ELSE MI_Check.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0) -
