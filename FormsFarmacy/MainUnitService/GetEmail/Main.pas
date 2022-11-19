@@ -1456,7 +1456,7 @@ begin
 
        // !!! VACUUM !!! - 1 раз после 2-х ночи - !!!Только если "Загрузка MMO"!!!
        // перенес в отдельную программу
-       try if vbEmailKindDesc= 'zc_Enum_EmailKind_IncomeMMO' then fBeginVACUUM;  except vbIsBegin:= false; AddToLog('!!! ERROR - VACUUM !!!'); isErr_exit:= true; exit; end;
+       //try if vbEmailKindDesc= 'zc_Enum_EmailKind_IncomeMMO' then fBeginVACUUM;  except vbIsBegin:= false; AddToLog('!!! ERROR - VACUUM !!!'); isErr_exit:= true; exit; end;
 
      finally
        Timer.Enabled:= true;
