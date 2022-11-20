@@ -667,7 +667,7 @@ BEGIN
 
 
            , Object_From.ValueData             		AS FromName
-           , CASE WHEN vbIsKiev = TRUE THEN TRUE ELSE FALSE END AS isPrintPageBarCode
+           , CASE WHEN vbIsKiev = TRUE OR OH_JuridicalDetails_To.OKPO IN ('43536406') THEN TRUE ELSE FALSE END AS isPrintPageBarCode
 
           -- , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
            , CASE WHEN COALESCE (OH_JuridicalDetails_To.Name,'') <> '' THEN (OH_JuridicalDetails_To.Name ||' '|| ObjectString_ToAddress.ValueData) 
