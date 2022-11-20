@@ -37,84 +37,114 @@ BEGIN
      END IF;
 
 
-     -- Проверка zc_ObjectBoolean_GoodsByGoodsKind_Order
-     IF EXISTS (SELECT 1
-                FROM MovementLinkObject AS MLO 
-                WHERE MLO.MovementId = inMovementId
-                  AND MLO.DescId   IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To())
-                  AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View_two AS tt)
-                )
-       OR (EXISTS (SELECT 1
-                FROM MovementLinkObject AS MLO 
-                WHERE MLO.MovementId = inMovementId
-                  AND MLO.DescId   IN (zc_MovementLinkObject_From())
-                  -- Склад База ГП + Склад База ГП (Ирна)
-                  AND MLO.ObjectId IN (8458, 8020714 )
-                )
-       AND EXISTS (SELECT 1
-                FROM MovementLinkObject AS MLO 
-                WHERE MLO.MovementId = inMovementId
-                  AND MLO.DescId   IN (zc_MovementLinkObject_To())
-                  -- Склад База ГП + Склад База ГП (Ирна)
-                  AND MLO.ObjectId IN (8458, 8020714 )
-                )
-         )
-     THEN   
-         -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка
-         IF NOT EXISTS (SELECT 1
-                        FROM ObjectBoolean AS ObjectBoolean_Order
-                             INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
-                        WHERE ObjectBoolean_Order.ValueData = TRUE
-                          AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
-                          AND Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
-                          AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
-                        )
-        -- если товара и вид товара нет в пересортице как расход - тогда ошиибка
-        AND NOT EXISTS (SELECT 1
-                        FROM ObjectBoolean AS ObjectBoolean_Order
-                             INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                                   ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId      = ObjectBoolean_Order.ObjectId
-                                                  AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
-                                                  AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = inGoodsId
-                             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
-                                                  ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectBoolean_Order.ObjectId
-                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
-                        WHERE ObjectBoolean_Order.ValueData = TRUE
-                          AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
-                          AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) = COALESCE (inGoodsKindId,0)
-                       )
-                        
-              AND EXISTS (SELECT 1 FROM ObjectLink AS OL
-                                   WHERE OL.ObjectId = inGoodsId
-                                     AND OL.DescId   = zc_ObjectLink_Goods_InfoMoney()
-                                     AND OL.ChildObjectId IN (zc_Enum_InfoMoney_30101() -- Готовая продукция
-                                                          --, zc_Enum_InfoMoney_30102() -- Тушенка
-                                                            , zc_Enum_InfoMoney_20901() -- Ирна
-                                                             )
-                         )
+     IF NOT (-- 1.1.
+             (EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_From()
+                        -- Склад База ГП
+                        AND MLO.ObjectId = 8458
+                     )
+          AND EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_To()
+                        -- Склад База ГП (Ирна)
+                        AND MLO.ObjectId = 8020714
+                     )
+             )
+          -- 1.2.
+          OR (EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_To()
+                        -- Склад База ГП
+                        AND MLO.ObjectId = 8458
+                     )
+          AND EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_From()
+                        -- Склад База ГП (Ирна)
+                        AND MLO.ObjectId = 8020714
+                     )
+             )
+          -- 2.1.
+          OR EXISTS (SELECT 1
+                     FROM MovementLinkObject AS MLO
+                     WHERE MLO.MovementId = inMovementId
+                       AND MLO.DescId IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To())
+                       -- ЦЕХ упаковки
+                       AND MLO.ObjectId = 8451
+                    )
+            )
+     THEN
+
+         -- Проверка zc_ObjectBoolean_GoodsByGoodsKind_Order
+         IF EXISTS (SELECT 1
+                    FROM MovementLinkObject AS MLO
+                    WHERE MLO.MovementId = inMovementId
+                      AND MLO.DescId   IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To())
+                      AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View_two AS tt)
+                    )
          THEN
-             /*RAISE EXCEPTION 'Ошибка.%У товара <%> <%>%не установлено свойство <Используется в заявках>=Да.% % № % от % % %'
-                            , CHR (13)
-                            , lfGet_Object_ValueData (inGoodsId)
-                            , lfGet_Object_ValueData_sh (inGoodsKindId)
-                            , CHR (13)
-                            , CHR (13)
-                            , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Send()) 
-                            , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
-                            , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
-                            , CHR (13)
-                            , (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
-                 || ' =>'  || (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
-                            ;*/
-              RAISE EXCEPTION 'Ошибка.Для товара <%>% указан неверный вид = <%>.'
-                             , lfGet_Object_ValueData (inGoodsId)
-                             , CHR (13)
-                             , lfGet_Object_ValueData_sh (inGoodsKindId)
-                              ;
+             -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка
+             IF NOT EXISTS (SELECT 1
+                            FROM ObjectBoolean AS ObjectBoolean_Order
+                                 INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
+                            WHERE ObjectBoolean_Order.ValueData = TRUE
+                              AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                              AND Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
+                              AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
+                            )
+            -- если товара и вид товара нет в пересортице как расход - тогда ошиибка
+            AND NOT EXISTS (SELECT 1
+                            FROM ObjectBoolean AS ObjectBoolean_Order
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                       ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId      = ObjectBoolean_Order.ObjectId
+                                                      AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+                                                      AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = inGoodsId
+                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                      ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectBoolean_Order.ObjectId
+                                                     AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+                            WHERE ObjectBoolean_Order.ValueData = TRUE
+                              AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                              AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) = COALESCE (inGoodsKindId,0)
+                           )
+
+                  AND EXISTS (SELECT 1 FROM ObjectLink AS OL
+                                       WHERE OL.ObjectId = inGoodsId
+                                         AND OL.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                         AND OL.ChildObjectId IN (zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                              --, zc_Enum_InfoMoney_30102() -- Тушенка
+                                                                , zc_Enum_InfoMoney_20901() -- Ирна
+                                                                 )
+                             )
+             THEN
+                 /*RAISE EXCEPTION 'Ошибка.%У товара <%> <%>%не установлено свойство <Используется в заявках>=Да.% % № % от % % %'
+                                , CHR (13)
+                                , lfGet_Object_ValueData (inGoodsId)
+                                , lfGet_Object_ValueData_sh (inGoodsKindId)
+                                , CHR (13)
+                                , CHR (13)
+                                , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Send())
+                                , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                                , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
+                                , CHR (13)
+                                , (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                     || ' =>'  || (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                ;*/
+                  RAISE EXCEPTION 'Ошибка.Для товара <%>% указан неверный вид = <%>.'
+                                 , lfGet_Object_ValueData (inGoodsId)
+                                 , CHR (13)
+                                 , lfGet_Object_ValueData_sh (inGoodsKindId)
+                                  ;
+             END IF;
          END IF;
+
      END IF;
 
-     
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -138,7 +168,7 @@ BEGIN
             )
      THEN
          ioPartionGoods:= lfGet_Object_PartionGoods_InvNumber (inGoodsId);
-     ELSE 
+     ELSE
          -- находим Инвентарный номер: если это перемещение с МО на МО
          IF EXISTS (SELECT MovementLinkObject_From.ObjectId
                     FROM MovementLinkObject AS MovementLinkObject_From
@@ -186,7 +216,7 @@ BEGIN
      -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
      -- сохранили связь с <Место хранения> - для партии прихода на МО
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
-     
+
      -- сохранили связь с <Партии товаров (для партии расхода если с МО)> - пока НЕ надо
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
 
@@ -194,7 +224,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
      -- сохранили связь с <Выработка на оборудовании 2>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), ioId, inAssetId_two);
-     
+
      IF inGoodsId <> 0 AND inGoodsKindId <> 0
      THEN
          -- создали объект <Связи Товары и Виды товаров>
