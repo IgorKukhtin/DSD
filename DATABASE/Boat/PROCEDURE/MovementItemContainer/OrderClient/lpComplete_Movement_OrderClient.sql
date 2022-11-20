@@ -68,6 +68,57 @@ BEGIN
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
     ;
 
+     -- Проверка - Boat Structure
+     IF EXISTS (SELECT ObjectLink_ProdColorPattern.ChildObjectId
+                FROM Object AS Object_ProdColorItems
+                     -- Лодка
+                     INNER JOIN ObjectLink AS ObjectLink_Product
+                                           ON ObjectLink_Product.ObjectId      = Object_ProdColorItems.Id
+                                          AND ObjectLink_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
+                                          AND ObjectLink_Product.ChildObjectId = vbProductId
+                     -- Заказ Клиента
+                     INNER JOIN ObjectFloat AS ObjectFloat_MovementId_OrderClient
+                                            ON ObjectFloat_MovementId_OrderClient.ObjectId  = Object_ProdColorItems.Id
+                                           AND ObjectFloat_MovementId_OrderClient.DescId    = zc_ObjectFloat_ProdColorItems_OrderClient()
+                                           AND ObjectFloat_MovementId_OrderClient.ValueData = inMovementId
+                     -- Элемент
+                     INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                           ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdColorItems.Id
+                                          AND ObjectLink_ProdColorPattern.DescId   = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                WHERE Object_ProdColorItems.DescId   = zc_Object_ProdColorItems()
+                  AND Object_ProdColorItems.isErased = FALSE
+                  AND ObjectLink_ProdColorPattern.ChildObjectId > 0
+                GROUP BY ObjectLink_ProdColorPattern.ChildObjectId
+                HAVING COUNT(*) > 1
+               )
+     THEN
+         RAISE EXCEPTION 'Проверка-1.Элемент Boat Structure = <%> не может дублироваться.'
+             , (SELECT lfGet_Object_ValueData_pcp (ObjectLink_ProdColorPattern.ChildObjectId)
+                FROM Object AS Object_ProdColorItems
+                     -- Лодка
+                     INNER JOIN ObjectLink AS ObjectLink_Product
+                                           ON ObjectLink_Product.ObjectId      = Object_ProdColorItems.Id
+                                          AND ObjectLink_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
+                                          AND ObjectLink_Product.ChildObjectId = vbProductId
+                     -- Заказ Клиента
+                     INNER JOIN ObjectFloat AS ObjectFloat_MovementId_OrderClient
+                                            ON ObjectFloat_MovementId_OrderClient.ObjectId  = Object_ProdColorItems.Id
+                                           AND ObjectFloat_MovementId_OrderClient.DescId    = zc_ObjectFloat_ProdColorItems_OrderClient()
+                                           AND ObjectFloat_MovementId_OrderClient.ValueData = inMovementId
+                     -- Элемент
+                     INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                           ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdColorItems.Id
+                                          AND ObjectLink_ProdColorPattern.DescId   = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                WHERE Object_ProdColorItems.DescId   = zc_Object_ProdColorItems()
+                  AND Object_ProdColorItems.isErased = FALSE
+                  AND ObjectLink_ProdColorPattern.ChildObjectId > 0
+                GROUP BY ObjectLink_ProdColorPattern.ChildObjectId
+                HAVING COUNT(*) > 1
+               )
+               ;
+               
+     END IF;
+
      -- проверка - Kunden
      IF COALESCE (vbClientId_From, 0) = 0
      THEN
@@ -102,7 +153,7 @@ BEGIN
                                          , OperCount TFloat
                                          , OperPrice TFloat
                                            --
-                                         , Key_Id TVarChar, Key_Id_text TVarChar
+                                         , Key_Id Text, Key_Id_text Text
                                           ) ON COMMIT DROP;
         -- таблица - элементы документа, сборка узлов
         CREATE TEMP TABLE _tmpItem_Detail (MovementItemId Integer
@@ -113,6 +164,10 @@ BEGIN
                                          , ProdColorPatternId Integer
                                            -- Категория Опций
                                          , MaterialOptionsId Integer
+                                           --
+                                         , ReceiptLevelId Integer
+                                           --
+                                         , GoodsId_child Integer
                                            -- Цвет - только Примечание
                                          , ProdColorName TVarChar
                                            --
@@ -138,6 +193,10 @@ BEGIN
                  , lpSelect.ObjectId_parent
                    -- либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure /либо ПУСТО
                  , lpSelect.ObjectId
+                   -- 
+                 , lpSelect.ReceiptLevelId
+                   -- 
+                 , lpSelect.GoodsId_child
                    -- значение - Узел
                  , lpSelect.Value_parent
                    -- значение - Элемент
@@ -149,7 +208,7 @@ BEGIN
                    -- Boat Structure
                  , lpSelect.ProdColorPatternId
 
-            FROM lpSelect_Object_ReceiptProdModelChild_detail (inUserId) AS lpSelect
+            FROM lpSelect_Object_ReceiptProdModelChild_detail (inIsGroup:=FALSE, inUserId:= inUserId) AS lpSelect
             WHERE lpSelect.ReceiptProdModelId = vbReceiptProdModelId
            ;
 
@@ -171,8 +230,14 @@ BEGIN
                                          , ObjectLink_MaterialOptions.ChildObjectId        AS MaterialOptionsId
                                            -- Шаблон Boat Structure
                                          , ObjectLink_ColorPattern.ChildObjectId           AS ColorPatternId
+                                           -- ReceiptLevel
+                                         , ObjectLink_ReceiptLevel.ChildObjectId           AS ReceiptLevelId
+                                           -- GoodsChild
+                                         , ObjectLink_GoodsChild.ChildObjectId             AS GoodsId_child
                                            -- цвет
-                                         , CASE WHEN Object_ReceiptGoodsChild.ValueData <> ''
+                                         , CASE WHEN ObjectLink_Object.ChildObjectId > 0
+                                                     THEN ''
+                                                WHEN Object_ReceiptGoodsChild.ValueData <> ''
                                                      THEN Object_ReceiptGoodsChild.ValueData
                                                 ELSE COALESCE (ObjectString_Comment_pcp.ValueData, '')
                                            END AS ProdColorName
@@ -204,6 +269,14 @@ BEGIN
                                          LEFT JOIN ObjectLink AS ObjectLink_Object
                                                               ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
                                                              AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                         -- ReceiptLevel
+                                         LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                                              ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
+                                                             AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
+                                         -- GoodsChild
+                                         LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                              ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
+                                                             AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
                                          -- цвет
                                          LEFT JOIN ObjectString AS ObjectString_Comment_pcp
                                                                 ON ObjectString_Comment_pcp.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
@@ -252,6 +325,8 @@ BEGIN
                 , tmpReceiptItems.ProdColorPatternId
                 , tmpReceiptItems.MaterialOptionsId
                 , tmpReceiptItems.ColorPatternId
+                , tmpReceiptItems.ReceiptLevelId
+                , tmpReceiptItems.GoodsId_child
                   -- Цвет - только Примечание
                 , tmpReceiptItems.ProdColorName
                   -- Цвет - только Примечание
@@ -264,6 +339,11 @@ BEGIN
                                              AND tmpReceiptItems_key.ObjectId_parent = tmpReceiptItems.ObjectId_parent
           ;
 
+
+--    RAISE EXCEPTION 'Ошибка. %   %', (select max (LENGTH (Key_Id)) from _tmpReceiptItems_Key)
+  --  , (select max (LENGTH (Key_Id_text)) from _tmpReceiptItems_Key)
+    --;
+
          -- существующие элементы ProdOptItems - у Лодки
          CREATE TEMP TABLE _tmpProdOptItems ON COMMIT DROP AS
             SELECT lpSelect.ProdOptionsId
@@ -273,6 +353,10 @@ BEGIN
                  , lpSelect.MaterialOptionsId
                    --
                  , lpSelect.GoodsId
+                   --
+               --, lpSelect.ReceiptLevelId
+                   --
+               --, lpSelect.GoodsId_child
                    -- Кол-во опций
                  , lpSelect.Amount
                    -- Кол-во для сборки узла
@@ -299,7 +383,9 @@ BEGIN
                    -- Категория Опций
                 , ObjectLink_MaterialOptions.ChildObjectId  AS MaterialOptionsId
                   -- Цвет - только Примечание (когда нет GoodsId)
-                , CASE WHEN TRIM (ObjectString_Comment.ValueData) <> ''
+                , CASE WHEN ObjectLink_Goods.ChildObjectId > 0
+                            THEN ''
+                       WHEN TRIM (ObjectString_Comment.ValueData) <> ''
                             THEN TRIM (ObjectString_Comment.ValueData)
                        ELSE -- нет, т.к. в ReceiptGoodsChild могли изменить, а если там пусто только тогда понадобится Boat Structure
                             ''
@@ -340,6 +426,15 @@ BEGIN
           ;
 
 
+         -- Проверка
+         IF EXISTS (SELECT _tmpProdColorItems.ProdColorPatternId FROM _tmpProdColorItems GROUP BY _tmpProdColorItems.ProdColorPatternId HAVING COUNT(*) > 1)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Элемент Boat Structure = <%> не может дублироваться.'
+                   , (SELECT lfGet_Object_ValueData_pcp (_tmpProdColorItems.ProdColorPatternId) FROM _tmpProdColorItems GROUP BY _tmpProdColorItems.ProdColorPatternId HAVING COUNT(*) > 1 LIMIT 1);
+         END IF;
+
+
+
          -- 1. Результат - элементы документа zc_MI_Child - Шаблон сборки Лодки
          WITH tmpRes AS (-- 1. Базовая - ВСЕ Комплектующие у Лодки - !!!без деталей для сборки узлов!!! - поэтому DISTINCT
                          SELECT DISTINCT
@@ -360,7 +455,9 @@ BEGIN
                          WHERE -- !!!если учитываем в стоимости ВСЮ БАЗОВУЮ конфигурацию!!
                                vbIsBasicConf = TRUE
                            OR -- или заполнена ЭТА структура
-                               lpSelect.ObjectId_parent IN (SELECT _tmpReceiptProdModel.ObjectId_parent FROM _tmpReceiptProdModel JOIN _tmpProdColorItems ON _tmpProdColorItems.ProdColorPatternId = _tmpReceiptProdModel.ProdColorPatternId)
+                               lpSelect.ObjectId_parent IN (SELECT _tmpReceiptProdModel.ObjectId_parent
+                                                            FROM _tmpReceiptProdModel
+                                                                 JOIN _tmpProdColorItems ON _tmpProdColorItems.ProdColorPatternId = _tmpReceiptProdModel.ProdColorPatternId)
 
                         UNION ALL
                          -- 2. Опции
@@ -415,6 +512,10 @@ BEGIN
                               , lpSelect.ProdColorPatternId
                                 -- Категория Опций
                               , _tmpProdColorItems.MaterialOptionsId
+                                --
+                              , lpSelect.ReceiptLevelId
+                                --
+                              , lpSelect.GoodsId_child
                                 -- Цвет - только Примечание (когда нет GoodsId)
                               , _tmpProdColorItems.ProdColorName
 
@@ -442,7 +543,9 @@ BEGIN
                               )
                         )
          -- Результат - элементы документа, сборка узлов
-         INSERT INTO _tmpItem_Detail (ObjectId_parent, ObjectId, ObjectDescId, ProdOptionsId, ColorPatternId, ProdColorPatternId, MaterialOptionsId, ProdColorName, OperCount, OperPrice)
+         INSERT INTO _tmpItem_Detail (ObjectId_parent, ObjectId, ObjectDescId, ProdOptionsId, ColorPatternId, ProdColorPatternId, MaterialOptionsId, ReceiptLevelId, GoodsId_child
+                                    , ProdColorName, OperCount, OperPrice)
+
             SELECT tmpRes.ObjectId_parent
                  , tmpRes.ObjectId
                  , COALESCE (Object_Object.DescId, 0) AS ObjectDescId
@@ -454,6 +557,9 @@ BEGIN
                  , tmpRes.ProdColorPatternId
                    -- Категория Опций
                  , tmpRes.MaterialOptionsId
+                   --
+                 , tmpRes.ReceiptLevelId
+                 , tmpRes.GoodsId_child
                    -- Цвет - только Примечание (когда нет GoodsId)
                  , tmpRes.ProdColorName
                    --
@@ -579,7 +685,7 @@ BEGIN
          -- таблица - список созданных узлов + его Комплектующие
          CREATE TEMP TABLE _tmpReceiptItems_new (ReceiptGoodsChildId Integer, ReceiptGoodsId Integer
                                                , ObjectId_parent_old Integer, ObjectId_parent Integer, ObjectId Integer, ProdColorPatternId Integer
-                                               , MaterialOptionsId Integer, ColorPatternId Integer
+                                               , MaterialOptionsId Integer, ColorPatternId Integer, ReceiptLevelId Integer, GoodsId_child Integer
                                                , ProdColorName TVarChar
                                                , OperCount TFloat
                                                , Key_Id TVarChar, Key_Id_text TVarChar
@@ -587,7 +693,7 @@ BEGIN
         -- Пробуем создать
         INSERT INTO _tmpReceiptItems_new (ReceiptGoodsChildId, ReceiptGoodsId
                                         , ObjectId_parent_old, ObjectId_parent, ObjectId, ProdColorPatternId
-                                        , MaterialOptionsId, ColorPatternId
+                                        , MaterialOptionsId, ColorPatternId, ReceiptLevelId, GoodsId_child
                                         , ProdColorName
                                         , OperCount
                                         , Key_Id, Key_Id_text
@@ -610,6 +716,10 @@ BEGIN
                 , _tmpItem_Detail.MaterialOptionsId
                   --  Шаблон Boat Structure
                 , _tmpItem_Detail.ColorPatternId
+                  --
+                , _tmpItem_Detail.ReceiptLevelId
+                  --
+                , _tmpItem_Detail.GoodsId_child
                   -- Цвет из которых делается узел - только Примечание (когда нет GoodsId)
                 , _tmpItem_Detail.ProdColorName
 
@@ -669,7 +779,8 @@ BEGIN
                                                                                         'AGL-' || Object_Model.ValueData
                                                                                      ||   '-*' || tmpColor_1.ProdColorName_goods
                                                                                      || ' - *' || tmpColor_2.ProdColorName_goods
-                                                                                               || CASE WHEN tmpColor_3.ProdColorName <> _tmpReceiptItems_Key.ProdColorName_pcp THEN ' *'  || tmpColor_3.ProdColorName ELSE '' END
+                                                                                             --|| CASE WHEN tmpColor_3.ProdColorName <> _tmpReceiptItems_Key.ProdColorName_pcp THEN ' *'  || tmpColor_3.ProdColorName ELSE '' END
+                                                                                               || CASE WHEN tmpColor_3.GoodsId <> _tmpReceiptItems_Key.ObjectId_pcp THEN ' *'  || tmpColor_3.ProdColorName_goods ELSE '' END
 
                                                                                    WHEN ObjectString_Comment.ValueData ILIKE 'Teak'
                                                                                    THEN
@@ -677,32 +788,25 @@ BEGIN
                                                                                       ||   '-' || LEFT (tmpColor_1.MaterialOptionsName, 2)
                                                                                         || '-' || tmpColor_1.ProdColorName
 
-                                                                                   /*WHEN ObjectString_Comment.ValueData ILIKE 'Korpus'
-                                                                                   THEN
-                                                                                        'AGL-' || Object_Model.ValueData
-                                                                                      ||   '-' || tmpColor_1.ProdColorName
-                                                                                               || CASE WHEN tmpColor_1.ProdColorName <> tmpColor_2.ProdColorName
-                                                                                                         OR tmpColor_1.ProdColorName <> tmpColor_3.ProdColorName
-                                                                                                         OR tmpColor_2.ProdColorName <> tmpColor_3.ProdColorName
-                                                                                                       THEN
-                                                                                                     '-' || tmpColor_2.ProdColorName
-                                                                                                  || '-' || tmpColor_3.ProdColorName
-                                                                                                       ELSE ''
-                                                                                                  END*/
-                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-Hull'
+                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'HULL/DECK'
                                                                                    THEN 
-                                                                                        'ПФ Корпус-'
+                                                                                        'Корпус '
+                                                                                      ||'AGL-' || Object_Model.ValueData
+                                                                                      ||   '-' || tmpColor_1.ProdColorName_goods
+                                                                                      ||   '-' || CASE WHEN tmpColor_2.ProdColorName_goods <> tmpColor_1.ProdColorName_goods
+                                                                                                       THEN tmpColor_2.ProdColorName_goods
+                                                                                                       ELSE ''
+                                                                                                  END
+
+                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'DECK'
+                                                                                   THEN
+                                                                                        'Сиденье водителя '
                                                                                       ||'AGL-' || Object_Model.ValueData
                                                                                       ||   '-' || tmpColor_1.ProdColorName_goods
 
-                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-Deck'
+                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'STEERING CONSOLE'
                                                                                    THEN
-                                                                                        'ПФ Палуба-'
-                                                                                      ||'AGL-' || Object_Model.ValueData
-                                                                                      ||   '-' || tmpColor_1.ProdColorName_goods
-                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-SCconsole'
-                                                                                   THEN
-                                                                                        'ПФ Сиденье-'
+                                                                                        'Капот '
                                                                                       ||'AGL-' || Object_Model.ValueData
                                                                                       ||   '-' || tmpColor_1.ProdColorName_goods
 
@@ -721,7 +825,8 @@ BEGIN
                                                                                         'AGL-' || Object_Model.ValueData
                                                                                      ||   '-*' || tmpColor_1.ProdColorName_goods
                                                                                      || ' - *' || tmpColor_2.ProdColorName_goods
-                                                                                               || CASE WHEN tmpColor_3.ProdColorName <> _tmpReceiptItems_Key.ProdColorName_pcp THEN ' *'  || LEFT (tmpColor_3.ProdColorName, 1) ELSE '' END
+                                                                                             --|| CASE WHEN tmpColor_3.ProdColorName <> _tmpReceiptItems_Key.ProdColorName_pcp THEN ' *'  || LEFT (tmpColor_3.ProdColorName, 1) ELSE '' END
+                                                                                               || CASE WHEN tmpColor_3.GoodsId <> _tmpReceiptItems_Key.ObjectId_pcp THEN ' *'  || LEFT (tmpColor_3.ProdColorName_goods, 1) ELSE '' END
 
                                                                                    WHEN ObjectString_Comment.ValueData ILIKE 'Teak'
                                                                                    THEN
@@ -729,35 +834,11 @@ BEGIN
                                                                                       ||   '-' || LEFT (tmpColor_1.MaterialOptionsName, 2)
                                                                                         || '-' || LEFT (tmpColor_1.ProdColorName, 1)
 
-                                                                                   /*WHEN ObjectString_Comment.ValueData ILIKE 'Korpus'
+                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'HULL/DECK'
+                                                                                     OR ObjectString_Comment.ValueData ILIKE 'DECK'
+                                                                                     OR ObjectString_Comment.ValueData ILIKE 'STEERING CONSOLE'
                                                                                    THEN
-                                                                                        'AGL-' || Object_Model.ValueData
-                                                                                      ||   '-' || tmpColor_1.ProdColorName
-                                                                                               || CASE WHEN tmpColor_1.ProdColorName <> tmpColor_2.ProdColorName
-                                                                                                         OR tmpColor_1.ProdColorName <> tmpColor_3.ProdColorName
-                                                                                                         OR tmpColor_2.ProdColorName <> tmpColor_3.ProdColorName
-                                                                                                       THEN
-                                                                                                     '-' || tmpColor_2.ProdColorName
-                                                                                                  || '-' || tmpColor_3.ProdColorName
-                                                                                                       ELSE ''
-                                                                                                  END*/
-
-                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-Hull'
-                                                                                   THEN
-                                                                                        'AGL-' || Object_Model.ValueData
-                                                                                      ||   '-' || tmpColor_1.ProdColorName_goods
-
-                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-Deck'
-                                                                                   THEN
-                                                                                        'AGL-' || Object_Model.ValueData
-                                                                                      ||   '-' || tmpColor_1.ProdColorName_goods
-                                                                                      ||   '-' || '2'
-                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'Korpus-SCconsole'
-                                                                                   THEN
-                                                                                        'AGL-' || Object_Model.ValueData
-                                                                                      ||   '-' || tmpColor_1.ProdColorName_goods
-                                                                                      ||   '-' || '3'
-
+                                                                                        lfGet_Object_Goods_Article_value ('AGL-' || Object_Model.ValueData)
 
                                                                                    WHEN ObjectString_Comment.ValueData ILIKE 'Kreslo'
                                                                                    THEN
@@ -876,10 +957,9 @@ BEGIN
               -- создаем только такие Узлы
               WHERE ObjectString_Comment.ValueData ILIKE 'Hypalon'
                  OR ObjectString_Comment.ValueData ILIKE 'Teak'
-                 OR ObjectString_Comment.ValueData ILIKE 'Korpus'
-                 OR ObjectString_Comment.ValueData ILIKE 'Korpus-Hull'
-                 OR ObjectString_Comment.ValueData ILIKE 'Korpus-Deck'
-                 OR ObjectString_Comment.ValueData ILIKE 'Korpus-SCconsole'
+                 OR ObjectString_Comment.ValueData ILIKE 'HULL/DECK'
+                 OR ObjectString_Comment.ValueData ILIKE 'DECK'
+                 OR ObjectString_Comment.ValueData ILIKE 'STEERING CONSOLE'
                  OR ObjectString_Comment.ValueData ILIKE 'Kreslo'
 
              ) AS tmpGoods
@@ -933,6 +1013,9 @@ BEGIN
                                                                   , inObjectId            := _tmpReceiptItems_new.ObjectId
                                                                   , inProdColorPatternId  := _tmpReceiptItems_new.ProdColorPatternId
                                                                   , inMaterialOptionsId   := _tmpReceiptItems_new.MaterialOptionsId
+                                                                  , inReceiptLevelId_top  := NULL
+                                                                  , inReceiptLevelId      := _tmpReceiptItems_new.ReceiptLevelId
+                                                                  , inGoodsChildId        := _tmpReceiptItems_new.GoodsId_child
                                                                   , ioValue               := _tmpReceiptItems_new.OperCount
                                                                   , ioValue_service       := 0
                                                                   , inIsEnabled           := TRUE
@@ -1061,11 +1144,9 @@ BEGIN
         WHERE _tmpItem_Child.ObjectId_parent_find = _tmpItem.ObjectId_parent_find
        ;
 
-
         -- 2. формируем второй раз - Количество для сборки Узла
         UPDATE _tmpItem_Detail
                SET MovementItemId = lpInsertUpdate_MI_OrderClient_Detail (ioId                  := 0
-                                                                        , inParentId            := _tmpItem.MovementItemId
                                                                         , inMovementId          := inMovementId
                                                                         , inObjectId            := CASE WHEN _tmpItem.ObjectId > 0 THEN _tmpItem.ObjectId ELSE _tmpItem.ProdColorPatternId END
                                                                         , inGoodsId             := _tmpItem.ObjectId_parent_find
@@ -1101,9 +1182,10 @@ BEGIN
              ) AS _tmpItem
         WHERE _tmpItem_Detail.ObjectId_parent      = _tmpItem.ObjectId_parent
           AND (_tmpItem_Detail.ObjectId            = _tmpItem.ObjectId
-            OR (_tmpItem_Detail.ProdColorPatternId = _tmpItem.ProdColorPatternId
-            AND _tmpItem_Detail.ColorPatternId     = _tmpItem.ColorPatternId
-              ))
+           AND _tmpItem_Detail.ProdColorPatternId = _tmpItem.ProdColorPatternId
+          --OR (_tmpItem_Detail.ProdColorPatternId = _tmpItem.ProdColorPatternId
+          --AND _tmpItem_Detail.ColorPatternId     = _tmpItem.ColorPatternId)
+              )
        ;
 
         -- !!!3.элементы документа, по партиям!!!
@@ -1396,4 +1478,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Status_OrderClient(inMovementId := 647 , inStatusCode := 2 , inIsChild_Recalc := 'True' ,  inSession := '5');
+-- SELECT * FROM gpUpdate_Status_OrderClient(inMovementId := 667 , inStatusCode := 2 , inIsChild_Recalc := 'True' ,  inSession := '5');

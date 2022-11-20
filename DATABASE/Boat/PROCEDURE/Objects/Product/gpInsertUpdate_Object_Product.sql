@@ -370,6 +370,59 @@ BEGIN
      -- сохранили связь документа <Заказ> с документом <Счет>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inMovementId_OrderClient, inMovementId_Invoice);
 
+
+     -- Проверка - Boat Structure
+     IF EXISTS (SELECT ObjectLink_ProdColorPattern.ChildObjectId
+                FROM Object AS Object_ProdColorItems
+                     -- Лодка
+                     INNER JOIN ObjectLink AS ObjectLink_Product
+                                           ON ObjectLink_Product.ObjectId      = Object_ProdColorItems.Id
+                                          AND ObjectLink_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
+                                          AND ObjectLink_Product.ChildObjectId = ioId
+                     -- Заказ Клиента
+                     INNER JOIN ObjectFloat AS ObjectFloat_MovementId_OrderClient
+                                            ON ObjectFloat_MovementId_OrderClient.ObjectId  = Object_ProdColorItems.Id
+                                           AND ObjectFloat_MovementId_OrderClient.DescId    = zc_ObjectFloat_ProdColorItems_OrderClient()
+                                           AND ObjectFloat_MovementId_OrderClient.ValueData = inMovementId_OrderClient
+                     -- Элемент
+                     INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                           ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdColorItems.Id
+                                          AND ObjectLink_ProdColorPattern.DescId   = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                WHERE Object_ProdColorItems.DescId   = zc_Object_ProdColorItems()
+                  AND Object_ProdColorItems.isErased = FALSE
+                  AND ObjectLink_ProdColorPattern.ChildObjectId > 0
+                GROUP BY ObjectLink_ProdColorPattern.ChildObjectId
+                HAVING COUNT(*) > 1
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Элемент Boat Structure = <%> не может дублироваться.'
+             , (SELECT lfGet_Object_ValueData_pcp (ObjectLink_ProdColorPattern.ChildObjectId)
+                FROM Object AS Object_ProdColorItems
+                     -- Лодка
+                     INNER JOIN ObjectLink AS ObjectLink_Product
+                                           ON ObjectLink_Product.ObjectId      = Object_ProdColorItems.Id
+                                          AND ObjectLink_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
+                                          AND ObjectLink_Product.ChildObjectId = ioId
+                     -- Заказ Клиента
+                     INNER JOIN ObjectFloat AS ObjectFloat_MovementId_OrderClient
+                                            ON ObjectFloat_MovementId_OrderClient.ObjectId  = Object_ProdColorItems.Id
+                                           AND ObjectFloat_MovementId_OrderClient.DescId    = zc_ObjectFloat_ProdColorItems_OrderClient()
+                                           AND ObjectFloat_MovementId_OrderClient.ValueData = inMovementId_OrderClient
+                     -- Элемент
+                     INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                           ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdColorItems.Id
+                                          AND ObjectLink_ProdColorPattern.DescId   = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                WHERE Object_ProdColorItems.DescId   = zc_Object_ProdColorItems()
+                  AND Object_ProdColorItems.isErased = FALSE
+                  AND ObjectLink_ProdColorPattern.ChildObjectId > 0
+                GROUP BY ObjectLink_ProdColorPattern.ChildObjectId
+                HAVING COUNT(*) > 1
+               )
+               ;
+               
+     END IF;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

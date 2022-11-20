@@ -1071,6 +1071,15 @@ BEGIN
                               FROM ObjectLink AS OL_ProdColor
                                    JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
                                                               AND Object_Goods.isErased = FALSE
+                                                              AND TRIM (Object_Goods.ValueData) ILIKE CASE WHEN inTitle ILIKE 'moldings' THEN 'fender' ELSE TRIM (Object_Goods.ValueData) END
+                                                              AND Object_Goods.ObjectCode BETWEEN CASE WHEN inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
+                                                                                                       THEN -100
+                                                                                                       ELSE Object_Goods.ObjectCode
+                                                                                                  END
+                                                                                              AND CASE WHEN inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
+                                                                                                       THEN 1
+                                                                                                       ELSE Object_Goods.ObjectCode
+                                                                                                  END
                               WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
                                 -- с таким Цветом
                                 AND OL_ProdColor.ChildObjectId IN (SELECT vbProdColorId UNION SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
@@ -1087,6 +1096,15 @@ BEGIN
                                              FROM ObjectLink AS OL_ProdColor
                                                   JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
                                                                              AND Object_Goods.isErased  = FALSE
+                                                                             AND TRIM (Object_Goods.ValueData) ILIKE CASE WHEN inTitle ILIKE 'moldings' THEN 'fender' ELSE TRIM (Object_Goods.ValueData) END
+                                                                             AND Object_Goods.ObjectCode BETWEEN CASE WHEN inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
+                                                                                                                      THEN -100
+                                                                                                                      ELSE Object_Goods.ObjectCode
+                                                                                                                 END
+                                                                                                             AND CASE WHEN inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
+                                                                                                                      THEN 1
+                                                                                                                      ELSE Object_Goods.ObjectCode
+                                                                                                                 END
                                              WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
                                                -- с таким Цветом
                                                AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
@@ -1095,6 +1113,7 @@ BEGIN
                                              FROM ObjectLink AS OL_ProdColor
                                                   JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
                                                                              AND Object_Goods.isErased  = FALSE
+                                                                             AND TRIM (Object_Goods.ValueData) ILIKE CASE WHEN inTitle ILIKE 'moldings' THEN 'fender' ELSE TRIM (Object_Goods.ValueData) END
                                              WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
                                                -- с таким Цветом
                                                AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = TRUE)

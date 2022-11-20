@@ -1,10 +1,10 @@
 -- Function: lpInsertUpdate_MI_OrderClient_Child()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Detail (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Detail (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderClient_Detail(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inParentId            Integer   , -- 
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inObjectId            Integer   , -- Комплектующие / Работы/Услуги / Boat Structure
     IN inGoodsId             Integer   , -- Комплектующие - узел
@@ -23,9 +23,38 @@ AS
 $BODY$
     DECLARE vbIsInsert Boolean;
 BEGIN
+
+     -- Проверка - 
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdColorPattern
+                                                      ON MILinkObject_ProdColorPattern.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                      ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Detail()
+                  AND MovementItem.isErased   = FALSE
+                  AND MovementItem.ObjectId   = inObjectId
+                  AND COALESCE (MILinkObject_ProdColorPattern.ObjectId, 0) = inProdColorPatternId
+                  AND COALESCE (MILinkObject_Goods.ObjectId, 0)            = inGoodsId
+                  AND MovementItem.Id         <> COALESCE (ioId, 0)
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Элемент Сборки узла уже существует %<%> %<%> %<%>.'
+             , CHR (13)
+             , inObjectId -- lfGet_Object_ValueData (inObjectId)
+             , CHR (13)
+             , inGoodsId -- lfGet_Object_ValueData (inGoodsId)
+             , CHR (13)
+             , inProdColorPatternId -- lfGet_Object_ValueData_pcp (inProdColorPatternId)
+              ;
+     END IF;
+     
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
-
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Detail(), inObjectId, NULL, inMovementId, inAmount, NULL, inUserId);

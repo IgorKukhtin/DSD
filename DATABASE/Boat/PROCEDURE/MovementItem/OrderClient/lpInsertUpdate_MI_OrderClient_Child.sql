@@ -25,6 +25,31 @@ AS
 $BODY$
     DECLARE vbIsInsert Boolean;
 BEGIN
+
+     -- Проверка - 
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsBasis
+                                                      ON MILinkObject_GoodsBasis.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_GoodsBasis.DescId         = zc_MILinkObject_GoodsBasis()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Detail()
+                  AND MovementItem.isErased   = FALSE
+                  AND COALESCE (MILinkObject_GoodsBasis.ObjectId, 0) = inGoodsId_Basis
+                  AND MovementItem.Id         <> COALESCE (ioId, 0)
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Элемент узел %<%>%уже был добавлен для %<%>.'
+             , CHR (13)
+             , lfGet_Object_ValueData (inObjectId)
+             , CHR (13)
+             , lfGet_Object_ValueData (inGoodsId_Basis)
+             , CHR (13)
+               ;
+               
+     END IF;
+
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
