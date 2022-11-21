@@ -314,11 +314,14 @@ BEGIN
                                         , MIContainer.GoodsId
                                         , SUM (COALESCE (MIContainer.Amount, 0))       AS Amount
                                         --, SUM (COALESCE (MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
-                                        , SUM (COALESCE (tmpData_Container_Sum.SummaSale, 0) * COALESCE (MIContainer.Amount,0) / COALESCE (tmpData_Container_Sum.Amount,0)) AS SummaSale
+                                        , SUM (CASE WHEN tmpData_Container_Sum.Amount <> 0
+                                                         THEN COALESCE (tmpData_Container_Sum.SummaSale, 0) * COALESCE (MIContainer.Amount, 0) / tmpData_Container_Sum.Amount
+                                                         ELSE 0
+                                               END) AS SummaSale
                                         , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 
                                                     THEN COALESCE (MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)
                                                     ELSE 0
-                                               END )                                   AS SummaPromo
+                                               END)                                   AS SummaPromo
                                    FROM tmpData_Container_All AS MIContainer
                                         LEFT JOIN tmpData_Container_Sum ON tmpData_Container_Sum.MI_Id = MIContainer.MI_Id
                                         LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MIContainer.GoodsId
