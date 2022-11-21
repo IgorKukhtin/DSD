@@ -189,6 +189,13 @@ begin
     SetDateParams;
     FProcError := False;
 
+    //!!!только для ручного режима!!!
+    if trim (EditId.Text) <> '' then
+    begin
+         DateStart:=StrToDate(StartDateEdit.Text);
+         DateEnd:=StrToDate(EndDateEdit.Text);
+    end;
+
     if qryMaker.FieldByName('isUnPlanned').AsBoolean then
     begin
 
