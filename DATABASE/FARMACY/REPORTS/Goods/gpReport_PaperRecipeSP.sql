@@ -243,8 +243,28 @@ BEGIN
                                      , Movement_Invoice.OperDate                                 AS OperDate_Invoice
                                 FROM  Movement AS Movement_Invoice 
                                 WHERE Movement_Invoice.Id in (SELECT Movement_Invoice FROM tmpMovement)
-                                ),
-        tmpMI_All AS (SELECT Movement.*
+                                )
+ 
+      , tmpMovementItem AS (SELECT *
+                            FROM MovementItem
+                            WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                              AND MovementItem.DescId = zc_MI_Master()
+                              AND MovementItem.Amount <> 0
+                              AND MovementItem.isErased = FALSE
+                            ) 
+        --свернули т.к. если идет несколько контейнеров задваиваются строки в отчете
+      , tmpMIContainer AS (SELECT MovementItemContainer.MovementId
+                                , MovementItemContainer.MovementItemId
+                                , SUM (COALESCE(MovementItemContainer.Amount,0)) AS Amount
+                           FROM MovementItemContainer
+                           WHERE MovementItemContainer.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                             AND MovementItemContainer.MovementItemId IN (SELECT tmpMovementItem.Id FROM tmpMovementItem)
+                             AND MovementItemContainer.DescId = zc_MIContainer_Count() 
+                           GROUP BY MovementItemContainer.MovementId
+                                  , MovementItemContainer.MovementItemId
+                           )
+
+      , tmpMI_All AS (SELECT Movement.*
                            , MovementItem.Id        AS MovementItemId
                            , MovementItem.ObjectId  AS GoodsId
                            , COALESCE(MovementItem.Amount, - MovementItemContainer.Amount)::TFloat AS Amount
@@ -252,7 +272,7 @@ BEGIN
                              COALESCE(MovementItem.Amount, - MovementItemContainer.Amount), 0)::TFloat             AS SummChangePercent
                            , COALESCE (MIFloat_PriceSale.ValueData, 0)::TFloat                     AS PriceSale
                            , COALESCE (MIFloat_Price.ValueData, 0)::TFloat                         AS Price
-                           , MovementItemContainer.ContainerId
+                         --  , MovementItemContainer.ContainerId
                       FROM tmpMovement AS Movement
                        
                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -260,9 +280,9 @@ BEGIN
                                                   AND MovementItem.Amount <> 0
                                                   AND MovementItem.isErased = FALSE    
                                                   
-                           INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
-                                                           AND MovementItemContainer.MovementItemId = MovementItem.Id
-                                                           AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                           INNER JOIN tmpMIContainer AS MovementItemContainer
+                                                     ON MovementItemContainer.MovementId = Movement.Id
+                                                    AND MovementItemContainer.MovementItemId = MovementItem.Id
                                                   
                            --Сумма Скидки
                            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
@@ -276,8 +296,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                     ),
-        tmpMI AS (SELECT tmpMI.*
+                     )
+
+      , tmpMI AS (SELECT tmpMI.*
                        /*, COALESCE (MI_Income_find.Id, MI_Income.Id) AS MI_IncomeId
                        , COALESCE (MI_Income_find.Id, MI_Income.Id) AS MI_IncomeId*/
                   FROM tmpMI_All AS tmpMI
@@ -462,6 +483,4 @@ ALTER FUNCTION gpReport_PaperRecipeSP (TDateTime, TDateTime, TVarChar) OWNER TO 
 */
 
 -- тест
--- 
-
-select * from gpReport_PaperRecipeSP(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime , inJuridicalId := 0 ,  inSession := '3');
+--    select * from gpReport_PaperRecipeSP(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime , inJuridicalId := 0 ,  inSession := '3');

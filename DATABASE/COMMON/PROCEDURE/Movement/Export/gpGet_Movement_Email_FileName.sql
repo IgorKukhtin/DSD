@@ -72,6 +72,12 @@ BEGIN
                  || '_' || zfCalc_Text_replace (zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData), '.', '_')
                  || '_' || Movement.InvNumber
 
+                 -- Таврия+
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Tavr31929492())
+                      THEN COALESCE (REPLACE (Object_JuridicalBasis.ValueData, '"', ''), 'Alan')
+                 || '_' || Movement.InvNumber
+                 || '_' || COALESCE (Object_Juridical.ValueData, 'Юр_лицо') || ' №' || COALESCE (ObjectString_RoomNumber.ValueData, '0')
+
             END AS outFileName
 
           , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386(), zc_Enum_ExportKind_Glad2514900150())
@@ -80,11 +86,13 @@ BEGIN
                       THEN 'csv'
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110())
                       THEN 'xls'
-                    --THEN 'xlsx'
+                    --THEN 'xlsx'  
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Tavr31929492())
+                      THEN 'txt'
             END AS outDefaultFileExt
           , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386(), zc_Enum_ExportKind_Glad2514900150())
                       THEN FALSE
-                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074(), zc_Enum_ExportKind_Avion40110917())
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074(), zc_Enum_ExportKind_Avion40110917(), zc_Enum_ExportKind_Tavr31929492())
                       THEN TRUE
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110())
                       THEN FALSE
@@ -155,6 +163,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.11.22         * add zc_Enum_ExportKind_Tavr31929492
  23.03.16                                        *
  25.02.16                                        *
 */

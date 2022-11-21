@@ -993,6 +993,9 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Avion40110917(),   inDescId:= zc_Object_ExportKind(), inCode:= 6, inName:= 'Авіон+ ТОВ - формат CSV',    inEnumName:= 'zc_Enum_ExportKind_Avion40110917');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Logistik41750857(),inDescId:= zc_Object_ExportKind(), inCode:= 7, inName:= 'ЧСПМ ЛОГІСТИК - формат XLS', inEnumName:= 'zc_Enum_ExportKind_Logistik41750857');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Nedavn2244900110(),inDescId:= zc_Object_ExportKind(), inCode:= 8, inName:= 'Недавній ФОП- формат XLS', inEnumName:= 'zc_Enum_ExportKind_Nedavn2244900110');
+     
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Tavr31929492(),inDescId:= zc_Object_ExportKind(), inCode:= 9, inName:= 'Таврия+ - формат TXT', inEnumName:= 'zc_Enum_ExportKind_Tavr31929492');
+
 
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_PersonalService(), inDescId:= zc_Object_ExportKind(), inCode:= 21, inName:= 'Ведомость ЗП - формат CSV', inEnumName:= 'zc_Enum_ExportKind_PersonalService');
      
