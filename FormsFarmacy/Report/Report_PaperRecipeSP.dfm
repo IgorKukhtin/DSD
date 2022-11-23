@@ -115,9 +115,7 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
     Height = 366
     Align = alClient
     PopupMenu = PopupMenu
-    TabOrder = 2
-    ExplicitLeft = 152
-    ExplicitTop = 73
+    TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1073,7 +1071,7 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
       end>
     Params = <
       item
-        Name = 'inDateStart'
+        Name = 'inStartDate'
         Value = 41640d
         Component = deStart
         DataType = ftDateTime
@@ -1081,7 +1079,7 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDateFinal'
+        Name = 'inEndDate'
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
