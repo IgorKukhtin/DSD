@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpReport_MotionGoodsCount_light (TDateTime, TDateTime, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpReport_MotionGoodsCount_light(
+CREATE OR REPLACE FUNCTION lpReport_MotionGoodsCount_light (
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inLocationId         Integer,    --
@@ -46,7 +46,13 @@ RETURNS TABLE (OperDate TDateTime
              , CountInventory TFloat
 
              , CountProductionIn  TFloat
-             , CountProductionOut TFloat
+             , CountProductionOut TFloat    
+             
+             , CostStart TFloat
+             , CostEnd  TFloat
+             , CostEnd_calc TFloat
+             , CostRemains_Mov  TFloat
+
               )
 AS
 $BODY$
@@ -219,11 +225,12 @@ BEGIN
     -- –ÂÁÛÎ¸Ú‡Ú
     RETURN QUERY
           WITH 
-               tmpMIContainer AS (SELECT _tmpContainer.ContainerDescId
+              tmpMIContainer AS (SELECT _tmpContainer.ContainerDescId
                                        , MIContainer.OperDate
                                        , _tmpContainer.LocationId
                                        , _tmpContainer.GoodsId
                                        , _tmpContainer.GoodsKindId
+                                       , _tmpContainer.ContainerId_begin
 
                                          -- ***COUNT***
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
@@ -383,7 +390,8 @@ BEGIN
                                          -- ***REMAINS***
                                        , 0                             AS RemainsStart
                                        , 0                             AS RemainsEnd
-                                       , -1 * SUM (MIContainer.Amount) AS Remains_Mov
+                                       , -1 * SUM (MIContainer.Amount) AS Remains_Mov   
+                                       
 
                                   FROM _tmpContainer
                                        INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId_begin
@@ -395,12 +403,13 @@ BEGIN
                                        LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                                                  ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
                                                                 AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
-
+                                      
                                   GROUP BY _tmpContainer.ContainerDescId
                                          , MIContainer.OperDate
                                          , _tmpContainer.LocationId
                                          , _tmpContainer.GoodsId
                                          , _tmpContainer.GoodsKindId
+                                         , _tmpContainer.ContainerId_begin
 
                                   HAVING -- ***COUNT***
                                          SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
@@ -567,6 +576,7 @@ BEGIN
                                        , _tmpContainer.LocationId
                                        , _tmpContainer.GoodsId
                                        , _tmpContainer.GoodsKindId
+                                       , _tmpContainer.ContainerId_begin
 
                                          -- ***COUNT***
                                        , 0 AS CountIncome
@@ -606,13 +616,14 @@ BEGIN
                                        , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
                                        , _tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate >inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS RemainsEnd
                                        , 0 AS Remains_Mov
+
                                   FROM _tmpContainer AS _tmpContainer
                                        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId_count
                                                                                      AND MIContainer.OperDate >= inStartDate -->inEndDate
 
                                   GROUP BY _tmpContainer.ContainerDescId
                                        --  , _tmpContainer.ContainerId_count
-                                       --  , _tmpContainer.ContainerId_begin
+                                         , _tmpContainer.ContainerId_begin
                                          , _tmpContainer.LocationId
                                          , _tmpContainer.GoodsId
                                          , _tmpContainer.GoodsKindId
@@ -623,6 +634,17 @@ BEGIN
                                       --OR _tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
                                  )
 
+
+ , tmpCost AS (SELECT tmpMIContainer.ContainerId_begin
+                               , SUM (HistoryCost.Price) AS Price
+                          FROM tmpMIContainer
+                               JOIN Container ON Container.ParentId = tmpMIContainer.ContainerId_begin
+                                             AND Container.DescId = zc_Container_Summ()
+                               JOIN HistoryCost ON HistoryCost.ContainerId = Container.Id
+                                               AND (tmpMIContainer.OperDate - INTERVAL '1 DAY') BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                          GROUP BY tmpMIContainer.ContainerId_begin
+                          )
+
          -- –ÂÁÛÎ¸Ú‡Ú
          SELECT tmpMIContainer_all.OperDate
               , tmpMIContainer_all.LocationId
@@ -632,7 +654,7 @@ BEGIN
               , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Count() THEN tmpMIContainer_all.RemainsStart ELSE 0 END) :: TFloat AS CountStart
               , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Count() THEN tmpMIContainer_all.RemainsEnd   ELSE 0 END) :: TFloat AS CountEnd
               , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Count() THEN tmpMIContainer_all.RemainsEnd - tmpMIContainer_all.CountInventory ELSE 0 END) :: TFloat AS CountEnd_calc
-              , SUM (tmpMIContainer_all.Remains_Mov) :: TFloat AS Remains_Mov
+              , SUM (tmpMIContainer_all.Remains_Mov)             :: TFloat AS Remains_Mov
 
               , SUM (tmpMIContainer_all.CountIncome)             :: TFloat AS CountIncome
               , SUM (tmpMIContainer_all.CountReturnOut)          :: TFloat AS CountReturnOut
@@ -664,8 +686,14 @@ BEGIN
 
               , SUM (tmpMIContainer_all.CountProductionIn)       :: TFloat AS CountProductionIn
               , SUM (tmpMIContainer_all.CountProductionOut)      :: TFloat AS CountProductionOut
+              
+              , SUM (tmpCost.Price * COALESCE(tmpMIContainer_all.RemainsStart,0) ) :: TFloat AS CostStart
+              , SUM (tmpCost.Price * tmpMIContainer_all.RemainsEnd ) :: TFloat AS CostEnd
+              , SUM (tmpCost.Price * tmpMIContainer_all.RemainsEnd - tmpMIContainer_all.CountInventory ) :: TFloat AS CostEnd_calc
+              , SUM (tmpCost.Price * tmpMIContainer_all.Remains_Mov)  :: TFloat AS CostRemains_Mov
 
          FROM tmpMIContainer AS tmpMIContainer_all
+              LEFT JOIN tmpCost ON tmpCost.ContainerId_begin = tmpMIContainer_all.ContainerId_begin
          GROUP BY tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
                 , tmpMIContainer_all.GoodsKindId
@@ -679,6 +707,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.11.22         * Cost
  29.04.20         * zc_Movement_SendAsset
  13.08.19         *
 */
@@ -689,4 +718,5 @@ $BODY$
 --left join Object on Object.Id = tt.GoodsId 
 --where tt.GoodsId  = 2055;
 
- --SELECT * FROM RemainsOLAPTable
+ --SELECT * FROM RemainsOLAPTable                     
+ --SELECT * FROM lpReport_MotionGoodsCount_light (inStartDate:= '01.11.2022', inEndDate:= '02.11.2022', inLocationId := 8459 , inUserId := zfCalc_UserAdmin() :: Integer) as tt
