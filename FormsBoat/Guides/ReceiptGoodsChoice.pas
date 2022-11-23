@@ -111,6 +111,7 @@ type
     actShowAll_ch2: TBooleanStoredProcAction;
     bbShowAll_ch1: TdxBarButton;
     actChoiceFormProdColor_goods_2: TOpenChoiceForm;
+    MaterialOptionsName: TcxGridDBColumn;
   private
     { Private declarations }
   public

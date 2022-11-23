@@ -1284,7 +1284,7 @@
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actChoiceFormGoodsChild_1
+              Action = actChoiceFormGoodsChild_2
               Default = True
               Kind = bkEllipsis
             end>
@@ -3489,7 +3489,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inValue'
+        Name = 'ioValue'
         Value = Null
         Component = Child2CDS
         ComponentItem = 'Value'
