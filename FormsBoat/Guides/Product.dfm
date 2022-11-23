@@ -2893,6 +2893,7 @@
     object actStartLoad: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actGetImportSetting
