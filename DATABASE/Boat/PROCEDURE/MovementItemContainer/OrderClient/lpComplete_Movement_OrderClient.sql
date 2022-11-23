@@ -444,6 +444,10 @@ BEGIN
                               , CASE WHEN lpSelect.ObjectId_parent = lpSelect.ObjectId THEN lpSelect.ObjectId_parent ELSE 0 END AS ObjectId_parent_find
                                 -- Узел/Товар из шаблона
                               , lpSelect.ObjectId_parent            AS ObjectId_parent
+                              
+                            --, CASE WHEN lpSelect.ObjectId_parent = lpSelect.ObjectId THEN lpSelect.GoodsId_child ELSE 0 END AS GoodsId_child_find
+                            --, lpSelect.GoodsId_child
+                              
                                 -- здесь нет опции
                               , 0                                   AS ProdOptionsId
                               , COALESCE (lpSelect.Value_parent, 0) AS OperCount
@@ -467,6 +471,10 @@ BEGIN
                               , lpSelect.GoodsId AS ObjectId_parent
                                 -- Goods
                               , lpSelect.GoodsId AS ObjectId
+
+                            --, 0 AS GoodsId_child_find
+                            --, 0 AS GoodsId_child
+
                                 -- Опция
                               , lpSelect.ProdOptionsId
                                 --
@@ -485,6 +493,8 @@ BEGIN
                  , tmpRes.ObjectId_parent_find
                  , tmpRes.ObjectId_parent
                  , COALESCE (Object_Object.DescId, 0) AS ObjectDescId
+               --, tmpRes.GoodsId_child_find
+               --, tmpRes.GoodsId_child
                    --
                  , tmpRes.ProdOptionsId
                    --
@@ -596,10 +606,12 @@ BEGIN
 
          -- Находим ObjectId_parent для Boat Structure
          UPDATE _tmpItem_Child SET ObjectId_parent_find = _tmpItem_find.ObjectId_parent_find
+                               --, GoodsId_child_find   = _tmpItem_find.GoodsId_child_find
          FROM (WITH -- существующий список
                     tmpList_from AS (SELECT DISTINCT
                                             _tmpItem.ColorPatternId
                                           , _tmpItem.ObjectId_parent
+                                        --, _tmpItem.GoodsId_child
                                           , _tmpItem_Child.Key_Id
                                      FROM _tmpItem_Detail AS _tmpItem
                                           JOIN _tmpItem_Child ON _tmpItem_Child.ObjectId_parent = _tmpItem.ObjectId_parent
@@ -609,6 +621,7 @@ BEGIN
                     , tmpList_to AS (SELECT DISTINCT
                                             _tmpReceiptItems_Key.ColorPatternId
                                           , _tmpReceiptItems_Key.ObjectId_parent
+                                        --, _tmpReceiptItems_Key.GoodsId_child
                                           , _tmpReceiptItems_Key.Key_Id
                                      FROM _tmpReceiptItems_Key
                                     )
@@ -616,6 +629,7 @@ BEGIN
                SELECT tmpList_from.ObjectId_parent
                       -- здесь нашли узел с такой структурой
                     , COALESCE (tmpList_to.ObjectId_parent, 0) AS ObjectId_parent_find
+                  --, COALESCE (tmpList_to.GoodsId_child, 0)   AS GoodsId_child_find
                FROM tmpList_from
                     LEFT JOIN tmpList_to ON tmpList_to.ColorPatternId = tmpList_from.ColorPatternId
                                         AND tmpList_to.Key_Id         = tmpList_from.Key_Id
@@ -685,7 +699,7 @@ BEGIN
          -- таблица - список созданных узлов + его Комплектующие
          CREATE TEMP TABLE _tmpReceiptItems_new (ReceiptGoodsChildId Integer, ReceiptGoodsId Integer
                                                , ObjectId_parent_old Integer, ObjectId_parent Integer, ObjectId Integer, ProdColorPatternId Integer
-                                               , MaterialOptionsId Integer, ColorPatternId Integer, ReceiptLevelId Integer, GoodsId_child Integer
+                                               , MaterialOptionsId Integer, ColorPatternId Integer, ReceiptLevelId Integer, GoodsId_child Integer, GoodsId_child_old Integer
                                                , ProdColorName TVarChar
                                                , OperCount TFloat
                                                , Key_Id TVarChar, Key_Id_text TVarChar
@@ -693,7 +707,7 @@ BEGIN
         -- Пробуем создать
         INSERT INTO _tmpReceiptItems_new (ReceiptGoodsChildId, ReceiptGoodsId
                                         , ObjectId_parent_old, ObjectId_parent, ObjectId, ProdColorPatternId
-                                        , MaterialOptionsId, ColorPatternId, ReceiptLevelId, GoodsId_child
+                                        , MaterialOptionsId, ColorPatternId, ReceiptLevelId, GoodsId_child, GoodsId_child_old
                                         , ProdColorName
                                         , OperCount
                                         , Key_Id, Key_Id_text
@@ -719,7 +733,8 @@ BEGIN
                   --
                 , _tmpItem_Detail.ReceiptLevelId
                   --
-                , _tmpItem_Detail.GoodsId_child
+                , 0 AS GoodsId_child
+                , _tmpItem_Detail.GoodsId_child AS GoodsId_child_old
                   -- Цвет из которых делается узел - только Примечание (когда нет GoodsId)
                 , _tmpItem_Detail.ProdColorName
 
@@ -739,7 +754,7 @@ BEGIN
           ;
 
 
-        -- Создаем новый Узел
+        -- Создаем новый Узел - master
         UPDATE _tmpReceiptItems_new SET ObjectId_parent = tmpGoods.GoodsId
         FROM (WITH tmpColor AS (SELECT _tmpReceiptItems_new.ObjectId_parent_old AS GoodsId_parent_old
                                      , _tmpReceiptItems_new.ObjectId            AS GoodsId
@@ -793,8 +808,8 @@ BEGIN
                                                                                         'Корпус '
                                                                                       ||'AGL-' || Object_Model.ValueData
                                                                                       ||   '-' || tmpColor_1.ProdColorName_goods
-                                                                                      ||   '-' || CASE WHEN tmpColor_2.ProdColorName_goods <> tmpColor_1.ProdColorName_goods
-                                                                                                       THEN tmpColor_2.ProdColorName_goods
+                                                                                               || CASE WHEN tmpColor_2.ProdColorName_goods <> tmpColor_1.ProdColorName_goods
+                                                                                                       THEN '-'  || tmpColor_2.ProdColorName_goods
                                                                                                        ELSE ''
                                                                                                   END
 
@@ -964,6 +979,125 @@ BEGIN
 
              ) AS tmpGoods
         WHERE _tmpReceiptItems_new.ObjectId_parent_old = tmpGoods.GoodsId_parent_old
+       ;
+
+
+
+
+        -- Создаем новый Узел - child
+        UPDATE _tmpReceiptItems_new SET GoodsId_child = tmpGoods.GoodsId_child
+        FROM (SELECT tmpGoods_1.GoodsId
+                   , gpInsertUpdate_Object_Goods (ioId                     := 0
+                                                , inCode                   := -1
+                                                , inName                   := 'ПФ ' || Object_Goods_new.ValueData
+                                                , inArticle                := ObjectString_Article_new.ValueData || '-пф'
+                                              --, inArticle                := tmpGoods_1.GoodsId :: TVarChar
+                                                , inArticleVergl           := ''
+                                                , inEAN                    := ''
+                                                , inASIN                   := ''
+                                                , inMatchCode              := ''
+                                                , inFeeNumber              := ObjectString_FeeNumber.ValueData
+                                                , inComment                := ObjectString_Comment.ValueData
+                                                , inIsArc                  := FALSE
+                                                , inFeet                   := ObjectFloat_Feet.ValueData
+                                                , inMetres                 := ObjectFloat_Metres.ValueData
+                                                , inAmountMin              := ObjectFloat_Min.ValueData
+                                                , inAmountRefer            := ObjectFloat_Refer.ValueData
+                                                , inEKPrice                := ObjectFloat_EKPrice.ValueData
+                                                , inEmpfPrice              := ObjectFloat_EmpfPrice.ValueData
+                                                , inGoodsGroupId           := ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                                , inMeasureId              := ObjectLink_Goods_Measure.ChildObjectId
+                                                , inGoodsTagId             := ObjectLink_Goods_GoodsTag.ChildObjectId
+                                                , inGoodsTypeId            := ObjectLink_Goods_GoodsType.ChildObjectId
+                                                , inGoodsSizeId            := ObjectLink_Goods_GoodsSize.ChildObjectId
+                                                , inProdColorId            := ObjectLink_Goods_ProdColor_new.ChildObjectId
+                                                , inPartnerId              := ObjectLink_Goods_Partner.ChildObjectId
+                                                , inUnitId                 := ObjectLink_Goods_Unit.ChildObjectId
+                                                , inDiscountPartnerId      := ObjectLink_Goods_DiscountPartner.ChildObjectId
+                                                , inTaxKindId              := ObjectLink_Goods_TaxKind.ChildObjectId
+                                                , inEngineId               := NULL
+                                                , inSession                := inUserId :: TVarChar
+                                                 ) AS GoodsId_child
+              FROM (SELECT DISTINCT
+                           _tmpReceiptItems_new.ObjectId_parent    AS GoodsId
+                         , _tmpReceiptItems_new.GoodsId_child_old  AS GoodsId_child_old
+                    FROM _tmpReceiptItems_new
+                    WHERE _tmpReceiptItems_new.GoodsId_child_old > 0
+                   ) AS tmpGoods_1
+                   LEFT JOIN Object AS Object_Goods_new ON Object_Goods_new.Id = tmpGoods_1.GoodsId
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor_new
+                                        ON ObjectLink_Goods_ProdColor_new.ObjectId = tmpGoods_1.GoodsId
+                                       AND ObjectLink_Goods_ProdColor_new.DescId = zc_ObjectLink_Goods_ProdColor()
+                   LEFT JOIN ObjectString AS ObjectString_Article_new
+                                          ON ObjectString_Article_new.ObjectId = tmpGoods_1.GoodsId
+                                         AND ObjectString_Article_new.DescId   =  zc_ObjectString_Article()
+
+                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods_1.GoodsId_child_old
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                        ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                       AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                        ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                       AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                        ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
+                                       AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsType
+                                        ON ObjectLink_Goods_GoodsType.ObjectId = Object_Goods.Id
+                                       AND ObjectLink_Goods_GoodsType.DescId   = zc_ObjectLink_Goods_GoodsType()
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsSize
+                                        ON ObjectLink_Goods_GoodsSize.ObjectId = Object_Goods.Id
+                                       AND ObjectLink_Goods_GoodsSize.DescId = zc_ObjectLink_Goods_GoodsSize()
+
+                   LEFT JOIN ObjectString AS ObjectString_Comment
+                                          ON ObjectString_Comment.ObjectId = Object_Goods.Id
+                                         AND ObjectString_Comment.DescId   = zc_ObjectString_Goods_Comment()
+                   LEFT JOIN ObjectString AS ObjectString_FeeNumber
+                                          ON ObjectString_FeeNumber.ObjectId = Object_Goods.Id
+                                         AND ObjectString_FeeNumber.DescId   = zc_ObjectString_Goods_FeeNumber()
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
+                                        ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id
+                                       AND ObjectLink_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner()
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Unit
+                                        ON ObjectLink_Goods_Unit.ObjectId = Object_Goods.Id
+                                       AND ObjectLink_Goods_Unit.DescId = zc_ObjectLink_Goods_Unit()
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_DiscountPartner
+                                        ON ObjectLink_Goods_DiscountPartner.ObjectId = Object_Goods.Id
+                                       AND ObjectLink_Goods_DiscountPartner.DescId = zc_ObjectLink_Goods_DiscountPartner()
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
+                                        ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
+                                       AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
+
+                   LEFT JOIN ObjectFloat AS ObjectFloat_Min
+                                         ON ObjectFloat_Min.ObjectId = Object_Goods.Id
+                                        AND ObjectFloat_Min.DescId   = zc_ObjectFloat_Goods_Min()
+                   LEFT JOIN ObjectFloat AS ObjectFloat_Refer
+                                         ON ObjectFloat_Refer.ObjectId = Object_Goods.Id
+                                        AND ObjectFloat_Refer.DescId   = zc_ObjectFloat_Goods_Refer()
+                   LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                         ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
+                                        AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+                   LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
+                                         ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
+                                        AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
+
+                   LEFT JOIN ObjectFloat AS ObjectFloat_Feet
+                                         ON ObjectFloat_Feet.ObjectId = Object_Goods.Id
+                                        AND ObjectFloat_Feet.DescId   = zc_ObjectFloat_Goods_Feet()
+                   LEFT JOIN ObjectFloat AS ObjectFloat_Metres
+                                         ON ObjectFloat_Metres.ObjectId = Object_Goods.Id
+                                        AND ObjectFloat_Metres.DescId   = zc_ObjectFloat_Goods_Metres()
+             ) AS tmpGoods
+        WHERE _tmpReceiptItems_new.ObjectId_parent = tmpGoods.GoodsId
        ;
 
 
