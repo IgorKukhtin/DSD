@@ -188,6 +188,9 @@ type
     bbUpdate_MI_Child: TdxBarButton;
     EngineNum: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
+    ProdColorName: TcxGridDBColumn;
+    Comment_goods: TcxGridDBColumn;
+    cxGridDBTableViewChildColumn1: TcxGridDBColumn;
   private
   public
   end;

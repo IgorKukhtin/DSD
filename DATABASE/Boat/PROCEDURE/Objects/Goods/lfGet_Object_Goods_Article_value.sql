@@ -49,7 +49,7 @@ BEGIN
 
    --
    --
-   RETURN inSrchText || (SELECT Object_Article.LastValue :: TVarChar FROM Object_Article WHERE Object_Article.Article ILIKE inSrchText);
+   RETURN inSrchText || '-' || (SELECT CASE WHEN Object_Article.LastValue < 10 THEN '0' ELSE '' END || Object_Article.LastValue :: TVarChar FROM Object_Article WHERE Object_Article.Article ILIKE inSrchText);
 
 END;
 $BODY$
@@ -64,4 +64,4 @@ $BODY$
 
 -- тест
 -- delete from Object_Article;
--- SELECT lfGet_Object_Goods_Article_value ('AGL-280-'), lfGet_Object_Goods_Article_value ('AGL-280-')
+-- SELECT lfGet_Object_Goods_Article_value ('AGL-280'), lfGet_Object_Goods_Article_value ('AGL-280')

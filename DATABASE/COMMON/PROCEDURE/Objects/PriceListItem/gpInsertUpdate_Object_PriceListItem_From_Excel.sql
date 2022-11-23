@@ -70,14 +70,16 @@ BEGIN
                                                       , inValue       := inPriceValue
                                                       , inUserId      := vbUserId
                                                        );
-    IF 1=1 AND COALESCE (vbGoodsKindId, 0) = 0
+    -- !!!отключил!!!
+    IF 1=0 AND COALESCE (vbGoodsKindId, 0) = 0
     THEN
         PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId          := 0
                                                           , inPriceListId := inPriceListId
                                                           , inGoodsId     := vbGoodsId
                                                           , inGoodsKindId := OL_PriceListItem_GoodsKind.ChildObjectId
                                                           , inOperDate    := inOperDate
-                                                          , inValue       := inPriceValue
+                                                        --, inValue       := inPriceValue
+                                                          , inValue       := COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0)
                                                           , inUserId      := vbUserId
                                                            )
         FROM ObjectLink AS OL_PriceListItem_Goods
@@ -89,6 +91,15 @@ BEGIN
                              ON OL_PriceListItem_GoodsKind.ObjectId      = OL_PriceListItem_Goods.ObjectId
                             AND OL_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
                             AND OL_PriceListItem_GoodsKind.ChildObjectId > 0
+
+                               LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                       ON ObjectHistory_PriceListItem.ObjectId = OL_PriceListItem_Goods.ObjectId
+                                                      AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                      AND inOperDate - INTERVAL '1 DAY' >= ObjectHistory_PriceListItem.StartDate AND inOperDate - INTERVAL '1 DAY' < ObjectHistory_PriceListItem.EndDate
+                               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                            ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                           AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+
         WHERE OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
           AND OL_PriceListItem_Goods.ChildObjectId = vbGoodsId
        ;

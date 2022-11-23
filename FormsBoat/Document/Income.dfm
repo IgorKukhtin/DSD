@@ -1190,9 +1190,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 342
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -1200,7 +1197,6 @@ object IncomeForm: TIncomeForm
         Height = 322
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 342
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CostDS
@@ -1589,15 +1585,23 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateActionMovement'
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAddMask'
         end
         item
           Visible = True
@@ -2038,6 +2042,9 @@ object IncomeForm: TIncomeForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2052,8 +2059,6 @@ object IncomeForm: TIncomeForm
       StoredProcList = <
         item
           StoredProc = spGet
-        end
-        item
         end
         item
           StoredProc = spSelectMI
@@ -2164,11 +2169,11 @@ object IncomeForm: TIncomeForm
           StoredProc = spErasedMIMaster
         end
         item
+          StoredProc = spGet
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -2182,11 +2187,11 @@ object IncomeForm: TIncomeForm
           StoredProc = spUnErasedMIMaster
         end
         item
+          StoredProc = spGet
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2447,7 +2452,7 @@ object IncomeForm: TIncomeForm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      ImageIndex = 54
+      ImageIndex = 27
     end
     object actAdd_limit: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -3448,7 +3453,7 @@ object IncomeForm: TIncomeForm
       end>
     PackSize = 1
     Left = 122
-    Top = 192
+    Top = 232
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null

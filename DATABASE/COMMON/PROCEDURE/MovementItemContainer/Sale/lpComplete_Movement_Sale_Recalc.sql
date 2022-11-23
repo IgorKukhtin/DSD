@@ -64,6 +64,14 @@ BEGIN
         GROUP BY Container.ObjectId, CLO_GoodsKind.ObjectId
        ;
 
+IF inUserId = 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>  <%>' 
+    , (select COUNT(*) from _tmpRemains)
+    , vbMovementId_Peresort
+     ;
+END IF;
+
 
      -- таблица - элементы
      CREATE TEMP TABLE _tmpItemPeresort_new (MovementItemId_to Integer, MovementItemId_from Integer
@@ -81,7 +89,10 @@ BEGIN
              , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId, 0) AS GoodsKindId_from
              , COALESCE (ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId, ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId, 0) AS ReceipId_to
              , COALESCE (ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId, 0)   AS ReceipId_gp_to
-             , SUM (_tmpItem.OperCount) - COALESCE (_tmpRemains.Amount, 0) AS Amount_to
+             , CASE WHEN SUM (_tmpItem.OperCount) - COALESCE (_tmpRemains.Amount, 0) > 0
+                         THEN SUM (_tmpItem.OperCount) - COALESCE (_tmpRemains.Amount, 0)
+                    ELSE 0
+               END AS Amount_to
                -- для сохранения этого параметра
              , COALESCE (_tmpRemains.Amount,0) AS Amount_Remains
         FROM _tmpItem
@@ -122,15 +133,17 @@ BEGIN
                , ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId
                , ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId
                , COALESCE (_tmpRemains.Amount, 0)
-        HAVING SUM (_tmpItem.OperCount) - COALESCE (_tmpRemains.Amount, 0) > 0
+      --HAVING SUM (_tmpItem.OperCount) - COALESCE (_tmpRemains.Amount, 0) > 0
                 ;
 
      -- !!! для филиалов - только одна схема, только для zc_ObjectLink_GoodsByGoodsKind_ReceiptGP !!!
      IF (NOT EXISTS (SELECT 1 FROM _tmpItemPeresort_new WHERE _tmpItemPeresort_new.ReceipId_gp_to > 0)
       AND inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
         )
-     -- !!!Розподільчий комплекс!!!
-     OR (vbMovementId_Peresort > 0 AND inUnitId = 8459)
+       -- !!!Розподільчий комплекс!!!
+       --OR (vbMovementId_Peresort > 0 AND inUnitId = 8459)
+       -- !!!
+     --OR inUserId = zc_Enum_Process_Auto_PrimeCost()
      THEN
          -- !!! ВЫХОД !!!
          RETURN;
@@ -340,8 +353,8 @@ BEGIN
 IF inUserId = 5 AND 1=1
 THEN
     RAISE EXCEPTION 'Ошибка.<%>   <%>   <%>', vbMovementId_Peresort
-    , (select _tmpItemPeresort_new.Amount_to from _tmpItemPeresort_new)
-    , (select _tmpItemPeresort_new.Amount_Remains from _tmpItemPeresort_new)
+    , (select SUM (_tmpItemPeresort_new.Amount_to) from _tmpItemPeresort_new)
+    , (select SUM (_tmpItemPeresort_new.Amount_Remains) from _tmpItemPeresort_new)
     ;
 END IF;
 
@@ -397,7 +410,10 @@ END IF;
          --отдельно для информации сохраняем обязательно факт остатка Amount_Remains
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), _tmpItemPeresort_new.MovementItemId_to, Amount_Remains)
          FROM _tmpItemPeresort_new
-         WHERE COALESCE(_tmpItemPeresort_new.Amount_Remains,0) <> 0;
+              LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItemPeresort_new.MovementItemId_to
+                                                AND MIF.DescId         = zc_MIFloat_Remains()
+         WHERE COALESCE(_tmpItemPeresort_new.Amount_Remains, 0) <> COALESCE (MIF.ValueData, 0)
+        ;
 
          -- сохранили элементы - Child
          PERFORM lpInsertUpdate_MI_ProductionUnion_Child

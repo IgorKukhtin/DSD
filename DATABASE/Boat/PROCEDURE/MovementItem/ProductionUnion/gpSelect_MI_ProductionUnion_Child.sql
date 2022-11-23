@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, NPP Integer, ParentId Integer
              , GoodsGroupName TVarChar
              , Article TVarChar
              , ProdColorName TVarChar
-             , MeasureName TVarChar
+             , MeasureName TVarChar, Comment_goods TVarChar
              , Value TFloat, Value_service TFloat
              , Amount_diff TFloat
              , Color_value Integer
@@ -31,11 +31,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
 
      vbUserId:= lpGetUserBySession (inSession);
-     
+
      DROP TABLE IF EXISTS _tmpReceiptProdModelChild;
      DROP TABLE IF EXISTS _tmpReceiptGoodsChild;
 
      --получим данные ReceiptProdModelChild
+     PERFORM gpSelect_Object_ReceiptProdModelChild_Goods(0, FALSE, inSession);
      CREATE TEMP TABLE _tmpReceiptProdModelChild ON COMMIT DROP AS
           (SELECT tmp.ReceiptProdModelId
                 , tmp.NPP
@@ -179,7 +180,7 @@ BEGIN
        --разница от введенного
        , (0 - tmpReceiptGoodsChild.Value) :: TFloat AS Amount_diff
        , tmpReceiptGoodsChild.Color_value
-       , tmpReceiptGoodsChild.Color_Level     
+       , tmpReceiptGoodsChild.Color_Level
      FROM _tmpReceiptGoodsChild AS tmpReceiptGoodsChild
           INNER JOIN tmpMI_Master ON tmpMI_Master.ObjectId = tmpReceiptGoodsChild.ReceiptGoodsId
           LEFT JOIN tmpMI ON tmpMI.ParentId = tmpMI_Master.Id
@@ -204,28 +205,29 @@ BEGIN
        , COALESCE (tmpReceiptProdModelChild.Article, tmpReceiptGoodsChild.Article)                       ::TVarChar  AS Article
        , COALESCE (tmpReceiptProdModelChild.ProdColorName, tmpReceiptGoodsChild.ProdColorName)           :: TVarChar AS ProdColorName
        , COALESCE (tmpReceiptProdModelChild.MeasureName, tmpReceiptGoodsChild.MeasureName)               ::TVarChar  AS MeasureName
+       , '' :: TVarChar AS Comment_goods
        , COALESCE (tmpReceiptProdModelChild.Value, tmpReceiptGoodsChild.Value)                           ::TFloat    AS Value
        , COALESCE (tmpReceiptProdModelChild.Value_service, tmpReceiptGoodsChild.Value_service)           ::TFloat    AS Value_service
        --разница от введенного
        , ( MovementItem.Amount - COALESCE (tmpReceiptProdModelChild.Value, tmpReceiptGoodsChild.Value) - COALESCE (tmpReceiptProdModelChild.Value_service, tmpReceiptGoodsChild.Value_service) )  :: TFloat   AS Amount_diff
-       
+
        , COALESCE (tmpReceiptProdModelChild.Color_value, tmpReceiptGoodsChild.Color_value) :: Integer AS Color_value
        , COALESCE (tmpReceiptProdModelChild.Color_Level, tmpReceiptGoodsChild.Color_Level) :: Integer AS Color_Level
      FROM tmpMI AS MovementItem
           LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementItem.ObjectId
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
-          
+
           LEFT JOIN tmpMI_Master ON tmpMI_Master.Id = MovementItem.ParentId
 
           LEFT JOIN _tmpReceiptProdModelChild AS tmpReceiptProdModelChild
                                               ON tmpReceiptProdModelChild.ReceiptProdModelId = tmpMI_Master.ReceiptProdModelId
                                              AND tmpReceiptProdModelChild.ObjectId           = MovementItem.ObjectId
-                                            
-          LEFT JOIN _tmpReceiptGoodsChild AS tmpReceiptGoodsChild 
+
+          LEFT JOIN _tmpReceiptGoodsChild AS tmpReceiptGoodsChild
                                           ON tmpReceiptGoodsChild.ReceiptGoodsId = tmpMI_Master.ObjectId
                                          AND tmpReceiptGoodsChild.ObjectId       = MovementItem.ObjectId
      ;
-   ELSE 
+   ELSE
    RETURN QUERY
     WITH
      tmpIsErased AS (SELECT FALSE AS isErased
@@ -233,7 +235,7 @@ BEGIN
                                SELECT inIsErased AS isErased WHERE inIsErased = TRUE
                               )
 
-    
+
 
    , tmpMI_Master AS (SELECT MovementItem.Id
                            , MovementItem.ObjectId
@@ -274,14 +276,17 @@ BEGIN
 
        , COALESCE (tmpReceiptProdModelChild.GoodsGroupNameFull, tmpReceiptGoodsChild.GoodsGroupNameFull) ::TVarChar  AS GoodsGroupNameFull
        , COALESCE (tmpReceiptProdModelChild.GoodsGroupName, tmpReceiptGoodsChild.GoodsGroupName)         ::TVarChar  AS GoodsGroupName
-       , COALESCE (tmpReceiptProdModelChild.Article, tmpReceiptGoodsChild.Article)                       ::TVarChar  AS Article
-       , COALESCE (tmpReceiptProdModelChild.ProdColorName, tmpReceiptGoodsChild.ProdColorName)           :: TVarChar AS ProdColorName
+     --, COALESCE (tmpReceiptProdModelChild.Article, tmpReceiptGoodsChild.Article)                       ::TVarChar  AS Article
+       , ObjectString_Article.ValueData                                                                              AS Article
+     --, COALESCE (tmpReceiptProdModelChild.ProdColorName, tmpReceiptGoodsChild.ProdColorName)           :: TVarChar AS ProdColorName
+       , Object_ProdColor.ValueData                                                                                  AS ProdColorName
        , COALESCE (tmpReceiptProdModelChild.MeasureName, tmpReceiptGoodsChild.MeasureName)               ::TVarChar  AS MeasureName
+       , ObjectString_Goods_Comment.ValueData                                                                        AS Comment_goods
        , COALESCE (tmpReceiptProdModelChild.Value, tmpReceiptGoodsChild.Value)                           ::TFloat    AS Value
        , COALESCE (tmpReceiptProdModelChild.Value_service, tmpReceiptGoodsChild.Value_service)           ::TFloat    AS Value_service
        --разница от введенного
        , ( MovementItem.Amount - COALESCE (tmpReceiptProdModelChild.Value, tmpReceiptGoodsChild.Value) - COALESCE (tmpReceiptProdModelChild.Value_service, tmpReceiptGoodsChild.Value_service) )  :: TFloat   AS Amount_diff
-       
+
        , COALESCE (tmpReceiptProdModelChild.Color_value, tmpReceiptGoodsChild.Color_value) :: Integer AS Color_value
        , COALESCE (tmpReceiptProdModelChild.Color_Level, tmpReceiptGoodsChild.Color_Level) :: Integer AS Color_Level
      FROM tmpMI AS MovementItem
@@ -293,10 +298,23 @@ BEGIN
           LEFT JOIN _tmpReceiptProdModelChild AS tmpReceiptProdModelChild
                                               ON tmpReceiptProdModelChild.ReceiptProdModelId = tmpMI_Master.ReceiptProdModelId
                                              AND tmpReceiptProdModelChild.ObjectId           = MovementItem.ObjectId
-                                            
-          LEFT JOIN _tmpReceiptGoodsChild AS tmpReceiptGoodsChild 
+
+          LEFT JOIN _tmpReceiptGoodsChild AS tmpReceiptGoodsChild
                                           ON tmpReceiptGoodsChild.ReceiptGoodsId = tmpMI_Master.ObjectId
                                          AND tmpReceiptGoodsChild.ObjectId       = MovementItem.ObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Article
+                                 ON ObjectString_Article.ObjectId = MovementItem.ObjectId
+                                AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
+                               ON ObjectLink_Goods_ProdColor.ObjectId = MovementItem.ObjectId
+                              AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
+          LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Goods_Comment
+                                 ON ObjectString_Goods_Comment.ObjectId = Object_Object.Id
+                                AND ObjectString_Goods_Comment.DescId   = zc_ObjectString_Goods_Comment()
+
 
      ;
     END IF;
@@ -312,4 +330,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpSelect_MI_ProductionUnion_Child (inMovementId:= 306,inShowAll:=true,  inIsErased:= true, inSession:= zfCalc_UserAdmin());
+-- SELECT * from gpSelect_MI_ProductionUnion_Child (inMovementId:= 306, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

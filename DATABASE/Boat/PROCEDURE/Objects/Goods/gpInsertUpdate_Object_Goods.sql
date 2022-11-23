@@ -97,12 +97,12 @@ BEGIN
    IF TRIM (COALESCE (inName, '')) = ''
    THEN
        --RAISE EXCEPTION 'Ошибка.Значение <Название> должно быть установлено.';
-       RAISE EXCEPTION '% <%> <%>'
+       RAISE EXCEPTION '% Code = <%> Article = <%> EAN = <%> Group = <%>'
                      , lfMessageTraslate (inMessage       := 'Ошибка.Значение <Название> должно быть установлено.'
                                         , inProcedureName := 'gpInsertUpdate_Object_Goods'
                                         , inUserId        := vbUserId
                                          )
-                     , inArticle, inEAN
+                     , inCode, inArticle, inEAN, lfGet_Object_ValueData_sh (inGoodsGroupId)
                       ;
    END IF;
 

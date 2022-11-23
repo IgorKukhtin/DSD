@@ -132,6 +132,34 @@ BEGIN
                                    FROM tmpReceiptGoodsChild_all
                                    GROUP BY tmpReceiptGoodsChild_all.ReceiptGoodsId
                                   )
+          -- продублировали GoodsChild
+        , tmpReceiptGoods AS (SELECT Object_ReceiptGoods.Id, Object_ReceiptGoods.DescId, Object_ReceiptGoods.ObjectCode, Object_ReceiptGoods.ValueData, Object_ReceiptGoods.isErased
+                                   , ObjectLink_Goods.ChildObjectId AS GoodsId
+                              FROM Object AS Object_ReceiptGoods
+                                   LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                        ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
+                                                       AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoods_Object()
+                              WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
+                               AND (Object_ReceiptGoods.isErased = FALSE OR inIsErased = TRUE)
+                             UNION ALL
+                              SELECT DISTINCT
+                                     Object_ReceiptGoods.Id, Object_ReceiptGoods.DescId, Object_ReceiptGoods.ObjectCode, Object_ReceiptGoods.ValueData, Object_ReceiptGoods.isErased
+                                   , ObjectLink_GoodsChild.ChildObjectId AS GoodsId
+                              FROM Object AS Object_ReceiptGoods
+                                   LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                        ON ObjectLink_ReceiptGoods.ChildObjectId = Object_ReceiptGoods.Id
+                                                       AND ObjectLink_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                   INNER JOIN Object AS Object_ReceiptGoodsChild
+                                                     ON Object_ReceiptGoodsChild.Id       = ObjectLink_ReceiptGoods.ObjectId
+                                                    AND Object_ReceiptGoodsChild.isErased = FALSE
+                                   INNER JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                         ON ObjectLink_GoodsChild.ObjectId      = Object_ReceiptGoodsChild.Id
+                                                        AND ObjectLink_GoodsChild.DescId        = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                                                        AND ObjectLink_GoodsChild.ChildObjectId > 0
+
+                              WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
+                               AND (Object_ReceiptGoods.isErased = FALSE OR inIsErased = TRUE)
+                             )
      -- Результат
      SELECT
            Object_ReceiptGoods.Id         AS Id
@@ -139,7 +167,7 @@ BEGIN
          , Object_ReceiptGoods.ValueData  AS Name
 
          , ObjectString_Code.ValueData        ::TVarChar  AS UserCode
-         , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
+         , CASE WHEN ObjectString_Comment.ValueData <> '' THEN ObjectString_Comment.ValueData ELSE ObjectString_Goods_Comment.ValueData END ::TVarChar  AS Comment
          , ObjectBoolean_Main.ValueData       ::Boolean   AS isMain
 
          , Object_Goods.Id         ::Integer  AS GoodsId
@@ -181,7 +209,7 @@ BEGIN
            -- Цена продажи с ндс
          , COALESCE (tmpPriceBasis.ValuePriceWVAT, 0) ::TFloat AS BasisPriceWVAT
 
-     FROM Object AS Object_ReceiptGoods
+     FROM tmpReceiptGoods AS Object_ReceiptGoods
           LEFT JOIN ObjectString AS ObjectString_Code
                                  ON ObjectString_Code.ObjectId = Object_ReceiptGoods.Id
                                 AND ObjectString_Code.DescId = zc_ObjectString_ReceiptGoods_Code()
@@ -193,10 +221,7 @@ BEGIN
                                   ON ObjectBoolean_Main.ObjectId = Object_ReceiptGoods.Id
                                  AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_ReceiptGoods_Main()
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods
-                               ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
-                              AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoods_Object()
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Object_ReceiptGoods.GoodsId
 
           LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
                                ON ObjectLink_ColorPattern.ObjectId = Object_ReceiptGoods.Id

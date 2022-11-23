@@ -3,7 +3,7 @@ object ProductionUnionForm: TProductionUnionForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1073#1086#1088#1082#1072'>'
   ClientHeight = 555
-  ClientWidth = 788
+  ClientWidth = 936
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object ProductionUnionForm: TProductionUnionForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 788
+    Width = 936
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 788
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -182,36 +183,40 @@ object ProductionUnionForm: TProductionUnionForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 788
+    Width = 936
     Height = 432
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 788
     ClientRectBottom = 432
-    ClientRectRight = 788
+    ClientRectRight = 936
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 788
       object Panel2: TPanel
         Left = 0
         Top = 137
-        Width = 788
+        Width = 936
         Height = 271
         Align = alBottom
         Caption = 'Panel2'
         TabOrder = 0
+        ExplicitWidth = 788
         object cxGridChild: TcxGrid
           Left = 1
           Top = 19
-          Width = 786
+          Width = 934
           Height = 251
           Align = alClient
           TabOrder = 0
           LookAndFeel.Kind = lfStandard
           LookAndFeel.NativeStyle = False
           LookAndFeel.SkinName = ''
+          ExplicitWidth = 786
           object cxGridDBTableViewChild: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -295,6 +300,7 @@ object ProductionUnionForm: TProductionUnionForm
               DataBinding.FieldName = 'NPP'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.##;-,0.##; ;'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
@@ -349,7 +355,6 @@ object ProductionUnionForm: TProductionUnionForm
               Properties.ReadOnly = True
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Options.Editing = False
               Width = 55
             end
             object ObjectName_ch1: TcxGridDBColumn
@@ -365,16 +370,33 @@ object ProductionUnionForm: TProductionUnionForm
               Properties.ReadOnly = True
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Width = 150
+              Width = 200
             end
             object ProdColorName_ch1: TcxGridDBColumn
               Caption = 'Farbe'
               DataBinding.FieldName = 'ProdColorName'
-              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
               Width = 70
+            end
+            object Amount_ch2: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
+              DataBinding.FieldName = 'Amount'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 80
+            end
+            object cxGridDBTableViewChildColumn1: TcxGridDBColumn
+              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
+              DataBinding.FieldName = 'Comment_goods'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+              Options.Editing = False
+              Width = 100
             end
             object MeasureName_ch1: TcxGridDBColumn
               Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -390,6 +412,7 @@ object ProductionUnionForm: TProductionUnionForm
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -402,26 +425,19 @@ object ProductionUnionForm: TProductionUnionForm
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
               Options.Editing = False
               Width = 63
             end
-            object Amount_ch2: TcxGridDBColumn
-              Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
-              DataBinding.FieldName = 'Amount'
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Width = 133
-            end
             object Amount_diff_ch2: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' ('#1086#1090#1082'.)'
               DataBinding.FieldName = 'Amount_diff'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1050#1086#1083'-'#1074#1086' ('#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077')'
@@ -431,9 +447,11 @@ object ProductionUnionForm: TProductionUnionForm
             object Comment_ch1: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
               DataBinding.FieldName = 'Comment'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
+              Options.Editing = False
               Width = 167
             end
             object IsErased_ch2: TcxGridDBColumn
@@ -464,30 +482,33 @@ object ProductionUnionForm: TProductionUnionForm
         object Panel1: TPanel
           Left = 1
           Top = 1
-          Width = 786
+          Width = 934
           Height = 18
           Align = alTop
           Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
           Color = clAqua
           ParentBackground = False
           TabOrder = 1
+          ExplicitWidth = 786
         end
       end
       object Panel3: TPanel
         Left = 0
         Top = 0
-        Width = 788
+        Width = 936
         Height = 129
         Align = alClient
         Caption = 'Panel3'
         TabOrder = 1
+        ExplicitWidth = 788
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
-          Width = 786
+          Width = 934
           Height = 127
           Align = alClient
           TabOrder = 0
+          ExplicitWidth = 786
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -603,14 +624,6 @@ object ProductionUnionForm: TProductionUnionForm
               Options.Editing = False
               Width = 90
             end
-            object Article: TcxGridDBColumn
-              Caption = 'Artikel Nr'
-              DataBinding.FieldName = 'Article'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Options.Editing = False
-              Width = 80
-            end
             object CIN: TcxGridDBColumn
               Caption = 'CIN Nr.'
               DataBinding.FieldName = 'CIN'
@@ -618,6 +631,14 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
               Width = 100
+            end
+            object Article: TcxGridDBColumn
+              Caption = 'Artikel Nr'
+              DataBinding.FieldName = 'Article'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 80
             end
             object EngineNum: TcxGridDBColumn
               Caption = 'Engine Nr.'
@@ -629,6 +650,7 @@ object ProductionUnionForm: TProductionUnionForm
                   Kind = bkEllipsis
                 end>
               Properties.ReadOnly = True
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 80
@@ -648,7 +670,7 @@ object ProductionUnionForm: TProductionUnionForm
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
                 item
-                  Action = actProductChoiceForm
+                  Action = actReceiptGoodsChoiceForm
                   Default = True
                   Kind = bkEllipsis
                 end>
@@ -656,6 +678,20 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 233
+            end
+            object ProdColorName: TcxGridDBColumn
+              Caption = 'Farbe'
+              DataBinding.FieldName = 'ProdColorName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 100
+            end
+            object Comment_goods: TcxGridDBColumn
+              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1059#1079#1077#1083')'
+              DataBinding.FieldName = 'Comment_goods'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 150
             end
             object Amount: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
@@ -677,7 +713,7 @@ object ProductionUnionForm: TProductionUnionForm
               Width = 45
             end
             object ReceiptProdModelName: TcxGridDBColumn
-              Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080
+              Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080'/'#1059#1079#1077#1083
               DataBinding.FieldName = 'ReceiptProdModelName'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -686,8 +722,10 @@ object ProductionUnionForm: TProductionUnionForm
             object Comment: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
               DataBinding.FieldName = 'Comment'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 125
             end
             object InsertName: TcxGridDBColumn
@@ -726,12 +764,13 @@ object ProductionUnionForm: TProductionUnionForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 129
-        Width = 788
+        Width = 936
         Height = 8
         HotZoneClassName = 'TcxSimpleStyle'
         HotZone.Visible = False
         AlignSplitter = salBottom
         Control = Panel2
+        ExplicitWidth = 788
       end
     end
   end
@@ -779,8 +818,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 400
-    Top = 367
+    Left = 104
+    Top = 303
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -835,6 +874,10 @@ object ProductionUnionForm: TProductionUnionForm
         item
           Visible = True
           ItemName = 'bbInsertRecordGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1568,6 +1611,7 @@ object ProductionUnionForm: TProductionUnionForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ObjectId'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -1576,6 +1620,7 @@ object ProductionUnionForm: TProductionUnionForm
           Component = MasterCDS
           ComponentItem = 'ObjectName'
           DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -1583,6 +1628,33 @@ object ProductionUnionForm: TProductionUnionForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ObjectCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CIN'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CIN'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptProdModelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptProdModelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelName'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1664,12 +1736,37 @@ object ProductionUnionForm: TProductionUnionForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'ObjectId'
+          ComponentItem = 'ReceiptProdModelId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ObjectName'
@@ -1678,10 +1775,11 @@ object ProductionUnionForm: TProductionUnionForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Code'
+          Name = 'Article'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'ObjectCode'
+          ComponentItem = 'Article'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

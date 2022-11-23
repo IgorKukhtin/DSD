@@ -1,3 +1,20 @@
+1) этап производство
+- ПФ Корпус стеклопластиковый АGL-280
+- 
+
+- ПФ Капот АGL-280
+2) этап
+- Корпус стеклопластиковый АGL-280 из ПФ.... + другие комплект.
+3) этап лодка из:
+- Корпус стеклопластиковый АGL-280
+- ПФ Сиденье водителя АGL-280
+- ПФ Капот АGL-280
+- BELUGA - материал для сиденья
+- hypalon
+- Teak
+- мотор
+- другие комплект.
+
 ----------------
 {  "order_id":4600 - Model - 560 !!!!
   ,"status":"new"
@@ -68,7 +85,55 @@
   ,"accessories":[{"id":"b280_doa_1","title":"Removable Steering wheel","price":400}
                  ]
 }
+
+{ "order_id":5347,"status":"new","transport_preparation_price":485,"full_price":27730
+ ,"client":{"name":"Константин","phone":"+380 1111111","email":"123@gmail.com","comment":"test"}
+ ,"model":{"id":"b280","title":"Agilis 280","price":"19950"}
+ 
+ ,"hypalon_primary":{"id":"b280_hp_c0","category_title":"LISSE\/MATT","color_title":"Off White","color":"#f1eadb","price":1150}
+ ,"hypalon_secondary":{"id":"b280_hs_c0","category_title":"LISSE\/MATT","color_title":"Artic Grey","color":"#c4c8c4","price":300}
+ ,"moldings":{"id":"b280_m","color_title":"Basic","color":"#808080","color_secondary":"#808080","price":0}
+ ,"upholstery":{"id":"b280_u_5","material_title":"POLARIS","color_title":"Gunmetal","color":"#606263","code":"POL-1620","price":1100}
+ 
+ ,"teak":{"id":"b280_t_0","material_title":"TEAK","color_title":"Grey caulking","color":"#eaab5e","lines_color":"#b3b8bb","price":900}
+ ,"hull":{"id":"b280_hc","color_title":"RAL 9010","color":"#f7f9ef","price":0}
+ ,"deck":{"id":"b280_dc","color_title":"RAL 9010","color":"#f7f9ef","price":0}
+ ,"sconsole":{"id":"b280_sc","color_title":"RAL 9010","color":"#f7f9ef","price":0}
+ ,"icolors":{"id":"b280_ic","color_title":"RAL 9003","color":"#0A0A0D","price":0}
+ 
+ ,"devices":[{"id":"b280_doa_0","title":"Raymarine Dragonfly 5 PRO","price":1200},{"id":"b280_doa_1","title":"Sound System","price":1700}]
+ ,"accessories":[{"id":"b280_aoa_0","title":"Boat Cover","price":630,"color_title":"Black","color":"#313133"},{"id":"b280_aoa_4","title":"Lifting Eyes","price":315}]}
   
+
+{ "order_id":5115,"status":"new","transport_preparation_price":350,"full_price":20520
+ ,"client":{"name":"test","phone":"+380 111111111","email":"vlad@push-k.ua","comment":"test"}
+ ,"model":{"id":"b280","title":"Agilis 280","price":"19950"}
+ 
+ ,"hypalon_primary":{"id":"b280_hp_b","category_title":"Basic","color_title":"Ice White","color":"#ffffff","price":0}
+ ,"hypalon_secondary":{"id":"b280_hs_c2","category_title":"FABRIC IMPRESSION","color_title":"Ocean Blue Fabric Impression","color":"#3f485b","price":220}
+ ,"moldings":{"id":"b280_m","color_title":"Light Grey ","color":"#D7D7D7","color_secondary":"#808080","price":0}
+ ,"upholstery":{"id":"b280_u_b","material_title":"BELUGA","color_title":"Pure white","color":"#F0F0EC","code":"BEL-3302","price":0}
+ 
+ ,"teak":{"id":"b280_t_b","material_title":"GREY","color_title":"White caulking","color":"#c4bebe","lines_color":"#ffffff","price":0}
+ ,"hull":{"id":"b280_hc","color_title":"RAL 9010","color":"#f7f9ef","price":0}
+ ,"deck":{"id":"b280_dc","color_title":"RAL 9010","color":"#f7f9ef","price":0}
+ ,"sconsole":{"id":"b280_sc","color_title":"RAL 9010","color":"#f7f9ef","price":0}
+ ,"icolors":{"id":"b280_ic","color_title":"RAL 9003","color":"#0A0A0D","price":0}}
+
+{ "order_id":5152,"status":"new","transport_preparation_price":350,"full_price":27010
+ ,"client":{"name":"Константин","phone":"+380 1111111","email":"123@gmail.com","comment":"test"}
+ ,"model":{"id":"b280","title":"Agilis 280","price":"19950"}
+
+ ,"hypalon_primary":{"id":"b280_hp_c0","category_title":"LISSE\/MATT","color_title":"Italia Green","color":"#2d9857","price":1050}
+ ,"hypalon_secondary":{"id":"b280_hs_c0","category_title":"LISSE\/MATT","color_title":"Cream White","color":"#e9e0cf","price":220}
+ ,"moldings":{"id":"b280_m","color_title":"Basic","color":"#808080","color_secondary":"#808080","price":0}
+
+ ,"upholstery":{"id":"b280_u_0","material_title":"BELUGA","color_title":"White Cap","color":"#DDCDB5","code":"BEL-3304","price":575}
+ ,"teak":{"id":"b280_t_0","material_title":"TEAK","color_title":"Black caulking","color":"#eaab5e","lines_color":"#000000","price":900}
+ ,"hull":{"id":"b280_hc","color_title":"RAL 9001","color":"#EFEBDC","price":680}
+ ,"deck":{"id":"b280_dc","color_title":"RAL 9002","color":"#DDDED4","price":680}
+ ,"sconsole":{"id":"b280_sc","color_title":"RAL 9018","color":"#CFD3CD","price":350}
+ ,"icolors":{"id":"b280_ic","color_title":"RAL 9003","color":"#0A0A0D","price":0},"devices":[{"id":"b280_doa_0","title":"Raymarine Dragonfly 5 PRO","price":950}],"light":[{"id":"b280_loa_0","title":"LED Deck Lights 3x","price":315,"color_title":"Blue","color":"#59bbe5"}],"accessories":[{"id":"b280_aoa_0","title":"Boat Cover","price":630,"color_title":"Admiral Navy","color":"#434667"},{"id":"b280_aoa_6","title":"Name of Boat","price":360,"text":"test"}]}
   
   
 --++++++++++++++

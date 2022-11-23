@@ -27,10 +27,6 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 0
-    ExplicitTop = 26
-    ExplicitWidth = 1272
-    ExplicitHeight = 225
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
@@ -41,10 +37,6 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = -14
-      ExplicitTop = 81
-      ExplicitWidth = 1272
-      ExplicitHeight = 208
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -175,6 +167,14 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
           HeaderGlyphAlignmentHorz = taCenter
           Options.Editing = False
           Width = 125
+        end
+        object MaterialOptionsName: TcxGridDBColumn
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
+          DataBinding.FieldName = 'MaterialOptionsName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 100
         end
         object Article: TcxGridDBColumn
           Caption = 'Artikel Nr'
@@ -407,7 +407,6 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 1272
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -417,8 +416,6 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitTop = 251
-    ExplicitWidth = 1272
   end
   object cxRightSplitter: TcxSplitter
     Left = 1119
@@ -426,18 +423,12 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
     Width = 8
     Height = 355
     AlignSplitter = salRight
-    ExplicitLeft = 1264
-    ExplicitTop = 256
-    ExplicitHeight = 302
   end
   object cxSplitter1: TcxSplitter
     Left = 0
     Top = 31
     Width = 8
     Height = 355
-    ExplicitLeft = 567
-    ExplicitTop = 256
-    ExplicitHeight = 302
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -929,6 +920,36 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Article'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

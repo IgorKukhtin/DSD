@@ -164,7 +164,11 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
                                   ON ObjectLink_MaterialOptions.ObjectId = ProdColorPattern.prodoptionsid
                                  AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
-       WHERE ProdColorPattern.ModelId = vbModelId AND ProdColorPattern.ProdColorGroupName ILIKE 'Fiberglass - '||TRIM(SPLIT_PART (inReceiptLevelName, '/', 1));
+       WHERE ProdColorPattern.ModelId = vbModelId
+         AND ProdColorPattern.ProdColorGroupName ILIKE CASE WHEN inReceiptLevelName ILIKE 'Steering console' 
+                                                            THEN 'Fiberglass '   || TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))
+                                                            ELSE 'Fiberglass - ' || TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))                                                         
+                                                       END;
 
      END IF;
 
@@ -362,7 +366,7 @@ BEGIN
        SELECT ProdColorPattern.Id
             , ObjectLink_MaterialOptions.ChildObjectId 
        INTO vbProdColorPatternId, vbMaterialOptionsId
-       FROM gpSelect_Object_ProdColorPattern(inColorPatternId:= vbColorPatternId, inIsErased:= FALSE, inIsShowAll := FALSE, inSession := inSession) AS ProdColorPattern
+       FROM gpSelect_Object_ProdColorPattern (inColorPatternId:= vbColorPatternId, inIsErased:= FALSE, inIsShowAll := FALSE, inSession := inSession) AS ProdColorPattern
              LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
                                   ON ObjectLink_MaterialOptions.ObjectId = ProdColorPattern.prodoptionsid
                                  AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
@@ -376,7 +380,14 @@ BEGIN
 
    IF inReplacement ILIKE 'ДА' AND COALESCE (vbProdColorPatternId, 0) = 0
    THEN
-     RAISE EXCEPTION 'Ошибка В Boat Structure не найдена замена для <%> <%>', inArticle, inGoodsName_child;        
+     RAISE EXCEPTION 'Ошибка В Boat Structure не найдена замена для <%> <%> <%>'
+      , CASE WHEN inReceiptLevelName ILIKE 'Steering console' 
+                  THEN 'Fiberglass '   || TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))
+             WHEN inReceiptLevelName ILIKE 'Hull' OR inReceiptLevelName ILIKE 'Deck' OR inReceiptLevelName ILIKE 'Deck color' 
+                  THEN 'Fiberglass - '   || TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))
+             ELSE TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))                                                         
+        END
+      , inArticle, inGoodsName_child;
    END IF;
 
    BEGIN
@@ -763,7 +774,7 @@ BEGIN
                                                                                  , inReceiptGoodsId     := vbReceiptGoodsId     ::Integer
                                                                                  , inObjectId           := vbGoodsId_child      ::Integer
                                                                                  , inProdColorPatternId := vbProdColorPatternId ::Integer
-                                                                                 , inMaterialOptionsId  := vbMaterialOptionsId  ::Integer
+                                                                                 , inMaterialOptionsId  := COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbReceiptGoodsChildId AND OL.DescId = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()), vbMaterialOptionsId)  ::Integer
                                                                                  , inReceiptLevelId_top := 0                    ::Integer
                                                                                  , inReceiptLevelId     := vbReceiptLevelId     ::Integer
                                                                                  , inGoodsChildId       := vbGoods_GoodsChildId ::Integer
@@ -907,4 +918,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load(1, 'AGL-280-01-пф', 'HULL/(Корпус)', 'ПФ Корпус стеклопластиковый АGL-280-RAL 9010', 'ПФ Корпус', 'ДА', '54890600251', '', 'Стеклопластик ПФ', '5,488', zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load(1, 'AGL-280-01-пф', 'HULL/(Корпус)', 'ПФ Корпус стеклопластиковый АGL-280-RAL 9010', 'ПФ Корпус', 'ДА', '54890600251', '', 'Стеклопластик ПФ', '5,488', zfCalc_UserAdmin())
