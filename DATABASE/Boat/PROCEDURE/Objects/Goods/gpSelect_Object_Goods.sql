@@ -192,6 +192,17 @@ BEGIN
                                                   --AND Object_Goods.ObjectCode < 0
                         WHERE Object_Goods.DescId = zc_Object_Goods()
                         --AND inIsLimit_100 = TRUE
+                       UNION
+                        SELECT DISTINCT Object_Goods.*
+                        FROM Movement
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId     IN (zc_MI_Child(), zc_MI_Detail(), zc_MI_Reserv())
+                             INNER JOIN Object AS Object_Goods
+                                               ON Object_Goods.Id     = MovementItem.ObjectId
+                                              AND Object_Goods.DescId = zc_Object_Goods()
+                        WHERE Movement.DescId = zc_Movement_OrderClient()
+                          AND vbUserId = 5
+                        --AND inIsLimit_100 = TRUE
                        )
 
        -- Результат

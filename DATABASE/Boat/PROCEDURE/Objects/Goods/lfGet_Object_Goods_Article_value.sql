@@ -16,7 +16,7 @@ BEGIN
         RETURN '';
    END IF;
    
-   vbValue:= 1 + COALESCE ((SELECT MAX (zfConvert_StringToFloat (SUBSTRING (ObjectString_Article.ValueData FROM 1 + LENGTH (inSrchText) FOR 3))) ::Integer
+   vbValue:= 1 + COALESCE ((SELECT MAX (zfConvert_StringToFloat (SUBSTRING (ObjectString_Article.ValueData FROM 2 + LENGTH (inSrchText) FOR 3))) ::Integer
                             FROM Object AS Object_Goods
                                  INNER JOIN ObjectString AS ObjectString_Article
                                                          ON ObjectString_Article.ObjectId  = Object_Goods.Id
