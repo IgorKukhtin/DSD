@@ -3650,10 +3650,6 @@
 				<Form>JuridicalOrderFinanceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_RemainsOLAPTable.pas">
-				<Form>Report_RemainsOLAPTableForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_RemainsOLAPTableDialog.pas">
 				<Form>Report_RemainsOLAPTableDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>

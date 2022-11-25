@@ -304,8 +304,18 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1074#1110#1076#1087#1091#1089#1082#1091' '#1088#1077#1094#1077#1087#1090#1072
         DataBinding.FieldName = 'OperDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'dd.mm.yyyy'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 77
+      end
+      object OperDate_Time: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'/'#1095#1072#1089' '#1074#1110#1076#1087#1091#1089#1082#1091' '#1088#1077#1094#1077#1087#1090#1072' ('#1110#1085#1092'.)'
+        DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 77
       end
       object InsertName_Check: TcxGridDBColumn

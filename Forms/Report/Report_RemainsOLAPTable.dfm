@@ -840,6 +840,30 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       Width = 107
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
+    object pvCostStart: TcxDBPivotGridField
+      AreaIndex = 13
+      IsCaptionAssigned = True
+      Caption = #1057'/c '#1086#1089#1090'. '#1085#1072#1095'., '#1075#1088#1085
+      DataBinding.FieldName = 'CostStart'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvCostEnd: TcxDBPivotGridField
+      AreaIndex = 14
+      IsCaptionAssigned = True
+      Caption = #1057'/c '#1086#1089#1090'. '#1082#1086#1085#1077#1095#1085'., '#1075#1088#1085
+      DataBinding.FieldName = 'CostEnd'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
     object pvAmountIncome_Weight: TcxDBPivotGridField
       Area = faData
       AreaIndex = 50

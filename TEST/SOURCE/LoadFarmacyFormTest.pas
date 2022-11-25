@@ -1161,6 +1161,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUsersSiteProfileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUsersSiteProfileForm');
 
@@ -1182,7 +1183,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ConductedSalesMobileForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ApplicationAwardUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ApplicationAwardUserForm');
-{
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalRemainsEndDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalRemainsEndDialogForm');
@@ -1244,9 +1245,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaperRecipeSPInsulinForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaperRecipeSPInsulinForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaperRecipeSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaperRecipeSPForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainingInsulinsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainingInsulinsForm');
 
