@@ -695,7 +695,6 @@ BEGIN
 --         ;
 
 
-
          -- таблица - список созданных узлов + его Комплектующие
          CREATE TEMP TABLE _tmpReceiptItems_new (ReceiptGoodsChildId Integer, ReceiptGoodsId Integer
                                                , ObjectId_parent_old Integer, ObjectId_parent Integer, ObjectId Integer, ProdColorPatternId Integer
@@ -752,6 +751,13 @@ BEGIN
            WHERE _tmpItem_Child.ObjectId_parent_find = 0
              AND _tmpItem_Detail.ProdColorPatternId  > 0
           ;
+
+
+/*        RAISE EXCEPTION 'Ошибка.<%>  <%>'
+        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) = 0)
+        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) > 0)
+         ;*/
+
 
 
         -- Создаем новый Узел - master
@@ -987,6 +993,7 @@ BEGIN
         -- Создаем новый Узел - child
         UPDATE _tmpReceiptItems_new SET GoodsId_child = tmpGoods.GoodsId_child
         FROM (SELECT tmpGoods_1.GoodsId
+                   , tmpGoods_1.GoodsId_child_old
                    , gpInsertUpdate_Object_Goods (ioId                     := 0
                                                 , inCode                   := -1
                                                 , inName                   := 'ПФ ' || Object_Goods_new.ValueData
@@ -1097,7 +1104,8 @@ BEGIN
                                          ON ObjectFloat_Metres.ObjectId = Object_Goods.Id
                                         AND ObjectFloat_Metres.DescId   = zc_ObjectFloat_Goods_Metres()
              ) AS tmpGoods
-        WHERE _tmpReceiptItems_new.ObjectId_parent = tmpGoods.GoodsId
+        WHERE _tmpReceiptItems_new.ObjectId_parent   = tmpGoods.GoodsId
+          AND _tmpReceiptItems_new.GoodsId_child_old = tmpGoods.GoodsId_child_old
        ;
 
 
@@ -1161,6 +1169,46 @@ BEGIN
                                                  AND _tmpReceiptItems_Key.ProdColorPatternId = _tmpReceiptItems_new.ProdColorPatternId
               -- если создавали Узел
               WHERE _tmpReceiptItems_new.ObjectId_parent > 0
+
+
+            UNION ALL
+             -- все остальное для сборки Узла
+             SELECT  0 AS ObjectId_parent
+                   , _tmpReceiptProdModel.ObjectId       AS ObjectId
+                   , 0 AS ProdColorPatternId
+                   , (SELECT gpInsertUpdate.ioId
+                      FROM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                  := 0
+                                                                  , inComment             := ''
+                                                                  , inReceiptGoodsId      := _tmpReceiptItems_new.ReceiptGoodsId
+                                                                  , inObjectId            := _tmpReceiptProdModel.ObjectId
+                                                                  , inProdColorPatternId  := 0
+                                                                  , inMaterialOptionsId   := NULL
+                                                                  , inReceiptLevelId_top  := NULL
+                                                                  , inReceiptLevelId      := _tmpReceiptProdModel.ReceiptLevelId
+                                                                  , inGoodsChildId        := _tmpReceiptItems_new.GoodsId_child
+                                                                  , ioValue               := _tmpReceiptProdModel.Value
+                                                                  , ioValue_service       := 0
+                                                                  , inIsEnabled           := TRUE
+                                                                  , inSession             := inUserId :: TVarChar
+                                                                   ) AS gpInsertUpdate
+                     ) AS ReceiptGoodsChildId
+             FROM _tmpReceiptProdModel
+                  INNER JOIN Object AS Object_Object
+                                    ON Object_Object.Id     = _tmpReceiptProdModel.ObjectId
+                                   AND Object_Object.DescId = zc_Object_Goods()
+                  INNER JOIN (SELECT DISTINCT
+                                     _tmpReceiptItems_new.ReceiptGoodsId
+                                   , _tmpReceiptItems_new.ObjectId_parent_old
+                                   , _tmpReceiptItems_new.GoodsId_child, COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) AS GoodsId_child_old
+                              FROM _tmpReceiptItems_new
+                             ) AS _tmpReceiptItems_new
+                               ON _tmpReceiptItems_new.ObjectId_parent_old = _tmpReceiptProdModel.ObjectId_parent
+                              AND _tmpReceiptItems_new.GoodsId_child_old   = COALESCE (_tmpReceiptProdModel.GoodsId_child, 0)
+                                   
+             WHERE COALESCE (_tmpReceiptProdModel.ProdColorPatternId, 0) = 0
+              -- только когда сборка Узла
+              AND _tmpReceiptProdModel.ObjectId_parent > 0
+             
              ) AS tmpGoods
         WHERE _tmpReceiptItems_new.ObjectId_parent    = tmpGoods.ObjectId_parent
           AND _tmpReceiptItems_new.ObjectId           = tmpGoods.ObjectId
