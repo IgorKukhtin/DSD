@@ -124,6 +124,8 @@ type
     spSelect_ExportCSV: TdsdStoredProc;
     mactExportCSV: TMultiAction;
     bbExportCSV: TdxBarButton;
+    actOpenFormPersonalServiceDetail: TdsdOpenForm;
+    bbOpenFormPersonalServiceDetail: TdxBarButton;
   private
     { Private declarations }
   public
