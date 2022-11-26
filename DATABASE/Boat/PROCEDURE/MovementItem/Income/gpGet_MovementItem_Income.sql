@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MovementItem_Income(
-    IN inId             Integer  , -- ключ
+    IN inId             Integer  , -- ключ 
+    IN inMaskId         Integer  , -- добавить по маске
     IN inGoodsId        Integer  , -- ключ
     IN inSession        TVarChar   -- сессия пользователя
 )
@@ -77,7 +79,7 @@ BEGIN
                                                              ON MIString_Comment.MovementItemId = MovementItem.Id
                                                             AND MIString_Comment.DescId = zc_MIString_Comment()
 
-                           WHERE MovementItem.Id     = inId
+                           WHERE MovementItem.Id     = inMaskId
                              AND MovementItem.DescId = zc_MI_Master()
                           )
               , tmpGoods AS (SELECT inGoodsId AS GoodsId)
@@ -89,7 +91,7 @@ BEGIN
                                  )
            -- Результат
            SELECT
-                 tmpMI.Id
+                 inId                           AS Id
                , Object_Goods.Id                AS GoodsId
                , Object_Goods.ObjectCode        AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
@@ -130,6 +132,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.11.22         * inMaskId
  12.10.21         *
 */
 
