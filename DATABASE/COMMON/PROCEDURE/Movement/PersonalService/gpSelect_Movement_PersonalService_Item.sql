@@ -938,6 +938,4 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2015', inEndDate:= '01.02.2015', inJuridicalBasisId:= 0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')
-
-
-select * from gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2022')::TDateTime , inEndDate := ('01.12.2022')::TDateTime , inJuridicalBasisId := 9399 , inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
+--select * from gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2022')::TDateTime , inEndDate := ('01.12.2022')::TDateTime , inJuridicalBasisId := 9399 , inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
