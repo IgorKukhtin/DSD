@@ -32,6 +32,7 @@ BEGIN
 
      vbUserId:= lpGetUserBySession (inSession);
 
+/*
      DROP TABLE IF EXISTS _tmpReceiptProdModelChild;
      DROP TABLE IF EXISTS _tmpReceiptGoodsChild;
 
@@ -98,7 +99,7 @@ BEGIN
           );
 
 
-    IF inShowAll
+    IF inShowAll    -- пока без обработки
     THEN
      RETURN QUERY
      WITH
@@ -228,6 +229,8 @@ BEGIN
                                          AND tmpReceiptGoodsChild.ObjectId       = MovementItem.ObjectId
      ;
    ELSE
+   */
+   
    RETURN QUERY
     WITH
      tmpIsErased AS (SELECT FALSE AS isErased
@@ -263,45 +266,54 @@ BEGIN
 
      SELECT
          MovementItem.Id
-       --, ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId ORDER BY MovementItem.Id ASC) :: Integer AS NPP
-       , COALESCE (tmpReceiptProdModelChild.NPP, tmpReceiptGoodsChild.NPP)  :: Integer AS NPP
+       , ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId ORDER BY MovementItem.Id ASC) :: Integer AS NPP
+       --, COALESCE (tmpReceiptProdModelChild.NPP, tmpReceiptGoodsChild.NPP)  :: Integer AS NPP
        , MovementItem.ParentId
        , MovementItem.ObjectId      AS ObjectId
        , Object_Object.ObjectCode   AS ObjectCode
        , Object_Object.ValueData    AS ObjectName
        , ObjectDesc.ItemName ::TVarChar AS DescName
-       , tmpReceiptProdModelChild.ReceiptLevelName  ::TVarChar AS ReceiptLevelName
+       , ''  ::TVarChar AS ReceiptLevelName
+       --, tmpReceiptProdModelChild.ReceiptLevelName  ::TVarChar AS ReceiptLevelName
        , MovementItem.Amount           ::TFloat
        , MovementItem.isErased
 
-       , COALESCE (tmpReceiptProdModelChild.GoodsGroupNameFull, tmpReceiptGoodsChild.GoodsGroupNameFull) ::TVarChar  AS GoodsGroupNameFull
-       , COALESCE (tmpReceiptProdModelChild.GoodsGroupName, tmpReceiptGoodsChild.GoodsGroupName)         ::TVarChar  AS GoodsGroupName
-     --, COALESCE (tmpReceiptProdModelChild.Article, tmpReceiptGoodsChild.Article)                       ::TVarChar  AS Article
+     --, COALESCE (tmpReceiptProdModelChild.GoodsGroupNameFull, tmpReceiptGoodsChild.GoodsGroupNameFull) ::TVarChar  AS GoodsGroupNameFull
+     --, COALESCE (tmpReceiptProdModelChild.GoodsGroupName, tmpReceiptGoodsChild.GoodsGroupName)         ::TVarChar  AS GoodsGroupName
+     --, COALESCE (tmpReceiptProdModelChild.Article, tmpReceiptGoodsChild.Article)                       ::TVarChar  AS Article        
+       , ObjectString_GoodsGroupFull.ValueData                                                           ::TVarChar  AS GoodsGroupNameFull
+       , Object_GoodsGroup.ValueData                                                                     ::TVarChar  AS GoodsGroupName
        , ObjectString_Article.ValueData                                                                              AS Article
      --, COALESCE (tmpReceiptProdModelChild.ProdColorName, tmpReceiptGoodsChild.ProdColorName)           :: TVarChar AS ProdColorName
        , Object_ProdColor.ValueData                                                                                  AS ProdColorName
-       , COALESCE (tmpReceiptProdModelChild.MeasureName, tmpReceiptGoodsChild.MeasureName)               ::TVarChar  AS MeasureName
+     --, COALESCE (tmpReceiptProdModelChild.MeasureName, tmpReceiptGoodsChild.MeasureName)               ::TVarChar  AS MeasureName
+       , Object_Measure.ValueData                                                                        ::TVarChar  AS MeasureName
        , ObjectString_Goods_Comment.ValueData                                                                        AS Comment_goods
-       , COALESCE (tmpReceiptProdModelChild.Value, tmpReceiptGoodsChild.Value)                           ::TFloat    AS Value
-       , COALESCE (tmpReceiptProdModelChild.Value_service, tmpReceiptGoodsChild.Value_service)           ::TFloat    AS Value_service
+     --, COALESCE (tmpReceiptProdModelChild.Value, tmpReceiptGoodsChild.Value)                           ::TFloat    AS Value
+     --, COALESCE (tmpReceiptProdModelChild.Value_service, tmpReceiptGoodsChild.Value_service)           ::TFloat    AS Value_service
        --разница от введенного
-       , ( MovementItem.Amount - COALESCE (tmpReceiptProdModelChild.Value, tmpReceiptGoodsChild.Value) - COALESCE (tmpReceiptProdModelChild.Value_service, tmpReceiptGoodsChild.Value_service) )  :: TFloat   AS Amount_diff
+     --, ( MovementItem.Amount - COALESCE (tmpReceiptProdModelChild.Value, tmpReceiptGoodsChild.Value) - COALESCE (tmpReceiptProdModelChild.Value_service, tmpReceiptGoodsChild.Value_service) )  :: TFloat   AS Amount_diff
+       , Null                                                                                            ::TFloat    AS Value
+       , Null                                                                                            ::TFloat    AS Value_service
+       , Null                                                                                            ::TFloat    AS Amount_diff
 
-       , COALESCE (tmpReceiptProdModelChild.Color_value, tmpReceiptGoodsChild.Color_value) :: Integer AS Color_value
-       , COALESCE (tmpReceiptProdModelChild.Color_Level, tmpReceiptGoodsChild.Color_Level) :: Integer AS Color_Level
+       --, COALESCE (tmpReceiptProdModelChild.Color_value, tmpReceiptGoodsChild.Color_value) :: Integer AS Color_value
+       --, COALESCE (tmpReceiptProdModelChild.Color_Level, tmpReceiptGoodsChild.Color_Level) :: Integer AS Color_Level
+       , Null                                                                                            :: Integer AS Color_value
+       , Null                                                                                            :: Integer AS Color_Level
      FROM tmpMI AS MovementItem
           LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementItem.ObjectId
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
 
           LEFT JOIN tmpMI_Master ON tmpMI_Master.Id = MovementItem.ParentId
 
-          LEFT JOIN _tmpReceiptProdModelChild AS tmpReceiptProdModelChild
+          /*LEFT JOIN _tmpReceiptProdModelChild AS tmpReceiptProdModelChild
                                               ON tmpReceiptProdModelChild.ReceiptProdModelId = tmpMI_Master.ReceiptProdModelId
                                              AND tmpReceiptProdModelChild.ObjectId           = MovementItem.ObjectId
 
           LEFT JOIN _tmpReceiptGoodsChild AS tmpReceiptGoodsChild
                                           ON tmpReceiptGoodsChild.ReceiptGoodsId = tmpMI_Master.ObjectId
-                                         AND tmpReceiptGoodsChild.ObjectId       = MovementItem.ObjectId
+                                         AND tmpReceiptGoodsChild.ObjectId       = MovementItem.ObjectId*/
 
           LEFT JOIN ObjectString AS ObjectString_Article
                                  ON ObjectString_Article.ObjectId = MovementItem.ObjectId
@@ -315,9 +327,21 @@ BEGIN
                                  ON ObjectString_Goods_Comment.ObjectId = Object_Object.Id
                                 AND ObjectString_Goods_Comment.DescId   = zc_ObjectString_Goods_Comment()
 
+          LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                 ON ObjectString_GoodsGroupFull.ObjectId = MovementItem.ObjectId
+                                AND ObjectString_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                               ON ObjectLink_Goods_GoodsGroup.ObjectId = MovementItem.ObjectId
+                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                               ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
      ;
-    END IF;
+   -- END IF;
 
 END;
 $BODY$

@@ -1605,6 +1605,10 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1813,6 +1817,7 @@ object IncomeForm: TIncomeForm
     object bbAddMask: TdxBarButton
       Action = actInsertMask
       Category = 0
+      Visible = ivNever
     end
     object bbInsertRecordCost: TdxBarButton
       Action = InsertRecordCost
@@ -1907,6 +1912,11 @@ object IncomeForm: TIncomeForm
     object bbAdd_limit: TdxBarButton
       Action = mactAdd_limit
       Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macInsertMask
+      Category = 0
+      ImageIndex = 54
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2174,6 +2184,7 @@ object IncomeForm: TIncomeForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -2192,6 +2203,7 @@ object IncomeForm: TIncomeForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2523,6 +2535,12 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'MaskId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'MovementId'
           Value = Null
           Component = FormParams
@@ -2569,6 +2587,20 @@ object IncomeForm: TIncomeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
       ImageIndex = 0
     end
+    object macInsertMask: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMaskAction
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 1
+    end
     object actOpenFormInvoice: TdsdOpenForm
       Category = 'OpenForm'
       TabSheet = cxTabSheetCost
@@ -2599,6 +2631,66 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = False
     end
+    object actInsertMaskAction: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
+      ImageIndex = 1
+      FormName = 'TIncomeItemEditForm'
+      FormNameParam.Value = 'TIncomeItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'id'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      ActionType = acUpdate
+      DataSource = MasterDS
+      IdFieldName = 'Id'
+    end
     object macUpdateAction: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -2625,6 +2717,14 @@ object IncomeForm: TIncomeForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
@@ -3096,7 +3196,7 @@ object IncomeForm: TIncomeForm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
-      ImageIndex = 54
+      ImageIndex = 0
       WithoutNext = True
     end
   end
@@ -4000,15 +4100,6 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEmpfPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'EmpfPrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inOperPrice_orig'
         Value = Null
         Component = MasterCDS
@@ -4027,10 +4118,91 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioDiscountTax'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DiscountTax'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummIn'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummIn'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_old'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice_orig_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice_orig_old'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountTax_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DiscountTax'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummIn_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummIn'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperPriceList'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEmpfPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'EmpfPrice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

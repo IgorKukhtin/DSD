@@ -1400,7 +1400,8 @@ uses
   Section in '..\..\Forms\Guides\Section.pas' {SectionForm: TParentForm},
   SectionEdit in '..\..\Forms\Guides\SectionEdit.pas' {SectionEditForm: TParentForm},
   MemberReport in '..\..\Forms\Guides\MemberReport.pas' {MemberReportForm: TParentForm},
-  MemberReportEdit in '..\..\Forms\Guides\MemberReportEdit.pas' {MemberReportEditForm: TParentForm};
+  MemberReportEdit in '..\..\Forms\Guides\MemberReportEdit.pas' {MemberReportEditForm: TParentForm},
+  PersonalServiceItemJournal in '..\..\Forms\Document\PersonalServiceItemJournal.pas' {PersonalServiceItemJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
