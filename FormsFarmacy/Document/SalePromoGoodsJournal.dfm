@@ -88,6 +88,24 @@ inherited SalePromoGoodsJournalForm: TSalePromoGoodsJournalForm
             HeaderHint = ' '#9#1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1082#1086#1085#1090#1088#1072#1082#1090#1072
             Width = 82
           end
+          object isAmountCheck: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
+            DataBinding.FieldName = 'isAmountCheck'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
+          object AmountCheck: TcxGridDBColumn
+            Caption = #1054#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
+            DataBinding.FieldName = 'AmountCheck'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'

@@ -37,9 +37,6 @@ $BODY$
    DECLARE vbReceiptLevelId Integer;
    DECLARE vbProdColorPatternId Integer;
    DECLARE vbMaterialOptionsId Integer;
-
-   DECLARE vbCommentMain TVarChar;
-   DECLARE vbComment_Child TVarChar;
    
    DECLARE vbReceiptProdModelId Integer;
    DECLARE vbReceiptProdModelChildId Integer;
@@ -49,7 +46,6 @@ $BODY$
    DECLARE vbGroup_GoodsChildName   TVarChar;  -- Группа-результат
    DECLARE vbGoods_GoodsChildId Integer;
    DECLARE vbGroup_GoodsChildId Integer;
-   DECLARE vbComment_GoodsChild TVarChar;
    
    DECLARE vbProdColorName TVarChar;
    DECLARE vbProdColor_ChildId Integer; 
@@ -143,12 +139,10 @@ BEGIN
        vbArticle_GoodsChild := inArticle;
        vbGoods_GoodsChildName := 'ПФ Корпус '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||vbProdColorName;
        vbGroup_GoodsChildName := 'Boote'; --inGroupName;
-       vbComment_GoodsChild := 'HULL/DECK';
        vbStage := True;
      END IF;
      
      -- Комплектующее узла
-     vbComment_child := '';
      inGroupName_child := 'Boote';
      
      -- Если есть замена комплектующей то определяем параметры
@@ -164,7 +158,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
                                   ON ObjectLink_MaterialOptions.ObjectId = ProdColorPattern.prodoptionsid
                                  AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
-       WHERE ProdColorPattern.ModelId = vbModelId
+      WHERE ProdColorPattern.ModelId = vbModelId
          AND ProdColorPattern.ProdColorGroupName ILIKE CASE WHEN inReceiptLevelName ILIKE 'Steering console' 
                                                             THEN 'Fiberglass '   || TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))
                                                             ELSE 'Fiberglass - ' || TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))                                                         
@@ -176,7 +170,6 @@ BEGIN
      inGoodsName := 'Корпус '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||vbProdColorName;
      inGroupName := 'Boote'; --'Сборка корпуса';    
      inArticle := SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||SPLIT_PART (inArticle, '-', 3);
-     vbCommentMain := 'HULL/DECK';
 
    ELSEIF SPLIT_PART (inArticle, '-', 3) = '02' -- Сборка сиденья
    THEN
@@ -187,12 +180,10 @@ BEGIN
        vbArticle_GoodsChild := inArticle;
        vbGoods_GoodsChildName := 'ПФ Сиденье водителя '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||vbProdColorName;
        vbGroup_GoodsChildName := 'Boote'; --inGroupName;
-       vbComment_GoodsChild := 'DECK';
        vbStage := True;
      END IF;
      
      -- Комплектующее узла
-     vbComment_child := '';
      inGroupName_child := 'Boote';
      
      -- Если есть замена комплектующей то определяем параметры
@@ -230,7 +221,6 @@ BEGIN
      inGoodsName := 'Сиденье водителя '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||vbProdColorName;
      inGroupName := 'Boote'; --'Сборка сиденья';    
      inArticle := SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||SPLIT_PART (inArticle, '-', 3);
-     vbCommentMain := 'DECK';
 
    ELSEIF SPLIT_PART (inArticle, '-', 3) = '03' -- Сборка капота
    THEN
@@ -241,12 +231,10 @@ BEGIN
        vbArticle_GoodsChild := inArticle;
        vbGoods_GoodsChildName := 'ПФ Капот '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||vbProdColorName;
        vbGroup_GoodsChildName := 'Boote'; --inGroupName;
-       vbComment_GoodsChild := 'STEERING CONSOLE';
        vbStage := True;
      END IF;
      
      -- Комплектующее узла
-     vbComment_child := '';
      inGroupName_child := 'Boote';
      
      -- Если есть замена комплектующей то определяем параметры
@@ -270,17 +258,14 @@ BEGIN
      inGoodsName := 'Капот '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||vbProdColorName;
      inGroupName := 'Boote'; --'Сборка Капота';    
      inArticle := SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||SPLIT_PART (inArticle, '-', 3);
-     vbCommentMain := 'STEERING CONSOLE';
 
    ELSEIF TRIM(SPLIT_PART (inArticle, '-', 3)) ILIKE '*ICE WHITE' -- Балоны
    THEN
      vbNotRename := True;  
      inGoodsName := inArticle;
      inGroupName := 'Boote'; -- 'Сборка баллона';
-     vbCommentMain := 'Hypalon';
 
      -- Комплектующее узла
-     vbComment_child := '';
      inGroupName_child := 'Boote';
      
      -- Если есть замена комплектующей то определяем параметры
@@ -303,7 +288,6 @@ BEGIN
        THEN
          vbProdColor_ChildId := (SELECT MAX(Object_ProdColor.Id) FROM Object AS Object_ProdColor 
                                  WHERE Object_ProdColor.DescId = zc_Object_ProdColor() AND Object_ProdColor.ValueData ILIKE 'NEPTUNE GREY');
-         vbComment_child := 'fender';
        END IF;
 
        SELECT ProdColorPattern.Id
@@ -324,7 +308,6 @@ BEGIN
      vbNotRename := True;  
 
      -- Комплектующее узла
-     vbComment_child := '';
      inGroupName_child := 'Boote';
      
      -- Если есть замена комплектующей то определяем параметры
@@ -349,7 +332,6 @@ BEGIN
 
      -- Узел основной
      inGroupName := 'Boote';
-     vbCommentMain := 'Kreslo';
      
    ELSEIF TRIM(SPLIT_PART (inArticle, '-', 3)) ILIKE 'basis' -- Сборка лодки
    THEN
@@ -357,7 +339,6 @@ BEGIN
      vbReceiptProdModel := True;
      
      inGroupName_child := 'Boote';
-     vbComment_child := inReceiptLevelName;
      
      -- Если есть замена комплектующей то определяем параметры
      IF inReplacement ILIKE 'ДА'
@@ -366,7 +347,7 @@ BEGIN
        SELECT ProdColorPattern.Id
             , ObjectLink_MaterialOptions.ChildObjectId 
        INTO vbProdColorPatternId, vbMaterialOptionsId
-       FROM gpSelect_Object_ProdColorPattern (inColorPatternId:= vbColorPatternId, inIsErased:= FALSE, inIsShowAll := FALSE, inSession := inSession) AS ProdColorPattern
+       FROM gpSelect_Object_ProdColorPattern(inColorPatternId:= vbColorPatternId, inIsErased:= FALSE, inIsShowAll := FALSE, inSession := inSession) AS ProdColorPattern
              LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
                                   ON ObjectLink_MaterialOptions.ObjectId = ProdColorPattern.prodoptionsid
                                  AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
@@ -387,7 +368,7 @@ BEGIN
                   THEN 'Fiberglass - '   || TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))
              ELSE TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))                                                         
         END
-      , inArticle, inGoodsName_child;
+      , inArticle, inGoodsName_child;  
    END IF;
 
    BEGIN
@@ -450,7 +431,9 @@ BEGIN
                                                                   , inASIN              := NULL     :: TVarChar
                                                                   , inMatchCode         := NULL     :: TVarChar
                                                                   , inFeeNumber         := NULL     :: TVarChar
-                                                                  , inComment           := vbComment_GoodsChild
+                                                                  , inComment           := COALESCE ((SELECT OC.ValueData FROM Object AS OC
+                                                                                                      WHERE OC.Id = COALESCE (vbGoods_GoodsChildId, 0) 
+                                                                                                        AND OC.DescId = zc_ObjectString_Goods_Comment()), '') ::TVarChar
                                                                   , inIsArc             := FALSE    :: Boolean
                                                                   , inFeet              := 0        :: TFloat
                                                                   , inMetres            := 0        :: TFloat
@@ -466,7 +449,7 @@ BEGIN
                                                                   , inProdColorId       := 0        :: Integer
                                                                   , inPartnerId         := 0        :: Integer
                                                                   , inUnitId            := 0        :: Integer
-                                                                  , inDiscountPartnerId := 0       :: Integer
+                                                                  , inDiscountPartnerId := 0        :: Integer
                                                                   , inTaxKindId         := 0        :: Integer
                                                                   , inEngineId          := NULL
                                                                   , inSession           := inSession:: TVarChar
@@ -553,7 +536,9 @@ BEGIN
                                                        , inASIN              := NULL     :: TVarChar
                                                        , inMatchCode         := NULL     :: TVarChar
                                                        , inFeeNumber         := NULL     :: TVarChar
-                                                       , inComment           := vbCommentMain
+                                                       , inComment           := COALESCE ((SELECT OC.ValueData FROM Object AS OC
+                                                                                           WHERE OC.Id = COALESCE (vbGoodsId, 0) 
+                                                                                             AND OC.DescId = zc_ObjectString_Goods_Comment()), '') ::TVarChar
                                                        , inIsArc             := FALSE    :: Boolean
                                                        , inFeet              := 0        :: TFloat
                                                        , inMetres            := 0        :: TFloat
@@ -645,7 +630,9 @@ BEGIN
                                                              , inASIN             := NULL     :: TVarChar
                                                              , inMatchCode        := NULL     :: TVarChar
                                                              , inFeeNumber        := NULL     :: TVarChar
-                                                             , inComment          := vbComment_child
+                                                             , inComment          := COALESCE ((SELECT OC.ValueData FROM Object AS OC
+                                                                                                WHERE OC.Id = COALESCE (vbGoodsId_child, 0) 
+                                                                                                  AND OC.DescId = zc_ObjectString_Goods_Comment()), '') ::TVarChar
                                                              , inIsArc            := FALSE    :: Boolean
                                                              , inFeet             := 0        :: TFloat
                                                              , inMetres           := 0        :: TFloat
@@ -698,13 +685,15 @@ BEGIN
                                                                   , inGoodsId          := vbGoodsId
                                                                   , inisMain           := TRUE     :: Boolean
                                                                   , inUserCode         := ''       :: TVarChar
-                                                                  , inComment          := NULL     :: TVarChar
+                                                                  , inComment          := COALESCE ((SELECT OC.ValueData FROM Object AS OC
+                                                                                                     WHERE OC.Id = COALESCE (vbReceiptGoodsId, 0) 
+                                                                                                       AND OC.DescId = zc_ObjectString_ReceiptGoods_Comment()), '') ::TVarChar
                                                                   , inSession          := inSession:: TVarChar
                                                                    );
        END IF;
 
 
-       /*IF COALESCE (inReceiptLevelName, '') <> '' AND COALESCE (vbGoods_GoodsChildId, 0) <> 0
+       IF COALESCE (inReceiptLevelName, '') <> '' AND COALESCE (vbGoods_GoodsChildId, 0) <> 0
        THEN
 
            -- Этап сборки пробуем найти
@@ -722,7 +711,7 @@ BEGIN
                                                                             , inSession         := inSession :: TVarChar
                                                                              ) AS tmp);
              END IF;
-       END IF;*/
+       END IF;
 
        -- ищем ReceiptGoodsChild
        vbReceiptGoodsChildId := (SELECT Object_ReceiptGoodsChild.Id
@@ -760,17 +749,23 @@ BEGIN
                            LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
                                                 ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
                                                AND ObjectLink_GoodsChild.DescId = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                           LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                                ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
+                                               AND ObjectLink_ReceiptLevel.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
                       WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
                         AND Object_ReceiptGoodsChild.ID = vbReceiptGoodsChildId
                         AND COALESCE (ObjectLink_ProdColorPattern.ChildObjectId, 0) = COALESCE (vbProdColorPatternId, 0)
                         AND COALESCE (ObjectLink_MaterialOptions.ChildObjectId, 0) = COALESCE (vbMaterialOptionsId, 0)
-                        AND COALESCE (ObjectLink_GoodsChild.ChildObjectId, 0) = COALESCE (vbGoods_GoodsChildId, 0))
+                        AND COALESCE (ObjectLink_GoodsChild.ChildObjectId, 0) = COALESCE (vbGoods_GoodsChildId, 0)
+                        AND COALESCE (ObjectLink_ReceiptLevel.ChildObjectId, 0) = COALESCE (vbReceiptLevelId, 0))
        THEN
 
            -- если не нашли создаем или правим если надо
            vbReceiptGoodsChildId := (SELECT tmp.ioId
                                      FROM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := COALESCE (vbReceiptGoodsChildId,0) ::Integer
-                                                                                 , inComment            := ''                   ::TVarChar
+                                                                                 , inComment            := COALESCE ((SELECT OC.ValueData FROM Object AS OC
+                                                                                                                      WHERE OC.Id = COALESCE (vbReceiptGoodsChildId, 0) 
+                                                                                                                        AND OC.DescId = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()), '') ::TVarChar
                                                                                  , inReceiptGoodsId     := vbReceiptGoodsId     ::Integer
                                                                                  , inObjectId           := vbGoodsId_child      ::Integer
                                                                                  , inProdColorPatternId := vbProdColorPatternId ::Integer
@@ -797,7 +792,7 @@ BEGIN
                                   AND Object.isErased = False);
 
          -- Этап сборки пробуем найти
-       /*IF COALESCE ('01-Boat', '') <> ''
+       IF COALESCE (inReceiptLevelName, '') <> ''
        THEN
 
            -- Этап сборки пробуем найти
@@ -815,7 +810,7 @@ BEGIN
                                                                             , inSession         := inSession :: TVarChar
                                                                              ) AS tmp);
              END IF;
-       END IF;*/
+       END IF;
      
        -- поиск ReceiptProdModelChild
        vbReceiptProdModelChildId:= (SELECT Object_ReceiptProdModelChild.Id
@@ -847,20 +842,31 @@ BEGIN
        END IF;                                    
                                    
        --
-       IF COALESCE (vbReceiptProdModelChildID, 0) = 0
+       IF COALESCE (vbReceiptProdModelChildID, 0) = 0 OR
+          COALESCE (vbReceiptLevelId, 0) <> 0 AND
+          NOT EXISTS(SELECT OC.ValueData 
+                     FROM Object AS OC
+                          LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                               ON ObjectLink_ReceiptLevel.ObjectId      = OC.Id
+                                              AND ObjectLink_ReceiptLevel.DescId        = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
+                     WHERE OC.Id = COALESCE (vbReceiptProdModelChildId, 0) 
+                       AND OC.DescId = zc_Object_ReceiptProdModelChild()
+                       AND COALESCE(ObjectLink_ReceiptLevel.ChildObjectId, 0) <> COALESCE(vbReceiptLevelId, 0))  
        THEN
 
          raise notice 'Value 05: Не нашли ReceiptProdModelChild'; 
 
          vbReceiptProdModelChildID:= (SELECT tmp.ioId
                                       FROM gpInsertUpdate_Object_ReceiptProdModelChild (ioId                 := COALESCE (vbReceiptProdModelChildId, 0)
-                                                                                      , inComment            := inGoodsName_child     ::TVarChar
+                                                                                      , inComment            := COALESCE ((SELECT OC.ValueData FROM Object AS OC
+                                                                                                                           WHERE OC.Id = COALESCE (vbReceiptProdModelChildId, 0) 
+                                                                                                                             AND OC.DescId = zc_Object_ReceiptProdModelChild()), '')    ::TVarChar
                                                                                       , inReceiptProdModelId := vbReceiptProdModelId  ::Integer
                                                                                       , inObjectId           := vbGoodsId_child       ::Integer
-                                                                                      , inReceiptLevelId_top := vbReceiptLevelId      ::Integer
-                                                                                      , inReceiptLevelId     := (SELECT OL.ChildObjectId FROM ObjectLink AS OL 
+                                                                                      , inReceiptLevelId_top := (SELECT OL.ChildObjectId FROM ObjectLink AS OL 
                                                                                                                  WHERE OL.ObjectId = COALESCE (vbReceiptProdModelChildId, 0) 
-                                                                                                                   AND OL.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel())
+                                                                                                                   AND OL.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()) ::Integer
+                                                                                      , inReceiptLevelId     := vbReceiptLevelId      ::Integer
                                                                                       , ioValue              := vbAmount              ::TFloat
                                                                                       , ioValue_service      := 0                     ::TFloat
                                                                                       , ioIsCheck            := FALSE
@@ -873,8 +879,9 @@ BEGIN
      
    EXCEPTION
       WHEN OTHERS THEN GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;	
-      RAISE EXCEPTION 'Ошибка <%> %Артикул-результат <%> %Название сборки <%> %Название-результат <%> %Группа-результат  <%> %Замена <%> %Артикул-комплект/узел <%> %Название-комплект/узел <%> %Группа-комплект/узел <%> %Количество <%>', 
+      RAISE EXCEPTION 'Ошибка <%> %Строка загрузки <%> %Артикул-результат <%> %Название сборки <%> %Название-результат <%> %Группа-результат  <%> %Замена <%> %Артикул-комплект/узел <%> %Название-комплект/узел <%> %Группа-комплект/узел <%> %Количество <%>', 
              text_var1, Chr(13),
+             inRecNum, Chr(13),                  -- Строка загрузки
              inArticle, Chr(13),                 -- Артикул-результат
              inReceiptLevelName, Chr(13),        -- Название сборки
              inGoodsName, Chr(13),               -- Название-результат
@@ -888,7 +895,7 @@ BEGIN
    END;
    
 
-  /* RAISE EXCEPTION 'Goods Main <%> <%> <%> <%> <%> %Goods child 2 <%> <%> <%> <%> <%> <%>  %Goods child <%> <%> <%> <%> <%> <%> <%> %ReceiptGoods <%> <%> <%> %ReceiptGoodsChild <%> <%> <%> <%> %ReceiptProdModel <%> <%>', 
+/*   RAISE EXCEPTION 'Goods Main <%> <%> <%> <%> <%> %Goods child 2 <%> <%> <%> <%> <%> <%>  %Goods child <%> <%> <%> <%> <%> <%> <%> %ReceiptGoods <%> <%> <%> %ReceiptGoodsChild <%> <%> <%> <%> %ReceiptProdModel <%> <%>', 
      --Goods Main        
      inArticle, inGoodsName, inGroupName, vbGoodsId, vbGoodsGroupId, Chr(13), 
      --Goods child 2     
@@ -918,4 +925,4 @@ $BODY$
 
 -- тест
 -- 
--- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load(1, 'AGL-280-01-пф', 'HULL/(Корпус)', 'ПФ Корпус стеклопластиковый АGL-280-RAL 9010', 'ПФ Корпус', 'ДА', '54890600251', '', 'Стеклопластик ПФ', '5,488', zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load(1, 'AGL-280-01-пф', 'HULL/(Корпус)', 'ПФ Корпус стеклопластиковый АGL-280-RAL 9010', 'ПФ Корпус', 'ДА', '54890600251', 'BUFA®-Marine-NPG-Gelcoat-S pur', 'Стеклопластик ПФ', '5,488', zfCalc_UserAdmin())

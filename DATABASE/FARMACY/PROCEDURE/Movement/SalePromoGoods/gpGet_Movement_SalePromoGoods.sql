@@ -23,6 +23,8 @@ RETURNS TABLE (Id Integer
              , UpdateName    TVarChar
              , UpdateDate    TDateTime
              , Comment       TVarChar
+             , isAmountCheck Boolean
+             , AmountCheck   TFloat
              )
 AS
 $BODY$
@@ -53,6 +55,8 @@ BEGIN
           , NULL  ::TVarChar            AS UpdateName
           , Null  :: TDateTime          AS UpdateDate
           , NULL  ::TVarChar            AS Comment
+          , False :: Boolean            AS isAmountCheck
+          , 0 :: TFloat                 AS AmountCheck
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
   
@@ -75,6 +79,8 @@ BEGIN
           , Object_Update.ValueData                                        AS UpdateName
           , MovementDate_Update.ValueData                                  AS UpdateDate
           , MovementString_Comment.ValueData                               AS Comment
+          , COALESCE (MovementBoolean_AmountCheck.ValueData, False)        AS isAmountCheck
+          , MovementFloat_AmountCheck.ValueData                            AS AmountCheck
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -88,6 +94,13 @@ BEGIN
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_AmountCheck
+                                  ON MovementBoolean_AmountCheck.MovementId = Movement.Id
+                                 AND MovementBoolean_AmountCheck.DescId = zc_MovementBoolean_AmountCheck()
+        LEFT JOIN MovementFloat AS MovementFloat_AmountCheck
+                                ON MovementFloat_AmountCheck.MovementId = Movement.Id
+                               AND MovementFloat_AmountCheck.DescId = zc_MovementFloat_AmountCheck()
 
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement.Id
@@ -128,3 +141,5 @@ $BODY$
 --тест 
 --select * from gpGet_Movement_SalePromoGoods(inMovementId := 0 , inOperDate := ('13.03.2016')::TDateTime ,  inSession := '3');
 --select * from gpGet_Movement_SalePromoGoods(inMovementId := 16406918 , inOperDate := ('24.04.2016')::TDateTime ,  inSession := '3');
+
+select * from gpGet_Movement_SalePromoGoods(inMovementId := 0 , inOperDate := ('25.11.2022')::TDateTime ,  inSession := '3');
