@@ -990,8 +990,8 @@ begin
          if ParamStr(1)='alan_dp_ua' then
          with toZConnection do begin
             Connected:=false;
-            HostName:='integer-srv.alan.dp.ua';
-            //HostName:='192.168.0.219';
+            //HostName:='integer-srv.alan.dp.ua';
+            HostName:='192.168.0.219';
             User:='admin';
             Password:='vas6ok';
             Database:='project';
@@ -1132,6 +1132,7 @@ begin
      end;
 
      isMsgCurrency_all:= FALSE;
+
 end;
 procedure TMainForm.FormShow(Sender: TObject);
 begin

@@ -2460,8 +2460,6 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 0
       OnDblClick = PanelErrDblClick
-      ExplicitLeft = -4
-      ExplicitTop = 9
       object EditRepl1: TEdit
         Left = 119
         Top = 17
