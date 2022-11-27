@@ -314,15 +314,15 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Top = 62
       Properties.ReadOnly = False
       TabOrder = 7
-      Width = 412
+      Width = 300
     end
     object cxLabel10: TcxLabel
-      Left = 663
+      Left = 642
       Top = 5
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
     end
     object edInsertName: TcxButtonEdit
-      Left = 663
+      Left = 642
       Top = 23
       Properties.Buttons = <
         item
@@ -332,15 +332,15 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 118
+      Width = 133
     end
     object cxLabel11: TcxLabel
-      Left = 663
+      Left = 642
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
     end
     object edUpdateName: TcxButtonEdit
-      Left = 663
+      Left = 642
       Top = 62
       Properties.Buttons = <
         item
@@ -350,7 +350,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 118
+      Width = 133
     end
     object cxLabel13: TcxLabel
       Left = 787
@@ -367,7 +367,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Width = 120
     end
     object edEndPromo: TcxDateEdit
-      Left = 537
+      Left = 533
       Top = 23
       EditValue = 42485d
       TabOrder = 14
@@ -400,7 +400,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1072#1082#1094#1080#1080
     end
     object cxLabel6: TcxLabel
-      Left = 537
+      Left = 533
       Top = 6
       Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1072#1082#1094#1080#1080
     end
@@ -423,6 +423,25 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       TabOrder = 21
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1089#1077#1090#1100'>'
       Width = 196
+    end
+    object cbAmountCheck: TcxCheckBox
+      Left = 64
+      Top = 42
+      Caption = #1040#1082#1094#1080#1103' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
+      TabOrder = 22
+      Width = 132
+    end
+    object ceAmountCheck: TcxCurrencyEdit
+      Left = 533
+      Top = 62
+      Properties.DisplayFormat = ',0.00;-,0.00; ;'
+      TabOrder = 23
+      Width = 100
+    end
+    object cxLabel4: TcxLabel
+      Left = 533
+      Top = 45
+      Caption = #1054#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
     end
   end
   inherited ActionList: TActionList
@@ -1269,6 +1288,20 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Component = edUpdateDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAmountCheck'
+        Value = Null
+        Component = cbAmountCheck
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountCheck'
+        Value = Null
+        Component = ceAmountCheck
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -1331,6 +1364,22 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountCheck'
+        Value = Null
+        Component = cbAmountCheck
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountCheck'
+        Value = Null
+        Component = ceAmountCheck
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -1371,8 +1420,10 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Control = edEndPromo
       end
       item
+        Control = cbAmountCheck
       end
       item
+        Control = ceAmountCheck
       end
       item
       end
@@ -1840,7 +1891,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 778
+    Left = 706
     Top = 6
   end
   object GuidesUpdate: TdsdGuides
@@ -1875,7 +1926,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 778
+    Left = 706
     Top = 46
   end
   object spErasedMISign: TdsdStoredProc

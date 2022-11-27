@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, 
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
                                                            Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, Integer, 
-                                                           Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TVarChar);
+                                                           Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -46,6 +46,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inisWagesCheckTesting        Boolean   ,     -- Контроль сдачи экзамен при выдача зарплаты
     IN inNormNewMobileOrders        Integer   ,     -- Норма по новым заказам мобильного приложения
     IN inUserUpdateMarketingId      Integer   ,     -- Сотрудник для редактирование в ЗП суммы Маркетинга
+    IN inLimitCash                  TFloat    ,     -- Ограничение при покупки наличными
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -163,6 +164,9 @@ BEGIN
    
      -- Норма по новым заказам мобильного приложения
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_NormNewMobileOrders(), vbID, inNormNewMobileOrders);
+
+     -- Ограничение при покупки наличными
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_LimitCash(), vbID, inLimitCash);
 
    -- Контроль сдачи экзамен при выдача зарплаты
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_WagesCheckTesting(), vbID, inisWagesCheckTesting);

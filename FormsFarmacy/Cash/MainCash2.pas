@@ -4050,6 +4050,18 @@ begin
   else
     ASalerCash := FTotalSumm;
 
+  if (UnitConfigCDS.FieldByName('LimitCash').AsCurrency > 0) and (
+     (UnitConfigCDS.FieldByName('LimitCash').AsCurrency > FTotalSumm) and
+     (PaidType = ptMoney) or
+     (UnitConfigCDS.FieldByName('LimitCash').AsCurrency > ASalerCashAdd) and
+     (PaidType = ptCardAdd)) then
+  begin
+    ShowPUSHMessageCash('вей мю рнбюп нр 1-ЦН онйсоюрекъ ме днкфем опебшьюрэ 50 000 цпм мюкхвмшлх!', cResult);
+    Exit;
+  end;
+
+  Exit;
+
   HelsiError := false;
   if (FormParams.ParamByName('HelsiID').Value <> '') then
   begin

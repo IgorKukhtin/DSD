@@ -48,6 +48,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , NormNewMobileOrders Integer
              , UserUpdateMarketingId Integer
              , UserUpdateMarketingName TVarChar
+             , LimitCash TFloat
              ) AS
 $BODY$
 BEGIN
@@ -101,6 +102,7 @@ BEGIN
         , ObjectFloat_CashSettings_NormNewMobileOrders.ValueData::Integer          AS NormNewMobileOrders
         , Object_UserUpdateMarketing.Id                                            AS UserUpdateMarketingId
         , Object_UserUpdateMarketing.ValueData                                     AS UserUpdateMarketingName
+        , ObjectFloat_CashSettings_LimitCash.ValueData                             AS LimitCash
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -232,6 +234,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_NormNewMobileOrders
                               ON ObjectFloat_CashSettings_NormNewMobileOrders.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_NormNewMobileOrders.DescId = zc_ObjectFloat_CashSettings_NormNewMobileOrders()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_LimitCash
+                              ON ObjectFloat_CashSettings_LimitCash.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_LimitCash.DescId = zc_ObjectFloat_CashSettings_LimitCash()
 
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_UserUpdateMarketing
                ON ObjectLink_CashSettings_UserUpdateMarketing.ObjectId = Object_CashSettings.Id

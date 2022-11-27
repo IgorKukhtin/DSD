@@ -257,6 +257,9 @@ type
     ceSumm3: TcxCurrencyEdit;
     cxLabel25: TcxLabel;
     ceTotalSumm: TcxCurrencyEdit;
+    macInsertMask: TMultiAction;
+    actInsertMaskAction: TdsdInsertUpdateAction;
+    bb: TdxBarButton;
   private
   public
   end;

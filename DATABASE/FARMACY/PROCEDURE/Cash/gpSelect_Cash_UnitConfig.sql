@@ -34,7 +34,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isRemovingPrograms Boolean, ExpressVIPConfirm Integer, isErrorRROToVIP Boolean, 
                LayoutFileCount Integer, LayoutFileID Integer, FilesToCheckCount Integer, FilesToCheckID Integer, 
                isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean,
-               MinPriceSale TFloat, DeviationsPrice1303 TFloat, SetDateRRO TDateTime, isSetDateRRO boolean, SetDateRROList TVarChar,
+               MinPriceSale TFloat, DeviationsPrice1303 TFloat, LimitCash TFloat, 
+               SetDateRRO TDateTime, isSetDateRRO boolean, SetDateRROList TVarChar,
                isReplaceSte2ListDif Boolean
               ) AS
 $BODY$
@@ -191,6 +192,7 @@ BEGIN
                                   , COALESCE(ObjectFloat_CashSettings_ExpressVIPConfirm.ValueData, 0)::Integer   AS ExpressVIPConfirm
                                   , COALESCE(ObjectFloat_CashSettings_MinPriceSale.ValueData, 0)::TFLoat         AS MinPriceSale
                                   , COALESCE(ObjectFloat_CashSettings_DeviationsPrice1303.ValueData, 1)::TFLoat  AS DeviationsPrice1303
+                                  , COALESCE(ObjectFloat_CashSettings_LimitCash.ValueData, 0)::TFLoat            AS LimitCash
                              FROM Object AS Object_CashSettings
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                                          ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id
@@ -219,6 +221,9 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DeviationsPrice1303
                                                         ON ObjectFloat_CashSettings_DeviationsPrice1303.ObjectId = Object_CashSettings.Id 
                                                        AND ObjectFloat_CashSettings_DeviationsPrice1303.DescId = zc_ObjectFloat_CashSettings_DeviationsPrice1303()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_LimitCash
+                                                        ON ObjectFloat_CashSettings_LimitCash.ObjectId = Object_CashSettings.Id 
+                                                       AND ObjectFloat_CashSettings_LimitCash.DescId = zc_ObjectFloat_CashSettings_LimitCash()
                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                              LIMIT 1)
        , tmpPromoCodeDoctor AS (SELECT PromoUnit.ID
@@ -415,6 +420,7 @@ BEGIN
        
        , tmpCashSettings.MinPriceSale
        , tmpCashSettings.DeviationsPrice1303
+       , tmpCashSettings.LimitCash
        , ObjectDate_SetDateRRO.ValueData                                                  AS SetDateRRO 
        , ObjectString_SetDateRROList.ValueData LIKE '%'||zfConvert_DateToString (CURRENT_DATE)||'%'   AS isSetDateRRO 
        , ObjectString_SetDateRROList.ValueData                                            AS SetDateRROList 

@@ -1,4 +1,4 @@
-unit PersonalServiceJournal;
+unit PersonalServiceItemJournal;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dsdInternetAction;
 
 type
-  TPersonalServiceJournalForm = class(TAncestorJournalForm)
+  TPersonalServiceItemJournalForm = class(TAncestorJournalForm)
     ServiceDate: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
@@ -124,8 +124,6 @@ type
     spSelect_ExportCSV: TdsdStoredProc;
     mactExportCSV: TMultiAction;
     bbExportCSV: TdxBarButton;
-    actOpenFormPersonalServiceDetail: TdsdOpenForm;
-    bbOpenFormPersonalServiceDetail: TdxBarButton;
   private
     { Private declarations }
   public
@@ -136,5 +134,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TPersonalServiceJournalForm);
+  RegisterClass(TPersonalServiceItemJournalForm);
 end.

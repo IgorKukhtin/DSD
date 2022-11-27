@@ -2629,7 +2629,7 @@
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupBy;ObjectCode'
+          IndexFieldNames = 'TitleGroup;ObjectCode'
         end>
       Params = <
         item

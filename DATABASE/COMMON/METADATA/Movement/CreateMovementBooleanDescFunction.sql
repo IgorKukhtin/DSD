@@ -443,9 +443,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_AtEveryEntry() RETURNS integer AS 
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_AtEveryEntry', 'При каждом входе в кассу'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_AtEveryEntry');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_AmountCheck() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_AmountCheck'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_AmountCheck', 'Акционный товар от суммы чека'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_AmountCheck');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 25.11.22                                                                                   * zc_MovementBoolean_AmountCheck
  01.11.22         * zc_MovementBoolean_ChangePriceUser
  28.10.22                                                                                   * zc_MovementBoolean_AtEveryEntry
  07.09.22                                                                                   * zc_MovementBoolean_NotUseSUN

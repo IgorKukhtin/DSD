@@ -30,6 +30,8 @@ type
     actOpenReportMinPrice_All: TdsdOpenForm;
     bbOpenReportMinPrice_All: TdxBarButton;
     RetailName: TcxGridDBColumn;
+    isAmountCheck: TcxGridDBColumn;
+    AmountCheck: TcxGridDBColumn;
   private
     { Private declarations }
   public
