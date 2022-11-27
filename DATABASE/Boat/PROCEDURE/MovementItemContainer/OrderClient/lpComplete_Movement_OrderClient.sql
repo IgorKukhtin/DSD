@@ -753,9 +753,10 @@ BEGIN
           ;
 
 
-/*        RAISE EXCEPTION 'Ошибка.<%>  <%>'
-        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) = 0)
-        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) > 0)
+/*        RAISE EXCEPTION 'Ошибка.<%>  <%> <%>'
+        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) = 0 and Key_Id_text ilike '%9005%')
+        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) > 0 and Key_Id_text ilike '%9005%')
+        , (select count(*) from _tmpReceiptItems_new )
          ;*/
 
 
@@ -1196,11 +1197,26 @@ BEGIN
                   INNER JOIN Object AS Object_Object
                                     ON Object_Object.Id     = _tmpReceiptProdModel.ObjectId
                                    AND Object_Object.DescId = zc_Object_Goods()
-                  INNER JOIN (SELECT DISTINCT
+                  INNER JOIN (-- новые элементы ReceiptGoodsId + есть GoodsId_child
+                              SELECT DISTINCT
                                      _tmpReceiptItems_new.ReceiptGoodsId
                                    , _tmpReceiptItems_new.ObjectId_parent_old
-                                   , _tmpReceiptItems_new.GoodsId_child, COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) AS GoodsId_child_old
+                                   , _tmpReceiptItems_new.GoodsId_child, _tmpReceiptItems_new.GoodsId_child_old
                               FROM _tmpReceiptItems_new
+                              -- есть GoodsId_child
+                              WHERE _tmpReceiptItems_new.GoodsId_child_old > 0
+
+                             UNION
+                              -- новые элементы ReceiptGoodsId + БЕЗ GoodsId_child
+                              SELECT DISTINCT
+                                     _tmpReceiptItems_new.ReceiptGoodsId
+                                   , _tmpReceiptItems_new.ObjectId_parent_old
+                                     -- будет пустой
+                                   , 0 AS GoodsId_child
+                                     -- подставляем пустой
+                                   , 0 AS GoodsId_child_old
+                              FROM _tmpReceiptItems_new
+
                              ) AS _tmpReceiptItems_new
                                ON _tmpReceiptItems_new.ObjectId_parent_old = _tmpReceiptProdModel.ObjectId_parent
                               AND _tmpReceiptItems_new.GoodsId_child_old   = COALESCE (_tmpReceiptProdModel.GoodsId_child, 0)
