@@ -60,6 +60,8 @@ BEGIN
    IF COALESCE (TRIM (inGoodsName_child), '') = '' OR
       upper(TRIM(SPLIT_PART (inArticle, '-', 3))) NOT IN ('01', '02', '03', '*ICE WHITE', 'BEL', 'BASIS') THEN RETURN; END IF;
       
+   IF upper(TRIM(SPLIT_PART (inArticle_child, '-', 3))) = '02' AND upper(TRIM(SPLIT_PART (inArticle_child, '-', 4))) = 'ПФ' THEN RETURN; END IF;
+      
    -- Преобразуем количество
    IF inAmount = '' OR inAmount = '0'
    THEN
@@ -895,7 +897,7 @@ BEGIN
    END;
    
 
-/*   RAISE EXCEPTION 'Goods Main <%> <%> <%> <%> <%> %Goods child 2 <%> <%> <%> <%> <%> <%>  %Goods child <%> <%> <%> <%> <%> <%> <%> %ReceiptGoods <%> <%> <%> %ReceiptGoodsChild <%> <%> <%> <%> %ReceiptProdModel <%> <%>', 
+   /*RAISE EXCEPTION 'Goods Main <%> <%> <%> <%> <%> %Goods child 2 <%> <%> <%> <%> <%> <%>  %Goods child <%> <%> <%> <%> <%> <%> <%> %ReceiptGoods <%> <%> <%> %ReceiptGoodsChild <%> <%> <%> <%> %ReceiptProdModel <%> <%>', 
      --Goods Main        
      inArticle, inGoodsName, inGroupName, vbGoodsId, vbGoodsGroupId, Chr(13), 
      --Goods child 2     
@@ -925,4 +927,4 @@ $BODY$
 
 -- тест
 -- 
--- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load(1, 'AGL-280-01-пф', 'HULL/(Корпус)', 'ПФ Корпус стеклопластиковый АGL-280-RAL 9010', 'ПФ Корпус', 'ДА', '54890600251', 'BUFA®-Marine-NPG-Gelcoat-S pur', 'Стеклопластик ПФ', '5,488', zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load(252, 'AGL-280-02', '', 'Сиденье водителя АGL-280-RAL 9010', 'Сборка сиденья', '', 'AGL-280-02-пф', 'ПФ Сиденье водителя АGL-280-RAL 9010', 'Сборка', '1', zfCalc_UserAdmin())
