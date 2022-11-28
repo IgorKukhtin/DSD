@@ -468,9 +468,9 @@ BEGIN
                          SELECT -- потом создадим
                                 0                AS MovementItemId
                                 -- тот же самый
-                              , lpSelect.GoodsId AS ObjectId_parent
+                              , CASE WHEN lpSelect.GoodsId > 0 THEN lpSelect.GoodsId ELSE lpSelect.ProdOptionsId END AS ObjectId_parent
                                 -- Goods
-                              , lpSelect.GoodsId AS ObjectId
+                              , CASE WHEN lpSelect.GoodsId > 0 THEN lpSelect.GoodsId ELSE lpSelect.ProdOptionsId END AS ObjectId
 
                             --, 0 AS GoodsId_child_find
                             --, 0 AS GoodsId_child
@@ -478,14 +478,14 @@ BEGIN
                                 -- Опция
                               , lpSelect.ProdOptionsId
                                 --
-                              , lpSelect.Amount  AS OperCount
-                              , lpSelect.EKPrice AS OperPrice
+                              , CASE WHEN lpSelect.GoodsId > 0 THEN lpSelect.Amount ELSE 1 END AS OperCount
+                              , COALESCE (lpSelect.EKPrice, 0) AS OperPrice
 
                          FROM _tmpProdOptItems AS lpSelect
                          -- БЕЗ этой Структуры
                          WHERE COALESCE (lpSelect.ProdColorPatternId, 0) = 0
                            -- !!!временно, пока не проставили Товар
-                           AND lpSelect.GoodsId > 0
+                         --AND lpSelect.GoodsId > 0
                         )
          -- Результат - Шаблон сборка Лодки
          INSERT INTO _tmpItem_Child (MovementItemId, ObjectId_parent_find, ObjectId_parent, ObjectDescId, ProdOptionsId, OperCount, OperPrice)
@@ -1404,7 +1404,8 @@ BEGIN
                                                             ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                                            AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
                            WHERE MovementItem.MovementId = inMovementId
-                             AND MovementItem.DescId     = zc_MI_Child()
+                             AND MovementItem.DescId     IN (zc_MI_Child(), zc_MI_Detail())
+                           --AND MovementItem.DescId     IN (zc_MI_Detail())
                              AND MovementItem.isErased   = FALSE
                              -- !!!без услуг!!!
                              AND Object_Object.DescId    <> zc_Object_ReceiptService()
@@ -1566,7 +1567,6 @@ BEGIN
             -- если нужен заказ
             WHERE tmpItem.Amount - COALESCE (tmpRes_partion_total.OperCount, 0) > 0
             ;
-
 
          -- Заказ Поставщику
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPricePartner(), _tmpItem_Reserv.MovementItemId, _tmpItem_Reserv.OperPricePartner)

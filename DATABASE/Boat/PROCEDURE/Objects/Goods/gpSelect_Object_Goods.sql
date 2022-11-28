@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsTagId Integer, GoodsTagName TVarChar
              , GoodsTypeId  Integer, GoodsTypeName TVarChar
              , GoodsSizeId  Integer, GoodsSizeName TVarChar
-             , ProdColorId Integer, ProdColorName TVarChar
+             , ProdColorId Integer, ProdColorName TVarChar, Color_Value Integer
              , PartnerId Integer, PartnerName   TVarChar
              , UnitId Integer, UnitName TVarChar
              , DiscountPartnerId Integer, DiscountPartnerName TVarChar
@@ -276,6 +276,7 @@ BEGIN
             , Object_GoodsSize.ValueData         AS GoodsSizeName
             , Object_ProdColor.Id                AS ProdColorId
             , Object_ProdColor.ValueData         AS ProdColorName
+            , COALESCE(ObjectFloat_ProdColor_Value.ValueData, zc_Color_White())::Integer  AS Color_Value
             , Object_Partner.Id                  AS PartnerId
             , Object_Partner.ValueData           AS PartnerName
             , Object_Unit.Id                     AS UnitId
@@ -379,6 +380,9 @@ BEGIN
                                   ON ObjectLink_Goods_ProdColor.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
              LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+             LEFT JOIN ObjectFloat AS ObjectFloat_ProdColor_Value
+                                   ON ObjectFloat_ProdColor_Value.ObjectId = Object_ProdColor.Id
+                                  AND ObjectFloat_ProdColor_Value.DescId   = zc_ObjectFloat_ProdColor_Value()
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
                                   ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id

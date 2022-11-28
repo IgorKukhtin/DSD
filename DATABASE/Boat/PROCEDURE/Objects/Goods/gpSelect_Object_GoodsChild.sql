@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsChild(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
-             , ProdColorId Integer, ProdColorName TVarChar
+             , ProdColorId Integer, ProdColorName TVarChar, Color_Value Integer
              , Value TFloat
               )
 AS
@@ -37,6 +37,7 @@ BEGIN
           , ObjectString_Article.ValueData             :: TVarChar AS Article
           , Object_ProdColor.Id                                    AS ProdColorId
           , Object_ProdColor.ValueData                             AS ProdColorName 
+            , COALESCE(ObjectFloat_ProdColor_Value.ValueData, zc_Color_White())::Integer  AS Color_Value
           , ObjectFloat_Value.ValueData                ::TFloat    AS Value
      from ObjectLink AS ObjectLink_ReceiptGoods_Object
           INNER JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_ReceiptGoods
@@ -55,6 +56,9 @@ BEGIN
                               ON ObjectLink_Goods_ProdColor.ObjectId = Object_Goods.Id
                              AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
          LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+         LEFT JOIN ObjectFloat AS ObjectFloat_ProdColor_Value
+                               ON ObjectFloat_ProdColor_Value.ObjectId = Object_ProdColor.Id
+                              AND ObjectFloat_ProdColor_Value.DescId   = zc_ObjectFloat_ProdColor_Value()
 
          LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId

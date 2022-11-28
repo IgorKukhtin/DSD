@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColor_goods(
     IN inSession     TVarChar            -- сессия пользователя
 
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Color_Value Integer
              , GoodsId Integer, GoodsCode Integer, Article TVarChar, GoodsName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
@@ -38,11 +38,12 @@ BEGIN
              Object_ProdColor.Id             AS Id
            , Object_ProdColor.ObjectCode     AS Code
            , Object_ProdColor.ValueData      AS Name
+           , COALESCE(ObjectFloat_Value.ValueData, zc_Color_White())::Integer  AS Color_Value
 
-           , Object_Goods.Id                 AS Id
-           , Object_Goods.ObjectCode         AS Code
+           , Object_Goods.Id                 AS GoodsId
+           , Object_Goods.ObjectCode         AS GoodsCode
            , ObjectString_Article.ValueData  AS Article
-           , Object_Goods.ValueData          AS Name
+           , Object_Goods.ValueData          AS GoodsName
 
            , Object_GoodsGroup.Id            AS GoodsGroupId
            , Object_GoodsGroup.ValueData     AS GoodsGroupName
@@ -73,6 +74,9 @@ BEGIN
            , Object_ProdColor.isErased       AS isErased
 
        FROM Object AS Object_ProdColor
+            LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                  ON ObjectFloat_Value.ObjectId = Object_ProdColor.Id
+                                 AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ProdColor_Value()
             INNER JOIN ObjectLink AS ObjectLink_Goods_ProdColor
                                   ON ObjectLink_Goods_ProdColor.ChildObjectId = Object_ProdColor.Id
                                  AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
