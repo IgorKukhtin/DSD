@@ -712,7 +712,6 @@
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.GroupByBox = False
           object Code_ch1: TcxGridDBColumn
             Caption = 'Interne Nr'
@@ -760,6 +759,12 @@
             Options.Editing = False
             Width = 70
           end
+          object Colors_ch1: TcxGridDBColumn
+            Caption = 'Colors'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object Value_ch1: TcxGridDBColumn
             DataBinding.FieldName = 'Value'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -767,8 +772,14 @@
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1074' '#1089#1073#1086#1088#1082#1077
             Width = 45
+          end
+          object Color_Value_ch1: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Value'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
           end
         end
         object cxGridLevel2: TcxGridLevel
@@ -2544,7 +2555,12 @@
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Colors_ch1
+        BackGroundValueColumn = Color_Value_ch1
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
