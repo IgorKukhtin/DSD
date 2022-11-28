@@ -4060,8 +4060,6 @@ begin
     Exit;
   end;
 
-  Exit;
-
   HelsiError := false;
   if (FormParams.ParamByName('HelsiID').Value <> '') then
   begin
