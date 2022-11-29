@@ -23,7 +23,8 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 563
-        ExplicitTop = -6
+        ExplicitLeft = 160
+        ExplicitTop = 312
         ExplicitWidth = 1221
         ExplicitHeight = 563
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -36,162 +37,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSumm
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummService
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCard
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummMinus
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummAdd
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCash
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCardRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummSocialIn
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummSocialAdd
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummChild
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummToPay
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummTransport
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummPhone
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummTransportAdd
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummHoliday
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummTransportAddLong
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummTransportTaxi
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummNalog
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummNalogRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCardSecond
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCardSecondRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummChildRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummMinusExt
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummMinusExtRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCardSecondCash
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummNalogRet
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummNalogRetRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummAddOth
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummAddOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummFine
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummHosp
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummFineOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummHospOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummFineOth
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummHospOth
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCompensation
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCompensationRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummAuditAdd
-            end
-            item
-              Format = ',0.####'
-              Column = TotalDayAudit
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummHouseAdd
             end
             item
               Format = ',0.####'
@@ -306,7 +151,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PriceCompensation
             end
             item
               Format = ',0.####'
@@ -381,7 +225,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             item
               Format = ',0.####'
               Position = spFooter
-              Column = PriceCompensation
             end
             item
               Format = ',0.####'
@@ -581,162 +424,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             end
             item
               Format = ',0.####'
-              Column = TotalSummService
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCard
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummMinus
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummAdd
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCash
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCardRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummSocialIn
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummSocialAdd
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummChild
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummToPay
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummTransport
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummPhone
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummTransportAdd
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummHoliday
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummTransportAddLong
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummTransportTaxi
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummNalog
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummNalogRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCardSecond
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCardSecondRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummChildRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummMinusExt
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummMinusExtRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCardSecondCash
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummNalogRet
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummNalogRetRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummAddOth
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummAddOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummFine
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummHosp
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummFineOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummHospOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummFineOth
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummHospOth
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCompensation
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummCompensationRecalc
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummAuditAdd
-            end
-            item
-              Format = ',0.####'
-              Column = TotalDayAudit
-            end
-            item
-              Format = ',0.####'
-              Column = TotalSummHouseAdd
-            end
-            item
-              Format = ',0.####'
               Kind = skSum
               Column = SummHouseAdd
             end
@@ -840,7 +527,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             end
             item
               Kind = skSum
-              Column = PriceCompensation
             end
             item
               Kind = skSum
@@ -1393,6 +1079,15 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             Options.Editing = False
             Width = 75
           end
+          object PriceCompensation: TcxGridDBColumn
+            Caption = #1057#1088'. '#1079#1087' '#1076#1083#1103' '#1088#1072#1089#1095'. '#1082#1086#1084#1087#1077#1085#1089'.'
+            DataBinding.FieldName = 'PriceCompensation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1077#1076#1085#1103#1103' '#1079#1087' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1089#1091#1084#1084#1099' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+            Options.Editing = False
+            Width = 70
+          end
           object SummCompensation: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087'.'
             DataBinding.FieldName = 'SummCompensation'
@@ -1415,15 +1110,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082' ('#1074#1074#1086#1076')'
             Width = 75
-          end
-          object PriceCompensation: TcxGridDBColumn
-            Caption = #1057#1088'. '#1079#1087' '#1076#1083#1103' '#1088#1072#1089#1095'. '#1082#1086#1084#1087#1077#1085#1089'.'
-            DataBinding.FieldName = 'PriceCompensation'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1088#1077#1076#1085#1103#1103' '#1079#1087' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1089#1091#1084#1084#1099' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
-            Options.Editing = False
-            Width = 70
           end
           object SummHospOthRecalc: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1074#1074#1086#1076')'
@@ -1484,127 +1170,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
-          end
-          object MemberName_mi: TcxGridDBColumn
-            Caption = #1060#1048#1054' ('#1040#1083#1080#1084#1077#1085#1090#1099')'
-            DataBinding.FieldName = 'MemberName_mi'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object InfoMoneyCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1059#1055
-            DataBinding.FieldName = 'InfoMoneyCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object InfoMoneyName: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object isAuto_mi: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
-            DataBinding.FieldName = 'isAuto_mi'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1087#1088#1080' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
-            Options.Editing = False
-            Width = 38
-          end
-          object Comment_mi: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment_mi'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 125
-          end
-          object SummTransportTaxi: TcxGridDBColumn
-            Caption = #1058#1072#1082#1089#1080' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
-            DataBinding.FieldName = 'SummTransportTaxi'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object PersonalServiceListName_mi: TcxGridDBColumn
-            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1041#1053')'
-            DataBinding.FieldName = 'PersonalServiceListName_mi'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 140
-          end
-          object BankOutDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
-            DataBinding.FieldName = 'BankOutDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'dd.mm.yy'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
-            Width = 80
-          end
-          object isBankOut: TcxGridDBColumn
-            Caption = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082
-            DataBinding.FieldName = 'isBankOut'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082' ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
-            Options.Editing = False
-            Width = 80
-          end
-          object FineSubjectName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1085#1072#1088#1091#1096#1077#1085#1080#1081
-            DataBinding.FieldName = 'FineSubjectName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object UnitFineSubjectName: TcxGridDBColumn
-            Caption = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
-            DataBinding.FieldName = 'UnitFineSubjectName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
-            Width = 70
           end
           object SummNalog: TcxGridDBColumn
             Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
@@ -1748,6 +1313,127 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1078#1080#1083#1100#1077
+            Width = 70
+          end
+          object MemberName_mi: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1040#1083#1080#1084#1077#1085#1090#1099')'
+            DataBinding.FieldName = 'MemberName_mi'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object InfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object isAuto_mi: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1089#1090#1088#1086#1082#1080')'
+            DataBinding.FieldName = 'isAuto_mi'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1087#1088#1080' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
+            Options.Editing = False
+            Width = 38
+          end
+          object Comment_mi: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1089#1090#1088#1086#1082#1080')'
+            DataBinding.FieldName = 'Comment_mi'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 125
+          end
+          object SummTransportTaxi: TcxGridDBColumn
+            Caption = #1058#1072#1082#1089#1080' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
+            DataBinding.FieldName = 'SummTransportTaxi'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object PersonalServiceListName_mi: TcxGridDBColumn
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1041#1053')'
+            DataBinding.FieldName = 'PersonalServiceListName_mi'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 140
+          end
+          object BankOutDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
+            DataBinding.FieldName = 'BankOutDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
+            Width = 80
+          end
+          object isBankOut: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082
+            DataBinding.FieldName = 'isBankOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082' ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
+            Options.Editing = False
+            Width = 80
+          end
+          object FineSubjectName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1085#1072#1088#1091#1096#1077#1085#1080#1081
+            DataBinding.FieldName = 'FineSubjectName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object UnitFineSubjectName: TcxGridDBColumn
+            Caption = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
+            DataBinding.FieldName = 'UnitFineSubjectName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
             Width = 70
           end
           object InfoMoneyName_all: TcxGridDBColumn
