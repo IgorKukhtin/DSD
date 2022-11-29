@@ -119,6 +119,23 @@ BEGIN
     RETURN QUERY
         SELECT vbSummaCalñ, vbSummaBase, vbSummaBaseSite, vbFormula;
 
+  ELSEIF inPayrollTypeID in (zc_Enum_PayrollType_WorkBid(), zc_Enum_PayrollType_WorkSBid())
+  THEN
+
+    vbSummaBase := 0;
+    vbSummaBaseSite := 0;
+    vbSumma := inMinAccrualAmount;
+    vbSummaCalñ := inMinAccrualAmount;
+    IF COALESCE (inCorrPercentage, 100) <> 100
+    THEN
+      vbSummaCalñ := ROUND(vbSummaCalñ * inCorrPercentage / 100, 2);
+    END IF;
+
+    vbFormula   := 'Ñòàâêà íà äåíü: '||zfConvert_FloatToString(vbSummaCalñ);
+
+    RETURN QUERY
+        SELECT vbSummaCalñ, vbSummaBase, vbSummaBaseSite, vbFormula;
+
   ELSE
 
     RETURN QUERY
@@ -139,4 +156,4 @@ ALTER FUNCTION gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TF
 */
 
 -- 
-select * from gpSelect_Calculation_PayrollGroup('01.07.2021', zc_Enum_PayrollType_WorkCS(), 3, 870, 3, 40813.63 - 3589.65, 3589.65, 0, 100, '');
+select * from gpSelect_Calculation_PayrollGroup('01.07.2021', zc_Enum_PayrollType_WorkSBid(), 3, 870, 3, 40813.63 - 3589.65, 3589.65, 0, 100, '');

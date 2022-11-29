@@ -21,6 +21,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbReturnDate TDateTime;
+   DECLARE vbIsFind Boolean;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -29,7 +30,29 @@ BEGIN
       
       vbReturnDate:= CURRENT_DATE - INTERVAL '14 DAY';
 
-      
+      -- поиск
+      vbIsFind:= EXISTS (SELECT 1
+                         FROM Object AS Object_PriceListItem
+                              JOIN ObjectLink AS ObjectLink_PriceListItem_Goods 
+                                              ON ObjectLink_PriceListItem_Goods.ObjectId = Object_PriceListItem.Id
+                                             AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                                             AND ObjectLink_PriceListItem_Goods.ChildObjectId = inGoodsId
+                                             
+                              JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                              ON ObjectLink_PriceListItem_PriceList.ObjectId = Object_PriceListItem.Id
+                                             AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
+                                             AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                              -- Цены возврата
+                              INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem_Return
+                                                       ON ObjectHistory_PriceListItem_Return.ObjectId = Object_PriceListItem.Id
+                                                      AND ObjectHistory_PriceListItem_Return.DescId = zc_ObjectHistory_PriceListItem() 
+                                                      AND vbReturnDate >= ObjectHistory_PriceListItem_Return.StartDate AND vbReturnDate < ObjectHistory_PriceListItem_Return.EndDate
+                         WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem()
+                        );
+      -- замена
+      IF vbIsFind = FALSE THEN vbReturnDate:= CURRENT_DATE; END IF;
+
+
       IF EXISTS (SELECT 1
                  FROM Object AS Object_PriceListItem
                       JOIN ObjectLink AS ObjectLink_PriceListItem_Goods 

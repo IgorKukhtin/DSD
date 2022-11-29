@@ -66,6 +66,12 @@ object ProdColor_goodsForm: TProdColor_goodsForm
         Options.Editing = False
         Width = 100
       end
+      object Colors: TcxGridDBColumn
+        Caption = 'Colors'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -194,6 +200,12 @@ object ProdColor_goodsForm: TProdColor_goodsForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
+      end
+      object Color_Value: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Value'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -711,7 +723,12 @@ object ProdColor_goodsForm: TProdColor_goodsForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Colors
+        BackGroundValueColumn = Color_Value
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

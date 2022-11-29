@@ -468,9 +468,9 @@ BEGIN
                          SELECT -- потом создадим
                                 0                AS MovementItemId
                                 -- тот же самый
-                              , lpSelect.GoodsId AS ObjectId_parent
+                              , CASE WHEN lpSelect.GoodsId > 0 THEN lpSelect.GoodsId ELSE lpSelect.ProdOptionsId END AS ObjectId_parent
                                 -- Goods
-                              , lpSelect.GoodsId AS ObjectId
+                              , CASE WHEN lpSelect.GoodsId > 0 THEN lpSelect.GoodsId ELSE lpSelect.ProdOptionsId END AS ObjectId
 
                             --, 0 AS GoodsId_child_find
                             --, 0 AS GoodsId_child
@@ -478,14 +478,14 @@ BEGIN
                                 -- Опция
                               , lpSelect.ProdOptionsId
                                 --
-                              , lpSelect.Amount  AS OperCount
-                              , lpSelect.EKPrice AS OperPrice
+                              , CASE WHEN lpSelect.GoodsId > 0 THEN lpSelect.Amount ELSE 1 END AS OperCount
+                              , COALESCE (lpSelect.EKPrice, 0) AS OperPrice
 
                          FROM _tmpProdOptItems AS lpSelect
                          -- БЕЗ этой Структуры
                          WHERE COALESCE (lpSelect.ProdColorPatternId, 0) = 0
                            -- !!!временно, пока не проставили Товар
-                           AND lpSelect.GoodsId > 0
+                         --AND lpSelect.GoodsId > 0
                         )
          -- Результат - Шаблон сборка Лодки
          INSERT INTO _tmpItem_Child (MovementItemId, ObjectId_parent_find, ObjectId_parent, ObjectDescId, ProdOptionsId, OperCount, OperPrice)
@@ -753,9 +753,10 @@ BEGIN
           ;
 
 
-/*        RAISE EXCEPTION 'Ошибка.<%>  <%>'
-        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) = 0)
-        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) > 0)
+/*        RAISE EXCEPTION 'Ошибка.<%>  <%> <%>'
+        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) = 0 and Key_Id_text ilike '%9005%')
+        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) > 0 and Key_Id_text ilike '%9005%')
+        , (select count(*) from _tmpReceiptItems_new )
          ;*/
 
 
@@ -1196,11 +1197,26 @@ BEGIN
                   INNER JOIN Object AS Object_Object
                                     ON Object_Object.Id     = _tmpReceiptProdModel.ObjectId
                                    AND Object_Object.DescId = zc_Object_Goods()
-                  INNER JOIN (SELECT DISTINCT
+                  INNER JOIN (-- новые элементы ReceiptGoodsId + есть GoodsId_child
+                              SELECT DISTINCT
                                      _tmpReceiptItems_new.ReceiptGoodsId
                                    , _tmpReceiptItems_new.ObjectId_parent_old
-                                   , _tmpReceiptItems_new.GoodsId_child, COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) AS GoodsId_child_old
+                                   , _tmpReceiptItems_new.GoodsId_child, _tmpReceiptItems_new.GoodsId_child_old
                               FROM _tmpReceiptItems_new
+                              -- есть GoodsId_child
+                              WHERE _tmpReceiptItems_new.GoodsId_child_old > 0
+
+                             UNION
+                              -- новые элементы ReceiptGoodsId + БЕЗ GoodsId_child
+                              SELECT DISTINCT
+                                     _tmpReceiptItems_new.ReceiptGoodsId
+                                   , _tmpReceiptItems_new.ObjectId_parent_old
+                                     -- будет пустой
+                                   , 0 AS GoodsId_child
+                                     -- подставляем пустой
+                                   , 0 AS GoodsId_child_old
+                              FROM _tmpReceiptItems_new
+
                              ) AS _tmpReceiptItems_new
                                ON _tmpReceiptItems_new.ObjectId_parent_old = _tmpReceiptProdModel.ObjectId_parent
                               AND _tmpReceiptItems_new.GoodsId_child_old   = COALESCE (_tmpReceiptProdModel.GoodsId_child, 0)
@@ -1388,7 +1404,8 @@ BEGIN
                                                             ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                                            AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
                            WHERE MovementItem.MovementId = inMovementId
-                             AND MovementItem.DescId     = zc_MI_Child()
+                             AND MovementItem.DescId     IN (zc_MI_Child(), zc_MI_Detail())
+                           --AND MovementItem.DescId     IN (zc_MI_Detail())
                              AND MovementItem.isErased   = FALSE
                              -- !!!без услуг!!!
                              AND Object_Object.DescId    <> zc_Object_ReceiptService()
@@ -1550,7 +1567,6 @@ BEGIN
             -- если нужен заказ
             WHERE tmpItem.Amount - COALESCE (tmpRes_partion_total.OperCount, 0) > 0
             ;
-
 
          -- Заказ Поставщику
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPricePartner(), _tmpItem_Reserv.MovementItemId, _tmpItem_Reserv.OperPricePartner)

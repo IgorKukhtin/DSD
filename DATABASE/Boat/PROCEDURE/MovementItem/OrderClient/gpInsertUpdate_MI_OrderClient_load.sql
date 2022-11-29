@@ -74,6 +74,71 @@ BEGIN
                                                              OR Object.ValueData ILIKE 'LISSE/MATT'
                                                                ));
 
+
+--     IF inTitle ILIKE 'moldings'
+--     THEN
+--         RAISE EXCEPTION 'Ошибка.<%>.', inTitle;
+--     END IF;
+
+
+     -- замена - временно - захардкодил
+     IF inTitle ILIKE 'upholstery' AND inTitle2 ILIKE 'material_title' AND inValue2 ILIKE 'LIENZO' AND inValue3 ILIKE 'Black'
+     THEN inValue2:= 'SILVERTEX®';
+          IF inValue1 = 'b280_u_3' THEN inValue1:= 'b280_u_1'; END IF;
+
+     -- замена - временно - захардкодил
+     ELSEIF inTitle ILIKE 'upholstery' AND inValue1 <> 'b280_u_1' AND inTitle2 ILIKE 'material_title' AND inValue2 ILIKE 'SILVERTEX®'
+     THEN inValue1 = 'b280_u_1';
+          -- замена - временно - захардкодил
+          IF inValue3 ILIKE 'Ice Cream' AND inValue5 ILIKE 'NAU-5002'
+          THEN inValue5 = '122-2090';
+          END IF;
+
+     -- замена - временно - захардкодил
+     ELSEIF inTitle ILIKE 'teak' AND inValue1 <> 'b280_t_2' AND inTitle2 ILIKE 'material_title' AND inValue2 ILIKE 'BLEACHED'
+     THEN inValue1 = 'b280_t_2';
+
+
+--     ELSEIF inTitle ILIKE 'hypalon_secondary' AND inValue1 ILIKE 'b280_hs_b'
+--     THEN inValue1:= 'b280_hs_c0';
+--     ELSEIF inTitle ILIKE 'moldings' AND inValue1 ILIKE 'b280_m'
+--     THEN inValue1:= 'b280_m_1';
+--     ELSEIF inTitle ILIKE 'upholstery' AND inValue1 ILIKE 'b280_u_' AND inValue2 ILIKE 'DIAMANTE'
+--     THEN inValue1:= 'b280_u_4';
+
+     --ELSEIF inTitle ILIKE 'upholstery' AND inTitle2 ILIKE 'material_title' AND inValue2 ILIKE 'DIAMANTE'
+     --THEN inValue1:= 'b280_u_4';
+
+     END IF;
+
+     -- замена - временно - захардкодил
+     IF inValue1 ILIKE 'b280_loa_'
+     THEN 
+         IF inValue2 ILIKE 'LED Deck Lights 3x'    THEN inValue1:= 'b280_loa_0'; END IF;
+         IF inValue2 ILIKE 'OceanLED X4 x2'        THEN inValue1:= 'b280_loa_1'; END IF;
+         IF inValue2 ILIKE 'LED Navigation Lights' THEN inValue1:= 'b280_loa_2'; END IF;
+     END IF;
+     -- замена - временно - захардкодил
+     IF inValue1 ILIKE 'b280_aoa_'
+     THEN 
+         IF inValue2 ILIKE 'Removable Steering wheel'               THEN inValue1:= 'b280_aoa_1'; END IF;
+         IF inValue2 ILIKE 'Anti-Theft Security System (D.E.S.S.)'  THEN inValue1:= 'b280_aoa_2'; END IF;
+         IF inValue2 ILIKE 'Ladder'                                 THEN inValue1:= 'b280_aoa_3'; END IF;
+         IF inValue2 ILIKE 'Name of Boat'                           THEN inValue1:= 'b280_aoa_6'; END IF;
+     END IF;
+     -- замена - временно - захардкодил
+     IF inValue1 ILIKE 'b280_aoav__'
+     THEN 
+         IF TRIM (inValue4) ILIKE '3 x Flush fitting padeyes c\/w tie down starps and fixings' THEN inValue1:= 'b280_aoav_8_0'; END IF;
+     END IF;
+
+
+
+     --***IF inValue1 = 'b280_t_4' AND inValue2 ILIKE 'SCRUBBED' THEN inValue1:= 'b280_t_1'; END IF;
+     --***IF inValue1 = 'b280_t_4' AND inValue2 ILIKE 'BLEACHED' THEN inValue1:= 'b280_t_2'; END IF;
+
+
+
      -- замена
      IF (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary' OR inTitle ILIKE 'moldings' OR inTitle ILIKE 'upholstery' OR inTitle ILIKE 'teak' )
      THEN
@@ -81,6 +146,8 @@ BEGIN
          IF inValue2 ILIKE 'Basic' AND inTitle ILIKE 'moldings' THEN inValue2:= 'NEPTUNE GREY'; END IF;
          -- если стандарт
          IF inValue2 ILIKE 'Basic' AND (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary') THEN inValue2:= ''; END IF;
+         -- если замена
+         IF inValue2 ILIKE 'Grey Light' AND inTitle ILIKE 'moldings' THEN inValue2:= 'Light Grey'; END IF;
          --
          -- если и ключ кривой
          IF NOT EXISTS (SELECT 1 FROM Object JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1 WHERE Object.DescId = zc_Object_ProdOptions())
@@ -126,31 +193,6 @@ BEGIN
      END IF;
 
 
---     IF inTitle ILIKE 'moldings'
---     THEN
---         RAISE EXCEPTION 'Ошибка.<%>.', inTitle;
---     END IF;
-
-
-     -- замена - временно
-     IF inTitle ILIKE 'upholstery' AND inTitle2 ILIKE 'material_title' AND inValue2 ILIKE 'LIENZO' AND inValue3 ILIKE 'Black'
-     THEN inValue2:= 'SILVERTEX®';
-          IF inValue1 = 'b280_u_3' THEN inValue1:= 'b280_u_1'; END IF;
-
---     ELSEIF inTitle ILIKE 'hypalon_secondary' AND inValue1 ILIKE 'b280_hs_b'
---     THEN inValue1:= 'b280_hs_c0';
---     ELSEIF inTitle ILIKE 'moldings' AND inValue1 ILIKE 'b280_m'
---     THEN inValue1:= 'b280_m_1';
---     ELSEIF inTitle ILIKE 'upholstery' AND inValue1 ILIKE 'b280_u_' AND inValue2 ILIKE 'DIAMANTE'
---     THEN inValue1:= 'b280_u_4';
-
-     --ELSEIF inTitle ILIKE 'upholstery' AND inTitle2 ILIKE 'material_title' AND inValue2 ILIKE 'DIAMANTE'
-     --THEN inValue1:= 'b280_u_4';
-
-     END IF;
-
-     --***IF inValue1 = 'b280_t_4' AND inValue2 ILIKE 'SCRUBBED' THEN inValue1:= 'b280_t_1'; END IF;
-     --***IF inValue1 = 'b280_t_4' AND inValue2 ILIKE 'BLEACHED' THEN inValue1:= 'b280_t_2'; END IF;
 
      -- замена - временно
      IF (inTitle ILIKE 'upholstery' OR inTitle ILIKE 'teak')
@@ -1007,6 +1049,11 @@ BEGIN
                       -- 2.2. Создаем
                       IF COALESCE (vbGoodsId, 0) = 0
                       THEN
+                          /*RAISE EXCEPTION 'Ошибка.<%>.', CASE WHEN inTitle5 ILIKE 'code' THEN inValue5
+                                                              WHEN inTitle6 ILIKE 'code' THEN inValue6
+                                                              WHEN inTitle7 ILIKE 'code' THEN inValue7
+                                                         END;*/
+
                           -- Создаем
                           vbGoodsId:= gpInsertUpdate_Object_Goods
                                                  (ioId                     := 0

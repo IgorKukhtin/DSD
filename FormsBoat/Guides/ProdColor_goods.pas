@@ -73,6 +73,8 @@ type
     EKPriceWVAT: TcxGridDBColumn;
     BasisPrice: TcxGridDBColumn;
     BasisPriceWVAT: TcxGridDBColumn;
+    Colors: TcxGridDBColumn;
+    Color_Value: TcxGridDBColumn;
   private
     { Private declarations }
   public

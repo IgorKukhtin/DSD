@@ -116,6 +116,9 @@ type
     MasterAmount: TcxGridDBColumn;
     sqAmount: TcxGridDBColumn;
     MasterPrice: TcxGridDBColumn;
+    cbAmountCheck: TcxCheckBox;
+    ceAmountCheck: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

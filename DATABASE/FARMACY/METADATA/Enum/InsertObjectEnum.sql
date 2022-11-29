@@ -367,15 +367,17 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkSAS(),   inDescId:= zc_Object_WorkTimeKind(), inCode:= 12, inName:= 'подмена средней смены'     , inEnumName:= 'zc_Enum_WorkTimeKind_WorkSAS');
 
 -- !!! Типы расчета заработной платы
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkCS(),    inDescId:= zc_Object_PayrollType(), inCode:= 1, inName:= 'Полная смена'                , inEnumName:= 'zc_Enum_PayrollType_WorkCS');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkAS(),    inDescId:= zc_Object_PayrollType(), inCode:= 2, inName:= 'Средняя смена'               , inEnumName:= 'zc_Enum_PayrollType_WorkAS');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSCS(),   inDescId:= zc_Object_PayrollType(), inCode:= 3, inName:= 'Подмена полной смены'        , inEnumName:= 'zc_Enum_PayrollType_WorkSCS');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkNS(),    inDescId:= zc_Object_PayrollType(), inCode:= 4, inName:= 'Ночная смена'                , inEnumName:= 'zc_Enum_PayrollType_WorkNS');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkS(),     inDescId:= zc_Object_PayrollType(), inCode:= 5, inName:= 'Смена кладовщика'            , inEnumName:= 'zc_Enum_PayrollType_WorkS');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSAS(),   inDescId:= zc_Object_PayrollType(), inCode:= 6, inName:= 'Подмена средней смены'       , inEnumName:= 'zc_Enum_PayrollType_WorkSAS');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkI(),     inDescId:= zc_Object_PayrollType(), inCode:= 7, inName:= 'Исключение'                  , inEnumName:= 'zc_Enum_PayrollType_WorkI');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkIS(),    inDescId:= zc_Object_PayrollType(), inCode:= 8, inName:= 'Исключение для кладовщика'   , inEnumName:= 'zc_Enum_PayrollType_WorkIS');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSSAS(),  inDescId:= zc_Object_PayrollType(), inCode:= 9, inName:= 'Смена кладовщика + Подмена средней смены'   , inEnumName:= 'zc_Enum_PayrollType_WorkSSAS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkCS(),    inDescId:= zc_Object_PayrollType(), inCode:= 1,  inName:= 'Полная смена'                , inEnumName:= 'zc_Enum_PayrollType_WorkCS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkAS(),    inDescId:= zc_Object_PayrollType(), inCode:= 2,  inName:= 'Средняя смена'               , inEnumName:= 'zc_Enum_PayrollType_WorkAS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSCS(),   inDescId:= zc_Object_PayrollType(), inCode:= 3,  inName:= 'Подмена полной смены'        , inEnumName:= 'zc_Enum_PayrollType_WorkSCS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkNS(),    inDescId:= zc_Object_PayrollType(), inCode:= 4,  inName:= 'Ночная смена'                , inEnumName:= 'zc_Enum_PayrollType_WorkNS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkS(),     inDescId:= zc_Object_PayrollType(), inCode:= 5,  inName:= 'Смена кладовщика'            , inEnumName:= 'zc_Enum_PayrollType_WorkS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSAS(),   inDescId:= zc_Object_PayrollType(), inCode:= 6,  inName:= 'Подмена средней смены'       , inEnumName:= 'zc_Enum_PayrollType_WorkSAS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkI(),     inDescId:= zc_Object_PayrollType(), inCode:= 7,  inName:= 'Исключение'                  , inEnumName:= 'zc_Enum_PayrollType_WorkI');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkIS(),    inDescId:= zc_Object_PayrollType(), inCode:= 8,  inName:= 'Исключение для кладовщика'   , inEnumName:= 'zc_Enum_PayrollType_WorkIS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSSAS(),  inDescId:= zc_Object_PayrollType(), inCode:= 9,  inName:= 'Смена кладовщика + Подмена средней смены'   , inEnumName:= 'zc_Enum_PayrollType_WorkSSAS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkBid(),   inDescId:= zc_Object_PayrollType(), inCode:= 10, inName:= 'Первостольник ставка'        , inEnumName:= 'zc_Enum_PayrollType_WorkBid');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSBid(),  inDescId:= zc_Object_PayrollType(), inCode:= 11, inName:= 'Кладовщик ставка'            , inEnumName:= 'zc_Enum_PayrollType_WorkSBid');
 
 
 -- !!! Группы расчета заработной платы

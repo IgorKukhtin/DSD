@@ -2424,7 +2424,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           DataSet = PrintItemsColorCDS
           UserName = 'frxDBDMasterGoods'
-          IndexFieldNames = 'TitleReceipt;GroupBy;ObjectCode'
+          IndexFieldNames = 'TitleReceipt;TitleGroup;ObjectCode'
         end>
       Params = <
         item

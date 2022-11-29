@@ -314,6 +314,12 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 100
       end
+      object Colors: TcxGridDBColumn
+        Caption = 'Colors'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
       object GoodsSizeName: TcxGridDBColumn
         Caption = 'Gr'#246#223'e'
         DataBinding.FieldName = 'GoodsSizeName'
@@ -674,6 +680,12 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 55
+      end
+      object Color_Value: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Value'
+        Visible = False
+        VisibleForCustomization = False
         Width = 55
       end
     end
@@ -1546,7 +1558,12 @@ object GoodsForm: TGoodsForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Colors
+        BackGroundValueColumn = Color_Value
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

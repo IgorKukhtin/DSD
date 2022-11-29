@@ -198,6 +198,8 @@ type
     cxGridDBTableView2: TcxGridDBTableView;
     cxGridLevel2: TcxGridLevel;
     apSelectChild: TdsdStoredProc;
+    Colors_ch1: TcxGridDBColumn;
+    Color_Value_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public

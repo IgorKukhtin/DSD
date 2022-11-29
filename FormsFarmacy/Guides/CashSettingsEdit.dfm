@@ -558,6 +558,23 @@ object CashSettingsEditForm: TCashSettingsEditForm
       #1082#1080#1088#1086#1074#1082#1080
     Caption = #1053#1086#1088#1084#1072' '#1087#1086' '#1085#1086#1074#1099#1084' '#1079#1072#1082#1072#1079#1072#1084' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
   end
+  object ceLimitCash: TcxCurrencyEdit
+    Left = 759
+    Top = 495
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.EditFormat = ',0.00'
+    TabOrder = 75
+    Width = 121
+  end
+  object cxLabel34: TcxLabel
+    Left = 540
+    Top = 496
+    Hint = 
+      #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
+      #1082#1080#1088#1086#1074#1082#1080
+    Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1086#1082#1091#1087#1082#1080' '#1085#1072#1083#1080#1095#1085#1099#1084#1080
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -904,6 +921,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLimitCash'
+        Value = Null
+        Component = ceLimitCash
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1198,6 +1223,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LimitCash'
+        Value = Null
+        Component = ceLimitCash
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1282,7 +1314,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 765
-    Top = 467
+    Left = 773
+    Top = 451
   end
 end

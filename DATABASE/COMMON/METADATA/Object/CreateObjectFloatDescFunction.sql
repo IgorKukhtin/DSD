@@ -2344,10 +2344,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_NormNewMobileOrders() RET
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_NormNewMobileOrders', '	Норма по новым заказам мобильного приложения' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_NormNewMobileOrders');
   
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_LimitCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_LimitCash'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_LimitCash', 'Ограничение при покупки наличными' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_LimitCash');
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 25.11.22                                                                                      * zc_ObjectFloat_CashSettings_LimitCash
  13.10.22                                                                                      * zc_ObjectFloat_CashSettings_NormNewMobileOrders
  26.09.22                                                                                      * zc_ObjectFloat_User_InternshipConfirmation
  21.09.22                                                                                      * zc_ObjectFloat_Goods_MultiplicityDiscontSite

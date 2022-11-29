@@ -101,6 +101,8 @@ type
     UserUpdateMarketingGuides: TdsdGuides;
     ceNormNewMobileOrders: TcxCurrencyEdit;
     cxLabel33: TcxLabel;
+    ceLimitCash: TcxCurrencyEdit;
+    cxLabel34: TcxLabel;
   private
     { Private declarations }
   public

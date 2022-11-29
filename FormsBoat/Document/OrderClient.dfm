@@ -1878,6 +1878,21 @@ object OrderClientForm: TOrderClientForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSumm_partner_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_basis_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_unit_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_partner_ch4
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1894,6 +1909,21 @@ object OrderClientForm: TOrderClientForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSumm_partner_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_basis_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_unit_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_partner_ch4
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.ImageList
@@ -1976,11 +2006,17 @@ object OrderClientForm: TOrderClientForm
           object ObjectCode_ch4: TcxGridDBColumn
             Caption = 'Interne Nr'
             DataBinding.FieldName = 'ObjectCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
-            Options.Editing = False
             Width = 55
           end
           object Article_Object_ch4: TcxGridDBColumn
@@ -2010,7 +2046,6 @@ object OrderClientForm: TOrderClientForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 200
           end
           object DescName_ch4: TcxGridDBColumn
