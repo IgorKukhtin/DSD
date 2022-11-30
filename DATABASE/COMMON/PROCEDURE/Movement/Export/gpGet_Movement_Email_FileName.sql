@@ -37,7 +37,7 @@ BEGIN
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Avion40110917())
                       THEN COALESCE (REPLACE (Object_JuridicalBasis.ValueData, '"', ''), 'Alan')
                  || '_' || Movement.InvNumber
-                 || '_' || COALESCE (Object_Juridical.ValueData, 'Юр_лицо') || ' №' || COALESCE (ObjectString_RoomNumber.ValueData, '0')
+                 || '_' || REPLACE (REPLACE (COALESCE (Object_Juridical.ValueData, 'Юр_лицо') || ' №' || COALESCE (ObjectString_RoomNumber.ValueData, '0'), '"', ''), '/', '_')
 
 
                  -- Vez+Brusn
@@ -50,7 +50,7 @@ BEGIN
                                                                                           END
                  -- Dakort
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Dakort39135074())
-                      THEN COALESCE (REPLACE (Object_JuridicalBasis.ValueData, '"', ''), 'Alan')
+                      THEN COALESCE (REPLACE (REPLACE (Object_JuridicalBasis.ValueData, '"', ''), '/', '_'), 'Alan')
                  || '_' || Movement.InvNumber
                  --|| '_' || COALESCE (Object_Retail.ValueData, 'Торговая сеть') || ' №' || CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Brusn34604386()
                  --                                                                                   THEN Object_Partner.Id :: TVarChar -- COALESCE (ObjectString_RoomNumber.ValueData, '0')
@@ -75,8 +75,10 @@ BEGIN
                  -- Таврия+
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Tavr31929492())
                       THEN COALESCE (REPLACE (Object_JuridicalBasis.ValueData, '"', ''), 'Alan')
-                 || '_' || Movement.InvNumber
-                 || '_' || COALESCE (Object_Juridical.ValueData, 'Юр_лицо') || ' №' || COALESCE (ObjectString_RoomNumber.ValueData, '0')
+--               || '_' || Movement.InvNumber
+--               || '_' || COALESCE (Object_Juridical.ValueData, 'Юр_лицо') || ' №' || COALESCE (ObjectString_RoomNumber.ValueData, '0')
+                 || ' № ' || Movement.InvNumber
+                 || ' - ' || REPLACE (REPLACE (COALESCE (Object_Partner.ValueData, Object_Juridical.ValueData, 'Юр_лицо'), '"', ''), '/', '_')
 
             END AS outFileName
 
@@ -176,4 +178,4 @@ $BODY$
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 15595974, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Glad2514900150()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 17125578, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Avion40110917()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 21640170, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Nedavn2244900110()
-
+-- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 23921479, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Tavr31929492()
