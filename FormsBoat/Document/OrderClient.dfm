@@ -2319,9 +2319,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2379,9 +2376,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -3898,8 +3892,11 @@ object OrderClientForm: TOrderClientForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrintStructureGoods
+      StoredProc = spSelectPrintStructureHeader
       StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructureHeader
+        end
         item
           StoredProc = spSelectPrintStructureGoods
         end>
@@ -6078,15 +6075,11 @@ object OrderClientForm: TOrderClientForm
   end
   object spSelectPrintStructureGoods: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product_StructureGoodsPrint'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId_OrderClient'
@@ -6097,7 +6090,27 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1056
-    Top = 240
+    Left = 1136
+    Top = 176
+  end
+  object spSelectPrintStructureHeader: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_StructureHeaderPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1144
+    Top = 128
   end
 end

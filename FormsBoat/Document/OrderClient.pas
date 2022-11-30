@@ -395,6 +395,7 @@ type
     GoodsName_basis_ch4: TcxGridDBColumn;
     OperPrice_load: TcxGridDBColumn;
     BasisPrice_load: TcxGridDBColumn;
+    spSelectPrintStructureHeader: TdsdStoredProc;
   private
   public
   end;

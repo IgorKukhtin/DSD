@@ -281,6 +281,7 @@ type
     ArrayCurrencyList : TArrayCurrencyList;
 
     procedure AddToLog(num, lMovementId : Integer; S: string);
+    procedure AddToLog_memo(S: string);
 
     procedure EADO_EngineErrorMsg(E:EADOError);
     procedure EDB_EngineErrorMsg(E:EDBEngineError);
@@ -990,8 +991,8 @@ begin
          if ParamStr(1)='alan_dp_ua' then
          with toZConnection do begin
             Connected:=false;
-            //HostName:='integer-srv.alan.dp.ua';
-            HostName:='192.168.0.219';
+            HostName:='integer-srv.alan.dp.ua';
+            //HostName:='192.168.0.219';
             User:='admin';
             Password:='vas6ok';
             Database:='project';
@@ -1046,7 +1047,7 @@ begin
          fromZConnection.Connected:=true;
          fromZConnection.Connected:=false;
      except
-          ShowMessage ('not Connected');
+          ShowMessage ('not Connected : ' + toZConnection.HostName);
      end;
      //
      //cbAllGuide.Checked:=true;
@@ -1671,10 +1672,37 @@ begin
      fStop:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.AddToLog_memo(S: string);
+var
+  LogStr: string;
+  LogFileName: string;
+  LogFile: TextFile;
+begin
+  Application.ProcessMessages;
+  LogStr := FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ' ' + trim(S);
+
+  LogFileName := ChangeFileExt(Application.ExeName, '') + '\' + FormatDateTime('yyyy-mm-dd', Date) + '.log';
+  ForceDirectories(ChangeFileExt(Application.ExeName, ''));
+
+  AssignFile(LogFile, LogFileName);
+
+  if FileExists(LogFileName) then
+    Append(LogFile)
+  else
+    Rewrite(LogFile);
+
+  Writeln(LogFile, LogStr);
+  Writeln(LogFile, '');
+  CloseFile(LogFile);
+  Application.ProcessMessages;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.myLogMemo_add(str :String);
 begin
      LogMemo.Lines.Add(DateTimeToStr(now) + ' - ' + trim(str));
      LogMemo.Lines.Add('');
+     //
+     AddToLog_memo(str);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKCompleteDocumentButtonClick(Sender: TObject);
