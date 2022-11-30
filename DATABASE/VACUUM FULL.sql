@@ -15,12 +15,12 @@
    VACUUM ANALYZE MovementLinkObject;
    VACUUM ANALYZE MovementLinkMovement;
    
-   VACUUM FULL MovementFloat;
-   VACUUM ANALYZE MovementFloat;
-   VACUUM FULL MovementDate;
-   VACUUM ANALYZE MovementDate;
-   VACUUM FULL MovementBoolean;
-   VACUUM ANALYZE MovementBoolean;
+   --VACUUM FULL MovementFloat;
+   --VACUUM ANALYZE MovementFloat;
+   --VACUUM FULL MovementDate;
+   --VACUUM ANALYZE MovementDate;
+   --VACUUM FULL MovementBoolean;
+   --VACUUM ANALYZE MovementBoolean;
 */
 /*
    VACUUM FULL HistoryCost;
