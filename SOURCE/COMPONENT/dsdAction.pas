@@ -4417,6 +4417,8 @@ var
     Result := StringReplace(Result, '"', '^', [rfReplaceAll]);
   end;
 begin
+  Result := False;
+
   if (XMLFilename = '') or (not FileExists(FXMLFilename)) then // если не указан файл или не существует
     if odOpenXML.Execute then // тогда спрашиваем
       XMLFilename := odOpenXML.FileName // запоминаем
@@ -4432,7 +4434,9 @@ begin
   spInsertProcedure.Params.AddParam('inXMLFile', ftBlob, ptInput, null);
   spInsertProcedure.ParamByName('inXMLFile').Value := UnXML(XMLFileStream.DataString);
 
-  try spInsertProcedure.Execute();
+  try
+    spInsertProcedure.Execute();
+    Result := True;
   finally
     spInsertProcedure.Free;
     XMLFileStream.Free;

@@ -21,7 +21,8 @@ BEGIN
 
 
      -- Замена - Убираем экранизацию
-     vbXMLFile:= REPLACE (REPLACE (REPLACE (REPLACE (inXMLFile, 'Windows-1251', 'UTF-8'), '%', '<'), '$', '>'), '^', '"');
+     -- vbXMLFile:= REPLACE (REPLACE (REPLACE (REPLACE (inXMLFile, 'Windows-1251', 'UTF-8'), '%', '<'), '$', '>'), '^', '"');
+     vbXMLFile:= convert_from(decode(inXMLFile, 'base64'), 'UTF8');
   
 --        delete from tmpProtocol;
 --        insert into tmpProtocol (Text,   ProtocolData)

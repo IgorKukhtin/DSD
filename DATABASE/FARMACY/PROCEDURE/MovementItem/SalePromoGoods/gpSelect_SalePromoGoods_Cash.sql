@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_SalePromoGoods_Cash(
 RETURNS TABLE (EndPromo         TDateTime
              , GoodsId          Integer
              , Amount           TFloat 
+             , isAmountCheck    Boolean
+             , AmountCheck      TFloat
              , GoodsPresentId   Integer
              , AmountPresent    TFloat
              , Price            TFloat
@@ -77,16 +79,26 @@ BEGIN
                               FROM tmpMIUnitAll AS MovementItem),
            tmpMovement AS (SELECT Movement.Id
                                 , Movement.EndPromo
+                                , COALESCE (MovementBoolean_AmountCheck.ValueData, False)        AS isAmountCheck
+                                , MovementFloat_AmountCheck.ValueData                            AS AmountCheck
                            FROM tmpMovementAll AS Movement
 
                                 LEFT JOIN tmpMIUnit ON tmpMIUnit.Id = Movement.Id
 
                                 LEFT JOIN tmpMIUnitGroup ON tmpMIUnitGroup.Id = Movement.Id
-
+                                
+                                LEFT JOIN MovementBoolean AS MovementBoolean_AmountCheck
+                                                          ON MovementBoolean_AmountCheck.MovementId = Movement.Id
+                                                         AND MovementBoolean_AmountCheck.DescId = zc_MovementBoolean_AmountCheck()
+                                LEFT JOIN MovementFloat AS MovementFloat_AmountCheck
+                                                        ON MovementFloat_AmountCheck.MovementId = Movement.Id
+                                                       AND MovementFloat_AmountCheck.DescId = zc_MovementFloat_AmountCheck()
                            ),
            tmpMI AS (SELECT Movement.EndPromo                             AS EndPromo
                           , Goods_Retail.Id                               AS GoodsId
                           , MI_SalePromoGoods.Amount                      AS Amount
+                          , Movement.isAmountCheck
+                          , Movement.AmountCheck
                           , Goods_RetailPresent.Id                        AS GoodsPresentId
                           , Object_Goods_Main.ObjectCode                  AS GoodsPresentCode
                           , Object_Goods_Main.Name                        AS GoodsPresentName
@@ -95,17 +107,17 @@ BEGIN
                           , ROW_NUMBER() OVER (PARTITION BY MI_SalePromoGoods.ObjectId, MI_SalePromoGoodsPresent.ObjectId ORDER BY Movement.EndPromo DESC) AS Ord
                      FROM tmpMovement AS Movement
 
-                          INNER JOIN MovementItem AS MI_SalePromoGoods
-                                                  ON MI_SalePromoGoods.MovementId = Movement.Id
-                                                 AND MI_SalePromoGoods.DescId = zc_MI_Master()
-                                                 AND MI_SalePromoGoods.isErased = FALSE
-                                                 AND MI_SalePromoGoods.Amount > 0
-                          INNER JOIN Object_Goods_Retail AS Goods_Retail 
-                                                         ON Goods_Retail.GoodsMainId = MI_SalePromoGoods.ObjectId 
-                                                        AND Goods_Retail.RetailId = vbRetailId
+                          LEFT JOIN MovementItem AS MI_SalePromoGoods
+                                                 ON MI_SalePromoGoods.MovementId = Movement.Id
+                                                AND MI_SalePromoGoods.DescId = zc_MI_Master()
+                                                AND MI_SalePromoGoods.isErased = FALSE
+                                                AND MI_SalePromoGoods.Amount > 0
+                          LEFT JOIN Object_Goods_Retail AS Goods_Retail 
+                                                        ON Goods_Retail.GoodsMainId = MI_SalePromoGoods.ObjectId 
+                                                       AND Goods_Retail.RetailId = vbRetailId
 
                           INNER JOIN MovementItem AS MI_SalePromoGoodsPresent
-                                                  ON MI_SalePromoGoodsPresent.MovementId = MI_SalePromoGoods.MovementId
+                                                  ON MI_SalePromoGoodsPresent.MovementId = Movement.Id
                                                  AND MI_SalePromoGoodsPresent.DescId = zc_MI_Child()
                                                  AND MI_SalePromoGoodsPresent.isErased = FALSE
                                                  AND MI_SalePromoGoodsPresent.Amount > 0
@@ -122,6 +134,8 @@ BEGIN
         SELECT MovementIten.EndPromo                             AS EndPromo
              , MovementIten.GoodsId
              , MovementIten.Amount
+             , MovementIten.isAmountCheck
+             , MovementIten.AmountCheck
              , MovementIten.GoodsPresentId
              , MovementIten.AmountPresent
              , MovementIten.Price
