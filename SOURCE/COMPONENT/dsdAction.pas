@@ -4406,16 +4406,6 @@ function TdsdLoadXMLKS.Execute: Boolean;
 var
   XMLFileStream: TStringStream;
   spInsertProcedure: TdsdStoredProc;
-
-  function UnXML(inXML: Variant): Variant;
-  begin
-    Result := inXML;
-    Result := StringReplace(Result, '<', '%', [rfReplaceAll]);
-    Result := StringReplace(Result, '>', '$', [rfReplaceAll]);
-    Result := StringReplace(Result, #9, '', [rfReplaceAll]);
-    Result := StringReplace(Result, '&quot;', '', [rfReplaceAll]);
-    Result := StringReplace(Result, '"', '^', [rfReplaceAll]);
-  end;
 begin
   Result := False;
 
@@ -4432,7 +4422,7 @@ begin
   spInsertProcedure.OutputType := otResult;
   spInsertProcedure.StoredProcName := FInsertProcedureName; ///'gpInsertUpdate_logBillsKS'; // FInsertProcedureName;
   spInsertProcedure.Params.AddParam('inXMLFile', ftBlob, ptInput, null);
-  spInsertProcedure.ParamByName('inXMLFile').Value := UnXML(XMLFileStream.DataString);
+  spInsertProcedure.ParamByName('inXMLFile').Value :=  EncodeBase64(BytesOf(XMLFileStream.DataString));
 
   try
     spInsertProcedure.Execute();
