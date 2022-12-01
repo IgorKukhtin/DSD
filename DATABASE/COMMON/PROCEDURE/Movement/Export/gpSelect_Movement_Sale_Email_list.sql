@@ -55,9 +55,16 @@ BEGIN
                                     FROM lpSelect_Object_ExportJuridical_list() AS tmp
                                     -- только для этого
                                     WHERE tmp.isAuto = TRUE
-                                                              )
+
+                                   UNION
+                                    SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId
+                                    FROM lpSelect_Object_ExportJuridical_list() AS tmp
+                                    -- только для этого
+                                    WHERE tmp.ExportKindId = zc_Enum_ExportKind_Tavr31929492()
+                                    --AND vbUserId = 5
                                     --AND inIsExcel = TRUE
                                    )
+
                   , tmpMovement AS (SELECT Movement.Id AS MovementId
                                          , Movement.InvNumber
                                          , Movement.OperDate

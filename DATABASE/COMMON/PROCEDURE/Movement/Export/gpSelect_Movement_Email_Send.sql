@@ -1592,6 +1592,8 @@ BEGIN
           AND MovementItem.DescId = zc_MI_Master()
           AND MovementItem.isErased = FALSE
           AND MIFloat_AmountPartner.ValueData <> 0
+        ORDER BY CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+               , Object_GoodsKind.ValueData
        ;
      
      

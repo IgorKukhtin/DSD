@@ -24,7 +24,7 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  cxButtonEdit, dsdGuides, frxClass, frxDBSet, dsdInternetAction;
+  cxButtonEdit, dsdGuides, frxClass, frxDBSet, dsdInternetAction, MeDOC;
 
 type
   TSale_PartnerJournalForm = class(TAncestorJournalForm)
@@ -237,6 +237,14 @@ type
     actGet_Export_FileNameXml: TdsdExecStoredProc;
     macExport_XML: TMultiAction;
     bbExport_XML: TdxBarButton;
+    macExportFile_fromMail: TMultiAction;
+    bbbExportFile_fromMail: TdxBarButton;
+    actExport_file_fromEmail: TdsdStoredProcExportToFile;
+    macExportFile_fromMail_All: TMultiAction;
+    actGet_Export_FileName_fromMail: TdsdExecStoredProc;
+    spGet_Export_FileName_2: TdsdStoredProc;
+    spGetDirectoryName: TdsdStoredProc;
+    actGetDirectory: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -70,8 +70,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
             
              , SummAddOth TFloat, SummAddOthRecalc TFloat
              , SummHouseAdd TFloat
-             --, SummCompensation TFloat, SummCompensationRecalc TFloat
-             , DayCompensation TFloat--, PriceCompensation TFloat
+             , SummCompensation TFloat, SummCompensationRecalc TFloat
+             , DayCompensation TFloat, PriceCompensation TFloat
              , DayVacation TFloat, DayHoliday TFloat, DayWork TFloat
              , DayAudit TFloat
              , Number TVarChar
@@ -101,6 +101,57 @@ BEGIN
          RETURN;
      END IF;
 
+     ---
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPersonalServiceList_check'))
+     THEN
+          -- Оптимизация
+          CREATE TEMP TABLE tmpPersonalServiceList_check ON COMMIT DROP AS 
+            WITH tmpUserAll_check AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
+            SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM ObjectLink AS ObjectLink_User_Member
+                 INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
+                                       ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                      AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                 INNER JOIN Object AS Object_MemberPersonalServiceList
+                                   ON Object_MemberPersonalServiceList.Id       = ObjectLink_MemberPersonalServiceList.ObjectId
+                                  AND Object_MemberPersonalServiceList.isErased = FALSE
+                 LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                        AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
+                 LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                      ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                     AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+                 LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                               AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
+                                                                 OR ObjectBoolean.ValueData          = TRUE)
+            WHERE ObjectLink_User_Member.ObjectId = vbUserId
+              AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+           UNION
+            SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM ObjectLink AS ObjectLink_User_Member
+                 INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                       ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                      AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
+                 LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                               AND Object_PersonalServiceList.Id     = ObjectLink_PersonalServiceList_Member.ObjectId
+            WHERE ObjectLink_User_Member.ObjectId = vbUserId
+              AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+           UNION
+            -- Админ и другие видят ВСЕХ
+            SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM Object AS Object_PersonalServiceList
+            WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+              AND (EXISTS (SELECT 1 FROM tmpUserAll_check)
+               OR vbUserId = 80373 -- Прохорова С.А.
+                  )
+           UNION
+            -- Админ и другие видят ВСЕХ
+            SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM Object AS Object_PersonalServiceList
+            WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+              AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin())
+           ;
+     END IF;
+     
 
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -479,11 +530,11 @@ BEGIN
             , MIFloat_SummHouseAdd.ValueData  ::TFloat  AS SummHouseAdd
 
 
-            --, CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensation.ValueData        ELSE 0 END ::TFloat AS SummCompensation
-            --, CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensationRecalc.ValueData  ELSE 0 END ::TFloat AS SummCompensationRecalc
+            , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensation.ValueData        ELSE 0 END ::TFloat AS SummCompensation
+            , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensationRecalc.ValueData  ELSE 0 END ::TFloat AS SummCompensationRecalc
             
             , MIFloat_DayCompensation.ValueData AS DayCompensation
-            --, CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_PriceCompensation.ValueData       ELSE 0 END ::TFloat AS PriceCompensation
+            , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_PriceCompensation.ValueData       ELSE 0 END ::TFloat AS PriceCompensation
             
             , MIFloat_DayVacation.ValueData             ::TFloat AS DayVacation
             , MIFloat_DayHoliday.ValueData              ::TFloat AS DayHoliday
@@ -891,6 +942,8 @@ BEGIN
                                              ON MILinkObject_UnitFineSubject.MovementItemId = tmpAll.MovementItemId
                                             AND MILinkObject_UnitFineSubject.DescId = zc_MILinkObject_UnitFineSubject()
             LEFT JOIN Object AS Object_UnitFineSubject ON Object_UnitFineSubject.Id = MILinkObject_UnitFineSubject.ObjectId
+            
+            LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId
             ;
 
 END;

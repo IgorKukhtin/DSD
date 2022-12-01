@@ -146,7 +146,8 @@ AND NOT EXISTS (SELECT 1
       
      -- при изменении ObjectId и/или в zc_MILinkObject_GoodsKind
      -- находим и автоматом подставляем из zc_ObjectLink_GoodsByGoodsKind_GoodsReal + zc_ObjectLink_GoodsByGoodsKind_GoodsKindReal если они есть + нет блокировки в Juridical_isNotRealGoods
-     IF NOT EXISTS (SELECT 1
+     IF '01.12.2022' <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+    AND NOT EXISTS (SELECT 1
                     FROM MovementLinkObject AS MLO
                         INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                               ON ObjectLink_Partner_Juridical.ObjectId = MLO.ObjectId
@@ -154,7 +155,7 @@ AND NOT EXISTS (SELECT 1
                         INNER JOIN ObjectBoolean AS ObjectBoolean_isNotRealGoods
                                                  ON ObjectBoolean_isNotRealGoods.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId 
                                                 AND ObjectBoolean_isNotRealGoods.DescId = zc_ObjectBoolean_Juridical_isNotRealGoods()
-                                                AND COALESCE (ObjectBoolean_isNotRealGoods.ValueData, FALSE) = TRUE
+                                                AND ObjectBoolean_isNotRealGoods.ValueData = TRUE
                     WHERE MLO.MovementId = inMovementId
                       AND MLO.DescId = zc_MovementLinkObject_To()
                     ) 
@@ -167,7 +168,7 @@ AND NOT EXISTS (SELECT 1
      THEN   
          SELECT ObjectLink_GoodsByGoodsKind_GoodsReal.ChildObjectId     AS GoodsRealId
               , ObjectLink_GoodsByGoodsKind_GoodsKindReal.ChildObjectId AS GoodsKindRealId
-        INTO vbGoodsRealId, vbGoodsKindRealId
+                INTO vbGoodsRealId, vbGoodsKindRealId
          FROM Object_GoodsByGoodsKind_View
               LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsReal
                                    ON ObjectLink_GoodsByGoodsKind_GoodsReal.ObjectId = Object_GoodsByGoodsKind_View.Id

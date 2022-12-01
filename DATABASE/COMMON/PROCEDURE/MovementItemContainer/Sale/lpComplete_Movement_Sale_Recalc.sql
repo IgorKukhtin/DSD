@@ -407,8 +407,8 @@ END IF;
            AND _tmpItemPeresort_new.GoodsKindId_to = tmpMI.GoodsKindId_to
           ;
 
-         --отдельно для информации сохраняем обязательно факт остатка Amount_Remains
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), _tmpItemPeresort_new.MovementItemId_to, Amount_Remains)
+         -- отдельно для информации сохраняем обязательно факт остатка Amount_Remains
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), _tmpItemPeresort_new.MovementItemId_to, COALESCE (_tmpItemPeresort_new.Amount_Remains, 0))
          FROM _tmpItemPeresort_new
               LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItemPeresort_new.MovementItemId_to
                                                 AND MIF.DescId         = zc_MIFloat_Remains()

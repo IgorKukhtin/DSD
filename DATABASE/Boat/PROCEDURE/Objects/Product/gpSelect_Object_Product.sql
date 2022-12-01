@@ -529,7 +529,7 @@ BEGIN
 
                        , Object_Model.Id                 AS ModelId
                        , Object_Model.ValueData          AS ModelName
-                       , (Object_Model.ValueData ||' (' || Object_Brand.ValueData||')') ::TVarChar AS ModelName_full
+                       , (Object_Brand.ValueData || '-' || Object_Model.ValueData) ::TVarChar AS ModelName_full
 
                        , Object_Engine.Id                AS EngineId
                        , Object_Engine.ValueData         AS EngineName

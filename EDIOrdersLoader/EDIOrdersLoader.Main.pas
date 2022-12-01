@@ -486,10 +486,10 @@ begin
               //
               Application.ProcessMessages;
               // Сохранили что отправка прошла
-              AddToLog('отправилось без ошибки № : <' + IntToStr(i) + '> <' + FieldByName('MovementId').AsString + '> <' + FieldByName('InvNumber').AsString + '> <' + FieldByName('OperDatePartner').AsString + '>' + '> <' + FieldByName('OperDate_protocol').AsString + '>');
+              AddToLog('отправилось без ошибки № : <' + IntToStr(i) + '> <' + FieldByName('MovementId').AsString + '> <' + FieldByName('InvNumber').AsString + '> <' + FieldByName('ToName').AsString + '> <' + FieldByName('OperDatePartner').AsString + '>' + '> <' + FieldByName('OperDate_protocol').AsString + '>');
           except
               // FormParams.ParamByName('Err_str_Email').Value := 'Ошибка при отправке';
-              AddToLog('Ошибка при отправке № : <' + IntToStr(i) + '> <' + FieldByName('MovementId').AsString + '>');
+              AddToLog('Ошибка при отправке № : <' + IntToStr(i) + '> <' + FieldByName('MovementId').AsString + '> <' + FieldByName('InvNumber').AsString + '> <' + FieldByName('ToName').AsString + '> <' + FieldByName('OperDatePartner').AsString + '>' + '> <' + FieldByName('OperDate_protocol').AsString + '>');
               //
               Application.ProcessMessages;
               // Сохранили что ошибка

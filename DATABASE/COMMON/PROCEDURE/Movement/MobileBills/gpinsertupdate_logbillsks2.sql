@@ -23,20 +23,53 @@ BEGIN
      -- Замена - Убираем экранизацию
      vbXMLFile:= REPLACE (REPLACE (REPLACE (REPLACE (inXMLFile, 'Windows-1251', 'UTF-8'), '%', '<'), '$', '>'), '^', '"');
   
-     -- Дата документа
-     vbOperDate:= (SELECT unnest(xpath('//Array-Bill/bill[1]/od/text()', vbXMLFile :: XML)));
+--        delete from tmpProtocol;
+--        insert into tmpProtocol (Text,   ProtocolData)
+--        values (vbUserId :: TVarChar, CURRENT_TIMESTAMP :: Text);
+--        return;
+
+     IF vbUserId <> 5 or 1=0
+     THEN
+        -- Дата документа
+        vbOperDate:= (SELECT unnest(xpath('//Array-Bill/bill[1]/od/text()', vbXMLFile :: XML)));
+     ELSE
+        -- Дата счета
+        vbOperDate:= (SELECT unnest(xpath('//Array-Bill/InvoiceDocument/Invoice/Header/InvoiceDate/text()', vbXMLFile :: XML)));
+
+--        insert into tmpProtocol (Text,   ProtocolData)
+--        values (vbOperDate :: TVarChar, CURRENT_TIMESTAMP :: Text);
+         
+        -- return;
+        -- RAISE EXCEPTION 'Ошибка. xmlBillDate = <%>', vbOperDate;
+     END IF;
 
 
      -- Парсим XML - получили строчную часть
      CREATE TEMP TABLE _tmpItem (PhoneNum TVarChar, TotalSumm TFloat) ON COMMIT DROP;
-     INSERT INTO _tmpItem (PhoneNum, TotalSumm)
-        WITH tmpData AS (SELECT vbXMLFile :: XML AS ValueData)
-        SELECT -- Номер мобильного
-               regexp_split_to_table (replace (replace (CAST (xpath ('//Array-Bill/bill/subs[stnd_id=1]/msisdn/text()', ValueData) AS Text), '}', ''), '{', ''), ',') :: TVarChar AS PhoneNum
-               -- Сумма Итого
-             , regexp_split_to_table (replace (replace (CAST (xpath ('//Array-Bill/bill/subs[stnd_id=1]/s_det/tot/text()', ValueData) AS Text), '}', ''), '{', ''),',') :: TFloat AS TotalSumm
-   
-        FROM tmpData;
+     IF vbUserId <> 5 or 1=0
+     THEN
+         INSERT INTO _tmpItem (PhoneNum, TotalSumm)
+            WITH tmpData AS (SELECT vbXMLFile :: XML AS ValueData)
+            SELECT -- Номер мобильного
+                   regexp_split_to_table (replace (replace (CAST (xpath ('//Array-Bill/bill/subs[stnd_id=1]/msisdn/text()', ValueData) AS Text), '}', ''), '{', ''), ',') :: TVarChar AS PhoneNum
+                   -- Сумма Итого
+                 , regexp_split_to_table (replace (replace (CAST (xpath ('//Array-Bill/bill/subs[stnd_id=1]/s_det/tot/text()', ValueData) AS Text), '}', ''), '{', ''),',') :: TFloat AS TotalSumm
+       
+            FROM tmpData;
+     ELSE
+         INSERT INTO _tmpItem (PhoneNum, TotalSumm)
+            WITH tmpData AS (SELECT vbXMLFile :: XML AS ValueData)
+            SELECT -- Номер мобильного
+                   regexp_split_to_table (replace (replace (CAST (xpath ('//Array-Bill/InvoiceDocument/Invoice/Contract/ContractDetail/ContractID/text()', ValueData) AS Text), '}', ''), '{', ''), ',') :: TVarChar AS PhoneNum
+                   -- Сумма Итого
+                 , zfConvert_StringToFloat (regexp_split_to_table (replace (replace (CAST (xpath ('//Array-Bill/InvoiceDocument/Invoice/Contract/ContractDetail/SubInvoiceAmount/AmountDetail/AmountExclTax/text()', ValueData) AS Text), '}', ''), '{', ''),',')) :: TFloat AS TotalSumm
+       
+            FROM tmpData;
+
+     END IF;
+
+--         insert into tmpProtocol (Text,   ProtocolData)
+--         values ((select count(*) from _tmpItem), CURRENT_TIMESTAMP :: Text);
 
      -- RAISE EXCEPTION '<%>  <%>', (select PhoneNum from  _tmpItem), (select TotalSumm from  _tmpItem );
 
@@ -219,4 +252,5 @@ $BODY$
 */
 
 -- тест
+--  select * from tmpProtocol
 -- SELECT * FROM gpInsertUpdate_LogBillsKS2
