@@ -29,7 +29,7 @@ BEGIN
 --        values (vbUserId :: TVarChar, CURRENT_TIMESTAMP :: Text);
 --        return;
 
-     IF vbUserId <> 5 or 1=0
+     IF vbUserId <> 5 AND 1=0
      THEN
         -- Дата документа
         vbOperDate:= (SELECT unnest(xpath('//Array-Bill/bill[1]/od/text()', vbXMLFile :: XML)));
@@ -47,7 +47,7 @@ BEGIN
 
      -- Парсим XML - получили строчную часть
      CREATE TEMP TABLE _tmpItem (PhoneNum TVarChar, TotalSumm TFloat) ON COMMIT DROP;
-     IF vbUserId <> 5 or 1=0
+     IF vbUserId <> 5 AND 1=0
      THEN
          INSERT INTO _tmpItem (PhoneNum, TotalSumm)
             WITH tmpData AS (SELECT vbXMLFile :: XML AS ValueData)
