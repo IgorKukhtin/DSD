@@ -54,6 +54,7 @@ AS
 $BODY$
    DECLARE vbIsMovement Boolean;
    DECLARE vbIsAll Boolean;
+   DECLARE vbIsUserRole_8813637 Boolean;
 BEGIN
 
      -- Блокируем ему просмотр
@@ -62,6 +63,11 @@ BEGIN
          inUserId:= NULL;
          RETURN;
      END IF;
+
+
+     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     vbIsUserRole_8813637:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = 8813637);
+
 
      -- !!!
      vbIsAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId);
@@ -394,6 +400,9 @@ BEGIN
                                 ELSE COALESCE (ContainerLO_Cash.ObjectId, COALESCE (ContainerLO_BankAccount.ObjectId, COALESCE (ContainerLO_Juridical.ObjectId, COALESCE (ContainerLO_Unit.ObjectId, COALESCE (ContainerLO_Car.ObjectId, COALESCE (ContainerLO_Member.ObjectId
                                              , COALESCE (ContainerLO_Juridical_inf.ObjectId, COALESCE (ContainerLO_Unit_inf.ObjectId, COALESCE (ContainerLO_Car_inf.ObjectId, ContainerLO_Member_inf.ObjectId)))))))))
                            END AS ObjectId_Direction
+
+                         , COALESCE (ContainerLO_Member.ObjectId, ContainerLO_Member_inf.ObjectId) AS ObjectId_Direction_two
+
                          , CASE WHEN 1=1 AND tmpReport_All.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
                                      THEN COALESCE (ContainerLO_Cash_inf.ObjectId, ContainerLO_BankAccount_inf.ObjectId)
                                 WHEN tmpReport_All.MovementDescId IN (zc_Movement_Currency())
@@ -441,6 +450,7 @@ BEGIN
                         LEFT JOIN tmpCLO AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpReport_All.ContainerId
                                                                         AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
                                                                         AND ContainerLO_Car.ObjectId > 0
+                                                                      --AND inUserId <> 5
                         LEFT JOIN tmpCLO AS ContainerLO_Member ON ContainerLO_Member.ContainerId = tmpReport_All.ContainerId
                                                                            AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()
                                                                            AND ContainerLO_Member.ObjectId > 0
@@ -482,6 +492,7 @@ BEGIN
                         LEFT JOIN tmpCLO AS ContainerLO_Car_inf ON ContainerLO_Car_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                AND ContainerLO_Car_inf.DescId = zc_ContainerLinkObject_Car()
                                                                AND ContainerLO_Car_inf.ObjectId > 0
+                                                             --AND inUserId <> 5
                         LEFT JOIN tmpCLO AS ContainerLO_Member_inf ON ContainerLO_Member_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                   AND ContainerLO_Member_inf.DescId = zc_ContainerLinkObject_Member()
                                                                   AND ContainerLO_Member_inf.ObjectId > 0
@@ -523,6 +534,7 @@ BEGIN
                                   ELSE COALESCE (ContainerLO_Cash.ObjectId, COALESCE (ContainerLO_BankAccount.ObjectId, COALESCE (ContainerLO_Juridical.ObjectId, COALESCE (ContainerLO_Unit.ObjectId, COALESCE (ContainerLO_Car.ObjectId, COALESCE (ContainerLO_Member.ObjectId
                                                , COALESCE (ContainerLO_Juridical_inf.ObjectId, COALESCE (ContainerLO_Unit_inf.ObjectId, COALESCE (ContainerLO_Car_inf.ObjectId, ContainerLO_Member_inf.ObjectId)))))))))
                              END
+                           , COALESCE (ContainerLO_Member.ObjectId, ContainerLO_Member_inf.ObjectId)
                            , CASE WHEN 1=1 AND tmpReport_All.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
                                        THEN COALESCE (ContainerLO_Cash_inf.ObjectId, ContainerLO_BankAccount_inf.ObjectId)
                                   WHEN tmpReport_All.MovementDescId IN (zc_Movement_Currency())
@@ -577,7 +589,11 @@ BEGIN
 
          , Object_Direction.Id             AS ObjectId_Direction
          , CASE WHEN inUserId = 5 THEN tmpReport.ContainerId ELSE Object_Direction.ObjectCode END :: Integer AS ObjectCode_Direction
-         , (COALESCE (Object_Bank.ValueData || ' * ', '') || Object_Direction.ValueData || COALESCE (' * ' || Object_Currency.ValueData, '')) :: TVarChar AS ObjectName_Direction
+         , (CASE WHEN /*tmpReport.MovementDescId = zc_Movement_Cash() AND*/ Object_Member.ValueData <> '' AND Object_Direction.ValueData <> Object_Member.ValueData
+                 AND Object_Direction.DescId <> zc_Object_Cash()
+                 THEN Object_Member.ValueData || ' * ' || Object_Direction.ValueData
+                 ELSE COALESCE (Object_Bank.ValueData || ' * ', '') || Object_Direction.ValueData || COALESCE (' * ' || Object_Currency.ValueData, '')
+            END) :: TVarChar AS ObjectName_Direction
          , Object_Destination.ObjectCode   AS ObjectCode_Destination
          , Object_Destination.ValueData    AS ObjectName_Destination
          , ObjectDesc_Direction.ItemName   AS DescName_Direction
@@ -662,13 +678,17 @@ BEGIN
                                                                    , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_inf ELSE tmpReport.MoneyPlaceId_inf END)
                                                  END
        LEFT JOIN Object AS Object_Destination
-                        ON Object_Destination.Id = CASE WHEN tmpReport.MovementDescId = zc_Movement_Cash() AND tmpReport.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                        ON Object_Destination.Id = CASE WHEN vbIsUserRole_8813637 = TRUE
+                                                             THEN 0
+                                                        WHEN tmpReport.MovementDescId = zc_Movement_Cash() AND tmpReport.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                                              THEN tmpReport.MoneyPlaceId_inf
                                                         WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
                                                              THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Destination ELSE tmpReport.ObjectId_Direction END
                                                         ELSE COALESCE (tmpReport.ObjectId_Destination
                                                                      , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.MoneyPlaceId_inf ELSE tmpReport.ObjectId_inf END)
                                                    END
+
+       LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpReport.ObjectId_Direction_two
 
        LEFT JOIN ObjectDesc AS ObjectDesc_Direction   ON ObjectDesc_Direction.Id   = Object_Direction.DescId
        LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId
@@ -700,4 +720,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpReport_AccountMotion (inStartDate := ('01.11.2019')::TDateTime , inEndDate := ('01.11.2019')::TDateTime , inAccountGroupId := 9015 , inAccountDirectionId := 9034 , inInfoMoneyId := 0 , inAccountId := 0 , inBusinessId := 0 , inProfitLossGroupId := 0 , inProfitLossDirectionId := 0 , inProfitLossId := 0 , inBranchId := 0 , inMovementDescId := 0 , inIsMovement := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inIsDetail := 'False', inUserId:= zfCalc_UserAdmin() :: Integer);
+-- SELECT * FROM lpReport_AccountMotion (inStartDate := ('01.11.2022')::TDateTime , inEndDate := ('01.11.2022')::TDateTime , inAccountGroupId := 9015 , inAccountDirectionId := 9034 , inInfoMoneyId := 0 , inAccountId := 0 , inBusinessId := 0 , inProfitLossGroupId := 0 , inProfitLossDirectionId := 0 , inProfitLossId := 0 , inBranchId := 0 , inMovementDescId := 0 , inIsMovement := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inIsDetail := 'False', inUserId:= zfCalc_UserAdmin() :: Integer);
