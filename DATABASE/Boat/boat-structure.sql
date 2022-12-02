@@ -105,6 +105,32 @@
  ,"accessories":[{"id":"b280_aoa_0","title":"Boat Cover","price":630,"color_title":"Black","color":"#313133"},{"id":"b280_aoa_4","title":"Lifting Eyes","price":315}]}
   
 
+{"order_id":4605,"status":"new","transport_preparation_price":350,"full_price":28977
+,"client":{"name":"123","phone":"+49 123","email":"123@gmail.com","comment":""}
+,"model":{"id":"b280","title":"Agilis 280","price":"19950"}
+,"hypalon_primary":{"id":"b280_hp_c3","category_title":"PERLAGE","color_title":"Ivory Perlage NB","color":"#cdc5b3","price":1050}
+,"hypalon_secondary":{"id":"b280_hs_c0","category_title":"LISSE\/MATT","color_title":"Cream Panna","color":"#e6d4b0","price":220}
+,"moldings":{"id":"b280_m","color_title":"Grey Light","color":"#D7D7D7","color_secondary":"#808080","price":0}
+
+,"upholstery":{"id":"b280_u_","material_title":"SILVERTEX®","color_title":"Ice Cream","color":"#E2DFCC","code":"NAU-5002","price":1100}
+,"teak":{"id":"b280_t_","material_title":"BLEACHED","color_title":"White caulking","color":"#eac6a6","lines_color":"#FFFFFF","price":900}
+
+,"hull":{"id":"b280_hc","color_title":"RAL 7035","color":"#CBD0CC","price":680}
+,"deck":{"id":"b280_dc","color_title":"RAL 7035","color":"#CBD0CC","price":680},
+"sconsole":{"id":"b280_sc","color_title":"RAL 7035","color":"#CBD0CC","price":350}
+,"icolors":{"id":"b280_ic","color_title":"RAL 9005","color":"#0A0A0D","price":120}
+
+,"light":[{"id":"b280_loa_","title":"LED Deck Lights 3x","price":315,"color_title":"Blue","color":"#59bbe5"},
+          {"id":"b280_loa_","title":"OceanLED X4 x2","price":1050,"color_title":"Blue","color":"#59bbe5"},
+          {"id":"b280_loa_","title":"LED Navigation Lights","price":170}]
+,"accessories":[{"id":"b280_aoa_","title":"Removable Steering wheel","price":400}
+               ,{"id":"b280_aoa_","title":"Anti-Theft Security System (D.E.S.S.)","price":300}
+               ,{"id":"b280_aoa_","title":"Ladder","price":630}
+               ,{"id":"b280_aoa_","title":"Name of Boat","price":360}
+               ,{"id":"b280_aoav__","title":"Tie Downs Fittings","price":"352","variant_title":"3 x Flush fitting padeyes c\/w tie down starps and fixings "}]}
+
+
+
 { "order_id":5115,"status":"new","transport_preparation_price":350,"full_price":20520
  ,"client":{"name":"test","phone":"+380 111111111","email":"vlad@push-k.ua","comment":"test"}
  ,"model":{"id":"b280","title":"Agilis 280","price":"19950"}
