@@ -95,22 +95,28 @@ BEGIN
                                     ON ObjectBoolean_NoSheetCalc.ObjectId = COALESCE(MIObject_PositionLevel.ObjectId, 0)
                                    AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
        WHERE (COALESCE(MI_SheetWorkTime.ObjectId, 0) = inMemberId OR inMemberId = 0)
-          AND COALESCE (MIObject_WorkTimeKind.ObjectId,0)<> 0
+          AND COALESCE (MIObject_WorkTimeKind.ObjectId,0) <> 0
      ;
 
      CREATE TEMP TABLE tmpPersonal ON COMMIT DROP AS
-       SELECT Object_Personal_View.MemberId
-            , Object_Personal_View.PersonalId
-            , Object_Personal_View.PositionId
-            , Object_Personal_View.PositionLevelId
-            , Object_Personal_View.PersonalGroupId
-            , Object_Personal_View.UnitId
-            , Object_Personal_View.DateIn
-            , CASE WHEN Object_Personal_View.DateOut = zc_DateEnd() THEN NULL ELSE Object_Personal_View.DateOut END ::TDateTime AS DateOut
-       FROM Object_Personal_View
-       WHERE (Object_Personal_View.UnitId = inUnitId OR inUnitId =0)
-         AND (Object_Personal_View.MemberId = inMemberId OR inMemberId =0)
-       ;
+       SELECT *
+       FROM (SELECT Object_Personal_View.MemberId
+                  , Object_Personal_View.PersonalId
+                  , Object_Personal_View.PositionId
+                  , Object_Personal_View.PositionLevelId
+                  , Object_Personal_View.PersonalGroupId
+                  , Object_Personal_View.UnitId
+                  , Object_Personal_View.DateIn
+                  , CASE WHEN Object_Personal_View.DateOut = zc_DateEnd() THEN NULL ELSE Object_Personal_View.DateOut END ::TDateTime AS DateOut
+                  , ROW_NUMBER() OVER (PARTITION BY Object_Personal_View.UnitId, Object_Personal_View.MemberId, Object_Personal_View.PositionId, Object_Personal_View.PositionLevelId
+                                       ORDER BY CASE WHEN Object_Personal_View.isErased = TRUE THEN 1 ELSE 0 END ASC
+                                       ) AS Ord_find
+             FROM Object_Personal_View
+             WHERE (Object_Personal_View.UnitId = inUnitId OR inUnitId =0)
+               AND (Object_Personal_View.MemberId = inMemberId OR inMemberId =0)
+            ) AS tmp
+       WHERE tmp.Ord_find = 1
+      ;
 
      -- данные из штатного расписания
      CREATE TEMP TABLE tmpStaffList ON COMMIT DROP AS

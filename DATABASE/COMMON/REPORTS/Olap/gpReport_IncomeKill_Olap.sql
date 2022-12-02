@@ -19,7 +19,10 @@ RETURNS TABLE (Num           Integer
              )
 AS
 $BODY$
+    DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
 
      -- очень важная проверка
     IF COALESCE (inGoodsId, 0) = 0
@@ -151,8 +154,9 @@ BEGIN
                                      FROM tmpContainer) AS tmp
                                           INNER JOIN Movement AS Movement_Cost ON Movement_Cost.ParentId = tmp.MovementId
                                                              AND Movement_Cost.DescId = zc_Movement_IncomeCost()
-                                                            --AND Movement_Cost.StatusId = zc_Enum_Status_Complete()
+                                                             AND Movement_Cost.StatusId = zc_Enum_Status_Complete()
                                                              AND Movement_Cost.StatusId <> zc_Enum_Status_Erased()
+                                                           --AND (vbUserId <> 5 OR Movement_Cost.StatusId = zc_Enum_Status_Erased())
 
                                           LEFT JOIN MovementFloat AS MovementFloat_AmountCost
                                                                   ON MovementFloat_AmountCost.MovementId = Movement_Cost.Id
