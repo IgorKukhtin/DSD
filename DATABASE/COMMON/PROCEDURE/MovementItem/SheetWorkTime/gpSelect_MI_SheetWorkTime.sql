@@ -45,9 +45,15 @@ BEGIN
 
      -- Сотрудники тек.подразделения
      CREATE TEMP TABLE tmpListPersonal ON COMMIT DROP AS 
-        SELECT Object_Personal_View.*
-        FROM Object_Personal_View
-        WHERE Object_Personal_View.UnitId = inUnitId
+        SELECT *
+        FROM (SELECT Object_Personal_View.*
+                   , ROW_NUMBER() OVER (PARTITION BY Object_Personal_View.UnitId, Object_Personal_View.MemberId, Object_Personal_View.PositionId, Object_Personal_View.PositionLevelId
+                                        ORDER BY CASE WHEN Object_Personal_View.isErased = TRUE THEN 1 ELSE 0 END ASC
+                                        ) AS Ord_find
+              FROM Object_Personal_View
+              WHERE Object_Personal_View.UnitId = inUnitId
+             ) AS tmp
+        WHERE tmp.Ord_find = 1
         ;
 
 
@@ -211,6 +217,8 @@ BEGIN
                                                                          )
                                   )
 
+-- AND (MI_SheetWorkTime.Id = 242132333 or vbUserId <> 5)
+-- limit case when vbUserId = 5 then 1 else 30000 end
                            )
 
      , tmpMovement_all AS (SELECT tmpMovement_all_all.OperDate
@@ -903,4 +911,5 @@ where a.Id = MovementItem.Id
 */
 
 -- тест
+--  SELECT * FROM Object_Personal_View where Personalid in (5364831 , 7475074)
 -- SELECT * FROM gpSelect_MovementItem_SheetWorkTime (inDate := NOW(), inUnitId:= 8465, inIsErased:= FALSE, inSession:= '5'); -- FETCH ALL "<unnamed portal 3>";
