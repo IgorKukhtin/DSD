@@ -28,7 +28,38 @@ BEGIN
 
     IF inSession = '3'
     THEN
-      vbUserId := 4036597;
+       RETURN QUERY
+       SELECT MovementFloat_DayCount.ValueData::Integer            AS DayCount
+            , 20::TFloat
+            , CASE WHEN vbDateStart < '01.11.2022' THEN 10
+                   ELSE 8 END::TFloat
+            , CASE WHEN vbDateStart < '01.06.2021' THEN 7 
+                   WHEN vbDateStart < '01.11.2022' THEN 5
+                   ELSE 4 END::TFloat
+            , CASE WHEN vbDateStart < '01.06.2021' THEN 500 ELSE 250 END::TFloat
+            , 250::TFloat
+       FROM Movement
+
+            LEFT OUTER JOIN MovementFloat AS MovementFloat_DayCount
+                                          ON MovementFloat_DayCount.MovementId = Movement.Id
+                                         AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
+            LEFT OUTER JOIN MovementFloat AS MovementFloat_ProcGoods
+                                          ON MovementFloat_ProcGoods.MovementId = Movement.Id
+                                         AND MovementFloat_ProcGoods.DescId = zc_MovementFloat_ProcGoods()
+            LEFT OUTER JOIN MovementFloat AS MovementFloat_ProcUnit
+                                          ON MovementFloat_ProcUnit.MovementId = Movement.Id
+                                         AND MovementFloat_ProcUnit.DescId = zc_MovementFloat_ProcUnit()
+            LEFT OUTER JOIN MovementFloat AS MovementFloat_Penalty
+                                          ON MovementFloat_Penalty.MovementId = Movement.Id
+                                         AND MovementFloat_Penalty.DescId = zc_MovementFloat_Penalty()
+
+       WHERE Movement.OperDate >= vbDateStart
+         AND Movement.OperDate < vbDateStart + INTERVAL '1 MONTH'
+         AND Movement.DescId = zc_Movement_IlliquidUnit()
+         AND Movement.StatusId = zc_Enum_Status_Complete()
+       LIMIT 1;
+       
+       RETURN;
     END IF;
 
       -- Мовементы по сотруднику
@@ -182,4 +213,4 @@ $BODY$
 
 -- тест select * from gpReport_GetIlliquidReductionPlanUser(inStartDate := ('27.04.2021')::TDateTime , inSession := '3');
 
-select * from gpReport_GetIlliquidReductionPlanUser(inStartDate := CURRENT_DATE ,  inSession := '4279294');
+select * from gpReport_GetIlliquidReductionPlanUser(inStartDate := '30.11.2022' ,  inSession := '3');

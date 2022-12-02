@@ -14,7 +14,8 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
   dxSkinsdxBarPainter, dxBar, cxSpinEdit, dxBarExtItems, cxBarEditItem,
   cxBlobEdit, cxCheckBox, cxNavigator,
-  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions;
+  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions,
+  dxDateRanges;
 
 type
   TChoosingPresentForm = class(TForm)

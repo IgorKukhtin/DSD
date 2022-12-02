@@ -921,6 +921,7 @@ type
     function UpdateSalePromoGoods : Boolean;
     function CheckSalePromoGoods : Boolean;
     procedure LoadVIPSalePromoGoods;
+    procedure AddSalePromoGoodsAmountCheck;
 
     function CheckGoodsPromoGoods(AGoodsId : Integer; APrice : Currency) : Boolean;
 
@@ -3710,7 +3711,7 @@ begin
           exit;
         end;
 
-        if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value = '') then
+        if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value = '') and (gc_User.Session <> '3') then
         begin
           ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для программы "Доступні ліки"!');
           exit;
@@ -9463,7 +9464,7 @@ begin
       end;
     end;
 
-    if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value = '') then
+    if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value = '') and (gc_User.Session <> '3') then
     begin
       ShowMessage('Ошибка.Товар <' + RemainsCDS.FieldByName('GoodsName').AsString + '> предназначен для программы "Доступні ліки"!');
       exit;
@@ -10704,7 +10705,6 @@ begin
 
     // Добавление акционного товара
     if not AisGoodsPresent then CheckAddSalePromoGoods;
-
   end;
 end;
 
@@ -14474,9 +14474,28 @@ begin
         CheckCDS.Next;
       end;
 
-      RemainsCDS.Filtered := false;
-      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0)';
-      RemainsCDS.Filtered := true;
+      // Добавим Акционный товар от суммы чека
+
+      SalePromoGoodsCDS.Filtered := False;
+      SalePromoGoodsCDS.Filter := 'EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = Null and isAmountCheck = TRUE and AmountCheck <= ' + FloatToStr(FTotalSumm);
+      SalePromoGoodsCDS.Filtered := True;
+      if (SalePromoGoodsCDS.RecordCount = 1) then
+      begin
+        if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([CheckCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Price').AsCurrency]), []) then
+        begin
+          SalePromoGoodsCalcCDS.Edit;
+          SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency;
+          SalePromoGoodsCalcCDS.Post;
+        end else
+        begin
+          SalePromoGoodsCalcCDS.Append;
+          SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger;
+          SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+          SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency;
+          SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := 0;
+          SalePromoGoodsCalcCDS.Post;
+        end;
+      end;
 
       // Проверяем акционные товары isGoodsPresent
       SalePromoGoodsCalcCDS.First;
@@ -14614,6 +14633,21 @@ begin
         end;
       end;
       CheckCDS.Next;
+    end;
+
+    // Добавим Акционный товар от суммы чека
+
+    SalePromoGoodsCDS.Filtered := False;
+    SalePromoGoodsCDS.Filter := 'EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = Null and isAmountCheck = TRUE and AmountCheck <= ' + FloatToStr(FTotalSumm);
+    SalePromoGoodsCDS.Filtered := True;
+    if (SalePromoGoodsCDS.RecordCount = 1) then
+    begin
+      if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Price').AsCurrency]), []) then
+      begin
+        SalePromoGoodsCalcCDS.Edit;
+        SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency;
+        SalePromoGoodsCalcCDS.Post;
+      end;
     end;
 
     // Проверяем акционные товары isGoodsPresent
@@ -14874,6 +14908,11 @@ begin
       SalePromoGoodsCDS.Filtered := False;
       SalePromoGoodsCDS.Filter := '';
   end;
+
+end;
+
+procedure TMainCashForm2.AddSalePromoGoodsAmountCheck;
+begin
 
 end;
 
