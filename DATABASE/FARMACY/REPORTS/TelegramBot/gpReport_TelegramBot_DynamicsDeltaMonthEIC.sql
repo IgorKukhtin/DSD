@@ -1,18 +1,26 @@
--- Function: gpReport_Movement_DynamicsOrdersEIC()
+-- Function: gpReport_TelegramBot_DynamicsDeltaMonthEIC()
 
-DROP FUNCTION IF EXISTS gpReport_Movement_DynamicsOrdersEIC (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_TelegramBot_DynamicsDeltaMonthEIC (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_Movement_DynamicsOrdersEIC(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
+CREATE OR REPLACE FUNCTION gpReport_TelegramBot_DynamicsDeltaMonthEIC(
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime
-             , CountNeBoley Integer
-             , CountNeBoleyMobile Integer
-             , CountTabletki Integer
-             , CountLiki24 Integer
-             , CountAll Integer
+RETURNS TABLE (OperDate TVarChar
+             , CountNeBoleyCurr Integer
+             , CountNeBoleyMobileCurr Integer
+             , CountTabletkiCurr Integer
+             , CountLiki24Curr Integer
+             , CountAllCurr Integer
+             , CountNeBoleyPrev Integer
+             , CountNeBoleyMobilePrev Integer
+             , CountTabletkiPrev Integer
+             , CountLiki24Prev Integer
+             , CountAllPrev Integer
+             , CountNeBoley TFloat
+             , CountNeBoleyMobile TFloat
+             , CountTabletki TFloat
+             , CountLiki24 TFloat
+             , CountAll TFloat
              
               )
 AS
@@ -25,120 +33,44 @@ BEGIN
      
      -- Результат
      RETURN QUERY
-       WITH tmpMovement AS (SELECT Movement_Check.Id                                         AS Id
-                                 , COALESCE(MovementLinkObject_CheckSourceKind.ObjectId, 0)  AS CheckSourceKindId
-                                 , MovementFloat_TotalCount.ValueData                        AS TotalCount
-                                 , MovementFloat_TotalSumm.ValueData                         AS TotalSumm
-                                 , COALESCE(MovementBoolean_MobileApplication.ValueData, False)::Boolean   AS isMobileApplication
-                            FROM (SELECT Movement.*
-                                       , MovementLinkObject_Unit.ObjectId                    AS UnitId
-                                       , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
-                                  FROM Movement
-
-                                       INNER JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
-                                                                     ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
-                                                                    AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
-                                                                    AND MovementLinkObject_ConfirmedKind.ObjectId = zc_Enum_ConfirmedKind_Complete()
-
-                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-
-
-                                       LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
-                                                                 ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                                                AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-                                       
-                                  WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate) - INTERVAL '5 DAY' 
-                                    AND Movement.DescId = zc_Movement_Check()
-                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                    AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = TRUE
-                               ) AS Movement_Check
-
-                                 LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                                         ON MovementFloat_TotalCount.MovementId = Movement_Check.Id
-                                                        AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-                                 LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                                         ON MovementFloat_TotalSumm.MovementId =  Movement_Check.Id
-                                                        AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-                                 LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                                          ON MovementString_InvNumberOrder.MovementId = Movement_Check.Id
-                                                         AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-
-
-                                LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
-                                                             ON MovementLinkObject_CheckSourceKind.MovementId =  Movement_Check.Id
-                                                            AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
-                                                            
-                                LEFT JOIN MovementDate AS MovementDate_Insert
-                                                       ON MovementDate_Insert.MovementId = Movement_Check.Id
-                                                      AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-                                                            
-                                LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
-                                                          ON MovementBoolean_MobileApplication.MovementId = Movement_Check.Id
-                                                         AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
-
-                                LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
-                            WHERE COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0
-                               OR COALESCE (MovementString_InvNumberOrder.ValueData, '') <> ''
-                            )
-        , tmpMovementProtocol AS (SELECT Movement.Id
-                                       , date_trunc('day', MIN(MovementProtocol.OperDate))  AS OperDate
-                        FROM tmpMovement AS Movement
-                             INNER JOIN MovementProtocol ON Movement.Id = MovementProtocol.MovementId
-                        GROUP BY Movement.Id)        
-        , tmpMovementDay AS (SELECT tmpMovementProtocol.OperDate
-                                  , Movement.CheckSourceKindId
-                                  , Movement.isMobileApplication
-                                  , Count(*)                    AS CountCheck
-                                  , Sum(Movement.TotalCount)    AS TotalCount
-                                  , Sum(Movement.TotalSumm)     AS TotalSumm
-                             FROM tmpMovement AS Movement
-                              
-                                  INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.Id = Movement.Id
-                                  
-                             WHERE tmpMovementProtocol.OperDate >= inStartDate 
-                               AND tmpMovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
-                             GROUP BY tmpMovementProtocol.OperDate, Movement.CheckSourceKindId, Movement.isMobileApplication) 
-        , tmpMovementSum AS (SELECT Movement.OperDate
-                                  , Sum(Movement.CountCheck)    AS CountCheck
-                                  , Sum(Movement.TotalCount)    AS TotalCount
-                                  , Sum(Movement.TotalSumm)     AS TotalSumm
-                             FROM tmpMovementDay AS Movement
-                             GROUP BY Movement.OperDate) 
-
-        SELECT Movement.OperDate::TDateTime
-             , MovementNeBoley.CountCheck::Integer       AS CountNeBoley
-             , MovementNeBoleyMobile.CountCheck::Integer AS CountNeBoleyMobile
-             , MovementTabletki.CountCheck::Integer      AS CountTabletki
-             , MovementLiki24.CountCheck::Integer        AS CountLiki24
-             , Movement.CountCheck::Integer              AS CountAll
-        FROM tmpMovementSum AS Movement
-        
-             LEFT JOIN tmpMovementDay AS MovementNeBoley
-                                      ON MovementNeBoley.OperDate = Movement.OperDate
-                                     AND MovementNeBoley.CheckSourceKindId = 0  
-                                     AND MovementNeBoley.isMobileApplication = False
-             
-             LEFT JOIN tmpMovementDay AS MovementNeBoleyMobile
-                                      ON MovementNeBoleyMobile.OperDate = Movement.OperDate
-                                     AND MovementNeBoleyMobile.CheckSourceKindId = 0  
-                                     AND MovementNeBoleyMobile.isMobileApplication = True
-
-             LEFT JOIN tmpMovementDay AS MovementTabletki
-                                      ON MovementTabletki.OperDate = Movement.OperDate
-                                     AND MovementTabletki.CheckSourceKindId = zc_Enum_CheckSourceKind_Tabletki()  
-
-             LEFT JOIN tmpMovementDay AS MovementLiki24
-                                      ON MovementLiki24.OperDate = Movement.OperDate
-                                     AND MovementLiki24.CheckSourceKindId = zc_Enum_CheckSourceKind_Liki24() 
-
-        ORDER BY Movement.OperDate
-        
-        
-      ;
+     WITH tmpDynamicsOrdersEIC AS (SELECT DynamicsOrdersEIC.* 
+                                        , DATE_TRUNC ('MONTH', DynamicsOrdersEIC.OperDate):: TDateTime as OperDateStart 
+                                   FROM gpReport_Movement_DynamicsOrdersEIC(inStartDate := '01.03.2021'::TDateTime
+                                                                          , inEndDate := CURRENT_DATE - INTERVAL '1 DAY'
+                                                                          , inSession := inSession) AS DynamicsOrdersEIC),
+          tmpDynamicsOrdersEICSum AS (SELECT tmpDynamicsOrdersEIC.OperDateStart
+                                           , SUM(tmpDynamicsOrdersEIC.CountNeBoley)::Integer   AS CountNeBoley
+                                           , SUM(tmpDynamicsOrdersEIC.CountNeBoleyMobile)::Integer   AS CountNeBoleyMobile
+                                           , SUM(tmpDynamicsOrdersEIC.CountTabletki)::Integer  AS CountTabletki
+                                           , SUM(tmpDynamicsOrdersEIC.CountLiki24)::Integer    AS CountLiki24
+                                           , SUM(tmpDynamicsOrdersEIC.CountAll)::Integer       AS CountAll
+                                      FROM tmpDynamicsOrdersEIC
+                                      GROUP BY tmpDynamicsOrdersEIC.OperDateStart)                                       
+     SELECT 
+            (zfConvert_IntToString((ROW_NUMBER() OVER (ORDER BY tmpDynamicsOrdersEIC.OperDateStart))::INTEGER, 3)::TVArChar||'. '||
+            zfCalc_MonthYearName(tmpDynamicsOrdersEIC.OperDateStart))::TVArChar  AS OperText
+          , tmpDynamicsOrdersEIC.CountNeBoley
+          , tmpDynamicsOrdersEIC.CountNeBoleyMobile
+          , tmpDynamicsOrdersEIC.CountTabletki
+          , tmpDynamicsOrdersEIC.CountLiki24
+          , tmpDynamicsOrdersEIC.CountAll
+          , DynamicsOrdersEIC.CountNeBoley
+          , DynamicsOrdersEIC.CountNeBoleyMobile
+          , DynamicsOrdersEIC.CountTabletki
+          , DynamicsOrdersEIC.CountLiki24
+          , DynamicsOrdersEIC.CountAll
+          , CASE WHEN COALESCE(DynamicsOrdersEIC.CountNeBoley, 0) = 0 THEN 0 ELSE Round(tmpDynamicsOrdersEIC.CountNeBoley::TFloat / DynamicsOrdersEIC.CountNeBoley::TFloat * 100.0 - 100.0, 2) END::TFloat    AS DeltaNeBoley
+          , CASE WHEN COALESCE(DynamicsOrdersEIC.CountNeBoleyMobile, 0) = 0 THEN 0 ELSE Round(tmpDynamicsOrdersEIC.CountNeBoleyMobile::TFloat / DynamicsOrdersEIC.CountNeBoleyMobile::TFloat * 100.0 - 100.0, 2) END::TFloat    AS DeltaNeBoleyMobile
+          , CASE WHEN COALESCE(DynamicsOrdersEIC.CountTabletki, 0) = 0 THEN 0 ELSE Round(tmpDynamicsOrdersEIC.CountTabletki::TFloat / DynamicsOrdersEIC.CountTabletki::TFloat * 100.0 - 100.0, 2) END::TFloat AS DeltaTabletki
+          , CASE WHEN COALESCE(DynamicsOrdersEIC.CountLiki24, 0) = 0 THEN 0 ELSE Round(tmpDynamicsOrdersEIC.CountLiki24::TFloat / DynamicsOrdersEIC.CountLiki24::TFloat * 100.0 - 100.0, 2) END::TFloat       AS DeltaLiki24
+          , CASE WHEN COALESCE(DynamicsOrdersEIC.CountAll, 0) = 0 THEN 0 ELSE Round(tmpDynamicsOrdersEIC.CountAll::TFloat / DynamicsOrdersEIC.CountAll::TFloat * 100.0 - 100.0, 2) END::TFloat                AS DeltaAll
+     FROM tmpDynamicsOrdersEICSum AS tmpDynamicsOrdersEIC
+     
+          LEFT JOIN tmpDynamicsOrdersEICSum AS DynamicsOrdersEIC
+                                            ON DynamicsOrdersEIC.OperDateStart =  tmpDynamicsOrdersEIC.OperDateStart - INTERVAL '1 MONTH'
+          
+     WHERE tmpDynamicsOrdersEIC.OperDateStart >= '01.04.2021'::TDateTime
+     ORDER BY  tmpDynamicsOrdersEIC.OperDateStart;
 
 END;
 $BODY$
@@ -148,9 +80,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 17.06.21                                                       * 
+ 20.07.21                                                       * 
 */
 
 -- тест
 
-select * FROM gpReport_Movement_DynamicsOrdersEIC(inStartDate := '01.03.2022'::TDateTime, inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := '3');
+select * FROM gpReport_TelegramBot_DynamicsDeltaMonthEIC(inSession := '3');

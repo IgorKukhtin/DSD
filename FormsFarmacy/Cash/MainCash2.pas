@@ -4052,9 +4052,9 @@ begin
     ASalerCash := FTotalSumm;
 
   if (UnitConfigCDS.FieldByName('LimitCash').AsCurrency > 0) and (
-     (UnitConfigCDS.FieldByName('LimitCash').AsCurrency > FTotalSumm) and
+     (UnitConfigCDS.FieldByName('LimitCash').AsCurrency < FTotalSumm) and
      (PaidType = ptMoney) or
-     (UnitConfigCDS.FieldByName('LimitCash').AsCurrency > ASalerCashAdd) and
+     (UnitConfigCDS.FieldByName('LimitCash').AsCurrency < ASalerCashAdd) and
      (PaidType = ptCardAdd)) then
   begin
     ShowPUSHMessageCash('×ÅÊ ÍÀ ÒÎÂÀÐ ÎÒ 1-ãî ÏÎÊÓÏÀÒÅËß ÍÅ ÄÎËÆÅÍ ÏÐÅÂÛØÀÒÜ 50 000 ÃÐÍ ÍÀËÈ×ÍÛÌÈ!', cResult);
