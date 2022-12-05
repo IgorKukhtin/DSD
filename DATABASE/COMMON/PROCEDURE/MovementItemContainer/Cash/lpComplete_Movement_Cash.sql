@@ -972,14 +972,6 @@ BEGIN
               AND COALESCE (_tmpItem.OperSumm_Asset, 0) = 0
            ;
 
-     -- Проверка
-     IF inUserId = 5 AND 1=0
-     THEN
-         RAISE EXCEPTION 'Ошибка ok.Admin vbSumm_diff = <%> '
-                        , vbSumm_diff
-                         ;
-     END IF;
-
      END IF; -- !!!Курсовая разница!!!
 
      -- Проверка

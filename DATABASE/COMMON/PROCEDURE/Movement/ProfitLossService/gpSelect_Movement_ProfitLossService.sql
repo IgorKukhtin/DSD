@@ -69,6 +69,14 @@ BEGIN
          inBranchId := 0;
      END IF;
 
+     -- Разрешен просмотр долги Маркетинг - НАЛ
+     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = vbUserId AND tmp.RoleId = 8852398)
+        AND COALESCE (inPaidKindId, 0) IN (0, zc_Enum_PaidKind_SecdondForm())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав просмотра данных <НАЛ>.'
+     END IF;
+     
+
      -- Результат
     RETURN QUERY
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId

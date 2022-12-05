@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , Comment TVarChar
              , PersonalServiceListId Integer
            --, PersonalServiceListId_calc Integer
-             , MovementId_find Integer
+             , MovementId_find Integer, ContainerId_find Integer
              , isErased Boolean
               )
 AS
@@ -433,6 +433,7 @@ BEGIN
                                    , tmpContainer.InfoMoneyId
                                    , tmpContainer.PersonalServiceListId
                                    , MAX (MIContainer.MovementId) AS MovementId_find
+                                   , MAX (tmpContainer.ContainerId) AS ContainerId_find
                               FROM tmpContainer
                                    INNER JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.ContainerId    = tmpContainer.ContainerId
@@ -479,6 +480,7 @@ BEGIN
                                    , SUM (tmpMIContainer.Amount_service)          AS Amount_service
                                    , 0 AS PersonalServiceListId
                                    , MAX (tmpMIContainer.MovementId_find)         AS MovementId_find
+                                   , MAX (tmpMIContainer.ContainerId_find)        AS ContainerId_find
                                 -- , tmpParent.PersonalServiceListId
                                  --, tmpParent.PersonalServiceListId_calc
                               FROM tmpParent
@@ -530,6 +532,7 @@ BEGIN
                                    , COALESCE (tmpService.PersonalServiceListId, 0)       AS PersonalServiceListId
                                  --, COALESCE (tmpService.PersonalServiceListId_calc, 0)  AS PersonalServiceListId_calc
                                    , tmpService.MovementId_find
+                                   , tmpService.ContainerId_find
                               FROM tmpMI
                                    FULL JOIN tmpService ON tmpService.PersonalId  = tmpMI.PersonalId
                                                        AND tmpService.UnitId      = tmpMI.UnitId
@@ -594,7 +597,8 @@ BEGIN
 
             , tmpData.PersonalServiceListId      :: Integer AS PersonalServiceListId
           --, tmpData.PersonalServiceListId_calc :: Integer AS PersonalServiceListId_calc
-            , tmpData.MovementId_find :: Integer AS MovementId_find
+            , tmpData.MovementId_find  :: Integer AS MovementId_find
+            , tmpData.ContainerId_find :: Integer AS ContainerId_find
             , tmpData.isErased
          
        FROM tmpData

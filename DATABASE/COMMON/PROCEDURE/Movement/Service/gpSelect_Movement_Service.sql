@@ -45,10 +45,16 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInfoMoneyDestination_21500 Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Service());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- Разрешен просмотр долги Маркетинг - НАЛ
+     vbIsInfoMoneyDestination_21500:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = vbUserId AND tmp.RoleId = 8852398);
+
 
      -- Результат
      RETURN QUERY 
@@ -93,6 +99,12 @@ BEGIN
                                       AND (Object_SettingsService.Id = ABS(inSettingsServiceId) AND inSettingsServiceId <> 0) --3175171 --
                                       AND Object_SettingsService.isErased = FALSE
                                     )
+             -- НЕ Разрешен просмотр долги Маркетинг - НАЛ
+           , tmpInfoMoney_not AS (SELECT Object_InfoMoney_View.*
+                                  FROM Object_InfoMoney_View
+                                  WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                    AND vbIsInfoMoneyDestination_21500 = FALSE
+                                 )
 
            , tmpInfoMoney_View AS (SELECT Object_InfoMoney_View.*
                                    FROM Object_InfoMoney_View
@@ -240,6 +252,9 @@ BEGIN
 
             INNER JOIN tmpInfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
             
+            LEFT JOIN tmpInfoMoney_not ON tmpInfoMoney_not.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+            
+            
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementItem.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -307,6 +322,9 @@ BEGIN
                                                                                     END
 
             LEFT JOIN tmpCost ON tmpCost.MovementServiceId = Movement.Id 
+
+       -- НЕ Разрешен просмотр долги Маркетинг - НАЛ
+       WHERE tmpInfoMoney_not.InfoMoneyId IS NULL OR COALESCE (MILinkObject_PaidKind.ObjectId, 0) <> zc_Enum_PaidKind_SecondForm()
       ;
   
 END;
