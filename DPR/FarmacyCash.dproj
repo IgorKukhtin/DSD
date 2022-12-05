@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>FarmacyCash.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -54,15 +54,15 @@
         <SanitizedProjectName>FarmacyCash</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
-        <VerInfo_Build>8</VerInfo_Build>
+        <VerInfo_Build>243</VerInfo_Build>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
-        <VerInfo_Release>6</VerInfo_Release>
+        <VerInfo_Release>12</VerInfo_Release>
         <DCC_UsePackage>dxTileControlRS16;dxdborRS16;fsADO16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;office2K;dxPScxPivotGridLnkRS16;dxCoreRS16;ipstudiowindataset;RtmRxBDE160;cxExportRS16;ZComponent;QExport4RT_D16;dxBarRS16;cxSpreadSheetRS16;QRDBASE_D2007;TeeDB;dxDBXServerModeRS16;cxTreeListdxBarPopupMenuRS16;ProjectComponent;frxTee16;inetdbbde;frxBDE16;dxPSCoreRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;vclib;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;fsIBX16;officeXPrt;vclimg;QR5RunDXE2;cxTreeListRS16;RtmRxCtl160;dxComnRS16;vcldb;dxADOServerModeRS16;vcldsnap;DBXDb2Driver;frxADO16;frxe16;vtable160;navXE2;vcl;RaudusD160;RtmRxDB160;DBXMSSQLDriver;CodeSiteExpressPkg;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;fsTee16;Intraweb_15_DXE2;cxSchedulerGridRS16;ADDONS_XE2;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;EhLib160;dxPSLnksRS16;EhLibDataDrivers160;ExcelExportXE2;dclCrossTalk_XE2;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;ProjectDesignComponent;frxDBX16;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;ZDbc;frx16;ZPlain;Tee;JSONDataSet;DBXOdbcDriver;dxdbtrRS16;kassa;dxSkinsCoreRS16;svnui;dxPScxSSLnkRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;frxDB16;fsBDE16;cxGridRS16;fs16;vclactnband;TeeUI;cxEditorsRS16;cxPivotGridRS16;dxPScxSchedulerLnkRS16;dxServerModeRS16;ipstudiowin;frxcs16;Jcl;vclie;QImport3RT_D16;inernetpackage;cxSchedulerRS16;F1Book;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;cefcomponent;fsDB16;DataSnapConnectors;dclfrxTee16;dsdLib;dsnapcon;dxPSdxFCLnkRS16;dd;dxThemeRS16;JclVcl;dcldxSkinsCoreRS16;ZParseSql;vclx;svn;dxFlowChartRS16;bdertl;frxIBX16;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <VerInfo_Keys>CompanyName=;FileVersion=1.1.6.8;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.243;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
@@ -85,9 +85,9 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.51;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.243;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <VerInfo_Release>12</VerInfo_Release>
-        <VerInfo_Build>51</VerInfo_Build>
+        <VerInfo_Build>243</VerInfo_Build>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -106,8 +106,8 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.242;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <VerInfo_Build>242</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.243;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>243</VerInfo_Build>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_Release>12</VerInfo_Release>

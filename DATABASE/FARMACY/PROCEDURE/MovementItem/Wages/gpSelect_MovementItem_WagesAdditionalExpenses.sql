@@ -130,7 +130,7 @@ BEGIN
                                                                           date_trunc('month', vbStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', 
                                                                           inSession) AS T1
                                          GROUP BY T1.UnitId)
-
+                                         
             SELECT 0                                  AS Id
                  , Object_Unit.Id                     AS UserID
                  , Object_Unit.ObjectCode             AS UnitCode
@@ -164,12 +164,14 @@ BEGIN
                                        ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
                                       AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
                                       AND COALESCE(ObjectLink_Unit_Parent.ChildObjectId, 0) <> 0
+                  
+                 LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                       AND MovementItem.DescId = zc_MI_Sign()
+                                       AND MovementItem.ObjectId = Object_Unit.ID
+                                        
             WHERE Object_Unit.DescId = zc_Object_Unit()
               AND (inIsErased = True OR Object_Unit.isErased = False)
-              AND Object_Unit.ID NOT IN (SELECT MovementItem.ObjectId
-                                         FROM  MovementItem
-                                         WHERE MovementItem.MovementId = inMovementId
-                                           AND MovementItem.DescId = zc_MI_Sign())
+              AND COALESCE (MovementItem.ObjectId, 0) = 0
             UNION ALL
             SELECT MovementItem.Id                       AS Id
                  , MovementItem.ObjectId                 AS UnitID
@@ -488,4 +490,4 @@ $BODY$
 */
 -- select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 17449644  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 19723487 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 27991035 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

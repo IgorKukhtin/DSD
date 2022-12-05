@@ -773,31 +773,50 @@ type
   TdsdStoredProcExportToFile = class(TdsdCustomAction)
   private
     FdsdStoredProcName: TdsdStoredProc;
-    FFilename: string;
+    FFilePath: string;
+    FFilePathParam: TdsdParam;
+    FFileName: string;
+    FFileNameParam: TdsdParam;
     FFileExt: string;// = '.txt';
-    FFilenamePrefix: string;
+    FFileExtParam: TdsdParam;
+    FFileNamePrefix: string;
+    FFileNamePrefixParam: TdsdParam;
+    FShowSaveDialog : Boolean;
     sdSaveFile: TSaveDialog;
     //FIncludeFieldNames: Boolean;
+
     procedure SetdsdStoredProcName(Value: TdsdStoredProc);
     function GetdsdStoredProcName: TdsdStoredProc;
+    procedure SetFilePath(const Value: string);
+    function GetFilePath: string;
+    procedure SetFileName(const Value: string);
+    function GetFileName: string;
+    procedure SetFileExt(const Value: string);
+    function GetFileExt: string;
+    procedure SetFileNamePrefix(const Value: string);
+    function GetFileNamePrefix: string;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     // основная функция - Сохранение файла
     function Execute: Boolean; override;
   published
-    // ДатаСет с данными
-//    property DataSet: TDataSet read FDataSet write FDataSet;
     // Настроенный компонент процедуры
     property dsdStoredProcName: TdsdStoredProc read GetdsdStoredProcName write SetdsdStoredProcName;
+    // Путь к файлу файла
+    property FilePath: string read GetFilePath write SetFilePath;
+    property FilePathParam: TdsdParam read FFilePathParam write FFilePathParam;
     // Имя файла
-    property Filename: string read FFilename write FFilename;
+    property FileName: string read GetFileName write SetFileName;
+    property FileNameParam: TdsdParam read FFilenameParam write FFilenameParam;
     // Расширение файла
-    property FileExt: string read FFileExt write FFileExt;
+    property FileExt: string read GetFileExt write SetFileExt;
+    property FileExtParam: TdsdParam read FFileExtParam write FFileExtParam;
     // Префикс имени файла
-    property FilenamePrefix: string read FFilenamePrefix write FFilenamePrefix;
-    // Флаг выгрузки названий полей
-    //property IncludeFieldNames: boolean read FIncludeFieldNames write FIncludeFieldNames default False;
+    property FileNamePrefix: string read GetFileNamePrefix write SetFileNamePrefix;
+    property FileNamePrefixParam: TdsdParam read FFileNamePrefixParam write FFileNamePrefixParam;
+    // Показывать диалог сохранения
+    property ShowSaveDialog : Boolean read FShowSaveDialog write FShowSaveDialog default True;
   end;
 
   TdsdPartnerMapAction = class(TdsdOpenForm, IFormAction)
@@ -4460,14 +4479,32 @@ begin
   inherited;
 
   sdSaveFile := TSaveDialog.Create(Application);
-  sdSaveFile.Filter := 'Текстовый файл|*.txt|Все файлы|*.*';
-  sdSaveFile.Title := 'Укажите файл для сохранения';
   sdSaveFile.Options := [ofFileMustExist, ofOverwritePrompt];
+
+  FFilePathParam := TdsdParam.Create(Nil);
+  FFilePathParam.DataType := ftString;
+  FFilePathParam.Value := '';
+  FFileNameParam := TdsdParam.Create(Nil);
+  FFileNameParam.DataType := ftString;
+  FFileNameParam.Value := '';
+  FFileExt := '.txt';
+  FFileExtParam := TdsdParam.Create(Nil);
+  FFileExtParam.DataType := ftString;
+  FFileExtParam.Value := '';
+  FFileNamePrefixParam := TdsdParam.Create(Nil);
+  FFileNamePrefixParam.DataType := ftString;
+  FFileNamePrefixParam.Value := '';
+
+  FShowSaveDialog := True;
 end;
 
 destructor TdsdStoredProcExportToFile.Destroy;
 begin
-  sdSaveFile := nil;
+  sdSaveFile := Nil;
+  FFilePathParam.Free;
+  FFileNameParam.Free;
+  FFileExtParam.Free;
+  FFileNamePrefixParam.Free;
 
   inherited;
 end;
@@ -4475,23 +4512,55 @@ end;
 function TdsdStoredProcExportToFile.Execute: Boolean;
 var
   F: TextFile;
+  FilePaths: string;
+  FileNames: string;
   FieldNames: string;
 begin
+
+  Result := False;
   if not Assigned(dsdStoredProcName) then
   begin
     Exit;
   end;
 
-  //теперь будем всегда очищать
-  if sdSaveFile.FileName <> '' then sdSaveFile.FileName:= '';
+  FilePaths := '';
+  if FilePath <> '' then
+  begin
+    try
+      if not DirectoryExists(FilePath) then ForceDirectories(FilePath);
+      if DirectoryExists(FilePath) then FilePaths := FilePath;
+    except
+      FilePaths := '';
+    end;
+  end;
+
+  if (ShowSaveDialog = True) or (FilePaths = '') or (FileName = '') then
+  begin
+    //теперь будем всегда очищать
+    if FileExt <> '' then
+      sdSaveFile.Filter := 'Текстовый файл|*' + FileExt + '|Все файлы|*.*'
+    else sdSaveFile.Filter := 'Текстовый файл|*.txt|Все файлы|*.*';
+    sdSaveFile.Title := 'Укажите файл для сохранения';
+    if FilePaths <> '' then sdSaveFile.InitialDir  := FilePaths;
+    sdSaveFile.FileName := FileName;
+
+    if sdSaveFile.Execute then
+    begin
+      FilePaths := ExtractFilePath(sdSaveFile.FileName);
+      FileNames := ExtractFileName(sdSaveFile.FileName);
+      if ExtractFileExt(FileNames) <> '' then FileNames := FileNames + FileExt;
+    end else Exit;
+
+  end else FileNames := FileName + FileExt;
+
+  FdsdStoredProcName.Execute();
+  TdsdStoredProc(FdsdStoredProcName).DataSet.First;
+
   //
-  if sdSaveFile.Execute then
   try
-    AssignFile(F, ExtractFilePath(sdSaveFile.FileName) + '\' + FilenamePrefix + ExtractFileName(sdSaveFile.FileName) + FileExt);
+    AssignFile(F, FilePaths + '\' + FilenamePrefix + FileNames);
     Rewrite(F); // переписываем файл
 
-    FdsdStoredProcName.Execute();
-    TdsdStoredProc(FdsdStoredProcName).DataSet.First;
 
     while not TdsdStoredProc(FdsdStoredProcName).DataSet.Eof do
     begin
@@ -4515,6 +4584,67 @@ procedure TdsdStoredProcExportToFile.SetdsdStoredProcName(
 begin
   FdsdStoredProcName := Value;
 end;
+
+procedure TdsdStoredProcExportToFile.SetFilePath(const Value: string);
+begin
+  if (csDesigning in ComponentState) and not(csLoading in ComponentState) then
+    ShowMessage('Используйте FilePathParam')
+  else
+    FFilePath := Value;
+end;
+
+function TdsdStoredProcExportToFile.GetFilePath: string;
+begin
+  result := FFilePathParam.AsString;
+  if result = '' then
+    result := FFilePath
+end;
+
+procedure TdsdStoredProcExportToFile.SetFileName(const Value: string);
+begin
+  if (csDesigning in ComponentState) and not(csLoading in ComponentState) then
+    ShowMessage('Используйте FileFileName')
+  else
+    FFileName := Value;
+end;
+
+function TdsdStoredProcExportToFile.GetFileName: string;
+begin
+  result := FFileNameParam.AsString;
+  if result = '' then
+    result := FFileName
+end;
+
+procedure TdsdStoredProcExportToFile.SetFileExt(const Value: string);
+begin
+  if (csDesigning in ComponentState) and not(csLoading in ComponentState) then
+    ShowMessage('Используйте FileExtParam')
+  else
+    FFileExt := Value;
+end;
+
+function TdsdStoredProcExportToFile.GetFileExt: string;
+begin
+  result := FFileExtParam.AsString;
+  if result = '' then
+    result := FFileExt
+end;
+
+procedure TdsdStoredProcExportToFile.SetFileNamePrefix(const Value: string);
+begin
+  if (csDesigning in ComponentState) and not(csLoading in ComponentState) then
+    ShowMessage('Используйте FileNamePrefixParam')
+  else
+    FFileNamePrefix := Value;
+end;
+
+function TdsdStoredProcExportToFile.GetFileNamePrefix: string;
+begin
+  result := FFileNamePrefixParam.AsString;
+  if result = '' then
+    result := FFileNamePrefix
+end;
+
 
 { TdsdPartnerMapAction }
 

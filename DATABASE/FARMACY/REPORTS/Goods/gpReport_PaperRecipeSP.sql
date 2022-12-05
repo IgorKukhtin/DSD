@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_PaperRecipeSP(
     IN inJuridicalId   Integer ,   -- ёр. лицо наше
     IN inSession       TVarChar    -- сесси€ пользовател€
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, OperDate_Time TDateTime
              , InsertName_Check TVarChar, TotalSumm_Check TFloat
              , UnitCode Integer, UnitName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
@@ -370,6 +370,7 @@ BEGIN
 
   SELECT tmpMI.Id
        , tmpMI.InvNumber 
+       , tmpMI.OperDate
        , tmpMI.OperDate
        , tmpMI.InsertName_Check
        , tmpMI.TotalSumm_Check

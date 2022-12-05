@@ -899,6 +899,12 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actGetDirectory
+        end
+        item
+          Action = actFileDirectoryDialog
+        end
+        item
           Action = macExportFile_fromMail
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083#1099' '#1042#1057#1045' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099'?'
@@ -930,6 +936,26 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           ToParam.MultiSelectSeparator = ','
         end>
       dsdStoredProcName = spSelect_Export
+      FilePathParam.Value = ''
+      FilePathParam.Component = FormParams
+      FilePathParam.ComponentItem = 'Directory'
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'FileName'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      FileExt = '.txt'
+      FileExtParam.Value = ''
+      FileExtParam.Component = FormParams
+      FileExtParam.ComponentItem = 'FileExt'
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
+      ShowSaveDialog = False
       Left = 1208
       Top = 168
     end
@@ -3073,7 +3099,21 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Category = 'Export_file'
       MoveParams = <>
       dsdStoredProcName = spSelectSale_xml
-      FileExt = '.xml'
+      FilePath = '.xml'
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileName = '.txt'
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      FileExt = '.txt'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
       Left = 1208
       Top = 168
     end
@@ -3113,7 +3153,19 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           StoredProc = spGetDirectoryName
         end>
-      Caption = 'actGetDirectory'
+    end
+    object actFileDirectoryDialog: TFileDialogAction
+      Category = 'Export_file_2'
+      MoveParams = <>
+      FileOpenDialog.FavoriteLinks = <>
+      FileOpenDialog.FileTypes = <>
+      FileOpenDialog.Options = [fdoPickFolders]
+      FileOpenDialog.Title = #1055#1072#1087#1082#1072' '#1082#1091#1076#1072' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083#1099' '#1042#1057#1045' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Param.Value = Null
+      Param.Component = FormParams
+      Param.ComponentItem = 'Directory'
+      Param.DataType = ftString
+      Param.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -3695,6 +3747,24 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Directory'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileExt'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -4878,15 +4948,15 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       item
         Name = 'outFileName'
         Value = Null
-        Component = actExport_file_fromEmail
-        ComponentItem = 'DefaultFileName'
+        Component = FormParams
+        ComponentItem = 'FileName'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDefaultFileExt'
         Value = Null
-        Component = actExport_file_fromEmail
+        Component = FormParams
         ComponentItem = 'FileExt'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4898,18 +4968,8 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outFileName'
-        Value = Null
-        Component = actExport_file_fromEmail
-        ComponentItem = 'FileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'outExportType'
         Value = Null
-        Component = actExport_file_fromEmail
-        ComponentItem = 'ExportType'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -4925,6 +4985,8 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       item
         Name = 'Directory'
         Value = Null
+        Component = FormParams
+        ComponentItem = 'Directory'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
