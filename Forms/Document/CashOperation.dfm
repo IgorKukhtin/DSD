@@ -5,7 +5,7 @@
   ClientWidth = 563
   PopupMenu = PopupMenu
   ExplicitWidth = 569
-  ExplicitHeight = 390
+  ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
