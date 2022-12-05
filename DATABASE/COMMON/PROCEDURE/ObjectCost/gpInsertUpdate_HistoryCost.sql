@@ -34,7 +34,8 @@ BEGIN
      -- IF inBranchId IN (8379, 3080683) THEN RETURN; END IF;
      -- IF inBranchId IN (0) THEN RETURN; END IF;
      
-     inItearationCount:=80;
+     inItearationCount:= 80;
+     inDiffSumm       := 0.009;
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
