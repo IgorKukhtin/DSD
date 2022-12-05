@@ -5403,7 +5403,7 @@ BEGIN
     -- Создаем 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка Корректировкb задолженности (Сотрудники ЗП)', 
+                                                       inName          := 'Загрузка Корректировки задолженности (Сотрудники ЗП)', 
                                                        inProcedureName := 'gpInsertUpdate_MI_LossPersonal_Load', 
                                                        inSession       := lfGet_User_Session (vbUserId));
     --Создали Enum
@@ -5411,7 +5411,7 @@ BEGIN
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка Корректировкb задолженности (Сотрудники ЗП)',
+                                                              inName         := 'Загрузка Корректировки задолженности (Сотрудники ЗП)',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
