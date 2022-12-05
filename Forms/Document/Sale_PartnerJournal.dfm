@@ -899,9 +899,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actGetDirectory
-        end
-        item
           Action = actFileDirectoryDialog
         end
         item
@@ -3105,10 +3102,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       FilePathParam.MultiSelectSeparator = ','
       FileName = '.txt'
       FileNameParam.Value = ''
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'FileName'
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       FileExt = '.txt'
       FileExtParam.Value = ''
+      FileExtParam.Component = FormParams
+      FileExtParam.ComponentItem = 'FileExt'
       FileExtParam.DataType = ftString
       FileExtParam.MultiSelectSeparator = ','
       FileNamePrefixParam.Value = ''
@@ -3143,16 +3144,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' <'#1052#1103#1089#1085#1072#1103' '#1074#1077#1089#1085#1072'>'
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' <'#1052#1103#1089#1085#1072#1103' '#1074#1077#1089#1085#1072'>'
       ImageIndex = 60
-    end
-    object actGetDirectory: TdsdExecStoredProc
-      Category = 'Export_file_2'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetDirectoryName
-      StoredProcList = <
-        item
-          StoredProc = spGetDirectoryName
-        end>
     end
     object actFileDirectoryDialog: TFileDialogAction
       Category = 'Export_file_2'
@@ -4879,16 +4870,16 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       item
         Name = 'outFileName'
         Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'DefaultFileName'
+        Component = FormParams
+        ComponentItem = 'FileName'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDefaultFileExt'
         Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'DefaultFileExt'
+        Component = FormParams
+        ComponentItem = 'FileExt'
         DataType = ftString
         MultiSelectSeparator = ','
       end

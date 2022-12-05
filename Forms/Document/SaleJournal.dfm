@@ -3912,7 +3912,19 @@ inherited SaleJournalForm: TSaleJournalForm
       Category = 'Export_file'
       MoveParams = <>
       dsdStoredProcName = spSelectSale_xml
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       FileExt = '.xml'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
       Left = 1208
       Top = 168
     end
@@ -3931,6 +3943,93 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' <'#1052#1103#1089#1085#1072#1103' '#1074#1077#1089#1085#1072'>'
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' <'#1052#1103#1089#1085#1072#1103' '#1074#1077#1089#1085#1072'>'
       ImageIndex = 60
+    end
+    object actFileDirectoryDialog: TFileDialogAction
+      Category = 'Export_file_2'
+      MoveParams = <>
+      FileOpenDialog.FavoriteLinks = <>
+      FileOpenDialog.FileTypes = <>
+      FileOpenDialog.Options = [fdoPickFolders]
+      FileOpenDialog.Title = #1055#1072#1087#1082#1072' '#1082#1091#1076#1072' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083#1099' '#1042#1057#1045' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Param.Value = Null
+      Param.Component = FormParams
+      Param.ComponentItem = 'Directory'
+      Param.DataType = ftString
+      Param.MultiSelectSeparator = ','
+    end
+    object actGet_Export_FileName_fromMail: TdsdExecStoredProc
+      Category = 'Export_file_2'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName_2
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName_2
+        end>
+      Caption = 'actGet_Export_FileName'
+    end
+    object actExport_file_fromEmail: TdsdStoredProcExportToFile
+      Category = 'Export_file_2'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      dsdStoredProcName = spSelect_Export
+      FilePathParam.Value = ''
+      FilePathParam.Component = FormParams
+      FilePathParam.ComponentItem = 'Directory'
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'FileName'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      FileExt = '.txt'
+      FileExtParam.Value = ''
+      FileExtParam.Component = FormParams
+      FileExtParam.ComponentItem = 'FileExt'
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
+      ShowSaveDialog = False
+      Left = 1208
+      Top = 168
+    end
+    object macExportFile_fromMail: TMultiAction
+      Category = 'Export_file_2'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileName_fromMail
+        end
+        item
+          Action = actExport_file_fromEmail
+        end>
+      View = cxGridDBTableView
+      Caption = 'macExportFile_fromMail'
+      ImageIndex = 32
+    end
+    object macExportFile_fromMail_All: TMultiAction
+      Category = 'Export_file_2'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actFileDirectoryDialog
+        end
+        item
+          Action = macExportFile_fromMail
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083#1099' '#1042#1057#1045' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099'?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083#1099' '#1042#1057#1045' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083#1099' '#1042#1057#1045' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 32
     end
   end
   inherited MasterDS: TDataSource
@@ -4112,6 +4211,10 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'bbExport_XML'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportFile_fromMail_All'
         end
         item
           BeginGroup = True
@@ -4472,6 +4575,10 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbPrintBox: TdxBarButton
       Action = actPrintBox
+      Category = 0
+    end
+    object bbExportFile_fromMail_All: TdxBarButton
+      Action = macExportFile_fromMail_All
       Category = 0
     end
   end
@@ -6322,5 +6429,50 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 511
     Top = 296
+  end
+  object spGet_Export_FileName_2: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Email_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExportType'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 456
   end
 end

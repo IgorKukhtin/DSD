@@ -244,7 +244,6 @@ type
     actGet_Export_FileName_fromMail: TdsdExecStoredProc;
     spGet_Export_FileName_2: TdsdStoredProc;
     spGetDirectoryName: TdsdStoredProc;
-    actGetDirectory: TdsdExecStoredProc;
     actFileDirectoryDialog: TFileDialogAction;
   private
     { Private declarations }
