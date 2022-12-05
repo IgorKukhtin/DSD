@@ -61,10 +61,16 @@ RETURNS TABLE (MovementSumm TFloat,
               )
 AS
 $BODY$
-  DECLARE vbPartionMovementId Integer;
+   DECLARE vbUserId Integer;
+   DECLARE vbPartionMovementId Integer;
+
+   DECLARE vbIsInfoMoneyDestination_21500 Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- Разрешен просмотр долги Маркетинг - НАЛ
+     vbIsInfoMoneyDestination_21500:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = vbUserId AND tmp.RoleId = 8852398);
 
      -- Партия
      IF inMovementId_Partion <> 0
@@ -85,6 +91,12 @@ BEGIN
                                LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey_find ON View_Contract_ContractKey_find.ContractKeyId = View_Contract_ContractKey.ContractKeyId
                           WHERE View_Contract_ContractKey.ContractId = inContractId
                          )
+          -- НЕ Разрешен просмотр долги Маркетинг - НАЛ
+        , tmpInfoMoney_not AS (SELECT Object_InfoMoney_View.*
+                               FROM Object_InfoMoney_View
+                               WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                 AND vbIsInfoMoneyDestination_21500 = FALSE
+                              )
         , tmpContainer AS (SELECT CLO_Juridical.ContainerId               AS ContainerId
                                 , Container_Currency.Id                   AS ContainerId_Currency
                                 , Container.ObjectId                      AS AccountId
@@ -127,6 +139,8 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Currency ON CLO_Currency.ContainerId = CLO_Juridical.ContainerId AND CLO_Currency.DescId = zc_ContainerLinkObject_Currency()
                                 LEFT JOIN Container AS Container_Currency ON Container_Currency.ParentId = CLO_Juridical.ContainerId AND Container_Currency.DescId = zc_Container_SummCurrency()
 
+                                LEFT JOIN tmpInfoMoney_not ON tmpInfoMoney_not.InfoMoneyId = CLO_InfoMoney.ObjectId
+
                            WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0
                              AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                              AND (CLO_Partner.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
@@ -136,6 +150,8 @@ BEGIN
                              AND (CLO_PartionMovement.ObjectId = vbPartionMovementId OR COALESCE (vbPartionMovementId, 0) = 0)
                              AND (tmpContract.ContractId > 0 OR COALESCE (inContractId, 0) = 0)
                              AND (CLO_Currency.ObjectId = inCurrencyId OR COALESCE (inCurrencyId, 0) = 0 OR COALESCE (inCurrencyId, 0) = zc_Enum_Currency_Basis())
+                             -- НЕ Разрешен просмотр долги Маркетинг - НАЛ
+                             AND (tmpInfoMoney_not.InfoMoneyId IS NULL OR COALESCE (CLO_PaidKind.ObjectId, 0) <> zc_Enum_PaidKind_SecondForm())
                           )
 
         , tmpContainer_All AS (-- 1.1. сумма даижения в валюте баланса
@@ -505,7 +521,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

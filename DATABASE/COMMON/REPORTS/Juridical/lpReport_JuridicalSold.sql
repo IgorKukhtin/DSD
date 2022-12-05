@@ -63,10 +63,15 @@ $BODY$
    DECLARE vbIsJuridicalGroup Boolean;
    DECLARE vbObjectId_Constraint_Branch Integer;
    DECLARE vbObjectId_Constraint_JuridicalGroup Integer;
+
+   DECLARE vbIsInfoMoneyDestination_21500 Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      --vbUserId:= lpGetUserBySession (inSession);
+
+     -- Разрешен просмотр долги Маркетинг - НАЛ
+     vbIsInfoMoneyDestination_21500:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = inUserId AND tmp.RoleId = 8852398);
 
      -- определяется ...
      vbIsBranch:= COALESCE (inBranchId, 0) > 0;
@@ -156,6 +161,13 @@ BEGIN
                                       )
         , View_InfoMoney AS (SELECT * FROM Object_InfoMoney_View)
 
+          -- НЕ Разрешен просмотр долги Маркетинг - НАЛ
+        , tmpInfoMoney_not AS (SELECT Object_InfoMoney_View.*
+                               FROM View_InfoMoney AS Object_InfoMoney_View
+                               WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                 AND vbIsInfoMoneyDestination_21500 = FALSE
+                              )
+
         , tmpContainer AS (SELECT Container.Id AS ContainerId
                                 , Container_Currency.Id  AS ContainerId_Currency
                                 , Container.ObjectId
@@ -199,6 +211,8 @@ BEGIN
                                                     ON Container_Currency.ParentId = CLO_Juridical.ContainerId
                                                    AND Container_Currency.DescId = zc_Container_SummCurrency()
 
+                                LEFT JOIN tmpInfoMoney_not ON tmpInfoMoney_not.InfoMoneyId = CLO_InfoMoney.ObjectId
+
                            WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                              AND (CLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
                              AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0
@@ -215,6 +229,9 @@ BEGIN
                              AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR COALESCE (inInfoMoneyGroupId, 0) = 0)
                              AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
                              AND (CLO_Currency.ObjectId = inCurrencyId OR COALESCE (inCurrencyId, 0) = 0 OR COALESCE (inCurrencyId, 0) = zc_Enum_Currency_Basis())
+                             -- НЕ Разрешен просмотр долги Маркетинг - НАЛ
+                             AND (tmpInfoMoney_not.InfoMoneyId IS NULL OR COALESCE (CLO_PaidKind.ObjectId, 0) <> zc_Enum_PaidKind_SecondForm())
+
                            )
 
         , Operation_all AS (-- 1.1. сумма даижения в валюте баланса
@@ -728,5 +745,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpReport_JuridicalSold (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inCurrencyId:= null, inIsPartionMovement:= FALSE, inSession:= zfCalc_UserAdmin()); 
---select * from lpReport_JuridicalSold(inStartDate := ('13.01.2022')::TDateTime , inEndDate := ('13.01.2022')::TDateTime , inAccountId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPaidKindId := 0 , inBranchId := 0 , inJuridicalGroupId := 257169 , inCurrencyId := 76965 , inIsPartionMovement := 'False' ,  inSession := '5');
+-- SELECT * FROM lpReport_JuridicalSold (inStartDate:= '13.12.2022', inEndDate:= '13.12.2022', inStartDate_sale:= NULL, inEndDate_sale:= NULL, inAccountId:= 0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inPaidKindId:= 0, inBranchId:= 0, inJuridicalGroupId:= 257169, inCurrencyId:= 76965, inIsPartionMovement:= FALSE, inUserId:= zfCalc_UserAdmin() :: Integer);

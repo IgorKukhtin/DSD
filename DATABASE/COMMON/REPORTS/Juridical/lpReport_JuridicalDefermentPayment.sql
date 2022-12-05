@@ -45,10 +45,15 @@ $BODY$
    DECLARE vbIsJuridicalGroup Boolean;
    DECLARE vbObjectId_Constraint_Branch Integer;
    DECLARE vbObjectId_Constraint_JuridicalGroup Integer;
+
+   DECLARE vbIsInfoMoneyDestination_21500 Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      --vbUserId:= lpGetUserBySession (inSession);
+
+     -- Разрешен просмотр долги Маркетинг - НАЛ
+     vbIsInfoMoneyDestination_21500:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = inUserId AND tmp.RoleId = 8852398);
 
      -- определяется ...
      vbIsBranch:= COALESCE (inBranchId, 0) > 0;
@@ -126,6 +131,13 @@ BEGIN
                                        GROUP BY ObjectLink_Contract_Personal.ObjectId
                                       )
         , tmpJuridical AS (SELECT lfSelect_Object_Juridical_byGroup.JuridicalId FROM lfSelect_Object_Juridical_byGroup (inJuridicalGroupId) AS lfSelect_Object_Juridical_byGroup WHERE inJuridicalGroupId <> 0)
+
+          -- НЕ Разрешен просмотр долги Маркетинг - НАЛ
+        , tmpInfoMoney_not AS (SELECT Object_InfoMoney_View.*
+                               FROM Object_InfoMoney_View
+                               WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                 AND vbIsInfoMoneyDestination_21500 = FALSE
+                              )
 
      SELECT a.AccountId, a.AccountName
              , a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
@@ -360,15 +372,17 @@ BEGIN
                                          ON ObjectLink_Contract_ContractStateKind.ObjectId = RESULT_all.ContractId
                                         AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
          
-                       LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
-                                       , Object_ContractCondition_View.PaidKindId
-                                       , Value AS DelayCreditLimit
-                                  FROM Object_ContractCondition_View
-                                  WHERE Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayCreditLimit()
-                                 ) AS ContractCondition_CreditLimit
-                                   ON ContractCondition_CreditLimit.ContractId = RESULT_all.ContractId
-                                  AND ContractCondition_CreditLimit.PaidKindId = CLO_PaidKind.ObjectId
+                    LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
+                                    , Object_ContractCondition_View.PaidKindId
+                                    , Value AS DelayCreditLimit
+                               FROM Object_ContractCondition_View
+                               WHERE Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayCreditLimit()
+                              ) AS ContractCondition_CreditLimit
+                                ON ContractCondition_CreditLimit.ContractId = RESULT_all.ContractId
+                               AND ContractCondition_CreditLimit.PaidKindId = CLO_PaidKind.ObjectId
          
+                    LEFT JOIN tmpInfoMoney_not ON tmpInfoMoney_not.InfoMoneyId = CLO_InfoMoney.ObjectId
+
                   WHERE (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
                     AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0
                          -- OR ((ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE)) -- !!!пересорт!!
@@ -376,8 +390,11 @@ BEGIN
                     -- AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR COALESCE (inJuridicalGroupId, 0) = 0
                     AND (tmpJuridical.JuridicalId > 0 OR COALESCE (inJuridicalGroupId, 0) = 0
                          OR tmpListBranch_Constraint.ContractId > 0
-                         OR (CLO_Branch.ObjectId = inBranchId AND vbIsJuridicalGroup = FALSE)) -- !!!пересорт!!
-         
+                         OR (CLO_Branch.ObjectId = inBranchId AND vbIsJuridicalGroup = FALSE) -- !!!пересорт!!
+                        )
+                    -- НЕ Разрешен просмотр долги Маркетинг - НАЛ
+                    AND (tmpInfoMoney_not.InfoMoneyId IS NULL OR COALESCE (CLO_PaidKind.ObjectId, 0) <> zc_Enum_PaidKind_SecondForm())
+
                   GROUP BY RESULT_all.AccountId
                          , RESULT_all.ContractId
                          , RESULT_all.JuridicalId 
