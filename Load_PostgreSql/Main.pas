@@ -1152,7 +1152,7 @@ var
   calcSec,calcSec2:LongInt;
 begin
      //AddToLog_memo('start Delay ' + FloatToStr(mySec/1000) + ' sec');
-     if mySec >= 3000 then myLogMemo_add('start Delay ' + FloatToStr(mySec/1000) + ' sec');
+     if mySec > 5000 then myLogMemo_add('start Delay ' + FloatToStr(mySec/1000) + ' sec');
      //
      Present:=Now;
      DecodeDate(Present, Year, Month, Day);
