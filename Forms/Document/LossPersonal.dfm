@@ -3,7 +3,7 @@ object LossPersonalForm: TLossPersonalForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1047#1055')>'
   ClientHeight = 405
-  ClientWidth = 820
+  ClientWidth = 904
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object LossPersonalForm: TLossPersonalForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 820
+    Width = 904
     Height = 57
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 820
     object edInvNumber: TcxTextEdit
       Left = 216
       Top = 23
@@ -111,25 +112,28 @@ object LossPersonalForm: TLossPersonalForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 83
-    Width = 820
+    Width = 904
     Height = 322
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 820
     ClientRectBottom = 322
-    ClientRectRight = 820
+    ClientRectRight = 904
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 820
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 820
+        Width = 904
         Height = 298
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 820
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -388,6 +392,11 @@ object LossPersonalForm: TLossPersonalForm
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 304
@@ -505,6 +514,14 @@ object LossPersonalForm: TLossPersonalForm
         end
         item
           Visible = True
+          ItemName = 'bbLoadExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -569,6 +586,10 @@ object LossPersonalForm: TLossPersonalForm
     end
     object bbInsertUpdateMI_Amount: TdxBarButton
       Action = actspInsertUpdateMI_Amount
+      Category = 0
+    end
+    object bbLoadExcel: TdxBarButton
+      Action = actLoadExcel
       Category = 0
     end
   end
@@ -1099,6 +1120,52 @@ object LossPersonalForm: TLossPersonalForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' - '#1044#1086#1083#1075#1080' '#1079#1072' '#1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'?'
       InfoAfterExecute = #1044#1086#1073#1072#1074#1083#1077#1085#1099' '#1076#1072#1085#1085#1099#1077' - '#1044#1086#1083#1075#1080' '#1079#1072' '#1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
     end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actLoadExcel: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
+      ImageIndex = 41
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1219,10 +1286,13 @@ object LossPersonalForm: TLossPersonalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 328
     Top = 312
   end
@@ -1261,7 +1331,7 @@ object LossPersonalForm: TLossPersonalForm
       end
       item
         Name = 'ioServiceDate'
-        Value = ''
+        Value = Null
         Component = deServiceDate
         DataType = ftDateTime
         ParamType = ptInputOutput
@@ -1317,7 +1387,7 @@ object LossPersonalForm: TLossPersonalForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1361,7 +1431,7 @@ object LossPersonalForm: TLossPersonalForm
       end
       item
         Name = 'ServiceDate'
-        Value = ''
+        Value = Null
         Component = deServiceDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1501,5 +1571,37 @@ object LossPersonalForm: TLossPersonalForm
     PackSize = 1
     Left = 94
     Top = 296
+  end
+  object spGetImportSetting: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TLossPersonalForm;zc_Object_ImportSetting_LossPersonal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 168
   end
 end

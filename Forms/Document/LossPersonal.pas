@@ -23,7 +23,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
+  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit, ExternalLoad;
 
 type
   TLossPersonalForm = class(TParentForm)
@@ -110,6 +110,11 @@ type
     spInsertUpdateMI_Amount: TdsdStoredProc;
     actspInsertUpdateMI_Amount: TdsdExecStoredProc;
     bbInsertUpdateMI_Amount: TdxBarButton;
+    spGetImportSetting: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actLoadExcel: TMultiAction;
+    bbLoadExcel: TdxBarButton;
   private
   public
   end;

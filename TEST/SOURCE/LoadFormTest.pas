@@ -1706,7 +1706,7 @@ procedure TLoadFormTest.LoadLossPersonalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLossPersonalForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossPersonalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLossPersonalJournalForm');
 end;
