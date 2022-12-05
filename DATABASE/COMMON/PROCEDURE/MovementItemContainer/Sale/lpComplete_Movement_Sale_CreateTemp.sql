@@ -23,11 +23,11 @@ BEGIN
      CREATE TEMP TABLE _tmpItemPartnerFrom (MovementItemId Integer, ContainerId_Goods Integer, ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10400 Integer, OperSumm_Partner TFloat) ON COMMIT DROP;
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer
+                               , ContainerId_Goods Integer, ContainerId_Count Integer, ContainerId_GoodsPartner Integer
                                , ContainerId_GoodsTransit Integer
                                , ContainerId_GoodsTransit_01 Integer, ContainerId_GoodsTransit_02 Integer, ContainerId_GoodsTransit_53 Integer
                                , ObjectDescId Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, ChangePercent TFloat, isChangePrice Boolean
-                               , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_PriceListJur TFloat, OperSumm_PriceListJur TFloat
+                               , OperCount TFloat, OperCountCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_PriceListJur TFloat, OperSumm_PriceListJur TFloat
                                , tmpOperSumm_Partner TFloat, tmpOperSumm_Partner_original      TFloat, tmpOperSumm_PartnerVirt            TFloat, tmpOperSumm_Partner_Currency TFloat
                                , OperSumm_Partner TFloat,    OperSumm_Partner_ChangePercent TFloat,    OperSumm_PartnerVirt_ChangePercent TFloat,            OperSumm_Currency TFloat, OperSumm_Partner_ChangePromo TFloat, OperSumm_80103 TFloat, OperSumm_51201 TFloat
                                , ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10200 Integer, ContainerId_ProfitLoss_10250 Integer, ContainerId_ProfitLoss_10300 Integer, ContainerId_ProfitLoss_80103 Integer
