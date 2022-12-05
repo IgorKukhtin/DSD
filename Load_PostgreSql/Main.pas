@@ -290,6 +290,8 @@ type
     function myExecToStoredProc_three:Boolean;
 
     procedure myShowSql(mySql:TStrings);
+    procedure myShowSP(Name:String);
+
     procedure MyDelay(mySec:Integer);
 
     function myReplaceStr(const S, Srch, Replace: string): string;
@@ -308,7 +310,8 @@ type
     function fExecSqToQuery_two (mySql:String):Boolean;
     function fExecSqToQuery_noErr_two (mySql:String):Boolean;
 
-
+    function fTryOpenSq (myComponent:TZQuery):Boolean;
+    function fTryExecStoredProc(toStoredProc:TdsdStoredProc):Boolean;
 
     procedure pInsertHistoryCost(isFirst:Boolean);
     procedure pInsertHistoryCost_Period(StartDate,EndDate:TDateTime;isPeriodTwo:Boolean);
@@ -585,7 +588,10 @@ begin
      //OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
+     //
+     if fStartProcess = true then ShowMessage('fStartProcess = TRUE');
 end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
      if fStartProcess = true then exit;
@@ -597,7 +603,6 @@ begin
         Timer.Enabled:= true;
      end;
 end;
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.Timer_Auto_PrimeCostTimer(Sender: TObject);
 var fEnabled: Boolean;
@@ -629,95 +634,514 @@ end;
 procedure TMainForm.CloseButtonClick(Sender: TObject);
 begin
      if not fStop then
-       if MessageDlg('Действительно остановить загрузку и выйти?',mtConfirmation,[mbYes,mbNo],0)=mrYes then fStop:=true;
+       if MessageDlg('Действительно остановить загрузку и выйти? fStop = FALSE',mtConfirmation,[mbYes,mbNo],0)=mrYes
+       then fStop:=true;
+     //
+     //if Timer.Enabled then
+     //  ShowMessage('Timer.Enabled = TRUE');
+     //
+     //if Timer_Auto_PrimeCost.Enabled then
+     //  ShowMessage('Timer_Auto_PrimeCost.Enabled = TRUE');
+     //
+     Timer.Enabled:= FALSE;
+     Timer_Auto_PrimeCost.Enabled:= FALSE;
      //
      if fStop then Close;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fOpenFromZQuery(mySql:String):Boolean;
+var i:LongInt;
 begin
+     i:=0;
      //fromZConnection.Connected:=false;
      //
      with fromZQuery,Sql do begin
         Clear;
         Add(mySql);
-        try Open except ShowMessage('fOpenFromZQuery'+#10+#13+mySql);Result:=false;exit;end;
+        //try Open except ShowMessage('fOpenFromZQuery'+#10+#13+mySql);Result:=false;exit;end;
+        while not Active do
+           try
+               if Connection.Connected = false then Connection.Connected:=true;
+               Open;
+           except
+                Connection.Connected:= false;
+                //
+                myLogMemo_add(' err fOpenFromZQuery ' +#10+#13+mySql);
+                i:= i + 1;
+                if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
+                else MyDelay(1 * 60 * 1000);
+                //
+                if fStop = true then exit;;
+           end;
      end;
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fOpenSqlFromZQuery(mySql:String):Boolean;
+var i:LongInt;
 begin
+     i:=0;
      //fromZConnection.Connected:=false;
      //
      with fromSqlZQuery,Sql do begin
         Clear;
         Add(mySql);
-        try Open except ShowMessage('fOpenSqlFromZQuery'+#10+#13+mySql);Result:=false;exit;end;
+        //try Open except ShowMessage('fOpenSqlFromZQuery'+#10+#13+mySql);Result:=false;exit;end;
+        while not Active do
+           try
+               if Connection.Connected = false then Connection.Connected:=true;
+               Open;
+           except
+                Connection.Connected:= false;
+                //
+                myLogMemo_add(' err fOpenSqlFromZQuery ' +#10+#13+mySql);
+                i:= i + 1;
+                if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
+                else MyDelay(1 * 60 * 1000);
+                //
+                if fStop = true then exit;;
+           end;
      end;
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fExecSqlFromZQuery(mySql:String):Boolean;
+var i:LongInt;fExec:Boolean;
 begin
+     i:=0;
+     fExec:=false;
      //fromZConnection.Connected:=false;
      //
      with fromSqlZQuery,Sql do begin
         Clear;
         Add(mySql);
-        try ExecSql except ShowMessage('fExecSqlFromZQuery'+#10+#13+mySql);Result:=false;exit;end;
+        //try ExecSql except ShowMessage('fExecSqlFromZQuery'+#10+#13+mySql);Result:=false;exit;end;
+        while not fExec do
+           try
+               if Connection.Connected = false then Connection.Connected:=true;
+               ExecSql;fExec:=true;
+           except
+                Connection.Connected:= false;
+                //
+                myLogMemo_add(' err fExecSqlFromZQuery ' +#10+#13+mySql);
+                i:= i + 1;
+                if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
+                else MyDelay(1 * 60 * 1000);
+                //
+                if fStop = true then exit;;
+           end;
      end;
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fOpenSqToQuery (mySql:String):Boolean;
+var i:LongInt;
 begin
+     i:=0;
      with toSqlQuery,Sql do begin
         Clear;
         Add(mySql);
-        try Open except ShowMessage('fOpenSqToQuery'+#10+#13+mySql);Result:=false;exit;end;
+        //try Open except ShowMessage('fOpenSqToQuery'+#10+#13+mySql);Result:=false;exit;end;
+        while not Active do
+           try
+               if Connection.Connected = false then Connection.Connected:=true;
+               Open;
+           except
+                Connection.Connected:= false;
+                //
+                myLogMemo_add(' err fOpenSqToQuery ' +#10+#13+mySql);
+                i:= i + 1;
+                if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
+                else MyDelay(1 * 60 * 1000);
+                //
+                if fStop = true then exit;;
+           end;
      end;
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fExecSqToQuery (mySql:String):Boolean;
+var i:LongInt;fExec:Boolean;
 begin
+     i:=0;
+     fExec:=false;
+     //
      with toSqlQuery,Sql do begin
         Clear;
         Add(mySql);
-        try ExecSql except ShowMessage('fExecSqToQuery'+#10+#13+mySql);Result:=false;exit;end;
+        //try ExecSql except ShowMessage('fExecSqToQuery'+#10+#13+mySql);Result:=false;exit;end;
+        while not fExec do
+           try
+               if Connection.Connected = false then Connection.Connected:=true;
+               ExecSql;fExec:=true;
+           except
+                Connection.Connected:= false;
+                //
+                myLogMemo_add(' err fExecSqToQuery ' +#10+#13+mySql);
+                i:= i + 1;
+                if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
+                else MyDelay(1 * 60 * 1000);
+                //
+                if fStop = true then exit;;
+           end;
      end;
      Result:=true;
 end;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fOpenSqToQuery_two (mySql:String):Boolean;
+var i:LongInt;
 begin
+     i:=0;
+     //
      with toSqlQuery_two,Sql do begin
         Clear;
         Add(mySql);
-        try Open except ShowMessage('fOpenSqToQuery'+#10+#13+mySql);Result:=false;exit;end;
+        //try Open except ShowMessage('fOpenSqToQuery'+#10+#13+mySql);Result:=false;exit;end;
+        while not Active do
+           try
+               if Connection.Connected = false then Connection.Connected:=true;
+               Open;
+           except
+                Connection.Connected:= false;
+                //
+                myLogMemo_add(' err fOpenSqToQuery_two ' +#10+#13+mySql);
+                i:= i + 1;
+                if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
+                else MyDelay(1 * 60 * 1000);
+                //
+                if fStop = true then exit;;
+           end;
      end;
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fExecSqToQuery_two (mySql:String):Boolean;
+var i:LongInt;fExec:Boolean;
 begin
+     i:=0;
+     fExec:=false;
+     //
      with toSqlQuery_two,Sql do begin
         Clear;
         Add(mySql);
-        try ExecSql except ShowMessage('fExecSqToQuery'+#10+#13+mySql);Result:=false;exit;end;
+        //try ExecSql except ShowMessage('fExecSqToQuery_two'+#10+#13+mySql);Result:=false;exit;end;
+        while not fExec do
+           try
+              if Connection.Connected = false then Connection.Connected:=true;
+              ExecSql;fExec:=true;
+           except
+                Connection.Connected:=false;
+                //
+                myLogMemo_add(' err fExecSqToQuery_two ' +#10+#13+mySql);
+                i:= i + 1;
+                if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
+                else MyDelay(1 * 60 * 1000);
+                //
+                if fStop = true then exit;;
+           end;
      end;
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fExecSqToQuery_noErr_two(mySql:String):Boolean;
+var i:LongInt;fExec:Boolean;
 begin
+     i:=0;
+     fExec:=false;
+     //
      with toSqlQuery_two,Sql do begin
         Clear;
         Add(mySql);
-        try ExecSql except Result:=false;exit;end;
+        //try ExecSql except Result:=false;exit;end;
+        while not fExec do
+           try
+               if Connection.Connected = false then Connection.Connected:=true;
+               ExecSql;fExec:=true;
+           except
+                Connection.Connected:= false;
+                //
+                // !!! ONLY ONE !!!
+                Result:=false;fExec:=true;exit;
+                //
+                //
+                //
+                myLogMemo_add(' err fExecSqToQuery_noErr_two ' +#10+#13+mySql);
+                i:= i + 1;
+                if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
+                else MyDelay(1 * 60 * 1000);
+                //
+                if fStop = true then exit;;
+           end;
      end;
+     Result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fTryExecStoredProc(toStoredProc:TdsdStoredProc):Boolean;
+var i:LongInt;fExec:Boolean;
+begin
+     i:=0;
+     fExec:=false;
+     Result:=false;
+     //
+     // 1.1.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpInsertUpdate_HistoryCost')
+     then begin
+             //inStartDate
+             //inEndDate
+             //inBranchId
+             //inItearationCount
+             //inInsert
+             //inDiffSumm
+             //
+             fExecSqToQuery_two ('select * from gpInsertUpdate_HistoryCost('
+                                +FormatToVarCharServer_isSpace(DateToStr(toStoredProc.Params.ParamByName('inStartDate').Value))
+                            +','+FormatToVarCharServer_isSpace(DateToStr(toStoredProc.Params.ParamByName('inEndDate').Value))
+                            +','+IntToStr(toStoredProc.Params.ParamByName('inBranchId').Value)
+                            +','+IntToStr(toStoredProc.Params.ParamByName('inItearationCount').Value)
+                            +','+IntToStr(toStoredProc.Params.ParamByName('inInsert').Value)
+                          //+','+FloatToStr(toStoredProc.Params.ParamByName('inDiffSumm').Value)
+                            +','+IntToStr(0)
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 1.1.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpComplete_All_Sybase')
+     then begin
+             //inMovementId
+             //inIsNoHistoryCost
+             //
+             fExecSqToQuery_two ('select * from gpComplete_All_Sybase('
+                                +IntToStr(toStoredProc.Params.ParamByName('inMovementId').Value)
+                            +','+toStoredProc.Params.ParamByName('inIsNoHistoryCost').AsString
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 1.2.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpReComplete_Movement_Transport')
+     then begin
+             //inMovementId
+             //inIsLastComplete
+             //
+             fExecSqToQuery_two ('select * from gpReComplete_Movement_Transport('
+                                +IntToStr(toStoredProc.Params.ParamByName('inMovementId').Value)
+                            +','+toStoredProc.Params.ParamByName('inIsLastComplete').AsString
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 1.3.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpReComplete_Movement_TransportService')
+     then begin
+             //inMovementId
+             //inIsNoHistoryCost
+             //
+             fExecSqToQuery_two ('select * from gpReComplete_Movement_TransportService('
+                                +IntToStr(toStoredProc.Params.ParamByName('inMovementId').Value)
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 2.1.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpInsertUpdate_Movement_Currency_https')
+     then begin
+             //inOperDate
+             //inAmount_text
+             //inInternalName
+             //
+             fExecSqToQuery_two ('select * from gpInsertUpdate_Movement_Currency_https('
+                                +FormatToVarCharServer_isSpace(DateToStr(toStoredProc.Params.ParamByName('inOperDate').Value))
+                            +','+FormatToVarCharServer_isSpace(toStoredProc.Params.ParamByName('inAmount_text').AsString)
+                            +','+FormatToVarCharServer_isSpace(toStoredProc.Params.ParamByName('inInternalName').AsString)
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 2.2.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpReComplete_Movement_Currency')
+     then begin
+             //inMovementId
+             //
+             fExecSqToQuery_two ('select * from gpReComplete_Movement_Currency('
+                                +IntToStr(toStoredProc.Params.ParamByName('inMovementId').Value)
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 3.1.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpUpdate_Movement_ProductionUnion_Defroster')
+     then begin
+             //inStartDate
+             //inEndDate
+             //inUnitId
+             //
+             fExecSqToQuery_two ('select * from gpUpdate_Movement_ProductionUnion_Defroster('
+                                +FormatToVarCharServer_isSpace(DateToStr(toStoredProc.Params.ParamByName('inStartDate').Value))
+                            +','+FormatToVarCharServer_isSpace(DateToStr(toStoredProc.Params.ParamByName('inEndDate').Value))
+                            +','+IntToStr(toStoredProc.Params.ParamByName('inUnitId').Value)
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 3.2.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpUpdate_Movement_ProductionUnion_Pack')
+     then begin
+             //inStartDate
+             //inEndDate
+             //inUnitId
+             //
+             fExecSqToQuery_two ('select * from gpUpdate_Movement_ProductionUnion_Pack('
+                                +FormatToVarCharServer_isSpace(DateToStr(toStoredProc.Params.ParamByName('inStartDate').Value))
+                            +','+FormatToVarCharServer_isSpace(DateToStr(toStoredProc.Params.ParamByName('inEndDate').Value))
+                            +','+IntToStr(toStoredProc.Params.ParamByName('inUnitId').Value)
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 3.3.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpUpdate_Movement_ProductionUnion_Kopchenie')
+     then begin
+             //inStartDate
+             //inEndDate
+             //inUnitId
+             //
+             fExecSqToQuery_two ('select * from gpUpdate_Movement_ProductionUnion_Kopchenie('
+                                +FormatToVarCharServer_isSpace(DateToStr(toStoredProc.Params.ParamByName('inStartDate').Value))
+                            +','+FormatToVarCharServer_isSpace(DateToStr(toStoredProc.Params.ParamByName('inEndDate').Value))
+                            +','+IntToStr(toStoredProc.Params.ParamByName('inUnitId').Value)
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 3.4.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpUpdate_Movement_ProductionUnion_Partion')
+     then begin
+             //inStartDate
+             //inEndDate
+             //inFromId
+             //inToId
+             //
+             fExecSqToQuery_two ('select * from gpUpdate_Movement_ProductionUnion_Partion('
+                                +FormatToVarCharServer_isSpace(DateToStr(toStoredProc.Params.ParamByName('inStartDate').Value))
+                            +','+FormatToVarCharServer_isSpace(DateToStr(toStoredProc.Params.ParamByName('inEndDate').Value))
+                            +','+IntToStr(toStoredProc.Params.ParamByName('inFromId').Value)
+                            +','+IntToStr(toStoredProc.Params.ParamByName('inToId').Value)
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 4.1.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpUpdate_Movement_ReturnIn_isError')
+     then begin
+             //inMovementId
+             //
+             fExecSqToQuery_two ('select * from gpUpdate_Movement_ReturnIn_isError('
+                                +IntToStr(toStoredProc.Params.ParamByName('inMovementId').Value)
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 4.2.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpUpdate_Movement_Transport_PartnerCount')
+     then begin
+             //inMovementId
+             //
+             fExecSqToQuery_two ('select * from gpUpdate_Movement_Transport_PartnerCount('
+                                +IntToStr(toStoredProc.Params.ParamByName('inMovementId').Value)
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     // 4.2.
+     if AnsiUpperCase(toStoredProc.StoredProcName) = AnsiUpperCase('gpInsertUpdate_MI_Promo_Param')
+     then begin
+             //inMovementId
+             //
+             fExecSqToQuery_two ('select * from gpInsertUpdate_MI_Promo_Param('
+                                +IntToStr(toStoredProc.Params.ParamByName('inMovementId').Value)
+                            +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                +')');
+             //
+             Result:=true;
+             exit;
+     end;
+     //
+     //
+     with toStoredProc do begin
+        //while not fExec do
+        try
+           Execute;
+           fExec:=true;
+        except on E:Exception
+        do begin
+                myShowSP(toStoredProc.StoredProcName);
+                myLogMemo_add(E.Message);
+                //
+                // !!! ONLY ONE !!!
+                //
+                i:= i + 1;
+                if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
+                else MyDelay(1 * 60 * 1000);
+                //
+                if fStop = true then exit;;
+           end;
+        end;
+     end;
+     //
+     Result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fTryOpenSq (myComponent:TZQuery):Boolean;
+var i:LongInt;
+begin
+     i:=0;
+     Result:=false;
+     //
+     with myComponent do begin
+        Close;
+        //
+        while not Active do
+           try
+               if Connection.Connected = false then Connection.Connected:=true;
+               Open;
+           except
+                Connection.Connected:= false;
+                //
+                myShowSql(Sql);
+                i:= i + 1;
+                if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
+                else MyDelay(1 * 60 * 1000);
+                //
+                if fStop = true then exit;;
+           end;
+     end;
+     //
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -727,6 +1151,9 @@ var
   Year, Month, Day, Hour, Min, Sec, MSec: Word;
   calcSec,calcSec2:LongInt;
 begin
+     //AddToLog_memo('start Delay ' + FloatToStr(mySec/1000) + ' sec');
+     if mySec >= 3000 then myLogMemo_add('start Delay ' + FloatToStr(mySec/1000) + ' sec');
+     //
      Present:=Now;
      DecodeDate(Present, Year, Month, Day);
      DecodeTime(Present, Hour, Min, Sec, MSec);
@@ -749,6 +1176,10 @@ begin
           Application.ProcessMessages;
           Application.ProcessMessages;
      end;
+     //
+     //AddToLog_memo('end Delay');
+     //myLogMemo_add('end Delay');
+
 end;
 {------------------------------------------------------------------------------}
 procedure TMainForm.myShowSql(mySql:TStrings);
@@ -761,7 +1192,13 @@ begin
      if i=mySql.Count-1
      then Str:=Str+mySql[i]
      else Str:=Str+mySql[i]+#10+#13;
-     ShowMessage('Error.OpenSql'+#10+#13+Str);
+     // ShowMessage('Error.OpenSql'+#10+#13+Str);
+     myLogMemo_add(' err myShowSql ' +#10+#13+Str);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.myShowSP(Name:String);
+begin
+     myLogMemo_add(' err StoredProc.Name = ' +#10+#13+Name);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.FormatToVarCharServer_notNULL(_Value:string):string;
@@ -815,7 +1252,8 @@ begin
     result:=false;
      // toStoredProc.Prepared:=true;
      //try
-     toStoredProc.Execute;
+     //toStoredProc.Execute;
+     fTryExecStoredProc(toStoredProc);
      //except
            //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
            //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
@@ -829,7 +1267,8 @@ begin
     result:=false;
      // toStoredProc_two.Prepared:=true;
      // try
-     toStoredProc_two.Execute;
+     //toStoredProc_two.Execute;
+     fTryExecStoredProc(toStoredProc_two);
      //except
            //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
            //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
@@ -843,7 +1282,8 @@ begin
     result:=false;
      // toStoredProc_three.Prepared:=true;
      // try
-     toStoredProc_three.Execute;
+     //toStoredProc_three.Execute;
+     fTryExecStoredProc(toStoredProc_three);
      //except
            //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
            //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
@@ -991,8 +1431,8 @@ begin
          if ParamStr(1)='alan_dp_ua' then
          with toZConnection do begin
             Connected:=false;
-            HostName:='integer-srv.alan.dp.ua';
-            //HostName:='192.168.0.219';
+            //HostName:='integer-srv.alan.dp.ua';
+            HostName:='192.168.0.219';
             User:='admin';
             Password:='vas6ok';
             Database:='project';
@@ -1435,7 +1875,10 @@ var Second, MSec: word;
           begin
                ZQuery.Sql.Clear;;
                ZQuery.Sql.Add (lStr);
-               ZQuery.ExecSql;
+               try ZQuery.ExecSql;
+               except
+                     myLogMemo_add(' err lVACUUM ' +#10+#13+lStr);
+               end;
                //myLogMemo_add(lStr);
                //Sleep(500);
           end;
@@ -1983,7 +2426,8 @@ begin
         if cbSnapshot.Checked = true
         then Sql.Add('SELECT * FROM _replica.grSelect_Snapshot_Insert_Query (' + chr(39)+EditRepl1.Text+chr(39)+')')
         else Sql.Add('SELECT * FROM _replica.gpSelect_Replica_union (' + EditRepl1.Text+ ' , ' +EditRepl2.Text+')');
-        Open;
+        //Open;
+        fTryOpenSq (ZQuery_test);
         while not eof do
          begin
         if cbSnapshot.Checked = true
@@ -2020,7 +2464,8 @@ begin
         //for i:=0 to Sql.Count-1 do LogMemo2.Lines.Add(Sql[i]);
         LogMemo2.Lines.Add('Start Open ZQuery_test2');
         //
-        Open;
+        //Open;
+        fTryOpenSq(ZQuery_test2);
         //
         LogMemo2.Clear;
         i:=0;
@@ -2116,7 +2561,8 @@ begin
              calcEndDate:=EncodeDate(Year, Month+1, 1)-1;
         end;
         Add('order by StartDate, BranchCode, EndDate');
-        Open;
+        //Open;
+        fTryOpenSq (myComponent);
         //
         Application.ProcessMessages;
         Application.ProcessMessages;
@@ -2652,8 +3098,9 @@ begin
         Add(' select DATE_TRUNC ('+FormatToVarCharServer_notNULL('MONTH')+', cast('+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+' as date)) as OperDate1'
                  +', DATE_TRUNC ('+FormatToVarCharServer_notNULL('MONTH')+', cast('+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+' as date) + INTERVAL '+FormatToVarCharServer_notNULL('1 DAY')+') as OperDate2'
            );
-        Open;
-        cb100MSec.Checked:= FieldByName('OperDate1').AsDateTime <> FieldByName('OperDate1').AsDateTime;
+        //Open;
+        fTryOpenSq(fromZQueryDate_recalc);
+        cb100MSec.Checked:= FieldByName('OperDate1').AsDateTime <> FieldByName('OperDate2').AsDateTime;
      end;
      //
      SessionIdEdit.Text:= '30000';
@@ -2676,7 +3123,8 @@ begin
              calcStartDate:=calcStartDate+1;
         end;
         Add('order by StartDate, EndDate');
-        Open;
+        //Open;
+        fTryOpenSq (fromZQueryDate_recalc);
 
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
@@ -2789,7 +3237,8 @@ begin
              calcStartDate:=calcStartDate+1;
         end;
         Add('order by StartDate, EndDate');
-        Open;
+        //Open;
+        fTryOpenSq(fromZQueryDate_recalc);
 
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
@@ -2902,7 +3351,8 @@ begin
         Clear;
         Add('select * from gpComplete_SelectAll_Sybase_ReturnIn_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')');
         Add('order by OperDate,MovementId,InvNumber');
-        Open;
+        //Open;
+        fTryOpenSq(fromZQuery);
 
         myLogMemo_add('start Привязка Возвраты' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
         cbReturnIn_Auto.Caption:='('+IntToStr(RecordCount)+') Привязка Возвраты';
@@ -2983,7 +3433,8 @@ begin
         Clear;
         Add('select * from gpComplete_SelectAll_Sybase_Currency_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')');
         Add('order by OperDate,MovementId,InvNumber');
-        Open;
+        //Open;
+        fTryOpenSq(fromZQuery);
 
         //
         Gauge.Progress:=0;
