@@ -16,8 +16,12 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Pack());
 
+-- if EXTRACT (DAY FROM inStartDate) < 12 then return; end if;
+
    IF (DATE_TRUNC ('MONTH', inStartDate) < DATE_TRUNC ('MONTH', CURRENT_DATE)
-       OR EXTRACT (DAY FROM inStartDate) > 20)
+       OR EXTRACT (DAY FROM inStartDate) > 20
+      )
+      AND inStartDate <>  CURRENT_DATE - INTERVAL '1 DAY'
       AND (EXTRACT (DAY FROM inStartDate)  / 2 - FLOOR (EXTRACT (DAY FROM inStartDate)  / 2)
         <> EXTRACT (DAY FROM CURRENT_DATE) / 2 - FLOOR (EXTRACT (DAY FROM CURRENT_DATE) / 2)
       --OR EXTRACT (DAY FROM inStartDate) < 14
