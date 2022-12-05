@@ -90,7 +90,7 @@ BEGIN
                       THEN 'xls'
                     --THEN 'xlsx'  
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Tavr31929492())
-                      THEN 'txt'
+                      THEN '.txt'
             END AS outDefaultFileExt
           , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386(), zc_Enum_ExportKind_Glad2514900150())
                       THEN FALSE

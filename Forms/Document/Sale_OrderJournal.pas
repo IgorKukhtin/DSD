@@ -293,6 +293,13 @@ type
     actGet_Export_FileNameXml: TdsdExecStoredProc;
     macExport_XML: TMultiAction;
     bbExport_XML: TdxBarButton;
+    actFileDirectoryDialog: TFileDialogAction;
+    spGet_Export_FileName_2: TdsdStoredProc;
+    actGet_Export_FileName_fromMail: TdsdExecStoredProc;
+    actExport_file_fromEmail: TdsdStoredProcExportToFile;
+    macExportFile_fromMail: TMultiAction;
+    macExportFile_fromMail_All: TMultiAction;
+    bbExportFile_fromMail_All: TdxBarButton;
   private
     { Private declarations }
   public
