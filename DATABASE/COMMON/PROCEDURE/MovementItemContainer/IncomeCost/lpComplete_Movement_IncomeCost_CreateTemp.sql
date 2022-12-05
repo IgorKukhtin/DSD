@@ -10,10 +10,21 @@ BEGIN
      -- таблица - Проводки
      PERFORM lpComplete_Movement_All_CreateTemp();
 
-     -- таблица - затраты
-     CREATE TEMP TABLE _tmpItem_From (ContainerId Integer, AccountId Integer, InfoMoneyId Integer, OperSumm TFloat);
-     -- таблица - затраты
-     CREATE TEMP TABLE _tmpItem_To (MovementId_cost Integer, MovementId_in Integer, ContainerId Integer, AccountId Integer, InfoMoneyId Integer, OperCount TFloat, OperSumm TFloat, OperSumm_calc TFloat);
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpItem_From')
+     THEN
+         DELETE FROM _tmpItem_From;
+     ELSE
+         -- таблица - затраты
+         CREATE TEMP TABLE _tmpItem_From (ContainerId Integer, AccountId Integer, InfoMoneyId Integer, OperSumm TFloat);
+     END IF;
+
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpItem_To')
+     THEN
+         DELETE FROM _tmpItem_To;
+     ELSE
+         -- таблица - затраты
+         CREATE TEMP TABLE _tmpItem_To (MovementId_cost Integer, MovementId_in Integer, ContainerId Integer, AccountId Integer, InfoMoneyId Integer, OperCount TFloat, OperSumm TFloat, OperSumm_calc TFloat);
+     END IF;
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
