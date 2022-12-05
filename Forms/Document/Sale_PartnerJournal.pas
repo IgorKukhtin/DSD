@@ -245,6 +245,7 @@ type
     spGet_Export_FileName_2: TdsdStoredProc;
     spGetDirectoryName: TdsdStoredProc;
     actGetDirectory: TdsdExecStoredProc;
+    actFileDirectoryDialog: TFileDialogAction;
   private
     { Private declarations }
   public
