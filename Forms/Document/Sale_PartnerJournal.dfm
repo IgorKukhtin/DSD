@@ -4894,7 +4894,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       item
         Name = 'outFileName'
         Value = Null
-        Component = actSMTPFile
+        Component = FormParams
         ComponentItem = 'FileName'
         DataType = ftString
         MultiSelectSeparator = ','
