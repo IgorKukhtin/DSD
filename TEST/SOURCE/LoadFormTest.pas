@@ -1807,8 +1807,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
-   { exit;
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
+    exit;
+ { TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   exit;
 
