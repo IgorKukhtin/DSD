@@ -22,15 +22,17 @@ $BODY$
    DECLARE vbPersonalId Integer;
    DECLARE vbPositionId Integer;
    DECLARE vbInfoMoneyId Integer;
-   DECLARE vbUnitIdId Integer;
+   DECLARE vbUnitId Integer;
    DECLARE vbBranchId Integer;
    DECLARE vbPersonalServiceListId Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_LossPersonal());
 
+ --RAISE EXCEPTION 'ќшибка.%  % % % %', inInfoMoneyName, inUnitName, inPositionName, inPersonalServiceListName,inBranchName ;
+ 
 
-     --пробуем найти —отрудника
+     --находим —отрудника
      SELECT Object_Personal_View.PersonalId
           , Object_Personal_View.UnitId
           , Object_Personal_View.BranchId
@@ -46,11 +48,11 @@ BEGIN
           LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
 
      WHERE ObjectString_INN.DescId = zc_ObjectString_Member_INN() 
-       AND TRIM (ObjectString_INN.ValueData) = TRIM (inINN)
-       AND Object_Personal_View.UnitName = TRIM (inUnitName)
-       AND Object_Personal_View.BranchName = TRIM (inBranchName)
-       AND Object_Personal_View.PositionName = TRIM (inPositionName)
-       AND Object_PersonalServiceList.ValueData = TRIM (inPersonalServiceListName)
+       AND  (TRIM (ObjectString_INN.ValueData)) =  (TRIM (inINN))
+       AND UPPER (Object_Personal_View.UnitName) = UPPER (TRIM (inUnitName))
+       AND UPPER (Object_Personal_View.BranchName) = UPPER (TRIM (inBranchName))
+       AND UPPER (Object_Personal_View.PositionName) = UPPER (TRIM (inPositionName))
+       --AND (UPPER (Object_PersonalServiceList.ValueData) = UPPER (TRIM (inPersonalServiceListName)) OR COALESCE (Object_PersonalServiceList.ValueData,'') = '')
        ;
      
      --проверка
@@ -60,7 +62,12 @@ BEGIN
      END IF;
    
 
-     vbInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_InfoMoney() AND Object.ValueData = TRIM (inInfoMoneyName) LIMIT 1);
+     vbInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_InfoMoney() AND UPPER (Object.ValueData) = UPPER (TRIM (inInfoMoneyName)) LIMIT 1); 
+     --если у сотрудника не выбрана ведомость
+     IF COALESCE(vbPersonalServiceListId,0) = 0
+     THEN
+         vbPersonalServiceListId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PersonalServiceList() AND UPPER (Object.ValueData) = UPPER (TRIM (inPersonalServiceListName)) LIMIT 1);
+     END IF;
      
     -- сохранили <Ёлемент документа>
      PERFORM lpInsertUpdate_MovementItem_LossPersonal (ioId                    := 0
