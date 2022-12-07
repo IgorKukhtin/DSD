@@ -318,6 +318,15 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 110
           end
+          object isRK: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1085#1072' '#1056#1050
+            DataBinding.FieldName = 'isRK'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'

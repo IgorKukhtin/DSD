@@ -611,18 +611,18 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindForm');
-  exit;
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_NormForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_NormForm');
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_OrderForm');
-  exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_ScaleCehForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_ScaleCehForm');
-
+  exit;
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_StickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_StickerForm');
   exit;

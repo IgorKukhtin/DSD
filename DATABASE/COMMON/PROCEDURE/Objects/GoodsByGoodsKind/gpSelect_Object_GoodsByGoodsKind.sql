@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , isNewQuality Boolean
              , isTop Boolean
              , isNotPack Boolean
+             , isRK Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
              , GoodsSubSendId Integer, GoodsSubSendCode Integer, GoodsSubSendName TVarChar, MeasureSubSendName TVarChar
@@ -194,6 +195,7 @@ BEGIN
            , COALESCE (ObjectBoolean_NewQuality.ValueData, False)      AS isNewQuality
            , COALESCE (ObjectBoolean_Top.ValueData, False)             AS isTop
            , COALESCE (ObjectBoolean_NotPack.ValueData, False) ::Boolean AS isNotPack
+           , COALESCE (ObjectBoolean_RK.ValueData, FALSE)      ::Boolean AS isRK
 
            , Object_GoodsSub.Id               AS GoodsSubId
            , Object_GoodsSub.ObjectCode       AS GoodsSubCode
@@ -366,6 +368,10 @@ BEGIN
                                     ON ObjectBoolean_NotPack.ObjectId = Object_GoodsByGoodsKind_View.Id
                                    AND ObjectBoolean_NotPack.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_RK
+                                    ON ObjectBoolean_RK.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                   AND ObjectBoolean_RK.DescId = zc_ObjectBoolean_GoodsByGoodsKind_RK()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -518,6 +524,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.12.22        * isRK
  30.09.22        * GoodsReal
  07.06.22        *
  03.03.22        *
