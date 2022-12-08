@@ -852,7 +852,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object cxLabel6: TcxLabel
-      Left = 274
+      Left = 271
       Top = 90
       Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
     end
@@ -1695,6 +1695,41 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end>
       Caption = 'actSPPrintTTNProcName'
     end
+    object actOpenProductionUnitForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
+      ImageIndex = 32
+      FormName = 'TProductionUnitForm'
+      FormNameParam.Value = 'TProductionUnitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = GuidesProductionDoc
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2256,14 +2291,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'MovementId_Production'
         Value = Null
-        Component = ProductionDocGuides
+        Component = GuidesProductionDoc
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_ProductionFull'
         Value = Null
-        Component = ProductionDocGuides
+        Component = GuidesProductionDoc
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3395,7 +3430,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Left = 687
     Top = 248
   end
-  object ProductionDocGuides: TdsdGuides
+  object GuidesProductionDoc: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberProduction
     Key = '0'
@@ -3408,7 +3443,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'Key'
         Value = '0'
-        Component = ProductionDocGuides
+        Component = GuidesProductionDoc
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3417,7 +3452,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = ProductionDocGuides
+        Component = GuidesProductionDoc
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

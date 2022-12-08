@@ -97,7 +97,7 @@ type
     bbPrintSaleOrder: TdxBarButton;
     cxLabel6: TcxLabel;
     edInvNumberProduction: TcxButtonEdit;
-    ProductionDocGuides: TdsdGuides;
+    GuidesProductionDoc: TdsdGuides;
     spSelectPrint_TTN: TdsdStoredProc;
     actDialog_TTN: TdsdOpenForm;
     actPrint_TTN: TdsdPrintAction;
@@ -151,6 +151,7 @@ type
     mactUpdateMaskSale: TMultiAction;
     actSaleJournalChoice: TOpenChoiceForm;
     bbUpdateMaskSale: TdxBarButton;
+    actOpenProductionUnitForm: TdsdOpenForm;
   private
     { Private declarations }
   public

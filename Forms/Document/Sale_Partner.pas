@@ -182,7 +182,7 @@ type
     Price_Pricelist_vat: TcxGridDBColumn;
     cxLabel27: TcxLabel;
     edInvNumberProduction: TcxButtonEdit;
-    ProductionDocGuides: TdsdGuides;
+    GuidesProductionDoc: TdsdGuides;
     actOpenProductionForm: TdsdOpenForm;
     bbOpenProduction: TdxBarButton;
     actPrintPackGross: TdsdPrintAction;
@@ -240,6 +240,8 @@ type
     actGet_Export_FileNameXml: TdsdExecStoredProc;
     macExport_XML: TMultiAction;
     bbExport_XML: TdxBarButton;
+    actOpenProductionUnitForm: TdsdOpenForm;
+    bbOpenProductionUnitForm: TdxBarButton;
   private
     { Private declarations }
   public

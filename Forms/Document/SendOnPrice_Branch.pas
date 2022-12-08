@@ -112,6 +112,10 @@ type
     GuidesSubjectDoc: TdsdGuides;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    actOpenProductionUnitForm: TdsdOpenForm;
+    edInvNumberProduction: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    GuidesProductionDoc: TdsdGuides;
   private
     { Private declarations }
   public

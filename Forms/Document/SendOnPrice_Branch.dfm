@@ -539,23 +539,23 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Width = 260
     end
     object cxLabel22: TcxLabel
-      Left = 488
+      Left = 680
       Top = 90
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 488
+      Left = 680
       Top = 108
       TabOrder = 24
-      Width = 336
+      Width = 144
     end
     object cxLabel9: TcxLabel
-      Left = 274
+      Left = 488
       Top = 90
       Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
     end
     object edSubjectDoc: TcxButtonEdit
-      Left = 274
+      Left = 488
       Top = 108
       Properties.Buttons = <
         item
@@ -564,7 +564,25 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end>
       Properties.ReadOnly = True
       TabOrder = 26
+      Width = 180
+    end
+    object edInvNumberProduction: TcxButtonEdit
+      Left = 274
+      Top = 108
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 27
       Width = 200
+    end
+    object cxLabel6: TcxLabel
+      Left = 274
+      Top = 90
+      Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
     end
   end
   object cbCalcAmountPartner: TcxCheckBox [2]
@@ -1154,6 +1172,41 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end>
       Caption = 'actSPPrintTTNProcName'
     end
+    object actOpenProductionUnitForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
+      ImageIndex = 32
+      FormName = 'TProductionUnitForm'
+      FormNameParam.Value = 'TProductionUnitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = GuidesProductionDoc
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1707,6 +1760,21 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Name = 'SubjectDocName'
         Value = Null
         Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Production'
+        Value = Null
+        Component = GuidesProductionDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_ProductionFull'
+        Value = Null
+        Component = GuidesProductionDoc
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2268,8 +2336,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 652
-    Top = 64
+    Left = 628
+    Top = 56
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
@@ -2863,8 +2931,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
-    Top = 88
+    Left = 536
+    Top = 96
   end
   object spGetReporNameTTN: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
@@ -2890,5 +2958,36 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     PackSize = 1
     Left = 840
     Top = 304
+  end
+  object GuidesProductionDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberProduction
+    Key = '0'
+    FormNameParam.Value = 'TProductionPeresortJournalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProductionPeresortJournalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesProductionDoc
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesProductionDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 356
+    Top = 96
   end
 end
