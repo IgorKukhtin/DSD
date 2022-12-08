@@ -1,13 +1,16 @@
 -- Function: gpUpdate_Object_GoodsByGoodsKind_isOrder_isScaleCeh (Integer, Integer, Integer)
 
-DROP FUNCTION IF EXISTS  gpUpdate_Object_GoodsByGoodsKind_isOrder_isScaleCeh (Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS  gpUpdate_Object_GoodsByGoodsKind_isOrder_isScaleCeh (Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpUpdate_Object_GoodsByGoodsKind_isOrder_isScaleCeh (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsByGoodsKind_isOrder_isScaleCeh(
  INOUT ioId                  Integer  , -- ключ объекта <Товар>
     IN inGoodsId             Integer  , -- Товары
     IN inGoodsKindId         Integer  , -- Виды товаров
     IN inIsOrder             Boolean  , -- используется в заявках
-    IN inIsScaleCeh          Boolean  , -- используется в ScaleCeh
+    IN inIsScaleCeh          Boolean  , -- используется в ScaleCeh 
+    IN inisRK                Boolean  , -- Перемещение на РК
     IN inSession             TVarChar 
 )
 RETURNS Integer
@@ -71,7 +74,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_Order(), ioId, inisOrder);
    -- сохранили свойство <используется в ScaleCeh>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh(), ioId, inisScaleCeh);
-   
+   -- сохранили свойство <Перемещение на РК>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_RK(), ioId, inisRK);
+      
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -83,6 +88,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.22         * inisRK
  01.03.17         * 
 */
 

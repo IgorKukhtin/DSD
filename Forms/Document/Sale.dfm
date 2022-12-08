@@ -1,30 +1,29 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
-  ClientHeight = 681
+  ClientHeight = 658
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -336
   ExplicitWidth = 1378
-  ExplicitHeight = 720
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 167
     Width = 1362
-    Height = 514
+    Height = 491
     ExplicitTop = 167
     ExplicitWidth = 1362
-    ExplicitHeight = 514
-    ClientRectBottom = 514
+    ExplicitHeight = 491
+    ClientRectBottom = 491
     ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
-      ExplicitHeight = 490
+      ExplicitHeight = 467
       inherited cxGrid: TcxGrid
         Width = 1362
-        Height = 490
+        Height = 467
         ExplicitWidth = 1362
-        ExplicitHeight = 490
+        ExplicitHeight = 467
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1109,7 +1108,7 @@ inherited SaleForm: TSaleForm
     Caption = #1055#1088#1072#1081#1089' '#1074#1093'. ('#1089#1093'. '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
   end
   object edPriceListIn: TcxButtonEdit [25]
-    Left = 804
+    Left = 806
     Top = 103
     Properties.Buttons = <
       item
@@ -2901,7 +2900,19 @@ inherited SaleForm: TSaleForm
       Category = 'Export_file'
       MoveParams = <>
       dsdStoredProcName = spSelectSale_xml
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       FileExt = '.xml'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
       Left = 1272
       Top = 344
     end
@@ -2931,6 +2942,41 @@ inherited SaleForm: TSaleForm
       Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' <'#1052#1103#1089#1085#1072#1103' '#1074#1077#1089#1085#1072'>'
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' <'#1052#1103#1089#1085#1072#1103' '#1074#1077#1089#1085#1072'>'
       ImageIndex = 60
+    end
+    object actOpenProductionUnionForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
+      ImageIndex = 32
+      FormName = 'TProductionUnionForm'
+      FormNameParam.Value = 'TProductionUnionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = GuidesProductionDoc
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -2988,8 +3034,8 @@ inherited SaleForm: TSaleForm
     Top = 248
   end
   inherited BarManager: TdxBarManager
-    Left = 80
-    Top = 207
+    Left = 24
+    Top = 239
     DockControlHeights = (
       0
       0
@@ -3121,6 +3167,10 @@ inherited SaleForm: TSaleForm
         item
           Visible = True
           ItemName = 'bbOpenProduction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenProductionUnionForm'
         end
         item
           Visible = True
@@ -3266,6 +3316,7 @@ inherited SaleForm: TSaleForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+      Visible = True
     end
     inherited dxBarStatic: TdxBarStatic
       Caption = '   '
@@ -3424,6 +3475,10 @@ inherited SaleForm: TSaleForm
     end
     object bbOpenWeighingPartner_bySale: TdxBarButton
       Action = actOpenWeighingPartner_bySale
+      Category = 0
+    end
+    object bbOpenProductionUnionForm: TdxBarButton
+      Action = actOpenProductionUnionForm
       Category = 0
     end
   end
@@ -6404,8 +6459,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 956
-    Top = 88
+    Left = 980
+    Top = 104
   end
   object spUpdateMI_Sale_PriceIn: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Sale_PriceIn'

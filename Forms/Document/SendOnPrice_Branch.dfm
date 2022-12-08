@@ -3,26 +3,26 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   ClientHeight = 668
   ClientWidth = 944
   ExplicitWidth = 960
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 944
     Height = 502
-    ExplicitTop = 166
+    ExplicitTop = 140
     ExplicitWidth = 944
-    ExplicitHeight = 502
+    ExplicitHeight = 528
     ClientRectBottom = 502
     ClientRectRight = 944
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 944
-      ExplicitHeight = 478
+      ExplicitHeight = 504
       inherited cxGrid: TcxGrid
         Width = 944
         Height = 478
         ExplicitWidth = 944
-        ExplicitHeight = 478
+        ExplicitHeight = 504
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -169,7 +169,15 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 41
           end
-          object isBarCode: TcxGridDBColumn [6]
+          object isPeresort: TcxGridDBColumn [6]
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPeresort'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isBarCode: TcxGridDBColumn [7]
             Caption = #1057#1082#1080#1076#1082#1072' '#1089#1082#1072#1085'. '#1091#1087'.'
             DataBinding.FieldName = 'isBarCode'
             HeaderAlignmentHorz = taCenter
@@ -177,7 +185,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 60
           end
-          object CountPack: TcxGridDBColumn [7]
+          object CountPack: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'CountPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -188,7 +196,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 55
           end
-          object WeightTotal: TcxGridDBColumn [8]
+          object WeightTotal: TcxGridDBColumn [9]
             Caption = #1042#1077#1089' 1'#1077#1076'.  '#1089' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'WeightTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -200,7 +208,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 57
           end
-          object WeightPack: TcxGridDBColumn [9]
+          object WeightPack: TcxGridDBColumn [10]
             Caption = #1042#1077#1089' 1'#1077#1076'. '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'WeightPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -212,7 +220,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 57
           end
-          object ChangePercentAmount: TcxGridDBColumn [10]
+          object ChangePercentAmount: TcxGridDBColumn [11]
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -224,7 +232,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 70
           end
-          object Amount: TcxGridDBColumn [11]
+          object Amount: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -234,7 +242,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountChangePercent: TcxGridDBColumn [12]
+          object AmountChangePercent: TcxGridDBColumn [13]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'AmountChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -246,7 +254,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 80
           end
-          object TotalPercentAmount: TcxGridDBColumn [13]
+          object TotalPercentAmount: TcxGridDBColumn [14]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1080#1076#1082#1072
             DataBinding.FieldName = 'TotalPercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -258,7 +266,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 60
           end
-          object AmountPartner: TcxGridDBColumn [14]
+          object AmountPartner: TcxGridDBColumn [15]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -268,7 +276,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Price: TcxGridDBColumn [15]
+          object Price: TcxGridDBColumn [16]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -278,7 +286,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object CountForPrice: TcxGridDBColumn [16]
+          object CountForPrice: TcxGridDBColumn [17]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -286,7 +294,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object AmountSumm: TcxGridDBColumn [17]
+          object AmountSumm: TcxGridDBColumn [18]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -296,7 +304,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 80
           end
-          object UnitName: TcxGridDBColumn [18]
+          object UnitName: TcxGridDBColumn [19]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
@@ -531,23 +539,23 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Width = 260
     end
     object cxLabel22: TcxLabel
-      Left = 488
+      Left = 680
       Top = 90
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 488
+      Left = 680
       Top = 108
       TabOrder = 24
-      Width = 336
+      Width = 144
     end
     object cxLabel9: TcxLabel
-      Left = 274
+      Left = 488
       Top = 90
       Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
     end
     object edSubjectDoc: TcxButtonEdit
-      Left = 274
+      Left = 488
       Top = 108
       Properties.Buttons = <
         item
@@ -556,7 +564,25 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end>
       Properties.ReadOnly = True
       TabOrder = 26
+      Width = 180
+    end
+    object edInvNumberProduction: TcxButtonEdit
+      Left = 274
+      Top = 108
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 27
       Width = 200
+    end
+    object cxLabel6: TcxLabel
+      Left = 274
+      Top = 90
+      Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
     end
   end
   object cbCalcAmountPartner: TcxCheckBox [2]
@@ -1146,6 +1172,41 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end>
       Caption = 'actSPPrintTTNProcName'
     end
+    object actOpenProductionUnitForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
+      ImageIndex = 32
+      FormName = 'TProductionUnitForm'
+      FormNameParam.Value = 'TProductionUnitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = GuidesProductionDoc
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1352,6 +1413,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+      Visible = True
     end
     object bbPrintOut: TdxBarButton
       Action = actPrintOut
@@ -1698,6 +1760,21 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Name = 'SubjectDocName'
         Value = Null
         Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Production'
+        Value = Null
+        Component = GuidesProductionDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_ProductionFull'
+        Value = Null
+        Component = GuidesProductionDoc
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2259,8 +2336,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 652
-    Top = 64
+    Left = 628
+    Top = 56
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
@@ -2854,8 +2931,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
-    Top = 88
+    Left = 536
+    Top = 96
   end
   object spGetReporNameTTN: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
@@ -2881,5 +2958,36 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     PackSize = 1
     Left = 840
     Top = 304
+  end
+  object GuidesProductionDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberProduction
+    Key = '0'
+    FormNameParam.Value = 'TProductionPeresortJournalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProductionPeresortJournalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesProductionDoc
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesProductionDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 356
+    Top = 96
   end
 end

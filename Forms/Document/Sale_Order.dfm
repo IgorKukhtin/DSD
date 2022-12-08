@@ -2,8 +2,6 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 585
   ClientWidth = 1370
-  ExplicitLeft = -344
-  ExplicitTop = -88
   ExplicitWidth = 1386
   ExplicitHeight = 624
   PixelsPerInch = 96
@@ -2210,6 +2208,41 @@ inherited Sale_OrderForm: TSale_OrderForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object actOpenProductionUnionForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
+      ImageIndex = 32
+      FormName = 'TProductionUnionForm'
+      FormNameParam.Value = 'TProductionUnionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = GuidesProductionDoc
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actPrint_Transport: TdsdPrintAction
       Category = 'Print_TTN'
       MoveParams = <>
@@ -2274,7 +2307,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Name = 'Id'
           Value = '-1'
-          Component = ProductionDocGuides
+          Component = GuidesProductionDoc
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2666,7 +2699,19 @@ inherited Sale_OrderForm: TSale_OrderForm
       Category = 'Export_file'
       MoveParams = <>
       dsdStoredProcName = spSelectSale_xml
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       FileExt = '.xml'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
       Left = 1208
       Top = 168
     end
@@ -2893,6 +2938,10 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenProductionUnionForm'
+        end
+        item
+          Visible = True
           ItemName = 'bbOrderExternal'
         end
         item
@@ -3031,6 +3080,7 @@ inherited Sale_OrderForm: TSale_OrderForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+      Visible = True
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Sale
@@ -3168,6 +3218,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object bbExport_XML: TdxBarButton
       Action = macExport_XML
+      Category = 0
+    end
+    object bbOpenProductionUnionForm: TdxBarButton
+      Action = actOpenProductionUnionForm
       Category = 0
     end
   end
@@ -3701,14 +3755,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'MovementId_Production'
         Value = '0'
-        Component = ProductionDocGuides
+        Component = GuidesProductionDoc
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_ProductionFull'
         Value = Null
-        Component = ProductionDocGuides
+        Component = GuidesProductionDoc
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5796,7 +5850,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Left = 984
     Top = 256
   end
-  object ProductionDocGuides: TdsdGuides
+  object GuidesProductionDoc: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberProduction
     Key = '0'
@@ -5809,7 +5863,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'Key'
         Value = '-1'
-        Component = ProductionDocGuides
+        Component = GuidesProductionDoc
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5817,7 +5871,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'InvNumber_Full'
         Value = ' '
-        Component = ProductionDocGuides
+        Component = GuidesProductionDoc
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

@@ -1,28 +1,28 @@
 inherited SaleForm: TSaleForm
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 542
-  ClientWidth = 659
+  ClientWidth = 794
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 675
+  ExplicitWidth = 810
   ExplicitHeight = 581
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 250
-    Width = 659
+    Width = 794
     Height = 292
     ExplicitTop = 250
-    ExplicitWidth = 668
+    ExplicitWidth = 659
     ExplicitHeight = 292
     ClientRectBottom = 292
-    ClientRectRight = 659
+    ClientRectRight = 794
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 668
+      ExplicitWidth = 659
       ExplicitHeight = 268
       inherited cxGrid: TcxGrid
-        Width = 659
+        Width = 794
         Height = 170
-        ExplicitWidth = 668
+        ExplicitWidth = 659
         ExplicitHeight = 170
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -195,12 +195,12 @@ inherited SaleForm: TSaleForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 178
-        Width = 659
+        Width = 794
         Height = 90
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 668
+        ExplicitWidth = 659
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -374,20 +374,20 @@ inherited SaleForm: TSaleForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 170
-        Width = 659
+        Width = 794
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 668
+        ExplicitWidth = 659
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 659
+    Width = 794
     Height = 224
     TabOrder = 3
-    ExplicitWidth = 668
+    ExplicitWidth = 659
     ExplicitHeight = 224
     inherited edInvNumber: TcxTextEdit
       Left = 161
@@ -477,14 +477,14 @@ inherited SaleForm: TSaleForm
       Width = 100
     end
     object cxLabel4: TcxLabel
-      Left = 683
-      Top = 33
+      Left = 795
+      Top = 34
       Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
       Visible = False
     end
     object edTotalSumm: TcxCurrencyEdit
-      Left = 684
-      Top = 49
+      Left = 796
+      Top = 50
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 13
@@ -492,14 +492,14 @@ inherited SaleForm: TSaleForm
       Width = 76
     end
     object cxLabel5: TcxLabel
-      Left = 684
-      Top = 6
+      Left = 796
+      Top = 7
       Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
       Visible = False
     end
     object edTotalCount: TcxCurrencyEdit
-      Left = 684
-      Top = 22
+      Left = 796
+      Top = 23
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 15
@@ -507,14 +507,14 @@ inherited SaleForm: TSaleForm
       Width = 81
     end
     object cxLabel6: TcxLabel
-      Left = 683
-      Top = 60
+      Left = 795
+      Top = 61
       Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' ('#1079#1072#1082'.)'
       Visible = False
     end
     object edTotalSummPrimeCost: TcxCurrencyEdit
-      Left = 683
-      Top = 76
+      Left = 795
+      Top = 77
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 17
@@ -1017,7 +1017,7 @@ inherited SaleForm: TSaleForm
         end
         item
           Name = 'Label'
-          Value = Null
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1094#1077#1085#1091' '#1073#1072#1079' '#1089#1082#1080#1076#1082#1080' '
           Component = FormParams
           ComponentItem = 'LabelPriceSale'
           DataType = ftString
@@ -1230,6 +1230,47 @@ inherited SaleForm: TSaleForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actUpdate_ChangePercent: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialog_Update_ChangePercent
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ChangePercent
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ChangePercent
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
+      ImageIndex = 80
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091'?'
+    end
+    object actExecuteDialog_Update_ChangePercent: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialog_Update_ChangePercent'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ChangePercent'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1087#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1088#1086' '#1076#1086#1082#1091#1084#1077#1085#1091
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -1366,6 +1407,10 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1453,6 +1498,10 @@ inherited SaleForm: TSaleForm
       Action = actUpdate_MedicSP
       Category = 0
     end
+    object dxBarButton8: TdxBarButton
+      Action = actUpdate_ChangePercent
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SearchAsFilter = False
@@ -1510,7 +1559,7 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'LabelPriceSale'
-        Value = #1042#1074#1077#1076#1080#1090#1077' '#1094#1077#1085#1091' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+        Value = #1042#1074#1077#1076#1080#1090#1077' '#1094#1077#1085#1091' '#1073#1072#1079' '#1089#1082#1080#1076#1082#1080' '
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1536,6 +1585,12 @@ inherited SaleForm: TSaleForm
         Name = 'MedicSPName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = Null
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -3042,5 +3097,31 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 320
     Top = 371
+  end
+  object spUpdate_ChangePercent: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Sale_ChangePercent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 656
+    Top = 323
   end
 end

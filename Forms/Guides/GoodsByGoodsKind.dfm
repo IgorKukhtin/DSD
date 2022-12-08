@@ -648,6 +648,13 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
+          object isRK: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1085#1072' '#1056#1050
+            DataBinding.FieldName = 'isRK'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
+          end
           object isNotMobile: TcxGridDBColumn
             Caption = #1053#1045' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1074' '#1052#1086#1073#1080#1083#1100#1085#1086#1084' '#1072#1075#1077#1085#1090#1077
             DataBinding.FieldName = 'isNotMobile'
@@ -1752,6 +1759,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isScaleCeh'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRK'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isRK'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

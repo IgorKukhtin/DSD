@@ -143,6 +143,10 @@ type
     actUpdate_MedicSP: TdsdExecStoredProc;
     actMedicSPDialog: TExecuteDialog;
     dxBarButton7: TdxBarButton;
+    actUpdate_ChangePercent: TdsdExecStoredProc;
+    actExecuteDialog_Update_ChangePercent: TExecuteDialog;
+    spUpdate_ChangePercent: TdsdStoredProc;
+    dxBarButton8: TdxBarButton;
   private
     { Private declarations }
   public

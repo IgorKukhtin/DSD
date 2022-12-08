@@ -3784,11 +3784,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       FilePathParam.Value = ''
       FilePathParam.DataType = ftString
       FilePathParam.MultiSelectSeparator = ','
-      FileNameParam.Value = ''
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'FileName'
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       FileExt = '.xml'
       FileExtParam.Value = ''
+      FileExtParam.Component = FormParams
+      FileExtParam.ComponentItem = 'FileExt'
       FileExtParam.DataType = ftString
       FileExtParam.MultiSelectSeparator = ','
       FileNamePrefixParam.Value = ''
@@ -4618,6 +4621,12 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       item
         Name = 'FileDirectory'
         Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileName'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6180,8 +6189,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       item
         Name = 'outDefaultFileExt'
         Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'DefaultFileExt'
+        Component = FormParams
+        ComponentItem = 'FileExt'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -6196,7 +6205,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       item
         Name = 'outFileName'
         Value = Null
-        Component = actSMTPFile
+        Component = FormParams
         ComponentItem = 'FileName'
         DataType = ftString
         MultiSelectSeparator = ','

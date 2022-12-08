@@ -98,6 +98,16 @@ type
     actUpdateMI_Closed: TdsdExecStoredProc;
     bbUpdateMI_Closed: TdxBarButton;
     Amount_Remains: TcxGridDBColumn;
+    cxLabel7: TcxLabel;
+    edProductionMov: TcxButtonEdit;
+    GuidesProduction: TdsdGuides;
+    actMovementForm: TdsdExecStoredProc;
+    getMovementForm: TdsdStoredProc;
+    actOpenForm: TdsdOpenForm;
+    macOpenDocument: TMultiAction;
+    bbOpenDocument: TdxBarButton;
+    spGet_checkopen: TdsdStoredProc;
+    actGet_checkopen: TdsdExecStoredProc;
   private
     { Private declarations }
   public

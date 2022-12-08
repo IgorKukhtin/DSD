@@ -287,6 +287,8 @@ type
     ExportCDS: TClientDataSet;
     actOpenWeighingPartner_bySale: TdsdOpenForm;
     bbOpenWeighingPartner_bySale: TdxBarButton;
+    bbOpenProductionUnionForm: TdxBarButton;
+    actOpenProductionUnionForm: TdsdOpenForm;
   private
     { Private declarations }
   public

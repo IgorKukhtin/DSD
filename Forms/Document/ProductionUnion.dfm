@@ -1,27 +1,28 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
-  ClientWidth = 1074
-  ExplicitWidth = 1090
+  ClientWidth = 1128
+  ExplicitWidth = 1144
   ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 122
-    Width = 1074
+    Width = 1128
     Height = 552
     TabOrder = 2
     ExplicitTop = 122
     ExplicitWidth = 1074
     ExplicitHeight = 552
     ClientRectBottom = 552
-    ClientRectRight = 1074
+    ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1074
       ExplicitHeight = 528
       inherited cxGrid: TcxGrid
-        Width = 1074
+        Width = 1128
         Height = 220
-        ExplicitWidth = 1074
+        ExplicitTop = -1
+        ExplicitWidth = 1180
         ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -449,7 +450,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       inherited cxGridChild: TcxGrid
         Top = 225
-        Width = 1074
+        Width = 1128
         ExplicitTop = 225
         ExplicitWidth = 1074
         inherited cxGridDBTableViewChild: TcxGridDBTableView
@@ -620,16 +621,17 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       inherited cxBottomSplitter: TcxSplitter
         Top = 220
-        Width = 1074
+        Width = 1128
         ExplicitTop = 220
         ExplicitWidth = 1074
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1074
+    Width = 1128
     Height = 96
-    ExplicitWidth = 1074
+    ExplicitTop = 4
+    ExplicitWidth = 1140
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 200
@@ -742,6 +744,23 @@ inherited ProductionUnionForm: TProductionUnionForm
     Properties.ReadOnly = True
     TabOrder = 8
     Width = 192
+  end
+  object cxLabel7: TcxLabel [5]
+    Left = 928
+    Top = 43
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
+  end
+  object edProductionMov: TcxButtonEdit [6]
+    Left = 928
+    Top = 61
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 196
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 827
@@ -1049,6 +1068,87 @@ inherited ProductionUnionForm: TProductionUnionForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actMovementForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actMovementForm'
+    end
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenForm'
+      FormName = 'NULL'
+      FormNameParam.Value = ''
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42005d
+          Component = edOperDate
+          ComponentItem = 'OperDate'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          Component = GuidesProduction
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_checkopen
+        end
+        item
+          Action = actMovementForm
+        end
+        item
+          Action = actOpenForm
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1103
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1103
+      ImageIndex = 28
+    end
+    object actGet_checkopen: TdsdExecStoredProc
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_checkopen
+      StoredProcList = <
+        item
+          StoredProc = spGet_checkopen
+        end>
+      Caption = 'actGet_checkopen_Sale'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072'>'
+      ImageIndex = 24
+    end
   end
   inherited MasterDS: TDataSource
     Left = 768
@@ -1144,6 +1244,14 @@ inherited ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -1223,6 +1331,10 @@ inherited ProductionUnionForm: TProductionUnionForm
     end
     object bbUpdateMI_Closed: TdxBarButton
       Action = actUpdateMI_Closed
+      Category = 0
+    end
+    object bbOpenDocument: TdxBarButton
+      Action = macOpenDocument
       Category = 0
     end
   end
@@ -1389,6 +1501,21 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = cbClosed
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Production'
+        Value = Null
+        Component = GuidesProduction
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_ProductionFull'
+        Value = Null
+        Component = GuidesProduction
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 328
@@ -1974,8 +2101,8 @@ inherited ProductionUnionForm: TProductionUnionForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 516
-    Top = 56
+    Left = 508
+    Top = 64
   end
   object spUpdateOrder: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_ProductionUnion_Order'
@@ -2123,5 +2250,117 @@ inherited ProductionUnionForm: TProductionUnionForm
     PackSize = 1
     Left = 177
     Top = 272
+  end
+  object GuidesProduction: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edProductionMov
+    DisableGuidesOpen = True
+    Key = '0'
+    FormNameParam.Value = 'TSaleJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSaleJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesProduction
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesProduction
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = JuridicalFromGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = JuridicalFromGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 1004
+    Top = 56
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = GuidesProduction
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 976
+    Top = 200
+  end
+  object spGet_checkopen: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_checkopen'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = GuidesProduction
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 971
+    Top = 258
+  end
+  object TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_checkopen'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ComponentItem = 'MovementId_sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFormName'
+        Value = Null
+        ComponentItem = 'outFormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1267
+    Top = 234
   end
 end

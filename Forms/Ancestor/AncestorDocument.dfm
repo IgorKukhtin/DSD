@@ -9,14 +9,14 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 86
+    Top = 60
     Width = 829
-    Height = 330
+    Height = 356
     TabOrder = 5
     ExplicitTop = 86
     ExplicitWidth = 829
     ExplicitHeight = 330
-    ClientRectBottom = 330
+    ClientRectBottom = 356
     ClientRectRight = 829
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -436,7 +436,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     DockControlHeights = (
       0
       0
-      26
+      0
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -517,6 +517,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+      Visible = False
     end
     object bbPrint: TdxBarButton
       Action = actPrint
@@ -654,7 +655,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime

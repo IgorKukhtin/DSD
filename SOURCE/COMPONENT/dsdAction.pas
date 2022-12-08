@@ -4543,15 +4543,23 @@ begin
     sdSaveFile.Title := 'Укажите файл для сохранения';
     if FilePaths <> '' then sdSaveFile.InitialDir  := FilePaths;
     sdSaveFile.FileName := FileName;
+    if FileExt[1] = '.' then
+      sdSaveFile.DefaultExt := copy(FileExt, 2, length(FileExt) - 1)
+    else sdSaveFile.DefaultExt := FileExt;
 
     if sdSaveFile.Execute then
     begin
       FilePaths := ExtractFilePath(sdSaveFile.FileName);
       FileNames := ExtractFileName(sdSaveFile.FileName);
-      if ExtractFileExt(FileNames) <> '' then FileNames := FileNames + FileExt;
     end else Exit;
 
-  end else FileNames := FileName + FileExt;
+  end else FileNames := FileName;
+
+  if (ExtractFileExt(FileNames) = '') and (FileExt <> '') then
+  begin
+    if FileExt[1] <> '.' then FileNames := FileNames + '.';
+    FileNames := FileNames + FileExt;
+  end;
 
   FdsdStoredProcName.Execute();
   TdsdStoredProc(FdsdStoredProcName).DataSet.First;
@@ -4627,7 +4635,9 @@ function TdsdStoredProcExportToFile.GetFileExt: string;
 begin
   result := FFileExtParam.AsString;
   if result = '' then
-    result := FFileExt
+    result := FFileExt;
+  if result = '' then
+    result := 'txt';
 end;
 
 procedure TdsdStoredProcExportToFile.SetFileNamePrefix(const Value: string);
