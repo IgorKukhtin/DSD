@@ -826,6 +826,7 @@ type
     fPrint: Boolean;
     FTotalSumm: Currency;
     FSummLoyalty: Currency;
+    FPromoForSale: Boolean;
     Cash: ICash;
     SoldParallel: Boolean;
     SourceClientDataSet: TClientDataSet;
@@ -1823,6 +1824,7 @@ begin
   ClearFilterAll;
 
   FFiscalNumber := '';
+  FPromoForSale := False;
   fPrint := False;
   pnlVIP.Visible := false;
   edPrice.Value := 0.0;
@@ -10871,6 +10873,7 @@ Begin
 
   FTotalSumm := 0;
   FSummLoyalty := 0;
+  FPromoForSale := False;
   try
     RemainsCDS.DisableControls;
     nID := RemainsCDS.RecNo;
@@ -10886,9 +10889,12 @@ Begin
           if not FieldByName('isPresent').AsBoolean then
             FTotalSumm := FTotalSumm + FieldByName('Summ').asCurrency;
           if not FieldByName('isPresent').AsBoolean and
-             RemainsCDS.Locate('ID', FieldByName('GoodsId').AsInteger, []) and
-             not RemainsCDS.FieldByName('isStaticCode').AsBoolean then
-            FSummLoyalty := FSummLoyalty + FieldByName('Summ').asCurrency;
+             RemainsCDS.Locate('ID', FieldByName('GoodsId').AsInteger, []) then
+          begin
+            if not RemainsCDS.FieldByName('isStaticCode').AsBoolean then
+               FSummLoyalty := FSummLoyalty + FieldByName('Summ').asCurrency;
+            if RemainsCDS.FieldByName('isPromoForSale').AsBoolean then FPromoForSale := True;
+          end;
           Next;
         End;
         GotoBookmark(B);
@@ -11313,6 +11319,7 @@ begin
   FormParams.ParamByName('isMobileFirstOrder').Value := False;
 
   FFiscalNumber := '';
+  FPromoForSale := False;
   pnlVIP.Visible := false;
   edPrice.Value := 0.0;
   edPrice.Visible := false;
@@ -14476,24 +14483,30 @@ begin
 
       // Добавим Акционный товар от суммы чека
 
-      SalePromoGoodsCDS.Filtered := False;
-      SalePromoGoodsCDS.Filter := 'EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = Null and isAmountCheck = TRUE and AmountCheck <= ' + FloatToStr(FTotalSumm);
-      SalePromoGoodsCDS.Filtered := True;
-      if (SalePromoGoodsCDS.RecordCount = 1) then
+      if (DiscountServiceForm.gCode = 0) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') and
+         (FormParams.ParamByName('isCorrectMarketing').Value = False) and
+         (FormParams.ParamByName('isCorrectIlliquidAssets').Value = False) and
+         not FPromoForSale then
       begin
-        if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([CheckCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Price').AsCurrency]), []) then
+        SalePromoGoodsCDS.Filtered := False;
+        SalePromoGoodsCDS.Filter := 'EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = Null and isAmountCheck = TRUE and AmountCheck <= ' + FloatToStr(FTotalSumm);
+        SalePromoGoodsCDS.Filtered := True;
+        if (SalePromoGoodsCDS.RecordCount = 1) then
         begin
-          SalePromoGoodsCalcCDS.Edit;
-          SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency;
-          SalePromoGoodsCalcCDS.Post;
-        end else
-        begin
-          SalePromoGoodsCalcCDS.Append;
-          SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger;
-          SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
-          SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency;
-          SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := 0;
-          SalePromoGoodsCalcCDS.Post;
+          if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([CheckCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Price').AsCurrency]), []) then
+          begin
+            SalePromoGoodsCalcCDS.Edit;
+            SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency;
+            SalePromoGoodsCalcCDS.Post;
+          end else
+          begin
+            SalePromoGoodsCalcCDS.Append;
+            SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger;
+            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+            SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency;
+            SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := 0;
+            SalePromoGoodsCalcCDS.Post;
+          end;
         end;
       end;
 
@@ -14637,16 +14650,22 @@ begin
 
     // Добавим Акционный товар от суммы чека
 
-    SalePromoGoodsCDS.Filtered := False;
-    SalePromoGoodsCDS.Filter := 'EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = Null and isAmountCheck = TRUE and AmountCheck <= ' + FloatToStr(FTotalSumm);
-    SalePromoGoodsCDS.Filtered := True;
-    if (SalePromoGoodsCDS.RecordCount = 1) then
+    if (DiscountServiceForm.gCode = 0) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') and
+       (FormParams.ParamByName('isCorrectMarketing').Value = False) and
+       (FormParams.ParamByName('isCorrectIlliquidAssets').Value = False) and
+       not FPromoForSale then
     begin
-      if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Price').AsCurrency]), []) then
+      SalePromoGoodsCDS.Filtered := False;
+      SalePromoGoodsCDS.Filter := 'EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = Null and isAmountCheck = TRUE and AmountCheck <= ' + FloatToStr(FTotalSumm);
+      SalePromoGoodsCDS.Filtered := True;
+      if (SalePromoGoodsCDS.RecordCount = 1) then
       begin
-        SalePromoGoodsCalcCDS.Edit;
-        SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency;
-        SalePromoGoodsCalcCDS.Post;
+        if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Price').AsCurrency]), []) then
+        begin
+          SalePromoGoodsCalcCDS.Edit;
+          SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency;
+          SalePromoGoodsCalcCDS.Post;
+        end;
       end;
     end;
 
