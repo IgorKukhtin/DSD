@@ -2,8 +2,6 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 585
   ClientWidth = 1370
-  ExplicitLeft = -344
-  ExplicitTop = -88
   ExplicitWidth = 1386
   ExplicitHeight = 624
   PixelsPerInch = 96
@@ -2666,7 +2664,19 @@ inherited Sale_OrderForm: TSale_OrderForm
       Category = 'Export_file'
       MoveParams = <>
       dsdStoredProcName = spSelectSale_xml
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       FileExt = '.xml'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
       Left = 1208
       Top = 168
     end
@@ -3031,6 +3041,7 @@ inherited Sale_OrderForm: TSale_OrderForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+      Visible = True
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Sale

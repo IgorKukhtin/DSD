@@ -2514,7 +2514,19 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Category = 'Export_file'
       MoveParams = <>
       dsdStoredProcName = spSelectSale_xml
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       FileExt = '.xml'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
       Left = 1192
       Top = 144
     end
@@ -2843,6 +2855,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+      Visible = True
     end
     inherited dxBarStatic: TdxBarStatic
       Caption = '    '
@@ -4354,8 +4367,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 476
-    Top = 193
+    Left = 404
+    Top = 241
   end
   object spGetReporNameTax: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'

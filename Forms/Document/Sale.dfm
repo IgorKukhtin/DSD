@@ -1,30 +1,29 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
-  ClientHeight = 681
+  ClientHeight = 658
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -336
   ExplicitWidth = 1378
-  ExplicitHeight = 720
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 167
     Width = 1362
-    Height = 514
-    ExplicitTop = 167
+    Height = 491
+    ExplicitTop = 147
     ExplicitWidth = 1362
-    ExplicitHeight = 514
-    ClientRectBottom = 514
+    ExplicitHeight = 540
+    ClientRectBottom = 491
     ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
-      ExplicitHeight = 490
+      ExplicitHeight = 516
       inherited cxGrid: TcxGrid
         Width = 1362
-        Height = 490
+        Height = 467
         ExplicitWidth = 1362
-        ExplicitHeight = 490
+        ExplicitHeight = 516
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -584,6 +583,7 @@ inherited SaleForm: TSaleForm
     Width = 1362
     Height = 141
     TabOrder = 3
+    ExplicitTop = -6
     ExplicitWidth = 1362
     ExplicitHeight = 141
     inherited edInvNumber: TcxTextEdit
@@ -2901,7 +2901,19 @@ inherited SaleForm: TSaleForm
       Category = 'Export_file'
       MoveParams = <>
       dsdStoredProcName = spSelectSale_xml
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       FileExt = '.xml'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
       Left = 1272
       Top = 344
     end
@@ -2988,8 +3000,8 @@ inherited SaleForm: TSaleForm
     Top = 248
   end
   inherited BarManager: TdxBarManager
-    Left = 80
-    Top = 207
+    Left = 24
+    Top = 239
     DockControlHeights = (
       0
       0
@@ -3266,6 +3278,7 @@ inherited SaleForm: TSaleForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+      Visible = True
     end
     inherited dxBarStatic: TdxBarStatic
       Caption = '   '

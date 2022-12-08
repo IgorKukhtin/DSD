@@ -3,26 +3,26 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   ClientHeight = 668
   ClientWidth = 944
   ExplicitWidth = 960
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 944
     Height = 502
-    ExplicitTop = 166
+    ExplicitTop = 140
     ExplicitWidth = 944
-    ExplicitHeight = 502
+    ExplicitHeight = 528
     ClientRectBottom = 502
     ClientRectRight = 944
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 944
-      ExplicitHeight = 478
+      ExplicitHeight = 504
       inherited cxGrid: TcxGrid
         Width = 944
         Height = 478
         ExplicitWidth = 944
-        ExplicitHeight = 478
+        ExplicitHeight = 504
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -169,7 +169,15 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 41
           end
-          object isBarCode: TcxGridDBColumn [6]
+          object isPeresort: TcxGridDBColumn [6]
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPeresort'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isBarCode: TcxGridDBColumn [7]
             Caption = #1057#1082#1080#1076#1082#1072' '#1089#1082#1072#1085'. '#1091#1087'.'
             DataBinding.FieldName = 'isBarCode'
             HeaderAlignmentHorz = taCenter
@@ -177,7 +185,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 60
           end
-          object CountPack: TcxGridDBColumn [7]
+          object CountPack: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'CountPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -188,7 +196,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 55
           end
-          object WeightTotal: TcxGridDBColumn [8]
+          object WeightTotal: TcxGridDBColumn [9]
             Caption = #1042#1077#1089' 1'#1077#1076'.  '#1089' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'WeightTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -200,7 +208,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 57
           end
-          object WeightPack: TcxGridDBColumn [9]
+          object WeightPack: TcxGridDBColumn [10]
             Caption = #1042#1077#1089' 1'#1077#1076'. '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'WeightPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -212,7 +220,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 57
           end
-          object ChangePercentAmount: TcxGridDBColumn [10]
+          object ChangePercentAmount: TcxGridDBColumn [11]
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -224,7 +232,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 70
           end
-          object Amount: TcxGridDBColumn [11]
+          object Amount: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -234,7 +242,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountChangePercent: TcxGridDBColumn [12]
+          object AmountChangePercent: TcxGridDBColumn [13]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'AmountChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -246,7 +254,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 80
           end
-          object TotalPercentAmount: TcxGridDBColumn [13]
+          object TotalPercentAmount: TcxGridDBColumn [14]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1080#1076#1082#1072
             DataBinding.FieldName = 'TotalPercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -258,7 +266,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 60
           end
-          object AmountPartner: TcxGridDBColumn [14]
+          object AmountPartner: TcxGridDBColumn [15]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -268,7 +276,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Price: TcxGridDBColumn [15]
+          object Price: TcxGridDBColumn [16]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -278,7 +286,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object CountForPrice: TcxGridDBColumn [16]
+          object CountForPrice: TcxGridDBColumn [17]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -286,7 +294,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object AmountSumm: TcxGridDBColumn [17]
+          object AmountSumm: TcxGridDBColumn [18]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -296,7 +304,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 80
           end
-          object UnitName: TcxGridDBColumn [18]
+          object UnitName: TcxGridDBColumn [19]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
@@ -1352,6 +1360,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+      Visible = True
     end
     object bbPrintOut: TdxBarButton
       Action = actPrintOut

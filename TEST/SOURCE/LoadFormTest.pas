@@ -1221,12 +1221,13 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceForm');
-  exit;
+  {exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceJournalForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPrice_BranchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPrice_BranchForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPrice_BranchJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPrice_BranchJournalForm');
 end;
