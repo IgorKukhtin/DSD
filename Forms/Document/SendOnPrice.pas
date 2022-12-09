@@ -152,6 +152,7 @@ type
     actSaleJournalChoice: TOpenChoiceForm;
     bbUpdateMaskSale: TdxBarButton;
     actOpenProductionUnitForm: TdsdOpenForm;
+    bbOpenProductionUnitForm: TdxBarButton;
   private
     { Private declarations }
   public

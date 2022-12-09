@@ -10,19 +10,19 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     Top = 166
     Width = 944
     Height = 502
-    ExplicitTop = 140
+    ExplicitTop = 166
     ExplicitWidth = 944
-    ExplicitHeight = 528
+    ExplicitHeight = 502
     ClientRectBottom = 502
     ClientRectRight = 944
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 944
-      ExplicitHeight = 504
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 944
         Height = 478
         ExplicitWidth = 944
-        ExplicitHeight = 504
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1179,8 +1179,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
       ImageIndex = 32
-      FormName = 'TProductionUnitForm'
-      FormNameParam.Value = 'TProductionUnitForm'
+      FormName = 'TProductionUnionForm'
+      FormNameParam.Value = 'TProductionUnionForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1331,6 +1331,14 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenProductionUnitForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1449,6 +1457,10 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     end
     object bbPrintSaleOrderTax: TdxBarButton
       Action = actPrintSaleOrderTax
+      Category = 0
+    end
+    object bbOpenProductionUnitForm: TdxBarButton
+      Action = actOpenProductionUnitForm
       Category = 0
     end
   end
