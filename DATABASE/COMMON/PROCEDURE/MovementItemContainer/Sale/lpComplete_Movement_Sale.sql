@@ -110,6 +110,13 @@ $BODY$
 
   DECLARE vbIsNotRealGoods Boolean;
 
+
+  DECLARE vbGoodsId Integer;
+  DECLARE vbGoodsKindId Integer;
+  DECLARE vbAmountPartner TFloat;
+  DECLARE vbAmountOrder TFloat;
+  DECLARE vbPersentReal TFloat;
+
 BEGIN
 
 
@@ -154,6 +161,79 @@ END IF;
      DELETE FROM _tmpItemSumm;
      -- !!!обязательно!!! очистили таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
+
+
+      --проверка отклонения по кол-ву более чем на 15 % 
+     IF inUserId = zfCalc_UserAdmin() :: Integer
+     THEN
+         --если есть хоть 1 товар у которого кол > на 15% чем в заявка выдаем сообщение
+         SELECT tmp.GoodsId
+           , tmp.GoodsKindId
+           , tmp.AmountPartner
+           , tmp.AmountOrder
+           , tmp.PersentReal
+     INTO vbGoodsId, vbGoodsKindId, vbAmountPartner, vbAmountOrder, vbPersentReal
+         FROM 
+           (WITH
+            tmpMIOrder AS (SELECT MovementItem.ObjectId AS GoodsId
+                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId  
+                                , (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0) ) AS Amount
+                                , (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) /100 * 15 AS Amount15
+                           FROM MovementLinkMovement AS MovementLinkMovement_Order
+                                INNER JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                      AND MovementItem.DescId = zc_MI_Master()
+                                                      AND MovementItem.isErased = FALSE
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                            ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                           WHERE MovementLinkMovement_Order.MovementId = inMovementId       --23791150 --
+                             AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                         )
+          , tmpMISale AS (SELECT MovementItem.ObjectId AS GoodsId
+                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId  
+                               , COALESCE (MovementItem.Amount,0) AS Amount
+                               , MIFloat_AmountPartner.ValueData               AS AmountPartner
+                          FROM MovementItem
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId = zc_MI_Master()
+                            AND MovementItem.isErased = FALSE
+                          )
+      
+              SELECT tmpMISale.GoodsId
+                   , tmpMISale.GoodsKindId
+                   , COALESCE (tmpMISale.AmountPartner,0) AS AmountPartner
+                   , COALESCE (tmpMIOrder.Amount,0)       AS AmountOrder
+                   , CAST ((COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0)) * 100 / COALESCE (tmpMIOrder.Amount,0) AS NUMERIC (16,1)) AS PersentReal
+              FROM tmpMISale
+                  LEFT JOIN tmpMIOrder ON tmpMIOrder.GoodsId = tmpMISale.GoodsId
+                                      AND  tmpMIOrder.GoodsKindId = tmpMISale.GoodsKindId
+              WHERE COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0) > tmpMIOrder.Amount15 
+              LIMIT 1
+             ) AS tmp;
+
+         IF COALESCE (vbGoodsId,0) > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для товара % % количество у покупателя %, количество в заказе %, больше чем в заказе на % процентов'
+                             , lfGet_Object_ValueData(vbGoodsId)
+                             , lfGet_Object_ValueData(vbGoodsKindId)
+                             , vbAmountPartner
+                             , vbAmountOrder
+                             , vbPersentReal; 
+         END IF;
+     END IF;
+
 
 
      -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
@@ -3831,3 +3911,63 @@ and coalesce (M1.ValueData, 0) <> coalesce (M2.ValueData, 0)
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 122175 , inSession:= '2')
 -- SELECT * FROM lpComplete_Movement_Sale (inMovementId:= 122175, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 122175 , inSession:= '2')
+
+
+/*
+--23791150 
+
+WITH
+tmpMIOrder AS (SELECT MovementItem.ObjectId AS GoodsId
+                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId  
+                    , (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0) ) AS Amount
+                    , (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) /100 * 15 AS Amount15
+               FROM MovementLinkMovement AS MovementLinkMovement_Order
+                    INNER JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Order.MovementChildId
+                                          AND MovementItem.DescId = zc_MI_Master()
+                                          AND MovementItem.isErased = FALSE
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                    LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                               AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+
+               WHERE MovementLinkMovement_Order.MovementId = 23791150 --inMovementId
+                 AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+              --MovementLinkMovement_Order.MovementChildId
+             )
+, tmpMISale AS (
+SELECT MovementItem.ObjectId AS GoodsId
+                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId  
+                    , COALESCE (MovementItem.Amount,0) AS Amount
+ , MIFloat_AmountPartner.ValueData               AS AmountPartner
+ , MIFloat_AmountPartner.ValueData*(1 + 15/100)  AS AmountPartner_15
+                    
+FROM MovementItem
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                    LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                               AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+ LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                            
+WHERE MovementItem.MovementId = 23791150 --inMovementId
+                                          AND MovementItem.DescId = zc_MI_Master()
+                                          AND MovementItem.isErased = FALSE
+)
+
+SELECT *
+, COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0)
+, CAST ((COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0)) * 100 / COALESCE (tmpMIOrder.Amount,0) AS NUMERIC (16,1)) AS PersentReal
+FROM tmpMISale
+    LEFT JOIN tmpMIOrder ON tmpMIOrder.GoodsId = tmpMISale.GoodsId
+                        AND  tmpMIOrder.GoodsKindId = tmpMISale.GoodsKindId
+    
+WHERE COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0) < tmpMIOrder.Amount15
+--LIMIT 1
+
+
+*/
