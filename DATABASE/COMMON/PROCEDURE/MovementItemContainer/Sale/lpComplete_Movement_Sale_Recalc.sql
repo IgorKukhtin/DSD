@@ -408,12 +408,15 @@ END IF;
           ;
 
          -- отдельно для информации сохраняем обязательно факт остатка Amount_Remains
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), _tmpItemPeresort_new.MovementItemId_to, COALESCE (_tmpItemPeresort_new.Amount_Remains, 0))
-         FROM _tmpItemPeresort_new
-              LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItemPeresort_new.MovementItemId_to
-                                                AND MIF.DescId         = zc_MIFloat_Remains()
-         WHERE COALESCE(_tmpItemPeresort_new.Amount_Remains, 0) <> COALESCE (MIF.ValueData, 0)
-        ;
+         PERFORM lpInsert_MovementItemProtocol (tmpMI.MovementItemId_to, inUserId, FALSE)
+         FROM (SELECT lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), _tmpItemPeresort_new.MovementItemId_to, COALESCE (_tmpItemPeresort_new.Amount_Remains, 0))
+                    , _tmpItemPeresort_new.MovementItemId_to
+               FROM _tmpItemPeresort_new
+                    LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItemPeresort_new.MovementItemId_to
+                                                      AND MIF.DescId         = zc_MIFloat_Remains()
+               WHERE COALESCE(_tmpItemPeresort_new.Amount_Remains, 0) <> COALESCE (MIF.ValueData, 0)
+              ) AS tmpMI
+              ;
 
          -- сохранили элементы - Child
          PERFORM lpInsertUpdate_MI_ProductionUnion_Child

@@ -1403,7 +1403,7 @@ BEGIN
                               , lfSelect.GoodsKindId AS GoodsKindId
                               , lfSelect.ValuePrice  AS Price_basis
                          FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
-                                                                  , inOperDate   := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                  , inOperDate   := COALESCE ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner()), (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
                                                                    ) AS lfSelect
                          WHERE lfSelect.ValuePrice <> 0
                         )
