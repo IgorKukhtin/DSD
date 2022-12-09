@@ -7,22 +7,22 @@ inherited SendForm: TSendForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 100
     Width = 1172
-    Height = 476
-    ExplicitTop = 126
+    Height = 502
+    ExplicitTop = 100
     ExplicitWidth = 1172
-    ExplicitHeight = 476
-    ClientRectBottom = 476
+    ExplicitHeight = 502
+    ClientRectBottom = 502
     ClientRectRight = 1172
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1172
-      ExplicitHeight = 452
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1172
-        Height = 452
+        Height = 478
         ExplicitWidth = 1172
-        ExplicitHeight = 452
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -462,17 +462,28 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object isPeresort: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPeresort'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
         Width = 1172
-        Height = 452
+        Height = 478
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -2061,7 +2072,7 @@ inherited SendForm: TSendForm
     DockControlHeights = (
       0
       0
-      26
+      0
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -3082,8 +3093,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 728
-    Top = 16
+    Left = 704
+    Top = 8
   end
   object spSelectPrintNoGroup: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send_Print'
@@ -3146,7 +3157,7 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     Left = 764
-    Top = 48
+    Top = 64
   end
   object GuidesInvNumberOrder: TdsdGuides
     KeyField = 'Id'
@@ -3260,8 +3271,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 40
+    Left = 632
+    Top = 48
   end
   object spSelectPrint_SaleOrder: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Order_Print'
