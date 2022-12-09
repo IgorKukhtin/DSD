@@ -1046,7 +1046,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
   exit;
@@ -1805,11 +1805,11 @@ begin
 end;
 procedure TLoadFormTest.LoadProductionUnionFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
     exit;
- { TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   exit;
 

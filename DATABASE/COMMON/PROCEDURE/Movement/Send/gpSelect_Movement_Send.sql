@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PartnerName_Order TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
              , PersonalGroupId Integer, PersonalGroupName TVarChar
+             , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
               )
 AS
 $BODY$
@@ -80,6 +81,13 @@ BEGIN
                        AND MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Send()
                                                          , zc_MovementLinkMovement_Order())
                      )
+
+        , tmpMLM_Production AS (SELECT MovementLinkMovement.*
+                                FROM MovementLinkMovement
+                                WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Production()
+                                  AND MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                               )
+
        SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -136,6 +144,17 @@ BEGIN
 
            , Object_PersonalGroup.Id                            AS PersonalGroupId
            , Object_PersonalGroup.ValueData                     AS PersonalGroupName
+          
+           , COALESCE(Movement_Production.Id, -1)               AS MovementId_Production
+           , COALESCE(CASE WHEN Movement_Production.StatusId = zc_Enum_Status_Erased()
+                       THEN '***'
+                   WHEN Movement_Production.StatusId = zc_Enum_Status_UnComplete()
+                       THEN '*'
+                   ELSE ''
+              END
+           || zfCalc_PartionMovementName (Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
+             , ' ')                     :: TVarChar             AS InvNumber_ProductionFull
+
        FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -223,6 +242,12 @@ BEGIN
                                         AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
             LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
 
+            LEFT JOIN tmpMLM_Production AS MovementLinkMovement_Production
+                                        ON MovementLinkMovement_Production.MovementChildId = Movement.Id
+                                       AND MovementLinkMovement_Production.DescId          = zc_MovementLinkMovement_Production()
+            LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
+
        WHERE (vbIsDocumentUser = FALSE OR MLO_Insert.ObjectId = vbUserId)
       ;
 
@@ -233,6 +258,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 09.12.22         * add MovementId_Production
  04.10.19         *
  27.02.19         * 
  03.10.17         add Comment

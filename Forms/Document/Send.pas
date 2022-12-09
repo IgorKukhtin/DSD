@@ -161,6 +161,11 @@ type
     AssetName: TcxGridDBColumn;
     AssetCode: TcxGridDBColumn;
     actAssetChoiceForm: TOpenChoiceForm;
+    edInvNumberProduction: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    GuidesProductionDoc: TdsdGuides;
+    actOpenProductionForm: TdsdOpenForm;
+    bbOpenProductionForm: TdxBarButton;
   private
     { Private declarations }
   public

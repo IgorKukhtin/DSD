@@ -62,11 +62,18 @@ type
     AmountIn: TcxGridDBColumn;
     cxLabel19: TcxLabel;
     edInvNumberSale: TcxButtonEdit;
-    SaleChoiceGuides: TdsdGuides;
+    GuidesSaleChoice: TdsdGuides;
     GoodsKindName_Complete: TcxGridDBColumn;
     GoodsKindName_Complete_child: TcxGridDBColumn;
     actGoodsKind_CompleteChoice: TOpenChoiceForm;
     actGoodsKind_Complete_childChoice: TOpenChoiceForm;
+    actMovementForm: TdsdExecStoredProc;
+    getMovementForm: TdsdStoredProc;
+    actOpenForm: TdsdOpenForm;
+    spGet_checkopen: TdsdStoredProc;
+    actGet_checkopen: TdsdExecStoredProc;
+    macOpenDocument: TMultiAction;
+    bbOpenDocument: TdxBarButton;
   private
     { Private declarations }
   public

@@ -10,19 +10,19 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 126
     Width = 1128
     Height = 376
-    ExplicitTop = 126
+    ExplicitTop = 100
     ExplicitWidth = 1128
-    ExplicitHeight = 376
+    ExplicitHeight = 402
     ClientRectBottom = 376
     ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1128
-      ExplicitHeight = 352
+      ExplicitHeight = 378
       inherited cxGrid: TcxGrid
         Width = 1128
         Height = 352
         ExplicitWidth = 1128
-        ExplicitHeight = 352
+        ExplicitHeight = 378
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -314,6 +314,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Width = 1128
     Height = 100
     TabOrder = 3
+    ExplicitTop = -6
     ExplicitWidth = 1128
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
@@ -684,6 +685,87 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         end>
       isShowModal = True
     end
+    object actMovementForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actMovementForm'
+    end
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenForm'
+      FormName = 'NULL'
+      FormNameParam.Value = ''
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          ComponentItem = 'OperDate'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = GuidesSaleChoice
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_checkopen
+        end
+        item
+          Action = actMovementForm
+        end
+        item
+          Action = actOpenForm
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1103
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1103
+      ImageIndex = 28
+    end
+    object actGet_checkopen: TdsdExecStoredProc
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_checkopen
+      StoredProcList = <
+        item
+          StoredProc = spGet_checkopen
+        end>
+      Caption = 'actGet_checkopen_Sale'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072'>'
+      ImageIndex = 24
+    end
   end
   inherited MasterDS: TDataSource
     Top = 432
@@ -791,6 +873,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -821,6 +911,11 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+      Visible = True
+    end
+    object bbOpenDocument: TdxBarButton
+      Action = macOpenDocument
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -984,14 +1079,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       item
         Name = 'MovementId_Production'
         Value = 0d
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_ProductionFull'
         Value = 'False'
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1613,7 +1708,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Left = 536
     Top = 8
   end
-  object SaleChoiceGuides: TdsdGuides
+  object GuidesSaleChoice: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberSale
     Key = '0'
@@ -1626,7 +1721,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       item
         Name = 'Key'
         Value = '0'
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1635,7 +1730,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1658,5 +1753,47 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       end>
     Left = 332
     Top = 48
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = GuidesSaleChoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 976
+    Top = 200
+  end
+  object spGet_checkopen: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_checkopen'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = GuidesSaleChoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 971
+    Top = 258
   end
 end
