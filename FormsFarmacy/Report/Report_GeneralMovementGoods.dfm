@@ -2,32 +2,32 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
   ActiveControl = edCodeSearch
   Caption = #1054#1073#1097#1080#1081' '#1086#1090#1095#1077#1090' '#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 551
-  ClientWidth = 862
+  ClientWidth = 883
   ShowHint = True
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = nil
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 878
+  ExplicitWidth = 899
   ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 862
+    Width = 883
     Height = 525
     ExplicitWidth = 862
     ExplicitHeight = 525
     ClientRectBottom = 525
-    ClientRectRight = 862
+    ClientRectRight = 883
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 862
       ExplicitHeight = 525
       inherited cxGrid: TcxGrid
         Top = 73
-        Width = 862
+        Width = 883
         Height = 452
-        ExplicitTop = 54
+        ExplicitTop = 73
         ExplicitWidth = 862
-        ExplicitHeight = 471
+        ExplicitHeight = 452
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -119,6 +119,11 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = AmountSale
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummChangePercent
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsData.CancelOnExit = False
@@ -135,7 +140,7 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
             end
             item
               Caption = #1044#1074#1080#1078#1077#1085#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-              Width = 346
+              Width = 363
             end
             item
               Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072
@@ -199,6 +204,17 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
+          object SummChangePercent: TcxGridDBBandedColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'SummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Position.BandIndex = 1
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
           object SummaIncome: TcxGridDBBandedColumn
             Caption = #1047#1072#1082#1091#1087#1082#1072' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'SummaIncome'
@@ -209,7 +225,7 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 1
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object AmountIncome: TcxGridDBBandedColumn
@@ -234,7 +250,7 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 1
-            Position.ColIndex = 4
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object Remains: TcxGridDBBandedColumn
@@ -271,11 +287,12 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 862
+        Width = 883
         Height = 73
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 862
         object edCodeSearch: TcxTextEdit
           Left = 225
           Top = 46
@@ -374,6 +391,27 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
           Left = 25
           Top = 28
           Caption = #1058#1086#1074#1072#1088
+        end
+        object cbTabletki: TcxCheckBox
+          Left = 579
+          Top = 46
+          Caption = #1090#1072#1073#1083#1077#1090#1082#1080
+          TabOrder = 14
+          Width = 80
+        end
+        object cbMobile: TcxCheckBox
+          Left = 579
+          Top = 26
+          Caption = #1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
+          TabOrder = 15
+          Width = 80
+        end
+        object cbNeBoley: TcxCheckBox
+          Left = 579
+          Top = 6
+          Caption = #1085#1072#1096' '#1089#1072#1081#1090
+          TabOrder = 16
+          Width = 80
         end
       end
     end
@@ -653,6 +691,27 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isNeBoley'
+          Value = Null
+          Component = cbNeBoley
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobile'
+          Value = Null
+          Component = cbMobile
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTabletki'
+          Value = Null
+          Component = cbTabletki
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -672,7 +731,7 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
     Params = <
       item
         Name = 'inDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -680,7 +739,7 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
       end
       item
         Name = 'inDateFinal'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -715,6 +774,30 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
         Value = Null
         Component = edGoodsSearch
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNeBoley'
+        Value = Null
+        Component = cbNeBoley
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMobile'
+        Value = Null
+        Component = cbMobile
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTabletki'
+        Value = Null
+        Component = cbTabletki
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -851,6 +934,15 @@ inherited Report_GeneralMovementGoodsForm: TReport_GeneralMovementGoodsForm
       end
       item
         Component = GuidesGoods
+      end
+      item
+        Component = cbNeBoley
+      end
+      item
+        Component = cbMobile
+      end
+      item
+        Component = cbTabletki
       end>
     Left = 416
     Top = 136

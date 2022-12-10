@@ -14405,7 +14405,7 @@ begin
 end;
 
 function TMainCashForm2.UpdateSalePromoGoods : Boolean;
-var Bookmark, RBookmark : TBookmark; nAmount : Currency; RemainsFilter : String;
+var Bookmark, RBookmark : TBookmark; nAmount : Currency; RemainsFilter : String; nSteps : Integer;
 begin
   Result := True;
 
@@ -14493,10 +14493,10 @@ begin
         SalePromoGoodsCDS.Filtered := True;
         if (SalePromoGoodsCDS.RecordCount = 1) then
         begin
-          if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([CheckCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Price').AsCurrency]), []) then
+          if SalePromoGoodsCalcCDS.Locate('GoodsPresentId;Price', VarArrayOf([SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Price').AsCurrency]), []) then
           begin
             SalePromoGoodsCalcCDS.Edit;
-            SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency;
+            SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency;
             SalePromoGoodsCalcCDS.Post;
           end else
           begin
@@ -14511,11 +14511,12 @@ begin
       end;
 
       // Проверяем акционные товары isGoodsPresent
+      nSteps := 100;
       SalePromoGoodsCalcCDS.First;
       while not SalePromoGoodsCalcCDS.Eof  do
       begin
 
-        if SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency >  SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency then
+        if SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency > SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency then
         begin
           if RemainsCDS.Locate('Id', SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger, []) then
           begin
@@ -14557,6 +14558,9 @@ begin
           end else SalePromoGoodsCalcCDS.Delete;
         end else SalePromoGoodsCalcCDS.Delete;
 
+        Dec(nSteps);
+        if nSteps <= 0 then
+           raise Exception.Create('Ошибка проверки акционных товаров.');
 
         SalePromoGoodsCalcCDS.First;
       end;

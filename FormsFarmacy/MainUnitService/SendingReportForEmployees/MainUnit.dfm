@@ -606,10 +606,6 @@ object MainForm: TMainForm
         Lines.Strings = (
           'cxMessage')
         TabOrder = 0
-        ExplicitLeft = 208
-        ExplicitTop = 120
-        ExplicitWidth = 185
-        ExplicitHeight = 89
         Height = 417
         Width = 1027
       end

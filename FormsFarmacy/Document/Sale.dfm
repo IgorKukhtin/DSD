@@ -8,22 +8,22 @@ inherited SaleForm: TSaleForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 250
+    Top = 251
     Width = 794
-    Height = 292
-    ExplicitTop = 250
-    ExplicitWidth = 659
-    ExplicitHeight = 292
-    ClientRectBottom = 292
+    Height = 291
+    ExplicitTop = 225
+    ExplicitWidth = 794
+    ExplicitHeight = 317
+    ClientRectBottom = 291
     ClientRectRight = 794
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 659
-      ExplicitHeight = 268
+      ExplicitWidth = 794
+      ExplicitHeight = 294
       inherited cxGrid: TcxGrid
         Width = 794
-        Height = 170
-        ExplicitWidth = 659
-        ExplicitHeight = 170
+        Height = 169
+        ExplicitWidth = 794
+        ExplicitHeight = 196
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -194,13 +194,13 @@ inherited SaleForm: TSaleForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 178
+        Top = 177
         Width = 794
         Height = 90
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 659
+        ExplicitTop = 204
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -373,22 +373,22 @@ inherited SaleForm: TSaleForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 170
+        Top = 169
         Width = 794
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 659
+        ExplicitTop = 196
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 794
-    Height = 224
+    Height = 225
     TabOrder = 3
-    ExplicitWidth = 659
-    ExplicitHeight = 224
+    ExplicitWidth = 794
+    ExplicitHeight = 225
     inherited edInvNumber: TcxTextEdit
       Left = 161
       Top = 22
@@ -1417,6 +1417,7 @@ inherited SaleForm: TSaleForm
           Visible = True
           ItemName = 'bbGridToExcel'
         end>
+      Visible = True
     end
     object bbPrintCheck: TdxBarButton
       Action = macPrintCheck
