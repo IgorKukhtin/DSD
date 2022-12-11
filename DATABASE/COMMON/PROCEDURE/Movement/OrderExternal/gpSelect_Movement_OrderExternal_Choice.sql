@@ -36,6 +36,15 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- !!!т.к. нельзя когда много данных в гриде!!!
+     IF inStartDate + (INTERVAL '200 DAY') <= inEndDate
+     THEN
+         inStartDate:= inEndDate + (INTERVAL '1 DAY');
+     END IF;
+
+
+
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -46,7 +55,7 @@ BEGIN
                          UNION SELECT DISTINCT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin)
                          UNION SELECT DISTINCT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll())
                          -- Божок С.Н.
-                         UNION SELECT DISTINCT AccessKeyId FROM Object_RoleAccessKey_View WHERE vbUserId = 409393)
+                         UNION SELECT DISTINCT AccessKeyId FROM Object_RoleAccessKey_View WHERE vbUserId = 409393
                               )
         , tmpMovement AS (SELECT Movement.*
                          , MovementLinkObject_From.ObjectId AS FromId

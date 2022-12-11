@@ -199,11 +199,11 @@ BEGIN
                                                             ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
                      )
-      , tmpMIChild_all AS (SELECT DISTINCT
+      , tmpMIChild_all AS (SELECT 
                                   MovementItem.ParentId                    AS ParentId
                                 , MovementItem.Amount                      AS Amount
                                 , COALESCE (MIFloat_DayCount.ValueData, 0) AS DayCount
-                                , MIFloat_WorkTimeHoursOne.ValueData       AS WorkTimeHoursOne
+                                , COALESCE (MIFloat_WorkTimeHoursOne.ValueData, 0) AS WorkTimeHoursOne
                                 , MIFloat_Price.ValueData                  AS Price
                                 , Object_StaffListSummKind.ValueData       AS StaffListSummKindName
                            FROM MovementItem
@@ -228,10 +228,15 @@ BEGIN
           , tmpMIChild AS (SELECT tmpMIChild_all.ParentId
                                 , SUM (tmpMIChild_all.Amount)           AS Amount
                                 , MAX (tmpMIChild_all.DayCount)         AS DayCount
-                                , SUM (tmpMIChild_all.WorkTimeHoursOne) AS WorkTimeHoursOne
+                              --, SUM (tmpMIChild_all.WorkTimeHoursOne) AS WorkTimeHoursOne
                                 , SUM (tmpMIChild_all.Price)            AS Price
                                 , STRING_AGG (DISTINCT tmpMIChild_all.StaffListSummKindName, ';') AS StaffListSummKindName
                            FROM tmpMIChild_all
+                           GROUP BY tmpMIChild_all.ParentId
+                          )
+    , tmpMIChild_Hours AS (SELECT tmpMIChild_all.ParentId
+                                , SUM (tmpMIChild_all.WorkTimeHoursOne) AS WorkTimeHoursOne
+                           FROM (SELECT DISTINCT tmpMIChild_all.ParentId, tmpMIChild_all.WorkTimeHoursOne FROM tmpMIChild_all) AS tmpMIChild_all
                            GROUP BY tmpMIChild_all.ParentId
                           )
 
@@ -426,7 +431,7 @@ BEGIN
             , COALESCE (tmpMIChild.Amount, 0)                                                 :: TFloat AS TotalSummChild
             , (COALESCE (tmpMIChild.Amount, 0) - COALESCE (MIFloat_SummService.ValueData, 0)) :: TFloat AS SummDiff
             , COALESCE (tmpMIChild.DayCount, 0)         ::TFloat AS DayCount_child
-            , COALESCE (tmpMIChild.WorkTimeHoursOne, 0) ::TFloat AS WorkTimeHoursOne_child
+            , COALESCE (tmpMIChild_Hours.WorkTimeHoursOne, 0) ::TFloat AS WorkTimeHoursOne_child
             , COALESCE (tmpMIChild.Price, 0)            ::TFloat AS Price_child
 
             , MIFloat_SummAddOth.ValueData              AS SummAddOth
@@ -690,6 +695,7 @@ BEGIN
             LEFT JOIN Object AS Object_UnitFineSubject ON Object_UnitFineSubject.Id = MILinkObject_UnitFineSubject.ObjectId
 
             LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
+            LEFT JOIN tmpMIChild_Hours ON tmpMIChild_Hours.ParentId = tmpAll.MovementItemId
 
             LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId_Personal
                                         AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
