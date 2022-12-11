@@ -757,12 +757,12 @@ END IF;
                                                              ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
                                                             AND vbIsNotRealGoods                      = FALSE
-                                                            AND vbOperDate                            >= '10.12.2022'
+                                                            AND vbOperDate                            >= '15.12.2022'
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
                                                              ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
                                                             AND vbIsNotRealGoods                          = FALSE
-                                                            AND vbOperDate                                >= '10.12.2022'
+                                                            AND vbOperDate                                >= '15.12.2022'
 
                             LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
                                                         ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
