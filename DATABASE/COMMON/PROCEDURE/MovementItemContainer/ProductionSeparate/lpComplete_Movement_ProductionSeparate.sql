@@ -731,6 +731,11 @@ end if;*/
      IF vbIsCalculated = TRUE
         AND EXISTS (SELECT 1 FROM _tmpItemSummChild WHERE _tmpItemSummChild.OperSumm < 0)
      THEN
+         IF inUserId = zc_Enum_Process_Auto_PrimeCost()
+         THEN
+             UPDATE _tmpItemSumm      SET OperSumm = 0;
+             UPDATE _tmpItemSummChild SET OperSumm = 0;
+         ELSE
           RAISE EXCEPTION 'Ошибка. Сумма по фиксированным ценам больше чем сумма для распределения, расход = <%>, фикс = <%>,  расчет = <%>. Для товара <%> расчетная сумма = % < 0'
                         , (SELECT SUM (_tmpItemSumm.OperSumm) FROM _tmpItemSumm)
                         , (SELECT SUM (_tmpItemSummChild.OperSumm) FROM _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId WHERE _tmpItemChild.isCalculated = FALSE)
@@ -739,6 +744,7 @@ end if;*/
                         , (SELECT SUM (_tmpItemSummChild.OperSumm) FROM _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId WHERE _tmpItemSummChild.OperSumm < 0 AND _tmpItemChild.GoodsId
                                                 = (SELECT _tmpItemChild.GoodsId FROM _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId WHERE _tmpItemSummChild.OperSumm < 0 ORDER BY _tmpItemChild.GoodsId LIMIT 1)
                           );
+         END IF;
      END IF;
 
 
@@ -788,6 +794,9 @@ end if;*/
        FROM _tmpItemChild;
 
 
+    -- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) FROM _tmpItemChild WHERE _tmpItemChild.InfoMoneyDestinationId = 8878);
+
+
      -- определяется Счет(справочника) для проводок по суммовому учету - Кому
      UPDATE _tmpItemSummChild SET AccountId_To = _tmpItem_byAccount.AccountId
      FROM _tmpItemChild
@@ -811,7 +820,8 @@ end if;*/
                                                   , inUserId                 := inUserId
                                                    ) AS AccountId
                      , _tmpItem_group.InfoMoneyDestinationId
-                FROM (SELECT _tmpItemChild.InfoMoneyDestinationId
+                FROM (SELECT DISTINCT
+                             _tmpItemChild.InfoMoneyDestinationId
                            , CASE WHEN (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Ирна
                                     OR (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
                                     OR (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
@@ -819,24 +829,12 @@ end if;*/
                                     OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
                                     OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на производстве AND Доходы + Мясное сырье
                                        THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
-                                  WHEN _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
-                                       THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                  --WHEN _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                  --     THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                   ELSE _tmpItemChild.InfoMoneyDestinationId
                              END AS InfoMoneyDestinationId_calc
                       FROM _tmpItemChild
                       WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
-                      GROUP BY _tmpItemChild.InfoMoneyDestinationId
-                             , CASE WHEN (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Ирна
-                                      OR (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
-                                      OR (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
-                                      OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Запасы + на производстве AND Доходы + Ирна
-                                      OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
-                                      OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на производстве AND Доходы + Мясное сырье
-                                         THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
-                                    WHEN _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
-                                         THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-                                    ELSE _tmpItemChild.InfoMoneyDestinationId
-                               END
                      ) AS _tmpItem_group
                ) AS _tmpItem_byAccount ON _tmpItem_byAccount.InfoMoneyDestinationId = _tmpItemChild.InfoMoneyDestinationId
      WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
