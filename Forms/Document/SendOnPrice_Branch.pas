@@ -116,6 +116,7 @@ type
     edInvNumberProduction: TcxButtonEdit;
     cxLabel6: TcxLabel;
     GuidesProductionDoc: TdsdGuides;
+    bbOpenProductionUnitForm: TdxBarButton;
   private
     { Private declarations }
   public

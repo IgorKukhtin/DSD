@@ -1,7 +1,8 @@
 -- Function: gpSelect_GeneralMovementGoods()
 
 --DROP FUNCTION IF EXISTS gpSelect_GeneralMovementGoods (TDateTime, TDateTime, Integer, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_GeneralMovementGoods (TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_GeneralMovementGoods (TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GeneralMovementGoods (TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GeneralMovementGoods(
     IN inDateStart         TDateTime,  -- Дата начала
@@ -10,6 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_GeneralMovementGoods(
     IN inGoodsID           Integer,    -- Товар
     IN inCodeSearch        TVarChar,   -- поиск товаров по коду
     IN inGoodsSearch       TVarChar,   -- поиск товаров
+    IN inisNeBoley         Boolean,    -- наш сайт
+    IN inisMobile          Boolean,    -- приложение
+    IN inisTabletki        Boolean,    -- таблетки 
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -21,6 +25,7 @@ RETURNS TABLE (
              , GoodsName       TVarChar
              , SummaSale       TFloat
              , AmountSale      TFloat
+             , SummChangePercent TFloat
              , SummaIncome     TFloat
              , AmountIncome    TFloat
              , SummaProfit     TFloat
@@ -40,6 +45,7 @@ BEGIN
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+       AND (vbUserId <> 8037524)
     THEN
         RAISE EXCEPTION 'Ошибка. Запуск отчета разрешен только директору.';
     END IF;
@@ -136,11 +142,35 @@ BEGIN
                                      , Container.GoodsId                                                                  AS GoodsId
                                      , SUM (-1.0 * MovementItemContainer.Amount)                                          AS AmountSale
                                      , SUM (-1.0 * Round(MovementItemContainer.Amount *  MovementItemContainer.Price, 2)) AS SummaSale
+                                     , SUM (MIFloat_SummChangePercent.ValueData)                                          AS SummChangePercent
                                 FROM tmpContainerAll as Container
                                      INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.ID
                                                                      AND MovementItemContainer.OperDate >= inDateStart
                                                                      AND MovementItemContainer.OperDate < inDateFinal + INTERVAL '1 DAY'
                                                                      AND MovementItemContainer.MovementDescId IN (zc_Movement_Check(), zc_Movement_Sale())
+                                                                     
+                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
+                                                                  ON MovementLinkObject_CheckSourceKind.MovementId = MovementItemContainer.MovementId
+                                                                 AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+                                                               
+                                     LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                                              ON MovementString_InvNumberOrder.MovementId = MovementItemContainer.MovementId
+                                                             AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                                               ON MovementBoolean_MobileApplication.MovementId = MovementItemContainer.MovementId
+                                                              AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+                                                               
+                                     LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                                 ON MIFloat_SummChangePercent.MovementItemId = MovementItemContainer.MovementItemId
+                                                                AND MIFloat_SummChangePercent.DescId = zc_MIFloat_SummChangePercent()
+                                                                    
+                                WHERE inisNeBoley = False AND inisMobile = False AND inisTabletki = False
+                                   OR inisNeBoley = True AND COALESCE (MovementBoolean_MobileApplication.ValueData, False) = False AND 
+                                                             COALESCE (MovementString_InvNumberOrder.ValueData, '') <> ''
+                                   OR inisMobile = True AND COALESCE (MovementBoolean_MobileApplication.ValueData, False) = True
+                                   OR inisTabletki = True AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki()
+
                                 GROUP BY Container.UnitID
                                        , Container.GoodsId
                                 HAVING SUM (MovementItemContainer.Amount) <> 0)
@@ -208,6 +238,7 @@ BEGIN
                            GROUP BY Container.UnitID
                                   , Container.GoodsId
                            HAVING SUM (Container.AmountIncome) <> 0)
+                           
         SELECT tmpUnit.UnitId                                                    AS UnitID
              , Object_Unit.ObjectCode                                            AS UnitCode
              , Object_Unit.ValueData                                             AS UnitName
@@ -216,6 +247,7 @@ BEGIN
              , _tmpGoods.Name                                                    AS GoodsName
              , tmpRealization.SummaSale ::TFloat                                 AS SummaSale
              , tmpRealization.AmountSale ::TFloat                                AS AmountSale
+             , tmpRealization.SummChangePercent ::TFloat                         AS SummChangePercent
              , tmpIncome.SummaIncome ::TFloat                                    AS SummaIncome
              , tmpIncome.AmountIncome ::TFloat                                   AS AmountIncome
 
@@ -258,3 +290,5 @@ $BODY$
 
 -- тест
 -- select * from gpSelect_GeneralMovementGoods(inDateStart := ('01.03.2020')::TDateTime , inDateFinal := ('23.03.2020')::TDateTime , inUnitID := 377610 , inGoodsID := 13736002, inCodeSearch := '' , inGoodsSearch := 'маска защи' ,  inSession := '3');
+
+select * from gpSelect_GeneralMovementGoods(('01.11.2022')::TDateTime , ('08.12.2022')::TDateTime , 0 , 19456 , '' , '' , False, False, False,  '3');

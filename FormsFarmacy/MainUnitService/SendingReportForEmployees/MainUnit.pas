@@ -163,10 +163,11 @@ begin
 end;
 
 function TMainForm.GetdsdeSputnikBalance(AName, APassword : String) : String;
-  var  S : String; jsonItem : TJSONObject;
+  var  S : String; jsonItem : TJSONObject; nSumms : currency;
 begin
   IdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
   IdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
+  Result := '';
 
   try
     IdHTTP.Request.Clear;
@@ -187,8 +188,8 @@ begin
       if IdHTTP.ResponseCode = 200 then
       begin
         jsonItem := TJSONObject.ParseJSONValue(S) as TJSONObject;
-        if jsonItem.Get('activityStatus').JsonValue.Value = 'DELIVERED' then
-           Result := jsonItem.Get('text').JsonValue.Value;
+        nSumms := jsonItem.Get('currentBalance').JsonValue.GetValue<TJSONNumber>.AsDouble;
+        if nSumms > 100 then Result := 'Баланс по СМС ' + CurrToStr(nSumms) + ' грн.';
       end else ShowMessage(IdHTTP.ResponseText);
 
     except  on E: Exception do
@@ -374,6 +375,10 @@ begin
   if not qrySendList.Active then Exit;
   if qrySendList.IsEmpty then Exit;
 
+  if qrySendList.FieldByName('Id').AsInteger in [14] then
+  begin
+    Add_Log('Начало выгрузки сообщения');
+  end else
   if qrySendList.FieldByName('Id').AsInteger in [13] then
   begin
     if not qryReport.Active then Exit;

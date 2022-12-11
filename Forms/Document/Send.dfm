@@ -7,22 +7,22 @@ inherited SendForm: TSendForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 118
     Width = 1172
-    Height = 476
-    ExplicitTop = 126
+    Height = 484
+    ExplicitTop = 100
     ExplicitWidth = 1172
-    ExplicitHeight = 476
-    ClientRectBottom = 476
+    ExplicitHeight = 502
+    ClientRectBottom = 484
     ClientRectRight = 1172
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1172
-      ExplicitHeight = 452
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1172
-        Height = 452
+        Height = 460
         ExplicitWidth = 1172
-        ExplicitHeight = 452
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -462,20 +462,30 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object isPeresort: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPeresort'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitHeight = 478
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
         Width = 1172
-        Height = 452
+        Height = 460
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitHeight = 478
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -693,10 +703,10 @@ inherited SendForm: TSendForm
   end
   inherited DataPanel: TPanel
     Width = 1172
-    Height = 100
+    Height = 92
     TabOrder = 3
     ExplicitWidth = 1172
-    ExplicitHeight = 100
+    ExplicitHeight = 92
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -765,15 +775,15 @@ inherited SendForm: TSendForm
       Caption = #1050#1086#1084#1091
     end
     object cxLabel22: TcxLabel
-      Left = 938
+      Left = 1054
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 938
+      Left = 1054
       Top = 63
       TabOrder = 11
-      Width = 230
+      Width = 114
     end
     object cxLabel8: TcxLabel
       Left = 938
@@ -845,6 +855,24 @@ inherited SendForm: TSendForm
       Properties.ReadOnly = True
       TabOrder = 19
       Width = 153
+    end
+    object edInvNumberProduction: TcxButtonEdit
+      Left = 938
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 112
+    end
+    object cxLabel12: TcxLabel
+      Left = 936
+      Top = 45
+      Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
     end
   end
   object cxLabel6: TcxLabel [2]
@@ -2004,6 +2032,41 @@ inherited SendForm: TSendForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actOpenProductionForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
+      ImageIndex = 26
+      FormName = 'TProductionPeresortForm'
+      FormNameParam.Value = 'TProductionPeresortForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = GuidesProductionDoc
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2180,6 +2243,14 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenProductionForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -2230,6 +2301,7 @@ inherited SendForm: TSendForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+      Visible = True
     end
     object bbPrintNoGroup: TdxBarButton
       Action = actPrintNoGroup
@@ -2289,6 +2361,10 @@ inherited SendForm: TSendForm
     end
     object bbOpenFormOrderExtChildSend: TdxBarButton
       Action = actOpenFormOrderExternalChildSend
+      Category = 0
+    end
+    object bbOpenProductionForm: TdxBarButton
+      Action = actOpenProductionForm
       Category = 0
     end
   end
@@ -2548,6 +2624,21 @@ inherited SendForm: TSendForm
         Name = 'PersonalGroupName'
         Value = Null
         Component = GuidesPersonalGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Production'
+        Value = Null
+        Component = GuidesProductionDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_ProductionFull'
+        Value = Null
+        Component = GuidesProductionDoc
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3082,8 +3173,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 728
-    Top = 16
+    Left = 704
+    Top = 8
   end
   object spSelectPrintNoGroup: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send_Print'
@@ -3146,7 +3237,7 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     Left = 764
-    Top = 48
+    Top = 64
   end
   object GuidesInvNumberOrder: TdsdGuides
     KeyField = 'Id'
@@ -3260,8 +3351,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 40
+    Left = 472
+    Top = 72
   end
   object spSelectPrint_SaleOrder: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Order_Print'
@@ -3787,5 +3878,33 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 400
     Top = 443
+  end
+  object GuidesProductionDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberProduction
+    Key = '0'
+    FormNameParam.Value = 'TProductionPeresortJournalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProductionPeresortJournalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesProductionDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesProductionDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 980
+    Top = 56
   end
 end

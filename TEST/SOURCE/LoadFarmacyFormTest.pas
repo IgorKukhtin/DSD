@@ -1245,11 +1245,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaperRecipeSPInsulinForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaperRecipeSPInsulinForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaperRecipeSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaperRecipeSPForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainingInsulinsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainingInsulinsForm');
 

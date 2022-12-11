@@ -47,6 +47,9 @@ type
     edGoods: TcxButtonEdit;
     cxLabel4: TcxLabel;
     GuidesGoods: TdsdGuides;
+    cbNeBoley: TcxCheckBox;
+    cbMobile: TcxCheckBox;
+    cbTabletki: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ object Report_GeneralMovementGoodsDialogForm: TReport_GeneralMovementGoodsDialog
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080'>'
-  ClientHeight = 294
+  ClientHeight = 315
   ClientWidth = 333
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_GeneralMovementGoodsDialogForm: TReport_GeneralMovementGoodsDialog
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 41
-    Top = 247
+    Top = 271
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_GeneralMovementGoodsDialogForm: TReport_GeneralMovementGoodsDialog
   end
   object cxButton2: TcxButton
     Left = 215
-    Top = 247
+    Top = 271
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -120,6 +120,27 @@ object Report_GeneralMovementGoodsDialogForm: TReport_GeneralMovementGoodsDialog
     Top = 105
     Caption = #1058#1086#1074#1072#1088
   end
+  object cbNeBoley: TcxCheckBox
+    Left = 16
+    Top = 240
+    Caption = #1085#1072#1096' '#1089#1072#1081#1090
+    TabOrder = 14
+    Width = 80
+  end
+  object cbMobile: TcxCheckBox
+    Left = 121
+    Top = 239
+    Caption = #1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
+    TabOrder = 15
+    Width = 80
+  end
+  object cbTabletki: TcxCheckBox
+    Left = 233
+    Top = 239
+    Caption = #1090#1072#1073#1083#1077#1090#1082#1080
+    TabOrder = 16
+    Width = 80
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -208,6 +229,27 @@ object Report_GeneralMovementGoodsDialogForm: TReport_GeneralMovementGoodsDialog
         Component = edGoodsSearch
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNeBoley'
+        Value = Null
+        Component = cbNeBoley
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMobile'
+        Value = Null
+        Component = cbMobile
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isTabletki'
+        Value = Null
+        Component = cbTabletki
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 38

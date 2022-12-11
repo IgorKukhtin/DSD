@@ -119,7 +119,7 @@ BEGIN
 
            , MovementString_Comment.ValueData               AS Comment
 
-           , Movement_Production.Id                         AS MovementId_Production
+           , CASE WHEN COALESCE (Movement_Production.Id,0) <> 0 THEN Movement_Production.Id ELSE -1 END ::Integer AS MovementId_Production
            , (CASE WHEN Movement_Production.StatusId = zc_Enum_Status_Erased()
                        THEN '***'
                    WHEN Movement_Production.StatusId = zc_Enum_Status_UnComplete()
@@ -245,3 +245,4 @@ ALTER FUNCTION gpGet_Movement_SendOnPrice (Integer, TDateTime, TFloat, TVarChar)
 
 -- тест
 -- SELECT * FROM gpGet_Movement_SendOnPrice (inMovementId:= 1, inOperDate:= NULL, inChangePercentAmount:= 0, inSession:= '2')
+--select * from gpGet_Movement_SendOnPrice(inMovementId := 22292328 , inOperDate := ('25.02.2022')::TDateTime , inChangePercentAmount := 1 ,  inSession := '9457');

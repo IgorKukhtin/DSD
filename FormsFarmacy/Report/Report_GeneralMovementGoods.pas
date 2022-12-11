@@ -15,7 +15,7 @@ uses
   dxBarBuiltInMenu, cxNavigator, Vcl.StdCtrls, cxButtons, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.ComCtrls,
   dxCore, cxDateUtils, cxDropDownEdit, cxCalendar, cxGridBandedTableView,
-  cxGridDBBandedTableView, ChoicePeriod, dsdGuides;
+  cxGridDBBandedTableView, ChoicePeriod, dsdGuides, cxCheckBox;
 
 type
   TReport_GeneralMovementGoodsForm = class(TAncestorEnumForm)
@@ -63,6 +63,10 @@ type
     edGoods: TcxButtonEdit;
     cxLabel8: TcxLabel;
     GuidesGoods: TdsdGuides;
+    cbTabletki: TcxCheckBox;
+    cbMobile: TcxCheckBox;
+    cbNeBoley: TcxCheckBox;
+    SummChangePercent: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

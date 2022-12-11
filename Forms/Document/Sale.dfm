@@ -1062,7 +1062,7 @@ inherited SaleForm: TSaleForm
     Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
   end
   object edInvNumberProduction: TcxButtonEdit [20]
-    Left = 948
+    Left = 949
     Top = 103
     Properties.Buttons = <
       item
