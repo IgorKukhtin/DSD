@@ -163,16 +163,18 @@ END IF;
      DELETE FROM _tmpItem;
 
 
-      --проверка отклонения по кол-ву более чем на 15 % 
-     IF inUserId = zfCalc_UserAdmin() :: Integer
+     -- проверка отклонения по кол-ву более чем на 15 % - Розподільчий комплекс
+     IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId = 8459)
+    AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.ObjectId = zc_Enum_PaidKind_FirstForm())
+    AND inUserId = zfCalc_UserAdmin() :: Integer
      THEN
-         --если есть хоть 1 товар у которого кол > на 15% чем в заявка выдаем сообщение
+         -- если есть хоть 1 товар у которого кол > на 15% чем в заявка выдаем сообщение
          SELECT tmp.GoodsId
            , tmp.GoodsKindId
            , tmp.AmountPartner
            , tmp.AmountOrder
            , tmp.PersentReal
-     INTO vbGoodsId, vbGoodsKindId, vbAmountPartner, vbAmountOrder, vbPersentReal
+             INTO vbGoodsId, vbGoodsKindId, vbAmountPartner, vbAmountOrder, vbPersentReal
          FROM 
            (WITH
             tmpMIOrder AS (SELECT MovementItem.ObjectId AS GoodsId
@@ -217,23 +219,30 @@ END IF;
                    , COALESCE (tmpMIOrder.Amount,0)       AS AmountOrder
                    , CAST ((COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0)) * 100 / COALESCE (tmpMIOrder.Amount,0) AS NUMERIC (16,1)) AS PersentReal
               FROM tmpMISale
-                  LEFT JOIN tmpMIOrder ON tmpMIOrder.GoodsId = tmpMISale.GoodsId
-                                      AND  tmpMIOrder.GoodsKindId = tmpMISale.GoodsKindId
+                   LEFT JOIN tmpMIOrder ON tmpMIOrder.GoodsId     = tmpMISale.GoodsId
+                                       AND tmpMIOrder.GoodsKindId = tmpMISale.GoodsKindId
               WHERE COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0) > tmpMIOrder.Amount15 
               LIMIT 1
              ) AS tmp;
 
          IF COALESCE (vbGoodsId,0) > 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Для товара % % количество у покупателя %, количество в заказе %, больше чем в заказе на % процентов'
-                             , lfGet_Object_ValueData(vbGoodsId)
-                             , lfGet_Object_ValueData(vbGoodsKindId)
-                             , vbAmountPartner
-                             , vbAmountOrder
-                             , vbPersentReal; 
+             RAISE EXCEPTION 'Ошибка.В продаже % % % % % отклонение от заказа больше 15%  %Количество = <%> %Заказ = <%> % факт % отклонения = <%>.'
+                             , CHR (13)
+                             , lfGet_Object_ValueData (vbGoodsId)
+                             , CHR (13)
+                             , lfGet_Object_ValueData_sh (vbGoodsKindId)
+                             , CHR (13)
+                             , '%'
+                             , CHR (13)
+                             , zfConvert_FloatToString (vbAmountPartner)
+                             , CHR (13)
+                             , zfConvert_FloatToString (vbAmountOrder)
+                             , CHR (13)
+                             , '%'
+                             , zfConvert_FloatToString (vbPersentReal); 
          END IF;
      END IF;
-
 
 
      -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!

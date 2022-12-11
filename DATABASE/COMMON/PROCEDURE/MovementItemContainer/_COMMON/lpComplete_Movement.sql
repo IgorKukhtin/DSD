@@ -17,6 +17,7 @@ $BODY$
    DECLARE vbAccessKeyId     Integer;
    DECLARE vbStatusId        Integer;
    DECLARE vbUserId_save     Integer;
+   DECLARE vbStatusId_old    Integer;
  --DECLARE vbRoleName TVarChar;
 BEGIN
 
@@ -38,10 +39,18 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
   END IF;
 
+  -- 1.0.1.
+  vbStatusId_old:= (SELECT StatusId FROM Movement WHERE Id = inMovementId);
+
   -- Обязательно меняем статус документа
   UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
   RETURNING OperDate, DescId, AccessKeyId, StatusId INTO vbOperDate, vbDescId, vbAccessKeyId, vbStatusId;
 
+  -- !!! zc_Enum_Process_Auto_PrimeCost
+  IF vbStatusId_old = zc_Enum_Status_Erased() AND vbDescId = zc_Movement_Transport() AND inUserId = zc_Enum_Process_Auto_PrimeCost()
+  THEN
+      RAISE EXCEPTION 'Ошибка.Complete zc_Movement_Transport AND zc_Enum_Process_Auto_PrimeCost where MovementId = <%>', inMovementId;
+  END IF;
 
   -- 1.0.
   vbOperDatePartner:= (SELECT MovementDate.ValueData

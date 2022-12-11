@@ -39,6 +39,13 @@ BEGIN
   UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Id = inMovementId
   RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
 
+  -- !!! zc_Enum_Process_Auto_PrimeCost
+  IF vbStatusId_old = zc_Enum_Status_Erased() AND vbDescId = zc_Movement_Transport() AND inUserId = zc_Enum_Process_Auto_PrimeCost()
+  THEN
+      RAISE EXCEPTION 'Ошибка.UnComplete zc_Movement_Transport AND zc_Enum_Process_Auto_PrimeCost where MovementId = <%>', inMovementId;
+  END IF;
+      
+
   -- 1.0.2.
   vbOperDatePartner:= (SELECT MovementDate.ValueData
                        FROM MovementDate
