@@ -199,17 +199,14 @@ BEGIN
                                                             ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
                      )
-          , tmpMIChild AS (SELECT  MovementItem.ParentId    AS ParentId
-                                 , SUM(MovementItem.Amount) AS Amount
-                                 , MAX( COALESCE (MIFloat_DayCount.ValueData, 0))         AS DayCount
-                                 , SUM(MIFloat_WorkTimeHoursOne.ValueData) AS WorkTimeHoursOne
-                                 , SUM(MIFloat_Price.ValueData)            AS Price
-                                 , STRING_AGG (DISTINCT Object_StaffListSummKind.ValueData, ';') AS StaffListSummKindName
-                           FROM tmpIsErased
-                              INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                     AND MovementItem.DescId = zc_MI_Child()
-                                                     AND MovementItem.isErased = tmpIsErased.isErased
-
+      , tmpMIChild_all AS (SELECT DISTINCT
+                                  MovementItem.ParentId                    AS ParentId
+                                , MovementItem.Amount                      AS Amount
+                                , COALESCE (MIFloat_DayCount.ValueData, 0) AS DayCount
+                                , MIFloat_WorkTimeHoursOne.ValueData       AS WorkTimeHoursOne
+                                , MIFloat_Price.ValueData                  AS Price
+                                , Object_StaffListSummKind.ValueData       AS StaffListSummKindName
+                           FROM MovementItem
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_StaffListSummKind
                                                                ON MILinkObject_StaffListSummKind.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_StaffListSummKind.DescId = zc_MILinkObject_StaffListSummKind()
@@ -224,8 +221,19 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                           GROUP BY MovementItem.ParentId
-                       )
+                           WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId = zc_MI_Child()
+                              AND MovementItem.isErased = FALSE
+                          )
+          , tmpMIChild AS (SELECT tmpMIChild_all.ParentId
+                                , SUM (tmpMIChild_all.Amount)           AS Amount
+                                , MAX (tmpMIChild_all.DayCount)         AS DayCount
+                                , SUM (tmpMIChild_all.WorkTimeHoursOne) AS WorkTimeHoursOne
+                                , SUM (tmpMIChild_all.Price)            AS Price
+                                , STRING_AGG (DISTINCT tmpMIChild_all.StaffListSummKindName, ';') AS StaffListSummKindName
+                           FROM tmpMIChild_all
+                           GROUP BY tmpMIChild_all.ParentId
+                          )
 
           , tmpUserAll AS (-- Админ видит ВСЕХ
                            SELECT DISTINCT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()/*, 293449*/) AND UserId = vbUserId/* AND UserId <> 9464*/ -- Документы-меню (управленцы) AND <> Рудик Н.В.
