@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Package(
     IN inStartDate          TDateTime ,
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Package(
     IN inIsDate             Boolean   , -- по датам
     IN inIsPersonalGroup    Boolean   , -- по № бригады
     IN inisMovement         Boolean   , -- показать № накладной перемещения
+    IN inisUnComplete       Boolean   , -- показать не проведенные
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime
@@ -129,6 +131,66 @@ BEGIN
                                    , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END
                                    , CASE WHEN inIsPersonalGroup = FALSE THEN 0 ELSE COALESCE (Object_PersonalGroup.Id,0) END
                                    , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
+                         UNION
+                            SELECT MovementItem.ObjectId AS GoodsId 
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                 , CASE WHEN inIsDate = TRUE OR inisMovement = TRUE THEN Movement.OperDate ELSE NULL END :: TDatetime AS OperDate
+                          
+                                 , SUM (CASE WHEN MovementLinkObject_To.ObjectId = inUnitId   THEN MovementItem.Amount ELSE 0 END) AS Amount_Send_in
+                                 , SUM (CASE WHEN MovementLinkObject_From.ObjectId = inUnitId THEN MovementItem.Amount ELSE 0 END) AS Amount_Send_out
+                                 , 0 AS Amount_Production
+                                 , 0 AS CountPack
+
+                                 , CASE WHEN inIsPersonalGroup = FALSE THEN 0 ELSE COALESCE (Object_PersonalGroup.Id,0) END AS PersonalGroupId
+                                 , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END AS PersonalGroupName
+
+                                 , CASE WHEN inisMovement = TRUE THEN Movement.Id ELSE 0 END MovementId
+                                     
+                            FROM Movement 
+                                 INNER JOIN MovementFloat AS MovementFloat_MovementDesc
+                                                         ON MovementFloat_MovementDesc.MovementId = Movement.Id
+                                                        AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
+                                                        AND MovementFloat_MovementDesc.ValueData = zc_Movement_Send()
+
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                               ON MovementLinkObject_To.MovementId = Movement.Id
+                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                              ON MovementLinkObject_From.MovementId = Movement.Id
+                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                 LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
+                                                              ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
+                                                             AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+                                 LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_PersonalGroup_Unit
+                                                      ON ObjectLink_PersonalGroup_Unit.ObjectId = Object_PersonalGroup.Id
+                                                     AND ObjectLink_PersonalGroup_Unit.DescId = zc_ObjectLink_PersonalGroup_Unit()
+                                 LEFT JOIN Object AS Object_Unit_PersonalGroup ON Object_Unit_PersonalGroup.Id = ObjectLink_PersonalGroup_Unit.ChildObjectId
+            
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                        AND MovementItem.isErased = FALSE
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+                            WHERE Movement.DescId IN (zc_Movement_WeighingProduction(), zc_Movement_WeighingPartner())
+                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              AND (MovementLinkObject_To.ObjectId = inUnitId OR MovementLinkObject_From.ObjectId = inUnitId)
+                              AND inisUnComplete = TRUE
+                            GROUP BY MovementItem.ObjectId 
+                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                   , CASE WHEN inIsDate = TRUE OR inisMovement = TRUE THEN Movement.OperDate ELSE NULL END
+                                   , CASE WHEN inIsPersonalGroup = FALSE THEN 0 ELSE COALESCE (Object_PersonalGroup.Id,0) END
+                                   , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END
+                                   , CASE WHEN inisMovement = TRUE THEN Movement.Id ELSE 0 END
                            ) AS tmpMI
                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
                      )
@@ -303,11 +365,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.12.22         * inisUnComplete
  03.06.21         * inisMovement
  17.08.20         * inIsPersonalGroup
  29.04.20         * zc_Movement_SendAsset()
@@ -328,8 +391,7 @@ SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.08.2020', inEndDate:= '
 where goodsId = 2062
 ORDER BY 7;
 
-SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.08.2020', inEndDate:= '02.08.2020', inUnitId:= 8451, inIsDate:= False, inIsPersonalGroup:= False, inisMovement := true, inSession:= zfCalc_UserAdmin()) 
-where goodsId = 2062
-ORDER BY invnumber , 7;
+SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.11.2022', inEndDate:= '04.11.2022', inUnitId:= 8451, inIsDate:= False, inIsPersonalGroup:= False, inisMovement := true, inisUnComplete:= true, inSession:= zfCalc_UserAdmin()) 
+where goodsId = 6694203
 
 */

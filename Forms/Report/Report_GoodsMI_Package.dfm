@@ -6,7 +6,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1074
-  ExplicitHeight = 572
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -472,6 +472,14 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       TabOrder = 8
       Width = 146
     end
+    object cbUnComplete: TcxCheckBox
+      Left = 599
+      Top = 30
+      Action = actRefreshUnComplete
+      Properties.ReadOnly = False
+      TabOrder = 9
+      Width = 160
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -521,7 +529,20 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshMov: TdsdDataSetRefresh [2]
+    object actRefreshUnComplete: TdsdDataSetRefresh [2]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshMov: TdsdDataSetRefresh [3]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -532,6 +553,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
@@ -942,6 +964,14 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUnComplete'
+        Value = Null
+        Component = cbUnComplete
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 192
@@ -1090,6 +1120,6 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
+    Left = 360
   end
 end
