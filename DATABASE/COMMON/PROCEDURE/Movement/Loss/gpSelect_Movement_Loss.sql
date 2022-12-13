@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CheckedName   TVarChar
              , CheckedDate   TDateTime
              , Checked       Boolean
-             , MovementId_Income Integer, InvNumber_IncomeFull TVarChar
+             , MovementId_Income Integer, InvNumber_IncomeFull TVarChar 
+             , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
               )
 
 AS
@@ -73,6 +74,15 @@ BEGIN
            , COALESCE (Movement_Income.Id, -1)       AS MovementId_Income
            , zfCalc_PartionMovementName (Movement_Income.DescId, MovementDesc_Income.ItemName, Movement_Income.InvNumber, Movement_Income.OperDate) :: TVarChar AS InvNumber_IncomeFull
 
+           , COALESCE(Movement_Production.Id, -1)               AS MovementId_Production
+           , COALESCE(CASE WHEN Movement_Production.StatusId = zc_Enum_Status_Erased()
+                       THEN '***'
+                   WHEN Movement_Production.StatusId = zc_Enum_Status_UnComplete()
+                       THEN '*'
+                   ELSE ''
+              END
+           || zfCalc_PartionMovementName (Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
+             , ' ')                     :: TVarChar             AS InvNumber_ProductionFull
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Loss() AND Movement.StatusId = tmpStatus.StatusId
@@ -148,6 +158,12 @@ BEGIN
             LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MovementLinkMovement_Income.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Production
+                                           ON MovementLinkMovement_Production.MovementChildId = Movement.Id
+                                          AND MovementLinkMovement_Production.DescId          = zc_MovementLinkMovement_Production()
+            LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
+
        -- огр. просмотра
        WHERE vbUserId <> 300550 -- Рибалко Вікторія Віталіївна
          AND vbUserId <> 929721 -- Решетова И.А.
@@ -181,6 +197,15 @@ BEGIN
            , COALESCE(Movement_Income.Id, -1)                         AS MovementId_Income
            , zfCalc_PartionMovementName (Movement_Income.DescId, MovementDesc_Income.ItemName, Movement_Income.InvNumber, Movement_Income.OperDate) :: TVarChar      AS InvNumber_IncomeFull
 
+           , COALESCE(Movement_Production.Id, -1)               AS MovementId_Production
+           , COALESCE(CASE WHEN Movement_Production.StatusId = zc_Enum_Status_Erased()
+                       THEN '***'
+                   WHEN Movement_Production.StatusId = zc_Enum_Status_UnComplete()
+                       THEN '*'
+                   ELSE ''
+              END
+           || zfCalc_PartionMovementName (Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
+             , ' ')                     :: TVarChar             AS InvNumber_ProductionFull
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Loss() AND Movement.StatusId = tmpStatus.StatusId
@@ -246,6 +271,11 @@ BEGIN
             LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MovementLinkMovement_Income.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Production
+                                           ON MovementLinkMovement_Production.MovementChildId = Movement.Id
+                                          AND MovementLinkMovement_Production.DescId          = zc_MovementLinkMovement_Production()
+            LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
        -- огр. просмотра - Рибалко Вікторія Віталіївна
        WHERE (vbUserId = 300550
           AND Object_From.Id IN (8447   -- цех колбасный
@@ -266,6 +296,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.12.22         * add MovementId_Production
  11.10.18         *
  27.03.17         *
  05.10.16         * add inJuridicalBasisId

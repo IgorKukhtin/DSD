@@ -10,19 +10,19 @@ inherited SendForm: TSendForm
     Top = 118
     Width = 1172
     Height = 484
-    ExplicitTop = 100
+    ExplicitTop = 118
     ExplicitWidth = 1172
-    ExplicitHeight = 502
+    ExplicitHeight = 484
     ClientRectBottom = 484
     ClientRectRight = 1172
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1172
-      ExplicitHeight = 478
+      ExplicitHeight = 460
       inherited cxGrid: TcxGrid
         Width = 1172
         Height = 460
         ExplicitWidth = 1172
-        ExplicitHeight = 478
+        ExplicitHeight = 460
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -224,7 +224,15 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object MeasureName: TcxGridDBColumn [7]
+          object isPeresort: TcxGridDBColumn [7]
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPeresort'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MeasureName: TcxGridDBColumn [8]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -232,7 +240,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 45
           end
-          object AmountRemains: TcxGridDBColumn [8]
+          object AmountRemains: TcxGridDBColumn [9]
             Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -243,7 +251,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 55
           end
-          object Amount: TcxGridDBColumn [9]
+          object Amount: TcxGridDBColumn [10]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -253,7 +261,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Count: TcxGridDBColumn [10]
+          object Count: TcxGridDBColumn [11]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -265,7 +273,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 60
           end
-          object HeadCount: TcxGridDBColumn [11]
+          object HeadCount: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -277,7 +285,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 55
           end
-          object UnitName: TcxGridDBColumn [12]
+          object UnitName: TcxGridDBColumn [13]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
             DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -293,7 +301,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 104
           end
-          object StorageName: TcxGridDBColumn [13]
+          object StorageName: TcxGridDBColumn [14]
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
             DataBinding.FieldName = 'StorageName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -309,7 +317,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 90
           end
-          object Price: TcxGridDBColumn [14]
+          object Price: TcxGridDBColumn [15]
             Caption = #1062#1077#1085#1072' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
             DataBinding.FieldName = 'Price'
             Visible = False
@@ -318,7 +326,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 68
           end
-          object AssetCode: TcxGridDBColumn [15]
+          object AssetCode: TcxGridDBColumn [16]
             Caption = #1050#1086#1076' ('#1074#1099#1088'. '#1085#1072' '#1086#1073#1086#1088#1091#1076'.1)'
             DataBinding.FieldName = 'AssetCode'
             HeaderAlignmentHorz = taCenter
@@ -326,7 +334,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
-          object AssetName: TcxGridDBColumn [16]
+          object AssetName: TcxGridDBColumn [17]
             Caption = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 1'
             DataBinding.FieldName = 'AssetName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -342,7 +350,7 @@ inherited SendForm: TSendForm
             HeaderHint = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 1'
             Width = 70
           end
-          object AssetCode_two: TcxGridDBColumn [17]
+          object AssetCode_two: TcxGridDBColumn [18]
             Caption = #1050#1086#1076' ('#1074#1099#1088'. '#1085#1072' '#1086#1073#1086#1088#1091#1076'.2)'
             DataBinding.FieldName = 'AssetCode_two'
             HeaderAlignmentHorz = taCenter
@@ -350,7 +358,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
-          object AssetName_two: TcxGridDBColumn [18]
+          object AssetName_two: TcxGridDBColumn [19]
             Caption = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 2'
             DataBinding.FieldName = 'AssetName_two'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -366,7 +374,7 @@ inherited SendForm: TSendForm
             HeaderHint = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 2'
             Width = 70
           end
-          object InfoMoneyCode: TcxGridDBColumn [19]
+          object InfoMoneyCode: TcxGridDBColumn [20]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -375,7 +383,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [20]
+          object InfoMoneyGroupName: TcxGridDBColumn [21]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -384,7 +392,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [21]
+          object InfoMoneyDestinationName: TcxGridDBColumn [22]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -393,7 +401,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [22]
+          object InfoMoneyName: TcxGridDBColumn [23]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -402,7 +410,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 100
           end
-          object Amount_child_sec: TcxGridDBColumn [23]
+          object Amount_child_sec: TcxGridDBColumn [24]
             Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1076#1083#1103' '#1079#1072#1103#1074#1086#1082
             DataBinding.FieldName = 'Amount_child_sec'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -414,7 +422,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 104
           end
-          object Amount_Diff: TcxGridDBColumn [24]
+          object Amount_Diff: TcxGridDBColumn [25]
             Caption = #1054#1090#1082#1083'. '#1088#1077#1079#1077#1088#1074#1072' '#1086#1090' '#1087#1077#1088#1077#1084'-'#1103
             DataBinding.FieldName = 'Amount_Diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -426,7 +434,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 87
           end
-          object InDate: TcxGridDBColumn [25]
+          object InDate: TcxGridDBColumn [26]
             Caption = #1044#1072#1090#1072' '#1087#1088'. '#1086#1090' '#1087#1086#1089#1090'. '
             DataBinding.FieldName = 'InDate'
             HeaderAlignmentHorz = taCenter
@@ -435,7 +443,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 80
           end
-          object PartnerInName: TcxGridDBColumn [26]
+          object PartnerInName: TcxGridDBColumn [27]
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'PartnerInName'
             HeaderAlignmentHorz = taCenter
@@ -444,7 +452,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 80
           end
-          object PartionGoodsId: TcxGridDBColumn [27]
+          object PartionGoodsId: TcxGridDBColumn [28]
             DataBinding.FieldName = 'PartionGoodsId'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -462,21 +470,12 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object isPeresort: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isPeresort'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
         end
       end
     end
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitHeight = 478
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -485,7 +484,6 @@ inherited SendForm: TSendForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitHeight = 478
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS

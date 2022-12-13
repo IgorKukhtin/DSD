@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Checked Boolean
              , MovementId_Income Integer, InvNumber_IncomeFull TVarChar
              , AssetId_top Integer, AssetName_top TVarChar
+             , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
               )
 AS
 $BODY$
@@ -47,7 +48,9 @@ BEGIN
              , 0                                                AS MovementId_Income
              , CAST ('' AS TVarChar) 		                AS InvNumber_IncomeFull
              , 0                     	 	                AS AssetId_top
-             , CAST ('' AS TVarChar) 	 	                AS AssetName_top
+             , CAST ('' AS TVarChar) 	 	                AS AssetName_top 
+             , 0                                            AS MovementId_Production
+             , CAST ('' AS TVarChar)                        AS InvNumber_ProductionFull
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -72,6 +75,16 @@ BEGIN
            , zfCalc_PartionMovementName (Movement_Income.DescId, MovementDesc_Income.ItemName, Movement_Income.InvNumber, Movement_Income.OperDate) :: TVarChar      AS InvNumber_IncomeFull
            , 0                     	 	                AS AssetId_top
            , CAST ('' AS TVarChar) 	 	                AS AssetName_top
+
+           , COALESCE(Movement_Production.Id, -1)                 AS MovementId_Production
+           , COALESCE(CASE WHEN Movement_Production.StatusId = zc_Enum_Status_Erased()
+                       THEN '***'
+                   WHEN Movement_Production.StatusId = zc_Enum_Status_UnComplete()
+                       THEN '*'
+                   ELSE ''
+              END
+           || zfCalc_PartionMovementName (Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
+             , ' ')                              :: TVarChar      AS InvNumber_ProductionFull
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -112,6 +125,13 @@ BEGIN
                                           AND MovementLinkMovement_Income.DescId     = zc_MovementLinkMovement_Income()
             LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MovementLinkMovement_Income.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Production
+                                           ON MovementLinkMovement_Production.MovementChildId = Movement.Id
+                                          AND MovementLinkMovement_Production.DescId          = zc_MovementLinkMovement_Production()
+            LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
+
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Loss();
 
