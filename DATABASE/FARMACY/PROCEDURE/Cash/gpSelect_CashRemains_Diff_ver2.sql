@@ -335,6 +335,8 @@ BEGIN
       AND COALESCE(CashSessionSnapShot.PartionDateKindId, 0) = COALESCE(_DIFF.PartionDateKindId, 0)
       AND COALESCE(CashSessionSnapShot.DivisionPartiesId, 0) = COALESCE(_DIFF.DivisionPartiesId, 0)
     ;
+    
+    ANALYZE _DIFF;
 
     --доливаем те, что появились
     Insert Into CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,DiscountExternalID,PartionDateKindId,DivisionPartiesId,Price,Remains,MCSValue,Reserved,

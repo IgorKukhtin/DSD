@@ -310,6 +310,10 @@ BEGIN
 
     SELECT Movement.Id FROM tmpMovReserveAll AS Movement;
 
+    -- !!!Оптимизация!!!
+    ANALYZE _tmpMovementCheck;
+
+
     -- еще оптимизируем - _tmpContainerCountPD
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainerCountPD'))
     THEN
