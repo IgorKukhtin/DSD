@@ -186,6 +186,7 @@ BEGIN
                                                       OR ObjectString_Article.ValueData ILIKE 'BEL%'
                                                       OR Object_Goods.ObjectCode < 0
                                                       OR Object_Goods.ValueData ILIKE '%от%'
+                                                      OR Object_Goods.ValueData ILIKE '%motor%'
                                                       OR Object_GoodsGroup.ValueData ILIKE '%от%'
                                                       OR Object_Goods.ValueData ILIKE '%ndige Inspektionsluke%'
                                                         )
