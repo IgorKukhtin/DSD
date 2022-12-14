@@ -5,7 +5,7 @@ inherited LossJournalForm: TLossJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 935
-  ExplicitHeight = 454
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -115,6 +115,14 @@ inherited LossJournalForm: TLossJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 130
+          end
+          object InvNumber_ProductionFull: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090
+            DataBinding.FieldName = 'InvNumber_ProductionFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -833,7 +841,7 @@ inherited LossJournalForm: TLossJournalForm
       end
       item
         Name = 'outCheckedDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CheckedDate'
         DataType = ftDateTime
