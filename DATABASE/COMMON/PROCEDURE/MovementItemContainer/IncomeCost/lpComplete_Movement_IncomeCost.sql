@@ -57,12 +57,14 @@ BEGIN
 
      -- Перепроведение, что б "затраты" оказались во ВСЕХ "Расходы будущих периодов"
      IF vbMovementDescId_from = zc_Movement_TransportService() -- AND 1=0
+        AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_from AND Movement.StatusId = zc_Enum_Status_Complete())
      THEN
          PERFORM gpReComplete_Movement_TransportService (vbMovementId_from, lfGet_User_Session (inUserId));
          --
          DROP TABLE _tmpItem;
 
      ELSEIF vbMovementDescId_from = zc_Movement_Transport() -- AND 1=0
+        AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_from AND Movement.StatusId = zc_Enum_Status_Complete())
      THEN
          PERFORM gpReComplete_Movement_Transport (vbMovementId_from, NULL, lfGet_User_Session (inUserId));
          --
@@ -358,7 +360,7 @@ BEGIN
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
-     PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
