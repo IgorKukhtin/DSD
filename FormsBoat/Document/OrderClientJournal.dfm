@@ -25,9 +25,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 107
       Top = 5
-      EditValue = 44197d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 44197d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -1353,8 +1353,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrintStructureGoods
+      StoredProc = spSelectPrintStructureHeader
       StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructureHeader
+        end
         item
           StoredProc = spSelectPrintStructureGoods
         end>
@@ -1853,15 +1856,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
   end
   object spSelectPrintStructureGoods: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product_StructureGoodsPrint'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId_OrderClient'
@@ -1874,5 +1873,25 @@ object OrderClientJournalForm: TOrderClientJournalForm
     PackSize = 1
     Left = 808
     Top = 272
+  end
+  object spSelectPrintStructureHeader: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_StructureHeaderPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 830
+    Top = 208
   end
 end

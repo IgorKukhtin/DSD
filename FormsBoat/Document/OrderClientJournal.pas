@@ -118,6 +118,7 @@ type
     actPrintStructureGoods: TdsdPrintAction;
     bbPrintStructureGoods: TdxBarButton;
     spSelectPrintStructureGoods: TdsdStoredProc;
+    spSelectPrintStructureHeader: TdsdStoredProc;
   private
   public
   end;

@@ -89,7 +89,6 @@ uses
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
-  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm},
   dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
   ModLink in '..\ScaleCeh\Util\Oven\ModLink.pas',
   Oven in '..\ScaleCeh\Util\Oven\Oven.pas',
@@ -112,7 +111,8 @@ uses
   DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
   DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
-  GuideAsset in '..\ScaleCeh\GuideAsset.pas' {GuideAssetForm};
+  GuideAsset in '..\ScaleCeh\GuideAsset.pas' {GuideAssetForm},
+  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm};
 
 {$R *.res}
 
@@ -159,7 +159,7 @@ begin
          Application.CreateForm(TGuidePersonalGroupForm, GuidePersonalGroupForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TGuideAssetForm, GuideAssetForm);
-         Application.CreateForm(TGuideAssetForm, GuideAssetForm);
+         Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
 
   end
   else
@@ -199,7 +199,7 @@ begin
          Application.CreateForm(TGuidePersonalGroupForm, GuidePersonalGroupForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TGuideAssetForm, GuideAssetForm);
-         Application.CreateForm(TGuideAssetForm, GuideAssetForm);
+         Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
 
   end;
   //

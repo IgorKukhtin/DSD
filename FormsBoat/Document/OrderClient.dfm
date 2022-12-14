@@ -2066,7 +2066,6 @@ object OrderClientForm: TOrderClientForm
             Width = 45
           end
           object GoodsCode_basis_ch4: TcxGridDBColumn
-            AlternateCaption = '80'
             Caption = '***Interne Nr'
             DataBinding.FieldName = 'GoodsCode_basis'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -2081,7 +2080,6 @@ object OrderClientForm: TOrderClientForm
             Width = 80
           end
           object Article_basis_ch4: TcxGridDBColumn
-            AlternateCaption = '80'
             Caption = '***Artikel Nr'
             DataBinding.FieldName = 'Article_basis'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -2096,7 +2094,6 @@ object OrderClientForm: TOrderClientForm
             Width = 80
           end
           object GoodsName_basis_ch4: TcxGridDBColumn
-            AlternateCaption = '80'
             Caption = '***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
             DataBinding.FieldName = 'GoodsName_basis'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -2319,6 +2316,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2376,6 +2376,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -3911,6 +3914,7 @@ object OrderClientForm: TOrderClientForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupId;NPP_1;NPP_2'
         end>
       Params = <
         item
