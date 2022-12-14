@@ -594,7 +594,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
-     if fStartProcess = true then exit;
+     if fStartProcess = true then begin {myLogMemo_add('!!! not BeginVACUUM');} exit; end;
      try
         Timer.Enabled:= false;
         //
@@ -635,7 +635,10 @@ procedure TMainForm.CloseButtonClick(Sender: TObject);
 begin
      if not fStop then
        if MessageDlg('Действительно остановить загрузку и выйти? fStop = FALSE',mtConfirmation,[mbYes,mbNo],0)=mrYes
-       then fStop:=true;
+       then begin fStop:=true;
+                  Timer.Enabled:= FALSE;
+                  Timer_Auto_PrimeCost.Enabled:= FALSE;
+       end;
      //
      //if Timer.Enabled then
      //  ShowMessage('Timer.Enabled = TRUE');
@@ -643,8 +646,6 @@ begin
      //if Timer_Auto_PrimeCost.Enabled then
      //  ShowMessage('Timer_Auto_PrimeCost.Enabled = TRUE');
      //
-     Timer.Enabled:= FALSE;
-     Timer_Auto_PrimeCost.Enabled:= FALSE;
      //
      if fStop then Close;
 end;
@@ -774,15 +775,20 @@ begin
            try
                if Connection.Connected = false then Connection.Connected:=true;
                ExecSql;fExec:=true;
-           except
-                Connection.Connected:= false;
+           except on E:Exception
+           do begin
+                Connection.Connected:=false;
                 //
                 myLogMemo_add(' err fExecSqToQuery ' +#10+#13+mySql);
+                myLogMemo_add('');
+                myLogMemo_add(E.Message);
+                //
                 i:= i + 1;
                 if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
                 else MyDelay(1 * 60 * 1000);
                 //
                 if fStop = true then exit;;
+               end;
            end;
      end;
      Result:=true;
@@ -830,15 +836,21 @@ begin
            try
               if Connection.Connected = false then Connection.Connected:=true;
               ExecSql;fExec:=true;
-           except
+
+              except on E:Exception
+              do begin
                 Connection.Connected:=false;
                 //
                 myLogMemo_add(' err fExecSqToQuery_two ' +#10+#13+mySql);
+                myLogMemo_add('');
+                myLogMemo_add(E.Message);
+                //
                 i:= i + 1;
                 if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
                 else MyDelay(1 * 60 * 1000);
                 //
                 if fStop = true then exit;;
+              end;
            end;
      end;
      Result:=true;
@@ -858,7 +870,8 @@ begin
            try
                if Connection.Connected = false then Connection.Connected:=true;
                ExecSql;fExec:=true;
-           except
+           except on E:Exception
+              do begin
                 Connection.Connected:= false;
                 //
                 // !!! ONLY ONE !!!
@@ -867,11 +880,15 @@ begin
                 //
                 //
                 myLogMemo_add(' err fExecSqToQuery_noErr_two ' +#10+#13+mySql);
+                myLogMemo_add('');
+                myLogMemo_add(E.Message);
+                //
                 i:= i + 1;
                 if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
                 else MyDelay(1 * 60 * 1000);
                 //
-                if fStop = true then exit;;
+                if fStop = true then exit;
+              end;
            end;
      end;
      Result:=true;
@@ -3037,7 +3054,7 @@ begin
              end;
              //
              try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
-             if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
+             if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); if MSec_complete > 3 * 1000 then myLogMemo_add('SessionIdEdit.Text'); MyDelay(MSec_complete);end;
              //
              Next;
              Application.ProcessMessages;

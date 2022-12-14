@@ -391,7 +391,7 @@ begin
          Execute;
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpUpdate_Scale_MLM');
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MovementDate');
        end;}
     end;
     Result:=true;

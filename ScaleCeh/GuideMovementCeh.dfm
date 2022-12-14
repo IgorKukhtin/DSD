@@ -34,7 +34,6 @@ object GuideMovementCehForm: TGuideMovementCehForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitTop = 2
       object ButtonExit: TSpeedButton
         Left = 326
         Top = 4
@@ -72,7 +71,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
         ShowHint = True
       end
       object bbChoice: TSpeedButton
-        Left = 86
+        Left = 73
         Top = 3
         Width = 31
         Height = 29
@@ -109,7 +108,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
         OnClick = bbPrintClick
       end
       object bbViewMI: TSpeedButton
-        Left = 248
+        Left = 269
         Top = 3
         Width = 31
         Height = 29
@@ -128,7 +127,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
         OnClick = bbViewMIClick
       end
       object SpeedButton1: TSpeedButton
-        Left = 153
+        Left = 175
         Top = 3
         Width = 31
         Height = 29
@@ -177,7 +176,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
         ShowHint = True
       end
       object SpeedButton2: TSpeedButton
-        Left = 190
+        Left = 212
         Top = 3
         Width = 31
         Height = 29
@@ -224,6 +223,25 @@ object GuideMovementCehForm: TGuideMovementCehForm
           FFFFFFFFFFFFFFFFFFFF}
         ParentShowHint = False
         ShowHint = True
+      end
+      object bbChangeOperDatePartner: TSpeedButton
+        Left = 123
+        Top = 3
+        Width = 31
+        Height = 29
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'> '#1087#1086' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00880000000000
+          000000000000000000000FFFFFFFFFFFFF000FF1111FFF1FFF000FF1FFFFFF1F
+          FF000FFF1FFFFF1FFF000FFFF1FFFF1FFF000FF1FF1FF11FFF000FFF11FFFF1F
+          FF000FFFFFFFFFFFFF0000000000000000000EEEEEEEEEEEEE000E0EEEEEEEEE
+          0E00000000000000000880888088880888088800088888800088}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbChangeOperDatePartnerClick
       end
     end
     object cxDBGrid: TcxGrid

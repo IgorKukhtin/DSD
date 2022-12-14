@@ -81,6 +81,7 @@ type
     SpeedButton2: TSpeedButton;
     actComplete: TAction;
     actUnComplete: TAction;
+    bbChangeOperDatePartner: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -97,6 +98,7 @@ type
     procedure cbPrintMovementClick(Sender: TObject);
     procedure actCompleteExecute(Sender: TObject);
     procedure actUnCompleteExecute(Sender: TObject);
+    procedure bbChangeOperDatePartnerClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -117,7 +119,7 @@ var
 
 implementation
 {$R *.dfm}
-uses dmMainScaleCeh,dmMainScale,UtilScale,UtilPrint,MainCeh,DialogMovementDesc;
+uses dmMainScaleCeh,dmMainScale,UtilScale,UtilPrint,MainCeh,DialogMovementDesc,DialogDateValue;
 {------------------------------------------------------------------------------}
 function TGuideMovementCehForm.Execute(var execParamsMovement:TParams;isChoice:Boolean): boolean;
 begin
@@ -347,6 +349,52 @@ end;
 procedure TGuideMovementCehForm.FormDestroy(Sender: TObject);
 begin
   ParamsMovement_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementCehForm.bbChangeOperDatePartnerClick(Sender: TObject);
+var execParams:TParams;
+begin
+    execParams:=nil;
+    ParamAddValue(execParams,'inMovementId',ftInteger,CDS.FieldByName('MovementId_parent').AsInteger);
+    ParamAddValue(execParams,'inDescCode',ftString,'Movement.OperDate');
+    //
+    if CDS.RecordCount=0 then
+    begin
+         ShowMessage('Ошибка.Документ не выбран.');
+         exit;
+    end;
+    //
+    if CDS.FieldByName('MovementDescId').AsInteger <> zc_Movement_Send then
+    begin
+         ShowMessage('Ошибка.Изменение даты возможно только для перемещения.');
+         exit;
+    end;
+    //
+    if CDS.FieldByName('MovementId_parent').AsInteger = 0 then
+    begin
+         ShowMessage('Ошибка.Документ <Перемещение> не сохранен.');
+         exit;
+    end;
+    //
+    with DialogDateValueForm do
+    begin
+          LabelDateValue.Caption:='ДАТА документа';
+          ActiveControl:=DateValueEdit;
+          DateValueEdit.Text:=DateToStr(CDS.FieldByName('OperDate_parent').AsDateTime);
+          isPartionGoodsDate:=false;
+          if not Execute then begin exit;end;
+     end;
+    //
+    try ParamAddValue(execParams,'inValueData',ftDateTime,StrToDate(DialogDateValueForm.DateValueEdit.Text));
+    except
+        ShowMessage('Ошибка.Неправильное значение даты.');
+    end;
+    //
+    //
+    if DMMainScaleCehForm.gpUpdate_Scale_MovementDate(execParams)
+    then actRefreshExecute(Self);
+    //
+    execParams.Free;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementCehForm.bbPrintClick(Sender: TObject);
