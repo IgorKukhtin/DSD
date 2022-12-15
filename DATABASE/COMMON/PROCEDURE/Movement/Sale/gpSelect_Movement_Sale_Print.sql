@@ -866,7 +866,8 @@ BEGIN
            , 'м.Дніпро' :: TVarChar AS CityOf
 
              -- для договора Id = 4440485(№7183Р(14781)) + доп страничка
-           , CASE WHEN vbContractId = 4440485 THEN TRUE ELSE FALSE END :: Boolean AS isFozzyPage2
+         --, CASE WHEN View_Contract.InvNumber = 4440485 THEN FALSE ELSE FALSE END :: Boolean AS isFozzyPage2
+           , CASE WHEN View_Contract.InvNumber ILIKE '7183Р' THEN TRUE ELSE FALSE END :: Boolean AS isFozzyPage2
 
              -- этому Юр Лицу печатается "За довіренністю ...."
            , vbIsOKPO_04544524 :: Boolean AS isOKPO_04544524
