@@ -151,6 +151,8 @@ BEGIN
                        , tmp.AreaName_Juridical       AS AreaName
                        , tmp.isDefault_JuridicalArea  AS isDefault
                   FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
+				  
+	ANALYSE tmpJuridicalArea;
 
     -- !!!Только для таких документов - 1-ая ВЕТКА (ВСЕГО = 3)!!!
     IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete()
@@ -555,7 +557,8 @@ BEGIN
                  , tmp.isDefault_JuridicalArea  AS isDefault
             FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
      END IF;
-
+	 
+	 ANALYSE tmpJuridicalArea;
 
      -- ДАННЫЕ
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI'))
@@ -922,7 +925,9 @@ BEGIN
        LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
        LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
        LEFT JOIN tmpCostCredit    ON ddd.MinPrice BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
-  ;
+     ;
+	 
+	 ANALYSE _tmpMI;
 
 -- lpCreateTempTable_OrderInternal Конец процедуры
 
@@ -1126,7 +1131,8 @@ BEGIN
                  , tmp.isDefault_JuridicalArea  AS isDefault
             FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
      END IF;
-
+	 
+	 ANALYSE tmpJuridicalArea;
 
      -- ДАННЫЕ
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI'))
@@ -1494,7 +1500,9 @@ BEGIN
        LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
        LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
        LEFT JOIN tmpCostCredit    ON ddd.MinPrice BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
-  ;
+     ;
+	 
+	 ANALYSE _tmpMI;
 
 -- lpCreateTempTable_OrderInternal Конец процедуры
 

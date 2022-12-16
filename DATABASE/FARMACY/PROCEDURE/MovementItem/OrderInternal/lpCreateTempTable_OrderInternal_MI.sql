@@ -291,7 +291,9 @@ BEGIN
               LEFT JOIN tmpMIF_SendSUN        AS MIFloat_SendSUN        ON MIFloat_SendSUN.MovementItemId        = MovementItem.Id
               LEFT JOIN tmpMIF_SendDefSUN     AS MIFloat_SendDefSUN     ON MIFloat_SendDefSUN.MovementItemId     = MovementItem.Id
               LEFT JOIN tmpMIF_RemainsSUN     AS MIFloat_RemainsSUN     ON MIFloat_RemainsSUN.MovementItemId     = MovementItem.Id
-;
+    ;
+	
+	ANALYSE _tmpOrderInternal_MI;
 
 END;
 $BODY$

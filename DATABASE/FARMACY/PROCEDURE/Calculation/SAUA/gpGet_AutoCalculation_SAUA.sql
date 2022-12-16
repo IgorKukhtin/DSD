@@ -105,6 +105,8 @@ BEGIN
                              AND ObjectDate_AutoSUA.DescId = zc_ObjectDate_Unit_AutoSUA()
          );
          
+	ANALYSE _tmpUnit;
+	
     IF vbMethodsAssortmentId in (zc_Enum_MethodsAssortment_Sales(), zc_Enum_MethodsAssortment_GeographSales()) 
     THEN
     

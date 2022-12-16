@@ -66,6 +66,7 @@ BEGIN
     RAISE EXCEPTION '¬ данных обнаружены разные подразделени€.';
   END IF;*/
   
+  ANALYSE tblDataJSON;
   
   ALTER TABLE tblDataJSON ADD SumCompSale TFloat;
   ALTER TABLE tblDataJSON ADD SumCompOOC TFloat;
@@ -73,6 +74,8 @@ BEGIN
   
   UPDATE tblDataJSON SET SumCompSale = CAST ((tblDataJSON.SummOriginal - COALESCE(tblDataJSON.SummSale, 0)) AS NUMERIC (16,2))  :: TFloat
                        , SumCompOOC  = ROUND(tblDataJSON.PriceOOC * tblDataJSON.Amount * tblDataJSON.ChangePercent / 100.0, 2);
+
+  ANALYSE tblDataJSON;
 
   vbSum := (SELECT SUM(tblDataJSON.SumCompSale) FROM tblDataJSON);
 
@@ -109,7 +112,9 @@ BEGIN
                                           THEN tblDataJSON.PriceOOC 
                                           ELSE ROUND(tblDataJSON.PriceSP * (1.0 + vbDSum / vbSum), 2) END
     WHERE tblDataJSON.PriceOOC > tblDataJSON.PriceSP;
-    
+
+    ANALYSE tblDataJSON;
+
     IF vbDSum = (vbSum - (SELECT SUM(ROUND(tblDataJSON.PriceSP * tblDataJSON.Amount * tblDataJSON.ChangePercent / 100.0, 2)) FROM tblDataJSON))
     THEN
       EXIT;

@@ -63,7 +63,8 @@ BEGIN
             FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
      END IF;
 
-
+     ANALYSE tmpJuridicalArea;
+	 
      -- ƒ¿ÕÕ€≈
      CREATE TEMP TABLE _tmpMI (Id integer
              , MovementItemId Integer
@@ -403,6 +404,8 @@ BEGIN
        LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
        LEFT JOIN tmpCostCredit    ON ddd.MinPrice BETWEEN tmpCostCredit.MinPrice    AND tmpCostCredit.PriceLimit
   ;
+  
+  ANALYSE _tmpMI;
 
 END;
 $BODY$

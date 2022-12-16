@@ -55,6 +55,8 @@ BEGIN
       INSERT INTO _tmpGoods
       SELECT *
       FROM json_populate_recordset(null::_tmpGoods, replace(replace(replace(inJSON, '&quot;', '\"'), CHR(9),''), CHR(10),'')::json);
+	  
+	  ANALYSE _tmpGoods;
 
       WITH tmpMovement AS (SELECT Movement.Id
                                 , '№ '||Movement.InvNumber||' от '||to_char(Movement.OperDate, 'DD.MM.YYYY') AS Pretension
