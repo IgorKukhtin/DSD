@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , Comment TVarChar
-             , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
+             , InsertId Integer, InsertName TVarChar, InsertDate TDateTime    
+             , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
               )
 AS
 $BODY$
@@ -42,7 +43,10 @@ BEGIN
 
              , Object_Insert.Id                AS InsertId
              , Object_Insert.ValueData         AS InsertName
-             , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate
+             , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate  
+
+             , 0                         AS ReceiptGoodsId
+             , CAST ('' AS TVarChar)     AS ReceiptGoodsName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
           ;
@@ -69,6 +73,8 @@ BEGIN
           , Object_Insert.ValueData        AS InsertName
           , MovementDate_Insert.ValueData  AS InsertDate
 
+          , 0                         AS ReceiptGoodsId
+          , CAST ('' AS TVarChar)     AS ReceiptGoodsName
         FROM Movement AS Movement_Send
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Send.StatusId
 

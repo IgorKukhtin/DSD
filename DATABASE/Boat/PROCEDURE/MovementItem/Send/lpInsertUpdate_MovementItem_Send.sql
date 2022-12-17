@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send(Integer, Integer, Integ
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ> 
+    IN inMovementId_OrderClient Integer, -- Заказ Клиента
     IN inGoodsId             Integer   , -- Комплектующие
     IN inAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена
@@ -30,10 +31,14 @@ BEGIN
      -- сохранили свойство <Цена за кол.>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
 
+     -- сохранили свойство <Заказ Клиента>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_OrderClient ::TFloat);
+
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
+
 
      IF vbIsInsert = TRUE
      THEN
@@ -52,6 +57,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.12.22         *
  23.06.21         *
 */
 
