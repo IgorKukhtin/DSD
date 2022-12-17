@@ -18,10 +18,22 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementDate (MovementDateDesc.Id, inMovementId, inValueData)
-     FROM (SELECT inDescCode AS DescCode WHERE TRIM (inDescCode) <> '') AS tmp
-          LEFT JOIN MovementDateDesc ON MovementDateDesc.Code ILIKE tmp.DescCode;
+     IF NOT EXISTS (SELECT 1 FROM MovementDateDesc WHERE MovementDateDesc.Code ILIKE TRIM (inDescCode) AND TRIM (inDescCode) <> '')
+     THEN
+         -- Проверка
+         IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_UnComplete())
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ в статусе <%>.Изменения невозможны.', lfGet_Object_ValueData_sh ((SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId));
+         END IF;
+         -- сохранили 
+         UPDATE Movement SET OperDate = inValueData WHERE Movement.Id = inMovementId;
+
+     ELSE
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementDate (MovementDateDesc.Id, inMovementId, inValueData)
+         FROM (SELECT inDescCode AS DescCode WHERE TRIM (inDescCode) <> '') AS tmp
+              LEFT JOIN MovementDateDesc ON MovementDateDesc.Code ILIKE tmp.DescCode;
+     END IF;
           
      IF EXISTS (SELECT 1 FROM MovementDateDesc WHERE MovementDateDesc.Code ILIKE inDescCode AND MovementDateDesc.Id = zc_MovementDate_OperDatePartner())
         AND EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.MovementChildId > 0 AND MLM.DescId = zc_MovementLinkMovement_Master())
