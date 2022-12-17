@@ -117,7 +117,11 @@ $BODY$
   DECLARE vbAmountOrder TFloat;
   DECLARE vbPersentReal TFloat;
 
+  DECLARE vbPersent_check TFloat;
 BEGIN
+
+     -- проверка отклонения по кол-ву
+     vbPersent_check:= 25;
 
 
 /*IF inUserId in (zfCalc_UserAdmin() :: Integer) -- , zc_Enum_Process_Auto_PrimeCost(), 9459)
@@ -163,12 +167,13 @@ END IF;
      DELETE FROM _tmpItem;
 
 
-     -- проверка отклонения по кол-ву более чем на 15 % - Розподільчий комплекс
+     -- проверка отклонения по кол-ву более чем на vbPersent_check % - Розподільчий комплекс
      IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId = 8459)
-    AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.ObjectId = zc_Enum_PaidKind_FirstForm())
-    AND inUserId = zfCalc_UserAdmin() :: Integer
+ --AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.ObjectId = zc_Enum_PaidKind_FirstForm())
+    AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.OperDate > '12.12.2022')
+ --AND inUserId = zfCalc_UserAdmin() :: Integer
      THEN
-         -- если есть хоть 1 товар у которого кол > на 15% чем в заявка выдаем сообщение
+         -- если есть хоть 1 товар у которого кол > на vbPersent_check% чем в заявка выдаем сообщение
          SELECT tmp.GoodsId
            , tmp.GoodsKindId
            , tmp.AmountPartner
@@ -180,7 +185,7 @@ END IF;
             tmpMIOrder AS (SELECT MovementItem.ObjectId AS GoodsId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId  
                                 , (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0) ) AS Amount
-                                , (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) /100 * 15 AS Amount15
+                                , (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) /100 * vbPersent_check AS Amount15
                            FROM MovementLinkMovement AS MovementLinkMovement_Order
                                 INNER JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Order.MovementChildId
                                                       AND MovementItem.DescId = zc_MI_Master()
@@ -211,6 +216,8 @@ END IF;
                           WHERE MovementItem.MovementId = inMovementId
                             AND MovementItem.DescId = zc_MI_Master()
                             AND MovementItem.isErased = FALSE
+                            -- !!! замовлення в яких більше 2,7 кілограма.
+                            -- AND MIFloat_AmountPartner.ValueData > 2.7
                           )
       
               SELECT tmpMISale.GoodsId
@@ -222,17 +229,20 @@ END IF;
                    LEFT JOIN tmpMIOrder ON tmpMIOrder.GoodsId     = tmpMISale.GoodsId
                                        AND tmpMIOrder.GoodsKindId = tmpMISale.GoodsKindId
               WHERE COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0) > tmpMIOrder.Amount15 
+               -- !!! замовлення в яких більше 2,7 кілограма.
+               AND (COALESCE (tmpMIOrder.Amount,0) = 0 OR tmpMIOrder.Amount > 2.7)
               LIMIT 1
              ) AS tmp;
 
          IF COALESCE (vbGoodsId,0) > 0
          THEN
-             RAISE EXCEPTION 'Ошибка.В продаже % % % % % отклонение от заказа больше 15%  %Количество = <%> %Заказ = <%> % факт % отклонения = <%>.'
+             RAISE EXCEPTION 'Ошибка.В продаже % % % % % отклонение от заказа больше % %  %Количество = <%> %Заказ = <%> % факт % отклонения = <%>.'
                              , CHR (13)
                              , lfGet_Object_ValueData (vbGoodsId)
                              , CHR (13)
                              , lfGet_Object_ValueData_sh (vbGoodsKindId)
                              , CHR (13)
+                             , zfConvert_FloatToString (vbPersent_check)
                              , '%'
                              , CHR (13)
                              , zfConvert_FloatToString (vbAmountPartner)
