@@ -49,6 +49,8 @@ BEGIN
          AND COALESCE (MovementItem_Income_View.GoodsId, 0) = 0
          AND Goods_Retail.GoodsId > 0
       ;
+	  
+	 ANALYSE _tmpMI; 
 
      -- заменили товар для накладной
      UPDATE MovementItem SET ObjectId = _tmpMI.GoodsId

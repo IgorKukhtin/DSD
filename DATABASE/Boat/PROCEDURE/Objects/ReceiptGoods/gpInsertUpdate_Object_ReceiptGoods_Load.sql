@@ -139,7 +139,7 @@ BEGIN
      THEN
 
        vbArticle_GoodsChild := inArticle;
-       vbGoods_GoodsChildName := 'ПФ Корпус '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||vbProdColorName;
+       vbGoods_GoodsChildName := 'ПФ Корпус стеклопластиковый '||SPLIT_PART (inArticle, '-', 1)||'-'||SPLIT_PART (inArticle, '-', 2)||'-'||vbProdColorName;
        vbGroup_GoodsChildName := 'Boote'; --inGroupName;
        vbStage := True;
      END IF;
@@ -162,8 +162,8 @@ BEGIN
                                  AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ProdOptions_MaterialOptions()
       WHERE ProdColorPattern.ModelId = vbModelId
          AND ProdColorPattern.ProdColorGroupName ILIKE CASE WHEN inReceiptLevelName ILIKE 'Steering console' 
-                                                            THEN 'Fiberglass '   || TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))
-                                                            ELSE 'Fiberglass - ' || TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))                                                         
+                                                            THEN 'Fiberglass '   || TRIM(SPLIT_PART (COALESCE(NULLIF(SPLIT_PART (inReceiptLevelName, '-', 2), ''), inReceiptLevelName), '/', 1))
+                                                            ELSE 'Fiberglass - ' || TRIM(SPLIT_PART (COALESCE(NULLIF(SPLIT_PART (inReceiptLevelName, '-', 2), ''), inReceiptLevelName), '/', 1))
                                                        END;
 
      END IF;
@@ -712,7 +712,8 @@ BEGIN
                                                                           --  , inObjectDesc      := 'zc_Object_ReceiptGoods'  ::TVarChar
                                                                             , inSession         := inSession :: TVarChar
                                                                              ) AS tmp);
-             END IF;
+           END IF;
+           
        END IF;
 
        -- ищем ReceiptGoodsChild
@@ -732,11 +733,15 @@ BEGIN
                                       LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
                                                            ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
                                                           AND ObjectLink_GoodsChild.DescId = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                                      LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                                           ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
+                                                          AND ObjectLink_ReceiptLevel.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
                                  WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
                                    AND Object_ReceiptGoodsChild.isErased = FALSE
                                    AND COALESCE (ObjectLink_ProdColorPattern.ChildObjectId, 0) = COALESCE (vbProdColorPatternId, 0)
                                    AND (COALESCE (ObjectLink_GoodsChild.ChildObjectId, 0) = 0 OR
                                         COALESCE (ObjectLink_GoodsChild.ChildObjectId, 0) = COALESCE (vbGoods_GoodsChildId, 0))
+                                   AND COALESCE (ObjectLink_ReceiptLevel.ChildObjectId, 0) = COALESCE (vbReceiptLevelId, 0)
                                  );
                                  
        IF COALESCE (vbReceiptGoodsChildId, 0) = 0 OR
@@ -897,7 +902,7 @@ BEGIN
    END;
    
 
-   /*RAISE EXCEPTION 'Goods Main <%> <%> <%> <%> <%> %Goods child 2 <%> <%> <%> <%> <%> <%>  %Goods child <%> <%> <%> <%> <%> <%> <%> %ReceiptGoods <%> <%> <%> %ReceiptGoodsChild <%> <%> <%> <%> %ReceiptProdModel <%> <%>', 
+  /* RAISE EXCEPTION 'Goods Main <%> <%> <%> <%> <%> %Goods child 2 <%> <%> <%> <%> <%> <%>  %Goods child <%> <%> <%> <%> <%> <%> <%> %ReceiptGoods <%> <%> <%> %ReceiptGoodsChild <%> <%> <%> <%> %ReceiptProdModel <%> <%>', 
      --Goods Main        
      inArticle, inGoodsName, inGroupName, vbGoodsId, vbGoodsGroupId, Chr(13), 
      --Goods child 2     
@@ -927,4 +932,5 @@ $BODY$
 
 -- тест
 -- 
--- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load(252, 'AGL-280-02', '', 'Сиденье водителя АGL-280-RAL 9010', 'Сборка сиденья', '', 'AGL-280-02-пф', 'ПФ Сиденье водителя АGL-280-RAL 9010', 'Сборка', '1', zfCalc_UserAdmin())
+-- 
+SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load(3, 'AGL-280-01-пф', '1-HULL/(Корпус)', '', '', '', '77083888883', 'SYNOLITE 8388-P-1', 'Стеклопластик ПФ', '16,7124', zfCalc_UserAdmin())

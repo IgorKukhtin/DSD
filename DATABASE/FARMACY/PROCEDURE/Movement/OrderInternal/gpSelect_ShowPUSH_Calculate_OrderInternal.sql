@@ -49,6 +49,8 @@ BEGIN
                MovementItem.DiscountName
         FROM gpSelect_MovementItem_OrderInternal_Master(inMovementId := inMovementID , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := inSession) AS MovementItem);
     
+	ANALYSE _tmpMIOrderInternal;
+	
     -- Для товаров дисконтных программ надо использовать поставщиков
     WITH
         tmpMI_All AS (SELECT MovementItem.GoodsId,
@@ -233,6 +235,7 @@ BEGIN
       END IF;
     END IF;
     
+	ANALYSE tmpResult;
     -- Результат
     RETURN QUERY
     SELECT tmpResult.ShowMessage, tmpResult.PUSHType, tmpResult.Text

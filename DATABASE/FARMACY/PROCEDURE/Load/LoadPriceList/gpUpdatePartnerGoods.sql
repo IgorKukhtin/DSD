@@ -17,9 +17,12 @@ $BODY$
    DECLARE vbisMorionCode Boolean;
    DECLARE vbisBarCode Boolean;
 BEGIN
+
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
      vbUserId := lpGetUserBySession (inSession);
+
+--raise notice 'Value 01: %', timeofday();
 
      -- Получаем параметры прайсЛиста
      WITH tmpArea AS
@@ -56,6 +59,8 @@ BEGIN
                                    ON ObjectBoolean_BarCode.ObjectId = LoadPriceList.ContractId
                                   AND ObjectBoolean_BarCode.DescId = zc_ObjectBoolean_Contract_BarCode()
       WHERE LoadPriceList.Id = inId;
+
+--raise notice 'Value 02: %', timeofday();
             
      -- Создаем общие коды, которых еще нет
      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), CommonCode, LoadPriceListItem.GoodsName), zc_Enum_GlobalConst_Marion())
@@ -64,11 +69,15 @@ BEGIN
               AND CommonCode NOT IN (SELECT GoodsCodeInt FROM Object_Goods_View WHERE ObjectId = zc_Enum_GlobalConst_Marion())
               AND CommonCode > 0;
 
+--raise notice 'Value 03: %', timeofday();
+
      -- Создаем штрих коды, которых еще нет
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), 0, TRIM (BarCode)), zc_Enum_GlobalConst_BarCode())
             FROM LoadPriceListItem WHERE LoadPriceListItem.LoadPriceListId = inId
              AND TRIM (BarCode) NOT IN (SELECT TRIM (GoodsName) FROM Object_Goods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())
              AND TRIM  (COALESCE (BarCode,'')) <> '';
+
+--raise notice 'Value 04: %', timeofday();
 
      -- Тут мы меняем или добавляем товары в справочник товаров прайс-листа
      PERFORM lpInsertUpdate_Object_Goods_andArea(
@@ -109,6 +118,16 @@ BEGIN
            LoadPriceListItem.CodeUKTZED;
 
      -- Тут устанавливаем связь между товарами покупателей и главным товаром
+	 
+	 
+	 CREATE TEMP TABLE tmpLinkGoods ON COMMIT DROP AS 
+       (SELECT GoodsMainId, GoodsId
+		FROM Object_LinkGoods_View
+		WHERE ObjectId = vbJuridicalId);
+		
+	ANALYSE tmpLinkGoods;
+
+--raise notice 'Value 05: %', timeofday();
 
      PERFORM
             gpInsertUpdate_Object_LinkGoods(0 , -- ключ объекта <Условия договора>
@@ -124,10 +143,7 @@ BEGIN
                                                      ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
                                            WHERE LoadPriceListItem.GoodsId <> 0 AND LoadPriceListItem.LoadPriceListId = inId
                                            GROUP BY LoadPriceListItem.GoodsId , 
-                                                    Object_Goods.Id),
-                   tmpLinkGoods AS (SELECT GoodsMainId, GoodsId
-                                    FROM Object_LinkGoods_View
-                                    WHERE ObjectId = vbJuridicalId)
+                                                    Object_Goods.Id)
                              
                    SELECT
                                 LoadPriceListItem.GoodsId , -- Главный товар
@@ -137,6 +153,8 @@ BEGIN
                                                ON LinkGoods.GoodsMainId = LoadPriceListItem.GoodsId
                                               AND LinkGoods.GoodsId = LoadPriceListItem.Id
                    WHERE COALESCE (LinkGoods.GoodsMainId, 0) = 0) AS tmpLoadPriceListItem;
+
+--raise notice 'Value 06: %', timeofday();
 
    IF vbisMorionCode = TRUE
    THEN
@@ -183,6 +201,8 @@ BEGIN
 
    END IF;
 
+--raise notice 'Value 07: %', timeofday();
+
    IF vbisBarCode = TRUE
    THEN
        -- Выбираем Штрих-кода, у которых нет стыковки с главным 
@@ -228,6 +248,14 @@ BEGIN
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+
+--raise notice 'Value 08: %', timeofday();
+
+    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%>', inSession;
+    END IF;
 
 END;
 $BODY$
@@ -271,3 +299,4 @@ WHERE Object.ObjectCode = 454112   --76689 --"ДЕТРАЛЕКС 1000 мг № 30"
 */
 
 -- select * from gpUpdatePartnerGoods(inId := 31994 ,  inSession := '3');
+

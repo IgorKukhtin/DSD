@@ -65,6 +65,8 @@ BEGIN
           AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0) = 4
           AND ','||inRecipientList||',' LIKE '%,'||Object_Unit.Id::TEXT||',%'
         ORDER BY Object_Unit.Id);
+		
+	ANALYSE _tmpUnitRecipient;
 
     -- Аптеки ассортимента
     CREATE TEMP TABLE _tmpUnitAssortment ON COMMIT DROP AS
@@ -85,6 +87,8 @@ BEGIN
           AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0) = 4
           AND ','||inAssortmentList||',' LIKE '%,'||Object_Unit.Id::TEXT||',%'
         ORDER BY Object_Unit.Id);
+		
+	ANALYSE _tmpUnitAssortment;
 
      -- Получили все продажи по аптекам ассортимента
     CREATE TEMP TABLE _tmpSale_Assortment ON COMMIT DROP AS
@@ -102,6 +106,8 @@ BEGIN
         GROUP BY AnalysisContainerItem.GoodsId
         HAVING SUM(AnalysisContainerItem.AmountCheck) / COUNT(DISTINCT AnalysisContainerItem.UnitID) >= inThreshold
            AND COUNT(DISTINCT AnalysisContainerItem.UnitID) >= inCountPharmacies);
+		   
+	ANALYSE _tmpSale_Assortment;
 
      -- Вычитаем все продажи не для НТЗ
     IF inisNotCheckNoMCS = TRUE
@@ -139,6 +145,8 @@ BEGIN
             AND MovementItem.Amount > 0
 
           GROUP BY MovementItem.ObjectId );
+		  
+	  ANALYSE _tmpSale_CheckNoMCS;
 
       raise notice 'Value 02: %', timeofday();
 
@@ -164,6 +172,8 @@ BEGIN
                                           SELECT DISTINCT _tmpUnitRecipient.Id FROM _tmpUnitRecipient)
         GROUP BY Container.WhereObjectId, Container.ObjectId
         HAVING SUM(Container.Amount) > 0);
+		
+	ANALYSE _tmpRemains_All;
         
     CREATE TEMP TABLE _tmpSendFrom (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
 
@@ -257,6 +267,8 @@ BEGIN
                LEFT OUTER JOIN tmpMovementTP AS Reserve_TP ON Reserve_TP.GoodsId = Remains.ObjectId
 
            WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (Reserve_TP.Amount, 0)) > 0);
+		   
+		  ANALYSE _tmpRemainsFrom;
 
       -- А сюда товары
       WITH
@@ -354,7 +366,8 @@ BEGIN
       FROM tmpItem
       ;
 
-
+      ANALYSE _tmpSendFrom;
+	  
     END IF;
 
     RETURN QUERY

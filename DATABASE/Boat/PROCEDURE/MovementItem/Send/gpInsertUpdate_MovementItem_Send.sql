@@ -7,10 +7,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_BarCode(Integer, Integer, TVarCha
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inMovementId_OrderClient Integer, -- Заказ Клиента
     IN inGoodsId             Integer   , -- Товары
     IN ioAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена со скидкой
@@ -77,6 +79,7 @@ BEGIN
             INTO ioId 
      FROM lpInsertUpdate_MovementItem_Send (ioId
                                           , inMovementId
+                                          , inMovementId_OrderClient
                                           , inGoodsId
                                           , ioAmount
                                           , inOperPrice
@@ -108,6 +111,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.12.22         *
  16.09.21         *
  23.06.21         *
 */

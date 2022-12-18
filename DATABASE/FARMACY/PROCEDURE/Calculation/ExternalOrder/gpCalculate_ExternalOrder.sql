@@ -107,6 +107,9 @@ BEGIN
                 COALESCE (vbRec.PartnerGoodsId, 0), COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0)
          FROM gpSelect_MovementItem_OrderInternal_Master (inInternalOrder, FALSE, FALSE, FALSE, inSession) AS vbRec;
 
+       ANALYSE _tmpMI_OrderInternal_Master;
+       ANALYSE _tmpMI_OrderInternal_Child;
+
        -- Сохранили
        PERFORM lpInsertUpdate_MovementItemDate    (zc_MIDate_PartionGoods()   , MovementItem.Id, _tmpMI_OrderInternal_Master.PartionGoods)
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_MinimumLot()    , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.MinimumLot, 0))

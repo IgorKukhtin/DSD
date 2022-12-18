@@ -228,7 +228,8 @@ BEGIN
                        , tmp.AreaName_Juridical       AS AreaName
                        , tmp.isDefault_JuridicalArea  AS isDefault
                   FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
-
+				  
+    ANALYSE tmpJuridicalArea;
 
     -- !!!Только для таких документов - 1-ая ВЕТКА (ВСЕГО = 3)!!!
     IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() 
@@ -1258,7 +1259,8 @@ BEGIN
                  , tmp.isDefault_JuridicalArea  AS isDefault
             FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
      END IF;
-
+	 
+	 ANALYSE tmpJuridicalArea;
 
      -- ДАННЫЕ
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI'))
@@ -1671,7 +1673,9 @@ BEGIN
                                             AND tmpJuridicalPriorities.JuridicalId = DD.JuridicalId
        
   ;
-
+  
+     ANALYSE _tmpMI;
+	 
 -- lpCreateTempTable_OrderInternal Конец процедуры
 --      raise notice 'Value: %', 21;
 
@@ -3179,7 +3183,8 @@ BEGIN
                  , tmp.isDefault_JuridicalArea  AS isDefault
             FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
      END IF;
-
+	 
+	 ANALYSE tmpJuridicalArea;
 
      -- ДАННЫЕ
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI'))
@@ -3590,7 +3595,9 @@ BEGIN
             
             LEFT JOIN tmpJuridicalPriorities ON tmpJuridicalPriorities.GoodsMainId = DD.GoodsMainId
                                             AND tmpJuridicalPriorities.JuridicalId = DD.JuridicalId
-  ;
+     ;
+	 
+	 ANALYSE tmpJuridicalArea; 
 
 -- lpCreateTempTable_OrderInternal Конец процедуры
 

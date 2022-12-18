@@ -46,13 +46,18 @@ BEGIN
    ;
 
     -- zc_MI_Master - текущее Перемещение
-    CREATE TEMP TABLE _tmpMI_Master (Id Integer, ObjectId Integer, Ord Integer) ON COMMIT DROP;
-    INSERT INTO _tmpMI_Master (Id, ObjectId, Ord)
+    CREATE TEMP TABLE _tmpMI_Master (Id Integer, ObjectId Integer, Ord Integer, MovementId_order Integer) ON COMMIT DROP;
+    INSERT INTO _tmpMI_Master (Id, ObjectId, Ord, MovementId_order)
           SELECT MovementItem.Id
                , MovementItem.ObjectId
                  -- № п/п
-               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MovementItem.Id ASC) AS Ord
+               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MovementItem.Id ASC) AS Ord 
+               , MIFloat_MovementId.ValueData :: Integer AS MovementId_order
           FROM MovementItem
+               -- ValueData - MovementId заказ Клиента
+               LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                           ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                          AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
           WHERE MovementItem.MovementId = inMovementId
             AND MovementItem.DescId     = zc_MI_Master()
             AND MovementItem.isErased   = FALSE;
@@ -172,6 +177,7 @@ BEGIN
                                                         AND MI_Master.DescId     = zc_MI_Master()
                                                         AND MI_Master.Id         = MovementItem.ParentId
                                                         AND MI_Master.isErased   = FALSE
+
                             WHERE MIFloat_MovementId.ValueData IN (SELECT DISTINCT tmpMI_Child.MovementId_order FROM tmpMI_Child)
                               AND MIFloat_MovementId.DescId   = zc_MIFloat_MovementId()
                            )
@@ -211,6 +217,7 @@ BEGIN
     -- сохраняем - zc_MI_Master - текущее Перемещение
     PERFORM lpInsertUpdate_MovementItem_Send (ioId                     := COALESCE (_tmpMI_Master.Id, 0)
                                             , inMovementId             := inMovementId
+                                            , inMovementId_OrderClient := COALESCE (tmp.MovementId_order, _tmpMI_Master.MovementId_order) :: Integer
                                             , inGoodsId                := COALESCE (tmp.ObjectId, _tmpMI_Master.ObjectId)
                                               -- кол-во резерв
                                             , inAmount                 := CASE WHEN _tmpMI_Master.ORD = 1 OR COALESCE (_tmpMI_Master.Id, 0) = 0 THEN COALESCE (tmp.Amount, 0) ELSE 0 END
@@ -227,13 +234,17 @@ BEGIN
                          , ObjectFloat_EKPrice.ValueData AS OperPrice
                          , 1 :: TFloat AS CountForPrice
                          , SUM (COALESCE (_tmpReserve.Amount,0)) AS Amount
+                         --заказ клиента 
+                         , _tmpReserve.MovementId_order
                     FROM _tmpReserve
                          LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                                ON ObjectFloat_EKPrice.ObjectId = _tmpReserve.ObjectId
                                               AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
                     GROUP BY _tmpReserve.ObjectId
-                           , ObjectFloat_EKPrice.ValueData
+                           , ObjectFloat_EKPrice.ValueData 
+                           , _tmpReserve.MovementId_order
                     ) AS tmp ON tmp.ObjectId = _tmpMI_Master.objectId
+                            AND tmp.MovementId_order = _tmpMI_Master.MovementId_order
     ;   
 
 /*zc_MI_Child - будут формироваться при проведении док

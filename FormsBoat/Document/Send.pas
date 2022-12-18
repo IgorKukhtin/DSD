@@ -229,6 +229,19 @@ type
     bbedSearchArticle: TdxBarControlContainerItem;
     bblbSearchArticle: TdxBarControlContainerItem;
     Panel1: TPanel;
+    actOrderClientChoiceForm: TOpenChoiceForm;
+    cxLabel15: TcxLabel;
+    edReceiptGoods: TcxButtonEdit;
+    GuidesReceiptGoods: TdsdGuides;
+    actOrderClientInsertForm: TOpenChoiceForm;
+    spInsert_MI_Send_byOrder: TdsdStoredProc;
+    actInsert_MI_Send_byOrder: TdsdExecStoredProc;
+    macInsert_MI_Send_byOrder: TMultiAction;
+    bbInsert_MI_Send_byOrder: TdxBarButton;
+    spInsert_MI_Send_byOrder_Detail: TdsdStoredProc;
+    actInsert_MI_Send_byOrderDetail: TdsdExecStoredProc;
+    macInsert_MI_Send_byOrderDetail: TMultiAction;
+    bbInsert_MI_Send_byOrderDetail: TdxBarButton;
   private
   public
   end;
