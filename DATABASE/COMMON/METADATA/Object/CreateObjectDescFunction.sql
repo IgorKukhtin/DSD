@@ -1024,7 +1024,12 @@ INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_MemberReport', 'Доступ к Просмотру Отчетов по подразделениям' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MemberReport');
 
  
+ CREATE OR REPLACE FUNCTION zc_Object_GoodsKindNew() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsKindNew'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_GoodsKindNew', 'Виды товаров (НОВЫЕ)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsKindNew');
 
+ 
+ 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека
