@@ -139,12 +139,10 @@ BEGIN
         DELETE FROM _tmpUnitMinPrice_List;
     END IF;
 
-
     -- даты + 6 месяцев, + 1 месяц
     vbDate180 := CURRENT_DATE + CASE WHEN vbIsMonth_6 = TRUE THEN vbMonth_6 ||' MONTH'  ELSE vbMonth_6 ||' DAY' END :: INTERVAL;
     vbDate30  := CURRENT_DATE + CASE WHEN vbIsMonth_1 = TRUE THEN vbMonth_1 ||' MONTH'  ELSE vbMonth_1 ||' DAY' END :: INTERVAL;
     vbDate0   := CURRENT_DATE + CASE WHEN vbIsMonth_0 = TRUE THEN vbMonth_0 ||' MONTH'  ELSE vbMonth_0 ||' DAY' END :: INTERVAL;
-
 
     -- парсим подразделения
     vbIndex := 1;
@@ -169,6 +167,7 @@ BEGIN
     -- !!!Временно!!!
     -- INSERT INTO _tmpUnitMinPrice_List (UnitId) SELECT 0 WHERE NOT EXISTS (SELECT 1 FROM _tmpUnitMinPrice_List);
 
+--raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
     -- парсим товары
     IF COALESCE(inGoodsId_list, '') <> ''
@@ -186,6 +185,7 @@ BEGIN
     -- !!!Оптимизация!!!
     ANALYZE _tmpUnitMinPrice_List;
 
+--raise notice 'Value 2: %', CLOCK_TIMESTAMP();
 
     -- если нет товаров
     IF NOT EXISTS (SELECT 1 FROM _tmpGoodsMinPrice_List WHERE GoodsId <> 0)
@@ -234,9 +234,10 @@ BEGIN
           ;
     END IF;
 
-
     -- !!!Оптимизация!!!
     ANALYZE _tmpGoodsMinPrice_List;
+
+--raise notice 'Value 3: %', CLOCK_TIMESTAMP();
 
     -- еще оптимизируем - _tmpContainerCount
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainerCount'))
@@ -276,16 +277,17 @@ BEGIN
     -- !!!Оптимизация!!!
     ANALYZE _tmpContainerCount;
 
+--raise notice 'Value 4: %', CLOCK_TIMESTAMP();
 
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMovementCheck'))
     THEN
         -- таблица
-        CREATE TEMP TABLE _tmpMovementCheck (Id Integer) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpMovementCheck (Id Integer, UnitId Integer) ON COMMIT DROP;
     ELSE
         DELETE FROM _tmpMovementCheck;
     END IF;
     --
-    INSERT INTO _tmpMovementCheck (Id)
+    INSERT INTO _tmpMovementCheck (Id, UnitId)
       WITH           -- Резервы по срокам
             tmpMovementCheck AS (SELECT Movement.Id
                                  FROM Movement
@@ -308,11 +310,18 @@ BEGIN
                              FROM tmpMovReserveId AS Movement
                              WHERE isDeferred = TRUE OR isCommentError = TRUE)
 
-    SELECT Movement.Id FROM tmpMovReserveAll AS Movement;
+    SELECT Movement.Id 
+	     , MovementLinkObject_Unit.ObjectId    AS UnitId
+	FROM tmpMovReserveAll AS Movement
+		 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+									   ON MovementLinkObject_Unit.movementid = Movement.Id
+									  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+	;
 
     -- !!!Оптимизация!!!
     ANALYZE _tmpMovementCheck;
 
+--raise notice 'Value 5: %', CLOCK_TIMESTAMP();
 
     -- еще оптимизируем - _tmpContainerCountPD
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainerCountPD'))
@@ -335,12 +344,18 @@ BEGIN
                                                                  AND MovementItemChild.DescId     = zc_MI_Child()
                                                                  AND MovementItemChild.Amount     > 0
                                                                  AND MovementItemChild.isErased   = FALSE)
+          , tmpMovementItemFloat AS (SELECT MIFloat_ContainerId.MovementItemId
+									      , MIFloat_ContainerId.ValueData
+                                 FROM MovementItemFloat AS MIFloat_ContainerId
+                                 WHERE MIFloat_ContainerId.MovementItemId IN (SELECT MovementItemChildId.Id FROM MovementItemChildId) 
+                                   AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                                )
           , ReserveContainer AS (SELECT MIFloat_ContainerId.ValueData::Integer      AS ContainerId
-                                      , Sum(MovementItemChildId.Amount)::TFloat       AS Amount
+                                      , Sum(MovementItemChildId.Amount)::TFloat     AS Amount
                                  FROM MovementItemChildId
-                                 INNER JOIN MovementItemFloat AS MIFloat_ContainerId
+                                 INNER JOIN tmpMovementItemFloat AS MIFloat_ContainerId
                                                                   ON MIFloat_ContainerId.MovementItemId = MovementItemChildId.Id
-                                                                 AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                                                                -- AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
 
                                  GROUP BY MIFloat_ContainerId.ValueData
                                 )
@@ -422,6 +437,7 @@ BEGIN
     -- !!!Оптимизация!!!
     ANALYZE _tmpContainerCountPD;
 
+--raise notice 'Value 6: %', CLOCK_TIMESTAMP();
 
     -- еще оптимизируем - _tmpList
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpList'))
@@ -465,6 +481,9 @@ BEGIN
                      LEFT JOIN _tmpList ON _tmpList.UnitId = _tmpUnitMinPrice_List.UnitId
                                        AND _tmpList.GoodsId = _tmpGoodsMinPrice_List.GoodsId
                 WHERE _tmpList.GoodsId IS NULL;
+
+    -- !!!Оптимизация!!!
+    ANALYZE _tmpList;
 
     -- еще оптимизируем - _tmpMinPrice_List
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMinPrice_List'))
@@ -540,9 +559,11 @@ BEGIN
                                            ON GoodsList_all.GoodsId = MinPriceList.GoodsId
           ;
 
+    -- !!!Оптимизация!!!
+    ANALYZE _tmpMinPrice_List;
+
     -- запомнили время после lpSelectMinPrice_List
     vbOperDate_Begin3:= CLOCK_TIMESTAMP();
-
 
     -- поиск категории для сайта
     vbMarginCategoryId_site:= (SELECT ObjectBoolean.ObjectId
@@ -552,59 +573,24 @@ BEGIN
                                LIMIT 1
                               );
 
+--raise notice 'Value 7: %', CLOCK_TIMESTAMP();
 
-    -- !!!Оптимизация!!!
-    ANALYZE _tmpList;
-    -- !!!Оптимизация!!!
-    ANALYZE _tmpMinPrice_List;
-
-    -- Результат
-    RETURN QUERY
-       WITH tmpMI_DeferredAll AS
-               (SELECT Movement.Id                        AS Id
-                     , MovementLinkObject_Unit.ObjectId   AS UnitId
-                FROM _tmpMovementCheck AS Movement
-
-                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                   ON MovementLinkObject_Unit.movementid = Movement.Id
-                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                            
-               )
-          , tmpMI_Deferred AS
-               (SELECT Movement.UnitId
-                     , MovementItem.ObjectId              AS GoodsId
-                     , SUM (MovementItem.Amount)          AS Amount
-                FROM tmpMI_DeferredAll AS Movement
-
-                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                            AND MovementItem.DescId     = zc_MI_Master()
-                                            AND MovementItem.isErased   = FALSE
-                GROUP BY Movement.UnitId
-                       , MovementItem.ObjectId
-               )
-          , MarginCategory_Unit AS
-               (SELECT tmp.UnitId
-                     , tmp.MarginCategoryId
-                FROM (SELECT tmpList.UnitId
-                           , ObjectLink_MarginCategory.ChildObjectId AS MarginCategoryId
-                        -- , ROW_NUMBER() OVER (PARTITION BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId ORDER BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
-                           , ROW_NUMBER() OVER (PARTITION BY tmpList.UnitId ORDER BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
-                      FROM _tmpUnitMinPrice_List AS tmpList
-                           INNER JOIN ObjectLink AS ObjectLink_MarginCategoryLink_Unit
-                                                 ON ObjectLink_MarginCategoryLink_Unit.ChildObjectId = tmpList.UnitId
-                                                AND ObjectLink_MarginCategoryLink_Unit.DescId        = zc_ObjectLink_MarginCategoryLink_Unit()
-                           LEFT JOIN ObjectLink AS ObjectLink_MarginCategory
-                                                ON ObjectLink_MarginCategory.ObjectId = ObjectLink_MarginCategoryLink_Unit.ObjectId
-                                               AND ObjectLink_MarginCategory.DescId   = zc_ObjectLink_MarginCategoryLink_MarginCategory()
-                           LEFT JOIN ObjectFloat AS ObjectFloat_Percent
-                                                 ON ObjectFloat_Percent.ObjectId = ObjectLink_MarginCategory.ChildObjectId
-                                                AND ObjectFloat_Percent.DescId   = zc_ObjectFloat_MarginCategory_Percent()
-                      WHERE COALESCE (ObjectFloat_Percent.ValueData, 0) = 0 -- !!!вот так криво!!!
-                     ) AS tmp
-                WHERE tmp.Ord = 1 -- !!!только одна категория!!!
-               )
-          , Price_Unit_all AS
-               (SELECT _tmpList.UnitId
+    -- еще оптимизируем - _tmpMinPrice_List
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('Price_Unit_all'))
+    THEN
+        -- таблица
+        CREATE TEMP TABLE Price_Unit_all (UnitId            Integer,
+                                          GoodsId           Integer,
+										  Price             TFloat,
+										  isTop             Boolean,
+										  PercentMarkup     TFloat
+                                          ) ON COMMIT DROP;
+    ELSE
+        DELETE FROM Price_Unit_all;
+    END IF;
+	
+    INSERT INTO Price_Unit_all
+                SELECT _tmpList.UnitId
                      , _tmpList.GoodsId
                      , CASE WHEN PriceSite_DiscontStart.ValueData IS NOT NULL
                              AND PriceSite_DiscontEnd.ValueData IS NOT NULL  
@@ -634,8 +620,8 @@ BEGIN
                             END::TFloat       AS Price
                      , COALESCE (NULLIF (ObjectBoolean_Goods_TOP.ValueData, FALSE), COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE))         AS isTop
                      , COALESCE (NULLIF (ObjectFloat_PercentMarkup.ValueData, 0), COALESCE (ObjectFloat_Goods_PercentMarkup.ValueData, 0)) AS PercentMarkup
-                -- FROM _tmpGoodsMinPrice_List
-                FROM _tmpList
+
+				FROM _tmpList
 
                      INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                                            ON ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
@@ -675,6 +661,47 @@ BEGIN
                      LEFT JOIN ObjectFloat AS PriceSite_DiscontPercent
                                            ON PriceSite_DiscontPercent.ObjectId = _tmpList.GoodsId_retail
                                           AND PriceSite_DiscontPercent.DescId = zc_ObjectFloat_Goods_DiscontPercentSite()
+               ;
+			   
+    -- !!!Оптимизация!!!
+    ANALYZE Price_Unit_all;
+
+--raise notice 'Value 8: %', CLOCK_TIMESTAMP();
+
+    -- Результат
+    RETURN QUERY
+       WITH tmpMI_Deferred AS
+               (SELECT Movement.UnitId
+                     , MovementItem.ObjectId              AS GoodsId
+                     , SUM (MovementItem.Amount)          AS Amount
+                FROM _tmpMovementCheck AS Movement
+
+                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = FALSE
+                GROUP BY Movement.UnitId
+                       , MovementItem.ObjectId
+               )
+          , MarginCategory_Unit AS
+               (SELECT tmp.UnitId
+                     , tmp.MarginCategoryId
+                FROM (SELECT tmpList.UnitId
+                           , ObjectLink_MarginCategory.ChildObjectId AS MarginCategoryId
+                        -- , ROW_NUMBER() OVER (PARTITION BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId ORDER BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
+                           , ROW_NUMBER() OVER (PARTITION BY tmpList.UnitId ORDER BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
+                      FROM _tmpUnitMinPrice_List AS tmpList
+                           INNER JOIN ObjectLink AS ObjectLink_MarginCategoryLink_Unit
+                                                 ON ObjectLink_MarginCategoryLink_Unit.ChildObjectId = tmpList.UnitId
+                                                AND ObjectLink_MarginCategoryLink_Unit.DescId        = zc_ObjectLink_MarginCategoryLink_Unit()
+                           LEFT JOIN ObjectLink AS ObjectLink_MarginCategory
+                                                ON ObjectLink_MarginCategory.ObjectId = ObjectLink_MarginCategoryLink_Unit.ObjectId
+                                               AND ObjectLink_MarginCategory.DescId   = zc_ObjectLink_MarginCategoryLink_MarginCategory()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Percent
+                                                 ON ObjectFloat_Percent.ObjectId = ObjectLink_MarginCategory.ChildObjectId
+                                                AND ObjectFloat_Percent.DescId   = zc_ObjectFloat_MarginCategory_Percent()
+                      WHERE COALESCE (ObjectFloat_Percent.ValueData, 0) = 0 -- !!!вот так криво!!!
+                     ) AS tmp
+                WHERE tmp.Ord = 1 -- !!!только одна категория!!!
                )
           , Price_Unit AS
                (SELECT Price_Unit_all.UnitId
@@ -1107,13 +1134,11 @@ BEGIN
              LEFT JOIN Object AS Object_Goods    ON Object_Goods.Id    = tmpList.GoodsId
              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MinPrice_List.ContractId
 
-
              LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                                   ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
              LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
-
 
              LEFT JOIN MarginCategory      ON MinPrice_List.Price >= MarginCategory.MinPrice      AND MinPrice_List.Price < MarginCategory.MaxPrice
                                           AND MarginCategory.UnitId = tmpList.UnitId
@@ -1149,6 +1174,7 @@ BEGIN
         ORDER BY Price_Unit.Price
        ;
        
+    
        
 --       RAISE notice '<%>', (SELECT COUNT (*) FROM _tmpGoodsMinPrice_List);
        

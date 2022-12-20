@@ -119,7 +119,6 @@ BEGIN
         vbAreaId:= (SELECT AreaId FROM gpGet_User_AreaId (inSession));
     END IF;
 
-
     -- значения для разделения по срокам
     SELECT Day_6, Date_6, Date_3, Date_1, Date_0
     INTO vbDay_6, vbDate_6, vbDate_3, vbDate_1, vbDate_0
@@ -196,12 +195,10 @@ BEGIN
     DELETE FROM CashSessionSnapShot
     WHERE CashSessionId = inCashSessionId;
 
-    -- Данные
-    --залили снапшот
-    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,DiscountExternalID,PartionDateKindId,DivisionPartiesID,Price,Remains,MCSValue,Reserved,DeferredSend,DeferredTR,MinExpirationDate,AccommodationId,PartionDateDiscount,PriceWithVAT
-    )
-    SELECT inCashSessionId                                                  AS CashSession
-          , CashRemains.GoodsId
+   -- raise notice 'Value 1: %', CURRENT_TIMESTAMP;
+
+    CREATE TEMP TABLE tmpCashSessionSnapShot ON COMMIT DROP AS
+    SELECT  CashRemains.GoodsId             AS ObjectId
           , CashRemains.NDSKindId
           , CashRemains.DiscountExternalID
           , CashRemains.PartionDateKindId
@@ -217,6 +214,78 @@ BEGIN
           , CashRemains.PartionDateDiscount
           , CashRemains.PriceWithVAT
     FROM gpSelect_CashRemains_CashSession(inSession) AS CashRemains;
+	
+    --raise notice 'Value 2: %', CURRENT_TIMESTAMP;
+	
+	ANALYZE tmpCashSessionSnapShot;
+	
+	--залили снапшот
+    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,DiscountExternalID,PartionDateKindId,DivisionPartiesID,Price,Remains,MCSValue,Reserved,DeferredSend,DeferredTR,MinExpirationDate,AccommodationId,PartionDateDiscount,PriceWithVAT
+    )
+    SELECT inCashSessionId                                                  AS CashSession
+          , CashRemains.ObjectId
+          , CashRemains.NDSKindId
+          , CashRemains.DiscountExternalID
+          , CashRemains.PartionDateKindId
+          , CashRemains.DivisionPartiesID
+          , CashRemains.Price
+          , CashRemains.Remains
+          , CashRemains.MCSValue
+          , CashRemains.Reserved
+          , CashRemains.DeferredSend
+          , CashRemains.DeferredTR
+          , CashRemains.MinExpirationDate
+          , CashRemains.AccommodationId
+          , CashRemains.PartionDateDiscount
+          , CashRemains.PriceWithVAT
+    FROM tmpCashSessionSnapShot AS CashRemains;
+	
+	--raise notice 'Value 3: %', CURRENT_TIMESTAMP;
+	
+    CREATE TEMP TABLE tmpGoodsAutoVIPforSalesCash ON COMMIT DROP AS 
+	  (SELECT  T1.GoodsId FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) AS T1);
+	
+	ANALYZE tmpGoodsAutoVIPforSalesCash;
+
+	--raise notice 'Value 4: %', CURRENT_TIMESTAMP;
+	
+	CREATE TEMP TABLE tmpGoodsSP_1303 ON COMMIT DROP AS 
+	(SELECT * FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := vbUnitId, inGoodsId := 0, inisCalc := COALESCE (vbPartnerMedicalId, 0) > 0, inSession := inSession));
+                                       
+	ANALYZE tmpGoodsSP_1303;
+
+	--raise notice 'Value 5: %', CURRENT_TIMESTAMP;
+	
+                -- товар в пути - непроведенные приходы сегодня
+    CREATE TEMP TABLE tmpIncome ON COMMIT DROP AS 
+	                           (SELECT MI_Income.ObjectId                      AS GoodsId
+                                     , SUM(COALESCE (MI_Income.Amount, 0))     AS AmountIncome
+                                     , SUM(COALESCE (MI_Income.Amount, 0) * COALESCE(MIFloat_PriceSale.ValueData,0))  AS SummSale
+                                FROM Movement AS Movement_Income
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                  AND MovementLinkObject_To.ObjectId = vbUnitId
+
+                                     LEFT JOIN MovementItem AS MI_Income
+                                                            ON MI_Income.MovementId = Movement_Income.Id
+                                                           AND MI_Income.isErased   = False
+
+                                     LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                                                 ON MIFloat_PriceSale.MovementItemId = MI_Income.Id
+                                                                AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+
+                                 WHERE Movement_Income.DescId = zc_Movement_Income()
+                                   AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
+                                   -- AND date_trunc('day', Movement_Income.OperDate) = CURRENT_DATE
+	                                 GROUP BY MI_Income.ObjectId
+                                        , MovementLinkObject_To.ObjectId
+                              );
+
+    ANALYZE tmpIncome;
+
+	--raise notice 'Value 6: %', CURRENT_TIMESTAMP;
+	
 
     RETURN QUERY
       WITH -- Товары соц-проект
@@ -320,30 +389,6 @@ BEGIN
                                LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmp.GoodsId
                           GROUP BY Object_Goods_Retail.GoodsMainId
                           )
-                -- товар в пути - непроведенные приходы сегодня
-                , tmpIncome AS (SELECT MI_Income.ObjectId                      AS GoodsId
-                                     , SUM(COALESCE (MI_Income.Amount, 0))     AS AmountIncome
-                                     , SUM(COALESCE (MI_Income.Amount, 0) * COALESCE(MIFloat_PriceSale.ValueData,0))  AS SummSale
-                                FROM Movement AS Movement_Income
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                   ON MovementLinkObject_To.MovementId = Movement_Income.Id
-                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                  AND MovementLinkObject_To.ObjectId = vbUnitId
-
-                                     LEFT JOIN MovementItem AS MI_Income
-                                                            ON MI_Income.MovementId = Movement_Income.Id
-                                                           AND MI_Income.isErased   = False
-
-                                     LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                                                 ON MIFloat_PriceSale.MovementItemId = MI_Income.Id
-                                                                AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-
-                                 WHERE Movement_Income.DescId = zc_Movement_Income()
-                                   AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
-                                   -- AND date_trunc('day', Movement_Income.OperDate) = CURRENT_DATE
-	                                 GROUP BY MI_Income.ObjectId
-                                        , MovementLinkObject_To.ObjectId
-                              )
            -- Коды Мориона
          , tmpGoodsMorion AS (SELECT ObjectLink_Main_Morion.ChildObjectId  AS GoodsMainId
                                    , MAX (Object_Goods_Morion.ObjectCode)  AS MorionCode
@@ -415,9 +460,8 @@ BEGIN
                                     , tmpObject_Price.EndDateMCSAuto
                                     , tmpObject_Price.isMCSAuto
                                     , tmpObject_Price.isMCSNotRecalcOld
-                               FROM CashSessionSnapShot
+                               FROM tmpCashSessionSnapShot AS CashSessionSnapShot
                                     INNER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = CashSessionSnapShot.ObjectId
-                               WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                               )
                 -- Цена со скидкой
               , tmpPriceChange AS (SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId                                                    AS GoodsId
@@ -780,13 +824,7 @@ BEGIN
                                             WHERE ObjectLink_GoodsDivisionLock_Unit.DescId        = zc_ObjectLink_GoodsDivisionLock_Unit()
                                               AND ObjectLink_GoodsDivisionLock_Unit.ChildObjectId = vbUnitId
                                             )
-                 , tmpGoodsAutoVIPforSalesCash AS (SELECT  T1.GoodsId FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) AS T1)
                  
-                 , tmpGoodsSP_1303 AS (SELECT * 
-                                       FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := vbUnitId, inGoodsId := 0, inisCalc := COALESCE (vbPartnerMedicalId, 0) > 0, inSession := inSession)
-                                       )
-
- 
 
         -- Результат
         SELECT
@@ -1246,7 +1284,7 @@ BEGIN
           , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check*/
           
          FROM
-            CashSessionSnapShot
+            tmpCashSessionSnapShot AS CashSessionSnapShot
 
             -- получается GoodsMainId
             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = CashSessionSnapShot.ObjectId
@@ -1350,8 +1388,6 @@ BEGIN
                                            AND MI_BrandSP.DescId = zc_MILinkObject_BrandSP()
            LEFT JOIN Object AS Object_BrandSP ON Object_BrandSP.Id = COALESCE(NULLIF(tmpGoodsSP.BrandSPId, 0), MI_BrandSP.ObjectId )
            
-        WHERE
-            CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
             CashSessionSnapShot.ObjectId;
 

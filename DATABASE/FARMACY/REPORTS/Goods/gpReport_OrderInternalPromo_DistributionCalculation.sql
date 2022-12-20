@@ -103,6 +103,8 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Должна быть заполнена только одна Сумма по ценам прайса, СИП или количество.';
      END IF;
 
+raise notice 'Value 0: %', CLOCK_TIMESTAMP();
+
      CREATE TEMP TABLE tmpGoods ON COMMIT DROP AS
         SELECT OIPromo.GoodsId
              , OIPromo.GoodsCode
@@ -118,6 +120,10 @@ BEGIN
           AND (OIPromo.isChecked = True OR vbisChecked = False);
           
      CREATE INDEX idx_tmpGoods_GoodsId ON tmpGoods(GoodsId, PriceCalc);
+	 
+	 ANALYSE tmpGoods;
+
+--raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
      IF COALESCE(vbTotalSummSIP, 0) <> 0
      THEN
@@ -126,18 +132,9 @@ BEGIN
      THEN
        vbTotalSummPrice := vbTotalAmount;
      END IF;
-
-     CREATE TEMP TABLE tmpData ON COMMIT DROP AS
-     SELECT T1.UnitID
-          , T1.GoodsId
-          , T1.AverageSalesRate
-          , T1.Remains
-          , T1.MCS
-          , (T1.Remains - T1.MCS)::TFloat AS  SettlementStart
-          , 0::TFloat                                                                               AS Distributed
-     FROM (
-       WITH
-            tmpCheck AS (SELECT AnalysisContainerItem.UnitID
+	 
+     CREATE TEMP TABLE tmpCheck ON COMMIT DROP AS 
+	                    (SELECT AnalysisContainerItem.UnitID
                               , AnalysisContainerItem.GoodsId
                               , SUM(AnalysisContainerItem.AmountCheck)     AS Sales
                          FROM tmpGoods
@@ -158,8 +155,14 @@ BEGIN
                            GROUP BY AnalysisContainerItem.UnitID
                                   , AnalysisContainerItem.GoodsId
                            HAVING SUM(AnalysisContainerItem.AmountCheck) > 0
-                           ),
-            tmpRemains AS (SELECT tmp.ObjectId         AS GoodsId
+                           );
+	 
+	 ANALYSE tmpCheck;
+
+--raise notice 'Value 11: %', CLOCK_TIMESTAMP();
+
+     CREATE TEMP TABLE tmpRemains ON COMMIT DROP AS 
+	                      (SELECT tmp.ObjectId         AS GoodsId
                                 , tmp.WhereObjectId    AS UnitID
                                 , SUM(tmp.Remains)     AS Remains
 
@@ -176,7 +179,22 @@ BEGIN
                                 ) AS tmp
                            GROUP BY tmp.ObjectId
                                   , tmp.WhereObjectId
-                           ),
+                           );
+
+     ANALYSE tmpRemains;
+
+--raise notice 'Value 12: %', CLOCK_TIMESTAMP();
+
+     CREATE TEMP TABLE tmpData ON COMMIT DROP AS
+     SELECT T1.UnitID
+          , T1.GoodsId
+          , T1.AverageSalesRate
+          , T1.Remains
+          , T1.MCS
+          , (T1.Remains - T1.MCS)::TFloat AS  SettlementStart
+          , 0::TFloat                                                                               AS Distributed
+     FROM (
+       WITH
             tmpPrice_View AS (SELECT tmpCheck.UnitID
                                    , tmpCheck.GoodsId
                                    , ObjectLink_Price_Unit.ObjectId          AS Id
@@ -222,7 +240,10 @@ BEGIN
 
      CREATE INDEX idx_tmpData_UnitID_GoodsId ON tmpData(UnitID, GoodsId, AverageSalesRate, Remains, MCS, SettlementStart, Distributed);
          
-         
+	 ANALYSE tmpData;
+
+--raise notice 'Value 2: %', CLOCK_TIMESTAMP();
+
      vbDayCalc := 0; vbTotalSummSIP := 0;
      WHILE vbDayCalc < 500 AND vbTotalSummSIP < vbTotalSummPrice
      LOOP
@@ -270,8 +291,16 @@ BEGIN
 
      END LOOP;
 
+	 ANALYSE tmpData;
+
+--raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+
      -- округлили количесто и убрали минусы
      UPDATE tmpData SET Distributed = CASE WHEN Distributed < 0 THEN 0 ELSE ROUND(Distributed, 0) END;
+
+	 ANALYSE tmpData;
+
+--raise notice 'Value 4: %', CLOCK_TIMESTAMP();
 
      -- Убрали перебор
      OPEN curResult_next FOR
@@ -309,6 +338,9 @@ BEGIN
      END LOOP; -- финиш цикла по курсору2
      CLOSE curResult_next; -- закрыли курсор2.
 
+	 ANALYSE tmpData;
+
+--raise notice 'Value 5: %', CLOCK_TIMESTAMP();
 
      -- Результат
      OPEN cur1 FOR SELECT T1.ID||' кол-во' AS AmountName, T1.ID||' сумма' AS SummName
@@ -347,4 +379,5 @@ ALTER FUNCTION gpReport_OrderInternalPromo_DistributionCalculation (Integer, TVa
 */
 
 -- тест
---  select * from gpReport_OrderInternalPromo_DistributionCalculation(inMovementID := 21527309  , inSession := '3');
+--  
+select * from gpReport_OrderInternalPromo_DistributionCalculation(inMovementID := 30412853  , inSession := '3');

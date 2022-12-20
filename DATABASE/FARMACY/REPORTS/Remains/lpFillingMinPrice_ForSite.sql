@@ -61,45 +61,54 @@ BEGIN
     isOneJuridical     Boolean
   );
 
-
-  -- Результат
-  INSERT INTO MinPrice_ForSite_Temp
-    WITH
     -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту) !!!внутри проц определяется ObjectId!!!
-    PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (inUserId::TVarChar))
-  , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar) WHERE vbIsGoodsPromo = TRUE)
+  CREATE TEMP TABLE PriceSettings ON COMMIT DROP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (inUserId::TVarChar));
+  ANALYSE PriceSettings;
+
+  CREATE TEMP TABLE PriceSettingsTOP ON COMMIT DROP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar) WHERE vbIsGoodsPromo = TRUE);
+  ANALYSE PriceSettingsTOP;
 
     -- Установки для юр. лиц (для поставщика определяется договор и т.п)
-  , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS tmp
+  CREATE TEMP TABLE JuridicalSettings ON COMMIT DROP AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS tmp
                           WHERE tmp.isSite = TRUE -- мне нужно: я отметил какие участвуют в аукционе цены для показа на сайте, чтобы цены только этих договоров и участвовали
-                         )
-    -- элементы установок юр.лиц (границы цен для бонуса)
-  , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
+                         );
+  ANALYSE JuridicalSettings;
+
+   -- элементы установок юр.лиц (границы цен для бонуса)
+  CREATE TEMP TABLE tmpJuridicalSettingsItem ON COMMIT DROP AS (SELECT tmp.JuridicalSettingsId
                                       , tmp.Bonus
                                       , tmp.PriceLimit_min
                                       , tmp.PriceLimit
                                  FROM JuridicalSettings
                                       INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
                                  WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
-                                 )
+                                 );
+
+  ANALYSE tmpJuridicalSettingsItem;
 
     -- Маркетинговый контракт
-  , GoodsPromo AS (SELECT tmp.JuridicalId
+  CREATE TEMP TABLE GoodsPromo ON COMMIT DROP AS (SELECT tmp.JuridicalId
                         , tmp.GoodsId        -- здесь товар "сети"
                         , tmp.ChangePercent
                    FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
                    WHERE vbIsGoodsPromo = TRUE -- !!!т.е. только в этом случае учитывается маркет. контракт!!!
-                  )
-  , tmpObject_Goods AS (SELECT Object_Goods_Retail.id
+                  );
+
+  ANALYSE GoodsPromo;
+
+  CREATE TEMP TABLE tmpObject_Goods ON COMMIT DROP AS (SELECT Object_Goods_Retail.id
                              , Object_Goods_Retail.GoodsMainId
                              , Object_Goods_Retail.isTop
                              , Object_Goods_Main.ObjectCode
                              , Object_Goods_Main.Name
                         FROM Object_Goods_Retail
                              LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
-                        WHERE Object_Goods_Retail.RetailId = inObjectId)
+                        WHERE Object_Goods_Retail.RetailId = inObjectId);
+
+  ANALYSE tmpObject_Goods;
+
     -- Список цены + ТОП
-  , GoodsPrice AS
+  CREATE TEMP TABLE GoodsPrice ON COMMIT DROP AS
        (SELECT tmpObject_Goods.Id                            AS GoodsId
              , COALESCE (ObjectBoolean_Top.ValueData, FALSE) AS isTOP
         FROM tmpObject_Goods
@@ -114,8 +123,11 @@ BEGIN
                                      ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
                                     AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
         WHERE ObjectBoolean_Top.ValueData = TRUE
-       )
-  , tmpLoadPriceListItem as (SELECT
+       );
+
+  ANALYSE GoodsPrice;
+
+  CREATE TEMP TABLE tmpLoadPriceListItem ON COMMIT DROP AS (SELECT
                                      LoadPriceList.JuridicalId
                                    , LoadPriceList.ContractId
                                    , LoadPriceList.AreaId
@@ -140,10 +152,16 @@ BEGIN
                                    -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
                                    INNER JOIN Object_Goods_Juridical AS Object_JuridicalGoods
                                                                      ON Object_JuridicalGoods.GoodsMainId = LoadPriceListItem.GoodsId
-                                                                    AND Object_JuridicalGoods.JuridicalId = LoadPriceList.JuridicalId)
+                                                                    AND Object_JuridicalGoods.JuridicalId = LoadPriceList.JuridicalId);
 
+
+  ANALYSE tmpLoadPriceListItem;
+
+  -- Результат
+  INSERT INTO MinPrice_ForSite_Temp
+    WITH
               -- товары в прайс-листе (поставщика)
-  , tmpMinPrice_RemainsPrice as (SELECT
+    tmpMinPrice_RemainsPrice as (SELECT
             tmpObject_Goods.Id                 AS GoodsId
           , tmpObject_Goods.Id                 AS GoodsId_retail
           , tmpObject_Goods.ObjectCode         AS GoodsCode
@@ -329,5 +347,5 @@ ALTER FUNCTION lpFillingMinPrice_ForSite () OWNER TO postgres;
 
 -- тест
 --
--- SELECT * FROM lpFillingMinPrice_ForSite ()
+ SELECT * FROM lpFillingMinPrice_ForSite ()
 -- SELECT Count(*) FROM MinPrice_ForSite    - 22572

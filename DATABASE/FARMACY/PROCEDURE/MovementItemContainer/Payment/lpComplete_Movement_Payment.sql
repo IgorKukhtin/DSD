@@ -92,6 +92,7 @@ BEGIN
           AND MI_Payment.DescId = zc_MI_Master()
           AND MI_Payment.isErased = FALSE;
     
+	ANALYSE _tmpMI;
     
     --Создать документы изменения долга по недостающим суммам прочих корректировок
     CREATE TEMP TABLE _tmp(OperDate TDateTime, JuridicalId Integer, Income_JuridicalId Integer, SummaCorrOther TFloat) ON COMMIT DROP;
@@ -174,6 +175,8 @@ BEGIN
                                                 inUserId := inUserId)
     FROM _Tmp;
     
+	ANALYSE _tmp;
+	
     -- проводим оплаты
     PERFORM
         lpComplete_Movement_BankAccount (inMovementId := MI_Payment.MovementBankAccountId

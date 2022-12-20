@@ -86,9 +86,6 @@ BEGIN
                                 )
                                 , 0)  :: TFloat;
 
-    -- !!!ќѕ“»ћ»«ј÷»я!!!
-    ANALYZE ObjectLink;
-
 --raise notice 'Value 1: %', timenow();
 
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpminprice_remains'))
@@ -221,53 +218,112 @@ BEGIN
         );
 
     ANALYZE _tmpMinPrice_RemainsList;
---RAISE notice '<%>', (select count(*) from _tmpMinPrice_RemainsList where  _tmpMinPrice_RemainsList.ObjectId_retail = 472);
 --raise notice 'Value 4: %', timenow();
 
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMovementItemLastPriceList_View'))
+    THEN
+      DROP TABLE tmpMovementItemLastPriceList_View;
+    END IF;
 
-/*    -- ќстатки + коды ...
-    CREATE TEMP TABLE _tmpMinPrice_RemainsList ON COMMIT DROP AS
-       (SELECT
-            _tmpMinPrice_Remains.ObjectId,                  -- здесь товар "сети"
-            _tmpMinPrice_Remains.ObjectId_retail,           -- здесь товар "сети"
-            ObjectLink_LinkGoods_Goods.ChildObjectId as GoodsMainId, -- здесь "общий" товар
-            ObjectLink_LinkGoods_Goods2.ChildObjectId as GoodsId,       -- здесь товар "поставщика"
-            _tmpMinPrice_Remains.Amount,
-            _tmpMinPrice_Remains.MinExpirationDate,
-            _tmpMinPrice_Remains.MidPriceSale
-        FROM _tmpMinPrice_Remains
-                 INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                       ON ObjectLink_LinkGoods_Goods.ChildObjectId = _tmpMinPrice_Remains.objectid -- —в€зь товара сети с общим
-                                      AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+    CREATE TEMP TABLE tmpMovementItemLastPriceList_View ON COMMIT DROP AS (SELECT LastMovement.MovementId
+                                               , MovementItem.ID                 
+                                               , MILinkObject_Goods.ObjectId      AS GoodsId
+                                               , COALESCE(MIFloat_Price.ValueData, MovementItem.Amount)::TFloat  AS Price
+                                               , LastMovement.JuridicalId 
+                                               , LastMovement.ContractId
+                                               , LastMovement.AreaId
+                                          FROM
+                                              (
+                                                  SELECT PriceList.MovementId 
+                                                       , PriceList.JuridicalId 
+                                                       , PriceList.ContractId
+                                                       , PriceList.AreaId
+                                                  FROM 
+                                                      (
+                                                          SELECT 
+                                                              MAX (Movement.OperDate) 
+                                                              OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId 
+                                                                               , COALESCE (MovementLinkObject_Contract.ObjectId, 0)
+                                                                               , COALESCE (MovementLinkObject_Area.ObjectId, 0)
+                                                                   ) AS Max_Date
+                                                            , Movement.OperDate                                  AS OperDate
+                                                            , Movement.Id                                        AS MovementId
+                                                            , MovementLinkObject_Juridical.ObjectId              AS JuridicalId 
+                                                            , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+                                                            , COALESCE (MovementLinkObject_Area.ObjectId, 0)     AS AreaId
+                                                          FROM 
+                                                              Movement
+                                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                                                           ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                                                                          AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
+                                                                                           ON MovementLinkObject_Area.MovementId = Movement.Id
+                                                                                          AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area() 
+                                                          WHERE 
+                                                              Movement.DescId = zc_Movement_PriceList()
+                                                          AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                                      ) AS PriceList
+                                                  WHERE PriceList.Max_Date = PriceList.OperDate 
+                                              ) AS LastMovement
+                                              INNER JOIN MovementItem ON MovementItem.MovementId = LastMovement.MovementId
+                                                                     AND MovementItem.DescId = zc_MI_Master()
+                                                                     AND MovementItem.isErased = False
+                                              INNER JOIN MovementItemLinkObject AS MILinkObject_Goods -- товары в прайс-листе
+                                                                                ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                                               AND MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                                          ON MIFloat_Price.MovementItemId =  MovementItem.Id
+                                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                          );
 
-                 INNER join ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                        ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                       AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+    ANALYZE tmpMovementItemLastPriceList_View;
 
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('PriceSettings'))
+    THEN
+      DROP TABLE PriceSettings;
+    END IF;
 
-                 INNER join ObjectLink AS ObjectLink_LinkGoods_GoodsMain2
-                                        ON ObjectLink_LinkGoods_GoodsMain2.ChildObjectId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
-                                       AND ObjectLink_LinkGoods_GoodsMain2.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+    CREATE TEMP TABLE PriceSettings ON COMMIT DROP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (inUserId::TVarChar));
 
-                 INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods2
-                                      ON ObjectLink_LinkGoods_Goods2.ObjectId = ObjectLink_LinkGoods_GoodsMain2.ObjectId
-                                     AND ObjectLink_LinkGoods_Goods2.DescId = zc_ObjectLink_LinkGoods_Goods()
-       );*/
+    ANALYZE PriceSettings;
 
--- RAISE EXCEPTION '<%>      <%>', (select count(*) from Remains), (select count(*) from _tmpMinPrice_RemainsList);
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('PriceSettingsTOP'))
+    THEN
+      DROP TABLE PriceSettingsTOP;
+    END IF;
+
+    CREATE TEMP TABLE PriceSettingsTOP ON COMMIT DROP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar) WHERE vbIsGoodsPromo = TRUE);
+
+    ANALYZE PriceSettingsTOP;
+
+    -- ”становки дл€ юр. лиц (дл€ поставщика определ€етс€ договор и т.п)
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('JuridicalSettings'))
+    THEN
+      DROP TABLE JuridicalSettings;
+    END IF;
+
+    CREATE TEMP TABLE JuridicalSettings ON COMMIT DROP AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId));
+
+    ANALYZE JuridicalSettings;
+
 
     -- –езультат
     RETURN QUERY
     WITH
     -- ”становки дл€ ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту) !!!внутри проц определ€етс€ ObjectId!!!
-    PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (inUserId::TVarChar))
-  , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar) WHERE vbIsGoodsPromo = TRUE)
+--     PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (inUserId::TVarChar))
+--   , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar) WHERE vbIsGoodsPromo = TRUE)
 
-    -- ”становки дл€ юр. лиц (дл€ поставщика определ€етс€ договор и т.п)
-  , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId)
-                         )
-    -- элементы установок юр.лиц (границы цен дл€ бонуса)
-  , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
+--     -- ”становки дл€ юр. лиц (дл€ поставщика определ€етс€ договор и т.п)
+--   , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId)
+--                          )
+--     -- элементы установок юр.лиц (границы цен дл€ бонуса)
+--   , 
+       tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
                                       , tmp.Bonus
                                       , tmp.PriceLimit_min
                                       , tmp.PriceLimit
@@ -322,59 +378,6 @@ BEGIN
                                  , SupplierFailures.AreaId
                             FROM lpSelect_PriceList_SupplierFailures(0, inUserId) AS SupplierFailures
                             )
-  , tmpMovementItemLastPriceList_View AS (SELECT LastMovement.MovementId
-                                               , MovementItem.ID                 
-                                               , MILinkObject_Goods.ObjectId      AS GoodsId
-                                               , COALESCE(MIFloat_Price.ValueData, MovementItem.Amount)::TFloat  AS Price
-                                               , LastMovement.JuridicalId 
-                                               , LastMovement.ContractId
-                                               , LastMovement.AreaId
-                                          FROM
-                                              (
-                                                  SELECT PriceList.MovementId 
-                                                       , PriceList.JuridicalId 
-                                                       , PriceList.ContractId
-                                                       , PriceList.AreaId
-                                                  FROM 
-                                                      (
-                                                          SELECT 
-                                                              MAX (Movement.OperDate) 
-                                                              OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId 
-                                                                               , COALESCE (MovementLinkObject_Contract.ObjectId, 0)
-                                                                               , COALESCE (MovementLinkObject_Area.ObjectId, 0)
-                                                                   ) AS Max_Date
-                                                            , Movement.OperDate                                  AS OperDate
-                                                            , Movement.Id                                        AS MovementId
-                                                            , MovementLinkObject_Juridical.ObjectId              AS JuridicalId 
-                                                            , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
-                                                            , COALESCE (MovementLinkObject_Area.ObjectId, 0)     AS AreaId
-                                                          FROM 
-                                                              Movement
-                                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                                                                           ON MovementLinkObject_Juridical.MovementId = Movement.Id
-                                                                                          AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-                                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
-                                                                                           ON MovementLinkObject_Area.MovementId = Movement.Id
-                                                                                          AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area() 
-                                                          WHERE 
-                                                              Movement.DescId = zc_Movement_PriceList()
-                                                          AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                                      ) AS PriceList
-                                                  WHERE PriceList.Max_Date = PriceList.OperDate 
-                                              ) AS LastMovement
-                                              INNER JOIN MovementItem ON MovementItem.MovementId = LastMovement.MovementId
-                                                                     AND MovementItem.DescId = zc_MI_Master()
-                                                                     AND MovementItem.isErased = False
-                                              INNER JOIN MovementItemLinkObject AS MILinkObject_Goods -- товары в прайс-листе
-                                                                                ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                                                               AND MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                                          ON MIFloat_Price.MovementItemId =  MovementItem.Id
-                                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                          )
   , tmpMinPrice_RemainsPrice as (SELECT
             _tmpMinPrice_RemainsList.ObjectId                 AS GoodsId
           , _tmpMinPrice_RemainsList.ObjectId_retail          AS GoodsId_retail

@@ -12,19 +12,20 @@ RETURNS TABLE (Id Integer
  AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbMovementId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoBonus());
     vbUserId:= lpGetUserBySession (inSession);
 
-    -- Результат такой
-    RETURN QUERY
-    WITH tmpMovement AS (SELECT Movement.id FROM Movement
-                         WHERE Movement.OperDate <= CURRENT_DATE
-                           AND Movement.DescId = zc_Movement_PromoBonus()
-                           AND Movement.StatusId = zc_Enum_Status_Complete()),
-         tmpMovementItem AS (SELECT MovementItem.Id        
+    vbMovementId := (SELECT MAX(Movement.id) AS ID FROM Movement
+                     WHERE Movement.OperDate <= CURRENT_DATE
+                       AND Movement.DescId = zc_Movement_PromoBonus()
+                       AND Movement.StatusId = zc_Enum_Status_Complete());
+					   
+	CREATE TEMP TABLE tmpMovementItem ON COMMIT DROP AS  
+	                        (SELECT MovementItem.Id        
                                   , MovementItem.ObjectId                      AS GoodsId
                                   , Object_Maker.ValueData                     AS MakerName
                                   , MovementItem.Amount                        AS Amount
@@ -42,11 +43,17 @@ BEGIN
                                                               AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
                                   LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = MovementLinkObject_Maker.ObjectId
 
-                             WHERE MovementItem.MovementId = (SELECT MAX(Movement.id) FROM tmpMovement AS Movement)
+                             WHERE MovementItem.MovementId = vbMovementId
                                AND MovementItem.DescId = zc_MI_Master()
                                AND MovementItem.isErased = False
                                AND MovementItem.Amount > 0
-                             ORDER BY Object_Maker.ValueData),
+                             ORDER BY Object_Maker.ValueData);	
+							 
+	ANALYSE tmpMovementItem;
+					   
+    -- Результат такой
+    RETURN QUERY
+    WITH 
          tmpMaxOrd AS (SELECT max(tmpMovementItem.Ord) AS MaxOrd FROM tmpMovementItem)
      
      SELECT MovementItem.Id        
@@ -60,7 +67,7 @@ BEGIN
      FROM tmpMovementItem AS MovementItem
           INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.GoodsId
           INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-          INNER JOIN tmpMaxOrd ON 1 = 1
+         -- INNER JOIN tmpMaxOrd ON 1 = 1
      /*WHERE CASE WHEN mod(date_part('week',  CURRENT_DATE)::TFloat, 2.0) = 0  
                 THEN tmpMaxOrd.MaxOrd / 2 <= MovementItem.Ord 
                 ELSE tmpMaxOrd.MaxOrd / 2 + 1 >= MovementItem.Ord END = TRUE*/

@@ -211,6 +211,8 @@ BEGIN
            reprice 
    FROM gpSelect_AllGoodsPrice(inUnitId := vbUnitID, inUnitId_to := inUnitId_to, inMinPercent := vbPercentDifference,
       inVAT20 := vbVAT20, inTaxTo := 0::TFloat, inPriceMaxTo := 0::TFloat,  inSession := inSession);
+	  
+    ANALYSE tmpAllGoodsPrice;
 
     PERFORM gpInsertUpdate_MovementItem_Reprice(
       ioID := 0 ,
