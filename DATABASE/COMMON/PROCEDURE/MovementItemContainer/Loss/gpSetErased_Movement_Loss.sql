@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSetErased_Movement_Loss(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+   DECLARE vbUserId Integer;
+   DECLARE vbMovementId_Peresort Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Loss());
@@ -23,6 +24,17 @@ BEGIN
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
+
+
+     -- Поиск "Пересортица"
+     vbMovementId_Peresort:= (SELECT MLM.MovementId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production());
+     -- Синхронно - Удалили
+     IF vbMovementId_Peresort <> 0
+     THEN
+         PERFORM lpSetErased_Movement (inMovementId := vbMovementId_Peresort
+                                     , inUserId     := vbUserId
+                                      );
+     END IF;
 
 END;
 $BODY$

@@ -36,7 +36,80 @@ BEGIN
         RETURN;
      END IF;
 
+ 
+     -- с ЦЕХа Упаковки и с Базы ГП на Распределительный комплекс.
+     IF      -- 1.1.
+             (EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_From()
+                        -- Склад База ГП
+                        AND MLO.ObjectId = 8458
+                     )
+          AND EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_To()
+                        -- Розподільчий комплекс
+                        AND MLO.ObjectId = 8459 
+                     )
+             )
+          -- 1.2.
+          OR (EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_From()
+                        -- ЦЕХ упаковки
+                        AND MLO.ObjectId = 8451
+                     )
+          AND EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_To()
+                        -- Розподільчий комплекс
+                        AND MLO.ObjectId = 8459 
+                     )
+             )
+     THEN
+         -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка
+         IF NOT EXISTS (SELECT 1
+                        FROM ObjectBoolean AS ObjectBoolean_RK
+                             INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_RK.ObjectId
+                        WHERE ObjectBoolean_RK.ValueData = TRUE
+                          AND ObjectBoolean_RK.DescId = zc_ObjectBoolean_GoodsByGoodsKind_RK()
+                          AND Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
+                          AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
+                        )
+              AND EXISTS (SELECT 1 FROM ObjectLink AS OL
+                                   WHERE OL.ObjectId = inGoodsId
+                                     AND OL.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                     AND OL.ChildObjectId IN (zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                          --, zc_Enum_InfoMoney_30102() -- Тушенка
+                                                            , zc_Enum_InfoMoney_20901() -- Ирна
+                                                             )
+                         )
+         THEN
+                  RAISE EXCEPTION 'Ошибка.Для товара <%>% указан неверный вид = <%>.% %'
+                                 , lfGet_Object_ValueData (inGoodsId)
+                                 , CHR (13)
+                                 , lfGet_Object_ValueData_sh (inGoodsKindId)
+                                 , CHR (13)
+                                 , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId
+                                                               FROM MovementLinkObject AS MLO
+                                                               WHERE MLO.MovementId = inMovementId
+                                                                 AND MLO.DescId = zc_MovementLinkObject_From()
+                                                              ))
+                                || '  =>  '
+                                || lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId
+                                                               FROM MovementLinkObject AS MLO
+                                                               WHERE MLO.MovementId = inMovementId
+                                                                 AND MLO.DescId = zc_MovementLinkObject_To()
+                                                             ))
+                                  ;
+         END IF;
+     END IF;
 
+     -- почти все на <ЦЕХ упаковки>
      IF NOT (-- 1.1.
              (EXISTS (SELECT 1
                       FROM MovementLinkObject AS MLO
