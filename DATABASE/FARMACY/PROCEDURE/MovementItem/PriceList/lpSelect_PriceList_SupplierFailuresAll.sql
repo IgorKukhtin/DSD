@@ -62,7 +62,8 @@ BEGIN
                              LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = PriceList.JuridicalId
                                                        AND tmpJuridicalArea.AreaId = PriceList.AreaId 
                             
-                        WHERE (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.JuridicalId, 0) <> 0))             
+                        WHERE (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.JuridicalId, 0) <> 0)
+                          AND COALESCE (PriceListNext.OperDate, zc_DateEnd()) >= '20.02.2022')              
 
     SELECT DISTINCT
            Movement.OperDate
@@ -82,7 +83,7 @@ BEGIN
                                      AND MIBoolean_SupplierFailures.DescId = zc_MIBoolean_SupplierFailures()
                                      AND MIBoolean_SupplierFailures.ValueData = TRUE
                                      
-    WHERE Movement.DateFinal >= '20.02.2022'
+   
     ;
 
 END;
