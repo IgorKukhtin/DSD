@@ -171,7 +171,7 @@ BEGIN
                               -- нашли Комплектующие
                             , ObjectLink_GoodsChild.ChildObjectId             AS GoodsChildId
                               -- значение
-                            , ObjectFloat_Value.ValueData                     AS Value
+                            , ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END AS Value
                               --
                             , Object_ReceiptGoodsChild.ValueData              AS Comment
                             , Object_ReceiptGoodsChild.isErased               AS isErased
@@ -196,6 +196,10 @@ BEGIN
                             LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                   ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
                                                  AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                  ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
+                                                 AND ObjectFloat_ForCount.DescId = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
+                                                    
                             -- Этап сборки
                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
                                                  ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
@@ -361,8 +365,8 @@ BEGIN
      SELECT (ROW_NUMBER() OVER (ORDER BY Object_ReceiptGoodsChild.Id ASC)
            + CASE WHEN ObjectLink_ProdColorPattern.ChildObjectId IS NULL THEN 1000 ELSE 0 END)  :: Integer AS NPP
 
-         , CASE WHEN Object_Goods.DescId <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END ::TFloat   AS Value
-         , CASE WHEN Object_Goods.DescId = zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END ::TFloat   AS Value_service
+         , CASE WHEN Object_Goods.DescId <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END ELSE 0 END ::TFloat   AS Value
+         , CASE WHEN Object_Goods.DescId = zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END ELSE 0 END ::TFloat   AS Value_service
 
          --, Object_ReceiptGoods.Id        ::Integer  AS ReceiptGoodsId
          --, Object_ReceiptGoods.ValueData ::TVarChar AS ReceiptGoodsName
@@ -402,10 +406,14 @@ BEGIN
                          -- AND Object_Object.DescId = zc_Object_Goods()
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
 
+          -- значение в сборке
           LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                 ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value() 
-
+          LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
+                               AND ObjectFloat_ForCount.DescId = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
+                               
           --
           LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
                                  ON ObjectString_GoodsGroupFull.ObjectId = Object_Object.Id
@@ -466,5 +474,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ReceiptGoods_Print (inReceiptGoodsId:= 122175, inSession:= zfCalc_UserAdmin())
-
-select * from gpSelect_Object_ReceiptGoods_Print(inReceiptGoodsId := 252646 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Object_ReceiptGoods_Print(inReceiptGoodsId := 252646 ,  inSession := '5');

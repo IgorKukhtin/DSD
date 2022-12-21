@@ -50,7 +50,7 @@ BEGIN
                -- элемент который будем раскладывать
              , ObjectLink_Object.ChildObjectId           AS ObjectId
                -- значение
-             , COALESCE (ObjectFloat_Value.ValueData, 0)   :: TFloat AS Value
+             , COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END :: TFloat AS Value
 
                -- Цена вх. без НДС
              , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
@@ -73,7 +73,10 @@ BEGIN
 
              LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                    ON ObjectFloat_Value.ObjectId = Object_ReceiptProdModelChild.Id
-                                  AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptProdModelChild_Value()
+                                  AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptProdModelChild_Value()
+             LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                   ON ObjectFloat_ForCount.ObjectId = Object_ReceiptProdModelChild.Id
+                                  AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptProdModelChild_ForCount()
 
              LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                    ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Object.ChildObjectId
@@ -116,7 +119,7 @@ BEGIN
              , ROW_NUMBER() OVER (PARTITION BY tmpReceiptProdModelChild.ReceiptProdModelChildId ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP
 
                -- умножили
-             , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0)) :: TFloat AS Value
+             , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END) :: TFloat AS Value
 
                -- Цена вх. без НДС
              , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
@@ -124,9 +127,13 @@ BEGIN
              , zfCalc_SummWVAT (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0), ObjectFloat_TaxKind_Value.ValueData) :: TFloat AS EKPriceWVAT
 
                -- Сумма вх. без НДС
-             , zfCalc_SummIn (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0), COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) , 1) :: TFloat AS EKPrice_summ
+             , zfCalc_SummIn (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END
+                            , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
+                            , 1) :: TFloat AS EKPrice_summ
                -- Сумма вх. с НДС
-             , zfCalc_SummWVAT (zfCalc_SummIn ( tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0), COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) , 1)
+             , zfCalc_SummWVAT (zfCalc_SummIn ( tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END
+                                              , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
+                                              , 1)
                               , ObjectFloat_TaxKind_Value.ValueData) :: TFloat AS EKPriceWVAT_summ
 
         FROM tmpReceiptProdModelChild
@@ -158,7 +165,10 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                    ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                   AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
-
+             LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                   ON ObjectFloat_ForCount.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                  AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
+                                  
              -- !!!с этой структурой!!!
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Object.ChildObjectId
 

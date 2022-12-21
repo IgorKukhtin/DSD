@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, I
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderClient_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderClient_Child(
     IN inGoodsId_Basis       Integer   , -- Комплектующие - если была замена, какой узел был в ReceiptProdModel
     IN inAmount              TFloat    , -- Количество резерв
     IN inAmountPartner       TFloat    , -- Количество заказ поставщику
+    IN inForCount            TFloat    , -- Для кол-во
     IN inOperPrice           TFloat    , -- Цена вх без НДС
     IN inCountForPrice       TFloat    , -- Цена за кол.
     IN inPartnerId           Integer   , -- Поставщик - кому уходит заказ поставщика
@@ -57,6 +59,8 @@ BEGIN
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, NULL, inMovementId, inAmount, NULL, inUserId);
 
+     -- сохранили свойство <Для кол-во>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ForCount(), ioId, CASE WHEN inForCount > 0 THEN inForCount ELSE 1 END);
      -- сохранили свойство <AmountPartner>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
      -- сохранили свойство <Цена со скидкой>

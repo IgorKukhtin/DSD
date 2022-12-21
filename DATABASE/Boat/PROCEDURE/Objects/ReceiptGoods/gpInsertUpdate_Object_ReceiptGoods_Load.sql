@@ -25,7 +25,8 @@ $BODY$
    DECLARE vbGoodsId_child Integer;
    DECLARE vbReceiptGoodsId Integer;
    DECLARE vbReceiptGoodsChildId Integer;
-   DECLARE vbAmount TFloat;
+   DECLARE vbAmount NUMERIC (16, 8);
+   DECLARE vbForCount TFloat;
    
    DECLARE vbStage boolean; -- Сборка второго уровня
    DECLARE vbNotRename boolean; -- Не переименовывать
@@ -68,6 +69,15 @@ BEGIN
      vbAmount := 0;
    ELSE
      vbAmount := zfConvert_CheckStringToFloat (inAmount);
+     -- если надо добавить разряд
+     IF vbAmount <> vbAmount :: TFloat
+     THEN
+         vbForCount:= 1000;
+         vbAmount:= vbAmount * 1000;
+     ELSE
+         vbForCount:= 1;
+     END IF;
+     --
      IF vbAmount <= 0
      THEN
        RAISE EXCEPTION 'Ошибка преобразования в число <%>.', inAmount;        
@@ -709,7 +719,7 @@ BEGIN
                                                                             , ioCode            := 0         :: Integer
                                                                             , inName            := TRIM (inReceiptLevelName) ::TVarChar
                                                                             , inShortName       := TRIM (inReceiptLevelName) ::TVarChar
-                                                                          --  , inObjectDesc      := 'zc_Object_ReceiptGoods'  ::TVarChar
+                                                                            , inObjectDesc      := 'zc_Object_ReceiptGoods'  ::TVarChar
                                                                             , inSession         := inSession :: TVarChar
                                                                              ) AS tmp);
            END IF;
@@ -782,6 +792,7 @@ BEGIN
                                                                                  , inGoodsChildId       := vbGoods_GoodsChildId ::Integer
                                                                                  , ioValue              := vbAmount             ::TFloat
                                                                                  , ioValue_service      := 0                    ::TFloat
+                                                                                 , ioForCount           := vbForCount
                                                                                  , inIsEnabled          := TRUE                 ::Boolean
                                                                                  , inSession            := inSession            ::TVarChar
                                                                                   ) AS tmp);
@@ -813,7 +824,7 @@ BEGIN
                                                                             , ioCode            := 0         :: Integer
                                                                             , inName            := TRIM (inReceiptLevelName) ::TVarChar
                                                                             , inShortName       := TRIM (inReceiptLevelName) ::TVarChar
-                                                                          --  , inObjectDesc      := 'zc_Object_ReceiptProdModel'  ::TVarChar
+                                                                            , inObjectDesc      := 'zc_Object_ReceiptProdModel'  ::TVarChar
                                                                             , inSession         := inSession :: TVarChar
                                                                              ) AS tmp);
              END IF;
@@ -876,6 +887,7 @@ BEGIN
                                                                                       , inReceiptLevelId     := vbReceiptLevelId      ::Integer
                                                                                       , ioValue              := vbAmount              ::TFloat
                                                                                       , ioValue_service      := 0                     ::TFloat
+                                                                                      , ioForCount           := vbForCount
                                                                                       , ioIsCheck            := FALSE
                                                                                       , inSession            := inSession             ::TVarChar
                                                                                        ) AS tmp);
@@ -931,6 +943,4 @@ $BODY$
 */
 
 -- тест
--- 
--- 
-SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load(3, 'AGL-280-01-пф', '1-HULL/(Корпус)', '', '', '', '77083888883', 'SYNOLITE 8388-P-1', 'Стеклопластик ПФ', '16,7124', zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_Object_ReceiptGoods_Load(3, 'AGL-280-01-пф', '1-HULL/(Корпус)', '', '', '', '77083888883', 'SYNOLITE 8388-P-1', 'Стеклопластик ПФ', '16,7124', zfCalc_UserAdmin())

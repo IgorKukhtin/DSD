@@ -1,4 +1,4 @@
--- Function: lpInsertUpdate_MI_OrderClient_Child()
+-- Function: lpInsertUpdate_MI_OrderClient_Reserv()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Reserv (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer);
 

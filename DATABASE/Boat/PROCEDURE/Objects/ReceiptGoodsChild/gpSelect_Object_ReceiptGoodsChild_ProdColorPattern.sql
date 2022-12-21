@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild_ProdColorPattern(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ReceiptGoodsId Integer
-             , Value TFloat
+             , Value NUMERIC (16, 8), ForCount TFloat
              , Comment TVarChar
              , isEnabled Boolean
              , isErased Boolean
@@ -82,7 +82,8 @@ BEGIN
                             , ObjectLink_ProdColorPattern.ChildObjectId       AS ProdColorPatternId
                             , ObjectLink_MaterialOptions.ChildObjectId        AS MaterialOptionsId
                               -- значение
-                            , ObjectFloat_Value.ValueData                     AS Value
+                            , ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END AS Value
+                            , ObjectFloat_ForCount.ValueData AS ForCount
                               --
                             , Object_ReceiptGoodsChild.ValueData              AS Comment
                             , Object_ReceiptGoodsChild.isErased               AS isErased
@@ -108,6 +109,10 @@ BEGIN
                             LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                   ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
                                                  AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                  ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
+                                                 AND ObjectFloat_ForCount.DescId = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
+
                        WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
                          AND (Object_ReceiptGoodsChild.isErased = FALSE OR inIsErased = TRUE)
                       )
@@ -120,6 +125,7 @@ BEGIN
                             , COALESCE (tmpItems.ProdColorPatternId, tmpObject.ProdColorPatternId) AS ProdColorPatternId
                             , tmpItems.MaterialOptionsId
                             , tmpItems.Value                                                       AS Value
+                            , tmpItems.ForCount                                                    AS ForCount
                             , tmpItems.Comment                                                     AS Comment
                             , COALESCE (tmpItems.isErased, FALSE)                                  AS isErased
                             , CASE WHEN tmpItems.ProdColorPatternId > 0 THEN TRUE ELSE FALSE END   AS isEnabled
@@ -131,7 +137,8 @@ BEGIN
      -- Результат
      SELECT tmpProdColorPattern.ReceiptGoodsChildId       AS Id
           , tmpProdColorPattern.ReceiptGoodsId            AS ReceiptGoodsId
-          , tmpProdColorPattern.Value         :: TFloat   AS Value
+          , tmpProdColorPattern.Value         :: NUMERIC (16, 8) AS Value
+          , tmpProdColorPattern.ForCount      :: TFloat          AS ForCount
           , tmpProdColorPattern.Comment       :: TVarChar AS Comment
           , tmpProdColorPattern.isEnabled     :: Boolean  AS isEnabled
           , tmpProdColorPattern.isErased      :: Boolean  AS isErased

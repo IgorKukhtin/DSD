@@ -14,11 +14,13 @@ RETURNS TABLE (ModelId Integer, ModelName TVarChar
                -- элемент который раскладывали
              , ObjectId_parent Integer, ObjectCode_parent Integer, ObjectName_parent TVarChar, ObjectDescId_parent Integer, DescName_parent TVarChar
                -- значение
-             , Value_parent TFloat
+             , Value_parent NUMERIC(16, 8), Value_parent_orig TFloat, ForCount_parent TFloat
                -- на что разложили /либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, ObjectDescId Integer, DescName TVarChar
                -- значение
-             , Value TFloat
+             , Value      NUMERIC(16, 8)
+             , Value_orig TFloat
+             , ForCount   TFloat
                --
              , ReceiptGoodsChildId Integer
                -- Boat Structure
@@ -79,7 +81,9 @@ BEGIN
                                              -- элемент который будем раскладывать
                                            , ObjectLink_Object.ChildObjectId                 AS ObjectId
                                              -- значение
-                                           , ObjectFloat_Value.ValueData                     AS Value
+                                           , ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END AS Value
+                                           , ObjectFloat_Value.ValueData    AS Value_orig
+                                           , ObjectFloat_ForCount.ValueData AS ForCount
 
                                       FROM Object AS Object_ReceiptProdModel
                                            -- признак главный Yes/no шаблон ProdModel
@@ -109,7 +113,10 @@ BEGIN
                                            LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                                  ON ObjectFloat_Value.ObjectId = Object_ReceiptProdModelChild.Id
                                                                 AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptProdModelChild_Value()
-
+                                           LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                                 ON ObjectFloat_ForCount.ObjectId = Object_ReceiptProdModelChild.Id
+                                                                AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptProdModelChild_ForCount()
+                                                                
                                       WHERE Object_ReceiptProdModel.DescId   = zc_Object_ReceiptProdModel()
                                         AND Object_ReceiptProdModel.isErased = FALSE
                                      )
@@ -136,8 +143,13 @@ BEGIN
                                        , ObjectLink_GoodsChild.ChildObjectId               AS GoodsChildId
                                          -- значение ProdModelChild
                                        , tmpReceiptProdModelChild.Value                    AS Value_parent
+                                       , tmpReceiptProdModelChild.Value_orig               AS Value_parent_orig
+                                       , tmpReceiptProdModelChild.ForCount                 AS ForCount_parent
+                                       
                                          -- умножили
-                                       , tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData AS Value
+                                       , tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END AS Value
+                                       , tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData AS Value_orig
+                                       , ObjectFloat_ForCount.ValueData AS ForCount
 
                                   FROM tmpReceiptProdModelChild
                                        -- нашли его в сборке узлов
@@ -180,6 +192,9 @@ BEGIN
                                        LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                              ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
                                                             AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                             ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
+                                                            AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
                                  )
 
                            -- элементы ReceiptProdModelChild
@@ -200,8 +215,13 @@ BEGIN
                                              --
                                            , '' AS Comment_Receipt
                                              -- значение
-                                           , tmpReceiptProdModelChild.Value AS Value_parent
-                                           , tmpReceiptProdModelChild.Value
+                                           , tmpReceiptProdModelChild.Value       AS Value_parent
+                                           , tmpReceiptProdModelChild.Value_orig  AS Value_parent_orig
+                                           , tmpReceiptProdModelChild.ForCount    AS ForCount_parent
+                                             --
+                                           , tmpReceiptProdModelChild.Value  AS Value
+                                           , tmpReceiptGoodsChild.Value_orig AS Value_orig
+                                           , tmpReceiptGoodsChild.ForCount   AS ForCount
                                              --
                                            , 0 AS ReceiptGoodsChildId
                                            , 0 AS ProdColorPatternId
@@ -229,8 +249,14 @@ BEGIN
                                              --
                                            , tmpReceiptGoodsChild.Comment AS Comment_Receipt
                                              -- значение
-                                           , tmpReceiptGoodsChild.Value_parent
-                                           , (tmpReceiptGoodsChild.Value) AS Value
+                                           , tmpReceiptGoodsChild.Value_parent      AS Value_parent
+                                           , tmpReceiptGoodsChild.Value_parent_orig AS Value_parent_orig
+                                           , tmpReceiptGoodsChild.ForCount_parent   AS ForCount_parent
+                                             -- 
+                                           , (tmpReceiptGoodsChild.Value)      AS Value
+                                           , (tmpReceiptGoodsChild.Value_orig) AS Value_orig
+                                           , (tmpReceiptGoodsChild.ForCount)   AS ForCount
+
                                              --
                                            , (tmpReceiptGoodsChild.ReceiptGoodsChildId) AS ReceiptGoodsChildId
                                            , tmpReceiptGoodsChild.ProdColorPatternId
@@ -257,8 +283,13 @@ BEGIN
                                              --
                                            , tmpReceiptGoodsChild.Comment AS Comment_Receipt
                                              -- значение
-                                           , tmpReceiptGoodsChild.Value_parent
-                                           , SUM (tmpReceiptGoodsChild.Value) AS Value
+                                           , tmpReceiptGoodsChild.Value_parent      AS Value_parent
+                                           , tmpReceiptGoodsChild.Value_parent_orig AS Value_parent_orig
+                                           , tmpReceiptGoodsChild.ForCount_parent   AS ForCount_parent
+                                             --
+                                           , SUM (tmpReceiptGoodsChild.Value)      AS Value
+                                           , SUM (tmpReceiptGoodsChild.Value_orig) AS Value_orig
+                                           , MAX (tmpReceiptGoodsChild.ForCount)   AS ForCount
                                              --
                                            , MAX (tmpReceiptGoodsChild.ReceiptGoodsChildId) AS ReceiptGoodsChildId
                                            , tmpReceiptGoodsChild.ProdColorPatternId
@@ -283,6 +314,8 @@ BEGIN
                                              , tmpReceiptGoodsChild.Comment
                                                -- значение
                                              , tmpReceiptGoodsChild.Value_parent
+                                             , tmpReceiptGoodsChild.Value_parent_orig
+                                             , tmpReceiptGoodsChild.ForCount_parent
                                                --
                                              , tmpReceiptGoodsChild.ProdColorPatternId
                                              , tmpReceiptGoodsChild.MaterialOptionsId
@@ -297,11 +330,15 @@ BEGIN
               -- элемент ReceiptProdModelChild
             , tmpRes.ObjectId_parent, Object_parent.ObjectCode AS ObjectCode_parent, Object_parent.ValueData AS ObjectName_parent, Object_parent.DescId AS ObjectDescId_parent, ObjectDesc_parent.ItemName AS DescName_parent
               -- значение ReceiptProdModelChild
-            , tmpRes.Value_parent :: TFloat AS Value_parent
+            , tmpRes.Value_parent      :: NUMERIC(16, 8) AS Value_parent
+            , tmpRes.Value_parent_orig :: TFloat         AS Value_parent_orig
+            , tmpRes.ForCount_parent   :: TFloat         AS ForCount_parent
               -- элемент ReceiptProdModelChild или разложили на ReceiptGoodsChild
             , tmpRes.ObjectId, Object.ObjectCode, Object.ValueData AS ObjectName, Object.DescId AS ObjectDescId, ObjectDesc.ItemName AS DescName
               -- значение
-            , COALESCE (tmpRes.Value, 0) :: TFloat AS Value
+            , COALESCE (tmpRes.Value, 0)      :: NUMERIC(16, 8) AS Value
+            , COALESCE (tmpRes.Value_orig, 0) :: TFloat         AS Value_orig
+            , COALESCE (tmpRes.ForCount, 0)   :: TFloat         AS ForCount
               --
             , tmpRes.ReceiptGoodsChildId
 

@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
     IN inGoodsChildId        Integer   ,
  INOUT ioValue               TFloat    ,
  INOUT ioValue_service       TFloat    ,
+ INOUT ioForCount            TFloat    ,
     IN inIsEnabled           Boolean   ,
    OUT outReceiptLevelName   TVarChar  ,
     IN inSession             TVarChar       -- сессия пользователя
@@ -92,6 +94,11 @@ BEGIN
 
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_Value(), ioId, ioValue);
+
+       -- сохранили свойство <>
+       IF COALESCE (ioForCount, 0) <= 0 THEN ioForCount:= 1; END IF;
+       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_ForCount(), ioId, ioForCount);
+       
 
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods(), ioId, inReceiptGoodsId);

@@ -98,7 +98,7 @@ BEGIN
                                              -- элемент который будем раскладывать
                                            , ObjectLink_Object.ChildObjectId           AS ObjectId
                                              -- значение
-                                           , ObjectFloat_Value.ValueData               AS Value
+                                           , ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END AS Value
                                       FROM Object AS Object_ReceiptProdModelChild
 
                                            LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
@@ -116,7 +116,10 @@ BEGIN
                                            LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                                  ON ObjectFloat_Value.ObjectId = Object_ReceiptProdModelChild.Id
                                                                 AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptProdModelChild_Value()
-
+                                           LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                                 ON ObjectFloat_ForCount.ObjectId = Object_ReceiptProdModelChild.Id
+                                                                AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptProdModelChild_ForCount()
+                                                                
                                       WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
                                         AND Object_ReceiptProdModelChild.isErased = FALSE
                                         AND ObjectLink_ReceiptProdModel.ChildObjectId = inReceiptProdModelId
@@ -134,7 +137,7 @@ BEGIN
                                          -- нашли Элемент Boat Structure
                                        , ObjectLink_ProdColorPattern.ChildObjectId       AS ProdColorPatternId    ---
                                          -- умножили
-                                       , tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData AS Value
+                                       , tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END AS Value
                                   FROM tmpReceiptProdModelChild
              -- нашли его в сборке узлов
              INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
@@ -164,6 +167,9 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                    ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                   AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
+             LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                   ON ObjectFloat_ForCount.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                  AND ObjectFloat_ForCount.DescId = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
 
              -- !!!с этой структурой!!!
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Object.ChildObjectId
@@ -386,5 +392,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ReceiptProdModel_Print (inReceiptProdModelId:= 122175, inReceiptLevelId:= 1, inSession:= zfCalc_UserAdmin())
-
-select * from gpSelect_Object_ReceiptProdModel_Print(inReceiptProdModelId := 39753 , inReceiptLevelId := 0 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Object_ReceiptProdModel_Print(inReceiptProdModelId := 39753 , inReceiptLevelId := 0 ,  inSession := '5');

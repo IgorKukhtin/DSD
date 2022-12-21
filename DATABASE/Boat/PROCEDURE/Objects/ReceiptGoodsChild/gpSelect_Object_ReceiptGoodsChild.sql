@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
-             , Value TFloat, Value_servise TFloat
+             , Value NUMERIC (16, 8), Value_servise NUMERIC (16, 8)
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
@@ -59,8 +59,8 @@ vbIsShowAll:= TRUE;
          , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptGoods.Id ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP
          , Object_ReceiptGoodsChild.ValueData       AS Comment
 
-         , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END ::TFloat   AS Value
-         , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END ::TFloat   AS Value_servise
+         , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END ELSE 0 END :: NUMERIC (16, 8) AS Value
+         , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END ELSE 0 END :: NUMERIC (16, 8) AS Value_servise
 
          , Object_ReceiptGoods.Id        ::Integer  AS ReceiptGoodsId
          , Object_ReceiptGoods.ValueData ::TVarChar AS ReceiptGoodsName
@@ -108,18 +108,18 @@ vbIsShowAll:= TRUE;
                ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
           END ::TFloat  AS BasisPriceWVAT
 
-        , (ObjectFloat_Value.ValueData * ObjectFloat_EKPrice.ValueData) :: TFloat AS EKPrice_summ
-        , (ObjectFloat_Value.ValueData
+        , (ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END * ObjectFloat_EKPrice.ValueData) :: TFloat AS EKPrice_summ
+        , (ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END
              * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
                     * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ
 
-        , (ObjectFloat_Value.ValueData
+        , (ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END
             * CASE WHEN vbPriceWithVAT = FALSE
                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                    ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
               END)  :: TFloat AS Basis_summ
 
-        , (ObjectFloat_Value.ValueData
+        , (ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END
             * CASE WHEN vbPriceWithVAT = FALSE
                     THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                     ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
@@ -133,9 +133,13 @@ vbIsShowAll:= TRUE;
           LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
 
+          -- значение в сборке
           LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                 ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
-                               AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                               AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
+          LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
+                               AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
 
           LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
                                ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
