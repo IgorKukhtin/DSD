@@ -25,7 +25,7 @@ RETURNS TABLE (MovementId_OrderClient Integer
              , GoodsId_Receipt Integer, MaterialOptionsId_Receipt Integer
 
                -- Boat Structure
-             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar, ProdColorPatternName_sh TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
                -- Категория Опций
              , MaterialOptionsId Integer, MaterialOptionsName TVarChar
@@ -44,7 +44,7 @@ RETURNS TABLE (MovementId_OrderClient Integer
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
              , Article TVarChar
-             , ProdColorName TVarChar
+             , ProdColorName TVarChar, Color_Value Integer
              , MeasureName TVarChar
              , EKPrice TFloat, EKPrice_summ TFloat
              , Amount TFloat
@@ -69,7 +69,7 @@ BEGIN
                                              -- элемент который будем раскладывать
                                            , ObjectLink_Object.ChildObjectId                 AS ObjectId
                                              -- значение
-                                           , ObjectFloat_Value.ValueData                     AS Value
+                                           , ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END AS Value
 
                                       FROM ObjectLink AS ObjectLink_ReceiptProdModel_master
 
@@ -100,6 +100,9 @@ BEGIN
                                            LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                                  ON ObjectFloat_Value.ObjectId = Object_ReceiptProdModelChild.Id
                                                                 AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptProdModelChild_Value()
+                                           LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                                 ON ObjectFloat_ForCount.ObjectId = Object_ReceiptProdModelChild.Id
+                                                                AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptProdModelChild_ForCount()
 
                                       WHERE ObjectLink_ReceiptProdModel_master.DescId = zc_ObjectLink_Product_ReceiptProdModel()
                                      )
@@ -118,7 +121,7 @@ BEGIN
                                          -- Категория Опций
                                        , ObjectLink_MaterialOptions.ChildObjectId          AS MaterialOptionsId
                                          -- умножили
-                                       , SUM (tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData) AS Value
+                                       , SUM (tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END) AS Value
 
                                   FROM tmpReceiptProdModelChild
                                        -- нашли его в сборке узлов
@@ -154,6 +157,9 @@ BEGIN
                                        LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                              ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                                             AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                             ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
+                                                            AND ObjectFloat_ForCount.DescId = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
                                        -- всегда Цвет
                                        LEFT JOIN ObjectString AS ObjectString_ProdColorPattern_Comment
                                                               ON ObjectString_ProdColorPattern_Comment.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
@@ -403,6 +409,11 @@ BEGIN
                                            , Object_Model_pcp.ValueData
                                            , Object_ProdColorPattern.isErased
                                             ) AS ProdColorPatternName
+         , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData
+                                           , Object_ProdColorPattern.ValueData
+                                           , ''
+                                           , Object_ProdColorPattern.isErased
+                                            ) AS ProdColorPatternName_sh
 
          , Object_ProdColorGroup.Id           ::Integer   AS ProdColorGroupId
          , Object_ProdColorGroup.ValueData    ::TVarChar  AS ProdColorGroupName
@@ -450,6 +461,8 @@ BEGIN
             END
             --|| ' ' || Object_Goods.Id ::TVarChar || ' '  || Object_ProdColorItems.GoodsId_Receipt::TVarChar
            ) :: TVarChar AS ProdColorName
+           
+         , COALESCE(ObjectFloat_Value.ValueData, zc_Color_White())::Integer  AS Color_Value
            --
          , Object_Measure.ValueData                   AS MeasureName
 
@@ -518,6 +531,9 @@ BEGIN
                                ON ObjectLink_Goods_ProdColor.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
           LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+          LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                ON ObjectFloat_Value.ObjectId = Object_ProdColor.Id
+                               AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ProdColor_Value()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id

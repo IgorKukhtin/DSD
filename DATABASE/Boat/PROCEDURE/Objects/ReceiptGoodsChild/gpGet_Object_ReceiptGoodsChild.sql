@@ -39,7 +39,7 @@ BEGIN
            Object_ReceiptGoodsChild.Id              AS Id 
          , Object_ReceiptGoodsChild.ValueData       AS Comment
 
-         , ObjectFloat_Value.ValueData       ::TFloat   AS Value
+         , ObjectFloat_Value.ValueData   ::TFloat   AS Value
 
          , Object_ReceiptGoods.Id        ::Integer  AS ReceiptGoodsId
          , Object_ReceiptGoods.ValueData ::TVarChar AS ReceiptGoodsName
@@ -50,8 +50,11 @@ BEGIN
  
           LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                 ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
-                               AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value() 
-
+                               AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value() 
+          LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
+                               AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
+                               
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
                                ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
                               AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()

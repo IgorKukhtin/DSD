@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpUnComplete_Movement_SendOnPrice(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+   DECLARE vbUserId Integer;
+   DECLARE vbMovementId_Peresort Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_SendOnPrice());
@@ -20,6 +21,22 @@ BEGIN
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
+
+
+     -- Поиск "Пересортица"
+     vbMovementId_Peresort:= (SELECT MLM.MovementId
+                              FROM MovementLinkMovement AS MLM
+                                   JOIN Movement ON Movement.Id       = MLM.MovementId
+                                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production()
+                             );
+     -- Синхронно - Распровели
+     IF vbMovementId_Peresort <> 0
+     THEN
+         PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_Peresort
+                                      , inUserId     := vbUserId
+                                       );
+     END IF;
 
 END;
 $BODY$

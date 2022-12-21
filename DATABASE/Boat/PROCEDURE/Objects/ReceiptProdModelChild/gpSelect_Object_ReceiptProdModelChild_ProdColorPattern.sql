@@ -44,7 +44,7 @@ BEGIN
                                              -- элемент который будем раскладывать
                                            , ObjectLink_Object.ChildObjectId           AS ObjectId
                                              -- значение
-                                           , ObjectFloat_Value.ValueData               AS Value
+                                           , ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END AS Value
                                       FROM Object AS Object_ReceiptProdModelChild
 
                                            LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
@@ -62,7 +62,10 @@ BEGIN
                                            LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                                  ON ObjectFloat_Value.ObjectId = Object_ReceiptProdModelChild.Id
                                                                 AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptProdModelChild_Value()
-
+                                           LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                                 ON ObjectFloat_ForCount.ObjectId = Object_ReceiptProdModelChild.Id
+                                                                AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptProdModelChild_ForCount()
+                                                                
                                       WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
                                         AND Object_ReceiptProdModelChild.isErased = FALSE
                                         AND (ObjectLink_ReceiptLevel.ChildObjectId = inReceiptLevelId OR inReceiptLevelId = 0)
@@ -80,7 +83,7 @@ BEGIN
                                          -- Категория Опций
                                        , ObjectLink_MaterialOptions.ChildObjectId        AS MaterialOptionsId
                                          -- умножили
-                                       , SUM (tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData) AS Value
+                                       , SUM (tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END) AS Value
                                   FROM tmpReceiptProdModelChild
                                        -- нашли его в сборке узлов
                                        INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
@@ -115,6 +118,9 @@ BEGIN
                                        LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                              ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                                             AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                             ON ObjectFloat_ForCount.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                            AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
                                   GROUP BY tmpReceiptProdModelChild.ReceiptProdModelId
                                          , Object_ReceiptGoodsChild.ValueData
                                          , Object_ReceiptGoodsChild.isErased

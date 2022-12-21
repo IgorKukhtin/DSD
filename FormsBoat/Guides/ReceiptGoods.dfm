@@ -703,7 +703,7 @@
           DataBinding.FieldName = 'Value'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Properties.DisplayFormat = ',0.00######;-,0.00######; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -1056,7 +1056,7 @@
           DataBinding.FieldName = 'Value'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Properties.DisplayFormat = ',0.00######;-,0.00######; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -2545,10 +2545,10 @@
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1047#1051#1054#1042' ('#1090#1086#1074#1072#1088#1099') '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1047#1051#1067' + '#1052#1086#1076#1077#1083#1100' '#1083#1086#1076#1082#1080' '#1080#1079' '#1092#1072#1081#1083#1072'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1047#1051#1054#1042' ('#1090#1086#1074#1072#1088#1099')'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1047#1051#1054#1042' ('#1090#1086#1074#1072#1088#1099')'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1047#1051#1067' + '#1052#1086#1076#1077#1083#1100' '#1083#1086#1076#1082#1080
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1047#1051#1067' + '#1052#1086#1076#1077#1083#1100' '#1083#1086#1076#1082#1080
       ImageIndex = 27
       WithoutNext = True
     end
@@ -3166,6 +3166,15 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioForCount'
+        Value = Null
+        Component = Child1CDS
+        ComponentItem = 'ForCount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsEnabled'
         Value = True
         DataType = ftBoolean
@@ -3502,6 +3511,15 @@
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioForCount'
+        Value = Null
+        Component = Child2CDS
+        ComponentItem = 'ForCount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

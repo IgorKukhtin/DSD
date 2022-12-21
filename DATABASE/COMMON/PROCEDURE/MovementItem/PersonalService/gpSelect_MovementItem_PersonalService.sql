@@ -201,16 +201,39 @@ BEGIN
                      )
       , tmpMIChild_all AS (SELECT 
                                   MovementItem.ParentId                    AS ParentId
+                                , MovementItem.Id                          AS MovementItemId
                                 , MovementItem.Amount                      AS Amount
                                 , COALESCE (MIFloat_DayCount.ValueData, 0) AS DayCount
                                 , COALESCE (MIFloat_WorkTimeHoursOne.ValueData, 0) AS WorkTimeHoursOne
                                 , MIFloat_Price.ValueData                  AS Price
                                 , Object_StaffListSummKind.ValueData       AS StaffListSummKindName
+                              /*, COALESCE (MILinkObject_StaffList.ObjectId, 0)      AS StaffListId
+                                , COALESCE (MILinkObject_ModelService.ObjectId, 0)   AS ModelServiceId
+                                , COALESCE (MILinkObject_StorageLine.ObjectId, 0)    AS StorageLineId
+                                , COALESCE (MILinkObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
+                                , COALESCE (MIFloat_GrossOne.ValueData, 0)           AS GrossOne
+                                , COALESCE (MIFloat_HoursPlan.ValueData, 0)          AS HoursPlan
+                                , COALESCE (MIFloat_HoursDay.ValueData, 0)           AS HoursDay*/
+                                
                            FROM MovementItem
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_StaffListSummKind
                                                                ON MILinkObject_StaffListSummKind.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_StaffListSummKind.DescId = zc_MILinkObject_StaffListSummKind()
                               LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = MILinkObject_StaffListSummKind.ObjectId
+                              --
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_StaffList
+                                                               ON MILinkObject_StaffList.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_StaffList.DescId = zc_MILinkObject_StaffList()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_ModelService
+                                                               ON MILinkObject_ModelService.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_ModelService.DescId = zc_MILinkObject_ModelService()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                                               ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_PositionLevel
+                                                               ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+                                                              
                               --
                               LEFT JOIN MovementItemFloat AS MIFloat_DayCount
                                                           ON MIFloat_DayCount.MovementItemId = MovementItem.Id
@@ -221,6 +244,18 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                              LEFT JOIN MovementItemFloat AS MIFloat_GrossOne
+                                                          ON MIFloat_GrossOne.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_GrossOne.DescId = zc_MIFloat_GrossOne()
+                              LEFT JOIN MovementItemFloat AS MIFloat_HoursPlan
+                                                          ON MIFloat_HoursPlan.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_HoursPlan.DescId = zc_MIFloat_HoursPlan()
+                              LEFT JOIN MovementItemFloat AS MIFloat_HoursDay
+                                                          ON MIFloat_HoursDay.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_HoursDay.DescId = zc_MIFloat_HoursDay()
+                                                         
+                                                         
+                                                         
                            WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId = zc_MI_Child()
                               AND MovementItem.isErased = FALSE
@@ -236,7 +271,21 @@ BEGIN
                           )
     , tmpMIChild_Hours AS (SELECT tmpMIChild_all.ParentId
                                 , SUM (tmpMIChild_all.WorkTimeHoursOne) AS WorkTimeHoursOne
-                           FROM (SELECT DISTINCT tmpMIChild_all.ParentId, tmpMIChild_all.WorkTimeHoursOne FROM tmpMIChild_all) AS tmpMIChild_all
+                           FROM (SELECT DISTINCT
+                                        tmpMIChild_all.ParentId, tmpMIChild_all.WorkTimeHoursOne
+                                      /*, tmpMIChild_all.StaffListId
+                                      , tmpMIChild_all.ModelServiceId
+                                      , tmpMIChild_all.StorageLineId
+                                      , tmpMIChild_all.PositionLevelId
+                                      , tmpMIChild_all.GrossOne
+                                      , tmpMIChild_all.HoursPlan
+                                      , tmpMIChild_all.HoursDay*/
+                                      , CASE WHEN vbPersonalServiceListId = 8265914 -- Ведомость ЦЕХ упаковки
+                                                  THEN tmpMIChild_all.MovementItemId
+                                             ELSE 0
+                                        END AS MovementItemId
+                                 FROM tmpMIChild_all
+                                ) AS tmpMIChild_all
                            GROUP BY tmpMIChild_all.ParentId
                           )
 

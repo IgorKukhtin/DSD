@@ -1,9 +1,10 @@
 -- Function: zfConvert_CheckStringToFloat
 
--- DROP FUNCTION IF EXISTS zfConvert_CheckStringToFloat (TVarChar);
+DROP FUNCTION IF EXISTS zfConvert_CheckStringToFloat (TVarChar);
 
 CREATE OR REPLACE FUNCTION zfConvert_CheckStringToFloat(Number TVarChar)
-RETURNS TFloat AS
+RETURNS NUMERIC (16, 8)
+AS
 $BODY$
    DECLARE vbNumber TVarChar;
    DECLARE vbChar TVarChar;
@@ -30,7 +31,7 @@ BEGIN
   END LOOP;  
         
   BEGIN
-    RETURN vbNumber :: TFloat;
+    RETURN vbNumber :: NUMERIC (16, 8);
   EXCEPTION
     WHEN OTHERS THEN	
        RETURN 0;
@@ -48,4 +49,4 @@ $BODY$
 */
 
 -- тест
-SELECT * FROM zfConvert_CheckStringToFloat ('-0,1321446')
+-- SELECT * FROM zfConvert_CheckStringToFloat ('-0,1321446')
