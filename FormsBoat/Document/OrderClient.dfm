@@ -1369,12 +1369,12 @@ object OrderClientForm: TOrderClientForm
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_unit_ch3
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_partner_ch3
             end
@@ -1394,7 +1394,7 @@ object OrderClientForm: TOrderClientForm
               Column = TotalSumm_basis_ch3
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_basis_ch3
             end
@@ -1404,13 +1404,13 @@ object OrderClientForm: TOrderClientForm
               Column = TotalSumm_real_ch3
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Value_service_ch3
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_unit_ch3
             end
@@ -1420,7 +1420,7 @@ object OrderClientForm: TOrderClientForm
               Column = ObjectName_ch3
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_partner_ch3
             end
@@ -1440,7 +1440,7 @@ object OrderClientForm: TOrderClientForm
               Column = TotalSumm_basis_ch3
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_basis_ch3
             end
@@ -1450,7 +1450,7 @@ object OrderClientForm: TOrderClientForm
               Column = TotalSumm_real_ch3
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Value_service_ch3
             end>
@@ -1721,7 +1721,7 @@ object OrderClientForm: TOrderClientForm
             DataBinding.FieldName = 'Amount_basis'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1084#1086#1076#1077#1083#1080
@@ -1733,7 +1733,7 @@ object OrderClientForm: TOrderClientForm
             DataBinding.FieldName = 'Amount_unit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1079#1072#1088#1077#1079#1077#1088#1074#1080#1088#1086#1074#1072#1085#1086' '#1085#1072' '#1089#1082#1083#1072#1076#1077
@@ -1745,7 +1745,7 @@ object OrderClientForm: TOrderClientForm
             DataBinding.FieldName = 'Value_service'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
@@ -1756,7 +1756,7 @@ object OrderClientForm: TOrderClientForm
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1089#1090#1072#1074#1097'.'
             DataBinding.FieldName = 'Amount_partner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
@@ -1880,17 +1880,17 @@ object OrderClientForm: TOrderClientForm
               Column = TotalSumm_partner_ch4
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_basis_ch4
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_unit_ch4
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_partner_ch4
             end>
@@ -1911,17 +1911,17 @@ object OrderClientForm: TOrderClientForm
               Column = TotalSumm_partner_ch4
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_basis_ch4
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_unit_ch4
             end
             item
-              Format = ',0.####'
+              Format = ',0.########'
               Kind = skSum
               Column = Amount_partner_ch4
             end>
@@ -2136,7 +2136,7 @@ object OrderClientForm: TOrderClientForm
             DataBinding.FieldName = 'Amount_basis'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1084#1086#1076#1077#1083#1080
@@ -2148,7 +2148,7 @@ object OrderClientForm: TOrderClientForm
             DataBinding.FieldName = 'Amount_unit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1079#1072#1088#1077#1079#1077#1088#1074#1080#1088#1086#1074#1072#1085#1086' '#1085#1072' '#1089#1082#1083#1072#1076#1077
@@ -2159,7 +2159,7 @@ object OrderClientForm: TOrderClientForm
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1089#1090#1072#1074#1097'.'
             DataBinding.FieldName = 'Amount_partner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -5728,8 +5728,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1040
-    Top = 184
+    Left = 1048
+    Top = 256
   end
   object spSelectPrintOrderConfirmation: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product_OrderConfirmationPrint'
@@ -6088,8 +6088,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1136
-    Top = 176
+    Left = 1192
+    Top = 248
   end
   object spSelectPrintStructureHeader: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product_StructureHeaderPrint'
