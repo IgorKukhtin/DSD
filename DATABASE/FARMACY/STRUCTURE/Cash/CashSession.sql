@@ -20,6 +20,9 @@ CREATE TABLE CashSession
 ALTER TABLE CashSession
   OWNER TO postgres;
 
+CREATE INDEX idx_CashSession_UserId ON CashSession(UserId);
+
+
 /*-------------------------------------------------------------------------------*/
 
 /*

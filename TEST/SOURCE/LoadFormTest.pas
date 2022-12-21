@@ -711,6 +711,13 @@ end;
 
 procedure TLoadFormTest.LoadGoodsKindFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindNewForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsKindNewForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindNewEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsKindNewEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindNew_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsKindNew_ObjectForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKind_ObjectForm'));

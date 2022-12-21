@@ -9,14 +9,14 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 60
+    Top = 86
     Width = 829
-    Height = 356
+    Height = 330
     TabOrder = 5
-    ExplicitTop = 86
+    ExplicitTop = 60
     ExplicitWidth = 829
-    ExplicitHeight = 330
-    ClientRectBottom = 356
+    ExplicitHeight = 356
+    ClientRectBottom = 330
     ClientRectRight = 829
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -24,12 +24,12 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 829
-      ExplicitHeight = 306
+      ExplicitHeight = 332
       inherited cxGrid: TcxGrid
         Width = 829
         Height = 306
         ExplicitWidth = 829
-        ExplicitHeight = 306
+        ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -436,7 +436,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     DockControlHeights = (
       0
       0
-      0
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -517,7 +517,6 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-      Visible = False
     end
     object bbPrint: TdxBarButton
       Action = actPrint

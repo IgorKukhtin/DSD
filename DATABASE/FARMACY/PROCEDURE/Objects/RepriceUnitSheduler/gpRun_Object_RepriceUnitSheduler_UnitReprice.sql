@@ -315,6 +315,8 @@ BEGIN
       inVAT20 := vbVAT20, inTaxTo := 0::TFloat, inPriceMaxTo := 0::TFloat,  inSession := inSession)
          LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = gpSelect_AllGoodsPrice.ID;
 
+    ANALYSE tmpAllGoodsPrice;
+
     -- сохранили свойство <Дата начала переоценки>
     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_RepriceUnitSheduler_DataStartLast(), inID, clock_timestamp());
 

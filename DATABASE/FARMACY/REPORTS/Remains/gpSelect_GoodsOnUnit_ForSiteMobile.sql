@@ -256,12 +256,12 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMovementCheck'))
     THEN
         -- таблица
-        CREATE TEMP TABLE _tmpMovementCheck (Id Integer) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpMovementCheck (Id Integer, UnitId Integer) ON COMMIT DROP;
     ELSE
         DELETE FROM _tmpMovementCheck;
     END IF;
     --
-    INSERT INTO _tmpMovementCheck (Id)
+    INSERT INTO _tmpMovementCheck (Id, UnitId)
       WITH           -- Резервы по срокам
             tmpMovementCheck AS (SELECT Movement.Id
                                  FROM Movement
@@ -284,7 +284,13 @@ BEGIN
                              FROM tmpMovReserveId AS Movement
                              WHERE isDeferred = TRUE OR isCommentError = TRUE)
 
-    SELECT Movement.Id FROM tmpMovReserveAll AS Movement;
+    SELECT Movement.Id 
+	     , MovementLinkObject_Unit.ObjectId    AS UnitId
+	FROM tmpMovReserveAll AS Movement
+		 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+									   ON MovementLinkObject_Unit.movementid = Movement.Id
+									  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+	;
 
     -- !!!Оптимизация!!!
     ANALYZE _tmpMovementCheck;
@@ -310,15 +316,22 @@ BEGIN
                                                                  AND MovementItemChild.DescId     = zc_MI_Child()
                                                                  AND MovementItemChild.Amount     > 0
                                                                  AND MovementItemChild.isErased   = FALSE)
+          , tmpMovementItemFloat AS (SELECT MIFloat_ContainerId.MovementItemId
+									      , MIFloat_ContainerId.ValueData
+                                 FROM MovementItemFloat AS MIFloat_ContainerId
+                                 WHERE MIFloat_ContainerId.MovementItemId IN (SELECT MovementItemChildId.Id FROM MovementItemChildId) 
+                                   AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                                )
           , ReserveContainer AS (SELECT MIFloat_ContainerId.ValueData::Integer      AS ContainerId
-                                      , Sum(MovementItemChildId.Amount)::TFloat       AS Amount
+                                      , Sum(MovementItemChildId.Amount)::TFloat     AS Amount
                                  FROM MovementItemChildId
-                                 INNER JOIN MovementItemFloat AS MIFloat_ContainerId
-                                                              ON MIFloat_ContainerId.MovementItemId = MovementItemChildId.Id
-                                                             AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                                 INNER JOIN tmpMovementItemFloat AS MIFloat_ContainerId
+                                                                  ON MIFloat_ContainerId.MovementItemId = MovementItemChildId.Id
+                                                                -- AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
 
                                  GROUP BY MIFloat_ContainerId.ValueData
                                 )
+
              -- Остатки по срокам
           , tmpPDContainerAll AS (SELECT Container.Id,
                                          Container.WhereObjectId,
@@ -598,33 +611,23 @@ BEGIN
 
     -- !!!Оптимизация!!!
     ANALYZE _tmpList;
-
-    -- Результат
-    RETURN QUERY
-       WITH tmpMI_DeferredAll AS
-               (SELECT Movement.Id                        AS Id
-                     , MovementLinkObject_Unit.ObjectId   AS UnitId
-                FROM _tmpMovementCheck AS Movement
-
-                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                   ON MovementLinkObject_Unit.movementid = Movement.Id
-                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                            
-               )
-          , tmpMI_Deferred AS
-               (SELECT Movement.UnitId
-                     , MovementItem.ObjectId              AS GoodsId
-                     , SUM (MovementItem.Amount)          AS Amount
-                FROM tmpMI_DeferredAll AS Movement
-
-                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                            AND MovementItem.DescId     = zc_MI_Master()
-                                            AND MovementItem.isErased   = FALSE
-                GROUP BY Movement.UnitId
-                       , MovementItem.ObjectId
-               )
-          , Price_Unit_all AS
-               (SELECT _tmpList.UnitId
+	
+    -- еще оптимизируем - _tmpMinPrice_List
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('Price_Unit_all'))
+    THEN
+        -- таблица
+        CREATE TEMP TABLE Price_Unit_all (UnitId            Integer,
+                                          GoodsId           Integer,
+										  Price             TFloat,
+										  PriceSale         TFloat,
+										  isTop             Boolean
+                                          ) ON COMMIT DROP;
+    ELSE
+        DELETE FROM Price_Unit_all;
+    END IF;
+	
+    INSERT INTO Price_Unit_all
+                SELECT _tmpList.UnitId
                      , _tmpList.GoodsId
                      , CASE WHEN PriceSite_DiscontStart.ValueData IS NOT NULL
                              AND PriceSite_DiscontEnd.ValueData IS NOT NULL  
@@ -692,7 +695,23 @@ BEGIN
                                           AND PriceSite_DiscontAmount.DescId = zc_ObjectFloat_Goods_DiscontAmountSite()
                      LEFT JOIN ObjectFloat AS PriceSite_DiscontPercent
                                            ON PriceSite_DiscontPercent.ObjectId = _tmpList.GoodsId_retail
-                                          AND PriceSite_DiscontPercent.DescId = zc_ObjectFloat_Goods_DiscontPercentSite()
+                                          AND PriceSite_DiscontPercent.DescId = zc_ObjectFloat_Goods_DiscontPercentSite();
+
+    ANALYZE Price_Unit_all;
+
+    -- Результат
+    RETURN QUERY
+       WITH tmpMI_Deferred AS
+               (SELECT Movement.UnitId
+                     , MovementItem.ObjectId              AS GoodsId
+                     , SUM (MovementItem.Amount)          AS Amount
+                FROM _tmpMovementCheck AS Movement
+
+                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = FALSE
+                GROUP BY Movement.UnitId
+                       , MovementItem.ObjectId
                )
           , Price_Unit AS
                (SELECT Price_Unit_all.UnitId
@@ -1181,5 +1200,5 @@ $BODY$
 
 -- тест
  
-SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '27355', zfCalc_UserSite()) AS p
+SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '6649, 33004, 5925154, 5925280, 16290423', zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId

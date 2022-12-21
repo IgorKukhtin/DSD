@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_CashRemains_Diff_ver2(
+CREATE OR REPLACE FUNCTION gpSelect_CashRemains_Diff_ver2 (
     IN inCashSessionId TVarChar,   -- —есси€ кассового места
     IN inSession       TVarChar    -- сесси€ пользовател€
 )
@@ -101,7 +101,6 @@ BEGIN
         vbAreaId:= (SELECT AreaId FROM gpGet_User_AreaId (inSession));
     END IF;
 
-
     -- значени€ дл€ разделени€ по срокам
     SELECT Day_6, Date_6, Date_3, Date_1, Date_0
     INTO vbDay_6, vbDate_6, vbDate_3, vbDate_1, vbDate_0
@@ -179,9 +178,11 @@ BEGIN
                            , PartionDateDiscount TFloat
                            , PriceWithVAT TFloat) ON COMMIT DROP;
 
-    -- ƒанные
-    WITH
-         GoodsRemains AS ( SELECT CashRemains.GoodsId                     AS ObjectId
+    --raise notice 'Value 0: %', CURRENT_TIMESTAMP;
+
+
+    CREATE TEMP TABLE GoodsRemains ON COMMIT DROP AS 
+	                     ( SELECT CashRemains.GoodsId                     AS ObjectId
                                 , CashRemains.NDSKindId
                                 , CashRemains.DiscountExternalID
                                 , CashRemains.PartionDateKindId
@@ -197,9 +198,15 @@ BEGIN
                                 , CashRemains.PartionDateDiscount
                                 , CashRemains.PriceWithVAT
                           FROM gpSelect_CashRemains_CashSession(inSession) AS CashRemains
-                         )
+                         );
+						 
+	ANALYSE GoodsRemains;
+
+    --raise notice 'Value 1: %', CURRENT_TIMESTAMP;
+
                  -- состо€ние в сессии
-       , SESSIONDATA AS (SELECT CashSessionSnapShot.ObjectId
+    CREATE TEMP TABLE SESSIONDATA ON COMMIT DROP AS 
+	                    (SELECT CashSessionSnapShot.ObjectId
                               , CashSessionSnapShot.NDSKindId
                               , CashSessionSnapShot.Price
                               , CashSessionSnapShot.Remains
@@ -216,8 +223,15 @@ BEGIN
                               , CashSessionSnapShot.PriceWithVAT
                          FROM CashSessionSnapShot
                          WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
-                        )
-       , tmpDiff AS (SELECT GoodsRemains.ObjectId                                             AS ObjectId
+                        );
+						
+	ANALYSE SESSIONDATA;
+
+    --raise notice 'Value 2: %', CURRENT_TIMESTAMP;
+	
+    -- ƒанные
+    WITH
+         tmpDiff AS (SELECT GoodsRemains.ObjectId                                             AS ObjectId
                            , GoodsRemains.Price                                               AS Price
                            , GoodsRemains.NDSKindId                                           AS NDSKindId
                            , GoodsRemains.MCSValue                                            AS MCSValue
@@ -310,6 +324,8 @@ BEGIN
             , tmpDiff.PartionDateDiscount
             , tmpDiff.PriceWithVAT
        FROM tmpDiff;
+	   
+	ANALYSE _DIFF;
 
     --ќбновл€ем данные в сессии
     UPDATE CashSessionSnapShot SET
@@ -336,8 +352,6 @@ BEGIN
       AND COALESCE(CashSessionSnapShot.DivisionPartiesId, 0) = COALESCE(_DIFF.DivisionPartiesId, 0)
     ;
     
-    ANALYZE _DIFF;
-
     --доливаем те, что по€вились
     Insert Into CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,DiscountExternalID,PartionDateKindId,DivisionPartiesId,Price,Remains,MCSValue,Reserved,
                                     DeferredSend,DeferredTR,MinExpirationDate, AccommodationId,PartionDateDiscount,PriceWithVAT)

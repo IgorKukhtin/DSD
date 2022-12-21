@@ -1414,6 +1414,8 @@ type
     miSection: TMenuItem;
     actMemberReport: TdsdOpenForm;
     N206: TMenuItem;
+    actGoodsKindNew: TdsdOpenForm;
+    miGoodsKindNew: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

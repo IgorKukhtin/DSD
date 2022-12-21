@@ -155,6 +155,19 @@ BEGIN
                                  
     vbPercentСhange := 0;
 
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('SelectMinPrice_AllGoods'))
+    THEN
+      DROP TABLE SelectMinPrice_AllGoods;
+    END IF;
+	
+    CREATE TEMP TABLE SelectMinPrice_AllGoods ON COMMIT DROP AS
+	  (SELECT * FROM lpSelectMinPrice_AllGoods(inUnitId   := inUnitId
+                                    , inObjectId := vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
+                                    , inUserId   := vbUserId
+                                    ));
+	   
+	ANALYSE SelectMinPrice_AllGoods;
+	   
   RETURN QUERY
     WITH DD
     AS
@@ -490,10 +503,8 @@ BEGIN
                              ) ::TFloat AS NewPricePromo
 
         FROM
-            lpSelectMinPrice_AllGoods(inUnitId   := inUnitId
-                                    , inObjectId := vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
-                                    , inUserId   := vbUserId
-                                    ) AS SelectMinPrice_AllGoods
+            SelectMinPrice_AllGoods
+		
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = SelectMinPrice_AllGoods.AreaId
 

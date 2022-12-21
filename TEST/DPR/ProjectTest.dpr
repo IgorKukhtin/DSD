@@ -1401,7 +1401,10 @@ uses
   SectionEdit in '..\..\Forms\Guides\SectionEdit.pas' {SectionEditForm: TParentForm},
   MemberReport in '..\..\Forms\Guides\MemberReport.pas' {MemberReportForm: TParentForm},
   MemberReportEdit in '..\..\Forms\Guides\MemberReportEdit.pas' {MemberReportEditForm: TParentForm},
-  PersonalServiceItemJournal in '..\..\Forms\Document\PersonalServiceItemJournal.pas' {PersonalServiceItemJournalForm: TParentForm};
+  PersonalServiceItemJournal in '..\..\Forms\Document\PersonalServiceItemJournal.pas' {PersonalServiceItemJournalForm: TParentForm},
+  GoodsKindNewEdit in '..\..\Forms\Guides\GoodsKindNewEdit.pas' {GoodsKindNewEditForm: TParentForm},
+  GoodsKindNew in '..\..\Forms\Guides\GoodsKindNew.pas' {GoodsKindNewForm: TParentForm},
+  GoodsKindNew_Object in '..\..\Forms\Guides\GoodsKindNew_Object.pas' {GoodsKindNew_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

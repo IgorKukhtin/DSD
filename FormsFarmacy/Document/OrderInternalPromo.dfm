@@ -3,6 +3,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   ClientHeight = 564
   ClientWidth = 1025
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
+  ExplicitTop = -28
   ExplicitWidth = 1041
   ExplicitHeight = 603
   PixelsPerInch = 96
@@ -11,19 +12,19 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Top = 116
     Width = 1025
     Height = 348
-    ExplicitTop = 116
+    ExplicitTop = 90
     ExplicitWidth = 1025
-    ExplicitHeight = 348
+    ExplicitHeight = 374
     ClientRectBottom = 348
     ClientRectRight = 1025
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1025
-      ExplicitHeight = 324
+      ExplicitHeight = 350
       inherited cxGrid: TcxGrid
         Width = 1025
         Height = 144
         ExplicitWidth = 1025
-        ExplicitHeight = 144
+        ExplicitHeight = 170
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -336,6 +337,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 178
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -551,6 +553,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 170
       end
       object cxGridExport: TcxGrid
         Left = 582
@@ -715,8 +718,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Touch.TabletOptions = [toPressAndHold]
     AlignSplitter = salBottom
     Control = cxGrid2
-    ExplicitLeft = 216
-    ExplicitTop = 470
   end
   object cxGrid2: TcxGrid [5]
     Left = 0
@@ -2302,6 +2303,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           Visible = True
           ItemName = 'dxBarButton4'
         end>
+      Visible = True
     end
     inherited dxBarStatic: TdxBarStatic
       Width = 18
