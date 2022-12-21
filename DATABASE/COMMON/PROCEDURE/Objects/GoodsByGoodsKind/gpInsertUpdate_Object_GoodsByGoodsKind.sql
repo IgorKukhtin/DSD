@@ -9,7 +9,8 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integ
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
  INOUT ioId                    Integer  , -- ключ объекта <Товар>
@@ -18,13 +19,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
     IN inGoodsSubId            Integer  , -- Товары
     IN inGoodsKindSubId        Integer  , -- Виды товаров
     IN inGoodsSubSendId        Integer  , -- Товары
-    IN inGoodsKindSubSendId    Integer  , -- Виды товаров
+    IN inGoodsKindSubSendId    Integer  , -- Виды товаров 
     IN inGoodsPackId           Integer  , -- Главный Товар в планировании прихода с упаковки
     IN inGoodsKindPackId       Integer  , -- Главный Вид в планировании прихода с упаковки 
     IN inGoodsSubId_Br         Integer  , -- Товары (пересортица на филиалах - расход)>
     IN inGoodsKindSubSendId_Br Integer , -- Виды товаров (перемещ.пересортица на филиалах - расход) 
     IN inGoodsRealId           Integer  , -- Товары
     IN inGoodsKindRealId       Integer  , -- Виды товаров
+    IN inGoodsKindNewId        Integer  , -- Виды товаров Новые
     IN inReceiptId             Integer  , -- Рецептуры
     IN inReceiptGPId           Integer  , -- Рецептура (схема с тушенкой) 
     IN inWeightPackage         TFloat   , -- вес пакета
@@ -122,6 +124,10 @@ BEGIN
    -- сохранили связь с <Виды товаров  (факт отгрузка)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindReal(), ioId, inGoodsKindRealId);
 
+   -- сохранили связь с <Виды товаров  (новые)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindNew(), ioId, inGoodsKindNewId);
+
+
    -- сохранили связь с <Рецептурой>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_Receipt(), ioId, inReceiptId);
    -- сохранили связь с <Рецептурой>
@@ -154,6 +160,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 21.12.22         * inGoodsKindNewId
  29.09.22         * inGoodsReal
  19.02.21         * add inDaysQ
  04.11.20         * add inReceiptGPId

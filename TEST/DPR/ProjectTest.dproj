@@ -4834,10 +4834,6 @@
 				<Form>TelegramGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind.pas">
-				<Form>GoodsByGoodsKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Asset_DocGoods.pas">
 				<Form>Asset_DocGoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4892,6 +4888,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsKindNew_Object.pas">
 				<Form>GoodsKindNew_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind.pas">
+				<Form>GoodsByGoodsKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

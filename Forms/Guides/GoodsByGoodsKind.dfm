@@ -129,6 +129,22 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object GoodsKindNewName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1085#1086#1074#1099#1081')'
+            DataBinding.FieldName = 'GoodsKindNewName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = GoodsKindNewChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1085#1086#1074#1099#1081')'
+            Width = 77
+          end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
@@ -784,7 +800,40 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
     end
   end
   inherited ActionList: TActionList
-    object actGetImportSettingPK: TdsdExecStoredProc [0]
+    object actGetImportSetting_GoodsKindNew: TdsdExecStoredProc [0]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_GoodsKindNew
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_GoodsKindNew
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1053#1086#1074#1099#1077') '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1053#1086#1074#1099#1077') '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object macStartLoadGoodsKindNew: TMultiAction [1]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      TabSheet = tsMain
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_GoodsKindNew
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1053#1086#1074#1099#1077') '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1053#1086#1074#1099#1077') '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1053#1086#1074#1099#1077') '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 30
+      WithoutNext = True
+    end
+    object actGetImportSettingPK: TdsdExecStoredProc [2]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -796,7 +845,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1085#1072' '#1056#1050' = '#1044#1072' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1080#1079' '#1092#1072#1081#1083#1072
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1085#1072' '#1056#1050' = '#1044#1072' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1080#1079' '#1092#1072#1081#1083#1072
     end
-    object macStartLoadPK: TMultiAction [3]
+    object macStartLoadPK: TMultiAction [5]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       TabSheet = tsMain
       MoveParams = <>
@@ -949,6 +998,33 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MeasurePackName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object GoodsKindNewChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TGoodsKindNewForm'
+      FormName = 'TGoodsKindNewForm'
+      FormNameParam.Value = 'TGoodsKindNewForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindNewId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindNewName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1481,6 +1557,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsByGoodsKind'
+    Left = 120
     Top = 40
   end
   inherited BarManager: TdxBarManager
@@ -1535,6 +1612,14 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoadGoodsKindNew'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -1572,6 +1657,10 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
     end
     object bbStartLoadPK: TdxBarButton
       Action = macStartLoadPK
+      Category = 0
+    end
+    object bbStartLoadGoodsKindNew: TdxBarButton
+      Action = macStartLoadGoodsKindNew
       Category = 0
     end
   end
@@ -1685,6 +1774,14 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindRealId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindNewId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindNewId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1941,5 +2038,39 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
     PackSize = 1
     Left = 840
     Top = 200
+  end
+  object spGetImportSettingId_GoodsKindNew: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TGoodsByGoodsKind_GoodsKindNewForm;zc_Object_ImportSetting_Goods' +
+          'ByGoodsKind_GoodsKindNew'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 272
   end
 end

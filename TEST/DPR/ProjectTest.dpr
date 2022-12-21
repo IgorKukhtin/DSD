@@ -1390,7 +1390,6 @@ uses
   Report_SaleExternal_GoodsDialog in '..\..\Forms\Report\Report_SaleExternal_GoodsDialog.pas' {Report_SaleExternal_GoodsDialogForm: TParentForm},
   TelegramGroup in '..\..\Forms\Guides\TelegramGroup.pas' {TelegramGroupForm: TParentForm},
   TelegramGroupEdit in '..\..\Forms\Guides\TelegramGroupEdit.pas' {TelegramGroupEditForm: TParentForm},
-  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
   Asset_DocGoods in '..\..\Forms\Guides\Asset_DocGoods.pas' {Asset_DocGoodsForm: TParentForm},
   Report_OrderInternalPackRemains in '..\..\Forms\Report\Report_OrderInternalPackRemains.pas' {Report_OrderInternalPackRemainsForm: TParentForm},
   Member_ContainerByDebt in '..\..\Forms\Guides\Member_ContainerByDebt.pas' {Member_ContainerByDebtForm: TParentForm},
@@ -1404,7 +1403,8 @@ uses
   PersonalServiceItemJournal in '..\..\Forms\Document\PersonalServiceItemJournal.pas' {PersonalServiceItemJournalForm: TParentForm},
   GoodsKindNewEdit in '..\..\Forms\Guides\GoodsKindNewEdit.pas' {GoodsKindNewEditForm: TParentForm},
   GoodsKindNew in '..\..\Forms\Guides\GoodsKindNew.pas' {GoodsKindNewForm: TParentForm},
-  GoodsKindNew_Object in '..\..\Forms\Guides\GoodsKindNew_Object.pas' {GoodsKindNew_ObjectForm: TParentForm};
+  GoodsKindNew_Object in '..\..\Forms\Guides\GoodsKindNew_Object.pas' {GoodsKindNew_ObjectForm: TParentForm},
+  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

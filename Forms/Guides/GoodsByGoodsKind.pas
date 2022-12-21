@@ -65,6 +65,11 @@ type
     actGetImportSettingPK: TdsdExecStoredProc;
     macStartLoadPK: TMultiAction;
     bbStartLoadPK: TdxBarButton;
+    spGetImportSettingId_GoodsKindNew: TdsdStoredProc;
+    actGetImportSetting_GoodsKindNew: TdsdExecStoredProc;
+    macStartLoadGoodsKindNew: TMultiAction;
+    bbStartLoadGoodsKindNew: TdxBarButton;
+    GoodsKindNewChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
