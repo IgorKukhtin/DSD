@@ -74,30 +74,41 @@ BEGIN
     INSERT INTO _tmpOrder (MovementId_order, ObjectId, PartionId, Amount)
        WITH 
             tmpMI_Child AS (-- Заказы клиента - zc_MI_Detail - детализация по Резервам
-                            SELECT MovementItem.MovementId   AS MovementId_order
-                                 , MovementItem.ObjectId
-                                 , MovementItem.PartionId
+                            SELECT MI_Detail.MovementId   AS MovementId_order
+                                 , MI_Detail.ObjectId
+                                 , MI_Detail.PartionId
                                    -- Кол-во - попало в Резерв
-                                 , SUM (MovementItem.Amount) AS Amount
+                                 , SUM (MI_Detail.Amount) AS Amount
+                  
                             FROM Movement
-                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                        AND MovementItem.DescId     = zc_MI_Detail()
+                                 INNER JOIN MovementItem AS MI_Detail
+                                                         ON MI_Detail.MovementId = Movement.Id
+                                                        AND MI_Detail.DescId     = zc_MI_Detail()
+                                                        AND MI_Detail.isErased   = FALSE
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                  ON MILinkObject_Goods.MovementItemId = MI_Detail.Id
+                                                                 AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+
+                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId     = zc_MI_Child()
                                                         AND MovementItem.isErased   = FALSE
+                                                        AND MovementItem.Id = MI_Detail.ParentId    ---537385
 
                                  LEFT JOIN ObjectLink AS ObjectLink_Goods
-                                                      ON ObjectLink_Goods.ChildObjectId = MovementItem.ObjectId
+                                                      ON ObjectLink_Goods.ChildObjectId = COALESCE (MovementItem.ObjectId, MILinkObject_Goods.ObjectId)
                                                      AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoods_Object()
 
-                            WHERE Movement.Id = inMovementId_OrderClient
+                           WHERE Movement.Id = inMovementId_OrderClient 
                               AND Movement.DescId   = zc_Movement_OrderClient()
                               -- все НЕ удаленные
                               --AND Movement.StatusId <> zc_Enum_Status_Erased()
                               -- Кол-во - попало в Резерв
-                              AND MovementItem.Amount > 0
-                              AND (ObjectLink_Goods.ObjectId = inReceiptGoodsId OR inReceiptGoodsId = 0)
-                            GROUP BY MovementItem.MovementId
-                                   , MovementItem.ObjectId
-                                   , MovementItem.PartionId
+                              AND MI_Detail.Amount > 0
+                              AND (ObjectLink_Goods.ObjectId = 253703 OR 253703 = 0)
+                            GROUP BY MI_Detail.MovementId
+                                   , MI_Detail.ObjectId
+                                   , MI_Detail.PartionId
                             )
 
              -- Перемещения - сколько уже переместили Резервов под Заказ клиента
