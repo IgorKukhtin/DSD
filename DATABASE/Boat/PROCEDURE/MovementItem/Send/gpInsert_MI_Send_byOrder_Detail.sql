@@ -102,7 +102,7 @@ BEGIN
                            WHERE Movement.Id = inMovementId_OrderClient 
                               AND Movement.DescId   = zc_Movement_OrderClient()
                               -- все НЕ удаленные
-                              --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              AND Movement.StatusId <> zc_Enum_Status_Erased()
                               -- Кол-во - попало в Резерв
                               AND MI_Detail.Amount > 0
                               AND (ObjectLink_Goods.ObjectId = 253703 OR 253703 = 0)
@@ -144,14 +144,15 @@ BEGIN
           , tmpMI_Child.ObjectId
           , tmpMI_Child.PartionId
             -- сколько осталось
-          , tmpMI_Child.Amount - COALESCE (tmpMI_Send.Amount, 0) AS Amount
+          --, tmpMI_Child.Amount - COALESCE (tmpMI_Send.Amount, 0) AS Amount
+          , tmpMI_Child.Amount AS Amount
 
      FROM (SELECT tmpMI_Child.MovementId_order, tmpMI_Child.ObjectId, tmpMI_Child.PartionId, SUM (tmpMI_Child.Amount) AS Amount
            FROM tmpMI_Child
            GROUP BY tmpMI_Child.MovementId_order, tmpMI_Child.ObjectId, tmpMI_Child.PartionId
           ) AS tmpMI_Child
-          -- Итого сколько переместили
-          LEFT JOIN (SELECT tmpMI_Send.MovementId_order
+        /*  -- Итого сколько переместили
+         LEFT JOIN (SELECT tmpMI_Send.MovementId_order
                           , tmpMI_Send.ObjectId
                           , tmpMI_Send.PartionId
                           , SUM (tmpMI_Send.Amount) AS Amount
@@ -163,9 +164,11 @@ BEGIN
                             , tmpMI_Send.PartionId
                     ) AS tmpMI_Send
                       ON tmpMI_Send.MovementId_order = tmpMI_Child.MovementId_order
-                     AND tmpMI_Send.PartionId        = tmpMI_Child.PartionId
+                     AND tmpMI_Send.PartionId        = tmpMI_Child.PartionId  
+                    AND 1=0     
+                    */
      -- !! осталось что Перемещать!!!
-     WHERE tmpMI_Child.Amount - COALESCE (tmpMI_Send.Amount, 0) > 0
+     WHERE tmpMI_Child.Amount /*- COALESCE (tmpMI_Send.Amount, 0)*/ > 0
     ;
 
     -- test
