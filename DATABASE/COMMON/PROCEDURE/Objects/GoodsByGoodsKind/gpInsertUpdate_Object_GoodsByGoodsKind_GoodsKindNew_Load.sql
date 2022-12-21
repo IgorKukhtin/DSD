@@ -53,7 +53,7 @@ BEGIN
    --пробуем найти Новый вид товара , если его нет создаем
    vbGoodsKindNewId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inGoodsKindNewName) AND Object.DescId = zc_Object_GoodsKindNew());
    
-   IF COALESCE (vbGoodsKindId,0) = 0 
+   IF COALESCE (vbGoodsKindNewId,0) = 0 
    THEN
        --создаем Вид товара Новый
        vbGoodsKindNewId := gpInsertUpdate_Object_GoodsKindNew (0, 0, inGoodsKindNewName, inSession);
