@@ -100,30 +100,30 @@ begin
          Add_Log('start all VACUUM');
          //
          // Container
-         lVACUUM ('VACUUM FULL Container');
-         lVACUUM ('VACUUM ANALYZE Container');
+//         lVACUUM ('VACUUM FULL Container');
+//         lVACUUM ('VACUUM ANALYZE Container');
          // CashSessionSnapShot - !!! 180 MIN !!!
          lVACUUM ('delete from CashSessionSnapShot WHERE CashSessionId IN (select Id from CashSession WHERE lastConnect < CURRENT_TIMESTAMP - INTERVAL ' + chr(39) + '180 MIN' + chr(39) + ')');
          lVACUUM ('delete from CashSession WHERE Id NOT IN (SELECT DISTINCT CashSessionId FROM CashSessionSnapShot) AND lastConnect < CURRENT_TIMESTAMP - INTERVAL ' + chr(39) + '180 MIN' + chr(39));
-         lVACUUM ('VACUUM FULL CashSession');
-         lVACUUM ('VACUUM ANALYZE CashSession');
-         lVACUUM ('VACUUM FULL CashSessionSnapShot');
-         lVACUUM ('VACUUM ANALYZE CashSessionSnapShot');
+//         lVACUUM ('VACUUM FULL CashSession');
+//         lVACUUM ('VACUUM ANALYZE CashSession');
+//         lVACUUM ('VACUUM FULL CashSessionSnapShot');
+//         lVACUUM ('VACUUM ANALYZE CashSessionSnapShot');
          // LoadPriceList + LoadPriceListItem
-         lVACUUM ('VACUUM FULL LoadPriceList');
-         lVACUUM ('VACUUM ANALYZE LoadPriceList');
-         lVACUUM ('VACUUM FULL LoadPriceListItem');
-         lVACUUM ('VACUUM ANALYZE LoadPriceListItem');
+//         lVACUUM ('VACUUM FULL LoadPriceList');
+//         lVACUUM ('VACUUM ANALYZE LoadPriceList');
+//         lVACUUM ('VACUUM FULL LoadPriceListItem');
+//         lVACUUM ('VACUUM ANALYZE LoadPriceListItem');
          // System - FULL
-         lVACUUM ('VACUUM FULL pg_catalog.pg_statistic');
-         lVACUUM ('VACUUM FULL pg_catalog.pg_attribute');
-         lVACUUM ('VACUUM FULL pg_catalog.pg_class');
-         lVACUUM ('VACUUM FULL pg_catalog.pg_type');
-         lVACUUM ('VACUUM FULL pg_catalog.pg_depend');
-         lVACUUM ('VACUUM FULL pg_catalog.pg_shdepend');
-         lVACUUM ('VACUUM FULL pg_catalog.pg_index');
-         lVACUUM ('VACUUM FULL pg_catalog.pg_attrdef');
-         lVACUUM ('VACUUM FULL pg_catalog.pg_proc');
+//         lVACUUM ('VACUUM FULL pg_catalog.pg_statistic');
+//         lVACUUM ('VACUUM FULL pg_catalog.pg_attribute');
+//         lVACUUM ('VACUUM FULL pg_catalog.pg_class');
+//         lVACUUM ('VACUUM FULL pg_catalog.pg_type');
+//         lVACUUM ('VACUUM FULL pg_catalog.pg_depend');
+//         lVACUUM ('VACUUM FULL pg_catalog.pg_shdepend');
+//         lVACUUM ('VACUUM FULL pg_catalog.pg_index');
+//         lVACUUM ('VACUUM FULL pg_catalog.pg_attrdef');
+//         lVACUUM ('VACUUM FULL pg_catalog.pg_proc');
          // System - ANALYZE
          lVACUUM ('VACUUM ANALYZE pg_catalog.pg_statistic');
          lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attribute');
@@ -136,16 +136,40 @@ begin
          lVACUUM ('VACUUM ANALYZE pg_catalog.pg_proc');
          //
          // !!!main!!!
-         lVACUUM ('VACUUM');
-         lVACUUM ('VACUUM ANALYZE');
-         //
-         //
-         Add_Log('end all VACUUM');
+         try
+           ZQueryTable.Open;
+           ZQueryTable.First;
+           while not ZQueryTable.Eof do
+           begin
+              lVACUUM ('VACUUM ANALYZE ' + ZQueryTable.FieldByName('table_name').AsString);
+              ZQueryTable.Next;
+              if HourOf(Now) >= 7 then Exit;
+           end;
+
+         finally
+           //
+           //
+           Add_Log('end all VACUUM');
+         end;
        end else
        begin
+
+         if HourOf(Now) < 7 then Exit;
+
          //
          Add_Log('start all ANALYZE');
          //
+
+         // System - ANALYZE
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_statistic');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attribute');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_class');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_type');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_depend');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_shdepend');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_index');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attrdef');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_proc');
 
          ZQueryTable.Open;
          ZQueryTable.First;
