@@ -701,9 +701,6 @@
         end
         object Value_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 8
-          Properties.DisplayFormat = ',0.00######;-,0.00######; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -712,9 +709,6 @@
         object Value_service_ch1: TcxGridDBColumn
           Caption = 'Value (service)'
           DataBinding.FieldName = 'Value_service'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
@@ -1066,9 +1060,6 @@
         end
         object Value_ch2: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 8
-          Properties.DisplayFormat = ',0.00######;-,0.00######; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -3176,7 +3167,7 @@
         Value = Null
         Component = Child1CDS
         ComponentItem = 'Value'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -3185,7 +3176,7 @@
         Value = Null
         Component = Child1CDS
         ComponentItem = 'Value_service'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -3526,7 +3517,7 @@
         Value = Null
         Component = Child2CDS
         ComponentItem = 'Value'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

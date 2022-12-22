@@ -120,7 +120,9 @@ BEGIN
              , ROW_NUMBER() OVER (PARTITION BY tmpReceiptProdModelChild.ReceiptProdModelChildId ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP
 
                -- умножили
-             , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END) :: NUMERIC (16, 8) AS Value
+             , CASE WHEN (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END) = 0 THEN NULL
+                    ELSE (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END) 
+               END:: NUMERIC (16, 8) AS Value
              , COALESCE (ObjectFloat_ForCount.ValueData,0) AS ForCount
 
                -- Цена вх. без НДС

@@ -74,12 +74,15 @@ BEGIN
                                , ProdColorPatternId  Integer
                                , Amount TFloat
                                , AmountPartner TFloat
+                               , ForCount TFloat
                                , OperPrice TFloat
                                , OperPricePartner TFloat
                                , isErased Boolean
                                 ) ON COMMIT DROP;
      -- элементы документа
-     INSERT INTO _tmpItem (DescId_mi, MovementItemId, ParentId, PartionId, UnitId, PartnerId, GoodsId, ObjectId, ObjectId_basis, ReceiptLevelId, ProdOptionsId, ColorPatternId, ProdColorPatternId, Amount, AmountPartner, OperPrice, OperPricePartner, isErased)
+     INSERT INTO _tmpItem (DescId_mi, MovementItemId, ParentId, PartionId, UnitId, PartnerId
+                         , GoodsId, ObjectId, ObjectId_basis, ReceiptLevelId, ProdOptionsId, ColorPatternId, ProdColorPatternId
+                         , Amount, AmountPartner, ForCount, OperPrice, OperPricePartner, isErased)
         SELECT MovementItem.DescId                                                 AS DescId_mi
              , MovementItem.Id                                                     AS MovementItemId
              , COALESCE (MovementItem.ParentId, 0)                                 AS ParentId
@@ -106,6 +109,7 @@ BEGIN
                                                                                    
              , MovementItem.Amount                                                 AS Amount
              , MIFloat_AmountPartner.ValueData                                     AS AmountPartner
+             , MIFloat_ForCount.ValueData                                          AS ForCount
              , MIFloat_OperPrice.ValueData                                         AS OperPrice
              , MIFloat_OperPricePartner.ValueData                                  AS OperPricePartner
                -- !!! временно для отладки
@@ -153,6 +157,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_OperPricePartner
                                          ON MIFloat_OperPricePartner.MovementItemId = MovementItem.Id
                                         AND MIFloat_OperPricePartner.DescId         = zc_MIFloat_OperPricePartner()
+             LEFT JOIN MovementItemFloat AS MIFloat_ForCount
+                                         ON MIFloat_ForCount.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
             ;
 
 
@@ -307,6 +314,7 @@ BEGIN
            , CASE WHEN ObjectDesc_Object.Id = zc_Object_ReceiptService() THEN _tmpItem.Amount ELSE 0 END ::TFloat   AS Value_service
              -- Количество заказ поставщику
            , _tmpItem.AmountPartner                   AS Amount_partner
+           , _tmpItem.ForCount ::TFloat
 
              -- Цена вх без НДС
            , _tmpItem.OperPrice                       AS OperPrice_basis
@@ -446,6 +454,7 @@ BEGIN
            , _tmpItem.Amount                          AS Amount_basis       -- Количество шаблон сборки
            , CASE WHEN Object_Object.DescId = zc_Object_ReceiptService() THEN 0 ELSE 0 END :: TFloat AS Amount_unit        -- Количество резерв
            , _tmpItem.AmountPartner                   AS Amount_partner     -- Количество заказ поставщику
+           , _tmpItem.ForCount   ::TFloat
 
            , _tmpItem.OperPrice                       AS OperPrice_basis   -- Цена вх без НДС
            , _tmpItem.OperPricePartner                AS OperPrice_partner   -- Цена вх без НДС
@@ -552,6 +561,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.12.22         * ForCount
  18.07.16         *
 */
 

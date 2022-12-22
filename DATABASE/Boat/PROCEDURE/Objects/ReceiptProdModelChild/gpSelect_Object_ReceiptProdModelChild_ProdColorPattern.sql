@@ -138,7 +138,7 @@ BEGIN
      -- Результат
      SELECT tmpProdColorPattern.ReceiptGoodsChildId       AS Id
           , tmpProdColorPattern.ReceiptProdModelId        AS ReceiptProdModelId
-          , tmpProdColorPattern.Value         :: NUMERIC (16, 8)   AS Value
+          , COALESCE (tmpProdColorPattern.Value,Null)  :: NUMERIC (16, 8)   AS Value
           , tmpProdColorPattern.ForCount      :: TFloat
           , tmpProdColorPattern.isErased      :: Boolean  AS isErased
           , ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptProdModelId ORDER BY Object_ProdColorPattern.ObjectCode ASC) :: Integer AS NPP

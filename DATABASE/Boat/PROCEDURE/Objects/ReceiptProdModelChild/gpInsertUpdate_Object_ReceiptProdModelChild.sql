@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TV
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, NUMERIC (16, 8), NUMERIC (16, 8), TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
@@ -15,8 +16,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
     IN inObjectId            Integer   ,
     IN inReceiptLevelId_top  Integer   ,
     IN inReceiptLevelId      Integer   ,
- INOUT ioValue               NUMERIC (16, 8)    ,
- INOUT ioValue_service       NUMERIC (16, 8)    ,
+ INOUT ioValue               TVarChar    ,
+ INOUT ioValue_service       TVarChar    ,
  INOUT ioForCount            TFloat    ,
    OUT outEKPrice_summ       TFloat    ,
    OUT outEKPriceWVAT_summ   TFloat    ,
@@ -31,35 +32,42 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
-   DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbPriceWithVAT Boolean;  
+   DECLARE vbValue  NUMERIC (16, 8); 
+   DECLARE vbValue_service  NUMERIC (16, 8);
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptProdModelChild());
    vbUserId:= lpGetUserBySession (inSession);
 
 
+   vbValue:= CAST (ioValue AS NUMERIC (16, 8));
+   vbValue_service:= CAST (REPLACE (ioValue_service,'.' , ',') AS NUMERIC (16, 8));
+
    -- замена
-   IF COALESCE (ioId, 0) = 0 OR ioValue <> COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_ReceiptProdModelChild_Value()), 0)
+   IF COALESCE (ioId, 0) = 0 OR vbValue <> COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_ReceiptProdModelChild_Value()), 0)
    THEN
        ioIsCheck:= TRUE;
    END IF;
 
    --замена  если посде зпт  ioValue больше 4-х знаков, тогда ForCount = 1000 а в ioValue записсываем ioValue * 1000
-   IF ioValue - ioValue ::NUMERIC (16, 4) > 0
+   IF (vbValue::NUMERIC (16, 8) <> vbValue ::NUMERIC (16, 4)) 
    THEN   
        ioForCount := 1000; 
-       ioValue := ioValue * 1000;
+       vbValue := vbValue * 1000;
+   ELSE 
+       ioForCount := 1; 
    END IF;
 
    -- замена
-   IF ioValue = 0 AND EXISTS (SELECT FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
+   IF vbValue = 0 AND EXISTS (SELECT FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
    THEN
-       ioValue:= ioValue_service;
+       vbValue:= vbValue_service;
    ELSE
        -- замена
-       IF ioValue = 0 THEN ioValue:= 1; END IF;
+       IF vbValue = 0 THEN vbValue:= 1; END IF;
        --
-       ioValue_service:= 0;
+       vbValue_service:= 0;
    END IF;
 
 
@@ -143,7 +151,7 @@ BEGIN
    ioId := lpInsertUpdate_Object(ioId, zc_Object_ReceiptProdModelChild(), 0, inComment);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptProdModelChild_Value(), ioId, ioValue);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptProdModelChild_Value(), ioId, vbValue);
    -- сохранили свойство <>
    IF COALESCE (ioForCount, 0) <= 0 THEN ioForCount:= 1; END IF;
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptProdModelChild_ForCount(), ioId, ioForCount);
@@ -175,8 +183,8 @@ BEGIN
    -- замена
    IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
    THEN
-       ioValue_service:= ioValue;
-       ioValue:= 0;
+       vbValue_service:= vbValue;
+       vbValue:= 0;
    END IF;
 
 
@@ -184,18 +192,18 @@ BEGIN
    vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
 
    -- если выбран товар получаем цены и возвращаем суммы
-   SELECT (ioValue * ObjectFloat_EKPrice.ValueData) :: TFloat AS EKPrice_summ
-        , (ioValue
+   SELECT (vbValue * ObjectFloat_EKPrice.ValueData) :: TFloat AS EKPrice_summ
+        , (vbValue
              * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
                     * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ
 
-       /* , (ioValue
+       /* , (vbValue
             * CASE WHEN vbPriceWithVAT = FALSE
                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                    ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
               END)  :: TFloat AS Basis_summ
 
-        , (ioValue
+        , (vbValue
             * CASE WHEN vbPriceWithVAT = FALSE
                     THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                     ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
@@ -229,6 +237,10 @@ BEGIN
 
 
    outReceiptLevelName :=  (SELECT Object.ValueData FROM Object WHERE Object.Id = inReceiptLevelId);
+
+   --возвращаем в грид как строку с  4 знаками после зпт
+   ioValue:= CAST (vbValue AS TVarChar);
+   ioValue_service:= CAST (ioValue_service AS TVarChar);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

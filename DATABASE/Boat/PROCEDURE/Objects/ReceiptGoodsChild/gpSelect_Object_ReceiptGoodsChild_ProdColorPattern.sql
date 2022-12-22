@@ -137,7 +137,7 @@ BEGIN
      -- Результат
      SELECT tmpProdColorPattern.ReceiptGoodsChildId       AS Id
           , tmpProdColorPattern.ReceiptGoodsId            AS ReceiptGoodsId
-          , tmpProdColorPattern.Value         :: NUMERIC (16, 8) AS Value
+          , CASE WHEN COALESCE (tmpProdColorPattern.Value,0) <> 0 THEN tmpProdColorPattern.Value ::TVarChar ELSE Null END :: NUMERIC (16, 8) AS Value
           , tmpProdColorPattern.ForCount      :: TFloat          AS ForCount
           , tmpProdColorPattern.Comment       :: TVarChar AS Comment
           , tmpProdColorPattern.isEnabled     :: Boolean  AS isEnabled
