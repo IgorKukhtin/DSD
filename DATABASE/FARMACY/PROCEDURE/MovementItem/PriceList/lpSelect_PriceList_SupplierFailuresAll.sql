@@ -1,4 +1,4 @@
--- Function: lpSelect_PriceList_SupplierFailures()
+-- Function: lpSelect_PriceList_SupplierFailuresAll()
 
 DROP FUNCTION IF EXISTS lpSelect_PriceList_SupplierFailuresAll (Integer, Integer);
 
@@ -24,10 +24,6 @@ BEGIN
                                  , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
                                  , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
                                  , COALESCE (MovementLinkObject_Area.ObjectId, 0)     AS AreaId
-                                 , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId
-                                                                 , COALESCE (MovementLinkObject_Contract.ObjectId, 0)
-                                                                 , COALESCE (MovementLinkObject_Area.ObjectId, 0)
-                                                      ORDER BY Movement.OperDate) AS Ord
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                               ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -40,6 +36,16 @@ BEGIN
                                                              AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
                             WHERE Movement.DescId = zc_Movement_PriceList()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()),
+        tmpMovementOrd AS (SELECT 
+                                   Movement.OperDate                                  AS OperDate
+                                 , Movement.MovementId                                AS MovementId
+                                 , Movement.JuridicalId                               AS JuridicalId
+                                 , Movement.ContractId                                AS ContractId
+                                 , Movement.AreaId                                    AS AreaId
+                                 , ROW_NUMBER() OVER (PARTITION BY Movement.JuridicalId, Movement.ContractId, Movement.AreaId
+                                                      ORDER BY Movement.OperDate) AS Ord
+                            FROM tmpMovementAll AS Movement
+                             ),
         tmpJuridicalArea AS (SELECT DISTINCT
                                     tmp.JuridicalId              AS JuridicalId
                                   , tmp.AreaId_Juridical         AS AreaId
@@ -51,9 +57,9 @@ BEGIN
                              , PriceList.ContractId
                              , PriceList.AreaId
                              , PriceList.MovementId
-                        FROM tmpMovementAll AS PriceList
+                        FROM tmpMovementOrd AS PriceList
                             
-                             LEFT JOIN tmpMovementAll AS PriceListNext 
+                             LEFT JOIN tmpMovementOrd AS PriceListNext 
                                                       ON PriceListNext.JuridicalId  = PriceList.JuridicalId
                                                      AND PriceListNext.ContractId   = PriceList.ContractId
                                                      AND PriceListNext.AreaId       = PriceList.AreaId
@@ -63,7 +69,16 @@ BEGIN
                                                        AND tmpJuridicalArea.AreaId = PriceList.AreaId 
                             
                         WHERE (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.JuridicalId, 0) <> 0)
-                          AND COALESCE (PriceListNext.OperDate, zc_DateEnd()) >= '20.02.2022')              
+                          AND COALESCE (PriceListNext.OperDate, zc_DateEnd()) >= '20.02.2022'),
+        tmpMI AS (SELECT MovementItem.MovementId
+                       , MovementItem.ObjectId 
+                  FROM MovementItem
+                       INNER JOIN MovementItemBoolean AS MIBoolean_SupplierFailures
+                                                      ON MIBoolean_SupplierFailures.MovementItemId = MovementItem.Id
+                                                     AND MIBoolean_SupplierFailures.DescId = zc_MIBoolean_SupplierFailures()
+                                                     AND MIBoolean_SupplierFailures.ValueData = TRUE
+                  WHERE MovementItem.MovementId IN (SELECT tmpMovement.MovementId FROM tmpMovement)
+                    AND MovementItem.DescId = zc_MI_Child())              
 
     SELECT DISTINCT
            Movement.OperDate
@@ -75,16 +90,7 @@ BEGIN
     
     FROM tmpMovement AS Movement
 
-        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.MovementId
-                               AND MovementItem.DescId = zc_MI_Child()
-
-        INNER JOIN MovementItemBoolean AS MIBoolean_SupplierFailures
-                                      ON MIBoolean_SupplierFailures.MovementItemId = MovementItem.Id
-                                     AND MIBoolean_SupplierFailures.DescId = zc_MIBoolean_SupplierFailures()
-                                     AND MIBoolean_SupplierFailures.ValueData = TRUE
-                                     
-   
-    ;
+        INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.MovementId;
 
 END;
 $BODY$
@@ -97,5 +103,13 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM lpSelect_PriceList_SupplierFailuresAll (inUnitId := 183292 , inUserId := 3)
+-- SELECT * FROM lpSelect_PriceList_SupplierFailuresAll (inUnitId := 183292 , inUserId := 3)
+
+
+SELECT DISTINCT
+                                       SupplierFailures.OperDate
+                                     , SupplierFailures.DateFinal
+                                     , SupplierFailures.GoodsId
+                                     , SupplierFailures.JuridicalId
+                                     , SupplierFailures.ContractId
+                                FROM lpSelect_PriceList_SupplierFailuresAll(19967206 , 3) AS SupplierFailures
