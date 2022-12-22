@@ -702,7 +702,7 @@
         object Value_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
+          Properties.DecimalPlaces = 8
           Properties.DisplayFormat = ',0.00######;-,0.00######; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -720,6 +720,18 @@
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
           Options.Editing = False
           Width = 63
+        end
+        object ForCount_ch1: TcxGridDBColumn
+          Caption = 'For Count'
+          DataBinding.FieldName = 'ForCount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.#;-,0.#; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+          Options.Editing = False
+          Width = 45
         end
         object EKPrice_ch1: TcxGridDBColumn
           Caption = 'Netto EK'
@@ -1055,11 +1067,23 @@
         object Value_ch2: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
+          Properties.DecimalPlaces = 8
           Properties.DisplayFormat = ',0.00######;-,0.00######; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
+          Width = 45
+        end
+        object ForCount_ch2: TcxGridDBColumn
+          Caption = 'For Count'
+          DataBinding.FieldName = 'ForCount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.#;-,0.#; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+          Options.Editing = False
           Width = 45
         end
         object GoodsGroupNameFull_ch2: TcxGridDBColumn
@@ -3167,7 +3191,7 @@
       end
       item
         Name = 'ioForCount'
-        Value = Null
+        Value = 0.000000000000000000
         Component = Child1CDS
         ComponentItem = 'ForCount'
         DataType = ftFloat

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModelChild_ProdColorPatter
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ReceiptProdModelId Integer
-             , Value TFloat
+             , Value NUMERIC (16, 8), ForCount TFloat
              , isErased Boolean
              , NPP Integer
 
@@ -45,6 +45,7 @@ BEGIN
                                            , ObjectLink_Object.ChildObjectId           AS ObjectId
                                              -- значение
                                            , ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END AS Value
+                                           , COALESCE (ObjectFloat_ForCount.ValueData,0) AS ForCount
                                       FROM Object AS Object_ReceiptProdModelChild
 
                                            LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
@@ -84,6 +85,7 @@ BEGIN
                                        , ObjectLink_MaterialOptions.ChildObjectId        AS MaterialOptionsId
                                          -- умножили
                                        , SUM (tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END) AS Value
+                                       , COALESCE (ObjectFloat_ForCount.ValueData,0) AS ForCount
                                   FROM tmpReceiptProdModelChild
                                        -- нашли его в сборке узлов
                                        INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
@@ -130,12 +132,14 @@ BEGIN
                                          , ObjectLink_ProdColorPattern.ChildObjectId
                                            -- Категория Опций
                                          , ObjectLink_MaterialOptions.ChildObjectId
+                                         , COALESCE (ObjectFloat_ForCount.ValueData,0)
                                  )
 
      -- Результат
      SELECT tmpProdColorPattern.ReceiptGoodsChildId       AS Id
           , tmpProdColorPattern.ReceiptProdModelId        AS ReceiptProdModelId
-          , tmpProdColorPattern.Value         :: TFloat   AS Value
+          , tmpProdColorPattern.Value         :: NUMERIC (16, 8)   AS Value
+          , tmpProdColorPattern.ForCount      :: TFloat
           , tmpProdColorPattern.isErased      :: Boolean  AS isErased
           , ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptProdModelId ORDER BY Object_ProdColorPattern.ObjectCode ASC) :: Integer AS NPP
 

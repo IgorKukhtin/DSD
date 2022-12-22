@@ -1,5 +1,5 @@
 -- Function: gpInsertUpdate_Object_ReceiptGoodsChild()
-
+   
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
@@ -45,10 +45,10 @@ BEGIN
    ELSE
        ioValue_service:= 0;
    END IF;
-
+  --  RAISE EXCEPTION '%', ioValue;
    --замена  если посде зпт  ioValue больше 4-х знаков, тогда ForCount = 1000 а в ioValue записсываем ioValue * 1000
-   IF ioValue - ioValue ::NUMERIC (16, 4) > 0
-   THEN   
+   IF (ioValue::NUMERIC (16, 8) - ioValue ::NUMERIC (16, 4)) > 0
+   THEN
        ioForCount := 1000; 
        ioValue := ioValue * 1000;
    END IF;
@@ -61,7 +61,7 @@ BEGIN
                                              , inUserId        := vbUserId
                                               );
    END IF;
-
+                  
    -- Проверка
    IF COALESCE (inObjectId, 0) = 0 AND COALESCE (inProdColorPatternId, 0) = 0
    THEN
