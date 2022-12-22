@@ -25,7 +25,9 @@ BEGIN
     
     vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate();   -- нужен 1 год (функция =6 мес.)
     vbDate9 := CURRENT_DATE + INTERVAL '9 MONTH';
-        
+
+raise notice 'Value 0: %', CLOCK_TIMESTAMP();
+
     IF inNeedCreate = True  --Если в интерфейсе поставили галку на подразделении
     THEN -- то перезаливаем заявку на разницу между остатком и НТЗ
         vbUserId := inSession;
@@ -77,7 +79,17 @@ BEGIN
             AND
             DescId = zc_MIFloat_AmountSecond();
 
+raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
+       CREATE TEMP TABLE _tmpMovement  ON COMMIT DROP AS
+	                              (SELECT Movement.*
+                                   FROM Movement 
+                                   WHERE Movement.DescId in (zc_Movement_Income(), zc_Movement_Send(), zc_Movement_Check())
+                                     AND Movement.StatusId = zc_Enum_Status_UnComplete());
+	   
+	   ANALYSE _tmpMovement;
+
+raise notice 'Value 2: %', CLOCK_TIMESTAMP();
 
         -- заливаем согласно разници между остатком и НТЗ
         PERFORM lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountSecond()
@@ -340,7 +352,7 @@ BEGIN
                                    )
                       , Income AS (SELECT MovementItem_Income.ObjectId    as GoodsId
                                         , SUM (MovementItem_Income.Amount) as Amount_Income
-                                   FROM Movement AS Movement_Income
+                                   FROM _tmpMovement AS Movement_Income
                                         INNER JOIN MovementItem AS MovementItem_Income
                                                                 ON Movement_Income.Id = MovementItem_Income.MovementId
                                                                AND MovementItem_Income.DescId = zc_MI_Master()
@@ -361,7 +373,7 @@ BEGIN
                              )
             , tmpMI_Send AS (SELECT MovementItem.ObjectId     AS GoodsId
                                   , SUM (MovementItem.Amount) AS Amount
-                             FROM Movement
+                             FROM _tmpMovement AS Movement
                                     INNER JOIN MovementItem AS MovementItem
                                                             ON MovementItem.MovementId = Movement.Id
                                                            AND MovementItem.DescId     = zc_MI_Master()
@@ -434,7 +446,8 @@ BEGIN
    -- выбираем отложенные Чеки (как в кассе колонка VIP)
    , tmpMovementChek AS (SELECT Movement.Id
                          FROM MovementBoolean AS MovementBoolean_Deferred
-                              INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                              INNER JOIN _tmpMovement AS Movement 
+						                              ON Movement.Id     = MovementBoolean_Deferred.MovementId
                                                  AND Movement.DescId = zc_Movement_Check()
                                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -446,7 +459,8 @@ BEGIN
                         UNION
                          SELECT Movement.Id
                          FROM MovementString AS MovementString_CommentError
-                              INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                              INNER JOIN _tmpMovement AS Movement 
+						                              ON Movement.Id     = MovementString_CommentError.MovementId
                                                  AND Movement.DescId = zc_Movement_Check()
                                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -557,6 +571,7 @@ BEGIN
                      END > 0
        ) AS tmp;
 
+raise notice 'Value 3: %', CLOCK_TIMESTAMP();
 
        -- RAISE EXCEPTION 'ok' ;
 
@@ -594,6 +609,8 @@ BEGIN
 
     END IF;
 
+raise notice 'Value 4: %', CLOCK_TIMESTAMP();
+
     -- пересчет для схемы SUN
     IF EXISTS (SELECT 1 FROM ObjectBoolean AS ObjectBoolean_SUN WHERE ObjectBoolean_SUN.ObjectId = inUnitId AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN())
     THEN
@@ -602,6 +619,8 @@ BEGIN
                                                                , inSession   := inSession
                                                                 );
     END IF;
+
+raise notice 'Value 5: %', CLOCK_TIMESTAMP();
 
        /*30.09 -
          в колонке Всего с округл., для позиций  у которых срок годности менее 1 года
@@ -616,6 +635,10 @@ BEGIN
        SELECT tmp.Id, tmp.GoodsId, tmp.Amount, tmp.Price, tmp.MCS, tmp.Layout, tmp.CalcAmountAll, tmp.PartionGoodsDate
        FROM gpSelect_MovementItem_OrderInternal_Master (vbMovementId, FALSE, FALSE, FALSE, inSession) AS tmp
        ;
+	   
+	   ANALYSE _tmpMI_OrderInternal_Master;
+
+raise notice 'Value 6: %', CLOCK_TIMESTAMP();
 
        --пересчитываем AmountManual, если больше НТЗ то берем НТЗ
        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual()
@@ -636,6 +659,7 @@ BEGIN
        FROM _tmpMI_OrderInternal_Master AS tmp
        WHERE tmp.PartionGoodsDate < CASE WHEN COALESCE (tmp.Layout, 0) > 0 THEN vbDate9 ELSE vbDate180 END;
 
+raise notice 'Value 7: %', CLOCK_TIMESTAMP();
     --
     IF EXISTS(  SELECT Movement.Id
                 FROM Movement
@@ -683,4 +707,5 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_OrderInternalMCSLayout (inUnitId := 19967206, inNeedCreate:= True, inSession:= '3')
+-- 
+SELECT * FROM gpInsertUpdate_MovementItem_OrderInternalMCSLayout (inUnitId := 19967206, inNeedCreate:= True, inSession:= '3')

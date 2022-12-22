@@ -24,7 +24,6 @@ DECLARE
   vbAmountOut TFloat;
 BEGIN
 
-
     -- вытягиваем дату и подразделение и ...
     SELECT DATE_TRUNC ('DAY', Movement.OperDate)  AS OperDate     -- при рассчете остатка добавил 1 день для условия >=
          , MLO_Unit.ObjectId                                      AS UnitId
@@ -57,11 +56,21 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. Не заполнено примечание.';
     END IF;
+	
+	CREATE TEMP TABLE tmpMovementItem ON COMMIT DROP AS
+	   (SELECT *
+		FROM MovementItem
+
+		WHERE MovementItem.MovementId = inMovementId
+		  AND MovementItem.DescId     = zc_MI_Master()
+		  AND MovementItem.isErased   = FALSE);
+
+    ANALYSE tmpMovementItem;
 
       -- Контроль заполнене пояснений
     SELECT Object_CommentTR.ValueData||COALESCE(' с пояснением '||MIString_Explanation.ValueData, '') AS CommentTR
     INTO vbCommentTR
-    FROM MovementItem
+    FROM tmpMovementItem AS MovementItem
 
          INNER JOIN MovementItemLinkObject AS MILinkObject_CommentTR
                                            ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
@@ -78,10 +87,7 @@ BEGIN
                                       ON MIString_Explanation.MovementItemId = MovementItem.Id
                                      AND MIString_Explanation.DescId = zc_MIString_Explanation()
 
-    WHERE MovementItem.MovementId = inMovementId
-      AND MovementItem.DescId     = zc_MI_Master()
-      AND MovementItem.isErased   = FALSE
-      AND COALESCE(MIString_Explanation.ValueData, '') = '';
+    WHERE COALESCE(MIString_Explanation.ValueData, '') = '';
 
     IF (COALESCE(vbCommentTR,'') <> '')
     THEN
@@ -91,7 +97,7 @@ BEGIN
       -- Контроль пересортов
     SELECT Object_CommentTR.ValueData||COALESCE(' с пояснением '||MIString_Explanation.ValueData, '') AS CommentTR
     INTO vbCommentTR
-    FROM MovementItem
+    FROM tmpMovementItem AS MovementItem
 
          LEFT JOIN MovementItemString AS MIString_Explanation
                                       ON MIString_Explanation.MovementItemId = MovementItem.Id
@@ -108,9 +114,6 @@ BEGIN
                                  AND ObjectBoolean_CommentTR_Resort.DescId = zc_ObjectBoolean_CommentTR_Resort()
                                  AND ObjectBoolean_CommentTR_Resort.ValueData = TRUE
 
-    WHERE MovementItem.MovementId = inMovementId
-      AND MovementItem.DescId     = zc_MI_Master()
-      AND MovementItem.isErased   = FALSE
     GROUP BY Object_CommentTR.ValueData
            , MIString_Explanation.ValueData
     HAVING COUNT(MovementItem.Amount) = 1;
@@ -234,7 +237,8 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более комментарию разница суммы <%> превышает допустимую сумму <%>.', vbCommentTR, vbAmountIn, vbAmountOut;
     END IF;
 */
-      -- Пересчитываем количество
+ 
+    -- Пересчитываем количество
     PERFORM lpUpdate_Movement_TechnicalRediscount_TotalDiff(inMovementId);
 
     -- 5.1. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
@@ -287,7 +291,6 @@ BEGIN
         -- сохранили <Документ>
         vbInventoryID := lpInsertUpdate_Movement (0, zc_Movement_Inventory(), vbInventoryNumber, vbOperDate, inMovementId);
     END IF;
-
 
     -- сохранили связь с <Подразделение в документе>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), vbInventoryID, vbUnitId);
@@ -342,6 +345,11 @@ BEGIN
       PERFORM gpInsertUpdate_MovementItem_WagesTechnicalRediscount(vbUnitId, vbOperDate, zfCalc_UserAdmin());
     END IF;
 
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    IF inUserId = 3
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inMovementId, inUserId;
+    END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -355,3 +363,6 @@ $BODY$
 --select * from gpUpdate_Status_TechnicalRediscount(inMovementId := 17785885 , inStatusCode := 2 ,  inSession := '3');
 
 -- select * from gpUpdate_Status_TechnicalRediscount(inMovementId := 19801455 , inStatusCode := 2 ,  inSession := '3');
+
+
+

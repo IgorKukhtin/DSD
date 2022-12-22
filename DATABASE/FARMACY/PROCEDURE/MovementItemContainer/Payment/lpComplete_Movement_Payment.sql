@@ -13,6 +13,7 @@ $BODY$
    DECLARE vbPaymentDate TDateTime;
    DECLARE vbOperDate TDateTime;
 BEGIN
+
     
     --Проверяем, что бы все оплаты соответствовали тем, что в документе
     PERFORM lpInsertUpdate_MovementItem_Payment_Child(inId     := MI_Payment.Id, -- Ключ объекта <Элемент документа>
@@ -22,8 +23,7 @@ BEGIN
     WHERE MI_Payment.MovementId = inMovementId
       AND MI_Payment.DescId = zc_MI_Master()
     ;
-
-    
+	
     SELECT Movement_Payment.OperDate             AS OperDate
          , MovementLinkObject_Juridical.ObjectId AS JuridicalId
         INTO vbOperDate, vbJuridicalId
@@ -93,7 +93,7 @@ BEGIN
           AND MI_Payment.isErased = FALSE;
     
 	ANALYSE _tmpMI;
-    
+	
     --Создать документы изменения долга по недостающим суммам прочих корректировок
     CREATE TEMP TABLE _tmp(OperDate TDateTime, JuridicalId Integer, Income_JuridicalId Integer, SummaCorrOther TFloat) ON COMMIT DROP;
     WITH 
@@ -234,7 +234,7 @@ BEGIN
       , vbOperDate
     FROM _tmpMI AS MovementItem_Payment
     WHERE MovementItem_Payment.SummaCorrBonus <> 0;
-        
+	
     -- Снимаем сумму с контейнера корректировок
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
     SELECT 
@@ -257,7 +257,7 @@ BEGIN
       , vbOperDate
     FROM _tmpMI AS MovementItem_Payment
     WHERE MovementItem_Payment.SummaCorrReturnOut <> 0;
-        
+	
     -- Снимаем сумму с контейнера оплаты по накладной
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
     SELECT 
@@ -277,7 +277,7 @@ BEGIN
       , vbOperDate
     FROM _tmpMI AS MovementItem_Payment
     WHERE MovementItem_Payment.SummaCorrReturnOut <> 0;    
-        
+	
     -- Снимаем сумму с контейнера корректировок
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
     SELECT 
@@ -300,7 +300,7 @@ BEGIN
       , vbOperDate
      FROM _tmpMI AS MovementItem_Payment
      WHERE MovementItem_Payment.SummaCorrOther <> 0;
-        
+	 
     -- Снимаем сумму с контейнера корректировок
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
     SELECT 
@@ -344,7 +344,6 @@ BEGIN
     FROM _tmpMI AS MovementItem_Payment
     WHERE MovementItem_Payment.SummaCorrOther <> 0;
     
-
     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
     
     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
@@ -352,8 +351,7 @@ BEGIN
                                , inDescId     := zc_Movement_Payment()
                                , inUserId     := inUserId
                                  );
-                                 
-
+								 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -364,3 +362,4 @@ $BODY$
  08.01.18         * без вьюх
  13.10.15                                                                     * 
 */
+

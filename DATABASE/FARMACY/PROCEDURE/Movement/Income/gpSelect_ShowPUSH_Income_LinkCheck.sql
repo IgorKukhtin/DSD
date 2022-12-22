@@ -30,7 +30,7 @@ BEGIN
      outTextColor        := zc_Color_Red();
      outColor            := zc_Color_White();
      outBold             := True;
-     
+
      -- проверка привязки товара
      vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
                     FROM MovementLinkObject AS MovementLinkObject_Juridical
@@ -40,8 +40,9 @@ BEGIN
                     WHERE MovementLinkObject_Juridical.MovementId = inMovementId
                       AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
                     );
-     vbMessageText := (WITH
-                        tmpMI AS (SELECT DISTINCT MILinkObject_Goods.ObjectId  AS PartnerGoodsId
+					
+	 CREATE TEMP TABLE tmpMI_PUSH ON COMMIT DROP AS 
+	                              (SELECT DISTINCT MILinkObject_Goods.ObjectId  AS PartnerGoodsId
                                   FROM MovementItem 
                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                                         ON MILinkObject_Goods.MovementItemId = MovementItem.Id
@@ -50,11 +51,14 @@ BEGIN
                                     AND MovementItem.isErased   = FALSE
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND COALESCE (MILinkObject_Goods.ObjectId, 0) <> 0
-                                  )
-     
-                      , tmpLink AS (SELECT tmpMI.PartnerGoodsId
+                                  );
+								  
+	 ANALYSE tmpMI_PUSH;
+
+     CREATE TEMP TABLE tmpLink ON COMMIT DROP AS 
+	                               (SELECT tmpMI.PartnerGoodsId
                                          , ObjectLink_LinkGoods_Goods_find.ChildObjectId AS GoodsId
-                                    FROM tmpMI
+                                    FROM tmpMI_PUSH AS tmpMI
                                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
                                                               ON ObjectLink_LinkGoods_Goods.ChildObjectId = tmpMI.PartnerGoodsId
                                                              AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
@@ -75,11 +79,15 @@ BEGIN
                                                            ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
                                                           AND Object_Retail.DescId = zc_Object_Retail()
                                     WHERE ObjectLink_Goods_Object.ChildObjectId = vbRetailId
-                                    )
+                                    );
+
+     ANALYSE tmpLink;
+
+     vbMessageText := (
                         -- Результат
                         SELECT string_agg (lfGet_Object_ValueData (tmpMI.PartnerGoodsId ), Chr(13)||Chr(13))
                         FROM (SELECT tmpMI.PartnerGoodsId
-                              FROM tmpMI
+                              FROM tmpMI_PUSH AS tmpMI
                                   LEFT JOIN tmpLink ON tmpLink.PartnerGoodsId = tmpMI.PartnerGoodsId
                               WHERE tmpLink.GoodsId IS NULL
                               LIMIT 3
@@ -138,4 +146,4 @@ $BODY$
  28.01.22                                                       *
 */
 --
-select * from gpSelect_ShowPUSH_Income_LinkCheck (inMovementId := 26610992   ,  inSession := '3'); 
+select * from gpSelect_ShowPUSH_Income_LinkCheck (inMovementId := 30420216   ,  inSession := '3'); 
