@@ -66,6 +66,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpGetUserBySession (inSession);
 
+--if inValue2 ILIKE 'RAL 9001'
+--then  inValue2:= 'RAL 9010';
+--end if;
+
      -- замена
      IF inValue3 ILIKE 'null' THEN inValue3:= ''; END IF;
      -- замена
@@ -1169,10 +1173,13 @@ BEGIN
                       -- 2.3. Проверка
                       IF COALESCE (vbGoodsId, 0) = 0
                       THEN
-                          RAISE EXCEPTION 'Ошибка.Не найдено сырье для <%> с цветом = <%>.Необходимо его добавить вручную как <%> или <%>.'
+                          RAISE EXCEPTION 'Ошибка.Не найдено сырье для <%> с цветом = <%>.Необходимо его добавить вручную как <%> или <%>.%Диапазон поиска для кода с <%> по <%>.'
                                         , inTitle
                                         , vbColor_title
                                         , lfGet_Object_ValueData (252217), lfGet_Object_ValueData (6357)
+                                        , CHR (13)
+                                        , -100
+                                        , 1
                                          ;
                       END IF;
 
