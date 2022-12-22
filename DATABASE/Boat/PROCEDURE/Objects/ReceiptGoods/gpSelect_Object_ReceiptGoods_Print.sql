@@ -241,7 +241,7 @@ BEGIN
          (ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptGoodsId ORDER BY Object_ProdColorPattern.ObjectCode ASC) 
            + CASE WHEN Object_ProdColorPattern.Id IS NULL THEN 1000 ELSE 0 END)  :: Integer AS NPP
 
-         , tmpProdColorPattern.Value  ::TFloat   AS Value
+         , tmpProdColorPattern.Value  :: NUMERIC (16, 8) AS Value
          --, CASE WHEN Object_Goods.DescId <> zc_Object_ReceiptService() THEN tmpProdColorPattern.Value ELSE 0 END ::TFloat   AS Value
          --, CASE WHEN Object_Goods.DescId =  zc_Object_ReceiptService() THEN tmpProdColorPattern.Value ELSE 0 END ::TFloat   AS Value_service
 

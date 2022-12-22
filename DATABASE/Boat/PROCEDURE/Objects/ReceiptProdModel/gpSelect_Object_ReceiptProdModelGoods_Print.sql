@@ -458,7 +458,8 @@ BEGIN
      -- Результат
      SELECT 
      
-           tmpReceiptProdModelChild.ReceiptGoodsId
+           1 :: Integer AS NPP
+         , tmpReceiptProdModelChild.ReceiptGoodsId
          , tmpReceiptProdModelChild.TitleReceipt
 
          , tmpProdColorPattern.Value  ::TFloat   AS Value

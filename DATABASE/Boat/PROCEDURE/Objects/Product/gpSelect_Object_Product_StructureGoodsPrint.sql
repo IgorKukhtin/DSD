@@ -17,6 +17,7 @@ RETURNS TABLE (GroupId Integer, GroupName TVarChar
              , GoodsGroupId_dt Integer, GoodsGroupNameFull_dt TVarChar, GoodsGroupName_dt TVarChar
              , ReceiptLevelName TVarChar, ReceiptLevelName_dt TVarChar
              , NPP_1 Integer, NPP_2 Integer
+             , NPP_pcp Integer,ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar
              , Color_Value Integer
               )
 AS
@@ -256,12 +257,16 @@ BEGIN
              END :: Integer AS GroupId
            , CASE WHEN tmpItem_Сhild.GroupId = 1
                       THEN 'Конфигуратор'
+
                   WHEN tmpItem_Сhild.GroupId = 2
                       THEN 'Опции'
+
                   WHEN tmpItem_Сhild.GroupId = 3
                       THEN 'Сборка Лодки'
+
                   WHEN tmpItem_Сhild.GroupId = 11
                       THEN 'Сборка узлов Level 1'
+
                   WHEN tmpItem_Сhild.GroupId = 22
                       THEN 'Сборка узлов Level 2'
              END                              :: TVarChar AS GroupName
@@ -316,12 +321,34 @@ BEGIN
            , COALESCE (Object_ReceiptLevel_dt.ValueData, tmpReceiptLevel_dt.ReceiptLevelName) :: TVarChar AS ReceiptLevelName_dt
 
            , COALESCE (tmpReceiptLevel.NPP_1, Object_ch.Id) :: Integer AS NPP_1
-           , ROW_NUMBER() OVER (PARTITION BY tmpItem_Сhild.GroupId
-                                ORDER BY CASE WHEN tmpItem_Detail.ProdColorPatternId > 0 THEN 0 ELSE 1 END
-                                       , COALESCE (tmpProdColorItems.Npp, 0)
+           , ROW_NUMBER() OVER (PARTITION BY tmpItem_Сhild.GroupId, tmpItem_Сhild.ObjectId
+                                ORDER BY -- для сборки Hypalon
+                                         CASE WHEN tmpItem_Detail.ProdColorPatternId > 0 AND tmpItem_Сhild.GroupId <> 11
+                                              THEN 0
+                                              ELSE 1
+                                         END
+                                         -- № п/п для сборки Hypalon
+                                       , CASE WHEN tmpItem_Сhild.GroupId <> 11
+                                              THEN COALESCE (tmpProdColorItems.Npp, 0)
+                                              ELSE 1000
+                                         END
+
+                                         -- для артикулов ПФ - в начало
                                        , CASE WHEN ObjectString_Article_dt.ValueData ILIKE '%ПФ' THEN 0 ELSE 1 END
+                                         -- для товаров ПФ - в начало
                                        , CASE WHEN Object_dt.ValueData ILIKE 'ПФ%' THEN 0 ELSE 1 END
+                                         -- для сборки модели 01+02+03 и для сборки узлов 1+2+3
                                        , COALESCE (Object_ReceiptLevel_dt.ValueData, tmpReceiptLevel_dt.ReceiptLevelName)
+
+                                         -- для сборки Hypalon
+                                       , CASE WHEN tmpItem_Detail.ProdColorPatternId > 0 AND tmpItem_Сhild.GroupId = 11
+                                              THEN 0
+                                              ELSE 1
+                                         END
+                                         -- № п/п для сборки Hypalon
+                                       , COALESCE (tmpProdColorItems.Npp, 0)
+
+                                         -- для сборки модели - сначала узлы
                                        , CASE WHEN EXISTS (SELECT 1 FROM tmpItem_Detail AS tmp WHERE tmp.GoodsId = tmpItem_Detail.ObjectId)
                                                    THEN 0
                                               ELSE 1
@@ -329,7 +356,13 @@ BEGIN
                                        , Object_dt.ValueData
                                ) :: Integer AS NPP_2
 
+           , tmpProdColorItems.Npp   :: Integer AS NPP_pcp
+           , Object_ProdColorPattern.Id         AS ProdColorPatternId
+           , Object_ProdColorPattern.ObjectCode AS ProdColorPatternCode
+           , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
+
            , zc_Color_White() :: Integer AS Color_Value
+
 
        FROM (-- уровень 3 - собираем Лодку
              SELECT DISTINCT
@@ -431,6 +464,24 @@ BEGIN
                                        AND tmpProdColorItems.GoodsId            = tmpItem_Detail.ObjectId
                     --AND 1=0
 
+            -- Boat Structure
+            LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpItem_Detail.ProdColorPatternId
+            -- Шаблон Boat Structure
+            LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                                 ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                                AND ObjectLink_ColorPattern.DescId   = zc_ObjectLink_ProdColorPattern_ColorPattern()
+            LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Model
+                                 ON ObjectLink_Model.ObjectId = Object_ColorPattern.Id
+                                AND ObjectLink_Model.DescId = zc_ObjectLink_ColorPattern_Model()
+            LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+            -- Категория/Группа Boat Structure
+            LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                 ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                AND ObjectLink_ProdColorGroup.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+            LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+
             LEFT JOIN Object AS Object_dt ON Object_dt.Id = tmpItem_Detail.ObjectId
             LEFT JOIN ObjectString AS ObjectString_Article_dt
                                    ON ObjectString_Article_dt.ObjectId = Object_dt.Id
@@ -516,6 +567,11 @@ BEGIN
            , -2                    :: Integer AS NPP_1
            , tmpProdColorItems.Npp :: Integer AS NPP_2
 
+           , tmpProdColorItems.Npp :: Integer AS NPP_pcp
+           , 0  :: Integer  AS ProdColorPatternId
+           , 0  :: Integer  AS ProdColorPatternCode
+           , '' :: TVarChar AS ProdColorPatternName
+
            , tmpProdColorItems.Color_Value
 
        FROM tmpProdColorItems
@@ -575,6 +631,11 @@ BEGIN
 
            , -1                  :: Integer AS NPP_1
            , tmpProdOptItems.Npp :: Integer AS NPP_2
+
+           , 0  :: Integer  AS NPP_pcp
+           , 0  :: Integer  AS ProdColorPatternId
+           , 0  :: Integer  AS ProdColorPatternCode
+           , '' :: TVarChar AS ProdColorPatternName
 
            , zc_Color_White()    :: Integer AS Color_Value
 
