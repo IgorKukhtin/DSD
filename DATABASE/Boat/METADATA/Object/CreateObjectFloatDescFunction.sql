@@ -185,7 +185,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_ProdColor_Value() RETURNS Integer AS $
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ProdColor(), 'zc_ObjectFloat_ProdColor_Value', 'Значение цвета для отображения' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProdColor_Value');
 
-
+     
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

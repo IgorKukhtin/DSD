@@ -8,6 +8,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, NUMERIC (16, 8), NUMERIC (16, 8), TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
@@ -19,8 +20,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
     IN inReceiptLevelId_top  Integer   ,
     IN inReceiptLevelId      Integer   ,
     IN inGoodsChildId        Integer   ,
- INOUT ioValue               TFloat    ,
- INOUT ioValue_service       TFloat    ,
+ INOUT ioValue               NUMERIC (16, 8)    ,
+ INOUT ioValue_service       NUMERIC (16, 8)    ,
  INOUT ioForCount            TFloat    ,
     IN inIsEnabled           Boolean   ,
    OUT outReceiptLevelName   TVarChar  ,
@@ -45,7 +46,12 @@ BEGIN
        ioValue_service:= 0;
    END IF;
 
-
+   --замена  если посде зпт  ioValue больше 4-х знаков, тогда ForCount = 1000 а в ioValue записсываем ioValue * 1000
+   IF ioValue - ioValue ::NUMERIC (16, 4) > 0
+   THEN   
+       ioForCount := 1000; 
+       ioValue := ioValue * 1000;
+   END IF;
 
    -- Проверка
    IF COALESCE (inReceiptGoodsId, 0) = 0

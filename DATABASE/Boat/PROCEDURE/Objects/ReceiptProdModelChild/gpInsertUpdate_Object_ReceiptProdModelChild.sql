@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TV
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, NUMERIC (16, 8), NUMERIC (16, 8), TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
@@ -14,15 +15,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
     IN inObjectId            Integer   ,
     IN inReceiptLevelId_top  Integer   ,
     IN inReceiptLevelId      Integer   ,
- INOUT ioValue               TFloat    ,
- INOUT ioValue_service       TFloat    ,
+ INOUT ioValue               NUMERIC (16, 8)    ,
+ INOUT ioValue_service       NUMERIC (16, 8)    ,
  INOUT ioForCount            TFloat    ,
    OUT outEKPrice_summ       TFloat    ,
    OUT outEKPriceWVAT_summ   TFloat    ,
 -- OUT outBasis_summ         TFloat    ,
 -- OUT outBasisWVAT_summ     TFloat    ,
    OUT outReceiptLevelName   TVarChar  ,
-    IN ioIsCheck               Boolean  ,
+    IN ioIsCheck             Boolean  ,
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -41,6 +42,13 @@ BEGIN
    IF COALESCE (ioId, 0) = 0 OR ioValue <> COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_ReceiptProdModelChild_Value()), 0)
    THEN
        ioIsCheck:= TRUE;
+   END IF;
+
+   --замена  если посде зпт  ioValue больше 4-х знаков, тогда ForCount = 1000 а в ioValue записсываем ioValue * 1000
+   IF ioValue - ioValue ::NUMERIC (16, 4) > 0
+   THEN   
+       ioForCount := 1000; 
+       ioValue := ioValue * 1000;
    END IF;
 
    -- замена
