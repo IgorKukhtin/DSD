@@ -349,6 +349,7 @@ object SendForm: TSendForm
         Height = 216
         Align = alClient
         TabOrder = 0
+        ExplicitTop = 2
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -595,9 +596,9 @@ object SendForm: TSendForm
             HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
             Width = 90
           end
-          object InvNumber_OrderClient: TcxGridDBColumn
+          object InvNumberFull_OrderClient: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'InvNumber_OrderClient'
+            DataBinding.FieldName = 'InvNumberFull_OrderClient'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -608,18 +609,34 @@ object SendForm: TSendForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
             Width = 70
           end
-          object OperDate_OrderClient: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'OperDate_OrderClient'
-            Visible = False
+          object CIN: TcxGridDBColumn
+            Caption = 'CIN Nr.'
+            DataBinding.FieldName = 'CIN'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
             Options.Editing = False
-            Width = 70
+            Width = 100
+          end
+          object ProductName: TcxGridDBColumn
+            Caption = 'Boat'
+            DataBinding.FieldName = 'ProductName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object FromName: TcxGridDBColumn
+            Caption = 'Kunden'
+            DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090' '#1082#1086#1075#1086
+            Options.Editing = False
+            Width = 120
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -1998,8 +2015,8 @@ object SendForm: TSendForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'OrderClientJournalChoiceForm'
-      FormName = 'TOrderClientJournalChoiceForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      FormName = 'TOrderClientJournalChoiceItemForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2014,16 +2031,54 @@ object SendForm: TSendForm
           Name = 'InvNumber_Full'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InvNumber_OrderClient'
+          ComponentItem = 'InvNumberFull_OrderClient'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'OperDate'
+          Name = 'FromName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'OperDate_OrderClient'
-          DataType = ftDateTime
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProductName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CIN'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CIN'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -3209,8 +3264,8 @@ object SendForm: TSendForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 144
-    Top = 224
+    Left = 120
+    Top = 264
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'

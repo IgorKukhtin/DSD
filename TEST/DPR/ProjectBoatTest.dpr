@@ -331,7 +331,8 @@ uses
   ProdOptions_Comment in '..\..\FormsBoat\Guides\ProdOptions_Comment.pas' {ProdOptions_CommentForm: TParentForm},
   ProdOptions in '..\..\FormsBoat\Guides\ProdOptions.pas' {ProdOptionsForm: TParentForm},
   GoodsGroupChoice in '..\..\FormsBoat\Guides\GoodsGroupChoice.pas' {GoodsGroupChoiceForm: TParentForm},
-  MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm};
+  MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm},
+  OrderClientJournalChoiceItem in '..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas' {OrderClientJournalChoiceItemForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

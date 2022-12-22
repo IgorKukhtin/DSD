@@ -412,6 +412,10 @@ end;
 
  procedure TLoadFormTest.LoadOrderClientFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalChoiceItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalChoiceItemForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalReserveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalReserveForm');
 
@@ -422,6 +426,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientForm');
+  }
 end;
 
 
