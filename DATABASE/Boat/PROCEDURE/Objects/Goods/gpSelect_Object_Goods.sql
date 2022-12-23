@@ -254,7 +254,7 @@ BEGIN
                                           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitId
                                       GROUP BY tmpUnit.UnitId
                                       ) AS tmp
-                                     INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpUnit.GoodsId_receipt
+                                     INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId_receipt
                                )
          
        -- Результат
