@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
   cxCurrencyEdit, ExternalLoad, cxContainer, cxImage, Vcl.ExtCtrls, cxTextEdit,
-  cxLabel;
+  cxLabel, dsdGuides, cxMaskEdit;
 
 type
   TGoodsForm = class(TParentForm)
@@ -138,6 +138,16 @@ type
     isReceiptGoods: TcxGridDBColumn;
     Colors: TcxGridDBColumn;
     Color_Value: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    spInsUpd_Unit: TdsdStoredProc;
+    actInsertUpdate_Unit: TdsdExecStoredProc;
+    macInsertUpdate_Unit_list: TMultiAction;
+    macInsertUpdate_Unit: TMultiAction;
+    bbInsertUpdate_Unit: TdxBarButton;
+    UnitName_receipt: TcxGridDBColumn;
+    GoodsName_receipt: TcxGridDBColumn;
   private
     { Private declarations }
   public

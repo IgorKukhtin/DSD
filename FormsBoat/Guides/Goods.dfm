@@ -3,7 +3,7 @@ object GoodsForm: TGoodsForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
   ClientHeight = 506
-  ClientWidth = 982
+  ClientWidth = 1036
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,7 +22,7 @@ object GoodsForm: TGoodsForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 59
-    Width = 982
+    Width = 1036
     Height = 447
     Align = alClient
     TabOrder = 0
@@ -380,6 +380,17 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 55
       end
+      object UnitName_receipt: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1089#1073#1086#1088#1082#1080
+        DataBinding.FieldName = 'UnitName_receipt'
+        HeaderAlignmentHorz = taCenter
+        Width = 80
+      end
+      object GoodsName_receipt: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088' '#1089#1073#1086#1088#1082#1080
+        DataBinding.FieldName = 'GoodsName_receipt'
+        Width = 80
+      end
       object TaxKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName'
@@ -696,7 +707,7 @@ object GoodsForm: TGoodsForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 982
+    Width = 1036
     Height = 33
     Align = alTop
     TabOrder = 1
@@ -762,6 +773,23 @@ object GoodsForm: TGoodsForm
         140
         21)
       Width = 140
+    end
+    object cxLabel4: TcxLabel
+      Left = 755
+      Top = 7
+      Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
+    end
+    object edUnit: TcxButtonEdit
+      Left = 829
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 188
     end
   end
   object DataSource: TDataSource
@@ -889,6 +917,18 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate_Unit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -958,6 +998,10 @@ object GoodsForm: TGoodsForm
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
+      Category = 0
+    end
+    object bbInsertUpdate_Unit: TdxBarButton
+      Action = macInsertUpdate_Unit
       Category = 0
     end
   end
@@ -1487,6 +1531,44 @@ object GoodsForm: TGoodsForm
       ControlName.DataType = ftString
       ControlName.MultiSelectSeparator = ','
     end
+    object actInsertUpdate_Unit: TdsdExecStoredProc
+      Category = 'Update'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsUpd_Unit
+      StoredProcList = <
+        item
+          StoredProc = spInsUpd_Unit
+        end>
+      Caption = 'actInsertUpdate_Unit'
+    end
+    object macInsertUpdate_Unit_list: TMultiAction
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_Unit
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
+    end
+    object macInsertUpdate_Unit: TMultiAction
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsertUpdate_Unit_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1099#1073#1088#1072#1085#1085#1086#1077' '#1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' '#1076#1083#1103' '#1042#1089#1077#1093' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093'?'
+      InfoAfterExecute = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' '#1076#1083#1103' '#1042#1089#1077#1093' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' '#1076#1083#1103' '#1042#1089#1077#1093' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093
+      ImageIndex = 76
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
@@ -1688,5 +1770,59 @@ object GoodsForm: TGoodsForm
     CheckBoxList = <>
     Left = 504
     Top = 296
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 927
+    Top = 11
+  end
+  object spInsUpd_Unit: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Goods_Unit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 900
+    Top = 80
   end
 end

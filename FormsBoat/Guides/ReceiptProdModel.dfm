@@ -230,6 +230,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Options.Editing = False
           Width = 70
         end
+        object UnitName: TcxGridDBColumn
+          Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080
+          DataBinding.FieldName = 'UnitName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 87
+        end
         object Comment: TcxGridDBColumn
           Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
           DataBinding.FieldName = 'Comment'
@@ -1287,6 +1295,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
+      ExplicitLeft = 80
+      ExplicitTop = 1
     end
   end
   object cxTopSplitter: TcxSplitter

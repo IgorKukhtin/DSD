@@ -2,7 +2,7 @@ object ReceiptProdModelEditForm: TReceiptProdModelEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080'>'
-  ClientHeight = 299
+  ClientHeight = 342
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -30,7 +30,7 @@ object ReceiptProdModelEditForm: TReceiptProdModelEditForm
   end
   object cxButton1: TcxButton
     Left = 40
-    Top = 260
+    Top = 307
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -39,7 +39,7 @@ object ReceiptProdModelEditForm: TReceiptProdModelEditForm
   end
   object cxButton2: TcxButton
     Left = 184
-    Top = 260
+    Top = 307
     Width = 75
     Height = 25
     Action = actFormClose
@@ -64,12 +64,12 @@ object ReceiptProdModelEditForm: TReceiptProdModelEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 196
+    Top = 243
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 216
+    Top = 263
     TabOrder = 7
     Width = 273
   end
@@ -86,7 +86,7 @@ object ReceiptProdModelEditForm: TReceiptProdModelEditForm
   end
   object cxLabel12: TcxLabel
     Left = 10
-    Top = 144
+    Top = 143
     Caption = #1052#1086#1076#1077#1083#1100
   end
   object edModel: TcxButtonEdit
@@ -107,6 +107,23 @@ object ReceiptProdModelEditForm: TReceiptProdModelEditForm
     Caption = #1043#1083#1072#1074#1085#1099#1081
     TabOrder = 12
     Width = 73
+  end
+  object cxLabel4: TcxLabel
+    Left = 8
+    Top = 192
+    Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080
+  end
+  object edUnit: TcxButtonEdit
+    Left = 8
+    Top = 215
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 14
+    Width = 273
   end
   object ActionList: TActionList
     Left = 152
@@ -172,6 +189,14 @@ object ReceiptProdModelEditForm: TReceiptProdModelEditForm
         Name = 'inModelId'
         Value = Null
         Component = GuidesModel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -277,6 +302,21 @@ object ReceiptProdModelEditForm: TReceiptProdModelEditForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -295,11 +335,11 @@ object ReceiptProdModelEditForm: TReceiptProdModelEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 144
-    Top = 224
+    Top = 271
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 248
-    Top = 176
+    Top = 223
   end
   object GuidesModel: TdsdGuides
     KeyField = 'Id'
@@ -355,5 +395,34 @@ object ReceiptProdModelEditForm: TReceiptProdModelEditForm
       end>
     Left = 183
     Top = 154
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 119
+    Top = 203
   end
 end

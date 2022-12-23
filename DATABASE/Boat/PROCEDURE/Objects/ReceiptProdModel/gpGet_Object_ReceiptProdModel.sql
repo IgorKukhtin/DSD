@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserCode TVarChar, Comment TVarChar
              , isMain Boolean
              , ModelId Integer, ModelName TVarChar
+             , UnitId Integer, UnitName TVarChar             
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -31,6 +32,8 @@ BEGIN
            , TRUE :: Boolean          AS isMain
            , 0  :: Integer            AS ModelId
            , '' :: TVarChar           AS ModelName
+           , 0  ::Integer             AS UnitId
+           , '' ::TVarChar            AS UnitName
        ;
    ELSE
      RETURN QUERY
@@ -45,7 +48,9 @@ BEGIN
          , ObjectBoolean_Main.ValueData       ::Boolean   AS isMain
 
          , Object_Model.Id                    ::Integer  AS ModelId
-         , Object_Model.ValueData             ::TVarChar AS ModelName
+         , Object_Model.ValueData             ::TVarChar AS ModelName  
+         , Object_Unit.Id                     ::Integer  AS UnitId
+         , Object_Unit.ValueData              ::TVarChar AS UnitName
      FROM Object AS Object_ReceiptProdModel
           LEFT JOIN ObjectString AS ObjectString_Code
                                  ON ObjectString_Code.ObjectId = Object_ReceiptProdModel.Id
@@ -63,6 +68,10 @@ BEGIN
                               AND ObjectLink_Model.DescId = zc_ObjectLink_ReceiptProdModel_Model()
           LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId 
 
+          LEFT JOIN ObjectLink AS ObjectLink_Unit
+                               ON ObjectLink_Unit.ObjectId = Object_ReceiptProdModel.Id
+                              AND ObjectLink_Unit.DescId = zc_ObjectLink_ReceiptProdModel_Unit()
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
      WHERE Object_ReceiptProdModel.DescId = zc_Object_ReceiptProdModel()
       AND Object_ReceiptProdModel.Id = inId
      ;
@@ -80,4 +89,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptProdModel (false,false, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Object_ReceiptProdModel (0, zfCalc_UserAdmin())

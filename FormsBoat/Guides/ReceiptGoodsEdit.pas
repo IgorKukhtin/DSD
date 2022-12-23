@@ -50,6 +50,9 @@ type
     GuidesColorPattern: TdsdGuides;
     edColorPattern: TcxButtonEdit;
     cxLabel6: TcxLabel;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public

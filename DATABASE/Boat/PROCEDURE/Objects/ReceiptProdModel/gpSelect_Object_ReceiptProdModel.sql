@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModel(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserCode TVarChar, Comment TVarChar
              , isMain Boolean
+             , UnitId Integer, UnitName TVarChar
              , ModelId Integer, ModelName TVarChar
              , BrandId Integer, BrandName TVarChar
              , EngineId Integer, EngineName TVarChar
@@ -241,7 +242,10 @@ BEGIN
          , ObjectString_Code.ValueData        ::TVarChar  AS UserCode
          , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
          , ObjectBoolean_Main.ValueData       ::Boolean   AS isMain
+           
 
+         , Object_Unit.Id            ::Integer  AS UnitId
+         , Object_Unit.ValueData     ::TVarChar AS UnitName
          , Object_Model.Id           ::Integer  AS ModelId
          , Object_Model.ValueData    ::TVarChar AS ModelName
          , Object_Brand.Id                      AS BrandId
@@ -293,6 +297,11 @@ BEGIN
                                ON ObjectLink_ProdEngine.ObjectId = Object_Model.Id
                               AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
           LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit
+                               ON ObjectLink_Unit.ObjectId = Object_ReceiptProdModel.Id
+                              AND ObjectLink_Unit.DescId = zc_ObjectLink_ReceiptProdModel_Unit()
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptProdModel.Id
