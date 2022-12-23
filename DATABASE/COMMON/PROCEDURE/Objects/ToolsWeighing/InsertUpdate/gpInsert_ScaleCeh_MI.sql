@@ -91,6 +91,22 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав для перемещения вида <%>.', lfGet_Object_ValueData_sh (inGoodsKindId);
      END IF;
+     
+     -- проверка
+     IF inBranchCode = 101
+        -- Реальный вес
+        AND inRealWeight > 20
+        -- Вес тары
+        AND COALESCE (inWeightTare, 0) = 0
+          -- Вес шпаг
+        AND COALESCE (inCountSkewer1 * inWeightSkewer1, 0) = 0
+        AND COALESCE (inCountSkewer2 * inWeightSkewer2, 0) = 0
+        -- Прочий вес
+        AND COALESCE (inWeightOther, 0) = 0
+      --AND vbUserId = 5
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не введено значение <Вес тары> или <Вес шпаг> или <Прочий вес>.';
+     END IF;
 
 
      -- !!!замена, приходит вес - из него получаем м. или шт.
