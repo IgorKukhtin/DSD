@@ -189,6 +189,8 @@ BEGIN
                                                       OR Object_Goods.ValueData ILIKE '%motor%'
                                                       OR Object_GoodsGroup.ValueData ILIKE '%œ‘%'
                                                       OR Object_Goods.ValueData ILIKE '%ndige Inspektionsluke%'
+                                                    --OR Object_Goods.ValueData ILIKE '%Bonding Paste%'
+                                                      OR Object_Goods.ValueData ILIKE '%FAÆ-%'
                                                         )
                                                   --AND Object_Goods.ObjectCode < 0
                         WHERE Object_Goods.DescId = zc_Object_Goods()
