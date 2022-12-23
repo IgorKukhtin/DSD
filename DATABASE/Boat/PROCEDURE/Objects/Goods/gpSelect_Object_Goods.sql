@@ -192,7 +192,7 @@ BEGIN
                                                         )
                                                   --AND Object_Goods.ObjectCode < 0
                         WHERE Object_Goods.DescId = zc_Object_Goods()
-                        -AND inIsLimit_100 = TRUE
+                        --AND inIsLimit_100 = TRUE
                        UNION
                         SELECT DISTINCT Object_Goods.*
                         FROM Movement
@@ -212,7 +212,7 @@ BEGIN
                        FROM tmpGoods
                             INNER JOIN ObjectLink AS ObjectLink_Object
                                                   ON ObjectLink_Object.ChildObjectId = tmpGoods.Id
-                                                 AND ObjectLink_Object.DescId = zc_ReceiptGoodsChild_Object()   -- zc_ReceiptProdModelChild_Object 
+                                                 AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()   -- 
                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
                                                  ON ObjectLink_ReceiptGoods.ObjectId = ObjectLink_Object.ObjectId
                                                 AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
@@ -228,10 +228,10 @@ BEGIN
                        FROM tmpGoods
                             INNER JOIN ObjectLink AS ObjectLink_Object
                                                   ON ObjectLink_Object.ChildObjectId = tmpGoods.Id
-                                                 AND ObjectLink_Object.DescId = zc_ReceiptProdModelChild_Object()   --  
+                                                 AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptProdModelChild_Object()   --  
                             LEFT JOIN ObjectLink AS ObjectLink_ProdModel
                                                  ON ObjectLink_ProdModel.ObjectId = ObjectLink_Object.ObjectId
-                                                AND ObjectLink_ProdModel.DescId = zc_ObjectLink_ProdModelChild_ProdModel()
+                                                AND ObjectLink_ProdModel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
                             
                             LEFT JOIN ObjectLink AS ObjectLink_Unit
                                                  ON ObjectLink_Unit.ObjectId = ObjectLink_ProdModel.ChildObjectId

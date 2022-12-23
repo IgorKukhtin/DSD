@@ -274,7 +274,6 @@
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitLeft = 1
       object edName: TcxTextEdit
         Left = 40
         Top = 114
@@ -1731,6 +1730,7 @@
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edUnit
     DisableGuidesOpen = True
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
