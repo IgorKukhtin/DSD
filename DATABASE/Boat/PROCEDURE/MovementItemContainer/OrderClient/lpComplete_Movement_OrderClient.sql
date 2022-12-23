@@ -1381,6 +1381,13 @@ BEGIN
         WHERE _tmpItem_Child.ObjectId_parent_find = _tmpItem.ObjectId_parent_find
        ;
 
+-- if exists (select 1 from _tmpItem_Detail join Object on  Object.Id = _tmpItem_Detail.GoodsId_child_find and Object.ValueData ilike '%9010%')
+-- if exists (select 1 from _tmpItem_Detail join Object on  Object.Id = _tmpItem_Detail.GoodsId_child_find and Object.ValueData ilike '%9010%')
+-- then 
+--    RAISE EXCEPTION 'Ошибка.<%>', (select Object.ValueData from _tmpItem_Detail join Object on  Object.Id = _tmpItem_Detail.GoodsId_child and Object.ValueData ilike '%9010%' limit 1);
+--end if;
+
+
         -- 2. формируем второй раз - Количество для сборки Узла
         UPDATE _tmpItem_Detail
                SET MovementItemId = lpInsertUpdate_MI_OrderClient_Detail (ioId                  := 0
@@ -1422,11 +1429,13 @@ BEGIN
                    LEFT JOIN ObjectLink AS OL_Goods_Partner
                                         ON OL_Goods_Partner.ObjectId = _tmpItem.ObjectId
                                        AND OL_Goods_Partner.DescId   = zc_ObjectLink_Goods_Partner()
-
-                   LEFT JOIN _tmpReceiptItems_new ON _tmpReceiptItems_new.ObjectId_parent_old = _tmpItem.ObjectId_parent
-                                                 AND _tmpReceiptItems_new.ObjectId            = _tmpItem.ObjectId
-                                                 AND _tmpReceiptItems_new.ProdColorPatternId  = _tmpItem.ProdColorPatternId
-                                                 AND _tmpReceiptItems_new.ReceiptLevelId      = _tmpItem.ReceiptLevelId
+                   -- находится новый GoodsId_child, он пока ОДИН
+                   LEFT JOIN (SELECT DISTINCT
+                                     _tmpReceiptItems_new.ObjectId_parent_old
+                                     -- здесь новый
+                                   , _tmpReceiptItems_new.GoodsId_child
+                              FROM _tmpReceiptItems_new
+                             ) AS _tmpReceiptItems_new ON _tmpReceiptItems_new.ObjectId_parent_old = _tmpItem.ObjectId_parent
 
              ) AS _tmpItem
         WHERE _tmpItem_Detail.ObjectId_parent     = _tmpItem.ObjectId_parent
