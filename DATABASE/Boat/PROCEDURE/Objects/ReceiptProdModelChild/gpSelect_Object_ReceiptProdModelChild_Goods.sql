@@ -51,6 +51,7 @@ BEGIN
              , ObjectLink_Object.ChildObjectId           AS ObjectId
                -- значение
              , COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END :: TFloat AS Value
+             , COALESCE (ObjectFloat_ForCount.ValueData,0) AS ForCount
 
                -- Цена вх. без НДС
              , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
@@ -119,7 +120,10 @@ BEGIN
              , ROW_NUMBER() OVER (PARTITION BY tmpReceiptProdModelChild.ReceiptProdModelChildId ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP
 
                -- умножили
-             , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END) :: TFloat AS Value
+             , CASE WHEN (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END) = 0 THEN NULL
+                    ELSE (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END) 
+               END:: NUMERIC (16, 8) AS Value
+             , COALESCE (ObjectFloat_ForCount.ValueData,0) AS ForCount
 
                -- Цена вх. без НДС
              , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
@@ -267,8 +271,9 @@ BEGIN
          , ROW_NUMBER() OVER (PARTITION BY tmpReceiptProdModelChild.ReceiptProdModelId ORDER BY tmpReceiptProdModelChild.ReceiptProdModelChildId ASC) :: Integer AS NPP
          , tmpReceiptProdModelChild.ValueData               AS Comment
 
-         , CASE WHEN ObjectDesc.Id = zc_Object_Goods()          THEN tmpReceiptProdModelChild.Value ELSE 0 END ::TFloat   AS Value
-         , CASE WHEN ObjectDesc.Id = zc_Object_ReceiptService() THEN tmpReceiptProdModelChild.Value ELSE 0 END ::TFloat   AS Value_service
+         , CASE WHEN ObjectDesc.Id = zc_Object_Goods()          THEN tmpReceiptProdModelChild.Value ELSE 0 END ::NUMERIC (16, 8)   AS Value
+         , CASE WHEN ObjectDesc.Id = zc_Object_ReceiptService() THEN tmpReceiptProdModelChild.Value ELSE 0 END ::NUMERIC (16, 8)   AS Value_service
+         , tmpReceiptProdModelChild.ForCount ::TFloat
 
          , tmpReceiptProdModelChild.ReceiptProdModelId
 

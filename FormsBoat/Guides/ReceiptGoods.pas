@@ -213,6 +213,14 @@ type
     GoodsChildName_ch2: TcxGridDBColumn;
     actChoiceFormReceiptLevel_ch2: TOpenChoiceForm;
     actChoiceFormGoodsChild_2: TOpenChoiceForm;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    spInsUpd_Unit: TdsdStoredProc;
+    actInsertUpdate_Unit: TdsdExecStoredProc;
+    macInsertUpdate_Unit_list: TMultiAction;
+    macInsertUpdate_Unit: TMultiAction;
+    bbInsertUpdate_Unit: TdxBarButton;
   private
     { Private declarations }
   public

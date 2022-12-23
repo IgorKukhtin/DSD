@@ -79,7 +79,7 @@ raise notice 'Value 0: %', CLOCK_TIMESTAMP();
             AND
             DescId = zc_MIFloat_AmountSecond();
 
-raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbMovementId;
 
        CREATE TEMP TABLE _tmpMovement  ON COMMIT DROP AS
 	                              (SELECT Movement.*
@@ -607,18 +607,16 @@ raise notice 'Value 3: %', CLOCK_TIMESTAMP();
                                          ON Object_Goods.Id = MovementItemSaved.ObjectId
         WHERE MovementItemSaved.MovementId = vbMovementId;
 
-    END IF;
-
 raise notice 'Value 4: %', CLOCK_TIMESTAMP();
 
-    -- пересчет для схемы SUN
-    IF EXISTS (SELECT 1 FROM ObjectBoolean AS ObjectBoolean_SUN WHERE ObjectBoolean_SUN.ObjectId = inUnitId AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN())
-    THEN
-        PERFORM gpUpdate_MI_OrderInternal_AmountReal_RemainsSun (inMovementId:= vbMovementId
-                                                               , inUnitId    := inUnitId
-                                                               , inSession   := inSession
-                                                                );
-    END IF;
+      -- пересчет для схемы SUN
+      IF EXISTS (SELECT 1 FROM ObjectBoolean AS ObjectBoolean_SUN WHERE ObjectBoolean_SUN.ObjectId = inUnitId AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN())
+      THEN
+          PERFORM gpUpdate_MI_OrderInternal_AmountReal_RemainsSun (inMovementId:= vbMovementId
+                                                                 , inUnitId    := inUnitId
+                                                                 , inSession   := inSession
+                                                                  );
+      END IF;
 
 raise notice 'Value 5: %', CLOCK_TIMESTAMP();
 
@@ -658,6 +656,7 @@ raise notice 'Value 6: %', CLOCK_TIMESTAMP();
              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), tmp.MovementItemId, 0 :: TFloat)
        FROM _tmpMI_OrderInternal_Master AS tmp
        WHERE tmp.PartionGoodsDate < CASE WHEN COALESCE (tmp.Layout, 0) > 0 THEN vbDate9 ELSE vbDate180 END;
+    END IF;
 
 raise notice 'Value 7: %', CLOCK_TIMESTAMP();
     --
@@ -708,4 +707,4 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
 -- 
-SELECT * FROM gpInsertUpdate_MovementItem_OrderInternalMCSLayout (inUnitId := 19967206, inNeedCreate:= True, inSession:= '3')
+SELECT * FROM gpInsertUpdate_MovementItem_OrderInternalMCSLayout (inUnitId := 0, inNeedCreate:= False, inSession:= '3')

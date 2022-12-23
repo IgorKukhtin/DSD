@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsSizeId  Integer, GoodsSizeName TVarChar
              , ProdColorId Integer, ProdColorName TVarChar, Color_Value Integer
              , PartnerId Integer, PartnerName   TVarChar
-             , UnitId Integer, UnitName TVarChar
+             , UnitId Integer, UnitName TVarChar, UnitName_receipt TVarChar, GoodsName_receipt TVarChar
              , DiscountPartnerId Integer, DiscountPartnerName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , EngineId Integer, EngineName TVarChar
@@ -206,6 +206,57 @@ BEGIN
                         --AND inIsLimit_100 = TRUE
                        )
 
+         , tmpUnit AS (SELECT DISTINCT 
+                              tmpGoods.Id AS GoodsId
+                            , ObjectLink_Unit.ChildObjectId  AS UnitId
+                       FROM tmpGoods
+                            INNER JOIN ObjectLink AS ObjectLink_Object
+                                                  ON ObjectLink_Object.ChildObjectId = tmpGoods.Id
+                                                 AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()   -- 
+                            LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                 ON ObjectLink_ReceiptGoods.ObjectId = ObjectLink_Object.ObjectId
+                                                AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                            
+                            LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                 ON ObjectLink_Unit.ObjectId = ObjectLink_ReceiptGoods.ChildObjectId
+                                                AND ObjectLink_Unit.DescId = zc_ObjectLink_ReceiptGoods_Unit()
+                            --LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId               
+                     UNION  
+                       SELECT DISTINCT 
+                              tmpGoods.Id AS GoodsId
+                            , ObjectLink_Unit.ChildObjectId  AS UnitId
+                       FROM tmpGoods
+                            INNER JOIN ObjectLink AS ObjectLink_Object
+                                                  ON ObjectLink_Object.ChildObjectId = tmpGoods.Id
+                                                 AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptProdModelChild_Object()   --  
+                            LEFT JOIN ObjectLink AS ObjectLink_ProdModel
+                                                 ON ObjectLink_ProdModel.ObjectId = ObjectLink_Object.ObjectId
+                                                AND ObjectLink_ProdModel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                            
+                            LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                 ON ObjectLink_Unit.ObjectId = ObjectLink_ProdModel.ChildObjectId
+                                                AND ObjectLink_Unit.DescId = zc_ObjectLink_ReceiptProdModel_Unit()
+                            --LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+                       )
+         -- подразделение сборки
+         , tmpUnit_receipt AS (SELECT tmpUnit.GoodsId
+                                    , STRING_AGG (DISTINCT Object_Unit.ValueData, '; ') AS UnitName_receipt
+                               FROM tmpUnit
+                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitId
+                               GROUP BY tmpUnit.GoodsId
+                               ) 
+           --товар сборки
+         , tmpGoods_receipt AS (SELECT tmp.UnitId
+                                     , Object_Goods.ValueData AS GoodsName_receipt
+                                FROM (SELECT tmpUnit.UnitId
+                                           , MIN (tmpUnit.GoodsId) AS GoodsId_receipt
+                                      FROM tmpUnit
+                                          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitId
+                                      GROUP BY tmpUnit.UnitId
+                                      ) AS tmp
+                                     INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId_receipt
+                               )
+         
        -- Результат
        SELECT Object_Goods.Id                     AS Id
             , Object_Goods.ObjectCode             AS Code
@@ -282,6 +333,8 @@ BEGIN
             , Object_Partner.ValueData           AS PartnerName
             , Object_Unit.Id                     AS UnitId
             , Object_Unit.ValueData              AS UnitName
+            , tmpUnit_receipt.UnitName_receipt   ::TVarChar 
+            , tmpGoods_receipt.GoodsName_receipt ::TVarChar
             , Object_DiscountPartner.Id           AS DiscountPartnerId
             , Object_DiscountPartner.ValueData    AS DiscountPartnerName
             , Object_TaxKind.Id                  AS TaxKindId
@@ -499,6 +552,9 @@ BEGIN
              LEFT JOIN tmpGoods_err_3 ON tmpGoods_err_3.EAN       = ObjectString_EAN.ValueData
 
              LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
+             
+             LEFT JOIN tmpUnit_receipt ON tmpUnit_receipt.GoodsId = Object_Goods.Id
+             LEFT JOIN tmpGoods_receipt ON tmpGoods_receipt.UnitId = Object_Unit.Id
             ;
 
 END;

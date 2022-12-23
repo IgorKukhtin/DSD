@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_ReceiptProdModel()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModel(Integer, Integer, TVarChar, Integer, Boolean, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModel(Integer, Integer, TVarChar, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModel(
  INOUT ioId               Integer   ,    -- ключ объекта <Лодки>
     IN inCode             Integer   ,    -- Код объекта 
     IN inName             TVarChar  ,    -- Название объекта
     IN inModelId          Integer   ,
+    IN inUnitId           Integer   ,    -- Место сборки
     IN inisMain           Boolean   , 
     IN inUserCode         TVarChar  ,    -- пользовательский код
     IN inComment          TVarChar  ,
@@ -56,7 +58,9 @@ BEGIN
       
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptProdModel_Model(), ioId, inModelId);
-
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptProdModel_Unit(), ioId, inUnitId);
+   
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -80,6 +84,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.12.22         * add inUnitId
  01.12.20         *
 */
 

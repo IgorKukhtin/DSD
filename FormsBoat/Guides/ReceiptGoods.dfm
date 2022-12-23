@@ -298,6 +298,14 @@
           Options.Editing = False
           Width = 40
         end
+        object UnitName: TcxGridDBColumn
+          Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080
+          DataBinding.FieldName = 'UnitName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 87
+        end
         object EKPrice_summ: TcxGridDBColumn
           Caption = 'Total EK'
           DataBinding.FieldName = 'EKPrice_summ'
@@ -701,9 +709,6 @@
         end
         object Value_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00######;-,0.00######; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -712,14 +717,23 @@
         object Value_service_ch1: TcxGridDBColumn
           Caption = 'Value (service)'
           DataBinding.FieldName = 'Value_service'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
           Options.Editing = False
           Width = 63
+        end
+        object ForCount_ch1: TcxGridDBColumn
+          Caption = 'For Count'
+          DataBinding.FieldName = 'ForCount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.#;-,0.#; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+          Options.Editing = False
+          Width = 45
         end
         object EKPrice_ch1: TcxGridDBColumn
           Caption = 'Netto EK'
@@ -1054,12 +1068,21 @@
         end
         object Value_ch2: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00######;-,0.00######; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
+          Width = 45
+        end
+        object ForCount_ch2: TcxGridDBColumn
+          Caption = 'For Count'
+          DataBinding.FieldName = 'ForCount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.#;-,0.#; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+          Options.Editing = False
           Width = 45
         end
         object GoodsGroupNameFull_ch2: TcxGridDBColumn
@@ -1365,6 +1388,23 @@
       TabOrder = 3
       Width = 181
     end
+    object cxLabel4: TcxLabel
+      Left = 720
+      Top = 8
+      Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080
+    end
+    object edUnit: TcxButtonEdit
+      Left = 799
+      Top = 7
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 273
+    end
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1491,6 +1531,14 @@
         item
           Visible = True
           ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_Unit'
         end
         item
           Visible = True
@@ -1778,6 +1826,10 @@
       Visible = ivAlways
       ShowCaption = False
     end
+    object bbInsertUpdate_Unit: TdxBarButton
+      Action = macInsertUpdate_Unit
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1802,6 +1854,22 @@
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object macInsertUpdate_Unit: TMultiAction
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsertUpdate_Unit_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1099#1073#1088#1072#1085#1085#1086#1077' '#1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074'?'
+      InfoAfterExecute = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
+      ImageIndex = 76
     end
     object actInsertEnter: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2884,6 +2952,28 @@
         end>
       isShowModal = False
     end
+    object actInsertUpdate_Unit: TdsdExecStoredProc
+      Category = 'Update'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsUpd_Unit
+      StoredProcList = <
+        item
+          StoredProc = spInsUpd_Unit
+        end>
+      Caption = 'actInsertUpdate_Unit'
+    end
+    object macInsertUpdate_Unit_list: TMultiAction
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_Unit
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptGoods'
@@ -3152,7 +3242,7 @@
         Value = Null
         Component = Child1CDS
         ComponentItem = 'Value'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -3161,13 +3251,13 @@
         Value = Null
         Component = Child1CDS
         ComponentItem = 'Value_service'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
         Name = 'ioForCount'
-        Value = Null
+        Value = 0.000000000000000000
         Component = Child1CDS
         ComponentItem = 'ForCount'
         DataType = ftFloat
@@ -3502,7 +3592,7 @@
         Value = Null
         Component = Child2CDS
         ComponentItem = 'Value'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3719,5 +3809,59 @@
         MultiSelectSeparator = ','
       end>
     Left = 392
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 927
+    Top = 11
+  end
+  object spInsUpd_Unit: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ReceiptGoods_Unit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1084
+    Top = 8
   end
 end

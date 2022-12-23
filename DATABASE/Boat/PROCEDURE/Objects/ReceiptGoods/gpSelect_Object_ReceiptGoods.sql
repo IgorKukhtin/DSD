@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
              , MaterialOptionsName TVarChar, ProdColorName_pcp TVarChar
+             , UnitId Integer, UnitName TVarChar
 
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -180,6 +181,9 @@ BEGIN
          , tmpMaterialOptions.MaterialOptionsName :: TVarChar AS MaterialOptionsName
          , COALESCE (tmpProdColorPattern.ProdColorName, tmpProdColorPattern_next.ProdColorName, tmpProdColorPattern_next_all.ProdColorName) :: TVarChar AS ProdColorName_pcp
 
+         , Object_Unit.Id                     AS UnitId
+         , Object_Unit.ValueData              AS UnitName
+         
          , Object_Insert.ValueData            AS InsertName
          , Object_Update.ValueData            AS UpdateName
          , ObjectDate_Insert.ValueData        AS InsertDate
@@ -227,6 +231,11 @@ BEGIN
                                ON ObjectLink_ColorPattern.ObjectId = Object_ReceiptGoods.Id
                               AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ReceiptGoods_ColorPattern()
           LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit
+                               ON ObjectLink_Unit.ObjectId = Object_ReceiptGoods.Id
+                              AND ObjectLink_Unit.DescId = zc_ObjectLink_ReceiptGoods_Unit()
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptGoods.Id
@@ -333,6 +342,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.12.22         * Unit
  11.12.20         *
  01.12.20         *
 */

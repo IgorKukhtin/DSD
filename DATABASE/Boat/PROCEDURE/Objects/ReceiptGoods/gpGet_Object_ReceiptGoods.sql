@@ -11,7 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isMain Boolean
              , GoodsId Integer, GoodsName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
-             , ColorPatternId Integer, ColorPatternName TVarChar
+             , ColorPatternId Integer, ColorPatternName TVarChar 
+             , UnitId Integer, UnitName TVarChar
+             
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -37,6 +39,8 @@ BEGIN
            , '' :: TVarChar           AS GoodsGroupName
            , 0  :: Integer            AS ColorPatternId
            , '' :: TVarChar           AS ColorPatternName
+           , 0  :: Integer            AS UnitId
+           , '' :: TVarChar           AS UnitName
 
        ;
    ELSE
@@ -59,6 +63,8 @@ BEGIN
          , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
          , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
 
+         , Object_Unit.Id                     AS UnitId
+         , Object_Unit.ValueData              AS UnitName
      FROM Object AS Object_ReceiptGoods
           LEFT JOIN ObjectString AS ObjectString_Code
                                  ON ObjectString_Code.ObjectId = Object_ReceiptGoods.Id
@@ -86,6 +92,10 @@ BEGIN
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Unit
+                               ON ObjectLink_Unit.ObjectId = Object_ReceiptGoods.Id
+                              AND ObjectLink_Unit.DescId = zc_ObjectLink_ReceiptGoods_Unit()
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
      WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
       AND Object_ReceiptGoods.Id = inId
      ;
@@ -99,6 +109,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.12.22         * Unit
  11.12.20         *
  01.12.20         *
 */

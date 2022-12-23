@@ -200,6 +200,7 @@ type
     actPrintStructureGoodsAll: TdsdPrintAction;
     spSelectPrintStructureGoodsAll: TdsdStoredProc;
     ppPrintStructureGoodsAll: TdxBarButton;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

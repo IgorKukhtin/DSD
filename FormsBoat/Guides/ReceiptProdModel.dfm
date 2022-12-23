@@ -230,6 +230,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Options.Editing = False
           Width = 70
         end
+        object UnitName: TcxGridDBColumn
+          Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080
+          DataBinding.FieldName = 'UnitName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 87
+        end
         object Comment: TcxGridDBColumn
           Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
           DataBinding.FieldName = 'Comment'
@@ -463,13 +471,22 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         object Value_ch2: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00######;-,0.00######; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
           Width = 50
+        end
+        object ForCount_ch2: TcxGridDBColumn
+          Caption = 'For Count'
+          DataBinding.FieldName = 'ForCount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.#;-,0.#; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+          Options.Editing = False
+          Width = 45
         end
         object GoodsGroupNameFull_ch2: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -867,9 +884,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         object Value_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00######;-,0.00######; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -878,14 +892,23 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         object Value_service_ch1: TcxGridDBColumn
           Caption = 'Value (service)'
           DataBinding.FieldName = 'Value_service'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
           Options.Editing = False
           Width = 63
+        end
+        object ForCount_ch1: TcxGridDBColumn
+          Caption = 'For Count'
+          DataBinding.FieldName = 'ForCount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.#;-,0.#; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+          Options.Editing = False
+          Width = 45
         end
         object EKPrice_ch1: TcxGridDBColumn
           Caption = 'Netto EK'
@@ -1272,6 +1295,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
+      ExplicitLeft = 80
+      ExplicitTop = 1
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -2784,7 +2809,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Value = Null
         Component = GoodsCDS
         ComponentItem = 'Value'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -2793,6 +2818,15 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Value = Null
         Component = GoodsCDS
         ComponentItem = 'Value_service'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioForCount'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'ForCount'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','

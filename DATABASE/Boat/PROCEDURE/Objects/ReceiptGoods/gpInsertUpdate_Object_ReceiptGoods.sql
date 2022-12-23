@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods(Integer, Integer, TVarChar, Integer, Boolean, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods(Integer, Integer, TVarChar, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods(Integer, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoods(
  INOUT ioId               Integer   ,    -- ключ объекта <Лодки>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoods(
     IN inName             TVarChar  ,    -- Название объекта
     IN inColorPatternId   Integer   ,
     IN inGoodsId          Integer   ,
+    IN inUnitId           Integer   ,    ---
     IN inisMain           Boolean   ,
     IN inUserCode         TVarChar  ,    -- пользовательский код
     IN inComment          TVarChar  ,
@@ -70,7 +72,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoods_ColorPattern(), ioId, inColorPatternId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoods_Object(), ioId, inGoodsId);
-
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoods_Unit(), ioId, inUnitId);
+   
+   
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -94,6 +99,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.12.22         * inUnitId
  11.12.20         * inColorPatternId
  01.12.20         *
 */

@@ -47,6 +47,9 @@ type
     edModel: TcxButtonEdit;
     GuidesModel: TdsdGuides;
     ceisMain: TcxCheckBox;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public

@@ -496,6 +496,7 @@
             Enabled = False
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
         TabOrder = 27
         Width = 176
       end
@@ -1729,6 +1730,8 @@
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edUnit
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1752,8 +1755,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 137
-    Top = 528
+    Left = 121
+    Top = 464
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'

@@ -1763,6 +1763,18 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 70
           end
+          object ForCount_ch3: TcxGridDBColumn
+            Caption = 'For Count'
+            DataBinding.FieldName = 'ForCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+            Options.Editing = False
+            Width = 45
+          end
           object OperPrice_basis_ch3: TcxGridDBColumn
             Caption = 'Netto EK'
             DataBinding.FieldName = 'OperPrice_basis'
@@ -2167,6 +2179,18 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 70
           end
+          object ForCount_ch4: TcxGridDBColumn
+            Caption = 'For Count'
+            DataBinding.FieldName = 'ForCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+            Options.Editing = False
+            Width = 45
+          end
           object OperPrice_basis_ch4: TcxGridDBColumn
             Caption = 'Netto EK'
             DataBinding.FieldName = 'OperPrice_basis'
@@ -2316,9 +2340,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2376,9 +2397,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0

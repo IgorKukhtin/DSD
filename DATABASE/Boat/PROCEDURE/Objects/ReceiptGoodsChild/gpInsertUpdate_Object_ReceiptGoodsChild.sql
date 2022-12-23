@@ -1,5 +1,5 @@
 -- Function: gpInsertUpdate_Object_ReceiptGoodsChild()
-
+   
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
@@ -8,7 +8,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, NUMERIC (16, 8), NUMERIC (16, 8), TFloat, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, NUMERIC (16, 8), NUMERIC (16, 8), TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
@@ -20,8 +21,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
     IN inReceiptLevelId_top  Integer   ,
     IN inReceiptLevelId      Integer   ,
     IN inGoodsChildId        Integer   ,
- INOUT ioValue               NUMERIC (16, 8)    ,
- INOUT ioValue_service       NUMERIC (16, 8)    ,
+ INOUT ioValue               TVarChar    ,
+ INOUT ioValue_service       TVarChar    ,
  INOUT ioForCount            TFloat    ,
     IN inIsEnabled           Boolean   ,
    OUT outReceiptLevelName   TVarChar  ,
@@ -32,26 +33,35 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbValue  NUMERIC (16, 8); 
+   DECLARE vbValue_service  NUMERIC (16, 8);
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptGoodsChild());
    vbUserId:= lpGetUserBySession (inSession);
 
-
-   -- замена
-   IF ioValue = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
-   THEN
-       ioValue:= ioValue_service;
-   ELSE
-       ioValue_service:= 0;
-   END IF;
-
+   
+   vbValue:= CAST (ioValue AS NUMERIC (16, 8));
+   vbValue_service:= CAST (REPLACE (ioValue_service,'.' , ',') AS NUMERIC (16, 8));
+   
    --замена  если посде зпт  ioValue больше 4-х знаков, тогда ForCount = 1000 а в ioValue записсываем ioValue * 1000
-   IF ioValue - ioValue ::NUMERIC (16, 4) > 0
-   THEN   
+   IF (vbValue::NUMERIC (16, 8) <> vbValue ::NUMERIC (16, 4)) 
+   THEN
        ioForCount := 1000; 
-       ioValue := ioValue * 1000;
+       vbValue := (vbValue * 1000) ::TFloat;
+   ELSE 
+       ioForCount := 1; 
    END IF;
+   
+   -- замена
+   IF vbValue = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
+   THEN
+       vbValue:= vbValue_service::TFloat;
+   ELSE
+       vbValue_service:= 0;
+   END IF;                        
+  --  RAISE EXCEPTION '%', ioValue;
+
 
    -- Проверка
    IF COALESCE (inReceiptGoodsId, 0) = 0
@@ -61,7 +71,7 @@ BEGIN
                                              , inUserId        := vbUserId
                                               );
    END IF;
-
+                  
    -- Проверка
    IF COALESCE (inObjectId, 0) = 0 AND COALESCE (inProdColorPatternId, 0) = 0
    THEN
@@ -99,7 +109,7 @@ BEGIN
        ioId := lpInsertUpdate_Object(ioId, zc_Object_ReceiptGoodsChild(), 0, inComment);
 
        -- сохранили свойство <>
-       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_Value(), ioId, ioValue);
+       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_Value(), ioId, vbValue);
 
        -- сохранили свойство <>
        IF COALESCE (ioForCount, 0) <= 0 THEN ioForCount:= 1; END IF;
@@ -132,8 +142,8 @@ BEGIN
        -- замена
        IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
        THEN
-           ioValue_service:= ioValue;
-           ioValue:= 0;
+           vbValue_service:= vbValue;
+           vbValue:= 0;
        END IF;
 
    END IF;
@@ -154,6 +164,11 @@ BEGIN
 
    outReceiptLevelName :=  (SELECT Object.ValueData FROM Object WHERE Object.Id = inReceiptLevelId);
    
+   --возвращаем в грид как строку с  4 знаками после зпт
+   ioValue:= CAST (vbValue AS TVarChar);
+   ioValue_service:= CAST (ioValue_service AS TVarChar);
+
+
    IF inIsEnabled = TRUE
    THEN
        -- сохранили протокол
