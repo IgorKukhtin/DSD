@@ -104,6 +104,8 @@ BEGIN
                                            AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
         );
         
+     ANALYSE tmpMov;
+        
      --raise notice 'Value 02: %', CLOCK_TIMESTAMP();
 
      CREATE TEMP TABLE tmpErr ON COMMIT DROP AS (
@@ -152,6 +154,8 @@ BEGIN
           INNER JOIN tmpMI ON tmpMI.MovementId = tmpMov.Id
           INNER JOIN tmpRemains ON tmpRemains.MovementId = tmpMI.MovementId
                                AND tmpRemains.GoodsId = tmpMI.GoodsId);
+                               
+    ANALYSE tmpErr;
 
     -- raise notice 'Value 03: %', CLOCK_TIMESTAMP();
 

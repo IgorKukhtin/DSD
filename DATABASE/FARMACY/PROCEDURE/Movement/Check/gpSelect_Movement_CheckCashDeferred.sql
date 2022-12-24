@@ -88,6 +88,8 @@ BEGIN
                                             ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id
                                            AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
         );
+        
+     ANALYSE tmpMov;
 
      CREATE TEMP TABLE tmpErr ON COMMIT DROP AS (
      WITH
@@ -135,6 +137,8 @@ BEGIN
           INNER JOIN tmpMI ON tmpMI.MovementId = tmpMov.Id
           INNER JOIN tmpRemains ON tmpRemains.MovementId = tmpMI.MovementId
                                AND tmpRemains.GoodsId = tmpMI.GoodsId);
+                               
+    ANALYSE tmpErr;
                                
     OPEN Cursor1 FOR (
         WITH

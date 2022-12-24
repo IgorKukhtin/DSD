@@ -323,6 +323,28 @@ BEGIN
 
 --raise notice 'Value 5: %', CLOCK_TIMESTAMP();
 
+    -- еще оптимизируем - _tmpMinPrice_List
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('MovementItemChildId'))
+    THEN
+        -- таблица
+        CREATE TEMP TABLE MovementItemChildId (Id        Integer,
+                                             Amount            TFloat
+                                             ) ON COMMIT DROP;
+    ELSE
+        DELETE FROM MovementItemChildId;
+    END IF;
+	
+    INSERT INTO MovementItemChildId
+                SELECT MovementItemChild.Id
+                     , MovementItemChild.Amount
+                FROM MovementItem AS MovementItemChild
+                WHERE MovementItemChild.MovementId IN (SELECT Movement.Id FROM _tmpMovementCheck AS Movement)
+                  AND MovementItemChild.DescId     = zc_MI_Child()
+                  AND MovementItemChild.Amount     > 0
+                  AND MovementItemChild.isErased   = FALSE;
+          
+    ANALYZE MovementItemChildId;
+
     -- еще оптимизируем - _tmpContainerCountPD
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainerCountPD'))
     THEN
@@ -335,16 +357,7 @@ BEGIN
 
     INSERT INTO _tmpContainerCountPD (UnitId, GoodsId, PartionDateKindId, Amount, Remains, PriceWithVAT, PartionDateDiscount)
       WITH           -- Резервы по срокам
-             MovementItemChildId AS (SELECT MovementItemChild.Id
-                                          , MovementItemChild.Amount
-                                     FROM _tmpMovementCheck AS Movement
-
-                                          INNER JOIN MovementItem AS MovementItemChild
-                                                                  ON MovementItemChild.MovementId = Movement.Id
-                                                                 AND MovementItemChild.DescId     = zc_MI_Child()
-                                                                 AND MovementItemChild.Amount     > 0
-                                                                 AND MovementItemChild.isErased   = FALSE)
-          , tmpMovementItemFloat AS (SELECT MIFloat_ContainerId.MovementItemId
+            tmpMovementItemFloat AS (SELECT MIFloat_ContainerId.MovementItemId
 									      , MIFloat_ContainerId.ValueData
                                  FROM MovementItemFloat AS MIFloat_ContainerId
                                  WHERE MIFloat_ContainerId.MovementItemId IN (SELECT MovementItemChildId.Id FROM MovementItemChildId) 
@@ -668,19 +681,42 @@ BEGIN
 
 --raise notice 'Value 8: %', CLOCK_TIMESTAMP();
 
+    -- еще оптимизируем - _tmpMinPrice_List
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMI_DeferredAll'))
+    THEN
+        -- таблица
+        CREATE TEMP TABLE tmpMI_DeferredAll (MovementId        Integer,
+                                             GoodsId           Integer,
+                                             Amount            TFloat
+                                             ) ON COMMIT DROP;
+    ELSE
+        DELETE FROM tmpMI_DeferredAll;
+    END IF;
+	
+    INSERT INTO tmpMI_DeferredAll
+                SELECT MovementItem.MovementId
+                     , MovementItem.ObjectId              AS GoodsId
+                     , MovementItem.Amount               AS Amount
+                FROM MovementItem  
+                WHERE MovementItem.MovementId IN (SELECT Movement.Id FROM _tmpMovementCheck AS Movement)
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE;
+          
+    ANALYZE tmpMI_DeferredAll;
+
+
     -- Результат
     RETURN QUERY
        WITH tmpMI_Deferred AS
                (SELECT Movement.UnitId
-                     , MovementItem.ObjectId              AS GoodsId
+                     , MovementItem.GoodsId
                      , SUM (MovementItem.Amount)          AS Amount
-                FROM _tmpMovementCheck AS Movement
+                FROM tmpMI_DeferredAll AS MovementItem
+                
+                     INNER JOIN _tmpMovementCheck AS Movement ON Movement.ID = MovementItem.MovementId
 
-                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                            AND MovementItem.DescId     = zc_MI_Master()
-                                            AND MovementItem.isErased   = FALSE
                 GROUP BY Movement.UnitId
-                       , MovementItem.ObjectId
+                       , MovementItem.GoodsId
                )
           , MarginCategory_Unit AS
                (SELECT tmp.UnitId

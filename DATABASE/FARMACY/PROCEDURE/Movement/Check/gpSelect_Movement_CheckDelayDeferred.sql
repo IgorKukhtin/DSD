@@ -87,6 +87,8 @@ BEGIN
                inType = 2 AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() OR
                inType = 3 AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24())
         );
+        
+    ANALYSE tmpMov;
 
     OPEN Cursor1 FOR (
        WITH

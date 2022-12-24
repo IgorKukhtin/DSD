@@ -30,10 +30,8 @@ BEGIN
                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
     WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitId
       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
-
-    RETURN QUERY
-    WITH
-     tmpContainerAll AS
+      
+    CREATE TEMP TABLE tmpContainerAll ON COMMIT DROP AS
                    (SELECT Container.ObjectId
                          , Container.Id
                          , Container.ParentId
@@ -44,8 +42,42 @@ BEGIN
                     WHERE Container.DescId        IN (zc_Container_Count(), zc_Container_CountPartionDate())
                       AND Container.WhereObjectId = inUnitId
                       AND Container.Amount        <> 0
-                   )
-   , tmpContainerPD AS
+                   );
+                       
+    ANALYSE tmpContainerAll;
+
+   -- выбираем отложенные Чеки (как в кассе колонка VIP)
+    CREATE TEMP TABLE tmpMovementChek ON COMMIT DROP AS
+                        (SELECT Movement.Id
+                         FROM MovementBoolean AS MovementBoolean_Deferred
+                              INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                                 AND Movement.DescId = zc_Movement_Check()
+                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId = inUnitId
+                         WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                           AND MovementBoolean_Deferred.ValueData = TRUE
+                        UNION
+                         SELECT Movement.Id
+                         FROM MovementString AS MovementString_CommentError
+                              INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                                 AND Movement.DescId = zc_Movement_Check()
+                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId = inUnitId
+                        WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                          AND MovementString_CommentError.ValueData <> ''
+                        );
+                        
+    ANALYSE tmpMovementChek;
+
+    RETURN QUERY
+    WITH
+     tmpContainerPD AS
                    (SELECT Container.ParentId
                          , SUM(Container.Amount) AS Amount
                     FROM
@@ -113,31 +145,6 @@ BEGIN
                     HAVING SUM (tmpRemains.Amount) > 0
                    )
 
-   -- выбираем отложенные Чеки (как в кассе колонка VIP)
-   , tmpMovementChek AS (SELECT Movement.Id
-                         FROM MovementBoolean AS MovementBoolean_Deferred
-                              INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
-                                                 AND Movement.DescId = zc_Movement_Check()
-                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                           AND MovementLinkObject_Unit.ObjectId = inUnitId
-                         WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
-                           AND MovementBoolean_Deferred.ValueData = TRUE
-                        UNION
-                         SELECT Movement.Id
-                         FROM MovementString AS MovementString_CommentError
-                              INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
-                                                 AND Movement.DescId = zc_Movement_Check()
-                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                           AND MovementLinkObject_Unit.ObjectId = inUnitId
-                        WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
-                          AND MovementString_CommentError.ValueData <> ''
-                        )
        , tmpReserve AS (SELECT MovementItem.ObjectId             AS GoodsId
                          , SUM (MovementItem.Amount)::TFloat AS ReserveAmount
                     FROM tmpMovementChek

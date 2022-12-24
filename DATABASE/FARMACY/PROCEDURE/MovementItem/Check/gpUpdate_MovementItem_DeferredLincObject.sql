@@ -202,6 +202,8 @@ BEGIN
                     THEN COALESCE(MovementItem.DivisionPartiesId, 0)
                     ELSE COALESCE(tmpContainerOrd.DivisionPartiesId, 0) END  <> COALESCE(MovementItem.DivisionPartiesId, 0))
          ;
+         
+    ANALYSE tmpMovementItem;
 
      -- Правим НДС если надо
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NDSKind(), tmpMovementItem.Id, tmpMovementItem.NDSKindId)

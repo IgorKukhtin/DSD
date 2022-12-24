@@ -70,6 +70,8 @@ BEGIN
 
         WHERE Movement.InvNumberOrder::TVarChar ILIKE '%'||inVIPOrder
         );
+        
+   ANALYSE tmpMov;
 
     OPEN Cursor1 FOR (
        SELECT Movement.Id

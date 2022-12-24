@@ -117,6 +117,7 @@ BEGIN
           AND COALESCE(ObjectString_BuyerForSite_Phone.ValueData, MovementString_BayerPhone.ValueData) = vbBayerPhone
         );
 
+    ANALYSE tmpMov;
 
     OPEN Cursor1 FOR (
        SELECT Movement.Id

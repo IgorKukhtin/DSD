@@ -113,6 +113,8 @@ BEGIN
                                    ON ObjectString_BuyerForSite_Phone.ObjectId = MovementLinkObject_BuyerForSite.ObjectId
                                   AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
         );
+        
+     ANALYSE tmpMov;
 
      CREATE TEMP TABLE tmpErr ON COMMIT DROP AS (
      WITH
@@ -160,6 +162,8 @@ BEGIN
           INNER JOIN tmpMI ON tmpMI.MovementId = tmpMov.Id
           INNER JOIN tmpRemains ON tmpRemains.MovementId = tmpMI.MovementId
                                AND tmpRemains.GoodsId = tmpMI.GoodsId);
+                               
+    ANALYSE tmpErr;
                 
     OPEN Cursor1 FOR (
        SELECT Object_BuyerForSite.Id                        AS Id 
