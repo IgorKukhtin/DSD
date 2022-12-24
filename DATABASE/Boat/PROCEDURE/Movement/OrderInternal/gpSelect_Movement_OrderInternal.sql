@@ -16,7 +16,23 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , TotalCount TFloat
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime 
+             --
+             , MovementItemId Integer
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Amount TFloat
+             , UnitId Integer
+             , UnitName TVarChar 
+             , Comment TVarChar
+             , MovementId_OrderClient Integer
+             , InvNumberFull_OrderClient TVarChar
+             , FromName TVarChar
+             , ProductName TVarChar
+             , CIN TVarChar
+             , InsertName_mi TVarChar
+             , InsertDate_mi TDateTime
+
+
              )
 
 AS
@@ -46,7 +62,42 @@ BEGIN
                                                               AND Movement_OrderInternal.OperDate BETWEEN inStartDate AND inEndDate
                                                               AND Movement_OrderInternal.DescId = zc_Movement_OrderInternal()
                                      )
+        
+        , tmpMI_Master AS (SELECT MovementItem.Id
+                                , MovementItem.MovementId
+                                , MovementItem.ObjectId
+                                , MovementItem.Amount         AS GoodsId
+                                , MovementItem.isErased
+                                , MIString_Comment.ValueData  AS Comment
+                                , Object_Insert.ValueData     AS InsertName
+                                , MIDate_Insert.ValueData     AS InsertDate
+                                , MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
+                                , MILinkObject_Unit.ObjectId  AS UnitId
+                           FROM Movement_OrderInternal AS Movement
+                               JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                AND MovementItem.DescId     = zc_MI_Master()
+                                                AND (MovementItem.isErased  = inIsErased OR inIsErased = TRUE)
 
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                           ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+
+                               LEFT JOIN MovementItemString AS MIString_Comment
+                                                            ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                           AND MIString_Comment.DescId = zc_MIString_Comment()
+
+                               LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                          ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                         AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                               LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                                                ON MILO_Insert.MovementItemId = MovementItem.Id
+                                                               AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+                           )
 
         SELECT Movement_OrderInternal.Id
              , zfConvert_StringToNumber (Movement_OrderInternal.InvNumber) AS InvNumber
@@ -63,6 +114,25 @@ BEGIN
              , MovementDate_Insert.ValueData        AS InsertDate
              , Object_Update.ValueData              AS UpdateName
              , MovementDate_Update.ValueData        AS UpdateDate
+
+             -- строки 
+             , MovementItem.Id                      AS MovementItemId
+             , MovementItem.GoodsId                 AS GoodsId
+             , Object_Goods.ObjectCode              AS GoodsCode
+             , Object_Goods.ValueData               AS GoodsName
+             , MovementItem.Amount ::TFloat         AS Amount
+             , Object_Unit.Id                       AS UnitId
+             , Object_Unit.ValueData                AS UnitName
+             , MovementItem.Comment ::TVarChar      AS Comment
+
+             , Movement_OrderClient.Id                                   AS MovementId_OrderClient
+             , ('№ ' || Movement_OrderClient.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderClient.OperDate) :: TVarChar ) :: TVarChar  AS InvNumberFull_OrderClient
+             , Object_From.ValueData                      AS FromName 
+             , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
+             , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,Object_Product.isErased) AS CIN
+
+             , MovementItem.InsertName_mi
+             , MovementItem.InsertDate_mi
 
         FROM Movement_OrderInternal
 
@@ -90,7 +160,26 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MLO_Update
                                           ON MLO_Update.MovementId = Movement_OrderInternal.Id
                                          AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
+             
+             --- 
+             LEFT JOIN tmpMI_Master AS MovementItem.MovementId = Movement_OrderInternal.Id
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.UnitId
+             
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                          ON MovementLinkObject_From.MovementId = MovementItem.MovementId_OrderClient
+                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                          ON MovementLinkObject_Product.MovementId = MovementItem.MovementId_OrderClient
+                                         AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+             LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId  
+
+             LEFT JOIN ObjectString AS ObjectString_CIN
+                                    ON ObjectString_CIN.ObjectId = Object_Product.Id
+                                   AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
        ;
 
 END;

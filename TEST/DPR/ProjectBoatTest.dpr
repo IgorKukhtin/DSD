@@ -2,6 +2,8 @@ program ProjectBoatTest;
 
 
 
+
+
 uses
   Forms,
   DUnitTestRunner,
@@ -332,7 +334,9 @@ uses
   ProdOptions in '..\..\FormsBoat\Guides\ProdOptions.pas' {ProdOptionsForm: TParentForm},
   GoodsGroupChoice in '..\..\FormsBoat\Guides\GoodsGroupChoice.pas' {GoodsGroupChoiceForm: TParentForm},
   MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm},
-  OrderClientJournalChoiceItem in '..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas' {OrderClientJournalChoiceItemForm: TParentForm};
+  OrderClientJournalChoiceItem in '..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas' {OrderClientJournalChoiceItemForm: TParentForm},
+  OrderInternalJournal in '..\..\FormsBoat\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
+  OrderInternal in '..\..\FormsBoat\Document\OrderInternal.pas' {OrderInternalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

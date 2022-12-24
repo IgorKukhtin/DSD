@@ -47,6 +47,7 @@ type
     procedure LoadMeasureCodeFormTest;
     procedure LoadModelEtiketenFormTest;
     procedure LoadOrderClientFormTest;
+    procedure LoadOrderInternalFormTest;
     procedure LoadOrderPartnerFormTest;
     procedure LoadPartionGoodsFormTest;
     procedure LoadPersonalFormTest;
@@ -429,6 +430,16 @@ begin
   }
 end;
 
+ procedure TLoadFormTest.LoadOrderInternalFormTest;
+begin
+  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalChoiceForm'));
+  //TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalChoiceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
+end;
 
  procedure TLoadFormTest.LoadOrderPartnerFormTest;
 begin

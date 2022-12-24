@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_Send_Child(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ParentId Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Article TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Article TVarChar, MeasureName TVarChar
              , Amount TFloat, AmountReserv TFloat, AmountSend TFloat 
              , UnitId Integer, UnitName TVarChar
              , isErased Boolean
@@ -26,17 +27,18 @@ BEGIN
      RETURN QUERY
      WITH
      tmpIsErased AS (SELECT FALSE AS isErased
-                                UNION ALL
-                               SELECT inIsErased AS isErased WHERE inIsErased = TRUE
-                              )
- 
+                      UNION ALL
+                     SELECT inIsErased AS isErased WHERE inIsErased = TRUE
+                    )
+
         -- Результат
         SELECT MovementItem.Id
              , MovementItem.ParentId
-             , MovementItem.GoodsId            AS GoodsId
+             , MovementItem.ObjectId           AS GoodsId
              , Object_Goods.ObjectCode         AS GoodsCode
              , Object_Goods.ValueData          AS GoodsName
              , ObjectString_Article.ValueData  AS Article
+             , Object_Measure.ValueData        AS MeasureName
              , MovementItem.Amount            ::TFloat AS Amount
              , MIFloat_AmountReserv.ValueData ::TFloat AS AmountReserv
              , MIFloat_AmountSend.ValueData   ::TFloat AS AmountSend
@@ -58,10 +60,16 @@ BEGIN
                                         ON MIFloat_AmountSend.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountSend.DescId = zc_MIFloat_AmountSend()
 
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
              LEFT JOIN ObjectString AS ObjectString_Article
-                                    ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                    ON ObjectString_Article.ObjectId = MovementItem.ObjectId
                                    AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
     ;
 
 END;
