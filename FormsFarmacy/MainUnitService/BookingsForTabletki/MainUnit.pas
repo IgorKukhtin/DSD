@@ -193,16 +193,16 @@ begin
       btnSaveBookingsClick(Nil);
       Application.ProcessMessages;
 
-      // Получаем заказы для изменения статуса
-      btnOpenBookingClick(Nil);
-      Application.ProcessMessages;
-
-      // Изменяем статусы
-      btnUpdateStausClick(Nil);
-      Application.ProcessMessages;
-
       qryUnit.Next;
     end;
+
+    // Получаем заказы для изменения статуса
+    btnOpenBookingClick(Nil);
+    Application.ProcessMessages;
+
+    // Изменяем статусы
+    btnUpdateStausClick(Nil);
+    Application.ProcessMessages;
 
   except
     on E: Exception do
@@ -228,7 +228,6 @@ procedure TMainForm.btnLoadBookingsClick(Sender: TObject);
 begin
   if not qryUnit.Active then Exit;
   if qryUnit.IsEmpty then Exit;
-  Add_Log('Аптека: ' + qryUnit.FieldByName('Name').AsString);
 
   if not TabletkiAPI.LoadBookings(qryUnit.FieldByName('SerialNumber').AsInteger) then
   begin
@@ -241,11 +240,11 @@ procedure TMainForm.btnOpenBookingClick(Sender: TObject);
 begin
   try
     qryCheckHead.Close;
-    qryCheckHead.ParamByName('UnitID').Value := qryUnit.FieldByName('Id').AsInteger;
+    qryCheckHead.ParamByName('UnitID').Value := 0;
     qryCheckHead.Open;
 
     qryCheckBody.Close;
-    qryCheckBody.ParamByName('UnitID').Value := qryUnit.FieldByName('Id').AsInteger;
+    qryCheckBody.ParamByName('UnitID').Value := 0;
     qryCheckBody.Open;
 
   except
@@ -259,12 +258,15 @@ procedure TMainForm.btnSaveBookingsClick(Sender: TObject);
 begin
   if not TabletkiAPI.BookingsHeadCDS.Active then Exit;
   if TabletkiAPI.BookingsHeadCDS.IsEmpty then Exit;
-  Add_Log('Загружено заказов: ' + IntToStr(TabletkiAPI.BookingsHeadCDS.RecordCount));
+  Add_Log('Аптека: ' + qryUnit.FieldByName('Name').AsString);
+  Add_Log('   заказов: ' + IntToStr(TabletkiAPI.BookingsHeadCDS.RecordCount));
 
   try
     TabletkiAPI.BookingsHeadCDS.First;
     while not TabletkiAPI.BookingsHeadCDS.Eof  do
     begin
+      Add_Log('   заказ: ' + TabletkiAPI.BookingsHeadCDS.FieldByName('bookingId').AsString);
+
       spInsertMovement.Params.ParamByName('ioId').AsInteger := 0;
       spInsertMovement.Params.ParamByName('inUnitId').AsInteger := qryUnit.FieldByName('Id').AsInteger;
       spInsertMovement.Params.ParamByName('inDate').AsDateTime := TabletkiAPI.BookingsHeadCDS.FieldByName('dateTimeCreated').AsDateTime;
@@ -373,40 +375,50 @@ begin
 //        end;
 //      end;
 
-      if Status = '7.0' then
+      if qryUnit.Locate('ID', qryCheckHead.FieldByName('UnitId').AsInteger, []) then
       begin
-        spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
-        spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := Status;
-        spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
-        spUpdateMovementStatus.ExecProc;
-      end else if Status <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
-      begin
-        if TabletkiAPI.UpdateStaus(qryUnit.FieldByName('SerialNumber').AsInteger,
-                                   qryCheckHead.FieldByName('BookingId').AsString,
-                                   qryCheckHead.FieldByName('OrderId').AsString,
-                                   qryCheckHead.FieldByName('BookingStatusNew').AsString,
-                                   qryCheckHead.FieldByName('OrderId').AsString,
-                                   qryCheckHead.FieldByName('Bayer').AsString,
-                                   qryCheckHead.FieldByName('BayerPhone').AsString,
-                                   qryCheckHead.FieldByName('CancelReason').AsString,
-                                   qryCheckHead.FieldByName('OperDate').AsDateTime,
-                                   GetJSONItems) then
+
+        Add_Log('   заказ: ' + qryCheckHead.FieldByName('BookingId').AsString + ' ' +
+                               qryCheckHead.FieldByName('BookingStatus').AsString + ' -> ' +
+                               qryCheckHead.FieldByName('BookingStatusNew').AsString);
+
+        Status := '';
+
+        if Status = '7.0' then
         begin
-          Add_LogSend(qryCheckHead.FieldByName('Id').AsString + ' ' + qryCheckHead.FieldByName('OrderId').AsString + ' UpdateStaus ' + qryCheckHead.FieldByName('BookingStatus').AsString +' на ' + qryCheckHead.FieldByName('BookingStatusNew').AsString);
+          spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
+          spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := Status;
+          spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
+          spUpdateMovementStatus.ExecProc;
+        end else if Status <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
+        begin
+          if TabletkiAPI.UpdateStaus(qryUnit.FieldByName('SerialNumber').AsInteger,
+                                     qryCheckHead.FieldByName('BookingId').AsString,
+                                     qryCheckHead.FieldByName('OrderId').AsString,
+                                     qryCheckHead.FieldByName('BookingStatusNew').AsString,
+                                     qryCheckHead.FieldByName('OrderId').AsString,
+                                     qryCheckHead.FieldByName('Bayer').AsString,
+                                     qryCheckHead.FieldByName('BayerPhone').AsString,
+                                     qryCheckHead.FieldByName('CancelReason').AsString,
+                                     qryCheckHead.FieldByName('OperDate').AsDateTime,
+                                     GetJSONItems) then
+          begin
+            Add_LogSend(qryCheckHead.FieldByName('Id').AsString + ' ' + qryCheckHead.FieldByName('OrderId').AsString + ' UpdateStaus ' + qryCheckHead.FieldByName('BookingStatus').AsString +' на ' + qryCheckHead.FieldByName('BookingStatusNew').AsString);
+            spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
+            spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;
+            spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
+            spUpdateMovementStatus.ExecProc;
+          end else
+          begin
+            Add_Log(TabletkiAPI.ErrorsText);
+          end;
+        end else if qryCheckHead.FieldByName('BookingStatus').AsString <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
+        begin
           spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
           spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;
           spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
           spUpdateMovementStatus.ExecProc;
-        end else
-        begin
-          Add_Log(TabletkiAPI.ErrorsText);
         end;
-      end else if qryCheckHead.FieldByName('BookingStatus').AsString <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
-      begin
-        spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
-        spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;
-        spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
-        spUpdateMovementStatus.ExecProc;
       end;
 
       qryCheckHead.Next;

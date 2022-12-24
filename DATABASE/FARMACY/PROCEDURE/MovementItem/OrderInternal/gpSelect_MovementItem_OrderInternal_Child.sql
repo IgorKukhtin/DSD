@@ -85,6 +85,13 @@ BEGIN
 --     RAISE EXCEPTION 'Повторите действие через 15 мин.';
 -- end if;
 
+     if COALESCE (inMovementId, 0) = 0
+     then
+         RAISE EXCEPTION 'Документ не сохранен.';
+     end if;
+
+--raise notice 'Value 01: %', CLOCK_TIMESTAMP();
+
      -- получаем значение константы
      vbCostCredit := COALESCE ((SELECT COALESCE (ObjectFloat_SiteDiscount.ValueData, 0)          :: TFloat    AS SiteDiscount
                                 FROM Object AS Object_GlobalConst
@@ -105,26 +112,31 @@ BEGIN
 
     --
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
-    SELECT COALESCE(MB_Document.ValueData, FALSE) :: Boolean AS isDocument
+
+    -- ПАРАМЕТРЫ
+    SELECT date_trunc('day', Movement.OperDate)
+         , COALESCE(MB_Document.ValueData, FALSE) :: Boolean AS isDocument
          , Movement.StatusId
-   INTO vbisDocument, vbStatusId
+         , MLO_Unit.ObjectId
+         , ObjectLink_Unit_Juridical.ChildObjectId
+         , COALESCE (ObjectLink_Unit_Area.ChildObjectId, zc_Area_Basis())
+    INTO vbOperDate, vbisDocument, vbStatusId, vbUnitId, vbMainJuridicalId, vbAreaId_find
     FROM Movement
+
         LEFT JOIN MovementBoolean AS MB_Document
                ON MB_Document.MovementId = Movement.Id
               AND MB_Document.DescId = zc_MovementBoolean_Document()
-    WHERE Movement.Id =inMovementId;
 
---
-    SELECT MovementLinkObject.ObjectId
-    INTO vbUnitId
-    FROM MovementLinkObject
-    WHERE MovementLinkObject.MovementId = inMovementId
-      AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
+        LEFT JOIN MovementLinkObject AS MLO_Unit
+               ON MLO_Unit.MovementId = Movement.Id
+              AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+               ON ObjectLink_Unit_Juridical.ObjectId = MLO_Unit.ObjectId
+              AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+               ON ObjectLink_Unit_Area.ObjectId = MLO_Unit.ObjectId
+              AND ObjectLink_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
 
-    -- определим дату документа
-    SELECT date_trunc('day', Movement.OperDate)
-    INTO vbOperDate
-    FROM Movement
     WHERE Movement.Id = inMovementId;
 
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
@@ -151,8 +163,186 @@ BEGIN
                        , tmp.AreaName_Juridical       AS AreaName
                        , tmp.isDefault_JuridicalArea  AS isDefault
                   FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
-				  
-	ANALYSE tmpJuridicalArea;
+
+    ANALYSE tmpJuridicalArea;
+    
+    -- Список цены + ТОП
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('GoodsPrice'))
+    THEN
+      DROP TABLE IF EXISTS GoodsPrice;
+    END IF;
+
+    CREATE TEMP TABLE GoodsPrice ON COMMIT DROP AS (
+                     SELECT Price_Goods.ChildObjectId           AS GoodsId
+                          , COALESCE(Price_Top.ValueData,FALSE) AS isTop
+                     FROM ObjectLink AS ObjectLink_Price_Unit
+                          INNER JOIN ObjectBoolean     AS Price_Top
+                                  ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                 AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                                 AND Price_Top.ValueData = TRUE
+                          LEFT JOIN ObjectLink       AS Price_Goods
+                                 ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                     WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                       AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                     );
+    
+    ANALYSE GoodsPrice;
+
+--raise notice 'Value 02: %', CLOCK_TIMESTAMP();
+
+    -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту) !!!внутри проц определяется ObjectId!!!
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('PriceSettings'))
+    THEN
+      DROP TABLE IF EXISTS PriceSettings;
+    END IF;
+
+    CREATE TEMP TABLE PriceSettings ON COMMIT DROP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (vbUserId::TVarChar));
+
+    ANALYSE PriceSettings;
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('PriceSettingsTOP'))
+    THEN
+      DROP TABLE IF EXISTS PriceSettingsTOP;
+    END IF;
+
+    CREATE TEMP TABLE PriceSettingsTOP ON COMMIT DROP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (vbUserId::TVarChar));
+
+    ANALYSE PriceSettingsTOP;
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('JuridicalSettings'))
+    THEN
+      DROP TABLE IF EXISTS JuridicalSettings;
+    END IF;
+
+    CREATE TEMP TABLE JuridicalSettings ON COMMIT DROP AS
+      (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId);
+
+    ANALYSE JuridicalSettings;
+
+    -- элементы установок юр.лиц (границы цен для бонуса)
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpJuridicalSettingsItem'))
+    THEN
+      DROP TABLE IF EXISTS tmpJuridicalSettingsItem;
+    END IF;
+
+    CREATE TEMP TABLE tmpJuridicalSettingsItem ON COMMIT DROP AS
+                                (SELECT tmp.JuridicalSettingsId
+                                      , tmp.Bonus
+                                      , tmp.PriceLimit_min
+                                      , tmp.PriceLimit
+                                 FROM JuridicalSettings
+                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inSession) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                 WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
+                                 );
+
+    ANALYSE tmpJuridicalSettingsItem;
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('JuridicalArea'))
+    THEN
+      DROP TABLE IF EXISTS JuridicalArea;
+    END IF;
+
+    CREATE TEMP TABLE JuridicalArea ON COMMIT DROP AS
+                    (SELECT DISTINCT ObjectLink_JuridicalArea_Juridical.ChildObjectId AS JuridicalId
+                      FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                           INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                                                    AND Object_JuridicalArea.isErased = FALSE
+                           INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                                 ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id
+                                                AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
+                                                AND ObjectLink_JuridicalArea_Area.ChildObjectId = vbAreaId_find
+                           -- Уникальный код поставщика ТОЛЬКО для Региона
+                           INNER JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
+                                                    ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id
+                                                   AND ObjectBoolean_JuridicalArea_GoodsCode.DescId    = zc_ObjectBoolean_JuridicalArea_GoodsCode()
+                                                   AND ObjectBoolean_JuridicalArea_GoodsCode.ValueData = TRUE
+                      WHERE ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
+                     );
+
+    ANALYSE JuridicalArea;            
+    
+     -- Отказы поставщиков
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpSupplierFailures'))
+    THEN
+      DROP TABLE IF EXISTS tmpSupplierFailures;
+    END IF;
+
+    CREATE TEMP TABLE tmpSupplierFailures ON COMMIT DROP AS
+                                (SELECT DISTINCT
+                                       SupplierFailures.GoodsId
+                                     , SupplierFailures.JuridicalId
+                                     , SupplierFailures.ContractId
+                                 FROM lpSelect_PriceList_SupplierFailures(vbUnitId, vbUserId) AS SupplierFailures
+                                 );
+
+    ANALYSE tmpSupplierFailures;
+    
+    -- Выкладка
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpLayoutAll'))
+    THEN
+      DROP TABLE IF EXISTS tmpLayoutAll;
+    END IF;
+
+    CREATE TEMP TABLE tmpLayoutAll ON COMMIT DROP AS (
+    WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
+                                , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+                           FROM Movement
+                                LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
+                                                          ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
+                                                         AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                           WHERE Movement.DescId = zc_Movement_Layout()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                          )
+  , tmpLayout AS (SELECT Movement.ID                        AS Id
+                        , MovementItem.ObjectId              AS GoodsId
+                        , MovementItem.Amount                AS Amount
+                        , Movement.isPharmacyItem            AS isPharmacyItem
+                   FROM tmpLayoutMovement AS Movement
+                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                               AND MovementItem.DescId = zc_MI_Master()
+                                               AND MovementItem.isErased = FALSE
+                                               AND MovementItem.Amount > 0
+                  )
+  , tmpLayoutUnit AS (SELECT Movement.ID                        AS Id
+                           , MovementItem.ObjectId              AS UnitId
+                      FROM tmpLayoutMovement AS Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId = zc_MI_Child()
+                                                  AND MovementItem.isErased = FALSE
+                                                  AND MovementItem.Amount > 0
+                     )
+
+  , tmpLayoutUnitCount AS (SELECT tmpLayoutUnit.ID                  AS Id
+                                , count(*)                          AS CountUnit
+                           FROM tmpLayoutUnit
+                           GROUP BY tmpLayoutUnit.ID
+                           )
+                           
+                     SELECT tmpLayout.GoodsId                  AS GoodsId
+                          , MAX(tmpLayout.Amount)::TFloat      AS Amount
+                     FROM tmpLayout
+
+                          LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
+                                                  ON Unit_PharmacyItem.ObjectId  = vbUnitId
+                                                 AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+
+                          LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
+                                                 AND tmpLayoutUnit.UnitId = vbUnitId
+
+                          LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
+
+                     WHERE (tmpLayoutUnit.UnitId = vbUnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
+                       AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                     GROUP BY tmpLayout.GoodsId
+                     );
+                     
+  ANALYSE tmpLayoutAll;
+    
+
+--raise notice 'Value 09: %', CLOCK_TIMESTAMP();
+
+
 
     -- !!!Только для таких документов - 1-ая ВЕТКА (ВСЕГО = 3)!!!
     IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete()
@@ -174,22 +364,8 @@ BEGIN
 
      RETURN QUERY
      WITH
-        PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (vbUserId::TVarChar))
-      , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (vbUserId::TVarChar))
-
-      , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId)
-
-        -- элементы установок юр.лиц (границы цен для бонуса)
-      , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
-                                          , tmp.Bonus
-                                          , tmp.PriceLimit_min
-                                          , tmp.PriceLimit
-                                     FROM JuridicalSettings
-                                          INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inSession) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
-                                     WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
-                                     )
        -- Маркетинговый контракт
-      , GoodsPromo AS (SELECT tmp.JuridicalId
+        GoodsPromo AS (SELECT tmp.JuridicalId
                             , ObjectLink_Child_retail.ChildObjectId AS GoodsId        -- здесь товар "сети"
                             , tmp.MovementId
                             , tmp.ChangePercent
@@ -365,57 +541,6 @@ BEGIN
                                        ) AS tmp
                                  WHERE tmp.ORD = 1
                                  )
-        -- Выкладка       
-       , tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
-                                    , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
-                               FROM Movement
-                                    LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
-                                                              ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
-                                                             AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
-                               WHERE Movement.DescId = zc_Movement_Layout()
-                                 AND Movement.StatusId = zc_Enum_Status_Complete()
-                              )
-      , tmpLayout AS (SELECT Movement.ID                        AS Id
-                            , MovementItem.ObjectId              AS GoodsId
-                            , MovementItem.Amount                AS Amount
-                            , Movement.isPharmacyItem            AS isPharmacyItem
-                       FROM tmpLayoutMovement AS Movement
-                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                   AND MovementItem.DescId = zc_MI_Master()
-                                                   AND MovementItem.isErased = FALSE
-                                                   AND MovementItem.Amount > 0
-                      )
-      , tmpLayoutUnit AS (SELECT Movement.ID                        AS Id
-                               , MovementItem.ObjectId              AS UnitId
-                          FROM tmpLayoutMovement AS Movement
-                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                      AND MovementItem.DescId = zc_MI_Child()
-                                                      AND MovementItem.isErased = FALSE
-                                                      AND MovementItem.Amount > 0
-                         )
-                                         
-      , tmpLayoutUnitCount AS (SELECT tmpLayoutUnit.ID                  AS Id
-                                    , count(*)                          AS CountUnit
-                               FROM tmpLayoutUnit
-                               GROUP BY tmpLayoutUnit.ID
-                               )
-      , tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
-                              , MAX(tmpLayout.Amount)::TFloat      AS Amount
-                         FROM tmpLayout
-                                     
-                              LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
-                                                      ON Unit_PharmacyItem.ObjectId  = vbUnitId
-                                                     AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
-                                           
-                              LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
-                                                     AND tmpLayoutUnit.UnitId = vbUnitId
-
-                              LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
-                                           
-                         WHERE (tmpLayoutUnit.UnitId = vbUnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
-                           AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
-                         GROUP BY tmpLayout.GoodsId 
-                         )                                 
 
         SELECT tmpMI.Id
              , tmpMI.MovementItemId
@@ -594,38 +719,8 @@ BEGIN
       INSERT INTO _tmpMI
 
            WITH -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту) !!!внутри проц определяется ObjectId!!!
-                PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (vbUserId::TVarChar))
-              , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (vbUserId::TVarChar))
 
-              , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId)
-
-                -- элементы установок юр.лиц (границы цен для бонуса)
-              , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
-                                                  , tmp.Bonus
-                                                  , tmp.PriceLimit_min
-                                                  , tmp.PriceLimit
-                                             FROM JuridicalSettings
-                                                  INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inSession) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
-                                             WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
-                                             )
-
-              , JuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalArea_Juridical.ChildObjectId AS JuridicalId
-                                  FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
-                                       INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
-                                                                                AND Object_JuridicalArea.isErased = FALSE
-                                       INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
-                                                             ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id
-                                                            AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
-                                                            AND ObjectLink_JuridicalArea_Area.ChildObjectId = vbAreaId_find
-                                       -- Уникальный код поставщика ТОЛЬКО для Региона
-                                       INNER JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
-                                                                ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id
-                                                               AND ObjectBoolean_JuridicalArea_GoodsCode.DescId    = zc_ObjectBoolean_JuridicalArea_GoodsCode()
-                                                               AND ObjectBoolean_JuridicalArea_GoodsCode.ValueData = TRUE
-                                  WHERE ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
-                                 )
-
-              , MovementItemOrder AS (SELECT MovementItem.*
+                MovementItemOrder AS (SELECT MovementItem.*
                                            , ObjectLink_Main.ChildObjectId AS GoodsMainId, ObjectLink_LinkGoods_Goods.ChildObjectId AS GoodsId
                                       FROM MovementItem
                                        --  INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = MovementItem.ObjectId -- Связь товара сети с общим
@@ -671,21 +766,6 @@ BEGIN
                                                                                        , inUnitId  := vbUnitId
                                                                                        , inUserId  := vbUserId) AS tmp
                                       )
-                -- Список цены + ТОП
-              , GoodsPrice AS (SELECT MovementItemOrder.ObjectId AS GoodsId, ObjectBoolean_Top.ValueData AS isTOP
-                               FROM MovementItemOrder
-                                    INNER JOIN ObjectLink AS ObjectLink_Price_Goods
-                                                          ON ObjectLink_Price_Goods.ChildObjectId = MovementItemOrder.ObjectId
-                                                         AND ObjectLink_Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                    INNER JOIN ObjectLink AS ObjectLink_Price_Unit
-                                                          ON ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                                                         AND ObjectLink_Price_Unit.ObjectId = ObjectLink_Price_Goods.ObjectId
-                                                         AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                    INNER JOIN ObjectBoolean AS ObjectBoolean_Top
-                                                             ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
-                                                            AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
-                                                            AND ObjectBoolean_Top.ValueData = TRUE
-                              )
 
               , tmpLoadPriceList AS (SELECT DISTINCT LoadPriceList.JuridicalId
                                           , LoadPriceList.ContractId
@@ -801,20 +881,6 @@ BEGIN
             , ddd.isDefault
             , ddd.Deferment
             , ddd.Bonus
-/* * /
-            , CASE WHEN ddd.Deferment = 0
-                        THEN 0
-                   WHEN ddd.isTOP = TRUE
-                        THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                   ELSE PriceSettings.Percent
-              END :: TFloat AS Percent
-            , CASE WHEN ddd.Deferment = 0
-                        THEN FinalPrice
-                   WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
-                        THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
-              END :: TFloat AS SuperFinalPrice
-/ */
             , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN COALESCE (PriceSettingsTOP.Percent, 0)
                    WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
@@ -1000,14 +1066,6 @@ BEGIN
                                     ) AS tmp
                               WHERE tmp.ORD = 1
                               )
-   -- Отказы поставщиков
-   , tmpSupplierFailures AS (SELECT DISTINCT
-                                    SupplierFailures.GoodsId
-                                  , SupplierFailures.JuridicalId
-                                  , SupplierFailures.ContractId
-                             FROM lpSelect_PriceList_SupplierFailures(vbUnitId, vbUserId) AS SupplierFailures
-                             )
-
 
         ---
         SELECT _tmpMI.Id
@@ -1168,38 +1226,8 @@ BEGIN
       INSERT INTO _tmpMI
 
            WITH -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту) !!!внутри проц определяется ObjectId!!!
-                PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (vbUserId::TVarChar))
-              , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (vbUserId::TVarChar))
 
-              , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId)
-
-                -- элементы установок юр.лиц (границы цен для бонуса)
-              , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
-                                                  , tmp.Bonus
-                                                  , tmp.PriceLimit_min
-                                                  , tmp.PriceLimit
-                                             FROM JuridicalSettings
-                                                  INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inSession) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
-                                             WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
-                                             )
-
-              , JuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalArea_Juridical.ChildObjectId AS JuridicalId
-                                  FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
-                                       INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
-                                                                                AND Object_JuridicalArea.isErased = FALSE
-                                       INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
-                                                             ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id
-                                                            AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
-                                                            AND ObjectLink_JuridicalArea_Area.ChildObjectId = vbAreaId_find
-                                       -- Уникальный код поставщика ТОЛЬКО для Региона
-                                       INNER JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
-                                                                ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id
-                                                               AND ObjectBoolean_JuridicalArea_GoodsCode.DescId    = zc_ObjectBoolean_JuridicalArea_GoodsCode()
-                                                               AND ObjectBoolean_JuridicalArea_GoodsCode.ValueData = TRUE
-                                  WHERE ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
-                                 )
-
-              , MovementItemOrder AS (SELECT MovementItem.*
+                MovementItemOrder AS (SELECT MovementItem.*
                                            , ObjectLink_Main.ChildObjectId AS GoodsMainId, ObjectLink_LinkGoods_Goods.ChildObjectId AS GoodsId
                                       FROM MovementItem
                                        --  INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = MovementItem.ObjectId -- Связь товара сети с общим
@@ -1245,21 +1273,6 @@ BEGIN
                                                                                        , inUnitId  := vbUnitId
                                                                                        , inUserId  := vbUserId) AS tmp
                                       )
-                -- Список цены + ТОП
-              , GoodsPrice AS (SELECT MovementItemOrder.ObjectId AS GoodsId, ObjectBoolean_Top.ValueData AS isTOP
-                               FROM MovementItemOrder
-                                    INNER JOIN ObjectLink AS ObjectLink_Price_Goods
-                                                          ON ObjectLink_Price_Goods.ChildObjectId = MovementItemOrder.ObjectId
-                                                         AND ObjectLink_Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                    INNER JOIN ObjectLink AS ObjectLink_Price_Unit
-                                                          ON ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                                                         AND ObjectLink_Price_Unit.ObjectId = ObjectLink_Price_Goods.ObjectId
-                                                         AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                    INNER JOIN ObjectBoolean AS ObjectBoolean_Top
-                                                             ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
-                                                            AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
-                                                            AND ObjectBoolean_Top.ValueData = TRUE
-                              )
 
               , tmpLoadPriceList AS (SELECT DISTINCT LoadPriceList.JuridicalId
                                           , LoadPriceList.ContractId
@@ -1376,20 +1389,6 @@ BEGIN
             , ddd.isDefault
             , ddd.Deferment
             , ddd.Bonus
-/* * /
-            , CASE WHEN ddd.Deferment = 0
-                        THEN 0
-                   WHEN ddd.isTOP = TRUE
-                        THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                   ELSE PriceSettings.Percent
-              END :: TFloat AS Percent
-            , CASE WHEN ddd.Deferment = 0
-                        THEN FinalPrice
-                   WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
-                        THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
-              END :: TFloat AS SuperFinalPrice
-/ */
             , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN COALESCE (PriceSettingsTOP.Percent, 0)
                    WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
@@ -1573,13 +1572,6 @@ BEGIN
                                     ) AS tmp
                               WHERE tmp.ORD = 1
                               )
-   -- Отказы поставщиков
-   , tmpSupplierFailures AS (SELECT DISTINCT
-                                    SupplierFailures.GoodsId
-                                  , SupplierFailures.JuridicalId
-                                  , SupplierFailures.ContractId
-                             FROM lpSelect_PriceList_SupplierFailures(vbUnitId, vbUserId) AS SupplierFailures
-                               )
 
         ---
         SELECT _tmpMI.Id
@@ -1741,4 +1733,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 --select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 22066168  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
 
 
-select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 28111158 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Child (inMovementId := 30460114 , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

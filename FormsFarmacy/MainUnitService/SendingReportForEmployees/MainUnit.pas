@@ -189,7 +189,7 @@ begin
       begin
         jsonItem := TJSONObject.ParseJSONValue(S) as TJSONObject;
         nSumms := jsonItem.Get('currentBalance').JsonValue.GetValue<TJSONNumber>.AsDouble;
-        if nSumms > 100 then Result := 'Баланс по СМС ' + CurrToStr(nSumms) + ' грн.';
+        if nSumms <= 150 then Result := 'Баланс по СМС ' + CurrToStr(nSumms) + ' грн.';
       end else ShowMessage(IdHTTP.ResponseText);
 
     except  on E: Exception do
@@ -283,6 +283,7 @@ begin
 
   if qrySendList.FieldByName('Id').AsInteger in [14] then
   begin
+    cxPageControl1.Properties.ActivePage := cxTabSheet6;
     cxMessage.Text := GetdsdeSputnikBalance('info@neboley.dp.ua', 'Max1256937841');
   end else
   if qrySendList.FieldByName('Id').AsInteger in [13] then
@@ -378,6 +379,7 @@ begin
   if qrySendList.FieldByName('Id').AsInteger in [14] then
   begin
     Add_Log('Начало выгрузки сообщения');
+    FMessage.Text := cxMessage.Text;
   end else
   if qrySendList.FieldByName('Id').AsInteger in [13] then
   begin

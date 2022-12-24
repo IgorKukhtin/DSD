@@ -392,6 +392,7 @@ type
     procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState); override;
     procedure OnAfterScroll(DataSet: TDataSet); virtual;
     procedure SetView(const Value: TcxGridTableView); virtual;
+    function GetView : TcxGridTableView; virtual;
     procedure SetDateEdit(const Value: TcxDateEdit); virtual;
     procedure edFilterExit(Sender: TObject);
     procedure edFilterKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -436,7 +437,7 @@ type
     // Ссылка на контрол с датой, если надо при создании показать текущую дату/время
     property DateEdit: TcxDateEdit read FDateEdit write SetDateEdit;
     // Ссылка ссылка на элемент отображающий список
-    property View: TcxGridTableView read FView write SetView;
+    property View: TcxGridTableView read GetView write SetView;
     // список событий на DblClick
     property OnDblClickActionList;
     // список событий, реагирующих на нажатие клавиш в гриде
@@ -1750,9 +1751,9 @@ end;
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
   var I, J : Integer;
 begin
-  if Assigned(Self.FView) then
-     if Assigned(Self.FView.Control) then
-        TcxGrid(Self.FView.Control).EndUpdate;
+  if Assigned(Self.View) then
+     if Assigned(Self.View.Control) then
+        TcxGrid(Self.View.Control).EndUpdate;
   if Assigned(FAfterOpen) then
      FAfterOpen(ADataSet);
 
@@ -1785,8 +1786,8 @@ begin
          end;
        end;
 
-       if Assigned(DisplayedDataComboBox) and (FChartVariantList.Count > 0) and Assigned(FView) and
-          Assigned(TcxDBDataController(FView.DataController).DataSource) then
+       if Assigned(DisplayedDataComboBox) and (FChartVariantList.Count > 0) and Assigned(View) and
+          Assigned(TcxDBDataController(View.DataController).DataSource) then
        begin
          try
            DisplayedDataComboBox.Properties.OnChange := Nil;
@@ -1840,7 +1841,7 @@ begin
                if (TdsdChartSeries(FChartSeriesList.Items[J]).ColumnList.Count > 0) and
                  Assigned(TdsdChartColumn(TdsdChartSeries(FChartSeriesList.Items[J]).ColumnList.Items[0]).Column)  then
                begin
-                 case TcxDBDataController(FView.DataController).DataSource.DataSet.FindField(TcxGridDBBandedColumn(
+                 case TcxDBDataController(View.DataController).DataSource.DataSet.FindField(TcxGridDBBandedColumn(
                    TdsdChartColumn(TdsdChartSeries(FChartSeriesList.Items[J]).ColumnList.Items[0]).Column).DataBinding.FieldName).DataType of
                    ftInteger : FChartCDS.FieldDefs.Add('SeriesList_' + IntToStr(J), ftInteger, 0);
                    else FChartCDS.FieldDefs.Add('SeriesList_' + IntToStr(J), ftFloat, 0);
@@ -1878,9 +1879,9 @@ procedure TdsdDBViewAddOn.OnBeforeOpen(ADataSet: TDataSet);
 begin
   if Assigned(FBeforeOpen) then
      FBeforeOpen(ADataSet);
-  if Assigned(Self.FView) then
-     if Assigned(Self.FView.Control) then
-        TcxGrid(Self.FView.Control).BeginUpdate;
+  if Assigned(Self.View) then
+     if Assigned(Self.View.Control) then
+        TcxGrid(Self.View.Control).BeginUpdate;
 end;
 
 procedure TdsdDBViewAddOn.OnColumnHeaderClick(Sender: TcxGridTableView;
@@ -2249,15 +2250,15 @@ procedure TdsdDBViewAddOn.OnExit(Sender: TObject);
 begin
   if Assigned(FonExit) then
      FOnExit(Sender);
-  if Assigned(FView) then
-     if Assigned(TcxDBDataController(FView.DataController).DataSource) then
-        if TcxDBDataController(FView.DataController).DataSource.State in dsEditModes then
+  if Assigned(View) then
+     if Assigned(TcxDBDataController(View.DataController).DataSource) then
+        if TcxDBDataController(View.DataController).DataSource.State in dsEditModes then
            try
-             TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+             TcxDBDataController(View.DataController).DataSource.DataSet.Post;
              // В случае ошибки оставляем фокус
            except
              on E: Exception do begin
-               FView.Control.SetFocus;
+               View.Control.SetFocus;
                raise;
              end;
            end;
@@ -2265,10 +2266,10 @@ end;
 
 procedure TdsdDBViewAddOn.onFilterChanged(Sender: TObject);
 begin
-  if FView.DataController.Filter.Root.Count > 0 then
-     FView.Styles.Background := FBackGroundStyle
+  if View.DataController.Filter.Root.Count > 0 then
+     View.Styles.Background := FBackGroundStyle
   else
-     FView.Styles.Background := nil
+     View.Styles.Background := nil
 end;
 
 destructor TdsdDBViewAddOn.Destroy;
@@ -2302,8 +2303,8 @@ end;
 procedure TdsdDBViewAddOn.edFilterExit(Sender: TObject);
 begin
   edFilter.Visible:=false;
-  TWinControl(FView.GetParentComponent).SetFocus;
-  FView.Focused := true;
+  TWinControl(View.GetParentComponent).SetFocus;
+  View.Focused := true;
 end;
 
 procedure TdsdDBViewAddOn.edFilterKeyDown(Sender: TObject; var Key: Word;
@@ -2355,19 +2356,23 @@ procedure TdsdDBViewAddOn.lpSetEdFilterPos(inKey: Char);
 var pRect:TRect;
 begin
  if (not edFilter.Visible) then
-   with FView.Controller do begin
+   with View.Controller do begin
      // позиционируем контрол на место заголовка
-     edFilter.Visible := true;
-     edFilter.Parent := TWinControl(FView.GetParentComponent);
-     pRect := TcxGridTableView(GridView).ViewInfo.HeaderViewInfo.Items[FocusedItemIndex].Bounds;
-     edFilter.Left := pRect.Left;
-     edFilter.Top := pRect.Top;
-     edFilter.Width := pRect.Right - pRect.Left + 1;
-     edFilter.Height := pRect.Bottom - pRect.Top;
-     edFilter.SetFocus;
-     edFilter.Text := inKey;
-     edFilter.SelStart := 1;
-     edFilter.SelLength := 0;
+     try
+       edFilter.Visible := true;
+       edFilter.Parent := TWinControl(Screen.ActiveControl);
+       pRect := View.ViewInfo.HeaderViewInfo.Items[FocusedItemIndex].Bounds;
+       edFilter.Left := pRect.Left;
+       edFilter.Top := pRect.Top;
+       edFilter.Width := pRect.Right - pRect.Left + 1;
+       edFilter.Height := pRect.Bottom - pRect.Top;
+       edFilter.SetFocus;
+       edFilter.Text := inKey;
+       edFilter.SelStart := 1;
+       edFilter.SelLength := 0;
+     except
+        edFilterExit(Nil);
+     end;
    end;
 end;
 
@@ -2376,7 +2381,7 @@ procedure TdsdDBViewAddOn.lpSetFilter;
    var i: integer;
    begin
      result := nil;
-     with FView.DataController.Filter.Root do
+     with View.DataController.Filter.Root do
        for i := 0 to Count - 1 do
            if Items[i] is TcxFilterCriteriaItem then
               if TcxFilterCriteriaItem(Items[i]).ItemLink = ItemLink then begin
@@ -2390,7 +2395,7 @@ var
   CurrentColumn: TcxGridColumn;
   ColumnAddOn: TColumnAddOn;
 begin
-  CurrentColumn := View.VisibleColumns[TcxGridDBDataController(FView.DataController).Controller.FocusedItemIndex];
+  CurrentColumn := View.VisibleColumns[TcxGridDBDataController(View.DataController).Controller.FocusedItemIndex];
   ColumnAddOn := GetColumnAddOn(CurrentColumn);
 
   if Assigned(ColumnAddOn) and ColumnAddOn.FindByFullValue then
@@ -2411,7 +2416,7 @@ begin
     end;
   end;
   edFilter.Visible := false;
-  with TcxGridDBDataController(FView.DataController), Filter.Root do begin
+  with TcxGridDBDataController(View.DataController), Filter.Root do begin
     FilterCriteriaItem := GetFilterItem(GetItem(CurrentColumn.Index));
     if Assigned(FilterCriteriaItem) then begin
        FilterCriteriaItem.Value := vbValue;
@@ -2443,7 +2448,7 @@ begin
   begin
     View.DataController.Filter.Clear;
     View.Columns[FGroupIndex].GroupIndex := -1;
-    if not FGroupByBox then FView.OptionsView.GroupByBox := False;
+    if not FGroupByBox then View.OptionsView.GroupByBox := False;
     FGroupIndex := -1;
   end;
 end;
@@ -2495,7 +2500,7 @@ begin
           root.AddItem(View.Controller.FocusedColumn, TcxFilterOperatorKind.foEqual, lFilter.Strings[I], lFilter.Strings[I]);
         end;
         Active := true;
-        FView.OptionsView.GroupByBox := True;
+        View.OptionsView.GroupByBox := True;
         FGroupIndex := View.Controller.FocusedColumnIndex;
         if View.OptionsView.GroupByBox then View.Controller.FocusedColumn.GroupIndex := 0;
       finally
@@ -2538,7 +2543,7 @@ procedure TdsdDBViewAddOn.OnAfterScroll(DataSet: TDataSet);
 begin
   if Assigned(FAfterScroll) then FAfterScroll(DataSet);
   if DataSet.IsEmpty then Exit;
-  if FView.DataController.IsDataLoading then Exit;
+  if View.DataController.IsDataLoading then Exit;
 
   for Item in ShowFieldImageList do
     if (TShowFieldImage(Item).FieldName <> '') and Assigned(TShowFieldImage(Item).Image)  and
@@ -2623,12 +2628,13 @@ procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
 var isReadOnly: boolean;
 begin
   isReadOnly := false;
-  if Assigned(FView.Controller.FocusedColumn) then
+
+  if Assigned(View.Controller) then
   begin
-     if Assigned(TcxGridDBColumn(FView.Controller.FocusedColumn).Properties) then
-       isReadOnly := TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly;
+     if Assigned(TcxGridDBColumn(View.Controller.FocusedColumn).Properties) then
+       isReadOnly := TcxGridDBColumn(View.Controller.FocusedColumn).Properties.ReadOnly;
     // если колонка не редактируема и введена буква или BackSpace то обрабатываем установку фильтра
-    if SearchAsFilter and (isReadOnly or (not TcxGridDBColumn(FView.Controller.FocusedColumn).Editable)) and (Key > #31) then
+    if SearchAsFilter and (isReadOnly or (not TcxGridDBColumn(View.Controller.FocusedColumn).Editable)) and (Key > #31) then
     begin
        lpSetEdFilterPos(Char(Key));
        Key := #0;
@@ -2644,8 +2650,8 @@ end;
 procedure TdsdDBViewAddOn.SetSearchAsFilter(const Value: boolean);
 begin
   FSearchAsFilter := Value;
-  if Assigned(FView) then
-     FView.OptionsBehavior.IncSearch := not FSearchAsFilter;
+  if Assigned(View) then
+     View.OptionsBehavior.IncSearch := not FSearchAsFilter;
 end;
 
 procedure TdsdDBViewAddOn.SetDateEdit(const Value: TcxDateEdit);
@@ -2720,6 +2726,13 @@ begin
   end;
 end;
 
+function TdsdDBViewAddOn.GetView : TcxGridTableView;
+begin
+  if Assigned(FView) and (FView.Control.ClassName = 'TcxGrid') then
+    Result := TcxGridTableView(TcxGrid(FView.Control).FocusedView)
+  else Result := FView;
+end;
+
 procedure TdsdDBViewAddOn.TableViewFocusedItemChanged(
   Sender: TcxCustomGridTableView; APrevFocusedItem,
   AFocusedItem: TcxCustomGridTableItem);
@@ -2768,9 +2781,9 @@ begin
   if (AValue = CUSTOM_FILTER) then
   begin
 
-    if not Assigned(Sender) or not Assigned(FView) then Exit;
+    if not Assigned(Sender) or not Assigned(View) then Exit;
 
-    with FView.DataController.Filter do
+    with View.DataController.Filter do
     begin
       lFilter := TStringList.Create;
       lFilter.Sorted := True;
@@ -2779,16 +2792,16 @@ begin
         Clear;
         root.BoolOperatorKind := TcxFilterBoolOperatorKind.fboAnd;
         ItemList := root.AddItemList(TcxFilterBoolOperatorKind.fboOr);
-        for i := 0 to FView.DataController.RecordCount - 1 do
+        for i := 0 to View.DataController.RecordCount - 1 do
         begin
-          if (FView.DataController.Values[I, Sender.Index] <> Null) and
-            (VarToStr(FView.DataController.Values[I, Sender.Index]) <> '') then
-             if not lFilter.Find(VarToStr(FView.DataController.Values[I, Sender.Index]), J) then
+          if (View.DataController.Values[I, Sender.Index] <> Null) and
+            (VarToStr(View.DataController.Values[I, Sender.Index]) <> '') then
+             if not lFilter.Find(VarToStr(View.DataController.Values[I, Sender.Index]), J) then
              begin
-               ItemList.AddItem(FView.Columns[Sender.Index], TcxFilterOperatorKind.foEqual,
-                    FView.DataController.Values[I, Sender.Index],
-                    VarToStr(FView.DataController.Values[I, Sender.Index]));
-               lFilter.Add(VarToStr(FView.DataController.Values[I, Sender.Index]));
+               ItemList.AddItem(View.Columns[Sender.Index], TcxFilterOperatorKind.foEqual,
+                    View.DataController.Values[I, Sender.Index],
+                    VarToStr(View.DataController.Values[I, Sender.Index]));
+               lFilter.Add(VarToStr(View.DataController.Values[I, Sender.Index]));
              end;
         end;
         Active := true;
@@ -2802,7 +2815,7 @@ begin
   if (AValue = CUSTOM_FILTERLOAD) then
   begin
 
-    if not Assigned(Sender) or not Assigned(FView) then Exit;
+    if not Assigned(Sender) or not Assigned(View) then Exit;
 
     with TFileOpenDialog.Create(nil) do
     try
@@ -2854,7 +2867,7 @@ begin
 
       if pADOQuery.RecordCount = 0 then Exit;
 
-      with FView.DataController.Filter do
+      with View.DataController.Filter do
       begin
         lFilter := TStringList.Create;
         lFilter.Sorted := True;
@@ -2871,7 +2884,7 @@ begin
              (VarToStr(pADOQuery.Fields.Fields[0].Value) <> '') and
              TryStrToInt(VarToStr(pADOQuery.Fields.Fields[0].Value), J) then
            begin
-             ItemList.AddItem(FView.Columns[Sender.Index], TcxFilterOperatorKind.foEqual,
+             ItemList.AddItem(View.Columns[Sender.Index], TcxFilterOperatorKind.foEqual,
                   pADOQuery.Fields.Fields[0].Value,
                   VarToStr(pADOQuery.Fields.Fields[0].Value));
              lFilter.Add(VarToStr(pADOQuery.Fields.Fields[0].Value));
@@ -3778,13 +3791,13 @@ procedure TCrossDBViewAddOn.FocusedItemChanged(Sender: TcxCustomGridTableView;
 begin
   if Assigned(FFocusedItemChanged) then
      FFocusedItemChanged(Sender, APrevFocusedItem, AFocusedItem);
-  if TcxDBDataController(FView.DataController).DataSource.State = dsEdit then begin
+  if TcxDBDataController(View.DataController).DataSource.State = dsEdit then begin
      // Если ошибка, то вернем в прошлую ячейку
      try
-       TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+       TcxDBDataController(View.DataController).DataSource.DataSet.Post;
      except
-       TcxDBDataController(FView.DataController).DataSource.DataSet.Cancel;
-       FView.Controller.FocusedItem := APrevFocusedItem;
+       TcxDBDataController(View.DataController).DataSource.DataSet.Cancel;
+       View.Controller.FocusedItem := APrevFocusedItem;
        raise;
      end;
   end;

@@ -48,6 +48,10 @@ BEGIN
      SELECT 12, (CURRENT_DATE + INTERVAL '8 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_PublishedSite (''3'')'::TVarChar
      UNION ALL
      SELECT 13, (DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 DAY') + INTERVAL '1 MONTH' + INTERVAL '11 HOUR')::TDateTime, '568330367,300408824,908475844'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_PopulMobileApplication (''3'')'::TVarChar
+     UNION ALL
+     SELECT 14, (CURRENT_DATE + INTERVAL '11 HOUR')::TDateTime, '568330367,300408824,1612960715'::TVarChar, ''::TVarChar
+     UNION ALL
+     SELECT 14, (CURRENT_DATE + INTERVAL '17 HOUR')::TDateTime, '568330367,300408824,1612960715'::TVarChar, ''::TVarChar
 
 /*     UNION ALL
      SELECT 100, CURRENT_DATE::TDateTime, ''::TVarChar, 'SELECT * FROM gpSelect_TelegramBot_TestMessage (:OperDate, ''3'')'::TVarChar*/

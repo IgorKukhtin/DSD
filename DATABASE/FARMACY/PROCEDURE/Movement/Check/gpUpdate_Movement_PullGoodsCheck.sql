@@ -59,6 +59,7 @@ BEGIN
           , lpInsertUpdate_MovementString (zc_MovementString_BayerPhone(), outMovementId, MovementString_BayerPhone.ValueData)
           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), outMovementId, TRUE)
           , lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CheckMember(), outMovementId, MovementLinkObject_CheckMember.ObjectId)
+          , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_MobileApplication(), outMovementId, COALESCE (MovementBoolean_MobileApplication.ValueData, False))
     FROM Movement
          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -76,6 +77,9 @@ BEGIN
          LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
                                       ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
                                      AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+         LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                   ON MovementBoolean_MobileApplication.MovementId = Movement.Id
+                                  AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
     WHERE Movement.Id = inMovementId;    
     
     IF EXISTS (SELECT * FROM MovementString AS MovementString_InvNumberOrder

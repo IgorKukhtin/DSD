@@ -23,11 +23,20 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH tmpUserAll AS (SELECT Object_User.Id                    AS Id
+       WITH tmpUserUnit AS (SELECT DefaultValue.UserKeyId  AS UserId
+                                 , MAX(DefaultValue.DefaultValue::Integer)::Integer AS UnitId
+                            FROM DefaultValue
+                                 INNER JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
+                            WHERE DefaultKeys.Key = 'zc_Object_Unit'
+                              AND COALESCE(DefaultValue.DefaultValue, '') <> ''
+                            GROUP BY DefaultValue.UserKeyId)                              
+          , tmpUserAll AS (SELECT Object_User.Id                    AS Id
                                 , Object_User.ObjectCode    
                                 , Object_User.ValueData
-                                , zfConvert_StringToNumber (lpGet_DefaultValue('zc_Object_Unit', Object_User.Id)) AS UnitId
+                                , tmpUserUnit.UnitId
                            FROM Object AS Object_User 
+                           
+                                LEFT JOIN tmpUserUnit ON tmpUserUnit.UserId = Object_User.Id  
                                                                                                            
                            WHERE Object_User.DescId   = zc_Object_User()
                              AND Object_User.isErased = FALSE
@@ -37,9 +46,9 @@ BEGIN
                              , Object_Member.ValueData           AS MemberName
                              , Object_User.ValueData             AS Name
                              , Object_User.ObjectCode            AS Code
-                             , Object_Position.ObjectCode       AS PositionCode
-                             , Object_Position.ValueData        AS PositionName
-                             , zfConvert_StringToNumber (lpGet_DefaultValue('zc_Object_Unit', Object_User.Id)) AS UnitId
+                             , Object_Position.ObjectCode        AS PositionCode
+                             , Object_Position.ValueData         AS PositionName
+                             , Object_User.UnitId                AS UnitId
                         FROM tmpUserAll AS Object_User 
                                                                  
                              LEFT JOIN ObjectDate AS ObjectDate_Personal_In
