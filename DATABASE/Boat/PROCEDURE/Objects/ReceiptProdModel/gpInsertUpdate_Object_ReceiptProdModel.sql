@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModel(
     IN inName             TVarChar  ,    -- Название объекта
     IN inModelId          Integer   ,
     IN inUnitId           Integer   ,    -- Место сборки
-    IN inisMain           Boolean   , 
+    IN inIsMain           Boolean   , 
     IN inUserCode         TVarChar  ,    -- пользовательский код
     IN inComment          TVarChar  ,
     IN inSession          TVarChar       -- сессия пользователя
@@ -54,7 +54,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ReceiptProdModel_Code(), ioId, COALESCE (inUserCode, vbModelCode,''));
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ReceiptProdModel_Main(), ioId, inisMain);
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ReceiptProdModel_Main(), ioId, inIsMain);
       
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptProdModel_Model(), ioId, inModelId);

@@ -154,6 +154,7 @@ uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML
   , DesadvFozzXML, OrderSpFozzXML, IftminFozzXML
   , DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML
+  , Vcl.Forms
   ;
 
 procedure Register;
@@ -235,6 +236,9 @@ begin
   ЕлектроннийДокумент.OwnerDocument.SaveToFile(XMLFileName);
   P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
+     //***if FileExists(XMLFileName) then showMessage('exists ' + XMLFileName + #10+#13 + ' start SignFile')
+     //***else showMessage('not exists ' + XMLFileName + #10+#13 + ' start SignFile');
+
     // подписать
     SignFile(XMLFileName, stComDoc, DebugMode
            , HeaderDataSet.FieldByName('UserSign').asString
@@ -243,6 +247,13 @@ begin
            , HeaderDataSet.FieldByName('NameExite').asString
            , HeaderDataSet.FieldByName('NameFiscal').asString
             );
+
+     //***if FileExists(XMLFileName) then showMessage('exists ' + XMLFileName + #10+#13 + ' end SignFile')
+     //***else showMessage('not exists ' + XMLFileName + #10+#13 + ' end SignFile');
+
+     //***if FileExists(P7SFileName) then showMessage('exists ' + P7SFileName + #10+#13 + ' end SignFile')
+     //***else showMessage('not exists ' + P7SFileName + #10+#13 + ' end SignFile');
+
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
@@ -251,8 +262,22 @@ begin
         'Документ сформирован и подписан';
       FInsertEDIEvents.Execute;
     end;
+
+     //***if FileExists(XMLFileName) then showMessage('exists ' + XMLFileName + #10+#13 + ' start на FTP')
+     //***else showMessage('not exists ' + XMLFileName + #10+#13 + ' end SignFile');
+
+     //***if FileExists(P7SFileName) then showMessage('exists ' + P7SFileName + #10+#13 + ' start на FTP')
+     //***else showMessage('not exists ' + P7SFileName + #10+#13 + ' end SignFile');
+
     // перекинуть на FTP
     PutFileToFTP(P7SFileName, '/outbox');
+
+     //***if FileExists(XMLFileName) then showMessage('exists ' + XMLFileName + #10+#13 + ' end на FTP')
+     //***else showMessage('not exists ' + XMLFileName + #10+#13 + ' end SignFile');
+
+     //***if FileExists(P7SFileName) then showMessage('exists ' + P7SFileName + #10+#13 + ' end на FTP')
+     //***else showMessage('not exists ' + P7SFileName + #10+#13 + ' end SignFile');
+
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
@@ -3579,6 +3604,29 @@ begin
   Result := VarToDateTime(DateTimeString)
 end;
 
+procedure AddToLog(S: string);
+var
+  LogStr: string;
+  LogFileName: string;
+  LogFile: TextFile;
+begin
+  Application.ProcessMessages;
+  LogStr := FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ' ' + S;
+  //LogMemo.Lines.Add(LogStr);
+  LogFileName := ChangeFileExt(Application.ExeName, '') + '_' + FormatDateTime('yyyymmdd', Date) + '_del.log';
+
+  AssignFile(LogFile, LogFileName);
+
+  if FileExists(LogFileName) then
+    Append(LogFile)
+  else
+    Rewrite(LogFile);
+
+  Writeln(LogFile, LogStr);
+  CloseFile(LogFile);
+  Application.ProcessMessages;
+end;
+
 procedure TEDI.OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String;
   StartDate, EndDate: TDateTime);
 var
@@ -3650,14 +3698,18 @@ begin
                          // FIdFTP.ChangeDir('/archive');
                          // FIdFTP.Put(Stream, List[i]);
                          //err_msg:= '';
-                         try FIdFTP.Delete(List[i]);
+                         try
+                             AddToLog('start ' + List[i]);
+                             FIdFTP.Delete(List[i]);
+                             AddToLog('try - 1  = ok');
                          except
-                              try FIdFTP.Delete(List[i]); except FIdFTP.Delete(List[i]); end;
+                              try FIdFTP.Delete(List[i]); AddToLog('try - 2  = ok'); except FIdFTP.Delete(List[i]); AddToLog('try - 3  = ok'); end;
                          end;
                        except
                          on E: Exception do begin
                            ii:= ii + 1;
                            err_msg:= '(' + intToStr(ii) + ')' + 'Delete - ' + s + ' : ' + E.Message;
+                           AddToLog('err:  ' + err_msg);
                            //if err_msg = ''
                            //then err_msg:= '(' + intToStr(ii) + ')' + 'Delete - ' + s + ' : ' + E.Message
                            //else err_msg:= '(' + intToStr(ii) + ')' + err_msg;
