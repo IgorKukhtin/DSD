@@ -446,10 +446,11 @@ BEGIN
                                 -- Товар c нужной Boat Structure, потом найдем/создадим
                               , CASE WHEN lpSelect.ObjectId_parent = lpSelect.ObjectId THEN lpSelect.ObjectId_parent ELSE 0 END AS ObjectId_parent_find
                                 -- Узел/Товар из шаблона
-                              , lpSelect.ObjectId_parent            AS ObjectId_parent
+                              , lpSelect.ObjectId_parent               AS ObjectId_parent
 
                                 -- здесь нет опции
                               , 0                                      AS ProdOptionsId
+                                --
                               , COALESCE (lpSelect.Value_parent, 0)    AS OperCount
                               , COALESCE (lpSelect.ForCount_parent, 1) AS ForCount
                                 -- для сборки узла - потом пересчитаем
@@ -1231,13 +1232,13 @@ BEGIN
                                      _tmpReceiptItems_new.ReceiptGoodsId
                                    , _tmpReceiptItems_new.ObjectId_parent_old
                                    , _tmpReceiptItems_new.GoodsId_child, _tmpReceiptItems_new.GoodsId_child_old
-                                   , _tmpReceiptItems_new.ReceiptLevelId
+                                 --, _tmpReceiptItems_new.ReceiptLevelId
                               FROM _tmpReceiptItems_new
                               -- есть GoodsId_child
                               WHERE _tmpReceiptItems_new.GoodsId_child_old > 0
 
                              UNION
-                              -- новые элементы ReceiptGoodsId + БЕЗ GoodsId_child
+                              -- новые элементы ReceiptGoodsId + НЕТ GoodsId_child
                               SELECT DISTINCT
                                      _tmpReceiptItems_new.ReceiptGoodsId
                                    , _tmpReceiptItems_new.ObjectId_parent_old
@@ -1245,13 +1246,13 @@ BEGIN
                                    , 0 AS GoodsId_child
                                      -- подставляем пустой
                                    , 0 AS GoodsId_child_old
-                                   , _tmpReceiptItems_new.ReceiptLevelId
+                                 --, -1 AS ReceiptLevelId
                               FROM _tmpReceiptItems_new
 
                              ) AS _tmpReceiptItems_new
                                ON _tmpReceiptItems_new.ObjectId_parent_old = _tmpReceiptProdModel.ObjectId_parent
                               AND _tmpReceiptItems_new.GoodsId_child_old   = COALESCE (_tmpReceiptProdModel.GoodsId_child, 0)
-                              AND _tmpReceiptItems_new.ReceiptLevelId      = COALESCE (_tmpReceiptProdModel.ReceiptLevelId, 0)
+                            --AND _tmpReceiptItems_new.ReceiptLevelId      = COALESCE (_tmpReceiptProdModel.ReceiptLevelId, 0)
 
              WHERE COALESCE (_tmpReceiptProdModel.ProdColorPatternId, 0) = 0
               -- только когда сборка Узла
@@ -1370,7 +1371,7 @@ BEGIN
                    -- Собрали Узлы
                    LEFT JOIN (SELECT _tmpItem_Detail.ObjectId_parent
                                    , SUM (COALESCE (_tmpItem_Detail.OperCount * _tmpItem_Detail.OperPrice
-                                                  / CASE WHEN _tmpItem_Detail.ForCount > 0  THEN _tmpItem_Detail.ForCount  ELSE 1 END)) AS OperSumm
+                                                  / CASE WHEN _tmpItem_Detail.ForCount > 0  THEN _tmpItem_Detail.ForCount  ELSE 1 END, 0)) AS OperSumm
                               FROM _tmpItem_Detail
                               GROUP BY _tmpItem_Detail.ObjectId_parent
                              ) AS tmpItem_Detail ON tmpItem_Detail.ObjectId_parent = _tmpItem.ObjectId_parent
@@ -1435,7 +1436,9 @@ BEGIN
                                      -- здесь новый
                                    , _tmpReceiptItems_new.GoodsId_child
                               FROM _tmpReceiptItems_new
-                             ) AS _tmpReceiptItems_new ON _tmpReceiptItems_new.ObjectId_parent_old = _tmpItem.ObjectId_parent
+                             ) AS _tmpReceiptItems_new
+                               ON _tmpReceiptItems_new.ObjectId_parent_old = _tmpItem.ObjectId_parent
+                              AND _tmpItem.GoodsId_child > 0
 
              ) AS _tmpItem
         WHERE _tmpItem_Detail.ObjectId_parent     = _tmpItem.ObjectId_parent
@@ -1741,4 +1744,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Status_OrderClient(inMovementId := 667 , inStatusCode := 2 , inIsChild_Recalc := 'True' ,  inSession := '5');
+-- SELECT * FROM gpUpdate_Status_OrderClient (inMovementId:= 662, inStatusCode:= 2, inIsChild_Recalc:= 'True', inSession:= '5');

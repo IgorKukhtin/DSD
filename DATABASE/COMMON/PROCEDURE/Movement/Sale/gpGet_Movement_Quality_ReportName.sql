@@ -44,7 +44,7 @@ BEGIN
 
                    WHEN ObjectLink_Juridical_Retail.ChildObjectId   = 310855 -- Варус
                     AND ObjectLink_Contract_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30101() -- Готовая продукция
-                  --AND vbUserId <> 5
+                    AND vbUserId <> 5
                         THEN 'PrintMovement_Quality310855'
 
                    ELSE COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_Quality')
