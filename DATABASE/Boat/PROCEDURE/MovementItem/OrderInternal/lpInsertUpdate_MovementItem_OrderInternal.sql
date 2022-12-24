@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_MovementItem_Send()
+-- Function: gpInsertUpdate_MovementItem_OrderInternal()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderInternal(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId             Integer   , -- Ключ объекта <Документ> 
     IN inMovementId_OrderClient Integer   , -- Заказ Клиента

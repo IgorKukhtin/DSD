@@ -1,11 +1,10 @@
 -- Function: gpSelect_Movement_OrderInternalChoice()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternal(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
-    IN inClientId      Integer  ,
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -23,7 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , Amount TFloat
              , UnitId Integer
              , UnitName TVarChar 
-             , Comment TVarChar
+             , Comment_mi TVarChar
              , MovementId_OrderClient Integer
              , InvNumberFull_OrderClient TVarChar
              , FromName TVarChar
@@ -65,8 +64,8 @@ BEGIN
         
         , tmpMI_Master AS (SELECT MovementItem.Id
                                 , MovementItem.MovementId
-                                , MovementItem.ObjectId
-                                , MovementItem.Amount         AS GoodsId
+                                , MovementItem.ObjectId       AS GoodsId
+                                , MovementItem.Amount         
                                 , MovementItem.isErased
                                 , MIString_Comment.ValueData  AS Comment
                                 , Object_Insert.ValueData     AS InsertName
@@ -123,7 +122,7 @@ BEGIN
              , MovementItem.Amount ::TFloat         AS Amount
              , Object_Unit.Id                       AS UnitId
              , Object_Unit.ValueData                AS UnitName
-             , MovementItem.Comment ::TVarChar      AS Comment
+             , MovementItem.Comment ::TVarChar      AS Comment_mi
 
              , Movement_OrderClient.Id                                   AS MovementId_OrderClient
              , ('№ ' || Movement_OrderClient.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderClient.OperDate) :: TVarChar ) :: TVarChar  AS InvNumberFull_OrderClient
@@ -131,8 +130,8 @@ BEGIN
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,Object_Product.isErased) AS CIN
 
-             , MovementItem.InsertName_mi
-             , MovementItem.InsertDate_mi
+             , MovementItem.InsertName AS InsertName_mi
+             , MovementItem.InsertDate AS InsertDate_mi
 
         FROM Movement_OrderInternal
 
@@ -163,10 +162,11 @@ BEGIN
              LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
              
              --- 
-             LEFT JOIN tmpMI_Master AS MovementItem.MovementId = Movement_OrderInternal.Id
+             LEFT JOIN tmpMI_Master AS MovementItem ON MovementItem.MovementId = Movement_OrderInternal.Id
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.UnitId
-             
+
+             LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MovementItem.MovementId_OrderClient
              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                           ON MovementLinkObject_From.MovementId = MovementItem.MovementId_OrderClient
                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -194,3 +194,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_OrderInternal (inStartDate:= '01.01.2021', inEndDate:= '31.12.2021', inClientId:=0 , inIsErased := FALSE, inSession:= zfCalc_UserAdmin())
+select * from gpSelect_Movement_OrderInternal(inStartDate := ('24.12.2022')::TDateTime , inEndDate := ('24.12.2022')::TDateTime , inIsErased := 'False' ,  inSession := '5');

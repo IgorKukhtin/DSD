@@ -1288,8 +1288,8 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 328
-    Top = 64
+    Left = 376
+    Top = 56
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

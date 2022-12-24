@@ -97,8 +97,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
           Kind = skSum
         end
         item
-          Format = ',0.####'
-          Kind = skSum
+          Kind = skMin
           Column = TotalCount
         end
         item
@@ -116,13 +115,13 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
         end>
       DataController.Summary.FooterSummaryItems = <
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalCount
-        end
         item
           Format = ',0.####'
           Kind = skSum
@@ -166,6 +165,11 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -220,7 +224,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Width = 105
       end
       object TotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
+        Caption = #1048#1090#1086#1075#1086' '#1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -819,8 +823,8 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TSendForm'
-      FormNameParam.Value = 'TSendForm'
+      FormName = 'TOrderInternalForm'
+      FormNameParam.Value = 'TOrderInternalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -853,8 +857,8 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TSendForm'
-      FormNameParam.Value = 'TSendForm'
+      FormName = 'TOrderInternalForm'
+      FormNameParam.Value = 'TOrderInternalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
