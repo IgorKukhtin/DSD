@@ -8,7 +8,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, NUMERIC (16, 8), NUMERIC (16, 8), TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, NUMERIC (16, 8), NUMERIC (16, 8), TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
@@ -31,32 +31,34 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId   Integer;
    DECLARE vbIsInsert Boolean;
-   DECLARE vbValue  NUMERIC (16, 8); 
-   DECLARE vbValue_service  NUMERIC (16, 8);
+
+   DECLARE vbValue         NUMERIC (16, 8); 
+   DECLARE vbValue_service NUMERIC (16, 8);
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptGoodsChild());
    vbUserId:= lpGetUserBySession (inSession);
 
+   -- переводим
+   vbValue        := zfConvert_StringToFloat (REPLACE (ioValue,         ',' , '.'));
+   vbValue_service:= zfConvert_StringToFloat (REPLACE (ioValue_service, ',' , '.'));
    
-   vbValue:= CAST (ioValue AS NUMERIC (16, 8));
-   vbValue_service:= CAST (REPLACE (ioValue_service,'.' , ',') AS NUMERIC (16, 8));
-   
-   --замена  если посде зпт  ioValue больше 4-х знаков, тогда ForCount = 1000 а в ioValue записсываем ioValue * 1000
-   IF (vbValue::NUMERIC (16, 8) <> vbValue ::NUMERIC (16, 4)) 
+   -- замена ioValue если больше 4-х знаков, тогда ForCount = 1000 а в ioValue записсываем ioValue * 1000
+   IF (vbValue <> vbValue :: TFloat) 
    THEN
-       ioForCount := 1000; 
-       vbValue := (vbValue * 1000) ::TFloat;
-   ELSE 
-       ioForCount := 1; 
+       ioForCount:= 1000; 
+       vbValue   := (vbValue * 1000) :: TFloat;
+   ELSEIF COALESCE (ioForCount, 0) = 0
+   THEN
+       ioForCount:= 1; 
    END IF;
    
    -- замена
    IF vbValue = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
    THEN
-       vbValue:= vbValue_service::TFloat;
+       vbValue:= vbValue_service :: TFloat;
    ELSE
        vbValue_service:= 0;
    END IF;                        
@@ -120,7 +122,7 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods(), ioId, inReceiptGoodsId);
 
        -- сохранили свойство <>
-        IF EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inProdColorPatternId AND OL.ChildObjectId > 0 AND OL.DescId = zc_ObjectLink_ProdColorPattern_Goods())
+       IF EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inProdColorPatternId AND OL.ChildObjectId > 0 AND OL.DescId = zc_ObjectLink_ProdColorPattern_Goods())
        THEN
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_Object(), ioId, inObjectId);
        ELSE
@@ -164,9 +166,9 @@ BEGIN
 
    outReceiptLevelName :=  (SELECT Object.ValueData FROM Object WHERE Object.Id = inReceiptLevelId);
    
-   --возвращаем в грид как строку с  4 знаками после зпт
-   ioValue:= CAST (vbValue AS TVarChar);
-   ioValue_service:= CAST (ioValue_service AS TVarChar);
+   -- возвращаем в грид
+   ioValue        := CAST (vbValue         / CASE WHEN ioForCount > 0 THEN ioForCount ELSE 1 END AS TVarChar);
+   ioValue_service:= CAST (vbValue_service AS TVarChar);
 
 
    IF inIsEnabled = TRUE

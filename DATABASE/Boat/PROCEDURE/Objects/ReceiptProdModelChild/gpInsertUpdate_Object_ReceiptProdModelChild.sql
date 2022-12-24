@@ -32,17 +32,18 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
-   DECLARE vbPriceWithVAT Boolean;  
-   DECLARE vbValue  NUMERIC (16, 8); 
+   DECLARE vbPriceWithVAT Boolean;
+
+   DECLARE vbValue          NUMERIC (16, 8);
    DECLARE vbValue_service  NUMERIC (16, 8);
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptProdModelChild());
    vbUserId:= lpGetUserBySession (inSession);
 
-
-   vbValue:= CAST (ioValue AS NUMERIC (16, 8));
-   vbValue_service:= CAST (REPLACE (ioValue_service,'.' , ',') AS NUMERIC (16, 8));
+   -- переводим
+   vbValue        := zfConvert_StringToFloat (REPLACE (ioValue,         ',' , '.'));
+   vbValue_service:= zfConvert_StringToFloat (REPLACE (ioValue_service, ',' , '.'));
 
    -- замена
    IF COALESCE (ioId, 0) = 0 OR vbValue <> COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_ReceiptProdModelChild_Value()), 0)
@@ -50,13 +51,14 @@ BEGIN
        ioIsCheck:= TRUE;
    END IF;
 
-   --замена  если посде зпт  ioValue больше 4-х знаков, тогда ForCount = 1000 а в ioValue записсываем ioValue * 1000
-   IF (vbValue::NUMERIC (16, 8) <> vbValue ::NUMERIC (16, 4)) 
-   THEN   
-       ioForCount := 1000; 
-       vbValue := vbValue * 1000;
-   ELSE 
-       ioForCount := 1; 
+   -- замена ioValue если больше 4-х знаков, тогда ForCount = 1000 а в ioValue записсываем ioValue * 1000
+   IF (vbValue <> vbValue :: TFloat)
+   THEN
+       ioForCount:= 1000;
+       vbValue   := (vbValue * 1000) :: TFloat;
+   ELSEIF COALESCE (ioForCount, 0) = 0
+   THEN
+       ioForCount:= 1;
    END IF;
 
    -- замена
@@ -238,9 +240,9 @@ BEGIN
 
    outReceiptLevelName :=  (SELECT Object.ValueData FROM Object WHERE Object.Id = inReceiptLevelId);
 
-   --возвращаем в грид как строку с  4 знаками после зпт
-   ioValue:= CAST (vbValue AS TVarChar);
-   ioValue_service:= CAST (ioValue_service AS TVarChar);
+   -- возвращаем в грид
+   ioValue        := CAST (vbValue         / CASE WHEN ioForCount > 0 THEN ioForCount ELSE 1 END AS TVarChar);
+   ioValue_service:= CAST (vbValue_service AS TVarChar);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

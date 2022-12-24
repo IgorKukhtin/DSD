@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_ReceiptGoods()
+-- Function: gpInsertUpdate_Object_Goods_Unit()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods_Unit(Integer, Integer, TVarChar);
 

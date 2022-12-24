@@ -1,12 +1,13 @@
 -- Function: zfConvert_StringToFloat
 
--- DROP FUNCTION IF EXISTS zfConvert_StringToFloat (TVarChar);
+DROP FUNCTION IF EXISTS zfConvert_StringToFloat (TVarChar);
 
-CREATE OR REPLACE FUNCTION zfConvert_StringToFloat(Number TVarChar)
-RETURNS TFloat AS
+CREATE OR REPLACE FUNCTION zfConvert_StringToFloat (Number TVarChar)
+RETURNS NUMERIC (16, 8)
+AS
 $BODY$
 BEGIN
-  RETURN Number :: TFloat;
+  RETURN Number :: NUMERIC (16, 8);
 EXCEPTION
   WHEN OTHERS THEN	
      RETURN 0;

@@ -1149,6 +1149,7 @@ BEGIN
                                                        , inName             := ''
                                                        , inColorPatternId   := tmpGoods.ColorPatternId
                                                        , inGoodsId          := tmpGoods.GoodsId_parent
+                                                       , inUnitId           := 0
                                                        , inIsMain           := TRUE
                                                        , inUserCode         := (ABS (Object_Goods.ObjectCode) :: Integer) :: TVarChar
                                                        , inComment          := ''

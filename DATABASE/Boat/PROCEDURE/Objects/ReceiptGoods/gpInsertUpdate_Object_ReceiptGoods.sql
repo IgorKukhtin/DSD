@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoods(
     IN inColorPatternId   Integer   ,
     IN inGoodsId          Integer   ,
     IN inUnitId           Integer   ,    ---
-    IN inisMain           Boolean   ,
+    IN inIsMain           Boolean   ,
     IN inUserCode         TVarChar  ,    -- пользовательский код
     IN inComment          TVarChar  ,
     IN inSession          TVarChar       -- сессия пользователя
@@ -66,7 +66,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ReceiptGoods_Code(), ioId, COALESCE (inUserCode, vbGoodsCode,''));
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ReceiptGoods_Main(), ioId, inisMain);
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ReceiptGoods_Main(), ioId, inIsMain);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoods_ColorPattern(), ioId, inColorPatternId);

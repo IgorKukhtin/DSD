@@ -660,7 +660,7 @@ BEGIN
                                                              , inProdColorId      := COALESCE(vbProdColor_ChildId, 0) :: Integer
                                                              , inPartnerId        := 0        :: Integer
                                                              , inUnitId           := 0        :: Integer
-                                                             , inDiscountPartnerId := 0       :: Integer
+                                                             , inDiscountPartnerId:= 0       :: Integer
                                                              , inTaxKindId        := 0        :: Integer
                                                              , inEngineId         := NULL
                                                              , inSession          := inSession:: TVarChar
@@ -695,7 +695,8 @@ BEGIN
                                                                   , inName             := TRIM (inGoodsName) :: TVarChar
                                                                   , inColorPatternId   := vbColorPatternId
                                                                   , inGoodsId          := vbGoodsId
-                                                                  , inisMain           := TRUE     :: Boolean
+                                                                  , inUnitId           := 0
+                                                                  , inIsMain           := TRUE     :: Boolean
                                                                   , inUserCode         := ''       :: TVarChar
                                                                   , inComment          := COALESCE ((SELECT OC.ValueData FROM Object AS OC
                                                                                                      WHERE OC.Id = COALESCE (vbReceiptGoodsId, 0) 
