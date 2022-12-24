@@ -1,7 +1,7 @@
-object SendItemEditForm: TSendItemEditForm
+object OrderInternalItemEditForm: TOrderInternalItemEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1047#1072#1082#1072#1079' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'>'
   ClientHeight = 296
   ClientWidth = 424
   Color = clBtnFace

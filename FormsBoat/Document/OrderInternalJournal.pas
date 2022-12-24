@@ -28,7 +28,7 @@ uses
   dsdGuides, cxButtonEdit, ExternalLoad;
 
 type
-  TSendJournalForm = class(TParentForm)
+  TOrderInternalJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -48,8 +48,6 @@ type
     StatusCode: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -65,7 +63,6 @@ type
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
     TotalCount: TcxGridDBColumn;
-    TotalSumm: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
@@ -109,6 +106,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendJournalForm);
+  RegisterClass(TOrderInternalJournalForm);
 
 end.

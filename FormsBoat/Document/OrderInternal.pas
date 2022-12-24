@@ -27,7 +27,7 @@ uses
   cxImageComboBox, cxSplitter;
 
 type
-  TSendForm = class(TParentForm)
+  TOrderInternalForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -135,10 +135,7 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    CountForPrice: TcxGridDBColumn;
-    OperPrice: TcxGridDBColumn;
     Amount_unit: TcxGridDBColumn;
-    Summ: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     InsertName: TcxGridDBColumn;
@@ -151,15 +148,10 @@ type
     GoodsName_ch2: TcxGridDBColumn;
     MeasureName_ch2: TcxGridDBColumn;
     Amount_ch2: TcxGridDBColumn;
-    InvNumber_OrderClientFull_ch2: TcxGridDBColumn;
     IsErased_ch2: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxTopSplitter: TcxSplitter;
     Artikel_ch2: TcxGridDBColumn;
-    InvNumber_OrderPartner_Full_ch2: TcxGridDBColumn;
-    CIN_ch2: TcxGridDBColumn;
-    ProductName_ch2: TcxGridDBColumn;
-    BrandName_ch2: TcxGridDBColumn;
     spInsert_MI_Send: TdsdStoredProc;
     actInsert_MI_Send: TdsdExecStoredProc;
     macInsert_MI_Send: TMultiAction;
@@ -168,9 +160,6 @@ type
     actOpenFormOrderPartner: TdsdOpenForm;
     bbOpenFormOrderClient: TdxBarButton;
     bbOpenFormOrderPartner: TdxBarButton;
-    isOn: TcxGridDBColumn;
-    EngineNum_ch2: TcxGridDBColumn;
-    EngineName_ch2: TcxGridDBColumn;
     spUnErasedMIchild: TdsdStoredProc;
     actSetUnErasedChild: TdsdUpdateErased;
     bbUnErasedChild: TdxBarButton;
@@ -178,14 +167,12 @@ type
     actReport_Goods_child: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     bbReport_Goods_child: TdxBarButton;
-    AmountSecond: TcxGridDBColumn;
     actPrint2: TdsdPrintAction;
     bbPrint2: TdxBarButton;
     Panel2: TPanel;
     cxLabel6: TcxLabel;
     edBarCode1: TcxTextEdit;
     cxLabel8: TcxLabel;
-    EnterMoveNext1: TEnterMoveNext;
     Panel3: TPanel;
     cxLabel5: TcxLabel;
     edPartNumber: TcxTextEdit;
@@ -220,7 +207,6 @@ type
     Ord: TcxGridDBColumn;
     OperDate_protocol: TcxGridDBColumn;
     UserName_protocol: TcxGridDBColumn;
-    PartnerName: TcxGridDBColumn;
     actChoiceGuides: TdsdChoiceGuides;
     Article_all: TcxGridDBColumn;
     edSearchArticle: TcxTextEdit;
@@ -242,6 +228,7 @@ type
     actInsert_MI_Send_byOrderDetail: TdsdExecStoredProc;
     macInsert_MI_Send_byOrderDetail: TMultiAction;
     bbInsert_MI_Send_byOrderDetail: TdxBarButton;
+    EnterMoveNext1: TEnterMoveNext;
   private
   public
   end;
@@ -251,6 +238,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendForm);
+  RegisterClass(TOrderInternalForm);
 
 end.

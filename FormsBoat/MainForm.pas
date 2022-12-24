@@ -256,6 +256,7 @@ type
     miMaterialOptions: TMenuItem;
     miLine31_: TMenuItem;
     miLine34_: TMenuItem;
+    actOrderInternal: TdsdOpenForm;
   private
     { Private declarations }
   public
