@@ -16,9 +16,10 @@ BEGIN
     -- vbUserId:= lpGetUserBySession (inSession);
     vbUserId:= inSession :: Integer;
 
-    RETURN QUERY
-    WITH
-       tmpContainer AS (SELECT DISTINCT Container.ObjectId
+raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+
+    CREATE TEMP TABLE tmpContainer ON COMMIT DROP AS
+                       (SELECT DISTINCT Container.ObjectId
                         FROM
                             Container
                             INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
@@ -31,23 +32,41 @@ BEGIN
                         WHERE Container.DescId        = zc_Container_Count()
                           AND (Container.WhereObjectId = inUnitId OR COALESCE(inUnitId, 0) = 0)
                           AND Container.Amount        <> 0
-                       )
-       , tmpMakerNameAll AS (SELECT  Object_Goods_Juridical.GoodsMainId
+                       );
+                       
+    ANALYSE tmpContainer;
+    
+
+    CREATE TEMP TABLE tmpMakerNameAll ON COMMIT DROP AS
+                           (SELECT  Object_Goods_Juridical.GoodsMainId
                                    , replace(replace(replace(COALESCE(Object_Goods_Juridical.MakerName, ''),'"',''),'&','&amp;'),'''','') AS MakerName
                                    , ROW_NUMBER()OVER(PARTITION BY Object_Goods_Juridical.GoodsMainId ORDER BY Object_Goods_Juridical.JuridicalId) as ORD
                             FROM
                                 Object_Goods_Juridical
                             WHERE COALESCE(Object_Goods_Juridical.MakerName, '') <> ''
-                           )
-       , tmpMakerName AS (SELECT tmpMakerNameAll.GoodsMainId
-                               , tmpMakerNameAll.MakerName
-                          FROM tmpMakerNameAll
-                          WHERE tmpMakerNameAll.ORD = 1)
-       , tmpObjectHistory AS (SELECT *
+                           );
+                       
+    ANALYSE tmpMakerNameAll;
+
+
+    CREATE TEMP TABLE tmpObjectHistory ON COMMIT DROP AS
+                             (SELECT *
                               FROM ObjectHistory
                               WHERE ObjectHistory.DescId = zc_ObjectHistory_JuridicalDetails()
                                 AND ObjectHistory.enddate::timestamp with time zone = zc_dateend()::timestamp with time zone
-                              )
+                              );
+                       
+    ANALYSE tmpObjectHistory;
+    
+
+raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+
+    RETURN QUERY
+    WITH
+         tmpMakerName AS (SELECT tmpMakerNameAll.GoodsMainId
+                               , tmpMakerNameAll.MakerName
+                          FROM tmpMakerNameAll
+                          WHERE tmpMakerNameAll.ORD = 1)
        , tmpJuridicalDetails AS (SELECT ObjectHistory_JuridicalDetails.ObjectId                                        AS JuridicalId
                                       , COALESCE(ObjectHistory_JuridicalDetails.StartDate, zc_DateStart())             AS StartDate
                                       , ObjectHistoryString_JuridicalDetails_FullName.ValueData                        AS FullName
@@ -239,5 +258,5 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletkiGroup (Integer, TVarChar) 
 -- тест
 --
 
-SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletkiGroup (inUnitId := 183292, inSession:= '-3')
-
+--SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletkiGroup (inUnitId := 183292, inSession:= '-3')
+--SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletkiGroup (0, '3')

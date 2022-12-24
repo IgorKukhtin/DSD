@@ -372,7 +372,7 @@ object GoodsForm: TGoodsForm
         Width = 70
       end
       object UnitName: TcxGridDBColumn
-        Caption = #1057#1082#1083#1072#1076
+        Caption = #1057#1082#1083#1072#1076' ('#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077')'
         DataBinding.FieldName = 'UnitName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -381,13 +381,13 @@ object GoodsForm: TGoodsForm
         Width = 55
       end
       object UnitName_receipt: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1089#1073#1086#1088#1082#1080
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1073#1086#1088#1082#1072' '#1091#1079#1083#1072')'
         DataBinding.FieldName = 'UnitName_receipt'
         HeaderAlignmentHorz = taCenter
         Width = 80
       end
       object GoodsName_receipt: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088' '#1089#1073#1086#1088#1082#1080
+        Caption = #1059#1079#1077#1083' '#1089#1073#1086#1088#1082#1080
         DataBinding.FieldName = 'GoodsName_receipt'
         Width = 80
       end

@@ -58,6 +58,8 @@ BEGIN
      AND Movement.DescId = zc_Movement_Check()
      AND (COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0
       OR COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0));
+      
+  ANALYSE tmpMov;
 
      -- Результат
   OPEN Cursor1 FOR (

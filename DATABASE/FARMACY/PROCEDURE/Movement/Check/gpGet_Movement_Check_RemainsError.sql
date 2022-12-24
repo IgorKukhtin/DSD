@@ -68,6 +68,8 @@ BEGIN
     INSERT INTO _tmpGoods
     SELECT *
     FROM json_populate_recordset(null::_tmpGoods, replace(replace(replace(inJSON, '&quot;', '\"'), CHR(9),''), CHR(10),'')::json);
+    
+    ANALYSE _tmpGoods;
 
     -- проверим что есть остатки
     outMessageText:= 'Ошибка.Товара'||CASE WHEN inSPKindId = zc_Enum_SPKind_SP() THEN ' для отпуска по СП нет в наличии или на остатке является СЭМПЛОВЫМ' ELSE ' нет в наличии' END||':'||Chr(13)

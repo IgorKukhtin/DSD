@@ -22,6 +22,8 @@ BEGIN
     CREATE TEMP TABLE tmpUnit ON COMMIT DROP AS
     SELECT 13711869  AS UnitId;
     
+    ANALYSE tmpUnit;
+    
     IF EXISTS(SELECT MovementBoolean_AutoVIPforSales.MovementId 
               FROM MovementBoolean AS MovementBoolean_AutoVIPforSales
               

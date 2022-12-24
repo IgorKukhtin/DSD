@@ -126,6 +126,8 @@ BEGIN
                                             ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id
                                            AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
         );
+        
+  ANALYSE tmpMov;
 
   WITH
       tmpMI_all AS (SELECT tmpMov.Id AS MovementId, tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
