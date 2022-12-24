@@ -199,7 +199,7 @@ object MainForm: TMainForm
     end
     object btnAll: TButton
       Left = 16
-      Top = 2
+      Top = 3
       Width = 97
       Height = 25
       Caption = #1042#1089#1077' '#1076#1077#1081#1089#1090#1074#1080#1103'!'

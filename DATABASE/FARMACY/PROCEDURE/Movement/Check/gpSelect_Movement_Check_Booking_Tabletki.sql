@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Check_Booking_Tabletki(
     IN inUnitId        Integer   , -- Подразделение
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer,
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, UnitId Integer,
                BookingId TVarChar, BookingStatus TVarChar, BookingStatusNew TVarChar,
                Bayer TVarChar, BayerPhone TVarChar, OrderId TVarChar,
                CancelReason TVarChar, CancelReasonID Integer
@@ -21,10 +21,28 @@ BEGIN
 
 
      RETURN QUERY
-      WITH tmpMovement AS (SELECT Movement.Id
+      WITH tmpMovementAll AS (SELECT Movement.Id
+                                   , Movement.InvNumber
+                                   , Movement.OperDate
+                                   , Movement.StatusId
+                                   , Object_Status.ObjectCode                           AS StatusCode
+                              FROM Movement 
+
+                                   INNER JOIN MovementLinkObject ON MovementLinkObject.MovementID = Movement.ID
+                                                                AND MovementLinkObject.DescId = zc_MovementLinkObject_CheckSourceKind()
+                                                                AND MovementLinkObject.ObjectId = zc_Enum_CheckSourceKind_Tabletki()
+
+                                   INNER JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+
+                              WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
+                                AND Movement.DescId = zc_Movement_Check())
+         , tmpMovement AS (SELECT Movement.Id
                                 , Movement.InvNumber
                                 , Movement.OperDate
-                                , Object_Status.ObjectCode                           AS StatusCode
+                                , Movement.StatusCode
+                                
+                                , MovementLinkObject_Unit.ObjectId                   AS UnitId
 
                                 , MovementString_BookingId.ValueData                 AS BookingId
                                 , MovementString_BookingStatus.ValueData             AS BookingStatus
@@ -45,11 +63,7 @@ BEGIN
                                 , CASE WHEN Movement.StatusId = zc_Enum_Status_Erased()
                                        THEN COALESCE(Object_CancelReason.ValueData, CancelReasonDefault.Name) END::TVarChar  AS CancelReason
 
-                           FROM MovementLinkObject
-
-                                INNER JOIN Movement ON Movement.ID = MovementLinkObject.MovementID
-
-                                INNER JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+                           FROM tmpMovementAll AS Movement 
 
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -86,9 +100,7 @@ BEGIN
                                                          
                                 LEFT JOIN (SELECT * FROM gpSelect_Object_CancelReason('3') AS CR ORDER BY CR.Code LIMIT 1) AS CancelReasonDefault ON 1 =1 
 
-                           WHERE MovementLinkObject.DescId = zc_MovementLinkObject_CheckSourceKind()
-                             AND MovementLinkObject.ObjectId = zc_Enum_CheckSourceKind_Tabletki()
-                             AND (MovementString_BookingStatus.ValueData = '0.0'
+                           WHERE (MovementString_BookingStatus.ValueData = '0.0'
                               OR MovementString_BookingStatus.ValueData = '2.0'
                                  AND COALESCE (MovementLinkObject_ConfirmedKind.ObjectId, 0) = zc_Enum_ConfirmedKind_Complete()
                               OR MovementString_BookingStatus.ValueData = '4.0'
@@ -121,6 +133,8 @@ BEGIN
           , Movement.InvNumber
           , Movement.OperDate
           , Movement.StatusCode
+          
+          , Movement.UnitId
 
           , Movement.BookingId
           , Movement.BookingStatus

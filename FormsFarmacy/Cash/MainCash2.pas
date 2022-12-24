@@ -6401,20 +6401,37 @@ begin
     exit;
   end;
 
-  with CheckCDS do
-  begin
-    First;
-    while not Eof do
+  try
+    RemainsCDS.DisableControls;
+    RemainsCDS.Filtered := false;
+    with CheckCDS do
     begin
-
-      if (Frac(FieldByName('Amount').AsCurrency) <> 0) then
+      First;
+      while not Eof do
       begin
-        ShowMessage('Деление медикамента для дисконтных программ запрещено!');
-        exit;
-      end;
 
-      Next;
+        if RemainsCDS.Locate('ID',
+           VarArrayOf([FieldByName('GoodsId').AsInteger,
+           FieldByName('PartionDateKindId').AsVariant,
+           FieldByName('NDSKindId').AsVariant,
+           FieldByName('DiscountExternalID').AsVariant,
+           FieldByName('DivisionPartiesID').AsVariant]), []) and
+           (RemainsCDS.FieldByName('GoodsDiscountName').AsString <> '') then
+        begin
+
+          if (Frac(FieldByName('Amount').AsCurrency) <> 0) then
+          begin
+            ShowMessage('Деление медикамента для дисконтных программ запрещено!');
+            exit;
+          end;
+        end;
+
+        Next;
+      end;
     end;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.EnableControls;
   end;
 
   with TDiscountDialogForm.Create(nil) do
@@ -6431,7 +6448,7 @@ begin
     finally
       Free;
     end;
-  //
+    //
 
   if FormParams.ParamByName('CheckId').Value <> 0 then
   begin
