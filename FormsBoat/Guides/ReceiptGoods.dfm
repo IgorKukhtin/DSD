@@ -3598,8 +3598,7 @@
       end
       item
         Name = 'ioValue_service'
-        Value = 0.000000000000000000
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

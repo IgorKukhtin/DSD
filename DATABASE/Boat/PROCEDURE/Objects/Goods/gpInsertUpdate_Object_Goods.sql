@@ -9,10 +9,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,T
                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                   , TVarChar);
 
-/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
                                                   , Boolean, TFloat, TFloat, TFloat, TFloat
                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                  , TVarChar);*/
+                                                  , TVarChar);
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
                                                   , Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
@@ -31,7 +31,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inComment                TVarChar,
     IN inIsArc                  Boolean,
     IN inFeet                   TFloat,
-    IN inMetres                 TFloat,   
+    IN inMetres                 TFloat,
     IN inAmountMin              TFloat,
     IN inAmountRefer            TFloat,
     IN inEKPrice                TFloat,
@@ -87,7 +87,7 @@ BEGIN
    IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), inCode, vbUserId); END IF;
 
    -- !!! проверка уникальности <ArticleNr>
-   IF inArticle <> '' 
+   IF inArticle <> ''
    THEN
        PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Article(), inArticle, vbUserId);
    END IF;
