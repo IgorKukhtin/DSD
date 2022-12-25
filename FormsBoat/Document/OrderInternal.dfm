@@ -2346,8 +2346,8 @@ object OrderInternalForm: TOrderInternalForm
       item
       end>
     GetStoredProc = spGet
-    Left = 336
-    Top = 57
+    Left = 200
+    Top = 201
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderInternal'
@@ -3126,7 +3126,7 @@ object OrderInternalForm: TOrderInternalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 432
-    Top = 56
+    Left = 400
+    Top = 48
   end
 end
