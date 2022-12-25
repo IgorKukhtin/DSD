@@ -26,7 +26,6 @@ object OrderInternalForm: TOrderInternalForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -1
     object edInvNumber: TcxTextEdit
       Left = 14
       Top = 23
@@ -3110,13 +3109,6 @@ object OrderInternalForm: TOrderInternalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
