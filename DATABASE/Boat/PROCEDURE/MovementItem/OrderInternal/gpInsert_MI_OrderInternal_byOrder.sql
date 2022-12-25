@@ -120,7 +120,8 @@ BEGIN
             , MILO_ColorPattern.ObjectId AS ColorPatternId
             , MILO_ProdColorPattern.ObjectId AS ProdColorPatternId
             
-            , MovementItem.ObjectId AS ObjectId_master
+            --, MovementItem.ObjectId AS ObjectId_master
+            , COALESCE (MovementItem.ObjectId, MILinkObject_Goods.ObjectId) AS ObjectId_master
               -- Кол-во - попало в Резерв
             , SUM (MI_Detail.Amount) AS Amount
 
@@ -167,7 +168,8 @@ BEGIN
       GROUP BY MI_Detail.MovementId
              , MI_Detail.ObjectId
              , MI_Detail.PartionId
-             , MovementItem.ObjectId
+             --, MovementItem.ObjectId
+             , COALESCE (MovementItem.ObjectId, MILinkObject_Goods.ObjectId)
              , MILO_ReceiptLevel.ObjectId
              , MILO_ColorPattern.ObjectId
              , MILO_ProdColorPattern.ObjectId
@@ -200,7 +202,6 @@ BEGIN
                             AND tmp.MovementId_order = _tmpMI_Master.MovementId_order
     ;   
 
-    
     --записанные строки мастера
         CREATE TEMP TABLE _tmpMI_New (Id Integer, ObjectId Integer, Amount TFloat, MovementId_order Integer) ON COMMIT DROP;
     INSERT INTO _tmpMI_New (Id, ObjectId, Amount, MovementId_order)
