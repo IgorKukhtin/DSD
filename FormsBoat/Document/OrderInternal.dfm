@@ -3108,6 +3108,7 @@ object OrderInternalForm: TOrderInternalForm
         Component = GuidesOrderClient
         ComponentItem = 'Key'
         DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -3116,6 +3117,7 @@ object OrderInternalForm: TOrderInternalForm
         Component = GuidesOrderClient
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -3124,6 +3126,7 @@ object OrderInternalForm: TOrderInternalForm
         Component = GuidesProduct
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     Left = 432
