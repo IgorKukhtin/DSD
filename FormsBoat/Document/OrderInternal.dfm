@@ -176,7 +176,7 @@ object OrderInternalForm: TOrderInternalForm
       Caption = 'Boat'
     end
     object edProduct: TcxButtonEdit
-      Left = 583
+      Left = 580
       Top = 63
       Properties.Buttons = <
         item
@@ -185,7 +185,7 @@ object OrderInternalForm: TOrderInternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 18
-      Width = 181
+      Width = 494
     end
     object edOrderClient: TcxButtonEdit
       Left = 273
@@ -835,6 +835,8 @@ object OrderInternalForm: TOrderInternalForm
       item
         Name = 'inMovementId_OrderClient'
         Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2546,8 +2548,8 @@ object OrderInternalForm: TOrderInternalForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 800
-    Top = 40
+    Left = 864
+    Top = 32
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetErased'
@@ -3129,7 +3131,7 @@ object OrderInternalForm: TOrderInternalForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 48
+    Left = 360
+    Top = 56
   end
 end

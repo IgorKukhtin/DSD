@@ -419,10 +419,10 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalReserveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalReserveForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalChoiceForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalForm');
   {

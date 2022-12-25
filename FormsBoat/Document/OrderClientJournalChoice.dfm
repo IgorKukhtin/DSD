@@ -861,6 +861,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -869,6 +870,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'InvNumber'
           DataType = ftString
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -877,6 +879,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'InvNumber_Full'
           DataType = ftString
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -885,6 +888,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'InvNumber_Full2'
           DataType = ftString
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -893,6 +897,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -900,6 +905,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'FromId'
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -908,6 +914,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'FromName'
           DataType = ftString
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -916,6 +923,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Comment'
           DataType = ftString
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -924,6 +932,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Comment_Invoice'
           DataType = ftString
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -932,6 +941,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'TotalSumm'
           DataType = ftFloat
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -940,6 +950,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'InvNumber_Invoice'
           DataType = ftString
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -947,6 +958,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MovementId_Invoice'
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -955,6 +967,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'BarCode'
           DataType = ftString
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -962,6 +975,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ToId'
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -970,6 +984,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'ToName'
           DataType = ftString
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -978,6 +993,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'ProductName_Full'
           DataType = ftString
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
