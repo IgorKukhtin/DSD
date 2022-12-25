@@ -880,6 +880,14 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'InvNumber_Full2'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber_Full2'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'OperDate'
           Value = Null
           Component = ClientDataSet
@@ -961,6 +969,14 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ToName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName_Full'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ProductName_Full'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

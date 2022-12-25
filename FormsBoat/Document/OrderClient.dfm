@@ -26,6 +26,8 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -24
+    ExplicitTop = 5
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23

@@ -188,6 +188,12 @@ type
     actChoiceFormOrderClient: TOpenChoiceForm;
     macInsert_MI_byorderclient: TMultiAction;
     UnitName_ch3: TcxGridDBColumn;
+    cxLabel15: TcxLabel;
+    cxLabel6: TcxLabel;
+    edProduct: TcxButtonEdit;
+    GuidesProduct: TdsdGuides;
+    edOrderClient: TcxButtonEdit;
+    GuidesOrderClient: TdsdGuides;
 
   private
   public

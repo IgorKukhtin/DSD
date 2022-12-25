@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient(
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumberPartner TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumber_Full2 TVarChar
+             , InvNumberPartner TVarChar
              , BarCode TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -23,7 +24,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumbe
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
+             , ProductId Integer, ProductName TVarChar, ProductName_Full TVarChar
+             , BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -94,7 +96,8 @@ BEGIN
 
         SELECT Movement_OrderClient.Id
              , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) AS InvNumber
-             , ('№ ' || Movement_OrderClient.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderClient.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_Full
+             , ('№ ' || Movement_OrderClient.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderClient.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_Full 
+             , ('№ ' || Movement_OrderClient.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderClient.OperDate) :: TVarChar || ' / ' ||Object_From.ValueData) :: TVarChar  AS InvNumber_Full2
              , Movement_OrderClient.InvNumberPartner
              , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_OrderClient.Id) AS BarCode
              , Movement_OrderClient.OperDate
@@ -123,6 +126,7 @@ BEGIN
              , Object_PaidKind.ValueData                  AS PaidKindName
              , Object_Product.Id                          AS ProductId
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
+             , (zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)|| ' / ' || zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased)) ::TVarChar AS ProductName_Full
              , Object_Brand.Id                            AS BrandId
              , Object_Brand.ValueData                     AS BrandName
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN
@@ -227,6 +231,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.12.22         *
  23.02.21         *
  15.02.21         *
 */
@@ -239,4 +244,4 @@ $BODY$
 4) итого сумма скидки
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '01.01.2021', inEndDate:= '31.12.2021', inClientId:=0 , inIsErased := FALSE, inSession:= zfCalc_UserAdmin())
+--  SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '01.01.2021', inEndDate:= '31.12.2021', inClientId:=0 , inIsErased := true, inSession:= zfCalc_UserAdmin())
