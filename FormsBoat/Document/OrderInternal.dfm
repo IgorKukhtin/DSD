@@ -26,6 +26,7 @@ object OrderInternalForm: TOrderInternalForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -1
     object edInvNumber: TcxTextEdit
       Left = 14
       Top = 23
@@ -188,7 +189,7 @@ object OrderInternalForm: TOrderInternalForm
       Width = 181
     end
     object edOrderClient: TcxButtonEdit
-      Left = 276
+      Left = 273
       Top = 63
       Properties.Buttons = <
         item
@@ -3108,6 +3109,14 @@ object OrderInternalForm: TOrderInternalForm
         Component = GuidesOrderClient
         ComponentItem = 'Key'
         DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -3116,6 +3125,7 @@ object OrderInternalForm: TOrderInternalForm
         Component = GuidesOrderClient
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -3124,6 +3134,7 @@ object OrderInternalForm: TOrderInternalForm
         Component = GuidesProduct
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     Left = 400
