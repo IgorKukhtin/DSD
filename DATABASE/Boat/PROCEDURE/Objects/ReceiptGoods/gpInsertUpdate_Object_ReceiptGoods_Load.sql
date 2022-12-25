@@ -791,8 +791,8 @@ BEGIN
                                                                                  , inReceiptLevelId_top := 0                    ::Integer
                                                                                  , inReceiptLevelId     := vbReceiptLevelId     ::Integer
                                                                                  , inGoodsChildId       := vbGoods_GoodsChildId ::Integer
-                                                                                 , ioValue              := vbAmount             ::TFloat
-                                                                                 , ioValue_service      := 0                    ::TFloat
+                                                                                 , ioValue              := vbAmount             ::TVarChar
+                                                                                 , ioValue_service      :='0'                   ::TVarChar
                                                                                  , ioForCount           := vbForCount
                                                                                  , inIsEnabled          := TRUE                 ::Boolean
                                                                                  , inSession            := inSession            ::TVarChar
