@@ -187,6 +187,7 @@ type
     actChoiceFormOrderClientItem: TOpenChoiceForm;
     actChoiceFormOrderClient: TOpenChoiceForm;
     macInsert_MI_byorderclient: TMultiAction;
+    UnitName_ch3: TcxGridDBColumn;
 
   private
   public

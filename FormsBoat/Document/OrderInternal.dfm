@@ -680,6 +680,31 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentVert = vaCenter
               Width = 286
             end
+            object UnitName_ch3: TcxGridDBColumn
+              Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
+              DataBinding.FieldName = 'UnitName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 108
+            end
+            object ReceiptLevelName_ch3: TcxGridDBColumn
+              Caption = 'Level'
+              DataBinding.FieldName = 'ReceiptLevelName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 54
+            end
+            object ProdColorPatternName_ch3: TcxGridDBColumn
+              Caption = #1069#1083#1077#1084#1077#1085#1090
+              DataBinding.FieldName = 'ProdColorPatternName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderGlyphAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 58
+            end
             object Amount_ch3: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086
               DataBinding.FieldName = 'Amount'
@@ -755,7 +780,7 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     Left = 862
-    Top = 87
+    Top = 119
   end
   object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_OrderInternal'

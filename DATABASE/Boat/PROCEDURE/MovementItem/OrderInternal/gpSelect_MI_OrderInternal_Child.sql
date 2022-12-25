@@ -12,6 +12,9 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , Article TVarChar, MeasureName TVarChar
              , Amount TFloat, AmountReserv TFloat, AmountSend TFloat 
              , UnitId Integer, UnitName TVarChar
+             , ReceiptLevelId Integer, ReceiptLevelName TVarChar
+             , ColorPatternId Integer, ColorPatternName TVarChar
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , isErased Boolean
 
               )
@@ -43,7 +46,13 @@ BEGIN
              , MIFloat_AmountReserv.ValueData ::TFloat AS AmountReserv
              , MIFloat_AmountSend.ValueData   ::TFloat AS AmountSend
              , Object_Unit.Id                       AS UnitId
-             , Object_Unit.ValueData                AS UnitName             
+             , Object_Unit.ValueData                AS UnitName
+             , Object_ReceiptLevel.Id               AS ReceiptLevelId
+             , Object_ReceiptLevel.ValueData        AS ReceiptLevelName
+             , Object_ColorPattern.Id               AS ColorPatternId
+             , Object_ColorPattern.ValueData        AS ColorPatternName
+             , Object_ProdColorPattern.Id           AS ProdColorPatternId
+             , Object_ProdColorPattern.ValueData    AS ProdColorPatternName
              , MovementItem.isErased
 
         FROM tmpIsErased
@@ -71,6 +80,21 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILO_ReceiptLevel
+                                              ON MILO_ReceiptLevel.MovementItemId = MovementItem.Id
+                                             AND MILO_ReceiptLevel.DescId = zc_MILinkObject_ReceiptLevel()
+             LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = MILO_ReceiptLevel.ObjectId
+ 
+             LEFT JOIN MovementItemLinkObject AS MILO_ColorPattern
+                                              ON MILO_ColorPattern.MovementItemId = MovementItem.Id
+                                             AND MILO_ColorPattern.DescId = zc_MILinkObject_ColorPattern()
+             LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = MILO_ColorPattern.ObjectId
+ 
+             LEFT JOIN MovementItemLinkObject AS MILO_ProdColorPattern
+                                              ON MILO_ProdColorPattern.MovementItemId = MovementItem.Id
+                                             AND MILO_ProdColorPattern.DescId = zc_MILinkObject_ProdColorPattern()
+             LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = MILO_ProdColorPattern.ObjectId
 
     ;
 
