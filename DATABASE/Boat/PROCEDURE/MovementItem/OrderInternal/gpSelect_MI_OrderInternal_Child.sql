@@ -1,8 +1,8 @@
--- Function: gpSelect_MI_Send_Child()
+-- Function: gpSelect_MI_OrderInternal_Child()
 
-DROP FUNCTION IF EXISTS gpSelect_MI_Send_Child (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_OrderInternal_Child (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MI_Send_Child(
+CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternal_Child(
     IN inMovementId       Integer      , -- ключ Документа
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
@@ -42,6 +42,8 @@ BEGIN
              , MovementItem.Amount            ::TFloat AS Amount
              , MIFloat_AmountReserv.ValueData ::TFloat AS AmountReserv
              , MIFloat_AmountSend.ValueData   ::TFloat AS AmountSend
+             , Object_Unit.Id                       AS UnitId
+             , Object_Unit.ValueData                AS UnitName             
              , MovementItem.isErased
 
         FROM tmpIsErased
@@ -83,4 +85,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpSelect_MI_Send_Child (inMovementId:= 224, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * from gpSelect_MI_OrderInternal_Child (inMovementId:= 224, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

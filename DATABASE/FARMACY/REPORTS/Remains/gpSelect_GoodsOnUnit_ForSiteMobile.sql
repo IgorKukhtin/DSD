@@ -108,7 +108,6 @@ BEGIN
         DELETE FROM _tmpUnitMinPrice_List;
     END IF;
 
-
     -- парсим подразделения
     vbIndex := 1;
     WHILE SPLIT_PART (inUnitId_list, ',', vbIndex) <> '' LOOP
@@ -146,6 +145,8 @@ BEGIN
           ;
 
     END IF;
+    
+    ANALYSE _tmpUnitMinPrice_List;
 
     -- парсим товары
     IF COALESCE(inGoodsId_list, '') <> ''
@@ -161,8 +162,7 @@ BEGIN
     END IF;
 
     -- !!!Оптимизация!!!
-    ANALYZE _tmpUnitMinPrice_List;
-
+    ANALYZE _tmpGoodsMinPrice_List;
 
     -- если нет товаров
     IF NOT EXISTS (SELECT 1 FROM _tmpGoodsMinPrice_List WHERE GoodsId <> 0)
@@ -209,11 +209,10 @@ BEGIN
                                         ON ObjectBoolean_Goods_Published.ObjectId = Container.ObjectId
                                        AND ObjectBoolean_Goods_Published.DescId = zc_ObjectBoolean_Goods_Published()
           ;
+
+        -- !!!Оптимизация!!!
+        ANALYZE _tmpGoodsMinPrice_List;
     END IF;
-
-
-    -- !!!Оптимизация!!!
-    ANALYZE _tmpGoodsMinPrice_List;
 
     -- еще оптимизируем - _tmpContainerCount
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainerCount'))
@@ -295,6 +294,28 @@ BEGIN
     -- !!!Оптимизация!!!
     ANALYZE _tmpMovementCheck;
 
+    -- еще оптимизируем - _tmpMinPrice_List
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('MovementItemChildId'))
+    THEN
+        -- таблица
+        CREATE TEMP TABLE MovementItemChildId (Id        Integer,
+                                             Amount            TFloat
+                                             ) ON COMMIT DROP;
+    ELSE
+        DELETE FROM MovementItemChildId;
+    END IF;
+	
+    INSERT INTO MovementItemChildId
+                SELECT MovementItemChild.Id
+                     , MovementItemChild.Amount
+                FROM MovementItem AS MovementItemChild
+                WHERE MovementItemChild.MovementId IN (SELECT Movement.Id FROM _tmpMovementCheck AS Movement)
+                  AND MovementItemChild.DescId     = zc_MI_Child()
+                  AND MovementItemChild.Amount     > 0
+                  AND MovementItemChild.isErased   = FALSE;
+          
+    ANALYZE MovementItemChildId;
+
     -- еще оптимизируем - _tmpContainerCountPD
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainerCountPD'))
     THEN
@@ -307,16 +328,7 @@ BEGIN
 
     INSERT INTO _tmpContainerCountPD (UnitId, GoodsId, PartionDateKindId, Amount, Remains, PriceWithVAT, PartionDateDiscount)
       WITH           -- Резервы по срокам
-             MovementItemChildId AS (SELECT MovementItemChild.Id
-                                          , MovementItemChild.Amount
-                                     FROM _tmpMovementCheck AS Movement
-
-                                          INNER JOIN MovementItem AS MovementItemChild
-                                                                  ON MovementItemChild.MovementId = Movement.Id
-                                                                 AND MovementItemChild.DescId     = zc_MI_Child()
-                                                                 AND MovementItemChild.Amount     > 0
-                                                                 AND MovementItemChild.isErased   = FALSE)
-          , tmpMovementItemFloat AS (SELECT MIFloat_ContainerId.MovementItemId
+            tmpMovementItemFloat AS (SELECT MIFloat_ContainerId.MovementItemId
 									      , MIFloat_ContainerId.ValueData
                                  FROM MovementItemFloat AS MIFloat_ContainerId
                                  WHERE MIFloat_ContainerId.MovementItemId IN (SELECT MovementItemChildId.Id FROM MovementItemChildId) 
@@ -611,7 +623,7 @@ BEGIN
 
     -- !!!Оптимизация!!!
     ANALYZE _tmpList;
-	
+
     -- еще оптимизируем - _tmpMinPrice_List
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('Price_Unit_all'))
     THEN
@@ -699,27 +711,42 @@ BEGIN
 
     ANALYZE Price_Unit_all;
 
+    -- еще оптимизируем - _tmpMinPrice_List
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMI_DeferredAll'))
+    THEN
+        -- таблица
+        CREATE TEMP TABLE tmpMI_DeferredAll (MovementId        Integer,
+                                             GoodsId           Integer,
+                                             Amount            TFloat
+                                             ) ON COMMIT DROP;
+    ELSE
+        DELETE FROM tmpMI_DeferredAll;
+    END IF;
+	
+    INSERT INTO tmpMI_DeferredAll
+                SELECT MovementItem.MovementId
+                     , MovementItem.ObjectId              AS GoodsId
+                     , MovementItem.Amount               AS Amount
+                FROM MovementItem  
+                WHERE MovementItem.MovementId IN (SELECT Movement.Id FROM _tmpMovementCheck AS Movement)
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE;
+          
+    ANALYZE tmpMI_DeferredAll;
+
+
     -- Результат
     RETURN QUERY
        WITH tmpMI_Deferred AS
                (SELECT Movement.UnitId
-                     , MovementItem.ObjectId              AS GoodsId
+                     , MovementItem.GoodsId
                      , SUM (MovementItem.Amount)          AS Amount
-                FROM _tmpMovementCheck AS Movement
+                FROM tmpMI_DeferredAll AS MovementItem
+                
+                     INNER JOIN _tmpMovementCheck AS Movement ON Movement.ID = MovementItem.MovementId
 
-                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                            AND MovementItem.DescId     = zc_MI_Master()
-                                            AND MovementItem.isErased   = FALSE
                 GROUP BY Movement.UnitId
-                       , MovementItem.ObjectId
-               )
-          , Price_Unit AS
-               (SELECT Price_Unit_all.UnitId
-                     , Price_Unit_all.GoodsId
-                     , Price_Unit_all.Price
-                     , Price_Unit_all.PriceSale
-                     , Price_Unit_all.isTop
-                FROM Price_Unit_all
+                       , MovementItem.GoodsId
                )
           , tmpPDGoodsRemains AS
                (SELECT PDGoodsRemains.GoodsId, PDGoodsRemains.UnitId, SUM(PDGoodsRemains.Remains) AS Amount
@@ -782,7 +809,6 @@ BEGIN
                                 AND Price_Goods.ChildObjectId NOT IN (SELECT Promo.GoodsId
                                                                       FROM gpSelect_MovementItem_Promo(inMovementId := 20813880 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') as Promo
                                                                       )
-                                AND FALSE
                               )
        -- Отложенные технические переучеты
        , tmpMovementTP AS (SELECT MovementItemMaster.ObjectId      AS GoodsId
@@ -1133,7 +1159,8 @@ BEGIN
              LEFT OUTER JOIN tmpMovementTP AS Reserve_TP ON Reserve_TP.GoodsId = tmpList.GoodsId_retail
                                                         AND Reserve_TP.UnitId = tmpList.UnitId
 
-             LEFT JOIN Price_Unit     ON Price_Unit.GoodsId     = tmpList.GoodsId
+             LEFT JOIN Price_Unit_all AS Price_Unit     
+                                      ON Price_Unit.GoodsId     = tmpList.GoodsId
                                      AND Price_Unit.UnitId      = tmpList.UnitId
                                      
              LEFT JOIN tmpPrice_Site  ON tmpPrice_Site.GoodsId     = tmpList.GoodsId

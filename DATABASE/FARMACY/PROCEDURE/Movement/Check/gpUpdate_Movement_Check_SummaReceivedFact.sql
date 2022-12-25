@@ -43,12 +43,10 @@ BEGIN
   SELECT *
   FROM json_populate_recordset(null::tblRetrievedAccountingJSON, replace(replace(replace(inJSON, '&quot;', '\"'), CHR(9),''), CHR(10),'')::json);
     
-  raise notice 'Value 05: %', (select Count(*) from tblRetrievedAccountingJSON);      
-  
-  
-  
+  ANALYSE tblRetrievedAccountingJSON;
 
-    
+  --raise notice 'Value 05: %', (select Count(*) from tblRetrievedAccountingJSON);      
+      
   IF COALESCE(inSummaReceivedFact, 0) > COALESCE((SELECT SUM(tblRetrievedAccountingJSON.TotalSumm) FROM  tblRetrievedAccountingJSON), 0)
   THEN
     RAISE EXCEPTION 'Сумма получено по факту <%> должна быть меньше или равна сумме чекаов <%>.', 
@@ -151,7 +149,6 @@ LANGUAGE PLPGSQL VOLATILE;
  29.07.21                                                                    *
 */
 
--- тест 
-select * from gpUpdate_Movement_Check_SummaReceivedFact(inSummaReceivedFact := 100 , inJson := '[{"id":24363804,"isretrievedaccounting":"False","totalsumm":306.2,"summareceivedfact":0},{"id":24254544,"isretrievedaccounting":"False","totalsumm":396,"summareceivedfact":0}]' ,  inSession := '3');
+-- тест select * from gpUpdate_Movement_Check_SummaReceivedFact(inSummaReceivedFact := 100 , inJson := '[{"id":24363804,"isretrievedaccounting":"False","totalsumm":306.2,"summareceivedfact":0},{"id":24254544,"isretrievedaccounting":"False","totalsumm":396,"summareceivedfact":0}]' ,  inSession := '3');
 
 

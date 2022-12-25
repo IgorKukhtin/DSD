@@ -1,12 +1,17 @@
--- Function: lpInsertUpdate_MI_Send_Child()
+-- Function: lpInsertUpdate_MI_OrderInternal_Child()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_Send_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternal_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternal_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Send_Child(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderInternal_Child(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId               Integer   , -- 
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
-    IN inObjectId               Integer   , -- Комплектующие
+    IN inObjectId               Integer   , -- Комплектующие 
+    IN inReceiptLevelId         Integer   , --Этап сборки
+    IN inColorPatternId         Integer   , -- Шаблон Boat Structure 
+    IN inProdColorPatternId     Integer   , -- Шаблон Boat Structure  
+    IN inUnitId                 Integer   , -- Место учета
     IN inAmount                 TFloat    , -- Количество (шаблон сборки)
     IN inAmountReserv           TFloat    , -- Количество резерв
     IN inAmountSend             TFloat    , -- Кол-во приход от поставщ./перемещение
@@ -29,8 +34,17 @@ BEGIN
      */
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, Null, inMovementId, inAmount, inParentId, inUserId);
-
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, Null, inMovementId, inAmount, inParentId, inUserId); 
+     
+     -- сохранили связь с <Этап сборки>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptLevel(), ioId, inReceiptLevelId);
+     -- сохранили связь с <Шаблон Boat Structure>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ColorPattern(), ioId, inColorPatternId);
+     -- сохранили связь с <Boat Structure>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ProdColorPattern(), ioId, inProdColorPatternId);
+     -- сохранили связь с <Место учета>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+     
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReserv(), ioId, inAmountReserv);
      -- сохранили свойство <>

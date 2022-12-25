@@ -44,6 +44,8 @@ BEGIN
          -- теперь следуюющий
          vbIndex := vbIndex + 1;
      END LOOP;
+     
+     ANALYSE _tmpUnitSMS_List;
 
      -- Результат
      RETURN QUERY

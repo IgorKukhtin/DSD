@@ -252,6 +252,8 @@ BEGIN
                     THEN MovementItem.DivisionPartiesId
                     ELSE tmpContainerOrd.DivisionPartiesId END  <> MovementItem.DivisionPartiesId)
          ;
+         
+    ANALYSE tmpMovementItem; 
 
      -- Правим НДС если надо
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NDSKind(), tmpMovementItem.Id, tmpMovementItem.NDSKindId)
