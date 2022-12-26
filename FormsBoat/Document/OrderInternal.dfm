@@ -994,6 +994,14 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSticker'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1111,11 +1119,8 @@ object OrderInternalForm: TOrderInternalForm
       Category = 0
     end
     object bbPrintSticker: TdxBarButton
-      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Action = actPrint
       Category = 0
-      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      Visible = ivAlways
-      ImageIndex = 18
     end
     object bbPrintStickerTermo: TdxBarButton
       Caption = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
@@ -1329,10 +1334,10 @@ object OrderInternalForm: TOrderInternalForm
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrintOld
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrintOld
+          StoredProc = spSelectPrint
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -1346,6 +1351,9 @@ object OrderInternalForm: TOrderInternalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'InvNumber_OrderClient;UnitName;GoodsName;ReceiptLevelName_ch;Goo' +
+            'dsName_ch'
         end>
       Params = <
         item
@@ -1373,8 +1381,8 @@ object OrderInternalForm: TOrderInternalForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_OrderInternal'
+      ReportNameParam.Value = 'PrintMovement_OrderInternal'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -3133,5 +3141,29 @@ object OrderInternalForm: TOrderInternalForm
       end>
     Left = 360
     Top = 56
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternal_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 336
+    Top = 264
   end
 end
