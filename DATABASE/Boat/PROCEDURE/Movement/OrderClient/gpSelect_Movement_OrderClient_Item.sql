@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_OrderClientChoice()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClient_Item (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClient_Item (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient_Item(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
-    IN inClientId      Integer  ,
+    IN inClientId      Integer  , 
+    IN inChildOnly     Boolean  ,  -- показать только  zc_MI_Child
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -138,7 +140,8 @@ BEGIN
       
               FROM Movement_OrderClient AS Movement
                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                          AND MovementItem.DescId     IN (zc_MI_Child(), zc_MI_Detail())
+                                          AND ((MovementItem.DescId IN (zc_MI_Child(), zc_MI_Detail()) AND inChildOnly = FALSE)
+                                            OR (MovementItem.DescId = zc_MI_Child() AND inChildOnly = TRUE))
                                           AND (MovementItem.isErased  = FALSE OR inIsErased = TRUE)
                      -- !!! временно для отладки
                    --LEFT JOIN MovementString AS MS ON MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_Comment()
@@ -370,4 +373,4 @@ $BODY$
 
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderClient_Item (inStartDate:= '01.01.2022', inEndDate:= '31.12.2022', inClientId:=0 , inIsErased := FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_OrderClient_Item (inStartDate:= '01.01.2022', inEndDate:= '31.12.2022', inClientId:=0 , inChildOnly:=FALSE, inIsErased := FALSE, inSession:= zfCalc_UserAdmin())

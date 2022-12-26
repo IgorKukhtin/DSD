@@ -268,7 +268,6 @@ uses
   DocTagEdit in '..\..\FormsBoat\Guides\DocTagEdit.pas' {DocTagEditForm: TParentForm},
   ProductDocumentPhotoEdit in '..\..\FormsBoat\Guides\ProductDocumentPhotoEdit.pas' {ProductDocumentPhotoEditForm: TParentForm},
   IncomeCostJournalByInvoice in '..\..\FormsBoat\Document\IncomeCostJournalByInvoice.pas' {IncomeCostJournalByInvoiceForm: TParentForm},
-  OrderClientJournalReserve in '..\..\FormsBoat\Document\OrderClientJournalReserve.pas' {OrderClientJournalReserveForm: TParentForm},
   SendJournal in '..\..\FormsBoat\Document\SendJournal.pas' {SendJournalForm: TParentForm},
   Send in '..\..\FormsBoat\Document\Send.pas' {SendForm: TParentForm},
   LossJournal in '..\..\FormsBoat\Document\LossJournal.pas' {LossJournalForm: TParentForm},
@@ -334,9 +333,9 @@ uses
   ProdOptions in '..\..\FormsBoat\Guides\ProdOptions.pas' {ProdOptionsForm: TParentForm},
   GoodsGroupChoice in '..\..\FormsBoat\Guides\GoodsGroupChoice.pas' {GoodsGroupChoiceForm: TParentForm},
   MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm},
-  OrderClientJournalChoiceItem in '..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas' {OrderClientJournalChoiceItemForm: TParentForm},
   OrderInternalJournal in '..\..\FormsBoat\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
-  OrderInternal in '..\..\FormsBoat\Document\OrderInternal.pas' {OrderInternalForm: TParentForm};
+  OrderInternal in '..\..\FormsBoat\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
+  OrderClientJournalChoiceItem in '..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas' {OrderClientJournalChoiceItemForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

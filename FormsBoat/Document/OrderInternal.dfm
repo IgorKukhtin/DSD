@@ -1075,7 +1075,7 @@ object OrderInternalForm: TOrderInternalForm
       Visible = ivAlways
     end
     object bbAddMask: TdxBarButton
-      Action = actAddMask
+      Action = macInsert_MI_byorderclient
       Category = 0
     end
     object bbInsertRecord: TdxBarButton
@@ -1115,7 +1115,7 @@ object OrderInternalForm: TOrderInternalForm
       Category = 0
     end
     object bbInsertRecordGoods: TdxBarButton
-      Action = macInsert_MI_byorderclient
+      Action = InsertRecordGoods
       Category = 0
     end
     object bbPrintSticker: TdxBarButton
@@ -1691,7 +1691,7 @@ object OrderInternalForm: TOrderInternalForm
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       View = cxGridDBTableView
-      Action = macInsert_MI_byorderclient
+      Action = actChoiceFormOrderClientItem
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
@@ -1915,8 +1915,8 @@ object OrderInternalForm: TOrderInternalForm
       PostDataSetBeforeExecute = False
       Caption = 'OrderClientJournalChoiceForm'
       ImageIndex = 47
-      FormName = 'TOrderClientJournalChoiceItemForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2110,19 +2110,26 @@ object OrderInternalForm: TOrderInternalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Amount_basis'
+          Name = 'ProductName'
           Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProductName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount_basis'
+          Value = 'Amount_basis'
           Component = MasterCDS
           ComponentItem = 'Amount'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ProductName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ProductName'
-          DataType = ftString
+          Name = 'inChildOnly'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -2142,7 +2149,7 @@ object OrderInternalForm: TOrderInternalForm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ImageIndex = 0
+      ImageIndex = 54
     end
   end
   object MasterDS: TDataSource
@@ -2199,8 +2206,8 @@ object OrderInternalForm: TOrderInternalForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 592
-    Top = 88
+    Left = 576
+    Top = 208
     object N1: TMenuItem
       Action = actRefresh
     end
