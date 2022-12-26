@@ -194,6 +194,7 @@ type
     GuidesProduct: TdsdGuides;
     edOrderClient: TcxButtonEdit;
     GuidesOrderClient: TdsdGuides;
+    spSelectPrint: TdsdStoredProc;
 
   private
   public
