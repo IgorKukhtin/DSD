@@ -31,6 +31,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , Text_Info1 TBlob
              , Text_Info2 TBlob
              , Text_Info3 TBlob
+
+             , BarCode_OrderClient TVarChar
               )
 AS
 $BODY$
@@ -103,6 +105,8 @@ BEGIN
             , tmp_OrderInfo.Text_Info1 :: TBlob AS Text_Info1
             , tmp_OrderInfo.Text_Info2 :: TBlob AS Text_Info2
             , tmp_OrderInfo.Text_Info3 :: TBlob AS Text_Info3
+
+            , zfFormat_BarCode (zc_BarCodePref_Movement(), tmpProduct.MovementId_OrderClient) AS BarCode_OrderClient
 
        FROM tmpProduct
             LEFT JOIN tmp_OrderInfo ON 1=1
