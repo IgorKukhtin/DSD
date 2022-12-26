@@ -425,6 +425,14 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -644,6 +652,9 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'InvNumber_OrderClient;UnitName;GoodsName;ReceiptLevelName_ch;Goo' +
+            'dsName_ch'
         end>
       Params = <
         item
@@ -653,8 +664,8 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Send'
-      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportName = 'PrintMovement_OrderInternal'
+      ReportNameParam.Value = 'PrintMovement_OrderInternal'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
