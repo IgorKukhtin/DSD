@@ -69,7 +69,8 @@ BEGIN
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                                           ON MovementLinkObject_CashRegister.MovementId = Movement.Id
                                                          AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
-                        WHERE COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0
+                        WHERE COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 10413041
+                          AND COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0 
                            OR COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0 
                         )
 

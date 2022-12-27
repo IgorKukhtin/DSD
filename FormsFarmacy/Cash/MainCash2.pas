@@ -2194,6 +2194,7 @@ begin
         CheckCDS.DisableControls;
         CheckCDS.Filtered := false;
         nRecNo := CheckCDS.RecNo;
+        CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
         try
 
           CheckCDS.First;
@@ -2224,6 +2225,7 @@ begin
             CheckCDS.Next;
           end;
         finally
+          CheckCDS.IndexFieldNames := '';
           CheckCDS.RecNo := nRecNo;
           CheckCDS.Filtered := True;
           CheckCDS.EnableControls;
@@ -3281,6 +3283,7 @@ begin
   CheckCDS.DisableControls;
   CheckCDS.Filtered := false;
   nRecNo := CheckCDS.RecNo;
+  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
   try
 
     CheckCDS.First;
@@ -3311,6 +3314,7 @@ begin
       CheckCDS.Next;
     end;
   finally
+    CheckCDS.IndexFieldNames := '';
     CheckCDS.RecNo := nRecNo;
     CheckCDS.Filtered := True;
     CheckCDS.EnableControls;
@@ -5045,6 +5049,7 @@ begin
   CheckCDS.DisableControls;
   CheckCDS.Filtered := false;
   nRecNo := CheckCDS.RecNo;
+  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
   try
 
     CheckCDS.First;
@@ -5214,6 +5219,7 @@ begin
       CheckCDS.Next;
     end;
   finally
+    CheckCDS.IndexFieldNames := '';
     CheckCDS.RecNo := nRecNo;
     CheckCDS.Filtered := True;
     CheckCDS.EnableControls;
@@ -5256,6 +5262,7 @@ begin
   nRecNo := CheckCDS.RecNo;
   CheckCDS.DisableControls;
   CheckCDS.Filtered := false;
+  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
   nSumAll := 0;
   try
 
@@ -5413,6 +5420,7 @@ begin
       CheckCDS.Next;
     end;
   finally
+    CheckCDS.IndexFieldNames := '';
     CheckCDS.Filtered := True;
     CheckCDS.RecNo := nRecNo;
     CheckCDS.EnableControls;
@@ -5431,6 +5439,7 @@ begin
   nRemainsRecNo := RemainsCDS.RecNo;
   CheckCDS.DisableControls;
   CheckCDS.Filtered := false;
+  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
   RemainsCDS.DisableControls;
   RemainsCDS.Filtered := false;
   nSumAll := 0;
@@ -5594,6 +5603,7 @@ begin
       CheckCDS.Next;
     end;
   finally
+    CheckCDS.IndexFieldNames := '';
     CheckCDS.Filtered := True;
     CheckCDS.RecNo := nRecNo;
     CheckCDS.EnableControls;
@@ -6670,6 +6680,7 @@ begin
   CheckCDS.DisableControls;
   CheckCDS.Filtered := false;
   nRecNo := CheckCDS.RecNo;
+  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
   try
 
     CheckCDS.First;
@@ -6808,6 +6819,7 @@ begin
       CheckCDS.Next;
     end;
   finally
+    CheckCDS.IndexFieldNames := '';
     CheckCDS.RecNo := nRecNo;
     CheckCDS.Filtered := True;
     CheckCDS.EnableControls;
@@ -12050,6 +12062,7 @@ begin
   DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
   RemainsCDS.DisableControls;
   RemainsCDS.Filtered := false;
+  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
   // AlternativeCDS.Filtered := False;
   try
     CheckCDS.First;
@@ -12516,6 +12529,7 @@ begin
       CheckCDS.Next;
     end;
   finally
+    CheckCDS.IndexFieldNames := '';
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
@@ -12562,6 +12576,7 @@ begin
     DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := false;
+    CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
     try
       CheckCDS.First;
       while not CheckCDS.Eof do
@@ -12607,6 +12622,7 @@ begin
       CheckCDS.First;
 
     finally
+      CheckCDS.IndexFieldNames := '';
       RemainsCDS.Filtered := True;
       RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
         VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
@@ -12624,6 +12640,7 @@ begin
     DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := false;
+    CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
     try
       CheckCDS.First;
       while not CheckCDS.Eof do
@@ -12644,6 +12661,7 @@ begin
         CheckCDS.Next;
       end;
     finally
+      CheckCDS.IndexFieldNames := '';
       RemainsCDS.Filtered := True;
       RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
         VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
@@ -14437,6 +14455,7 @@ begin
     SalePromoGoodsCalcCDS.Filter := '';
 
     Bookmark := CheckCDS.GetBookmark;
+    CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
     try
       CheckCDS.Filtered := False;
       CheckCDS.First;
@@ -14583,6 +14602,7 @@ begin
       end;
 
     finally
+      CheckCDS.IndexFieldNames := '';
       CheckCDS.Filtered := True;
       try
         if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
@@ -14614,6 +14634,7 @@ begin
 
   CheckCDS.DisableConstraints;
   Bookmark := CheckCDS.GetBookmark;
+  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
   try
     if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
     SalePromoGoodsCalcCDS.CreateDataSet;
@@ -14702,6 +14723,7 @@ begin
     end;
 
   finally
+    CheckCDS.IndexFieldNames := '';
     SalePromoGoodsCalcCDS.Filtered := False;
     SalePromoGoodsCalcCDS.Filter := '';
     if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
@@ -14724,6 +14746,7 @@ begin
   if SalePromoGoodsCDS.IsEmpty then Exit;
 
   CheckCDS.DisableConstraints;
+  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
   try
 
     if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
@@ -14920,6 +14943,7 @@ begin
     UpdateSalePromoGoods;
 
   finally
+    CheckCDS.IndexFieldNames := '';
     SalePromoGoodsCalcCDS.Filtered := False;
     SalePromoGoodsCalcCDS.Filter := '';
     if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;

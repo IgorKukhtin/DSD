@@ -809,6 +809,7 @@ BEGIN
                                 AND Price_Goods.ChildObjectId NOT IN (SELECT Promo.GoodsId
                                                                       FROM gpSelect_MovementItem_Promo(inMovementId := 20813880 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') as Promo
                                                                       )
+                                AND FALSE
                               )
        -- Отложенные технические переучеты
        , tmpMovementTP AS (SELECT MovementItemMaster.ObjectId      AS GoodsId
@@ -1227,5 +1228,5 @@ $BODY$
 
 -- тест
  
-SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '6649, 33004, 5925154, 5925280, 16290423', zfCalc_UserSite()) AS p
+SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '18308538', zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId

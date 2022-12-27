@@ -160,7 +160,7 @@ BEGIN
 
      if COALESCE (inMovementId, 0) = 0
      then
-         RAISE EXCEPTION 'Документ не сохранен.';
+         Return;
      end if;
 
 --raise notice 'Value 01: %', CLOCK_TIMESTAMP();
