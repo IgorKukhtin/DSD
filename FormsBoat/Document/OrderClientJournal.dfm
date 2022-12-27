@@ -1372,7 +1372,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'ReceiptLevelName;GoodsGroupNameFull;ObjectName'
+          IndexFieldNames = 'GroupId;NPP_1;NPP_2'
         end>
       Params = <
         item

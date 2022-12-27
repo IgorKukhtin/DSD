@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternal_Child(
 RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Article TVarChar, MeasureName TVarChar
-             , Amount TFloat, AmountReserv TFloat, AmountSend TFloat 
+             , Amount NUMERIC (16, 8), AmountReserv NUMERIC (16, 8), AmountSend NUMERIC (16, 8)
              , UnitId Integer, UnitName TVarChar
              , ReceiptLevelId Integer, ReceiptLevelName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
@@ -42,9 +42,9 @@ BEGIN
              , Object_Goods.ValueData          AS GoodsName
              , ObjectString_Article.ValueData  AS Article
              , Object_Measure.ValueData        AS MeasureName
-             , MovementItem.Amount            ::TFloat AS Amount
-             , MIFloat_AmountReserv.ValueData ::TFloat AS AmountReserv
-             , MIFloat_AmountSend.ValueData   ::TFloat AS AmountSend
+             , zfCalc_Value_ForCount (MovementItem.Amount,            MIFloat_ForCount.ValueData) AS Amount
+             , zfCalc_Value_ForCount (MIFloat_AmountReserv.ValueData, MIFloat_ForCount.ValueData) AS AmountReserv
+             , zfCalc_Value_ForCount (MIFloat_AmountSend.ValueData,   MIFloat_ForCount.ValueData) AS AmountSend
              , Object_Unit.Id                       AS UnitId
              , Object_Unit.ValueData                AS UnitName
              , Object_ReceiptLevel.Id               AS ReceiptLevelId
@@ -56,20 +56,23 @@ BEGIN
              , MovementItem.isErased
 
         FROM tmpIsErased
-            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                   AND MovementItem.DescId     = zc_MI_Child()
-                                   AND MovementItem.isErased   = tmpIsErased.isErased
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit() 
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+             INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Child()
+                                    AND MovementItem.isErased   = tmpIsErased.isErased
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
-            LEFT JOIN MovementItemFloat AS MIFloat_AmountReserv
-                                        ON MIFloat_AmountReserv.MovementItemId = MovementItem.Id
-                                       AND MIFloat_AmountReserv.DescId = zc_MIFloat_AmountReserv()
-            LEFT JOIN MovementItemFloat AS MIFloat_AmountSend
-                                        ON MIFloat_AmountSend.MovementItemId = MovementItem.Id
-                                       AND MIFloat_AmountSend.DescId = zc_MIFloat_AmountSend()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountReserv
+                                         ON MIFloat_AmountReserv.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountReserv.DescId = zc_MIFloat_AmountReserv()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountSend
+                                         ON MIFloat_AmountSend.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountSend.DescId = zc_MIFloat_AmountSend()
+             LEFT JOIN MovementItemFloat AS MIFloat_ForCount
+                                         ON MIFloat_ForCount.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
              LEFT JOIN ObjectString AS ObjectString_Article
@@ -85,12 +88,12 @@ BEGIN
                                               ON MILO_ReceiptLevel.MovementItemId = MovementItem.Id
                                              AND MILO_ReceiptLevel.DescId = zc_MILinkObject_ReceiptLevel()
              LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = MILO_ReceiptLevel.ObjectId
- 
+
              LEFT JOIN MovementItemLinkObject AS MILO_ColorPattern
                                               ON MILO_ColorPattern.MovementItemId = MovementItem.Id
                                              AND MILO_ColorPattern.DescId = zc_MILinkObject_ColorPattern()
              LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = MILO_ColorPattern.ObjectId
- 
+
              LEFT JOIN MovementItemLinkObject AS MILO_ProdColorPattern
                                               ON MILO_ProdColorPattern.MovementItemId = MovementItem.Id
                                              AND MILO_ProdColorPattern.DescId = zc_MILinkObject_ProdColorPattern()

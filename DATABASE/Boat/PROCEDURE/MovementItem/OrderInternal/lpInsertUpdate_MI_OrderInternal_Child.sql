@@ -2,19 +2,21 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternal_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternal_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternal_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderInternal_Child(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId               Integer   , -- 
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inObjectId               Integer   , -- Комплектующие 
-    IN inReceiptLevelId         Integer   , --Этап сборки
+    IN inReceiptLevelId         Integer   , --  Этап сборки
     IN inColorPatternId         Integer   , -- Шаблон Boat Structure 
-    IN inProdColorPatternId     Integer   , -- Шаблон Boat Structure  
+    IN inProdColorPatternId     Integer   , -- Boat Structure  
     IN inUnitId                 Integer   , -- Место учета
     IN inAmount                 TFloat    , -- Количество (шаблон сборки)
     IN inAmountReserv           TFloat    , -- Количество резерв
     IN inAmountSend             TFloat    , -- Кол-во приход от поставщ./перемещение
+    IN inForCount               TFloat    , -- Для кол-во
     IN inUserId                 Integer     -- сессия пользователя
 )
 RETURNS Integer
@@ -49,6 +51,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReserv(), ioId, inAmountReserv);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSend(), ioId, inAmountSend);
+     -- сохранили свойство <Для кол-во>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ForCount(), ioId, CASE WHEN inForCount > 0 THEN inForCount ELSE 1 END);
  
      IF vbIsInsert = TRUE
      THEN

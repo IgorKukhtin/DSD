@@ -107,83 +107,107 @@ BEGIN
                                WHERE MovementLinkObject_From.ObjectId = inClientId
                                   OR inClientId = 0
                               )
- , tmpItem AS(SELECT Movement.Id                                                         AS MovementId
-                   , MovementItem.DescId                                                 AS DescId_mi
-                   , MovementItem.Id                                                     AS MovementItemId
-                   , COALESCE (MovementItem.ParentId, 0)                                 AS ParentId
-                   , MovementItem.PartionId                                              AS PartionId
-                   , MILinkObject_Unit.ObjectId                                          AS UnitId
-                   , MILinkObject_Partner.ObjectId                                       AS PartnerId
-                                                                                         
-                     -- какой Узел собирается
-                   , COALESCE (MILinkObject_Goods.ObjectId, 0)                           AS GoodsId
-                     -- Комплектующие
-                   , MovementItem.ObjectId                                               AS ObjectId
-      
-                     -- какой узел был в ReceiptProdModel или какой "Виртуальный" Узел собирается
-                   , COALESCE (MILinkObject_Goods_basis.ObjectId, 0)                     AS ObjectId_basis
-      
-                     -- только для zc_MI_Detail
-                   , COALESCE (MILinkObject_ReceiptLevel.ObjectId, 0)                    AS ReceiptLevelId
-      
-                     --
-                   , MILinkObject_ProdOptions.ObjectId                                   AS ProdOptionsId
-                   , MILinkObject_ColorPattern.ObjectId                                  AS ColorPatternId
-                   , MILinkObject_ProdColorPattern.ObjectId                              AS ProdColorPatternId
-                                                                                         
-                   , MovementItem.Amount                                                 AS Amount
-                   , MIFloat_AmountPartner.ValueData                                     AS AmountPartner
-                   , MIFloat_OperPrice.ValueData                                         AS OperPrice
-                   , MIFloat_OperPricePartner.ValueData                                  AS OperPricePartner
-      
-                   , MovementItem.isErased
-      
-              FROM Movement_OrderClient AS Movement
-                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                          AND ((MovementItem.DescId IN (zc_MI_Child(), zc_MI_Detail()) AND inChildOnly = FALSE)
-                                            OR (MovementItem.DescId = zc_MI_Child() AND inChildOnly = TRUE))
-                                          AND (MovementItem.isErased  = FALSE OR inIsErased = TRUE)
-                     -- !!! временно для отладки
-                   --LEFT JOIN MovementString AS MS ON MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_Comment()
-      
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
-                                                    ON MILinkObject_Partner.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Partner.DescId         = zc_MILinkObject_Partner()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                    ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                                    ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_basis
-                                                    ON MILinkObject_Goods_basis.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Goods_basis.DescId         = zc_MILinkObject_GoodsBasis()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdOptions
-                                                    ON MILinkObject_ProdOptions.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_ColorPattern
-                                                    ON MILinkObject_ColorPattern.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_ColorPattern.DescId         = zc_MILinkObject_ColorPattern()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdColorPattern
-                                                    ON MILinkObject_ProdColorPattern.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptLevel
-                                                    ON MILinkObject_ReceiptLevel.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_ReceiptLevel.DescId         = zc_MILinkObject_ReceiptLevel()
-                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                              AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
-                   LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                               ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                              AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
-                   LEFT JOIN MovementItemFloat AS MIFloat_OperPricePartner
-                                               ON MIFloat_OperPricePartner.MovementItemId = MovementItem.Id
-                                              AND MIFloat_OperPricePartner.DescId         = zc_MIFloat_OperPricePartner()
-                  )
+   , tmpMI AS (--
+               SELECT DISTINCT
+                      MovementItem.MovementId
+                      -- узел
+                    , MILinkObject_Goods.ObjectId AS GoodsId
+                      -- "виртуальный" узел
+                    , MILinkObject_Goods_basis.ObjectId AS GoodsId_basis
+
+               FROM Movement_OrderClient AS Movement
+                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                           AND MovementItem.isErased   = FALSE
+                                           AND MovementItem.DescId     = zc_MI_Detail()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                     ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_basis
+                                                     ON MILinkObject_Goods_basis.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_Goods_basis.DescId         = zc_MILinkObject_GoodsBasis()
+               WHERE inChildOnly = TRUE
+              )
+ , tmpItem AS (SELECT Movement.Id                                                         AS MovementId
+                    , MovementItem.DescId                                                 AS DescId_mi
+                    , MovementItem.Id                                                     AS MovementItemId
+                    , COALESCE (MovementItem.ParentId, 0)                                 AS ParentId
+                    , MovementItem.PartionId                                              AS PartionId
+                    , MILinkObject_Unit.ObjectId                                          AS UnitId
+                    , MILinkObject_Partner.ObjectId                                       AS PartnerId
+                                                                                          
+                      -- какой Узел собирается
+                    , COALESCE (MILinkObject_Goods.ObjectId, 0)                           AS GoodsId
+                      -- Комплектующие
+                    , MovementItem.ObjectId                                               AS ObjectId
+       
+                      -- какой узел был в ReceiptProdModel или какой "Виртуальный" Узел собирается
+                    , COALESCE (MILinkObject_Goods_basis.ObjectId, 0)                     AS ObjectId_basis
+       
+                      -- только для zc_MI_Detail
+                    , COALESCE (MILinkObject_ReceiptLevel.ObjectId, 0)                    AS ReceiptLevelId
+       
+                      --
+                    , MILinkObject_ProdOptions.ObjectId                                   AS ProdOptionsId
+                    , MILinkObject_ColorPattern.ObjectId                                  AS ColorPatternId
+                    , MILinkObject_ProdColorPattern.ObjectId                              AS ProdColorPatternId
+                                                                                          
+                    , MovementItem.Amount                                                 AS Amount
+                    , MIFloat_AmountPartner.ValueData                                     AS AmountPartner
+                    , MIFloat_OperPrice.ValueData                                         AS OperPrice
+                    , MIFloat_OperPricePartner.ValueData                                  AS OperPricePartner
+       
+                    , MovementItem.isErased
+       
+               FROM Movement_OrderClient AS Movement
+                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                           AND MovementItem.isErased   = FALSE
+                                           AND ((MovementItem.DescId = zc_MI_Detail() AND inChildOnly = FALSE)
+                                             OR (MovementItem.DescId = zc_MI_Child()  AND inChildOnly = TRUE)
+                                               )
+                      -- !!! временно для отладки
+                    --LEFT JOIN MovementString AS MS ON MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_Comment()
+                    LEFT JOIN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmpMI ON tmpMI.GoodsId = MovementItem.ObjectId
+       
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                                     ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_Partner.DescId         = zc_MILinkObject_Partner()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                     ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                     ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_basis
+                                                     ON MILinkObject_Goods_basis.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_Goods_basis.DescId         = zc_MILinkObject_GoodsBasis()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdOptions
+                                                     ON MILinkObject_ProdOptions.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_ColorPattern
+                                                     ON MILinkObject_ColorPattern.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_ColorPattern.DescId         = zc_MILinkObject_ColorPattern()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdColorPattern
+                                                     ON MILinkObject_ProdColorPattern.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptLevel
+                                                     ON MILinkObject_ReceiptLevel.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_ReceiptLevel.DescId         = zc_MILinkObject_ReceiptLevel()
+                    LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                               AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                    LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                                ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                               AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
+                    LEFT JOIN MovementItemFloat AS MIFloat_OperPricePartner
+                                                ON MIFloat_OperPricePartner.MovementItemId = MovementItem.Id
+                                               AND MIFloat_OperPricePartner.DescId         = zc_MIFloat_OperPricePartner()
+               WHERE (MILinkObject_ProdOptions.ObjectId IS NULL AND tmpMI.GoodsId > 0 AND inChildOnly = TRUE)
+                  OR inChildOnly = FALSE
+              )
 
         SELECT Movement_OrderClient.Id
              , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) AS InvNumber
-             , ('№ ' || Movement_OrderClient.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderClient.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_Full
+             , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumber_Full
              , Movement_OrderClient.InvNumberPartner
              , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_OrderClient.Id) AS BarCode
              , Movement_OrderClient.OperDate

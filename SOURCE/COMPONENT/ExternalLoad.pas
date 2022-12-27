@@ -930,7 +930,7 @@ begin
                       end;
                       ftFloat: begin
                          try
-                           Value := Field.Value;
+                           Value := StringReplace(Field.Value, ' ', '', [rfReplaceAll]);
                            Ft := gfStrToFloat(Value);
                            vParamValue := Ft;
                          except

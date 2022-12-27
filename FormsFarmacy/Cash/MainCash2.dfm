@@ -8325,9 +8325,6 @@ inherited MainCashForm2: TMainCashForm2
         DataType = ftFloat
       end>
     IndexDefs = <>
-    IndexFieldNames = 
-      'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionP' +
-      'artiesID;isPresent;isGoodsPresent'
     Params = <>
     StoreDefs = True
     BeforePost = CheckCDSBeforePost

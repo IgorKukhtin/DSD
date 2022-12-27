@@ -1,4 +1,4 @@
--- Function: gpSelect_MI_Invoice_Child()
+ -- Function: gpSelect_MI_Invoice_Child()
 
 DROP FUNCTION IF EXISTS gpSelect_MI_OrderClient_Child (Integer, Boolean, TVarChar);
 
@@ -8,40 +8,6 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderClient_Child(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor
-/*RETURNS TABLE (Id Integer
-             , ObjectId Integer, ObjectCode Integer, Article_Object TVarChar, ObjectName TVarChar, DescName TVarChar
-             , GoodsId Integer, GoodsCode Integer, Article TVarChar, GoodsName TVarChar
-             , UnitId Integer, UnitName TVarChar
-             , PartnerId_goods Integer, PartnerName_goods TVarChar
-             , PartnerId Integer, PartnerName TVarChar
-             , Amount TFloat, AmountPartner TFloat
-             , OperPrice TFloat
-             , TotalSumm_unit TFloat
-             , TotalSumm_partner TFloat
-             , TotalSumm TFloat
-             , isErased Boolean
-             , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
-             , MeasureName TVarChar
-             , GoodsTagName    TVarChar
-             , GoodsTypeName   TVarChar
-             , ProdColorName   TVarChar
-             , ProdOptionsName TVarChar
-             , TaxKindName    TVarChar
-             , Amount_in      TFloat -- Итого кол-во Приход от поставщика
-             , EKPrice        TFloat -- Цена вх.
-             , CountForPrice  TFloat -- Кол. в цене вх.
-             , OperPriceList  TFloat -- Цена по прайсу
-             , CostPrice      TFloat -- Цена вх + затрата
-             , OperPrice_cost TFloat -- сумма затраты
-
-             , MovementId_OrderPartner Integer
-             , InvNumber               Integer
-             , OperDate                TDateTime
-             , OperDatePartner         TDateTime
-
-             , PartNumber TVarChar
-
-              )*/
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -247,9 +213,9 @@ BEGIN
      -- Результат
      OPEN Cursor1 FOR
       WITH tmpSumm AS (SELECT _tmpItem.ParentId
-                            , SUM (_tmpItem.Amount) AS Amount_unit
-                            , SUM (_tmpItem.Amount * (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice))  AS TotalSumm_unit
-                            , SUM (_tmpItem.Amount * (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice, 0)))  AS TotalSummCost_unit
+                            , SUM (zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount)) AS Amount_unit
+                            , SUM (zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount) * (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice))  AS TotalSumm_unit
+                            , SUM (zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount) * (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice, 0)))  AS TotalSummCost_unit
                             , STRING_AGG (DISTINCT COALESCE (MIString_PartNumber.ValueData, ''), '; ') AS PartNumber
                             , STRING_AGG (DISTINCT COALESCE (Object_Unit.ValueData, ''), '; ')         AS UnitName
                        FROM _tmpItem
@@ -305,16 +271,15 @@ BEGIN
            , Object_Partner.ValueData                 AS PartnerName
 
              -- Количество шаблон сборки
-           , _tmpItem.Amount                          AS Amount_basis
+           , zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount) AS Amount_basis
              -- Количество резерв
-             --,  COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) AS Amount_unit
-             -- Количество резерв
-           , CASE WHEN ObjectDesc_Object.Id = zc_Object_Goods()          THEN COALESCE (tmpSumm.Amount_unit, 0) ELSE 0 END ::TFloat   AS Amount_unit
+           , CASE WHEN ObjectDesc_Object.Id = zc_Object_Goods()          THEN zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount)  ELSE 0 END :: NUMERIC (16, 8) AS Amount_unit
              -- работы/услуги
-           , CASE WHEN ObjectDesc_Object.Id = zc_Object_ReceiptService() THEN _tmpItem.Amount ELSE 0 END ::TFloat   AS Value_service
+           , CASE WHEN ObjectDesc_Object.Id = zc_Object_ReceiptService() THEN zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount)  ELSE 0 END :: NUMERIC (16, 8) AS Value_service
              -- Количество заказ поставщику
-           , _tmpItem.AmountPartner                   AS Amount_partner
-           , _tmpItem.ForCount ::TFloat
+           , zfCalc_Value_ForCount (_tmpItem.AmountPartner, _tmpItem.ForCount) AS Amount_partner
+             --
+           , _tmpItem.ForCount                        AS ForCount
 
              -- Цена вх без НДС
            , _tmpItem.OperPrice                       AS OperPrice_basis
@@ -323,12 +288,12 @@ BEGIN
              -- Цена вх. с затратами без НДС
            , CASE WHEN tmpSumm.Amount_unit > 0 THEN COALESCE (tmpSumm.TotalSummCost_unit / tmpSumm.Amount_unit) ELSE 0 END :: TFloat AS OperPrice_unit
 
-           , (_tmpItem.Amount * _tmpItem.OperPrice)                                      :: TFloat AS TotalSumm_basis
-           , COALESCE (tmpSumm.TotalSummCost_unit, _tmpItem.Amount * _tmpItem.OperPrice) :: TFloat AS TotalSumm_unit
-           , (_tmpItem.AmountPartner * _tmpItem.OperPricePartner) :: TFloat AS TotalSumm_partner
+           , (zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount) * _tmpItem.OperPrice)                :: TFloat AS TotalSumm_basis
+           , COALESCE (tmpSumm.TotalSummCost_unit, zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount) * _tmpItem.OperPrice) :: TFloat AS TotalSumm_unit
+           , (zfCalc_Value_ForCount (_tmpItem.AmountPartner, _tmpItem.ForCount) * _tmpItem.OperPricePartner) :: TFloat AS TotalSumm_partner
 
-           , (COALESCE (tmpSumm.TotalSummCost_unit, _tmpItem.Amount * _tmpItem.OperPrice, 0)
-            + COALESCE (_tmpItem.AmountPartner * _tmpItem.OperPricePartner, 0)) :: TFloat AS TotalSumm_real
+           , (COALESCE (tmpSumm.TotalSummCost_unit, zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount) * _tmpItem.OperPrice, 0)
+            + COALESCE (zfCalc_Value_ForCount (_tmpItem.AmountPartner, _tmpItem.ForCount) * _tmpItem.OperPricePartner, 0)) :: TFloat AS TotalSumm_real
 
            , _tmpItem.isErased
 
@@ -451,19 +416,25 @@ BEGIN
            , Object_Partner.Id                        AS PartnerId
            , Object_Partner.ValueData                 AS PartnerName
 
-           , _tmpItem.Amount                          AS Amount_basis       -- Количество шаблон сборки
-           , CASE WHEN Object_Object.DescId = zc_Object_ReceiptService() THEN 0 ELSE 0 END :: TFloat AS Amount_unit        -- Количество резерв
-           , _tmpItem.AmountPartner                   AS Amount_partner     -- Количество заказ поставщику
-           , _tmpItem.ForCount   ::TFloat
+             -- Количество шаблон сборки
+           , zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount) AS Amount_basis
+             -- Количество резерв
+           , CASE WHEN Object_Object.DescId = zc_Object_ReceiptService() THEN 0 ELSE 0 END :: TFloat AS Amount_unit        
+             -- Количество заказ поставщику
+           , zfCalc_Value_ForCount (_tmpItem.AmountPartner, _tmpItem.ForCount) AS Amount_partner     
+             -- 
+           , _tmpItem.ForCount                        AS ForCount
 
-           , _tmpItem.OperPrice                       AS OperPrice_basis   -- Цена вх без НДС
-           , _tmpItem.OperPricePartner                AS OperPrice_partner   -- Цена вх без НДС
+             -- Цена вх без НДС
+           , _tmpItem.OperPrice                       AS OperPrice_basis
+             -- Цена вх без НДС
+           , _tmpItem.OperPricePartner                AS OperPrice_partner   
              -- Цена вх. с затратами без НДС
            , (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice, 0)) :: TFloat AS OperPrice_unit
 
-           , (_tmpItem.Amount   * _tmpItem.OperPrice) :: TFloat AS TotalSumm_basis
+           , (zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount)   * _tmpItem.OperPrice) :: TFloat AS TotalSumm_basis
            , (0 * (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice, 0))) :: TFloat AS TotalSumm_unit
-           , (_tmpItem.AmountPartner * _tmpItem.OperPricePartner) :: TFloat AS TotalSumm_partner
+           , (zfCalc_Value_ForCount (_tmpItem.AmountPartner, _tmpItem.ForCount) * _tmpItem.OperPricePartner) :: TFloat AS TotalSumm_partner
 
            , _tmpItem.isErased
 
