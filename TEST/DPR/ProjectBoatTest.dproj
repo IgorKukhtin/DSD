@@ -1136,16 +1136,16 @@
 				<Form>MaterialOptionsChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas">
-				<Form>OrderClientJournalChoiceItemForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\OrderInternalJournal.pas">
 				<Form>OrderInternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\OrderInternal.pas">
 				<Form>OrderInternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas">
+				<Form>OrderClientJournalChoiceItemForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

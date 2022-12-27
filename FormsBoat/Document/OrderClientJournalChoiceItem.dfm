@@ -1074,7 +1074,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         item
           Name = 'Amount_basis'
           Value = Null
-          Component = GuidesClient
+          Component = ClientDataSet
           ComponentItem = 'Amount_basis'
           DataType = ftFloat
           MultiSelectSeparator = ','
@@ -1354,6 +1354,15 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inChildOnly'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inChildOnly'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = Null
         Component = actShowErased
@@ -1488,6 +1497,13 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         Component = GuidesClient
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChildOnly'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

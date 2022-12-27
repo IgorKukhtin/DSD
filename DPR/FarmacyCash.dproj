@@ -413,7 +413,7 @@
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\InternshipConfirmation.pas">
-            <Form>InternshipConfirmationForm</Form>
+            <Form>InternshipConfirmationFormЬфшт</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

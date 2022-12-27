@@ -40,7 +40,8 @@ BEGIN
 
       WHERE Movement_Check.Id = inMovementId
         AND Movement_Check.DescId = zc_Movement_Check()
-        AND (COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0
+        AND COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 10413041
+        AND (COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0 
          OR COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0);
 
       IF COALESCE (vbStatusId, 0) = 0

@@ -971,6 +971,7 @@ BEGIN
                            WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                              AND Movement.DescId = zc_Movement_Check()
+                             AND COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 10413041
                              AND (COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0
                               OR COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0))                
          , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId

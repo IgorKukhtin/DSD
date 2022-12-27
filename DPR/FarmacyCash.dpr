@@ -142,7 +142,7 @@ uses
   ListGoodsKeyword in '..\FormsFarmacy\Cash\ListGoodsKeyword.pas' {ListGoodsKeywordForm: TParentForm},
   EnterBuyerForSite in '..\FormsFarmacy\Cash\EnterBuyerForSite.pas' {EnterBuyerForSiteForm},
   SalePromoGoodsDialog in '..\FormsFarmacy\Cash\SalePromoGoodsDialog.pas' {SalePromoGoodsForm: TParentForm},
-  InternshipConfirmation in '..\FormsFarmacy\Cash\InternshipConfirmation.pas' {InternshipConfirmationForm};
+  InternshipConfirmation in '..\FormsFarmacy\Cash\InternshipConfirmation.pas' {InternshipConfirmationForm‹Ù¯Ú};
 
 {$R *.res}
 
