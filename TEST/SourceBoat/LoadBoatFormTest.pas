@@ -834,6 +834,9 @@ end;
 
 procedure TLoadFormTest.LoadReceiptGoodsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoodsLineForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptGoodsLineForm');
+   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoodsEditEnterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoodsEditEnterForm');
 

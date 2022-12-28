@@ -226,6 +226,20 @@ object TransportJournalForm: TTransportJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object PositionName: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
+        DataBinding.FieldName = 'PositionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object PositionLevelName: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
+        DataBinding.FieldName = 'PositionLevelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object PersonalDriverMoreName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100', '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081
         DataBinding.FieldName = 'PersonalDriverMoreName'
