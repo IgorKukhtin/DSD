@@ -879,10 +879,6 @@
 				<Form>IncomeCostJournalByInvoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\OrderClientJournalReserve.pas">
-				<Form>OrderClientJournalReserveForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\SendJournal.pas">
 				<Form>SendJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1146,6 +1142,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas">
 				<Form>OrderClientJournalChoiceItemForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptGoodsLine.pas">
+				<Form>ReceiptGoodsLineForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

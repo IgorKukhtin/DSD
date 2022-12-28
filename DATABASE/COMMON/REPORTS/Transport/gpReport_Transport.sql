@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_Transport(
 RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
              , BranchName TVarChar, UnitName_car TVarChar, UnitName_route TVarChar
              , CarModelName TVarChar, CarName TVarChar
-             , PersonalDriverName TVarChar
+             , PersonalDriverName TVarChar, PositionName TVarChar, PositionLevelName TVarChar
              , RouteName TVarChar, RouteKindName TVarChar
              , RateFuelKindName TVarChar
              , FuelName TVarChar
@@ -807,7 +807,10 @@ BEGIN
              , STRING_AGG (Object_Unit_route.ValueData, ';') :: TVarChar AS UnitName_route
              , Object_CarModel.ValueData        AS CarModelName
              , Object_Car.ValueData             AS CarName
-             , View_PersonalDriver.PersonalName AS PersonalDriverName
+             --, View_PersonalDriver.PersonalName AS PersonalDriverName 
+             , View_PersonalDriver.PersonalName       :: TVarChar AS PersonalDriverName 
+             , View_PersonalDriver.PositionName       :: TVarChar AS PositionName
+             , View_PersonalDriver.PositionLevelName  :: TVarChar AS PositionLevelName
              , Object_Route.ValueData           AS RouteName
              , Object_RouteKind.ValueData       AS RouteKindName
              , Object_RateFuelKind.ValueData    AS RateFuelKindName
@@ -935,7 +938,9 @@ BEGIN
                , tmpFuel.OperDate
                , Object_CarModel.ValueData
                , Object_Car.ValueData
-               , View_PersonalDriver.PersonalName
+               , View_PersonalDriver.PersonalName 
+               , View_PersonalDriver.PositionName
+               , View_PersonalDriver.PositionLevelName
                , Object_Route.ValueData
                , Object_RouteKind.ValueData
                , Object_RateFuelKind.ValueData

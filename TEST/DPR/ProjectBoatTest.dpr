@@ -335,7 +335,8 @@ uses
   MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm},
   OrderInternalJournal in '..\..\FormsBoat\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
   OrderInternal in '..\..\FormsBoat\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
-  OrderClientJournalChoiceItem in '..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas' {OrderClientJournalChoiceItemForm: TParentForm};
+  OrderClientJournalChoiceItem in '..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas' {OrderClientJournalChoiceItemForm: TParentForm},
+  ReceiptGoodsLine in '..\..\FormsBoat\Guides\ReceiptGoodsLine.pas' {ReceiptGoodsLineForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

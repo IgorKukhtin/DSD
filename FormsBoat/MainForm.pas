@@ -257,6 +257,8 @@ type
     miLine31_: TMenuItem;
     miLine34_: TMenuItem;
     actOrderInternal: TdsdOpenForm;
+    actReceiptGoodsLine: TdsdOpenForm;
+    miReceiptGoodsLine: TMenuItem;
   private
     { Private declarations }
   public

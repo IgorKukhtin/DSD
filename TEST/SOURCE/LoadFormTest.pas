@@ -1828,9 +1828,10 @@ begin
   exit;
 
   // 11,12,14 Инна
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
-  }
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortForm');
   //
@@ -1845,16 +1846,16 @@ begin
  {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportRouteJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportRouteJournalForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportForm');
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportJournalForm');
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportJournalChoiceForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadTransportServiceFormTest;
@@ -3000,6 +3001,7 @@ end;
 
 procedure TLoadFormTest.LoadReportTransportFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportTireForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportTireForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportTireDialogForm'));
@@ -3017,7 +3019,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_CostDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_CostDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportFuelDialogForm'));
@@ -3032,10 +3034,11 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListDialogForm'));

@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , BranchCode Integer, BranchName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , CarName TVarChar, CarModelName TVarChar, CarTrailerName TVarChar
-             , PersonalDriverName TVarChar
+             , PersonalDriverName TVarChar, PositionName TVarChar, PositionLevelName TVarChar
              , PersonalDriverMoreName TVarChar
              , PersonalName TVarChar
              , UnitForwardingName TVarChar
@@ -130,7 +130,9 @@ BEGIN
            , Object_CarModel.ValueData            AS CarModelName
            , Object_CarTrailer.ValueData          AS CarTrailerName
 
-           , (View_PersonalDriver.PersonalName || ' ' || View_PersonalDriver.PositionName) :: TVarChar AS PersonalDriverName
+           , (View_PersonalDriver.PersonalName || ' ' || View_PersonalDriver.PositionName) :: TVarChar AS PersonalDriverName 
+           , View_PersonalDriver.PositionName       :: TVarChar AS PositionName
+           , View_PersonalDriver.PositionLevelName  :: TVarChar AS PositionLevelName
            , (View_PersonalDriverMore.PersonalName || ' ' || View_PersonalDriverMore.PositionName) :: TVarChar AS PersonalDriverMoreName
            , (View_Personal.PersonalName || ' ' || View_Personal.PositionName) :: TVarChar AS PersonalName
 
