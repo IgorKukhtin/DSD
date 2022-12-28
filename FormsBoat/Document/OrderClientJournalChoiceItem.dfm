@@ -1,7 +1,7 @@
 object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
+  Caption = #1046#1091#1088#1085#1072#1083'  <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1091#1079#1083#1099')>'
   ClientHeight = 492
   ClientWidth = 1034
   Color = clBtnFace
@@ -26,9 +26,9 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 107
       Top = 5
-      EditValue = 44197d
+      EditValue = 44562d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -38,7 +38,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 44197d
+      EditValue = 44562d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -329,6 +329,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       object CIN: TcxGridDBColumn
         Caption = 'CIN Nr.'
         DataBinding.FieldName = 'CIN'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -337,6 +338,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       object EngineNum: TcxGridDBColumn
         Caption = 'Engine Nr.'
         DataBinding.FieldName = 'EngineNum'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -370,11 +372,12 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         Width = 80
       end
       object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1047#1072#1082#1072#1079')'
         DataBinding.FieldName = 'Comment'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 130
       end
@@ -411,6 +414,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       object ObjectCode_ch3: TcxGridDBColumn
         Caption = 'Interne Nr'
         DataBinding.FieldName = 'ObjectCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
@@ -423,10 +427,10 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 120
       end
       object ObjectName_ch3: TcxGridDBColumn
-        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080
+        Caption = #1059#1079#1077#1083
         DataBinding.FieldName = 'ObjectName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -472,6 +476,14 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         Options.Editing = False
         Width = 80
       end
+      object Comment_goods: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1059#1079#1077#1083')'
+        DataBinding.FieldName = 'Comment_goods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
       object Amount_basis_ch3: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1096#1072#1073#1083#1086#1085
         DataBinding.FieldName = 'Amount_basis'
@@ -481,7 +493,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1084#1086#1076#1077#1083#1080
         Options.Editing = False
-        Width = 55
+        Width = 80
       end
       object Value_service_ch3: TcxGridDBColumn
         Caption = 'Value (service)'
@@ -489,6 +501,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.########;-,0.########; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
@@ -504,7 +517,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
         Options.Editing = False
-        Width = 70
+        Width = 80
       end
       object isErased_ch3: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -1078,6 +1091,12 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
           ComponentItem = 'Amount_basis'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isEnabled'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -1354,10 +1373,10 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChildOnly'
+        Name = 'inIsChildOnly'
         Value = Null
         Component = FormParams
-        ComponentItem = 'inChildOnly'
+        ComponentItem = 'inIsChildOnly'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1501,8 +1520,8 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChildOnly'
-        Value = False
+        Name = 'inIsChildOnly'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

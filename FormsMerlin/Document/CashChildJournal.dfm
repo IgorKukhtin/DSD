@@ -62,6 +62,23 @@ object CashChildJournalForm: TCashChildJournalForm
       TabOrder = 4
       Width = 161
     end
+    object ceCash: TcxButtonEdit
+      Left = 463
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 174
+    end
+    object cxLabel14: TcxLabel
+      Left = 420
+      Top = 6
+      Caption = #1050#1072#1089#1089#1072':'
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -1776,6 +1793,14 @@ object CashChildJournalForm: TCashChildJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashId'
+        Value = Null
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 24
@@ -1915,6 +1940,9 @@ object CashChildJournalForm: TCashChildJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = GuidesCash
       end>
     Left = 392
     Top = 112
@@ -2095,6 +2123,14 @@ object CashChildJournalForm: TCashChildJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashId'
+        Value = Null
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288
@@ -2266,5 +2302,32 @@ object CashChildJournalForm: TCashChildJournalForm
     PackSize = 1
     Left = 582
     Top = 392
+  end
+  object GuidesCash: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCash
+    FormNameParam.Value = 'TCash_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCash_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCash
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 521
+    Top = 5
   end
 end

@@ -10,13 +10,14 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternal_Child(
 RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Article TVarChar, MeasureName TVarChar
+             , ProdColorName_goods TVarChar
+             , Comment_goods TVarChar
              , Amount NUMERIC (16, 8), AmountReserv NUMERIC (16, 8), AmountSend NUMERIC (16, 8)
              , UnitId Integer, UnitName TVarChar
              , ReceiptLevelId Integer, ReceiptLevelName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , isErased Boolean
-
               )
 AS
 $BODY$
@@ -42,6 +43,9 @@ BEGIN
              , Object_Goods.ValueData          AS GoodsName
              , ObjectString_Article.ValueData  AS Article
              , Object_Measure.ValueData        AS MeasureName
+             , Object_ProdColor.ValueData            AS ProdColorName_goods
+             , ObjectString_Goods_Comment.ValueData  AS Comment_goods
+
              , zfCalc_Value_ForCount (MovementItem.Amount,            MIFloat_ForCount.ValueData) AS Amount
              , zfCalc_Value_ForCount (MIFloat_AmountReserv.ValueData, MIFloat_ForCount.ValueData) AS AmountReserv
              , zfCalc_Value_ForCount (MIFloat_AmountSend.ValueData,   MIFloat_ForCount.ValueData) AS AmountSend
@@ -98,6 +102,14 @@ BEGIN
                                               ON MILO_ProdColorPattern.MovementItemId = MovementItem.Id
                                              AND MILO_ProdColorPattern.DescId = zc_MILinkObject_ProdColorPattern()
              LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = MILO_ProdColorPattern.ObjectId
+
+             LEFT JOIN ObjectString AS ObjectString_Goods_Comment
+                                    ON ObjectString_Goods_Comment.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_Comment.DescId   = zc_ObjectString_Goods_Comment()
+             LEFT JOIN ObjectLink AS ObjectLink_ProdColor
+                                  ON ObjectLink_ProdColor.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
+             LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_ProdColor.ChildObjectId
 
     ;
 

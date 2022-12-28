@@ -148,6 +148,9 @@ type
     bbSetErased_MI: TdxBarButton;
     bbSetUnErased_MI: TdxBarButton;
     isErased: TcxGridDBColumn;
+    ceCash: TcxButtonEdit;
+    cxLabel14: TcxLabel;
+    GuidesCash: TdsdGuides;
   private
   public
   end;

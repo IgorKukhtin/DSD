@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient_Item(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inClientId      Integer  , 
-    IN inChildOnly     Boolean  ,  -- показать только  zc_MI_Child
+    IN inIsChildOnly   Boolean  ,  -- показать только  zc_MI_Child
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -28,17 +28,21 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumbe
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime   
-             --строки
+ 
+              -- строки
              , MovementItemId Integer
              , ObjectId  Integer
              , ObjectCode  Integer
              , Article_Object  TVarChar
              , ObjectName  TVarChar
              , DescName  TVarChar
+             , Comment_goods  TVarChar
+
              , GoodsId_basis  Integer
              , GoodsCode_basis Integer
              , GoodsName_basis  TVarChar
              , Article_basis TVarChar
+
              , PartnerId   Integer
              , PartnerName  TVarChar
              , Amount_basis TFloat
@@ -53,7 +57,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
 BEGIN
-
+     --inIsChildOnly:= TRUE;
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderClient());
 
@@ -107,31 +111,67 @@ BEGIN
                                WHERE MovementLinkObject_From.ObjectId = inClientId
                                   OR inClientId = 0
                               )
-   , tmpMI AS (--
-               SELECT DISTINCT
-                      MovementItem.MovementId
-                      -- узел
-                    , MILinkObject_Goods.ObjectId AS GoodsId
-                      -- "виртуальный" узел
-                    , MILinkObject_Goods_basis.ObjectId AS GoodsId_basis
+   , tmpMI_all AS (--
+                   SELECT MovementItem.Id
+                        , MovementItem.MovementId
+                        , MovementItem.ParentId
+                        , MovementItem.DescId
+                        , MovementItem.ObjectId
+                        , MovementItem.Amount
+                        , MovementItem.isErased
+                          -- узел
+                        , MILinkObject_Goods.ObjectId AS GoodsId
+                          -- "виртуальный" узел
+                        , MILinkObject_Goods_basis.ObjectId AS GoodsId_basis
+    
+                   FROM Movement_OrderClient AS Movement
+                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                               AND MovementItem.isErased   = FALSE
+                                               AND MovementItem.DescId     IN (zc_MI_Child(), zc_MI_Detail())
+                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                         ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_basis
+                                                         ON MILinkObject_Goods_basis.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_Goods_basis.DescId         = zc_MILinkObject_GoodsBasis()
+                  )
+       , tmpMI AS (--
+                   SELECT tmpMI_all.Id
+                        , tmpMI_all.MovementId
+                        , tmpMI_all.DescId
+                        , tmpMI_all.ParentId
+                        , tmpMI_all.ObjectId
+                        , tmpMI_all.Amount
+                        , tmpMI_all.isErased
+                          -- узел
+                        , tmpMI_all.GoodsId
+                          -- "виртуальный" узел
+                        , tmpMI_all.GoodsId_basis
+                   FROM tmpMI_all
+                  UNION ALL
+                   SELECT DISTINCT
+                          tmpMI_parent.Id
+                        , tmpMI_all.MovementId
+                        , zc_MI_Child() AS DescId
+                        , 0 AS ParentId
+                        , tmpMI_all.GoodsId_basis AS ObjectId
+                        , 1 :: TFloat AS Amount
+                        , tmpMI_all.isErased
+                          -- узел
+                        , tmpMI_all.GoodsId_basis AS GoodsId
+                          -- "виртуальный" узел
+                        , 0 AS GoodsId_basis
+                   FROM tmpMI_all
+                        JOIN tmpMI_all AS tmpMI_parent ON tmpMI_parent.ObjectId = tmpMI_all.GoodsId
+                   WHERE tmpMI_all.DescId = zc_MI_Detail()
+                     AND inIsChildOnly = TRUE
+                  )
 
-               FROM Movement_OrderClient AS Movement
-                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                           AND MovementItem.isErased   = FALSE
-                                           AND MovementItem.DescId     = zc_MI_Detail()
-                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                                     ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                    AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
-                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_basis
-                                                     ON MILinkObject_Goods_basis.MovementItemId = MovementItem.Id
-                                                    AND MILinkObject_Goods_basis.DescId         = zc_MILinkObject_GoodsBasis()
-               WHERE inChildOnly = TRUE
-              )
  , tmpItem AS (SELECT Movement.Id                                                         AS MovementId
                     , MovementItem.DescId                                                 AS DescId_mi
                     , MovementItem.Id                                                     AS MovementItemId
                     , COALESCE (MovementItem.ParentId, 0)                                 AS ParentId
-                    , MovementItem.PartionId                                              AS PartionId
+                    , 0                                                                   AS PartionId
                     , MILinkObject_Unit.ObjectId                                          AS UnitId
                     , MILinkObject_Partner.ObjectId                                       AS PartnerId
                                                                                           
@@ -159,14 +199,13 @@ BEGIN
                     , MovementItem.isErased
        
                FROM Movement_OrderClient AS Movement
-                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                           AND MovementItem.isErased   = FALSE
-                                           AND ((MovementItem.DescId = zc_MI_Detail() AND inChildOnly = FALSE)
-                                             OR (MovementItem.DescId = zc_MI_Child()  AND inChildOnly = TRUE)
-                                               )
+                    INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND ((MovementItem.DescId = zc_MI_Detail() AND inIsChildOnly = FALSE)
+                                                      OR (MovementItem.DescId = zc_MI_Child()  AND inIsChildOnly = TRUE)
+                                                        )
                       -- !!! временно для отладки
                     --LEFT JOIN MovementString AS MS ON MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_Comment()
-                    LEFT JOIN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmpMI ON tmpMI.GoodsId = MovementItem.ObjectId
+                    LEFT JOIN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmpMI_group ON tmpMI_group.GoodsId = MovementItem.ObjectId
        
                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
                                                      ON MILinkObject_Partner.MovementItemId = MovementItem.Id
@@ -201,10 +240,10 @@ BEGIN
                     LEFT JOIN MovementItemFloat AS MIFloat_OperPricePartner
                                                 ON MIFloat_OperPricePartner.MovementItemId = MovementItem.Id
                                                AND MIFloat_OperPricePartner.DescId         = zc_MIFloat_OperPricePartner()
-               WHERE (MILinkObject_ProdOptions.ObjectId IS NULL AND tmpMI.GoodsId > 0 AND inChildOnly = TRUE)
-                  OR inChildOnly = FALSE
+               WHERE (MILinkObject_ProdOptions.ObjectId IS NULL AND tmpMI_group.GoodsId > 0 AND inIsChildOnly = TRUE)
+                  OR inIsChildOnly = FALSE
               )
-
+        -- Результат
         SELECT Movement_OrderClient.Id
              , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) AS InvNumber
              , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumber_Full
@@ -253,14 +292,15 @@ BEGIN
              , MovementDate_Update.ValueData        AS UpdateDate
 
              -- строки
-            , tmpItem.MovementItemId                  AS MovementItemId
-           --, tmpItem.ObjectId                        AS KeyId
+            , tmpItem.MovementItemId       :: Integer AS MovementItemId
+           --, tmpItem.ObjectId                       AS KeyId
 
            , Object_Object.Id                         AS ObjectId
            , Object_Object.ObjectCode                 AS ObjectCode
            , ObjectString_Article_Object.ValueData    AS Article_Object
            , Object_Object.ValueData                  AS ObjectName
            , ObjectDesc_Object.ItemName               AS DescName
+           , ObjectString_Goods_Comment.ValueData     AS Comment_goods
 
            , Object_Object_basis.Id                   AS GoodsId_basis
            , Object_Object_basis.ObjectCode           AS GoodsCode_basis
@@ -361,7 +401,8 @@ BEGIN
 
              --- строки
              INNER JOIN tmpItem  ON tmpItem.MovementId = Movement_OrderClient.Id
-                         LEFT JOIN Object AS Object_Object ON Object_Object.Id = tmpItem.ObjectId
+             LEFT JOIN Object AS Object_Object ON Object_Object.Id = tmpItem.ObjectId
+ 
             LEFT JOIN ObjectString AS ObjectString_Article_object
                                    ON ObjectString_Article_object.ObjectId = Object_Object.Id
                                   AND ObjectString_Article_object.DescId   = zc_ObjectString_Article()
@@ -397,4 +438,4 @@ $BODY$
 
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderClient_Item (inStartDate:= '01.01.2022', inEndDate:= '31.12.2022', inClientId:=0 , inChildOnly:=FALSE, inIsErased := FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_OrderClient_Item (inStartDate:= '01.01.2022', inEndDate:= '31.12.2022', inClientId:=0 , inIsChildOnly:=FALSE, inIsErased := FALSE, inSession:= zfCalc_UserAdmin())

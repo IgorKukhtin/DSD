@@ -425,10 +425,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientForm');
-  }
+
 end;
 
  procedure TLoadFormTest.LoadOrderInternalFormTest;
