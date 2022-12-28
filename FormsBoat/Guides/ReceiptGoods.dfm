@@ -3598,6 +3598,7 @@
       end
       item
         Name = 'ioValue_service'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -11,6 +11,9 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
+             , MaterialOptionsId Integer, MaterialOptionsName TVarChar
+             , ReceiptLevelId Integer, ReceiptLevelName TVarChar 
+             , GoodsChildId Integer, GoodsChildName TVarChar
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, DescName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -20,7 +23,15 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , Article TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
-             , EKPrice TFloat, EKPriceWVAT TFloat
+               -- Цена вх. без НДС - Товар/Услуги
+             , EKPrice TFloat
+               -- Цена вх. с НДС, до 2-х знаков - Товар/Услуги
+             , EKPriceWVAT TFloat
+               -- Сумма вх. без НДС, до 2-х знаков - Товар/Услуги
+             , EKPrice_summ TFloat
+               -- Сумма вх. с НДС, до 2-х знаков - Товар/Услуги
+             , EKPriceWVAT_summ TFloat
+
              , EmpfPrice TFloat, EmpfPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
 
@@ -44,7 +55,8 @@ vbIsShowAll:= TRUE;
 
      -- Определили
      vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
-
+     -- !!!Базовый % НДС!!!
+     vbTaxKindValue_basis:= (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = zc_Enum_TaxKind_Basis() AND OFl.DescId = zc_ObjectFloat_TaxKind_Value());
 
 
      RETURN QUERY
@@ -71,6 +83,13 @@ vbIsShowAll:= TRUE;
          , Object_ProdColorPattern.Id         ::Integer  AS ProdColorPatternId
          , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model_pcp.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
 
+         , Object_MaterialOptions.Id          ::Integer  AS MaterialOptionsId
+         , Object_MaterialOptions.ValueData   ::TVarChar AS MaterialOptionsName
+         , Object_ReceiptLevel.Id                        AS ReceiptLevelId
+         , Object_ReceiptLevel.ValueData      ::TVarChar AS ReceiptLevelName
+         , Object_GoodsChild.Id                          AS GoodsChildId
+         , Object_GoodsChild.ValueData        ::TVarChar AS GoodsChildName
+
          , Object_Object.Id               ::Integer  AS ObjectId
          , Object_Object.ObjectCode       ::Integer  AS ObjectCode
          , Object_Object.ValueData        ::TVarChar AS ObjectName
@@ -88,14 +107,23 @@ vbIsShowAll:= TRUE;
          , Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
          , Object_Measure.ValueData              ::TVarChar  AS MeasureName
 
-         , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
-         , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
-              * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
 
-         , ObjectFloat_EmpfPrice.ValueData ::TFloat   AS EmpfPrice
-         , CAST (COALESCE (ObjectFloat_EmpfPrice.ValueData, 0)
-              * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
+           -- Цена вх. без НДС - Товар/Услуги
+         , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
+           -- расчет Цена вх. с НДС, до 2-х знаков - Товар/Услуги
+         , zfCalc_SummWVAT (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData), vbTaxKindValue_basis) AS EKPriceWVAT
 
+           -- Сумма вх. без НДС, до 2-х знаков - Товар/Услуги
+         , zfCalc_SummIn (ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END
+                        , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData)
+                        , 1) AS EKPrice_summ
+           -- Сумма вх. с НДС, до 2-х знаков - Товар/Услуги
+         , zfCalc_SummWVAT (zfCalc_SummIn (ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END
+                                         , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData)
+                                         , 1)
+                          , vbTaxKindValue_basis) AS EKPriceWVAT_summ
+
+        /*
           -- расчет базовой цены без НДС, до 2 знаков
         , CASE WHEN vbPriceWithVAT = FALSE
                THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
@@ -124,7 +152,7 @@ vbIsShowAll:= TRUE;
                     THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                     ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
                END) ::TFloat BasisWVAT_summ
-
+         */
      FROM Object AS Object_ReceiptGoodsChild
 
           LEFT JOIN ObjectLink AS ObjectLink_Object
@@ -159,6 +187,21 @@ vbIsShowAll:= TRUE;
                                ON ObjectLink_ColorPattern_Model.ObjectId = ObjectLink_ProdColorPattern_ColorPattern.ChildObjectId
                               AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
           LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                               ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_MaterialOptions.DescId = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+          LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                               ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
+          LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptLevel.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
+                               ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+          LEFT JOIN Object AS Object_GoodsChild ON Object_GoodsChild.Id = ObjectLink_GoodsChild.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
                                ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
@@ -207,9 +250,15 @@ vbIsShowAll:= TRUE;
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+          -- Цена вх. без НДС - Товар
           LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                 ON ObjectFloat_EKPrice.ObjectId = Object_Object.Id
-                               AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+                               AND ObjectFloat_EKPrice.DescId   = zc_ObjectFloat_Goods_EKPrice()
+          -- Цена вх. без НДС - Услуги
+          LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
+                                ON ObjectFloat_ReceiptService_EKPrice.ObjectId = Object_Object.Id
+                               AND ObjectFloat_ReceiptService_EKPrice.DescId   = zc_ObjectFloat_ReceiptService_EKPrice()
+
           LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
                                 ON ObjectFloat_EmpfPrice.ObjectId = Object_Object.Id
                                AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
