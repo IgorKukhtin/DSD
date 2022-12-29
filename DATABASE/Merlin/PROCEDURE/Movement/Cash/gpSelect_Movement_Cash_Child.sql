@@ -1,12 +1,14 @@
 -- Function: gpSelect_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_CashChild (TDateTime, TDateTime, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_CashChild (TDateTime, TDateTime, Boolean, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_CashChild(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inIsErased          Boolean   , --
     IN inKindName          TVarChar   , --
+    IN inCashId            Integer   ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
@@ -215,4 +217,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_CashChild(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('01.01.2022')::TDateTime , inIsErased := 'False' , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_CashChild(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('01.01.2022')::TDateTime , inIsErased := 'False' , inKindName := 'zc_Enum_InfoMoney_In', inCashId:= 0, inSession := '5');

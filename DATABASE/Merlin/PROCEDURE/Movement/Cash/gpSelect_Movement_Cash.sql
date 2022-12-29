@@ -255,4 +255,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('01.10.2022')::TDateTime , inIsErased := 'False' , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_Cash(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('01.10.2022')::TDateTime , inIsErased := 'False' , inKindName := 'zc_Enum_InfoMoney_In', inCashId:= 0, inSession := '5');
