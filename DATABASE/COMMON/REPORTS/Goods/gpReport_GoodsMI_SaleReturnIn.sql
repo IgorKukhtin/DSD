@@ -229,7 +229,9 @@ BEGIN
 
     -- определяется уровень доступа для с/с
     -- vbIsCost:= FALSE; -- EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId); -- Отчеты (управленцы) + Аналитики по продажам
-    vbIsCost:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId); -- Отчеты (управленцы) + Аналитики по продажам
+    vbIsCost:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId) -- Отчеты (управленцы) + Аналитики по продажам
+                OR vbUserId = 1058530 -- Няйко В.И.
+              ;
 
 
     vbIsGoods_where:= FALSE;
@@ -480,6 +482,9 @@ BEGIN
                                ON ObjectLink_Juridical_Section.ObjectId = gpReport.JuridicalId
                               AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
           LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
+
+       WHERE gpReport.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Мясное сырье
+          OR vbUserId <> 1058530 -- Няйко В.И.
 
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
@@ -1047,6 +1052,9 @@ BEGIN
                                  AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
 
           LEFT JOIN zfCalc_DayOfWeekName (tmpOperationGroup.OperDate) AS tmpWeekDay ON 1=1
+
+       WHERE tmpOperationGroup.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Мясное сырье
+          OR vbUserId <> 1058530 -- Няйко В.И.
     ;
 
 END;
