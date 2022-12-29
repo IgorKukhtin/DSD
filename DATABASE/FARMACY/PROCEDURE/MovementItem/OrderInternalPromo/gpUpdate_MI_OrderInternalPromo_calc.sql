@@ -67,7 +67,8 @@ BEGIN
          WHERE COALESCE (SelectMinPrice_AllGoods.Price,0) > 0
          ) AS tmpAll;
 
-
+    -- пересчитали Итоговые суммы по накладной
+    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
     -- по мастеру заполняем zc_Movement_OrderInternalPromoPartner 
     PERFORM lpInsertUpdate_Movement_OrderInternalPromoPartner (ioId         := 0

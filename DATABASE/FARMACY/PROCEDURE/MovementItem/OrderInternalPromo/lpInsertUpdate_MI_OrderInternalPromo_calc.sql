@@ -33,12 +33,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Juridical(), ioId, inJuridicalId);
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioId, inContractId);
-
-    -- пересчитали Итоговые суммы по накладной
-    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
     
     -- сохранили протокол
-    --PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+    PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$

@@ -158,8 +158,8 @@ object MainForm: TMainForm
           Width = 50
         end
         object customer: TcxGridDBColumn
-          Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
-          DataBinding.FieldName = 'customer'
+          Caption = #1058#1077#1083#1077#1092#1086#1085
+          DataBinding.FieldName = 'customerPhone'
           GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderGlyphAlignmentHorz = taCenter
@@ -1074,5 +1074,33 @@ object MainForm: TMainForm
       '')
     Left = 44
     Top = 128
+  end
+  object spSetErased: TZStoredProc
+    Connection = ZConnection1
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'inMovementId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inSession'
+        ParamType = ptInput
+      end>
+    StoredProcName = 'gpSetErased_Movement_Check'
+    Left = 728
+    Top = 312
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'inMovementId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inSession'
+        ParamType = ptInput
+      end>
   end
 end
