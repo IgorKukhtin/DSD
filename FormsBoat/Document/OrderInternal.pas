@@ -195,6 +195,11 @@ type
     edOrderClient: TcxButtonEdit;
     GuidesOrderClient: TdsdGuides;
     spSelectPrint: TdsdStoredProc;
+    isEnabled: TcxGridDBColumn;
+    Comment_goods: TcxGridDBColumn;
+    ProdColorName_goods: TcxGridDBColumn;
+    ProdColorName_goods_ch3: TcxGridDBColumn;
+    Comment_goods_ch3: TcxGridDBColumn;
 
   private
   public

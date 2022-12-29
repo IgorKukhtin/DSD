@@ -102,6 +102,7 @@ type
     miUpdate: TMenuItem;
     EngineNum: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
+    Comment_goods: TcxGridDBColumn;
   private
   public
   end;

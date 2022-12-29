@@ -68,7 +68,7 @@ object CashOutJournalForm: TCashOutJournalForm
       Caption = #1050#1072#1089#1089#1072':'
     end
     object ceCash: TcxButtonEdit
-      Left = 461
+      Left = 463
       Top = 5
       Properties.Buttons = <
         item

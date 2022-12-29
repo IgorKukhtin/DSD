@@ -1,5 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_OrderClient()
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
     IN inGoodsId                Integer   , -- “овары
     IN inAmount                 TFloat    , --  оличество
     IN inComment                TVarChar  , --
+    IN inIsEnabled              Boolean   ,
    OUT outIsErased              Boolean   , -- удален
     IN inSession                TVarChar    -- сесси€ пользовател€
 )
@@ -30,23 +32,39 @@ BEGIN
          outIsErased := gpMovementItem_OrderInternal_SetUnErased (ioId, inSession);
      ENd IF;
 
-     -- сохранили <Ёлемент документа>
-     SELECT tmp.ioId
-            INTO ioId 
-     FROM lpInsertUpdate_MovementItem_OrderInternal (ioId
-                                                   , inMovementId
-                                                   , inMovementId_OrderClient
-                                                   , inGoodsId
-                                                   , inAmount
-                                                   , inComment
-                                                   , vbUserId
-                                                   ) AS tmp;
-     
+
+     IF inIsEnabled = FALSE
+     THEN
+         -- ѕроверка
+         IF ioId > 0
+         THEN
+             -- удалили
+             PERFORM gpMovementItem_OrderInternal_SetErased (inMovementItemId:= ioId, inSession:= inSession);
+             --
+             outIsErased:= TRUE;
+
+         END IF;
+
+     ELSE
+         -- сохранили <Ёлемент документа>
+         SELECT tmp.ioId
+                INTO ioId
+         FROM lpInsertUpdate_MovementItem_OrderInternal (ioId
+                                                       , inMovementId
+                                                       , inMovementId_OrderClient
+                                                       , inGoodsId
+                                                       , inAmount
+                                                       , inComment
+                                                       , vbUserId
+                                                       ) AS tmp;
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+
+     END IF;
+
      -- пересчитали »тоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
