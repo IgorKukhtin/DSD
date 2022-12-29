@@ -18,6 +18,7 @@ RETURNS TABLE (GroupId Integer, GroupName TVarChar
              , ReceiptLevelName TVarChar, ReceiptLevelName_dt TVarChar
              , NPP_1 Integer, NPP_2 Integer
              , NPP_pcp Integer,ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar
+             , mi_child_count Integer
              , Color_Value Integer
               )
 AS
@@ -89,7 +90,7 @@ BEGIN
                                     -- Узел / Комплектующие / Работы/Услуги
                                   , MovementItem.ObjectId                     AS ObjectId
                                     -- Количество шаблон сборки
-                                  , MovementItem.Amount / CASE WHEN MIFloat_ForCount.ValueData > 0 THEN MIFloat_ForCount.ValueData ELSE 1 END AS Amount
+                                  , zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData) AS Amount
                                     -- Количество заказ поставщику
                                   , MIFloat_AmountPartner.ValueData           AS AmountPartner
 
@@ -115,7 +116,7 @@ BEGIN
                                AND MovementItem.isErased   = FALSE
                             )
      -- Элементы - Комплектующие сборка узла
-   , tmpItem_Detail AS (SELECT MovementItem.Id                           AS MovementItemId
+, tmpItem_Detail_mi AS (SELECT MovementItem.Id                           AS MovementItemId
                                -- Поставщик
                              , MILinkObject_Partner.ObjectId             AS PartnerId
 
@@ -133,7 +134,7 @@ BEGIN
                                --
                              , MILinkObject_ReceiptLevel.ObjectId        AS ReceiptLevelId
                                -- Количество для сборки Узла
-                             , MovementItem.Amount / CASE WHEN MIFloat_ForCount.ValueData > 0 THEN MIFloat_ForCount.ValueData ELSE 1 END AS Amount
+                             , zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData) AS Amount
                                -- Количество заказ поставщику
                              , MIFloat_AmountPartner.ValueData           AS AmountPartner
 
@@ -200,53 +201,49 @@ BEGIN
                                                     ON ObjectLink_ReceiptProdModelChild_ReceiptLevel.ObjectId = ObjectLink_ReceiptProdModelChild_Object.ObjectId
                                                    AND ObjectLink_ReceiptProdModelChild_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
                                LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptProdModelChild_ReceiptLevel.ChildObjectId
-                        /* UNION
-                          -- уровень ReceiptGoods
-                          SELECT DISTINCT
-                                 -- какой узел собирается
-                                 tmpItem.GoodsId                     AS GoodsId_parent
-                                 -- комплектующие
-                               , tmpItem.ObjectId                    AS GoodsId
-                                 -- LevelName
-                               , Object_ReceiptLevel.ValueData       AS ReceiptLevelName
-                                 --
-                               , ObjectFloat_ReceiptGoodsChild_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END AS Value
-                                 -- "виртуальный" узел
-                               , ObjectLink_GoodsChild.ChildObjectId AS GoodsId_child
-                          FROM tmpItem_Detail AS tmpItem
-                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_Object
-                                                    ON ObjectLink_ReceiptGoodsChild_Object.ChildObjectId = tmpItem.ObjectId
-                                                   AND ObjectLink_ReceiptGoodsChild_Object.DescId        = zc_ObjectLink_ReceiptGoodsChild_Object()
-                               -- ReceiptGoodsChild не удаленные
-                               INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = ObjectLink_ReceiptGoodsChild_Object.ObjectId
-                                                                            AND Object_ReceiptGoodsChild.IsErased = FALSE
-                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_ReceiptLevel
-                                                    ON ObjectLink_ReceiptGoodsChild_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
-                                                   AND ObjectLink_ReceiptGoodsChild_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
-                               LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptGoodsChild_ReceiptLevel.ChildObjectId
-                               LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
-                                                    ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
-                                                   AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
-                               -- значение в сборке
-                               LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptGoodsChild_Value
-                                                     ON ObjectFloat_ReceiptGoodsChild_Value.ObjectId = Object_ReceiptGoodsChild.Id
-                                                    AND ObjectFloat_ReceiptGoodsChild_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
-                               LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
-                                                     ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
-                                                    AND ObjectFloat_ForCount.DescId = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
-
-                               -- ReceiptGoods
-                               INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
-                                                     ON ObjectLink_ReceiptGoods.ObjectId      = Object_ReceiptGoodsChild.Id
-                                                    AND ObjectLink_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
-                               -- ReceiptGoods не удаленный
-                               INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = ObjectLink_ReceiptGoods.ChildObjectId
-                                                                       AND Object_ReceiptGoods.IsErased = FALSE
-                               INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
-                                                     ON ObjectLink_ReceiptGoods_Object.ObjectId      = Object_ReceiptGoods.Id
-                                                    AND ObjectLink_ReceiptGoods_Object.DescId        = zc_ObjectLink_ReceiptGoods_Object()
-                                                    AND ObjectLink_ReceiptGoods_Object.ChildObjectId = tmpItem.GoodsId*/
                          )
+     -- Комплектующие сборка узла
+   , tmpItem_Detail AS (-- уровень 3 - собираем Лодку
+                        SELECT
+                               -1 AS GoodsId
+                             , tmpItem_Сhild.ObjectId
+                             , tmpItem_Сhild.PartnerId
+                             , tmpItem_Сhild.Amount
+                             , tmpItem_Сhild.AmountPartner
+                             , 0 AS GoodsId_basis
+                             , 0 AS ReceiptLevelId
+                             , 0 AS ProdColorPatternId
+                        FROM tmpItem_Сhild
+                        WHERE tmpItem_Сhild.ProdOptionsId = 0
+
+                       UNION ALL
+                        -- уровень 1 - собираем только "виртуальные" узлы
+                        SELECT
+                               tmpItem_Detail.GoodsId_basis AS GoodsId
+                             , tmpItem_Detail.ObjectId
+                             , tmpItem_Detail.PartnerId
+                             , tmpItem_Detail.Amount
+                             , tmpItem_Detail.AmountPartner
+                             , tmpItem_Detail.GoodsId_basis
+                             , tmpItem_Detail.ReceiptLevelId
+                             , tmpItem_Detail.ProdColorPatternId
+                        FROM tmpItem_Detail_mi AS tmpItem_Detail
+                        WHERE tmpItem_Detail.GoodsId_basis > 0
+
+                       UNION ALL
+                        -- уровень 2 - собираем узлы и подставляем "виртуальные" узлы
+                        SELECT DISTINCT
+                               tmpItem_Detail.GoodsId
+                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN tmpItem_Detail.GoodsId_basis ELSE tmpItem_Detail.ObjectId END AS ObjectId
+                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.PartnerId     END AS PartnerId
+                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 1 ELSE tmpItem_Detail.Amount        END AS Amount
+                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.AmountPartner END AS AmountPartner
+                             , 0 AS GoodsId_basis
+                             , 0 AS ReceiptLevelId
+                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.ProdColorPatternId END AS ProdColorPatternId
+                        FROM tmpItem_Detail_mi AS tmpItem_Detail
+
+                       )
       -- Результат
       -- 1. ProdColorItems
       SELECT
@@ -361,8 +358,8 @@ BEGIN
            , Object_ProdColorPattern.ObjectCode AS ProdColorPatternCode
            , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
 
+           , (SELECT COUNT(*) FROM tmpItem_Detail WHERE tmpItem_Detail.GoodsId = tmpItem_Сhild.ObjectId) :: Integer AS mi_child_count
            , zc_Color_White() :: Integer AS Color_Value
-
 
        FROM (-- уровень 3 - собираем Лодку
              SELECT DISTINCT
@@ -414,51 +411,13 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsGroup_ch ON Object_GoodsGroup_ch.Id = ObjectLink_GoodsGroup_ch.ChildObjectId
             LEFT JOIN Object AS Object_ProdColor_ch  ON Object_ProdColor_ch.Id  = ObjectLink_ProdColor_ch.ChildObjectId
 
+            -- Только для ReceiptProdModel
             LEFT JOIN tmpReceiptLevel ON tmpReceiptLevel.GoodsId = tmpItem_Сhild.ObjectId
                                      AND tmpItem_Сhild.GroupId   = 22
+
             -- Комплектующие сборка узла
-            INNER JOIN (-- уровень 3 - собираем Лодку
-                        SELECT
-                               -1 AS GoodsId
-                             , tmpItem_Сhild.ObjectId
-                             , tmpItem_Сhild.PartnerId
-                             , tmpItem_Сhild.Amount
-                             , tmpItem_Сhild.AmountPartner
-                             , 0 AS GoodsId_basis
-                             , 0 AS ReceiptLevelId
-                             , 0 AS ProdColorPatternId
-                        FROM tmpItem_Сhild
-                        WHERE tmpItem_Сhild.ProdOptionsId = 0
+            INNER JOIN tmpItem_Detail ON tmpItem_Detail.GoodsId = tmpItem_Сhild.ObjectId
 
-                       UNION ALL
-                        -- уровень 1 - собираем только "виртуальные" узлы
-                        SELECT
-                               tmpItem_Detail.GoodsId_basis AS GoodsId
-                             , tmpItem_Detail.ObjectId
-                             , tmpItem_Detail.PartnerId
-                             , tmpItem_Detail.Amount
-                             , tmpItem_Detail.AmountPartner
-                             , tmpItem_Detail.GoodsId_basis
-                             , tmpItem_Detail.ReceiptLevelId
-                             , tmpItem_Detail.ProdColorPatternId
-                        FROM tmpItem_Detail
-                        WHERE tmpItem_Detail.GoodsId_basis > 0
-
-                       UNION ALL
-                        -- уровень 2 - собираем узлы и подставляем "виртуальные" узлы
-                        SELECT DISTINCT
-                               tmpItem_Detail.GoodsId
-                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN tmpItem_Detail.GoodsId_basis ELSE tmpItem_Detail.ObjectId END AS ObjectId
-                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.PartnerId     END AS PartnerId
-                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 1 ELSE tmpItem_Detail.Amount        END AS Amount
-                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.AmountPartner END AS AmountPartner
-                             , 0 AS GoodsId_basis
-                             , 0 AS ReceiptLevelId
-                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.ProdColorPatternId END AS ProdColorPatternId
-                        FROM tmpItem_Detail
-
-                       ) AS tmpItem_Detail
-                         ON tmpItem_Detail.GoodsId = tmpItem_Сhild.ObjectId
 
             LEFT JOIN tmpProdColorItems ON tmpProdColorItems.ProdColorPatternId = tmpItem_Detail.ProdColorPatternId
                                        AND tmpProdColorItems.GoodsId            = tmpItem_Detail.ObjectId
@@ -571,6 +530,7 @@ BEGIN
            , 0  :: Integer  AS ProdColorPatternId
            , 0  :: Integer  AS ProdColorPatternCode
            , '' :: TVarChar AS ProdColorPatternName
+           , 0  :: Integer  AS mi_child_count
 
            , tmpProdColorItems.Color_Value
 
@@ -636,6 +596,7 @@ BEGIN
            , 0  :: Integer  AS ProdColorPatternId
            , 0  :: Integer  AS ProdColorPatternCode
            , '' :: TVarChar AS ProdColorPatternName
+           , 0  :: Integer  AS mi_child_count
 
            , zc_Color_White()    :: Integer AS Color_Value
 

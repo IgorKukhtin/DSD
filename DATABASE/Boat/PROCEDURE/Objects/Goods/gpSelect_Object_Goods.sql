@@ -237,6 +237,7 @@ BEGIN
                                                 AND ObjectLink_ReceiptGoods_Object.DescId   = zc_ObjectLink_ReceiptGoods_Object()
                        -- это НЕ виртуальная сборка
                        WHERE ObjectLink_GoodsChild.ChildObjectId IS NULL
+                         AND ObjectReceipt.ValueData ILIKE '%280%'
 
                      UNION
                        -- сборка "виртуальных" узлов
@@ -325,6 +326,7 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModel_Model
                                                  ON ObjectLink_ReceiptProdModel_Model.ObjectId = ObjectReceiptProdModel.Id
                                                 AND ObjectLink_ReceiptProdModel_Model.DescId   = zc_ObjectLink_ReceiptProdModel_Model()
+                       WHERE ObjectReceiptProdModel.ValueData ILIKE '%280%'
                       )
          -- подразделение сборки
          , tmpUnit_receipt AS (SELECT tmpReceipt.GoodsId

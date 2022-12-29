@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , UpdateName TVarChar, UpdateDate TDateTime 
              --
              , MovementItemId Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, Article TVarChar, GoodsName TVarChar, Comment_goods TVarChar
              , Amount TFloat
              , UnitId Integer
              , UnitName TVarChar 
@@ -30,8 +30,6 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , CIN TVarChar
              , InsertName_mi TVarChar
              , InsertDate_mi TDateTime
-
-
              )
 
 AS
@@ -96,8 +94,8 @@ BEGIN
                                                                 ON MILO_Insert.MovementItemId = MovementItem.Id
                                                                AND MILO_Insert.DescId = zc_MILinkObject_Insert()
                                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
-                           )
-
+                          )
+        -- Результат
         SELECT Movement_OrderInternal.Id
              , zfConvert_StringToNumber (Movement_OrderInternal.InvNumber) AS InvNumber
              , zfCalc_InvNumber_isErased ('', Movement_OrderInternal.InvNumber, Movement_OrderInternal.OperDate, Movement_OrderInternal.StatusId) AS InvNumber_Full
@@ -118,7 +116,9 @@ BEGIN
              , MovementItem.Id                      AS MovementItemId
              , MovementItem.GoodsId                 AS GoodsId
              , Object_Goods.ObjectCode              AS GoodsCode
+             , ObjectString_Article.ValueData       AS Article
              , Object_Goods.ValueData               AS GoodsName
+             , ObjectString_Comment.ValueData       AS Comment_goods
              , MovementItem.Amount ::TFloat         AS Amount
              , Object_Unit.Id                       AS UnitId
              , Object_Unit.ValueData                AS UnitName
@@ -166,6 +166,13 @@ BEGIN
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.UnitId
 
+             LEFT JOIN ObjectString AS ObjectString_Article
+                                    ON ObjectString_Article.ObjectId = MovementItem.GoodsId
+                                   AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+             LEFT JOIN ObjectString AS ObjectString_Comment
+                                    ON ObjectString_Comment.ObjectId = MovementItem.GoodsId
+                                   AND ObjectString_Comment.DescId   = zc_ObjectString_Goods_Comment()
+
              LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MovementItem.MovementId_OrderClient
              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                           ON MovementLinkObject_From.MovementId = MovementItem.MovementId_OrderClient
@@ -194,4 +201,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_OrderInternal (inStartDate:= '01.01.2021', inEndDate:= '31.12.2021', inClientId:=0 , inIsErased := FALSE, inSession:= zfCalc_UserAdmin())
-select * from gpSelect_Movement_OrderInternal(inStartDate := ('24.12.2022')::TDateTime , inEndDate := ('24.12.2022')::TDateTime , inIsErased := 'False' ,  inSession := '5');
+-- select * from gpSelect_Movement_OrderInternal(inStartDate := ('24.12.2022')::TDateTime , inEndDate := ('24.12.2022')::TDateTime , inIsErased := 'False' ,  inSession := '5');

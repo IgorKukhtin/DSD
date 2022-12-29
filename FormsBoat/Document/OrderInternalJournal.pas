@@ -97,6 +97,8 @@ type
     bbPrintStickerTermo: TdxBarButton;
     actPrint2: TdsdPrintAction;
     bbPrint2: TdxBarButton;
+    Article: TcxGridDBColumn;
+    Comment_goods: TcxGridDBColumn;
   private
   public
   end;

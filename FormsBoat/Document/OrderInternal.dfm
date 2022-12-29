@@ -469,7 +469,7 @@ object OrderInternalForm: TOrderInternalForm
               DataBinding.FieldName = 'Amount'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
-              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Properties.DisplayFormat = ',0.########;-,0.########; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 70
@@ -790,7 +790,7 @@ object OrderInternalForm: TOrderInternalForm
               DataBinding.FieldName = 'Amount'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
-              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Properties.DisplayFormat = ',0.########;-,0.########; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1096#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080')'
@@ -801,7 +801,7 @@ object OrderInternalForm: TOrderInternalForm
               Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079#1077#1088#1074
               DataBinding.FieldName = 'AmountReserv'
               PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Properties.DisplayFormat = ',0.########;-,0.########; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079#1077#1088#1074
@@ -812,7 +812,7 @@ object OrderInternalForm: TOrderInternalForm
               Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' /'#1087#1077#1088#1077#1084#1077#1097'.'
               DataBinding.FieldName = 'AmountSend'
               PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Properties.DisplayFormat = ',0.########;-,0.########; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' /'#1087#1077#1088#1077#1084#1077#1097'.'
@@ -1391,42 +1391,11 @@ object OrderInternalForm: TOrderInternalForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'InvNumber_OrderClient;UnitName;GoodsName;ReceiptLevelName_ch;Goo' +
-            'dsName_ch'
+          IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2'
         end>
-      Params = <
-        item
-          Name = 'InvNumber'
-          Value = ''
-          Component = edInvNumber
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'From'
-          Value = ''
-          Component = GuidesFrom
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = 0d
-          Component = edOperDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
+      Params = <>
       ReportName = 'PrintMovement_OrderInternal'
       ReportNameParam.Value = 'PrintMovement_OrderInternal'
       ReportNameParam.DataType = ftString
@@ -1767,10 +1736,6 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndex = 15
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'NPP;ProdColorGroupName'
@@ -1816,10 +1781,6 @@ object OrderInternalForm: TOrderInternalForm
       Hint = 'Print OrderConfirmation'
       ImageIndex = 18
       DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
@@ -1998,10 +1959,6 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
@@ -3230,15 +3187,11 @@ object OrderInternalForm: TOrderInternalForm
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderInternal_Print'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
