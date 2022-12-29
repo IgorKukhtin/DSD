@@ -880,7 +880,9 @@ begin
     FRESTRequest.Execute;
   except on E: Exception do
          Begin
-           ShowMessage('Ошибка подписи оплаты рецепта:'#13#10 + E.Message);
+           if FRESTResponse.JSONValue <> Nil then
+             ShowMessage('Ошибка подписи оплаты рецепта:'#13#10 + E.Message + #13#10 + FRESTResponse.JSONValue.Tostring)
+           else ShowMessage('Ошибка подписи оплаты рецепта:'#13#10 + E.Message);
            Exit;
          End;
   end;

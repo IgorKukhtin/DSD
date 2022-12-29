@@ -91,13 +91,12 @@ type
     actGoodsChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
-    bbInsertRecordCost: TdxBarButton;
     bbCompleteCost: TdxBarButton;
     bbactUnCompleteCost: TdxBarButton;
     bbactSetErasedCost: TdxBarButton;
     actShowErasedCost: TBooleanStoredProcAction;
     bbShowErasedCost: TdxBarButton;
-    InsertRecordGoods: TInsertRecord;
+    InsertRecordPersonal: TInsertRecord;
     bbInsertRecordGoods: TdxBarButton;
     bbPrintSticker: TdxBarButton;
     bbPrintStickerTermo: TdxBarButton;
@@ -151,6 +150,16 @@ type
     actPrint: TdsdPrintAction;
     EngineNum: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
+    actPersonalChoiceForm: TOpenChoiceForm;
+    spInsertUpdateMIMaster_basis: TdsdStoredProc;
+    Comment: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    actChoiceFormOrderClientItem: TOpenChoiceForm;
+    actChoiceFormOrderClient_grid: TOpenChoiceForm;
+    cxLabel15: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
   private
   public
   end;

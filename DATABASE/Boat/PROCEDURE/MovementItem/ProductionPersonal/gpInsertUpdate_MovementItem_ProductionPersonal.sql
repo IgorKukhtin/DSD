@@ -2,13 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionPersonal(Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionPersonal(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionPersonal(Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ProductionPersonal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inBarCode_start       TVarChar   , -- сотрудник Старт
     IN inBarCode_end         TVarChar   , -- сотрудник ФИНИШ
-    IN inBarCode_OrderClient TVarChar   , -- заказ клиента
+    IN inBarCode_OrderClient TVarChar   , -- заказ клиента  
+    IN inGoodsId             Integer    ,
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -21,7 +23,9 @@ $BODY$
    DECLARE vbMovementId_OrderClient Integer;
    DECLARE vbStartBegin TDateTime;
    DECLARE vbEndBegin   TDateTime;
-   DECLARE vbAmount     TFloat;
+   DECLARE vbAmount     TFloat;  
+   DECLARE vbGoodsId_end Integer;
+   DECLARE vbComment TVarChar;
    
 BEGIN
 
@@ -116,8 +120,10 @@ BEGIN
          -- пробуем найти строку по сотруднику с пустой датой окончания
          SELECT MovementItem.Id
               , MIDate_StartBegin.ValueData
-              , MILO_Product.ObjectId
-        INTO ioId, vbStartBegin, vbProductId_end
+              , MILO_Product.ObjectId  
+              , MILinkObject_Goods.ObjectId AS GoodsId
+              , MIString_Comment.ValueData  AS Comment
+        INTO ioId, vbStartBegin, vbProductId_end, vbGoodsId_end, vbComment
          FROM MovementItem
               LEFT JOIN MovementItemDate AS MIDate_StartBegin
                                          ON MIDate_StartBegin.MovementItemId = MovementItem.Id
@@ -127,7 +133,13 @@ BEGIN
                                         AND MIDate_EndBegin.DescId = zc_MIDate_EndBegin()
               LEFT JOIN MovementItemLinkObject AS MILO_Product
                                                ON MILO_Product.MovementItemId = MovementItem.Id
-                                              AND MILO_Product.DescId = zc_MILinkObject_Product()
+                                              AND MILO_Product.DescId = zc_MILinkObject_Product() 
+              LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                               ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                              AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+              LEFT JOIN MovementItemString AS MIString_Comment
+                                           ON MIString_Comment.MovementItemId = MovementItem.Id
+                                          AND MIString_Comment.DescId = zc_MIString_Comment()
          WHERE MovementItem.MovementId = inMovementId
            AND MovementItem.DescId     =  zc_MI_Master()
            AND MovementItem.isErased   = FALSE
@@ -150,10 +162,12 @@ BEGIN
              FROM lpInsertUpdate_MovementItem_ProductionPersonal (ioId
                                                                 , inMovementId
                                                                 , vbPersonalId
-                                                                , vbProductId_end
+                                                                , vbProductId_end 
+                                                                , vbGoodsId_end
                                                                 , vbStartBegin
                                                                 , vbEndBegin
-                                                                , vbAmount
+                                                                , vbAmount     
+                                                                , vbComment
                                                                 , vbUserId
                                                                 ) AS tmp;
          END IF;
@@ -236,10 +250,12 @@ BEGIN
      FROM lpInsertUpdate_MovementItem_ProductionPersonal (ioId
                                                         , inMovementId
                                                         , vbPersonalId
-                                                        , vbProductId
+                                                        , vbProductId 
+                                                        , inGoodsId
                                                         , vbStartBegin
                                                         , vbEndBegin
-                                                        , vbAmount
+                                                        , vbAmount 
+                                                        , ''::TVarChar --inComment
                                                         , vbUserId
                                                         ) AS tmp;
 
@@ -258,6 +274,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.12.22         *
  12.07.21         *
 */
 

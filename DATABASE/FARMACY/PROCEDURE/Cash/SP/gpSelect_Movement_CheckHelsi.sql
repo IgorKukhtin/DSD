@@ -64,9 +64,11 @@ BEGIN
                                , MIString_IdSP.ValueData       AS IdSP
                                , COALESCE (MIString_ProgramIdSP.ValueData, '')::TVarChar AS ProgramIdSP
                                , MIString_DosageIdSP.ValueData AS DosageIdSP
+                               , MLO_MedicalProgramSP.ObjectId                           AS MedicalProgramSPID
                                , ObjectString_ProgramId.ValueData                        AS MedicalProgramId
+                               , COALESCE(MovementFloat_PercentPayment.ValueData, 0)::TFloat  AS PercentPayment
                                                                 -- № п/п - на всякий случай
-                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MLO_MedicalProgramSP.ObjectId  ORDER BY Movement.OperDate DESC) AS Ord
                           FROM Movement
                                INNER JOIN MovementDate AS MovementDate_OperDateStart
                                                        ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -77,6 +79,10 @@ BEGIN
                                                        ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                                       AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
                                                       AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+
+                               LEFT JOIN MovementFloat AS MovementFloat_PercentPayment
+                                                       ON MovementFloat_PercentPayment.MovementId = Movement.Id
+                                                      AND MovementFloat_PercentPayment.DescId = zc_MovementFloat_PercentPayment()
 
                                LEFT JOIN MovementLinkObject AS MLO_MedicalProgramSP
                                                             ON MLO_MedicalProgramSP.MovementId = Movement.Id
@@ -157,8 +163,12 @@ BEGIN
            , tmpGoodsSP.IdSP                                        AS IdSP
            , tmpGoodsSP.ProgramIdSP                                 AS ProgramIdSP
            , tmpGoodsSP.DosageIdSP                                  AS DosageIdSP
-           , tmpGoodsSP.PriceRetSP                                  AS PriceRetSP
-           , tmpGoodsSP.PaymentSP                                   AS PaymentSP
+           , CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
+                  THEN MIFloat_PriceSale.ValueData 
+                  ELSE tmpGoodsSP.PriceRetSP END :: TFloat          AS PriceRetSP
+           , CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
+                  THEN MIFloat_Price.ValueData 
+                  ELSE tmpGoodsSP.PaymentSP END :: TFloat           AS PaymentSP
            , NULL::TVarChar                                         AS State
            , zc_Color_White()                                       AS Color_calc
 
@@ -242,6 +252,7 @@ BEGIN
                                                     AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
            -- Соц Проект
            LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+                               AND tmpGoodsSP.MedicalProgramSPId = MovementLinkObject_MedicalProgramSP.ObjectId
                                AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
            LEFT JOIN  Object AS Object_IntenalSP ON Object_IntenalSP.Id = tmpGoodsSP.IntenalSPId
 
@@ -269,4 +280,6 @@ $BODY$
 -- тест
 -- 
 
-SELECT * FROM gpSelect_Movement_CheckHelsi (inStartDate:= '24.05.2022', inSession:= '3')
+--SELECT * FROM gpSelect_Movement_CheckHelsi (inStartDate:= '24.05.2022', inSession:= '3')
+
+select * from gpSelect_Movement_CheckHelsi(inStartDate := ('26.12.2022')::TDateTime ,  inSession := '3');

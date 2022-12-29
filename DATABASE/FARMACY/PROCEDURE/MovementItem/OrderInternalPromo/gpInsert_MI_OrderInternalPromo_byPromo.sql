@@ -17,7 +17,7 @@ BEGIN
     
     -- данные из шапки документа
     SELECT MovementLinkObject_Retail.ObjectId AS RetailId
-   INTO vbRetailId 
+    INTO vbRetailId 
     FROM Movement 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
                                       ON MovementLinkObject_Retail.MovementId = Movement.Id
@@ -38,16 +38,16 @@ BEGIN
     */
      
     -- сохраняем товары
-    PERFORM lpInsertUpdate_MI_OrderInternalPromo (ioId                 := 0
-                                                , inMovementId         := inMovementId
-                                                , inGoodsId            := tmpAll.GoodsId_retail
-                                                , inJuridicalId        := 0
-                                                , inContractId         := 0
-                                                , inAmount             := 0                       :: TFloat
-                                                , inPromoMovementId    := tmpAll.MovementId_Promo :: TFloat
-                                                , inPrice              := 0                       :: TFloat
-                                                , inUserId             := vbUserId
-                                                )
+    PERFORM lpInsertUpdate_MI_OrderInternalPromo_calc (ioId                 := 0
+                                                     , inMovementId         := inMovementId
+                                                     , inGoodsId            := tmpAll.GoodsId_retail
+                                                     , inJuridicalId        := 0
+                                                     , inContractId         := 0
+                                                     , inAmount             := 0                       :: TFloat
+                                                     , inPromoMovementId    := tmpAll.MovementId_Promo :: TFloat
+                                                     , inPrice              := 0                       :: TFloat
+                                                     , inUserId             := vbUserId
+                                                     )
     FROM (WITH 
              -- товары входящего PromoMovement
              tmpMIPromo AS (SELECT MI_Promo.MovementId                  AS MovementId_Promo
@@ -76,7 +76,24 @@ BEGIN
                                      ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                     AND ObjectLink_Goods_Object.ChildObjectId = vbRetailId
-          ) AS tmpAll;       
+          ) AS tmpAll;    
+          
+    -- пересчитали Итоговые суммы по накладной
+    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+          
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inSession, inMovementId, 
+                           (SELECT COUNT(*)
+                            FROM MovementItem AS MI_Promo
+                            WHERE MI_Promo.MovementId = inMovementId
+                              AND MI_Promo.DescId = zc_MI_Master()
+                              AND MI_Promo.isErased = FALSE
+                            );
+    END IF;
+             
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -86,3 +103,5 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  16.09.19         *
 */
+
+select * from gpInsert_MI_OrderInternalPromo_byPromo(inMovementId := 27522956 , inMovementId_promo := 2115795 ,  inSession := '3');

@@ -302,14 +302,14 @@ BEGIN
         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = COALESCE(tmpSupplierFailures.ContractId, tmpMI_All.ContractId)
                                                  
         LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
-                                ON ObjectBoolean_PartialPay.ObjectId = tmpSupplierFailures.ContractId
+                                ON ObjectBoolean_PartialPay.ObjectId = Object_Contract.Id
                                AND ObjectBoolean_PartialPay.DescId = zc_ObjectBoolean_Contract_PartialPay()
         LEFT JOIN ObjectBoolean AS ObjectBoolean_DefermentContract
-                                ON ObjectBoolean_DefermentContract.ObjectId = tmpSupplierFailures.ContractId
+                                ON ObjectBoolean_DefermentContract.ObjectId = Object_Contract.Id
                                AND ObjectBoolean_DefermentContract.DescId = zc_ObjectBoolean_Contract_DefermentContract()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
-                              ON ObjectFloat_Deferment.ObjectId = tmpSupplierFailures.ContractId
+                              ON ObjectFloat_Deferment.ObjectId = Object_Contract.Id
                              AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
 
     GROUP BY Object_JuridicalMain.Id
@@ -343,4 +343,5 @@ $BODY$
 -- тест
 -- 
 
-select * from gpReport_OrderExternal_JuridicalItog(inDateStart := ('20.04.2022')::TDateTime , inDateEnd := ('20.04.2022')::TDateTime ,  inSession := '3');
+
+select * from gpReport_OrderExternal_JuridicalItog(inDateStart := ('27.12.2022')::TDateTime , inDateEnd := ('28.12.2022')::TDateTime ,  inSession := '3');

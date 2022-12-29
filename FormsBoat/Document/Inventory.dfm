@@ -1946,7 +1946,7 @@ object InventoryForm: TInventoryForm
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 464
-    Top = 240
+    Top = 280
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -2400,8 +2400,8 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 567
-    Top = 208
+    Left = 551
+    Top = 160
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     DataSets = <>
@@ -2513,8 +2513,8 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 216
+    Left = 704
+    Top = 288
   end
   object dsdDBViewAddOn0: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

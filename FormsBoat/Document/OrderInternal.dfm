@@ -859,8 +859,8 @@ object OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 862
-    Top = 119
+    Left = 838
+    Top = 103
   end
   object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_OrderInternal'
@@ -2340,8 +2340,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 162
-    Top = 144
+    Left = 138
+    Top = 168
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -2577,8 +2577,8 @@ object OrderInternalForm: TOrderInternalForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 518
-    Top = 130
+    Left = 526
+    Top = 82
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -2615,8 +2615,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 494
-    Top = 168
+    Left = 486
+    Top = 192
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetUnErased'
@@ -2641,7 +2641,7 @@ object OrderInternalForm: TOrderInternalForm
       end>
     PackSize = 1
     Left = 414
-    Top = 160
+    Top = 184
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'

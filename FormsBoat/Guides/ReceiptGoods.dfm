@@ -1408,8 +1408,8 @@
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
-    Left = 464
-    Top = 96
+    Left = 456
+    Top = 168
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -3016,8 +3016,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 80
+    Left = 480
+    Top = 160
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 352
@@ -3075,8 +3075,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 128
+    Left = 408
+    Top = 168
   end
   object Child1CDS: TClientDataSet
     Aggregates = <>
