@@ -468,7 +468,7 @@ BEGIN
 
      -- определяется - может ли быть несколько документов под одну заявку
      vbIsDocMany:= inBranchCode = 1 AND vbRetailId IN (310839 -- Фора
-                                                   --, 310854 -- Фоззі
+                                                     , 310854 -- Фоззі
                                                       );
      -- определяется признак
      inIsDocInsert:= inIsDocInsert = TRUE AND vbIsDocMany = TRUE;
