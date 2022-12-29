@@ -100,7 +100,7 @@ BEGIN
 
         SELECT Movement_OrderInternal.Id
              , zfConvert_StringToNumber (Movement_OrderInternal.InvNumber) AS InvNumber
-             , ('№ ' || Movement_OrderInternal.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderInternal.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_Full
+             , zfCalc_InvNumber_isErased ('', Movement_OrderInternal.InvNumber, Movement_OrderInternal.OperDate, Movement_OrderInternal.StatusId) AS InvNumber_Full
              , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_OrderInternal.Id) AS BarCode
              , Movement_OrderInternal.OperDate
              , Object_Status.ObjectCode                   AS StatusCode
@@ -125,7 +125,7 @@ BEGIN
              , MovementItem.Comment ::TVarChar      AS Comment_mi
 
              , Movement_OrderClient.Id                                   AS MovementId_OrderClient
-             , ('№ ' || Movement_OrderClient.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderClient.OperDate) :: TVarChar ) :: TVarChar  AS InvNumberFull_OrderClient
+             , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
              , Object_From.ValueData                      AS FromName 
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,Object_Product.isErased) AS CIN

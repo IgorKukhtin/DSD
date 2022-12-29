@@ -337,9 +337,12 @@ BEGIN
            -- товар сборки
          , tmpGoods_receipt AS (SELECT tmp.GoodsId
                                      , Object_Goods.ValueData AS GoodsName_receipt
+                                     , tmp.Name_all
                                 FROM (SELECT tmpReceipt.GoodsId
-                                           , MIN (tmpReceipt.ObjectId_master) AS GoodsId_receipt
+                                           , MAX (tmpReceipt.ObjectId_master) AS GoodsId_receipt
+                                           , STRING_AGG (DISTINCT Object_Goods.ValueData, ';') as Name_all
                                       FROM tmpReceipt
+                                           INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpReceipt.ObjectId_master
                                       GROUP BY tmpReceipt.GoodsId
                                       ) AS tmp
                                      INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId_receipt
@@ -422,7 +425,10 @@ BEGIN
             , Object_Unit.Id                     AS UnitId
             , Object_Unit.ValueData              AS UnitName
             , tmpUnit_receipt.UnitName_receipt   ::TVarChar
+
             , tmpGoods_receipt.GoodsName_receipt ::TVarChar
+          --, SUBSTRING (tmpGoods_receipt.Name_all, 1, 128) :: TVarChar AS GoodsName_receipt
+
             , Object_DiscountPartner.Id           AS DiscountPartnerId
             , Object_DiscountPartner.ValueData    AS DiscountPartnerName
             , Object_TaxKind.Id                  AS TaxKindId
