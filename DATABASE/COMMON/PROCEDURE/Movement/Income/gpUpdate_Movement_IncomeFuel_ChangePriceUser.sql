@@ -15,7 +15,10 @@ $BODY$
    DECLARE vbStatusId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_IncomeFuel_ChangePriceUser());
+     IF EXISTS (SELECT 1  FROM  MovementLinkObject AS MLO WHERE MLO.MovementId = inId AND MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.ObjectId = zc_Enum_PaidKind_SecondForm())
+     THEN vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_IncomeFuel_ChangePriceUserSF());
+     ELSE vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_IncomeFuel_ChangePriceUser());
+     END IF;
 
      -- текущий статус документа
      vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inId);
