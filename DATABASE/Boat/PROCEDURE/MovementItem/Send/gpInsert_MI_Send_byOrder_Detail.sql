@@ -105,7 +105,7 @@ BEGIN
                               AND Movement.StatusId <> zc_Enum_Status_Erased()
                               -- Кол-во - попало в Резерв
                               AND MI_Detail.Amount > 0
-                              AND (ObjectLink_Goods.ObjectId = 253703 OR 253703 = 0)
+                              AND (ObjectLink_Goods.ObjectId = inReceiptGoodsId OR inReceiptGoodsId = 0)
                             GROUP BY MI_Detail.MovementId
                                    , MI_Detail.ObjectId
                                    , MI_Detail.PartionId

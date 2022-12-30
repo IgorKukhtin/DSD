@@ -62,6 +62,9 @@ type
     GuidesFiller: TGuidesFiller;
     ceAmountRemainsFrom: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
+    cxLabel15: TcxLabel;
+    edOrderClient: TcxButtonEdit;
+    GuidesOrderClient: TdsdGuides;
   private
     { Private declarations }
   public

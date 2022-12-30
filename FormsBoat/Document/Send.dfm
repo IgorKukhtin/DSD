@@ -349,7 +349,6 @@ object SendForm: TSendForm
         Height = 216
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 2
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
