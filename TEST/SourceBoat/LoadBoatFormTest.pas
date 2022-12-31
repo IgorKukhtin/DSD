@@ -435,7 +435,9 @@ end;
 begin
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalChoiceForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalChoiceForm');
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalChoiceForm');
+   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));

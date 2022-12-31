@@ -127,7 +127,7 @@ BEGIN
                             WHERE MIFloat_MovementId.ValueData IN (SELECT DISTINCT tmpMI_Child.MovementId_order FROM tmpMI_Child)
                               AND MIFloat_MovementId.DescId   = zc_MIFloat_MovementId()
                            )
-     -- сколько осталось для а=перемещения
+     -- сколько осталось для перемещения
      SELECT tmpMI_Child.MovementId_order
           , tmpMI_Child.ObjectId
           , tmpMI_Child.PartionId
@@ -154,7 +154,7 @@ BEGIN
                      AND tmpMI_Send.PartionId        = tmpMI_Child.PartionId
      -- !! осталось что Перемещать!!!
      WHERE tmpMI_Child.Amount - COALESCE (tmpMI_Send.Amount, 0) > 0
-    ;
+    ;                            
 
     -- test
     --RAISE EXCEPTION '%', (select count(*)  from _tmpOrder);
