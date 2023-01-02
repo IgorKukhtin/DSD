@@ -202,7 +202,7 @@ BEGIN
                           END :: TFloat  AS BasisPriceWVAT
                
                           -- цена продажи без НДС - если товар указан то берем цену товара, иначе это Boat Structure тогда берем SalePrice
-                        , CASE WHEN ObjectLink_Goods.ChildObjectId > 0 AND Object_ProdColorPattern.Id IS NULL -- AND 1=0
+                        , CASE WHEN ObjectLink_Goods.ChildObjectId > 0 AND Object_ProdColorPattern.Id IS NULL AND 1=0
                                     THEN CASE WHEN vbPriceWithVAT = FALSE
                                               THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                                               ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
@@ -213,7 +213,7 @@ BEGIN
                           END :: TFloat AS SalePrice
                
                           -- цена продажи с НДС - если товар указан то берем цену товара, иначе это Boat Structure тогда берем SalePrice
-                        , CASE WHEN ObjectLink_Goods.ChildObjectId > 0 AND Object_ProdColorPattern.Id IS NULL -- AND 1=0
+                        , CASE WHEN ObjectLink_Goods.ChildObjectId > 0 AND Object_ProdColorPattern.Id IS NULL AND 1=0
                                     THEN CASE WHEN vbPriceWithVAT = FALSE
                                               THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
                                               ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
@@ -244,7 +244,9 @@ BEGIN
                                              ORDER BY CASE WHEN Object_ProdColorPattern.Id > 0 THEN 0 ELSE 1 END ASC
                                                     , COALESCE (Object_ProdColorPattern.ObjectCode, 0) ASC
                                                     , COALESCE (ObjectFloat_ProdOptions_CodeVergl.ValueData, 0) ASC
-                                                    , Object_ProdOptions.ObjectCode ASC
+                                                    , ObjectString_Id_Site.ValueData ASC
+                                                    , Object_ProdOptions.ValueData   ASC
+                                                    , Object_ProdOptions.ObjectCode  ASC
                                             ) :: Integer AS NPP
                
                         , ROW_NUMBER() OVER (PARTITION BY Object_Model.Id, Object_ProdColorPattern.Id

@@ -184,10 +184,14 @@ BEGIN
                                                     AND ObjectString_Article.DescId = zc_ObjectString_Article()
                                                     AND (ObjectString_Article.ValueData ILIKE 'AGL%'
                                                       OR ObjectString_Article.ValueData ILIKE 'BEL%'
+                                                      OR ObjectString_Article.ValueData ILIKE '%x-7%'
+                                                      OR ObjectString_Article.ValueData ILIKE '%74976%'
+                                                      --
                                                       OR Object_Goods.ObjectCode < 0
+                                                      OR Object_GoodsGroup.ValueData ILIKE '%ÏÔ%'
+                                                      --
                                                       OR Object_Goods.ValueData ILIKE '%ÏÔ%'
                                                       OR Object_Goods.ValueData ILIKE '%motor%'
-                                                      OR Object_GoodsGroup.ValueData ILIKE '%ÏÔ%'
                                                       OR Object_Goods.ValueData ILIKE '%ndige Inspektionsluke%'
                                                     --OR Object_Goods.ValueData ILIKE '%Bonding Paste%'
                                                       OR Object_Goods.ValueData ILIKE '%FA®-%'
