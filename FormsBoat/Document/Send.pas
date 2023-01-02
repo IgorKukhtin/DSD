@@ -242,6 +242,11 @@ type
     actInsert_MI_Send_byOrderDetail: TdsdExecStoredProc;
     macInsert_MI_Send_byOrderDetail: TMultiAction;
     bbInsert_MI_Send_byOrderDetail: TdxBarButton;
+    spInsert_MI_Send_byOrderInternal: TdsdStoredProc;
+    actInsert_MI_Send_byOrderInternal: TdsdExecStoredProc;
+    actOrderInternalInsertForm: TOpenChoiceForm;
+    macInsert_MI_Send_byOrderInternal: TMultiAction;
+    bbInsert_MI_Send_byOrderInternal: TdxBarButton;
   private
   public
   end;

@@ -271,6 +271,11 @@ type
     actOpenProtocolPersonal: TdsdOpenForm;
     bbOpenProtocolMember: TdxBarButton;
     bbOpenProtocolPersonal: TdxBarButton;
+    spGetImportSettingSummService: TdsdStoredProc;
+    actGetImportSettingSS: TdsdExecStoredProc;
+    macStartLoad_SS: TMultiAction;
+    bbStartLoad_SS: TdxBarButton;
+    actDoLoad_SS: TExecuteImportSettingsAction;
   private
     { Private declarations }
   public

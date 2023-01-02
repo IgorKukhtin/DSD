@@ -194,12 +194,28 @@ object SendItemEditForm: TSendItemEditForm
   end
   object cxLabel7: TcxLabel
     Left = 290
-    Top = 102
+    Top = 99
     Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1089#1095'.) '#1086#1090' '#1082#1086#1075#1086
   end
+  object cxLabel15: TcxLabel
+    Left = 218
+    Top = 52
+    Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+  end
+  object edOrderClient: TcxButtonEdit
+    Left = 215
+    Top = 72
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 200
+  end
   object ActionList: TActionList
-    Left = 264
-    Top = 59
+    Top = 219
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -273,6 +289,14 @@ object SendItemEditForm: TSendItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = '0'
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = GuidesGoods
@@ -281,7 +305,7 @@ object SendItemEditForm: TSendItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = 0.000000000000000000
         Component = edAmount
         DataType = ftFloat
@@ -499,8 +523,8 @@ object SendItemEditForm: TSendItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
-    Top = 50
+    Left = 48
+    Top = 234
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -519,7 +543,7 @@ object SendItemEditForm: TSendItemEditForm
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 385
-    Top = 22
+    Top = 246
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -721,8 +745,7 @@ object SendItemEditForm: TSendItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 305
-    Top = 8
+    Left = 225
   end
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
@@ -801,5 +824,43 @@ object SendItemEditForm: TSendItemEditForm
       end>
     Left = 216
     Top = 206
+  end
+  object GuidesOrderClient: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderClient
+    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderClientJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full2'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductName_Full'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    Left = 288
+    Top = 56
   end
 end

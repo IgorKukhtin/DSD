@@ -349,7 +349,6 @@ object SendForm: TSendForm
         Height = 216
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 2
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1245,6 +1244,10 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_MI_Send_byOrderInternal'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1510,6 +1513,10 @@ object SendForm: TSendForm
     end
     object bbInsert_MI_Send_byOrderDetail: TdxBarButton
       Action = macInsert_MI_Send_byOrderDetail
+      Category = 0
+    end
+    object bbInsert_MI_Send_byOrderInternal: TdxBarButton
+      Action = macInsert_MI_Send_byOrderInternal
       Category = 0
     end
   end
@@ -1990,6 +1997,26 @@ object SendForm: TSendForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    object actOrderInternalInsertForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'OrderClientJournalChoiceForm'
+      ImageIndex = 49
+      FormName = 'TOrderInternalJournalChoiceForm'
+      FormNameParam.Value = 'TOrderInternalJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_OrderInternal'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actOrderClientInsertForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2194,6 +2221,27 @@ object SendForm: TSendForm
       Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1089#1073#1086#1088#1082#1072' '#1091#1079#1083#1072')'
       Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1089#1073#1086#1088#1082#1072' '#1091#1079#1083#1072')'
       ImageIndex = 48
+    end
+    object macInsert_MI_Send_byOrderInternal: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOrderInternalInsertForm
+        end
+        item
+          Action = actInsert_MI_Send_byOrderInternal
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = 
+        #1079#1072#1087#1086#1083#1085#1080#1090#1100'  '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1091#1079#1083#1099') '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1047#1072#1082#1072#1079#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072 +
+        '?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086' '#1047#1072#1082#1072#1079#1091' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1091#1079#1083#1099')'
+      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086' '#1047#1072#1082#1072#1079#1091' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1091#1079#1083#1099')'
+      ImageIndex = 49
     end
     object actInsert_MI_Send_byOrderDetail: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2826,6 +2874,24 @@ object SendForm: TSendForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
       DataSource = MasterDS
+    end
+    object actInsert_MI_Send_byOrderInternal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_Send_byOrderInternal
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_Send_byOrderInternal
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
+        end>
+      Caption = 'actInsert_MI_Send_byOrderInternal'
+      ImageIndex = 49
     end
   end
   object MasterDS: TDataSource
@@ -3949,8 +4015,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 878
-    Top = 295
+    Left = 838
+    Top = 279
   end
   object spInsert_MI_Send_byOrder_Detail: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_Send_byOrder_Detail'
@@ -3984,5 +4050,38 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 950
     Top = 287
+  end
+  object spInsert_MI_Send_byOrderInternal: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_Send_byOrderInternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Order'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_OrderInternal'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptGoodsId'
+        Value = ''
+        Component = GuidesReceiptGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 830
+    Top = 319
   end
 end
