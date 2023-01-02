@@ -242,6 +242,8 @@ BEGIN
         --  OR inUserId = 3 -- Админ - отладка
               )
        ;
+       
+     ANALYSE _tmpUnit_SUN;  
 
      -- Выкладки
      WITH tmpLayoutMovement AS (SELECT Movement.Id                                                   AS Id
@@ -314,6 +316,8 @@ BEGIN
       FROM tmpLayoutAll      
       GROUP BY tmpLayoutAll.GoodsId
              , tmpLayoutAll.UnitId;
+             
+     ANALYSE _tmpGoods_Layout;
 
      -- Маркетинговый план для точек
       WITH tmpUserUnit AS (SELECT COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) AS UnitId
@@ -355,6 +359,8 @@ BEGIN
                                                                      
            INNER JOIN tmpUserUnit ON tmpUserUnit.UnitId = MI_Goods.UnitId           
       ;
+      
+      ANALYSE _tmpGoods_PromoUnit;
         
      -- Товары дисконтных проектов
      
@@ -393,6 +399,8 @@ BEGIN
         AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
       GROUP BY ObjectLink_BarCode_Goods.ChildObjectId
              , tmpUnitDiscount.UnitId;
+             
+      ANALYSE _tmpGoods_DiscountExternal;
                 
      -- находим максимальный
      vbDayIncome_max := (SELECT MAX (_tmpUnit_SUN.DayIncome)  FROM _tmpUnit_SUN);
@@ -412,6 +420,9 @@ BEGIN
             WHERE OF_KoeffSUN.DescId    = zc_ObjectFloat_Goods_KoeffSUN_v1()
               AND OF_KoeffSUN.ValueData > 0
            ;
+         
+         ANALYSE _tmpGoods_SUN;
+         
          -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
          INSERT INTO _tmpGoods_SUN_PairSun (GoodsId, GoodsId_PairSun, PairSunAmount)
             SELECT OL_GoodsPairSun.ObjectId      AS GoodsId
@@ -425,6 +436,8 @@ BEGIN
 
             WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun()
            ;
+           
+         ANALYSE _tmpGoods_SUN_PairSun;
 
      END IF;
 
@@ -465,6 +478,8 @@ BEGIN
      INSERT INTO _tmpGoods_TP_exception   (UnitId, GoodsId)
      SELECT tmpGoods.UnitId, tmpGoods.GoodsId
      FROM tmpGoods;
+     
+     ANALYSE _tmpGoods_TP_exception;
 
      -- исключаем такие перемещения
      INSERT INTO _tmpUnit_SunExclusion (UnitId_from, UnitId_to)
@@ -490,7 +505,8 @@ BEGIN
         WHERE Object.DescId   = zc_Object_SunExclusion()
           AND Object.isErased = FALSE
            ;
-
+           
+     ANALYSE _tmpUnit_SunExclusion;
 
      IF inStep = 1
      THEN
@@ -540,6 +556,8 @@ BEGIN
                  LEFT JOIN (SELECT tmpSUN.UnitId_to, SUM (tmpSUN.Summ_in) AS Summ_in FROM tmpSUN GROUP BY tmpSUN.UnitId_to
                            ) AS tmpSumm_in ON tmpSumm_in.UnitId_to = _tmpUnit_SUN.UnitId
                 ;
+                
+         ANALYSE _tmpUnit_SUN_balance;
 
          -- баланс-2 накопительно по Аптекам - только по срокам
          WITH -- SUN - за 30 дней
@@ -639,6 +657,8 @@ BEGIN
            ;
 
      END IF;
+     
+     ANALYSE _tmpUnit_SUN_balance_partion;
 
 
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
@@ -1069,6 +1089,8 @@ BEGIN
                    ELSE 0
               END > 0*/
        ;
+       
+     ANALYSE _tmpRemains_all;
 
      -- 1.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
@@ -1092,6 +1114,8 @@ BEGIN
                )
            AND (_tmpUnit_SUN.KoeffInSUN = 0 OR _tmpUnit_SUN_balance.KoeffInSUN < _tmpUnit_SUN.KoeffInSUN)
        ;
+       
+     ANALYSE _tmpRemains_all;
 
 /*     raise notice 'Ошибка. % % %',
                      (SELECT count(*) FROM _tmpRemains),
@@ -1139,6 +1163,8 @@ BEGIN
                , MIContainer.WhereObjectId_analyzer
         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
        ;
+       
+      ANALYSE _tmpSale;
 
      -- Уже использовано в текущем СУН
      WITH
@@ -1167,6 +1193,8 @@ BEGIN
      INSERT INTO _tmpGoods_Sun_exception (UnitId, GoodsId, Amount)
         SELECT tmpSUN.UnitId, tmpSUN.GoodsId, tmpSUN.Amount
         FROM tmpSUN;
+        
+     ANALYSE _tmpGoods_Sun_exception;
 
      -- значения для разделения по срокам
      SELECT Date_6, Date_3, Date_1, Date_0
@@ -1668,6 +1696,8 @@ BEGIN
          AND COALESCE (tmpGoods_TP_exception.GoodsId, 0) = 0
        -- AND tmpRes_SUN.GoodsId IS NULL
        ;
+       
+     ANALYSE _tmpRemains_Partion_all;
 
 
      -- 3.2. остатки у ОТПРАВИТЕЛЯ, SUN-1 - для распределения
@@ -2010,6 +2040,8 @@ BEGIN
             AND tmpGoods_NOT.ObjectId IS NULL
 
           ;
+          
+      ANALYSE _tmpRemains_Partion;
 
  /*RAISE EXCEPTION 'Ошибка.<%> <%> ', (select count(*) FROM _tmpRemains_Partion WHERE _tmpRemains_Partion.GoodsId in (42364)),
                                (SELECT tmpGoods.GoodsID AS ObjectId
@@ -2087,6 +2119,8 @@ BEGIN
             -- Парный потом добавим
           AND COALESCE (_tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
         ;
+        
+     ANALYSE _tmpRemains_calc;
 
      -- 5. из каких аптек остатки со сроками "максимально" закрывают АВТОЗАКАЗ
      -- CREATE TEMP TABLE _tmpSumm_limit (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
@@ -2138,6 +2172,8 @@ BEGIN
         GROUP BY _tmpRemains_Partion.UnitId
                , _tmpRemains_calc.UnitId
        ;
+       
+     ANALYSE _tmpSumm_limit;
 
 
      -- 6.1.1. распределяем-1 остатки со сроками - по всем аптекам - здесь только >= vbSumm_limit
@@ -2461,6 +2497,8 @@ BEGIN
 
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion; -- закрыли курсор1
+     
+     ANALYSE _tmpResult_Partion;
 
      -- raise notice 'Value 01: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
 
@@ -2753,6 +2791,8 @@ BEGIN
 
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion_next; -- закрыли курсор1
+     
+     ANALYSE _tmpResult_Partion;
 
      --raise notice 'Value 02: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
 
@@ -2873,6 +2913,8 @@ BEGIN
        AND _tmpResult_Partion.UnitId_to   = tmp.UnitId_to
        AND _tmpResult_Partion.Amount_next > 0
     ;
+    
+    ANALYSE _tmpResult_Partion;
 
      -- 6.1.4.2. !!!важно, если остатка не хватило для vbSumm_limit - переносим в отложенные!!!
      UPDATE _tmpResult_Partion SET Amount      = CASE WHEN _tmpResult_Partion.Amount_next = 0 THEN 0                         ELSE _tmpResult_Partion.Amount      END
@@ -2888,11 +2930,15 @@ BEGIN
      WHERE _tmpResult_Partion.UnitId_from = tmp.UnitId_from
        AND _tmpResult_Partion.UnitId_to   = tmp.UnitId_to
     ;
+    
+    ANALYSE _tmpResult_Partion;
 
 
      -- 6.1.5. !!!важно, ОТКЛЮЧИЛИ отложенные!!!
      UPDATE _tmpResult_Partion SET Amount_next = 0, Summ_next = 0;
      DELETE FROM _tmpResult_Partion WHERE Amount = 0 AND Amount_next = 0;
+     
+    ANALYSE _tmpResult_Partion;
 
 
      -- Добавили парные согласно наличия
@@ -2965,6 +3011,8 @@ BEGIN
               FROM tmpResult AS DD
               WHERE DD.AmountRemains - (DD.AmountSUM - DD.AmountPair) > 0
              ) AS tmpItem;
+             
+     ANALYSE _tmpResult_Partion; 
 
 /*     IF inUserId = '3'
      THEN
@@ -3477,3 +3525,5 @@ WHERE Movement.OperDate  >= '01.01.2019'
 
  SELECT * FROM lpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 */
+
+select * from gpReport_Movement_Send_RemainsSun(inOperDate := ('02.01.2023')::TDateTime ,  inSession := '3');

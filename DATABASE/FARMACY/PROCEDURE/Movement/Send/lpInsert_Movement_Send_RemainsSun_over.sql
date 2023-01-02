@@ -171,6 +171,8 @@ BEGIN
         WHERE OF_KoeffSUN.DescId    = zc_ObjectFloat_Goods_KoeffSUN_v2()
           AND OF_KoeffSUN.ValueData > 0
        ;
+       
+     ANALYSE _tmpGoods_SUN;
 
      -- день недели
      vbDOW_curr:= (SELECT CASE WHEN tmp.RetV = 0 THEN 7 ELSE tmp.RetV END
@@ -218,6 +220,8 @@ BEGIN
           --OR inUserId = 3 -- Админ - отладка
               )
        ;
+       
+     ANALYSE _tmpUnit_SUN;
 
      -- Выкладки
      WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
@@ -281,6 +285,8 @@ BEGIN
       FROM tmpLayoutAll      
       GROUP BY tmpLayoutAll.GoodsId
              , tmpLayoutAll.UnitId;
+             
+      ANALYSE _tmpGoods_Layout;
 
      -- Маркетинговый план для точек
       WITH tmpUserUnit AS (SELECT COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) AS UnitId
@@ -322,6 +328,8 @@ BEGIN
                                                           
            INNER JOIN tmpUserUnit ON tmpUserUnit.UnitId = MI_Goods.UnitId           
       ;
+      
+      ANALYSE _tmpGoods_PromoUnit;
 
      -- Товары дисконтных проектов
      
@@ -360,6 +368,8 @@ BEGIN
         AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
       GROUP BY ObjectLink_BarCode_Goods.ChildObjectId
              , tmpUnitDiscount.UnitId;
+             
+     ANALYSE _tmpGoods_DiscountExternal;
 
      -- находим максимальный
      vbDayIncome_max:= (SELECT MAX (_tmpUnit_SUN.DayIncome) FROM _tmpUnit_SUN);
@@ -387,6 +397,8 @@ BEGIN
 
         WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun()
        ;
+       
+     ANALYSE _tmpGoods_SUN_PairSun;
 
 
      -- исключаем такие перемещения
@@ -444,6 +456,8 @@ BEGIN
         WHERE Object.DescId   = zc_Object_SunExclusion()
           AND Object.isErased = FALSE
            ;
+           
+     ANALYSE _tmpUnit_SunExclusion;
 
      -- Уже использовано в текущем СУН
      WITH
@@ -472,6 +486,8 @@ BEGIN
      INSERT INTO _tmpGoods_Sun_exception (UnitId, GoodsId, Amount)
         SELECT tmpSUN.UnitId, tmpSUN.GoodsId, tmpSUN.Amount
         FROM tmpSUN;
+        
+     ANALYSE _tmpGoods_Sun_exception;
         
      -- 2.1. вся статистика продаж
      -- CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
@@ -542,6 +558,8 @@ BEGIN
         GROUP BY tmp.UnitId
                , tmp.GoodsId
        ;
+       
+     ANALYSE _tmpSale_over;
 
      -- 2.2. NotSold
      INSERT INTO _tmpSale_not (UnitId, GoodsId, Amount)
@@ -579,6 +597,8 @@ BEGIN
              , tmpNotSold_all.Amount
         FROM tmpNotSold_all
        ;
+       
+     ANALYSE _tmpSale_not;
 
      -- 2.3. Перемещение ВСЕ SUN-кроме текущего - Erased - за СЕГОДНЯ, что б не отправлять / не получать эти товары повторно в СУН-2
      INSERT INTO _tmpSUN_oth (UnitId_from, UnitId_to, GoodsId, Amount)
@@ -619,6 +639,8 @@ BEGIN
           AND MB_SUN_v2.MovementId IS NULL
         --AND 1=0
        ;
+       
+     ANALYSE _tmpSUN_oth;
 
      -- 2.4. все остатки, продажи => расчет кол-ва ПОТРЕБНОСТЬ у получателя
      WITH -- приход - UnComplete - за последние +/-7 дней для Date_Branch
@@ -1013,6 +1035,8 @@ BEGIN
           -- товары "закрыт код"
           AND (ObjectBoolean_Goods_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0)
        ;
+       
+     ANALYSE _tmpRemains_all;
 
      -- 2.6. Результат: все остатки, продажи => получаем кол-ва ПОТРЕБНОСТЬ у получателя
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
@@ -1028,7 +1052,7 @@ BEGIN
            OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0
        ;
 
-
+    ANALYSE _tmpRemains;
 
     -- дата + 6 месяцев
     vbDate_6:= inOperDate
@@ -1377,6 +1401,8 @@ BEGIN
               -- !!!
           AND tmpMI_SUN_out.GoodsId IS NULL
        ;
+       
+     ANALYSE _tmpRemains_Partion_all;
 
 
      -- 3.2. остатки, OVER (Сверх запас) - для распределения
@@ -1531,6 +1557,8 @@ BEGIN
             -- отбросили !!НОТ!!
             AND tmpGoods_NOT.ObjectId IS NULL
           ;
+          
+     ANALYSE _tmpRemains_Partion;
 
      -- Правим количество распределения если остаток меньше отгружать товар по СУН , если у него остаток больше чем N
      UPDATE _tmpRemains_Partion SET Amount = FLOOR (CASE WHEN _tmpRemains_Partion.Amount_save - COALESCE(_tmpUnit_SUN.Limit_N, 0) <= 0 THEN 0
@@ -1592,7 +1620,7 @@ BEGIN
           OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0
        ;
 
-
+     ANALYSE _tmpRemains_calc;
 
      -- 5. из каких аптек остатки OVER "максимально" закрывают ПОТРЕБНОСТЬ
      -- CREATE TEMP TABLE _tmpSumm_limit (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
@@ -1660,6 +1688,8 @@ BEGIN
         GROUP BY _tmpRemains_Partion.UnitId
                , _tmpRemains_calc.UnitId
        ;
+       
+     ANALYSE _tmpSumm_limit;
 
      -- 6.1.1. распределяем-1 остатки OVER (Сверх запас) - по всем аптекам
      -- CREATE TEMP TABLE _tmpResult_Partion (DriverId Integer, UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount_next TFloat, Summ_next TFloat, MovementId Integer, MovementItemId Integer) ON COMMIT DROP;
@@ -1892,6 +1922,8 @@ BEGIN
 
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion; -- закрыли курсор1
+     
+     ANALYSE _tmpResult_Partion;
 
 
      -- !!!Удаляем НЕ получившиеся пары!!!
@@ -2015,6 +2047,7 @@ BEGIN
           )
     ;
 
+    ANALYSE _tmpResult_Partion;
 
      -- Результат
      RETURN QUERY
@@ -2290,3 +2323,6 @@ WHERE Movement.OperDate  >= '01.01.2019'
      CREATE TEMP TABLE _tmpUnit_SunExclusion (UnitId_from Integer, UnitId_to Integer, isMCS_to Boolean) ON COMMIT DROP;
 
  SELECT * FROM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ*/
+ 
+ 
+ SELECT * FROM gpReport_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";

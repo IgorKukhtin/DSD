@@ -294,12 +294,12 @@ begin
         TabletkiAPI.BookingsBodyCDS.Next;
       end;
 
-      if Pos('000-0000', TabletkiAPI.BookingsHeadCDS.FieldByName('customerPhone').AsString) > 0 then
-      begin
-        Add_Log('   удаление тестового заказ: ' + TabletkiAPI.BookingsHeadCDS.FieldByName('bookingId').AsString);
-        spSetErased.Params.ParamByName('inMovementId').AsInteger := spInsertMovement.Params.ParamByName('ioId').AsInteger;
-        spSetErased.ExecProc;
-      end;
+//      if Pos('000-0000', TabletkiAPI.BookingsHeadCDS.FieldByName('customerPhone').AsString) > 0 then
+//      begin
+//        Add_Log('   удаление тестового заказ: ' + TabletkiAPI.BookingsHeadCDS.FieldByName('bookingId').AsString);
+//        spSetErased.Params.ParamByName('inMovementId').AsInteger := spInsertMovement.Params.ParamByName('ioId').AsInteger;
+//        spSetErased.ExecProc;
+//      end;
 
       TabletkiAPI.BookingsHeadCDS.Next;
     end;

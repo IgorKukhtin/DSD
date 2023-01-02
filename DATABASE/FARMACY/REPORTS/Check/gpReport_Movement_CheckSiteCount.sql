@@ -46,9 +46,43 @@ BEGIN
 
      --raise notice 'Value 03: % %', vbStartDate, vbEndDate;
 
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('Movement_Check'))
+     THEN
+       DROP TABLE Movement_Check;
+     END IF;
+         
+     CREATE TEMP TABLE Movement_Check ON COMMIT DROP AS (
+        SELECT Movement.Id
+             , Movement.OperDate 
+             , MovementLinkObject_Unit.ObjectId                    AS UnitId
+             , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
+        FROM Movement
+
+             INNER JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                           ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
+                                          AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
+                                          AND MovementLinkObject_ConfirmedKind.ObjectId = zc_Enum_ConfirmedKind_Complete()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                       ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                                                
+        WHERE Movement.OperDate >= DATE_TRUNC ('DAY', vbStartDate) - INTERVAL '10 DAY' 
+          AND Movement.DescId = zc_Movement_Check()
+          AND Movement.StatusId <> zc_Enum_Status_Erased() 
+          AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.OperDate < '01.12.2022')
+          AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = TRUE);     
+          
+     ANALYSE Movement_Check;
+
      -- Результат
      RETURN QUERY
        WITH tmpMovement AS (SELECT Movement_Check.Id                                       AS Id
+                                 , Movement_Check.OperDate                                 AS OperDate
                                  , COALESCE(Object_CheckSourceKind.ValueData, 
                                    CASE WHEN COALESCE(MovementBoolean_MobileApplication.ValueData, False) = False 
                                         THEN 'Не болей' ELSE 'Моб. приложение' END)  AS CheckSourceKindName
@@ -57,29 +91,7 @@ BEGIN
                                  , COALESCE(MovementBoolean_DeliverySite.ValueData, False) AS isDeliverySite
                                  , MovementFloat_SummaDelivery.ValueData                   AS SummaDelivery
                                  , COALESCE(MovementBoolean_MobileApplication.ValueData, False)::Boolean   AS isMobileApplication
-                            FROM (SELECT Movement.*
-                                       , MovementLinkObject_Unit.ObjectId                    AS UnitId
-                                       , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
-                                  FROM Movement
-
-                                       INNER JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
-                                                                     ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
-                                                                    AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
-                                                                    AND MovementLinkObject_ConfirmedKind.ObjectId = zc_Enum_ConfirmedKind_Complete()
-
-                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-
-                                       LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
-                                                                 ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                                                AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-                                                                              
-                                  WHERE Movement.OperDate >= DATE_TRUNC ('DAY', vbStartDate) - INTERVAL '10 DAY' 
-                                    AND Movement.DescId = zc_Movement_Check()
-                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                    AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = TRUE
-                               ) AS Movement_Check
+                            FROM Movement_Check
 
                                  LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                                          ON MovementFloat_TotalCount.MovementId = Movement_Check.Id
@@ -147,7 +159,9 @@ BEGIN
                                    INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.Id = Movement.Id
                               
                               WHERE tmpMovementProtocol.OperDate >= DATE_TRUNC ('DAY', inStartDate)
-                                AND tmpMovementProtocol.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
+                                AND tmpMovementProtocol.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY' AND Movement.OperDate < '01.12.2022'
+                                 OR Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
+                                AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY' AND Movement.OperDate >= '01.12.2022'
                               GROUP BY Movement.CheckSourceKindName, Movement.isMobileApplication) 
         , tmpMovementPrev AS (SELECT Movement.CheckSourceKindName
                                    , Movement.isMobileApplication
@@ -172,8 +186,10 @@ BEGIN
 
                                    INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.Id = Movement.Id
 
-                              WHERE tmpMovementProtocol.OperDate >=  DATE_TRUNC ('DAY', vbStartDate)
-                                AND tmpMovementProtocol.OperDate <  DATE_TRUNC ('DAY', vbEndDate) + INTERVAL '1 DAY'
+                              WHERE tmpMovementProtocol.OperDate >=  DATE_TRUNC ('DAY', vbStartDate) 
+                                AND tmpMovementProtocol.OperDate <  DATE_TRUNC ('DAY', vbEndDate) + INTERVAL '1 DAY' AND Movement.OperDate < '01.12.2022'
+                                 OR Movement.OperDate >=  DATE_TRUNC ('DAY', vbStartDate)
+                                AND Movement.OperDate <  DATE_TRUNC ('DAY', vbEndDate) + INTERVAL '1 DAY' AND Movement.OperDate >= '01.12.2022'
                               GROUP BY Movement.CheckSourceKindName, Movement.isMobileApplication) 
 
         SELECT COALESCE(Movement.CheckSourceKindName, tmpMovementPrev.CheckSourceKindName)::TVarChar
@@ -219,5 +235,5 @@ $BODY$
 
 --select * from gpReport_Movement_CheckSiteCount(inStartDate := ('16.06.2021')::TDateTime , inEndDate := ('16.06.2021')::TDateTime , inSession := '3');
 
-select * FROM gpReport_Movement_CheckSiteCount(inStartDate := CURRENT_DATE - INTERVAL '1 DAY', inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := '3');     
+--select * FROM gpReport_Movement_CheckSiteCount(inStartDate := CURRENT_DATE - INTERVAL '1 DAY', inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := '3');     
 
