@@ -13,7 +13,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     IF (inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar) OR (inSession :: Integer < 0)
+     IF (inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar) OR (zfConvert_StringToNumber (inSession) < 0)
      THEN vbUserId:= ABS (inSession :: Integer);
      ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProductionSeparate());
      END IF;
