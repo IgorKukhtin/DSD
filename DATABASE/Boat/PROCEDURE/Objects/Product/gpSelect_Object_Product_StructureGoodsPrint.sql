@@ -115,7 +115,7 @@ BEGIN
                                AND MovementItem.DescId     = zc_MI_Child()
                                AND MovementItem.isErased   = FALSE
                             )
-     -- Элементы - Комплектующие сборка узла
+  -- Элементы - Комплектующие сборка узла
 , tmpItem_Detail_mi AS (SELECT MovementItem.Id                           AS MovementItemId
                                -- Поставщик
                              , MILinkObject_Partner.ObjectId             AS PartnerId

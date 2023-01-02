@@ -87,21 +87,18 @@ BEGIN
                                           , inPartNumber
                                           , inComment
                                           , vbUserId
-                                          ) AS tmp;
+                                           ) AS tmp;
      
      -- (разделила т.к. если внесут еще какие-то изменения в строку то ощибка что элемент удален)
      IF COALESCE (inIsOn, FALSE) = FALSE
      THEN
-         --ставим отметку об удалении 
+         -- ставим отметку об удалении 
          outIsErased := gpMovementItem_Send_SetErased (ioId, inSession);
      ENd IF;
 
 
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$

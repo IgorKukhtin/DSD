@@ -16,9 +16,9 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime 
-             --
+               --
              , MovementItemId Integer
-             , GoodsId Integer, GoodsCode Integer, Article TVarChar, GoodsName TVarChar, Comment_goods TVarChar
+             , GoodsId Integer, GoodsCode Integer, Article TVarChar, GoodsName TVarChar, GoodsName_all TVarChar, Comment_goods TVarChar
              , Amount TFloat
              , UnitId Integer
              , UnitName TVarChar 
@@ -118,6 +118,7 @@ BEGIN
              , Object_Goods.ObjectCode              AS GoodsCode
              , ObjectString_Article.ValueData       AS Article
              , Object_Goods.ValueData               AS GoodsName
+             , zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData) AS GoodsName_all
              , ObjectString_Comment.ValueData       AS Comment_goods
              , MovementItem.Amount ::TFloat         AS Amount
              , Object_Unit.Id                       AS UnitId

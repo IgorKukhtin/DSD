@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoods(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserCode TVarChar, Comment TVarChar
              , isMain Boolean
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_all TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
              , MaterialOptionsName TVarChar, ProdColorName_pcp TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -174,6 +174,7 @@ BEGIN
          , Object_Goods.Id         ::Integer  AS GoodsId
          , Object_Goods.ObjectCode ::Integer  AS GoodsCode
          , Object_Goods.ValueData  ::TVarChar AS GoodsName
+         , zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData) ::TVarChar AS GoodsName_all
 
          , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
          , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName

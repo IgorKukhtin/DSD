@@ -89,6 +89,7 @@ BEGIN
                                 THEN 0
                             ELSE MIFloat_ForCount.ValueData
                       END AS ForCount
+
                FROM MovementItem
                     -- какой узел собирается
                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
@@ -116,7 +117,7 @@ BEGIN
                WHERE MovementItem.MovementId = inMovementId_OrderClient
                  AND MovementItem.DescId     = zc_MI_Detail()
                  AND MovementItem.isErased    = FALSE
-                 AND (MILinkObject_Goods.ObjectId       = inGoodsId
+                 AND ((MILinkObject_Goods.ObjectId       = inGoodsId AND MILinkObject_Goods_basis.ObjectId IS NULL)
                    OR MILinkObject_Goods_basis.ObjectId = inGoodsId
                      )
               ) AS tmpMI

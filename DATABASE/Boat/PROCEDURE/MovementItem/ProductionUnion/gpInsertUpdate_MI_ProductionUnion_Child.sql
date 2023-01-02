@@ -36,7 +36,6 @@ BEGIN
                                                  , vbUserId
                                                  ) AS tmp;
 
- lpinsertupdate_mi_productionunion_child(ioid => integer, inparentid => integer, inmovementid => integer, inobjectid => integer, inamount => tfloat, vbuserid => integer) не существует
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
