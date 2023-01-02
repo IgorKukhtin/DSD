@@ -383,7 +383,6 @@ and MovementItemContainer.ContainerId = Container.Id
 and MovementItemContainer.OperDAte < '01.06.2014'
 ;
 
-Ну то что сейчас рядом с тобой, как раз чуть лучше обезьянки)))
 
 update MovementItemContainer set AnalyzerId = zc_Enum_ProfitLossDirection_10800()
 from Movement, (select Container.Id from Object_Account_View JOIN Container ON Container.ObjectId = Object_Account_View.AccountId where AccountGroupId IN (zc_Enum_AccountGroup_20000(), zc_Enum_AccountGroup_60000())) AS Container
@@ -395,9 +394,7 @@ and MovementItemContainer.ContainerId = Container.Id
 and MovementItemContainer.OperDAte < '01.06.2014'
 ;
 
-Ну за то, что я у тебя такая красотка была))
-
-
+	
 update MovementItemContainer set AnalyzerId = zc_Enum_ProfitLossDirection_10100()
 from Movement, Container
 where Movement.Id = MovementItemContainer.MovementId

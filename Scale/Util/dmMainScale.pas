@@ -35,6 +35,8 @@ type
     // Scale + ScaleCeh
     function lpGet_BranchName(inBranchCode:Integer): String;
     function gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
+    // Scale
+    function gpGet_Scale_Movement_findOldPeriod(var execParamsMovement:TParams): Boolean;
     // !!!Scale + ScaleCeh!!!
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
@@ -272,6 +274,33 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_Movement_findOldPeriod(var execParamsMovement:TParams): Boolean;
+begin
+    Result:=false;
+    //
+    if execParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Sale
+    then exit;
+    //
+    if execParamsMovement.ParamByName('MovementId').AsInteger<>0 then
+    with spSelect do begin
+       StoredProcName:='gpGet_Scale_Movement_findOldPeriod';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       //try
+         Execute;
+         Result:=DataSet.FieldByName('isFind').asBoolean;
+         execParamsMovement.ParamByName('OperDate_inf').AsDateTime:=DataSet.FieldByName('OperDate').AsDateTime;
+         execParamsMovement.ParamByName('InvNumber_inf').AsString:=DataSet.FieldByName('InvNumber').AsString;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
 begin
     Result:=false;
@@ -478,6 +507,7 @@ begin
        Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inIsDocInsert', ftBoolean, ptInput, execParamsMovement.ParamByName('isDocInsert').AsBoolean);
+       Params.AddParam('inIsOldPeriod', ftBoolean, ptInput, execParamsMovement.ParamByName('isOldPeriod').AsBoolean);
        Params.AddParam('inIP', ftString, ptInput, SettingMain.IP_str);
        //try
          Execute;

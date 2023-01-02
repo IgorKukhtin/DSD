@@ -244,6 +244,9 @@ begin
      ParamAdd(Params,'InvNumber',ftString);
      ParamAdd(Params,'OperDate_Movement',ftDateTime);
 
+     ParamAdd(Params,'InvNumber_inf',ftString);
+     ParamAdd(Params,'OperDate_inf',ftDateTime);
+
      ParamAdd(Params,'MovementDescNumber',ftInteger);
 
      ParamAdd(Params,'MovementDescId',ftInteger);
@@ -280,6 +283,8 @@ begin
 
      ParamAdd(Params,'isSticker_Ceh',ftBoolean);
      ParamAdd(Params,'isSticker_KVK',ftBoolean);
+
+     ParamAdd(Params,'isOldPeriod',ftBoolean);
 
      ParamAdd(Params,'isSubjectDoc',ftBoolean);
      ParamAdd(Params,'isComment',ftBoolean);

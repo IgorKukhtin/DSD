@@ -464,8 +464,19 @@ begin
          exit;
      end;
      //
-     if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
-     then exit;
+     ParamsMovement.ParamByName('isOldPeriod').AsBoolean := false;
+     if DMMainScaleForm.gpGet_Scale_Movement_findOldPeriod(ParamsMovement) = true
+     then begin
+          if MessageDlg('Найден Документ № ' + ParamsMovement.ParamByName('InvNumber_inf').AsString + ' смена за <'+DateToStr(ParamsMovement.ParamByName('OperDate_inf').AsDateTime)+'>.Добавить в старую накладную?',mtConfirmation,mbYesNoCancel,0) = 6
+          then ParamsMovement.ParamByName('isOldPeriod').AsBoolean := true
+          else
+          if MessageDlg('Будет создан Новый Документ смена за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
+          then exit;
+     end
+     else
+         //
+         if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
+         then exit;
 
      //Проверка
      if {((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
