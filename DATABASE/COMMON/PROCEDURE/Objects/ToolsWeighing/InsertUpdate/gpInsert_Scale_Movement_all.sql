@@ -5,13 +5,15 @@
 
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
     IN inBranchCode          Integer   , --
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
     IN inIsDocInsert         Boolean   , -- 
+    IN inIsOldPeriod         Boolean   , -- 
     IN inIP                  TVarChar,
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -398,6 +400,9 @@ BEGIN
                          OR inBranchCode = 2 -- филиал Киев
                             THEN inOperDate
 
+                     --WHEN inIsOldPeriod = FALSE
+                     --     THEN inOperDate
+
                        ELSE vbOperDatePartner_order
                   END;
 
@@ -483,7 +488,8 @@ BEGIN
                                                                     AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                                      INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
                                                         AND Movement.DescId = zc_Movement_Sale()
-                                                        AND Movement.OperDate = inOperDate
+                                                      --AND Movement.OperDate = inOperDate
+                                                        AND Movement.OperDate BETWEEN inOperDate - CASE WHEN inIsOldPeriod = TRUE THEN '2 DAY' ELSE '0 DAY' END :: INTERVAL AND inOperDate
                                                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                                 WHERE MovementLinkMovement.MovementId = inMovementId
                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order())
@@ -505,7 +511,8 @@ BEGIN
                                                                     AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                                      INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
                                                         AND Movement.DescId = zc_Movement_Sale()
-                                                        AND Movement.OperDate = inOperDate -- BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate
+                                                      --AND Movement.OperDate = inOperDate
+                                                        AND Movement.OperDate BETWEEN inOperDate - CASE WHEN inIsOldPeriod = TRUE THEN '2 DAY' ELSE '0 DAY' END :: INTERVAL AND inOperDate
                                                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                                 WHERE MovementLinkMovement.MovementId = inMovementId
                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
@@ -1936,15 +1943,18 @@ end if;*/
 -- !!! ВРЕМЕННО !!!
  IF vbUserId = 5 AND 1=1 THEN
 -- IF inSession = '1162887' AND 1=1 THEN
-    RAISE EXCEPTION 'Admin - Test = OK : %  %  %  % % % % %'
+    RAISE EXCEPTION 'Admin - Test = OK : %  %  %  %  % % % % %  % %'
   , vbIsSendOnPriceIn -- inBranchCode -- 'Повторите действие через 3 мин.'
   , vbMovementId_begin
-  , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_begin)
-  , (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_begin AND MD.DescId = zc_MovementDate_OperDatePartner())
+  , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_begin))
+  , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_begin)
+  , zfConvert_DateToString ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_begin AND MD.DescId = zc_MovementDate_OperDatePartner()))
   , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = vbMovementId_begin AND MF.DescId = zc_MovementFloat_TotalCount())
   , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = vbMovementId_begin AND MF.DescId = zc_MovementFloat_TotalCountPartner())
   , (SELECT MI.Amount FROM MovementItem AS MI LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_AmountPartner() WHERE MI.MovementId = vbMovementId_begin AND MI.DescId = zc_MI_Master() LIMIT 1)
   , (SELECT MIF.ValueData FROM MovementItem AS MI LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_AmountPartner() WHERE MI.MovementId = vbMovementId_begin AND MI.DescId = zc_MI_Master() LIMIT 1)
+  , zfConvert_DateToString (vbOperDate_scale)
+  , zfConvert_DateToString (inOperDate)
    ;
 END IF;
 
