@@ -433,11 +433,9 @@ end;
 
  procedure TLoadFormTest.LoadOrderInternalFormTest;
 begin
-  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalChoiceForm'));
-  //TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalChoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalChoiceForm');
-   exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
@@ -838,7 +836,7 @@ procedure TLoadFormTest.LoadReceiptGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoodsLineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoodsLineForm');
-   exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoodsEditEnterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoodsEditEnterForm');
 
