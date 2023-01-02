@@ -54,6 +54,8 @@ BEGIN
                                         AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId = zc_MI_Child();
+          
+     ANALYSE tmpMI_Child;
 
      -- снимаем удаление со строк чайлд
      UPDATE MovementItem
@@ -151,6 +153,8 @@ BEGIN
          WHERE COALESCE (tmpMI_Child.AmountManual, 0) = 0
            AND CEIL(tmpMI_Master.Amount - COALESCE (tmpRemains.Amount, 0)) > 0
          ;
+         
+         ANALYSE tmpDataAddToM;
 
 
           -- Распределение по аптекам
@@ -422,6 +426,8 @@ BEGIN
                WHERE COALESCE (tmpMI_Child.AmountManual, 0) <> 0
                  AND COALESCE (tmpDD.ParentId, 0) = 0
                ) AS DD;
+               
+         ANALYSE tmpData;
 
           -- Дополнение по аптекам согласно N
           INSERT INTO tmpData (Id, ParentId, UnitId, AmountOut, Remains, AmountIn, AmountManual)
@@ -511,6 +517,8 @@ BEGIN
                 THEN COALESCE (tmpMI_Child.AmountManual, 0)
                 ELSE CEIL (tmpMI_Master.Amount - COALESCE (tmpRemains.Amount, 0)) END  > 0
          ;
+         
+    ANALYSE tmpData;
          
          
     -- Дораспределение нерасспределенного
@@ -628,9 +636,10 @@ BEGIN
        END LOOP; -- финиш цикла по курсору1
        CLOSE curDistribution; -- закрыли курсор1 
     END IF;
+    
 
     --- сохраняем данные чайлд
-    PERFORM lpInsertUpdate_MI_OrderInternalPromoChild (ioId           := COALESCE (tmpData.Id,0)
+    PERFORM lpInsertUpdate_MI_OrderInternalPromoChild (ioId           := COALESCE (tmpData.Id, tmpMI_Child.Id, 0)
                                                      , inParentId     := tmpData.ParentId
                                                      , inMovementId   := inMovementId
                                                      , inUnitId       := tmpData.UnitId
@@ -640,7 +649,9 @@ BEGIN
                                                      , inRemains      := COALESCE (tmpData.Remains,0)    :: TFloat
                                                      , inUserId       := vbUserId
                                                      )
-    FROM tmpData;
+    FROM tmpData
+         LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpData.ParentId
+                              AND tmpMI_Child.UnitId = tmpData.UnitId;
     
      -- удаляем строки чайлд, которые нам не нужны
      UPDATE MovementItem
@@ -652,7 +663,13 @@ BEGIN
                                     LEFT JOIN tmpData ON tmpData.Id = tmpMI_Child.Id
                                                      AND COALESCE (tmpData.Id,0) <> 0
                                WHERE tmpData.Id IS NULL);
-
+                               
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+/*    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inSession, inSession, inSession;
+    END IF;*/
+                               
 
 END;
 $BODY$
@@ -669,3 +686,5 @@ $BODY$
 -- select * from gpInsert_MI_OrderInternalPromoChild(inMovementId := 25768416 , inUnitCodeList := '13,14,15,74,11,29,34,57,104,20,22,30,56,101,75,18,17,82,103,91,93,96,95,100,10,25,33,66,92,47,51,44,60,59,61,69,2,4,5,83,87,88,102' ,  inSession := '3');
 
 --select * from gpInsert_MI_OrderInternalPromoChild(inMovementId := 28909930 , inUnitCodeList := '13,14,15,74,11,29,34,57,104,20,22,30,56,101,75,18,17,82,103,91,93,96,95,100,10,25,33,66,92,47,51,44,60,59,61,69,2,4,5,83,87,88,102' ,  inSession := '3');
+
+--select * from gpInsert_MI_OrderInternalPromoChild(inMovementId := 30534071 , inUnitCodeList := '13,14,15,74,11,29,34,57,104,20,22,30,56,101,75,18,17,82,103,91,93,96,95,100,10,25,33,66,92,47,51,44,60,59,61,69,2,4,5,83,87,88,102' ,  inSession := '3');

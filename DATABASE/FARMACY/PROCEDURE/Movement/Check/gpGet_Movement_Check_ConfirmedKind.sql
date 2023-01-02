@@ -147,7 +147,7 @@ BEGIN
                                                                        AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
                                                                        AND MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki()
                                        INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.ID
-                                                                  AND MovementProtocol.OperDate < (CURRENT_TIMESTAMP - INTERVAL '25 MIN')::TDateTime
+                                                                  AND MovementProtocol.OperDate < (CURRENT_TIMESTAMP - INTERVAL '15 MIN')::TDateTime
                                        LEFT JOIN tmpMLO_ConfirmedKind AS MovementLinkObject_ConfirmedKind
                                                                       ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id                                                                      
                                        LEFT JOIN tmpErr ON tmpErr.MovementId = Movement.Id
@@ -212,5 +212,4 @@ $BODY$
 -- SELECT * FROM gpGet_Movement_Check_ConfirmedKind (inSession:= zfCalc_UserAdmin())
 
 select * from gpGet_Movement_Check_ConfirmedKind( inSession := '3');
-
 

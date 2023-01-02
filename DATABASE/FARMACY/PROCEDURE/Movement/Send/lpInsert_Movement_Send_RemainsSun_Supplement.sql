@@ -263,6 +263,8 @@ BEGIN
             AND COALESCE (ObjectBoolean_SUN.ValueData, FALSE) = TRUE
             OR Object_Unit.ID IN (SELECT DISTINCT Object_Goods_Main.UnitSupplementSUN1InId FROM Object_Goods_Main WHERE Object_Goods_Main.UnitSupplementSUN1InId IS NOT NULL))         
        ;
+       
+     ANALYSE _tmpUnit_SUN_Supplement;
 
      -- Товары дисконтных проектов
      
@@ -301,6 +303,8 @@ BEGIN
         AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
       GROUP BY ObjectLink_BarCode_Goods.ChildObjectId
              , tmpUnitDiscount.UnitId;
+             
+      ANALYSE _tmpGoods_DiscountExternal_Supplement;
 
 
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
@@ -340,6 +344,8 @@ BEGIN
      INSERT INTO _tmpGoods_TP_exception_Supplement   (UnitId, GoodsId, Amount)
      SELECT tmpGoods.UnitId, tmpGoods.GoodsId, tmpGoods.Amount
      FROM tmpGoods;
+     
+     ANALYSE _tmpGoods_TP_exception_Supplement;
 
      -- Уже использовано в текущем СУН
      WITH
@@ -368,6 +374,8 @@ BEGIN
      INSERT INTO _tmpGoods_Sun_exception_Supplement (UnitId, GoodsId, Amount)
         SELECT tmpSUN.UnitId, tmpSUN.GoodsId, tmpSUN.Amount
         FROM tmpSUN;
+        
+     ANALYSE _tmpGoods_Sun_exception_Supplement;
         
      -- Что приходило по СУН и не отдаем
      WITH
@@ -410,6 +418,8 @@ BEGIN
      INSERT INTO _tmpSUN_Send_Supplement (UnitId, GoodsId)
      SELECT tmpSUN_Send.UnitId_to, tmpSUN_Send.GoodsId FROM tmpSUN_Send
      ;
+     
+     ANALYSE _tmpSUN_Send_Supplement;
           
      -- Что приходило по СУН и не отдаем
      WITH
@@ -452,6 +462,8 @@ BEGIN
      INSERT INTO _tmpSUN_Send_SupplementAll (UnitId, GoodsId)
      SELECT tmpSUN_Send.UnitId_to, tmpSUN_Send.GoodsId FROM tmpSUN_Send
      ;
+     
+     ANALYSE _tmpSUN_Send_SupplementAll;
 
      -- исключаем такие перемещения
      INSERT INTO _tmpUnit_SunExclusion_Supplement (UnitId_from, UnitId_to)
@@ -478,6 +490,8 @@ BEGIN
           AND Object.isErased = FALSE
            ;
            
+        ANALYSE _tmpUnit_SunExclusion_Supplement;
+           
          -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
          INSERT INTO _tmpGoods_SUN_PairSun_Supplement (GoodsId, GoodsId_PairSun, PairSunAmount)
             SELECT OL_GoodsPairSun.ObjectId      AS GoodsId
@@ -491,6 +505,8 @@ BEGIN
 
             WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun()
            ;
+           
+         ANALYSE _tmpGoods_SUN_PairSun_Supplement;
            
            
      -- Товар из перемещения
@@ -544,6 +560,8 @@ BEGIN
           AND COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0
           AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = FALSE AND
                Object_Goods_Main.isColdSUN = FALSE OR vbisEliminateColdSUN = FALSE);
+               
+        ANALYSE _tmpGoods_SUN_Supplement;
 
 /*     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId, UnitOut2Id)
         SELECT Object_Goods_Retail.ID
@@ -569,6 +587,8 @@ BEGIN
            LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = T1.GoodsId
            
      WHERE COALESCE (_tmpGoods_SUN_Supplement.isSupplementMarkSUN1, False) = False;
+     
+     ANALYSE _tmpGoodsUnit_SUN_Supplement;
               
      -- Выкладки
      WITH tmpLayoutMovement AS (SELECT Movement.Id                                                   AS Id
@@ -641,6 +661,8 @@ BEGIN
       FROM tmpLayoutAll      
       GROUP BY tmpLayoutAll.GoodsId
              , tmpLayoutAll.UnitId;
+             
+     ANALYSE _tmpGoodsLayout_SUN_Supplement;
       
      -- Маркетинговый план для точек
       WITH tmpUserUnit AS (SELECT COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) AS UnitId
@@ -686,6 +708,8 @@ BEGIN
            
       ;
       
+     ANALYSE _tmpGoods_PromoUnit_Supplement;
+     
  --raise notice 'Value 05: %', (select Count(*) from _tmpGoods_PromoUnit_Supplement);      
 
      -- 1. все остатки
@@ -955,6 +979,8 @@ BEGIN
         WHERE (COALESCE (tmpUnitSupplementSUN1In.UnitId, 0) = 0
            OR tmpUnitSupplementSUN1In.UnitId = _tmpGoods_SUN_Supplement.UnitSupplementSUN1InId)
        ;
+       
+     ANALYSE _tmpRemains_all_Supplement;
                                      
      IF EXISTS (SELECT 1
                 FROM _tmpGoods_SUN_Supplement 
@@ -1112,6 +1138,8 @@ BEGIN
              LEFT JOIN tmpUnit ON 1 = 1
 
        ;
+       
+       ANALYSE _tmpStockRatio_all_Supplement;
 
      -- 2.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      UPDATE _tmpRemains_all_Supplement SET AverageSalesMonth =(COALESCE (_tmpRemains_all_Supplement.AmountSalesMonth, 0) / extract('DAY' from CURRENT_DATE -
@@ -1618,6 +1646,8 @@ BEGIN
 
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion_next; -- закрыли курсор1
+     
+     ANALYSE _tmpResult_Supplement;
 
      -- !!! Добавили парные, после распределения ...
      WITH -- Товар к которому нужна пара
@@ -1662,6 +1692,8 @@ BEGIN
               FROM tmpResult AS DD
               WHERE DD.AmountRemains - (DD.AmountSUM - DD.AmountPair) > 0
              ) AS tmpItem;
+             
+     ANALYSE _tmpResult_Supplement;
 
      -- Результат
      RETURN QUERY
@@ -1768,4 +1800,4 @@ $BODY$
 
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inDriverId:= 0, inUserId:= 3);

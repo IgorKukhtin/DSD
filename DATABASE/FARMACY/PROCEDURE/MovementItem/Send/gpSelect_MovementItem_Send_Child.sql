@@ -1,6 +1,6 @@
 -- Function: gpSelect_MovementItem_Send_Child()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send_Child (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send_Child (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send_Child(
     IN inMovementId  Integer      , -- ключ Документа
@@ -88,6 +88,51 @@ BEGIN
     SELECT Date_6, Date_3, Date_1, Date_0
     INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
     FROM lpSelect_PartionDateKind_SetDate ();
+   
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMI_Child'))
+    THEN
+      DROP TABLE tmpMI_Child;
+    END IF;
+	
+    CREATE TEMP TABLE tmpMI_Child ON COMMIT DROP AS 
+                    (SELECT MovementItem.*
+                     FROM MovementItem
+                     WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId = zc_MI_Child()
+                        AND MovementItem.Amount > 0
+                     );
+                    
+    ANALYSE tmpMI_Child;
+   
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMI_Master'))
+    THEN
+      DROP TABLE tmpMI_Master;
+    END IF;
+	
+    CREATE TEMP TABLE tmpMI_Master ON COMMIT DROP AS 
+          (WITH
+           tmpMI_ChildSUM AS (SELECT MovementItem.ParentID
+                                   , SUM(MovementItem.Amount)   AS Amount
+                              FROM tmpMI_Child AS MovementItem
+                              GROUP BY MovementItem.ParentID
+                               )
+                               
+                            SELECT MovementItem.Id
+                                 , MovementItem.ObjectID
+                                 , MovementItem.Amount - COALESCE(tmpMI_ChildSUM.Amount, 0) AS Amount  
+                                 , MovementItem.isErased 
+                            FROM MovementItem
+                            
+                                 LEFT JOIN tmpMI_ChildSUM ON tmpMI_ChildSUM.ParentID = MovementItem.ID 
+                                 
+                            WHERE MovementItem.MovementId = inMovementId
+                               AND MovementItem.DescId = zc_MI_Master()
+                              -- AND MovementItem.Amount > 0
+                              -- AND MovementItem.isErased = FALSE
+                              -- AND MovementItem.ID not In (SELECT tmpMI_Child.ParentID FROM tmpMI_Child)
+                            );
+                           
+     ANALYSE tmpMI_Master;
 
      IF vbStatusID = zc_Enum_Status_Complete() OR vbisDeferred = TRUE
      THEN
@@ -96,13 +141,7 @@ BEGIN
 
        RETURN QUERY
        WITH
-           tmpMI_Child AS (SELECT MovementItem.*
-                     FROM MovementItem
-                     WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId = zc_MI_Child()
-                        AND MovementItem.Amount > 0
-                     )
-         , tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
+           tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
                                            , MovementItemFloat.ValueData::Integer  AS ContainerId
                                       FROM MovementItemFloat
                                       WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child WHERE tmpMI_Child.IsErased = FALSE)
@@ -288,32 +327,7 @@ BEGIN
 
        RETURN QUERY
        WITH
-           tmpMI_Child AS (SELECT MovementItem.*
-                     FROM MovementItem
-                     WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId = zc_MI_Child()
-                        AND MovementItem.Amount > 0
-                     )
-         , tmpMI_ChildSUM AS (SELECT MovementItem.ParentID
-                                   , SUM(MovementItem.Amount)   AS Amount
-                              FROM tmpMI_Child AS MovementItem
-                              GROUP BY MovementItem.ParentID
-                               )
-         , tmpMI_Master AS (SELECT MovementItem.Id
-                                 , MovementItem.ObjectID
-                                 , MovementItem.Amount - COALESCE(tmpMI_ChildSUM.Amount, 0) AS Amount  
-                                 , MovementItem.isErased 
-                            FROM MovementItem
-                            
-                                 LEFT JOIN tmpMI_ChildSUM ON tmpMI_ChildSUM.ParentID = MovementItem.ID 
-                                 
-                            WHERE MovementItem.MovementId = inMovementId
-                               AND MovementItem.DescId = zc_MI_Master()
-                              -- AND MovementItem.Amount > 0
-                              -- AND MovementItem.isErased = FALSE
-                              -- AND MovementItem.ID not In (SELECT tmpMI_Child.ParentID FROM tmpMI_Child)
-                            )
-         , tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
+           tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
                                            , MovementItemFloat.ValueData::Integer  AS ContainerId
                                       FROM MovementItemFloat
                                       WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child)
@@ -559,32 +573,7 @@ BEGIN
 
        RETURN QUERY
        WITH
-           tmpMI_Child AS (SELECT MovementItem.*
-                     FROM MovementItem
-                     WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId = zc_MI_Child()
-                        AND MovementItem.Amount > 0
-                     )
-         , tmpMI_ChildSUM AS (SELECT MovementItem.ParentID
-                                   , SUM(MovementItem.Amount)   AS Amount
-                              FROM tmpMI_Child AS MovementItem
-                              GROUP BY MovementItem.ParentID
-                               )
-         , tmpMI_Master AS (SELECT MovementItem.Id
-                                 , MovementItem.ObjectID
-                                 , MovementItem.Amount - COALESCE(tmpMI_ChildSUM.Amount, 0) AS Amount  
-                                 , MovementItem.isErased 
-                            FROM MovementItem
-                            
-                                 LEFT JOIN tmpMI_ChildSUM ON tmpMI_ChildSUM.ParentID = MovementItem.ID 
-                                 
-                            WHERE MovementItem.MovementId = inMovementId
-                               AND MovementItem.DescId = zc_MI_Master()
-                              -- AND MovementItem.Amount > 0
-                              -- AND MovementItem.isErased = FALSE
-                              -- AND MovementItem.ID not In (SELECT tmpMI_Child.ParentID FROM tmpMI_Child)
-                            )
-         , tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
+           tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
                                            , MovementItemFloat.ValueData::Integer  AS ContainerId
                                       FROM MovementItemFloat
                                       WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child)
@@ -831,4 +820,4 @@ $BODY$
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 19872428  ,  inSession := '3') left join Object ON Object.Id = GoodsId;
 
 
-select * from gpSelect_MovementItem_Send_Child(inMovementId := 26535651 ,  inSession := '3');
+select * from gpSelect_MovementItem_Send_Child(inMovementId := 30564803 ,  inSession := '3');
