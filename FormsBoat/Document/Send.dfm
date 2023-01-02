@@ -309,8 +309,7 @@ object SendForm: TSendForm
     object cxLabel15: TcxLabel
       Left = 578
       Top = 131
-      Hint = #1054#1090' '#1082#1086#1075#1086
-      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1091#1079#1083#1091
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1091#1079#1083#1072':'
       ParentShowHint = False
       ShowHint = True
     end
@@ -478,10 +477,10 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 40
           end
           object isOn: TcxGridDBColumn
-            Caption = #1042#1082#1083'.'
+            Caption = 'Yes/no'
             DataBinding.FieldName = 'isOn'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -528,6 +527,22 @@ object SendForm: TSendForm
             HeaderHint = 'EAN'
             Width = 106
           end
+          object GoodsCode: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object Article: TcxGridDBColumn
             Caption = 'Artikel Nr'
             DataBinding.FieldName = 'Article'
@@ -556,21 +571,6 @@ object SendForm: TSendForm
             Visible = False
             Width = 70
           end
-          object GoodsCode: TcxGridDBColumn
-            Caption = 'Interne Nr'
-            DataBinding.FieldName = 'GoodsCode'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object GoodsName: TcxGridDBColumn
             Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
             DataBinding.FieldName = 'GoodsName'
@@ -585,7 +585,7 @@ object SendForm: TSendForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 201
+            Width = 150
           end
           object PartNumber: TcxGridDBColumn
             Caption = 'S/N'
@@ -594,48 +594,6 @@ object SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
             Width = 90
-          end
-          object InvNumberFull_OrderClient: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'InvNumberFull_OrderClient'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actOrderClientChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
-            Width = 70
-          end
-          object CIN: TcxGridDBColumn
-            Caption = 'CIN Nr.'
-            DataBinding.FieldName = 'CIN'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object ProductName: TcxGridDBColumn
-            Caption = 'Boat'
-            DataBinding.FieldName = 'ProductName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object FromName: TcxGridDBColumn
-            Caption = 'Kunden'
-            DataBinding.FieldName = 'FromName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090' '#1082#1086#1075#1086
-            Options.Editing = False
-            Width = 120
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -705,6 +663,65 @@ object SendForm: TSendForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
             Options.Editing = False
             Width = 80
+          end
+          object ProdColorName: TcxGridDBColumn
+            Caption = 'Farbe'
+            DataBinding.FieldName = 'ProdColorName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Comment_goods: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1079#1077#1083')'
+            DataBinding.FieldName = 'Comment_goods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object InvNumberFull_OrderClient: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumberFull_OrderClient'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOrderClientChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+            Width = 70
+          end
+          object CIN: TcxGridDBColumn
+            Caption = 'CIN Nr.'
+            DataBinding.FieldName = 'CIN'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ProductName: TcxGridDBColumn
+            Caption = 'Boat'
+            DataBinding.FieldName = 'ProductName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object FromName: TcxGridDBColumn
+            Caption = 'Kunden'
+            DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090' '#1082#1086#1075#1086
+            Options.Editing = False
+            Width = 120
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -1236,7 +1253,15 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert_MI_Send_byOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -2001,7 +2026,7 @@ object SendForm: TSendForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'OrderClientJournalChoiceForm'
+      Caption = 'TOrderInternalJournalChoiceForm'
       ImageIndex = 49
       FormName = 'TOrderInternalJournalChoiceForm'
       FormNameParam.Value = 'TOrderInternalJournalChoiceForm'
@@ -2013,6 +2038,21 @@ object SendForm: TSendForm
           Value = '0'
           Component = FormParams
           ComponentItem = 'MovementId_OrderInternal'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName_all'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -2216,10 +2256,9 @@ object SendForm: TSendForm
         item
           Action = actRefreshMI
         end>
-      QuestionBeforeExecute = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1089#1073#1086#1088#1082#1072' '#1091#1079#1083#1072') '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1079#1072#1082#1072#1079#1072'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1089#1073#1086#1088#1082#1072' '#1091#1079#1083#1072')'
-      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1089#1073#1086#1088#1082#1072' '#1091#1079#1083#1072')'
+      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074') '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074') '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
       ImageIndex = 48
     end
     object macInsert_MI_Send_byOrderInternal: TMultiAction
@@ -2235,12 +2274,9 @@ object SendForm: TSendForm
         item
           Action = actRefreshMI
         end>
-      QuestionBeforeExecute = 
-        #1079#1072#1087#1086#1083#1085#1080#1090#1100'  '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1091#1079#1083#1099') '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1047#1072#1082#1072#1079#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072 +
-        '?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086' '#1047#1072#1082#1072#1079#1091' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1091#1079#1083#1099')'
-      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086' '#1047#1072#1082#1072#1079#1091' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1091#1079#1083#1099')'
+      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074') '#1080#1079' '#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074') '#1080#1079' '#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
       ImageIndex = 49
     end
     object actInsert_MI_Send_byOrderDetail: TdsdExecStoredProc
@@ -2274,10 +2310,9 @@ object SendForm: TSendForm
         item
           Action = actRefreshMI
         end>
-      QuestionBeforeExecute = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1091#1079#1083#1099') '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1079#1072#1082#1072#1079#1072'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1091#1079#1083#1099')'
-      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'('#1091#1079#1083#1099')'
+      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1090#1086#1083#1100#1082#1086' '#1091#1079#1083#1099') '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1090#1086#1083#1100#1082#1086' '#1091#1079#1083#1099') '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
       ImageIndex = 47
     end
     object actInsert_MI_Send_byOrder: TdsdExecStoredProc
@@ -3290,14 +3325,14 @@ object SendForm: TSendForm
       item
         Name = 'ReceiptGoodsId'
         Value = Null
-        Component = GuidesReceiptGoods
+        Component = GuidesGoods
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ReceiptGoodsName'
         Value = Null
-        Component = GuidesReceiptGoods
+        Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3958,7 +3993,7 @@ object SendForm: TSendForm
     Left = 280
     Top = 192
   end
-  object GuidesReceiptGoods: TdsdGuides
+  object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edReceiptGoods
     FormNameParam.Value = 'TReceiptGoodsChoiceForm'
@@ -3968,22 +4003,22 @@ object SendForm: TSendForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'Key'
+        Name = 'GoodsId'
         Value = ''
-        Component = GuidesReceiptGoods
+        Component = GuidesGoods
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'GoodsName_all'
         Value = ''
-        Component = GuidesReceiptGoods
+        Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 728
-    Top = 128
+    Left = 560
+    Top = 120
   end
   object spInsert_MI_Send_byOrder: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_Send_byOrder'
@@ -4007,9 +4042,9 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReceiptGoodsId'
+        Name = 'inGoodsId'
         Value = Null
-        Component = GuidesReceiptGoods
+        Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4040,9 +4075,9 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReceiptGoodsId'
+        Name = 'inGoodsId'
         Value = ''
-        Component = GuidesReceiptGoods
+        Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4073,9 +4108,9 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReceiptGoodsId'
+        Name = 'inGoodsId'
         Value = ''
-        Component = GuidesReceiptGoods
+        Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','

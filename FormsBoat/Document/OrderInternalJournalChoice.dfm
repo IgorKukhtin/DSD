@@ -13,7 +13,6 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
@@ -29,7 +28,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     object deStart: TcxDateEdit
       Left = 103
       Top = 5
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -39,7 +38,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -149,7 +148,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
-        Width = 120
+        Width = 80
       end
       object InvNumberFull_OrderClient: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
@@ -158,7 +157,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
-        Width = 200
+        Width = 100
       end
       object ProductName: TcxGridDBColumn
         Caption = 'Boat'
@@ -167,7 +166,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 200
+        Width = 100
       end
       object CIN: TcxGridDBColumn
         Caption = 'CIN Nr.'
@@ -183,7 +182,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
         DataBinding.FieldName = 'Article'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 120
+        Width = 100
       end
       object GoodsCode: TcxGridDBColumn
         Caption = 'Interne Nr'
@@ -394,6 +393,10 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbEdit'
         end
         item
@@ -402,11 +405,11 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -420,18 +423,6 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
         end
         item
           Visible = True
@@ -1194,6 +1185,21 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
           ComponentItem = 'ProductName'
           DataType = ftString
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName_all'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName_all'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072

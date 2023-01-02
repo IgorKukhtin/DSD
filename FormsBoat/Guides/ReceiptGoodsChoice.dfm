@@ -946,6 +946,14 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'GoodsName_all'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName_all'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'Article'
           Value = Null
           Component = MasterCDS

@@ -13,7 +13,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -28,7 +27,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 44197d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -38,7 +37,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 44197d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -265,6 +264,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
@@ -285,6 +285,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -295,6 +296,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -305,6 +307,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -323,6 +326,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 42
@@ -1330,9 +1334,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
-        Component = edClient
       end
       item
         Component = GuidesClient

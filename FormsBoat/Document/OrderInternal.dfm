@@ -166,12 +166,12 @@ object OrderInternalForm: TOrderInternalForm
       Width = 146
     end
     object cxLabel15: TcxLabel
-      Left = 268
-      Top = 50
+      Left = 273
+      Top = 46
       Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
     end
     object cxLabel6: TcxLabel
-      Left = 583
+      Left = 580
       Top = 46
       Caption = 'Boat'
     end
@@ -987,6 +987,10 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErasedMI_Master'
         end
         item
@@ -1012,19 +1016,11 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
         end
         item
           Visible = True
@@ -1427,8 +1423,8 @@ object OrderInternalForm: TOrderInternalForm
         item
           StoredProc = spSelectMI_Child
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -1708,8 +1704,8 @@ object OrderInternalForm: TOrderInternalForm
       View = cxGridDBTableView
       Action = actChoiceFormOrderClientItem
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ShortCut = 45
       ImageIndex = 0
     end
@@ -2165,8 +2161,8 @@ object OrderInternalForm: TOrderInternalForm
         item
           Action = actRefresh
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
   end
@@ -2295,8 +2291,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 358
-    Top = 223
+    Left = 222
+    Top = 255
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 878
@@ -2340,8 +2336,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 138
-    Top = 168
+    Left = 226
+    Top = 48
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -2640,8 +2636,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 414
-    Top = 184
+    Left = 430
+    Top = 240
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
@@ -2677,7 +2673,7 @@ object OrderInternalForm: TOrderInternalForm
       end>
     PackSize = 1
     Left = 100
-    Top = 64
+    Top = 32
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2825,7 +2821,7 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 454
+    Left = 302
     Top = 231
   end
   object PrintItemsColorCDS: TClientDataSet
@@ -2934,8 +2930,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 272
-    Top = 239
+    Left = 160
+    Top = 407
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -2979,8 +2975,8 @@ object OrderInternalForm: TOrderInternalForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 728
-    Top = 208
+    Left = 296
+    Top = 392
   end
   object spInsert_MI_byOrderClient: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_OrderInternal_byOrderClient'
@@ -3010,8 +3006,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 394
-    Top = 424
+    Left = 586
+    Top = 264
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3040,33 +3036,33 @@ object OrderInternalForm: TOrderInternalForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 816
-    Top = 224
+    Left = 728
+    Top = 192
   end
   object spErasedMIChild: TdsdStoredProc
-    StoredProcName = 'gpMI_OrderInternal_Child_SetErased'
+    StoredProcName = 'gpMovementItem_OrderInternal_SetErased_Child'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementItemId_child'
+        Name = 'inMovementItemId'
         Value = 0
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 550
-    Top = 247
+    Left = 238
+    Top = 447
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -3202,7 +3198,7 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 336
-    Top = 264
+    Left = 576
+    Top = 384
   end
 end

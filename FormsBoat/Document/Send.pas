@@ -232,7 +232,7 @@ type
     actOrderClientChoiceForm: TOpenChoiceForm;
     cxLabel15: TcxLabel;
     edReceiptGoods: TcxButtonEdit;
-    GuidesReceiptGoods: TdsdGuides;
+    GuidesGoods: TdsdGuides;
     actOrderClientInsertForm: TOpenChoiceForm;
     spInsert_MI_Send_byOrder: TdsdStoredProc;
     actInsert_MI_Send_byOrder: TdsdExecStoredProc;
@@ -247,6 +247,8 @@ type
     actOrderInternalInsertForm: TOpenChoiceForm;
     macInsert_MI_Send_byOrderInternal: TMultiAction;
     bbInsert_MI_Send_byOrderInternal: TdxBarButton;
+    ProdColorName: TcxGridDBColumn;
+    Comment_goods: TcxGridDBColumn;
   private
   public
   end;

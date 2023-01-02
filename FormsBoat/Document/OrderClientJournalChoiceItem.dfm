@@ -13,7 +13,6 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -28,7 +27,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -38,7 +37,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
