@@ -198,6 +198,7 @@ END IF;
                                                            AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
                            WHERE MovementLinkMovement_Order.MovementId = inMovementId       --23791150 --
                              AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                             AND COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0) <> 0
                          )
           , tmpMISale AS (SELECT MovementItem.ObjectId AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId  
@@ -224,7 +225,10 @@ END IF;
                    , tmpMISale.GoodsKindId
                    , COALESCE (tmpMISale.AmountPartner,0) AS AmountPartner
                    , COALESCE (tmpMIOrder.Amount,0)       AS AmountOrder
-                   , CAST ((COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0)) * 100 / COALESCE (tmpMIOrder.Amount,0) AS NUMERIC (16,1)) AS PersentReal
+                   , CASE WHEN tmpMIOrder.Amount > 0
+                          THEN CAST ((COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0)) * 100 / COALESCE (tmpMIOrder.Amount,0) AS NUMERIC (16,1)) 
+                          ELSE 100
+                          END AS PersentReal
               FROM tmpMISale
                    LEFT JOIN tmpMIOrder ON tmpMIOrder.GoodsId     = tmpMISale.GoodsId
                                        AND tmpMIOrder.GoodsKindId = tmpMISale.GoodsKindId

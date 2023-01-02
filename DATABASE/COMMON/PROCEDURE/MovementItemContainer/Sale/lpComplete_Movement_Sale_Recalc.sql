@@ -12,10 +12,24 @@ AS
 $BODY$
    DECLARE vbMovementId_Peresort Integer;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbIsNotRealGoods Boolean;
 BEGIN
      -- нашли дату
      vbOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId);
 
+
+    vbIsNotRealGoods:= EXISTS (SELECT 1
+                               FROM MovementLinkObject AS MLO
+                                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                         ON ObjectLink_Partner_Juridical.ObjectId = MLO.ObjectId
+                                                        AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                   INNER JOIN ObjectBoolean AS ObjectBoolean_isNotRealGoods
+                                                            ON ObjectBoolean_isNotRealGoods.ObjectId  = ObjectLink_Partner_Juridical.ChildObjectId 
+                                                           AND ObjectBoolean_isNotRealGoods.DescId    = zc_ObjectBoolean_Juridical_isNotRealGoods()
+                                                           AND ObjectBoolean_isNotRealGoods.ValueData = TRUE
+                               WHERE MLO.MovementId = inMovementId
+                                 AND MLO.DescId     = zc_MovementLinkObject_To()
+                              );
 
      -- Временно захардкодил - !!!только для этого склада!!!
      IF inUnitId = 8459 -- Склад Реализации
@@ -66,7 +80,7 @@ BEGIN
 
 IF inUserId = 5 AND 1=0
 THEN
-    RAISE EXCEPTION 'Ошибка.<%>  <%>' 
+    RAISE EXCEPTION 'Ошибка.<%>  <%>'
     , (select COUNT(*) from _tmpRemains)
     , vbMovementId_Peresort
      ;
@@ -111,6 +125,18 @@ END IF;
                                   ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                  AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
                                  -- AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
+
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsReal
+                                  ON ObjectLink_GoodsByGoodsKind_GoodsReal.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                 AND ObjectLink_GoodsByGoodsKind_GoodsReal.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsReal()
+                                 AND vbIsNotRealGoods = FALSE
+                                 AND vbOperDate >= '23.12.2022'
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindReal
+                                  ON ObjectLink_GoodsByGoodsKind_GoodsKindReal.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                 AND ObjectLink_GoodsByGoodsKind_GoodsKindReal.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindReal()
+                                 AND vbIsNotRealGoods = FALSE
+                                 AND vbOperDate >= '23.12.2022'
+
              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Receipt
                                   ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                  AND ObjectLink_GoodsByGoodsKind_Receipt.DescId   = zc_ObjectLink_GoodsByGoodsKind_Receipt()
@@ -126,6 +152,8 @@ END IF;
             OR (_tmpItem.GoodsKindId  <> ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
                AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
               ))
+          AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsReal.ChildObjectId, 0) = 0
+          AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindReal.ChildObjectId, 0) = 0
         GROUP BY _tmpItem.GoodsId
                , _tmpItem.GoodsKindId
                , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
@@ -350,7 +378,7 @@ END IF;
                                                                         , inUserId         := inUserId
                                                                          );
 
-IF inUserId = 5 AND 1=1
+IF inUserId = 5 AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.<%>   <%>   <%>', vbMovementId_Peresort
     , (select SUM (_tmpItemPeresort_new.Amount_to) from _tmpItemPeresort_new)
