@@ -75,6 +75,8 @@ BEGIN
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummCompensation()), 0)
                   -- SummAuditAdd
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummAuditAdd()), 0)
+                  -- SummHouseAdd
+                  + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummHouseAdd()), 0)
                     -- 
                   , MovementItem.ParentId
                   )
