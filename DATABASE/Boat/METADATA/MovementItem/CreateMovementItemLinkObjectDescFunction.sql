@@ -89,9 +89,16 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_MeasureParent() RETURNS Integer AS $B
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_MeasureParent', 'Ед.изм (упакови)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_MeasureParent');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_Personal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Personal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_Personal', 'Сотрудник' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Personal');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 03.01.23         * zc_MILinkObject_Personal
  18.02.22         * zc_MILinkObject_MeasureParent
                     zc_MILinkObject_Measure
                     zc_MILinkObject_DiscountPartner

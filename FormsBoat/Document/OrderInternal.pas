@@ -135,9 +135,6 @@ type
     InsertDate: TcxGridDBColumn;
     IsErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    cxTopSplitter: TcxSplitter;
-    Panel4: TPanel;
-    cxSplitter1: TcxSplitter;
     cxLabel17: TcxLabel;
     edInsertDate: TcxDateEdit;
     cxLabel18: TcxLabel;
@@ -200,6 +197,38 @@ type
     ProdColorName_goods: TcxGridDBColumn;
     ProdColorName_goods_ch3: TcxGridDBColumn;
     Comment_goods_ch3: TcxGridDBColumn;
+    DetailCDS: TClientDataSet;
+    DetailDS: TDataSource;
+    DetailViewAddOn: TdsdDBViewAddOn;
+    actReceiptServiceChoiceForm: TOpenChoiceForm;
+    actPersonalChoiceForm: TOpenChoiceForm;
+    spSelectMI_Detail: TdsdStoredProc;
+    cxGrid_Detail: TcxGrid;
+    cxGridDBTableView_Det: TcxGridDBTableView;
+    Article_ch4: TcxGridDBColumn;
+    GoodsName_ch4: TcxGridDBColumn;
+    ReceiptServiceName_ch4: TcxGridDBColumn;
+    PersonalCode_ch4: TcxGridDBColumn;
+    PersonalName_ch4: TcxGridDBColumn;
+    Amount_ch4: TcxGridDBColumn;
+    OperPrice_ch4: TcxGridDBColumn;
+    Hours_ch4: TcxGridDBColumn;
+    Summ_ch4: TcxGridDBColumn;
+    Comment_ch4: TcxGridDBColumn;
+    isErased_ch4: TcxGridDBColumn;
+    cxGridLevel_Det: TcxGridLevel;
+    spInsertUpdateMIDetail: TdsdStoredProc;
+    actUpdateDetailDS: TdsdUpdateDataSet;
+    InsertRecordDetail: TInsertRecord;
+    spErasedMIDetail: TdsdStoredProc;
+    SetErasedDetail: TdsdUpdateErased;
+    SetUnErasedDetail: TdsdUpdateErased;
+    spUnErasedMIDetail: TdsdStoredProc;
+    bbInsertRecordDetail: TdxBarButton;
+    bbSetErasedDetail: TdxBarButton;
+    bbSetUnErasedDetail: TdxBarButton;
+    cxTopSplitter: TcxSplitter;
+    cxSplitter2: TcxSplitter;
 
   private
   public
