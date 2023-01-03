@@ -231,7 +231,13 @@ type
     SetUnErasedChild: TdsdUpdateErased;
     spErasedMIChild: TdsdStoredProc;
     spUnErasedMIChild: TdsdStoredProc;
-    bb: TdxBarButton;
+    bbSetUnErasedChild: TdxBarButton;
+    InsertRecordBoat: TInsertRecord;
+    actOrderClientInsertBoatForm: TOpenChoiceForm;
+    bbb: TdxBarButton;
+    actUpdateRecordBoat2: TOpenChoiceForm;
+    actUpdateRecordBoat: TdsdInsertUpdateAction;
+    bbUpdateRecordBoat: TdxBarButton;
 
   private
   public

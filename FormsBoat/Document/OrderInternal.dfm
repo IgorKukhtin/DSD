@@ -1105,6 +1105,12 @@ object OrderInternalForm: TOrderInternalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Value = 'true'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 838
     Top = 103
@@ -1234,6 +1240,14 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateRecordBoat'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1254,7 +1268,7 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbSetUnErasedChild'
         end
         item
           Visible = True
@@ -1507,10 +1521,19 @@ object OrderInternalForm: TOrderInternalForm
       Category = 0
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1088#1072#1073#1086#1090#1091
     end
-    object bb: TdxBarButton
+    object bbSetUnErasedChild: TdxBarButton
       Action = SetUnErasedChild
       Category = 0
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+    end
+    object bbb: TdxBarButton
+      Action = InsertRecordBoat
+      Category = 0
+    end
+    object bbUpdateRecordBoat: TdxBarButton
+      Action = actOrderClientInsertBoatForm
+      Caption = #1080#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1730,6 +1753,7 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -1760,6 +1784,7 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
     end
@@ -1777,6 +1802,7 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -2374,16 +2400,6 @@ object OrderInternalForm: TOrderInternalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object InsertRecordInfo: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      PostDataSetBeforeExecute = False
-      Params = <>
-      Caption = 'Add Info'
-      Hint = 'Add Info'
-      ImageIndex = 0
-    end
     object actInsert_MI_byOrderClient: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2402,6 +2418,19 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1047#1072#1082#1072#1079#1072#1084' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1047#1072#1082#1072#1079#1072#1084' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
       ImageIndex = 27
+    end
+    object InsertRecordBoat: TInsertRecord
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actOrderClientInsertBoatForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      ImageIndex = 0
     end
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -2457,19 +2486,29 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
+    object InsertRecordInfo: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      Params = <>
+      Caption = 'Add Info'
+      Hint = 'Add Info'
+      ImageIndex = 0
+    end
     object actChoiceFormOrderClientItem: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'OrderClientJournalChoiceForm'
       ImageIndex = 47
-      FormName = 'TOrderClientJournalChoiceItemForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'ObjectId'
+          Name = 'ProductId'
           Value = '0'
           Component = MasterCDS
           ComponentItem = 'GoodsId'
@@ -2477,7 +2516,7 @@ object OrderInternalForm: TOrderInternalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ObjectName'
+          Name = 'ProductName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsName'
@@ -2512,36 +2551,12 @@ object OrderInternalForm: TOrderInternalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ProductName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ProductName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Amount_basis'
-          Value = 'Amount_basis'
-          Component = MasterCDS
-          ComponentItem = 'Amount'
-          DataType = ftFloat
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'isEnabled'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'isEnabled'
           DataType = ftBoolean
           ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inIsChildOnly'
-          Value = True
-          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -2611,9 +2626,180 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
+    end
+    object actUpdateRecordBoat2: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      ImageIndex = 1
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOrderClientInsertBoatForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      Hint = #1080#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      ImageIndex = 1
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ClientName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsEnabled'
+          Value = True
+          Component = MasterCDS
+          ComponentItem = 'IsEnabled'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdateRecordBoat: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      ImageIndex = 1
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      IdFieldName = 'Id'
     end
   end
   object MasterDS: TDataSource
@@ -2715,7 +2901,7 @@ object OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inAmount'
-        Value = Null
+        Value = 'khkh'
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -2733,9 +2919,9 @@ object OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inIsEnabled'
-        Value = Null
+        Value = True
         Component = MasterCDS
-        ComponentItem = 'isEnabled'
+        ComponentItem = 'IsEnabled'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
