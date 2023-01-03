@@ -24,6 +24,7 @@ BEGIN
 
     vbOparDate3 := vbOparDate2 - INTERVAL '1 DAY';
     IF date_part('DOW', vbOparDate3)::Integer = 0 THEN vbOparDate3 := vbOparDate3 - INTERVAL '2 DAY'; END IF;
+    
 
 --    raise notice 'Прошло. % % %', vbOparDate1, vbOparDate2, vbOparDate3;
 
@@ -83,7 +84,7 @@ BEGIN
                                           ON MovementDate_Insert.MovementId = Movement.Id
                                          AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
               WHERE date_trunc('day', MovementDate_Insert.ValueData) in (vbOparDate1, vbOparDate2, vbOparDate3)
-                AND MovementLinkObject_From.ObjectId = 377595 
+                AND MovementLinkObject_From.ObjectId = 0 -- 377595 
               GROUP BY MovementLinkObject_From.ObjectId
                      , date_trunc('day', MovementDate_Insert.ValueData)) AS T1;
 

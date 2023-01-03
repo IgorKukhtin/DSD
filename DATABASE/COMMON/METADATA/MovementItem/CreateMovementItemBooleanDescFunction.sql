@@ -201,9 +201,14 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_GoodsPresent() RETURNS Integer AS $BODY$
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_GoodsPresent', 'Акционный товар' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_GoodsPresent'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_FixedPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_FixedPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_FixedPercent', 'Фиксированный процент выполнения' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_FixedPercent'); 
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 03.01.23                                                                       * zc_MIBoolean_FixedPercent
  10.09.22                                                                       * zc_MIBoolean_GoodsPresent
  10.04.22                                                                       * zc_MIBoolean_UsePriceOOC
  20.02.22                                                                       * zc_MIBoolean_SupplierFailures

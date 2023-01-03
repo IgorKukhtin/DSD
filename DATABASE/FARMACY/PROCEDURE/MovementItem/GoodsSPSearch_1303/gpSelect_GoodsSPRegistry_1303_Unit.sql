@@ -36,13 +36,19 @@ BEGIN
     vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
     vbGoodsId := (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inGoodsId);
 
-    RETURN QUERY
-    WITH
-        tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
-                            , ObjectFloat_NDSKind_NDS.ValueData
-                       FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
-                       WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
-      , tmpGoodsSPRegistry_1303 AS (SELECT MovementItem.Id               AS MovementItemId
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('__tmpGoodsSPRegistry_1303'))
+    THEN
+      DROP TABLE __tmpGoodsSPRegistry_1303;
+    END IF;
+    
+    CREATE TEMP TABLE __tmpGoodsSPRegistry_1303 ON COMMIT DROP AS 
+                                   (WITH
+                                    tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                                                        , ObjectFloat_NDSKind_NDS.ValueData
+                                                   FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                   WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
+                                                   
+                                    SELECT MovementItem.Id               AS MovementItemId
                                          , MovementItem.ObjectId         AS GoodsId
                                          , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat       AS NDS
                                          , MIFloat_PriceOptSP.ValueData                                 AS PriceOptSP
@@ -84,7 +90,17 @@ BEGIN
                                     WHERE Movement.DescId = zc_Movement_GoodsSPSearch_1303()
                                       AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                                       AND COALESCE (MovementItem.ObjectId, 0) <> 0
-                                   )
+                                   );
+                                   
+    ANALYSE __tmpGoodsSPRegistry_1303;
+    
+
+    RETURN QUERY
+    WITH
+         tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                             , ObjectFloat_NDSKind_NDS.ValueData
+                        FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                        WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
        , tmpContainer AS (SELECT Container.ObjectId
                                , SUM(Container.Amount)                  AS Amount
                           FROM Container
@@ -105,7 +121,7 @@ BEGIN
 
                                , tmpGoodsSPRegistry_1303.MovementItemId
 
-                          FROM tmpGoodsSPRegistry_1303
+                          FROM __tmpGoodsSPRegistry_1303 AS tmpGoodsSPRegistry_1303
                           
                                LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = tmpGoodsSPRegistry_1303.GoodsId
                                LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.Id
@@ -204,5 +220,6 @@ $BODY$
 --реяр
 -- select * from gpSelect_GoodsSPRegistry_1303_Unit(inUnitId := 13338606, inGoodsId := 16242420, inisCalc := True, inSession := '3');
 
+
 SELECT * 
-FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := COALESCE (lpGet_DefaultValue ('zc_Object_Unit', 3), '0')::Integer , inGoodsId := 0, inisCalc := True, inSession := '3')
+FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := 183289 , inGoodsId := 0, inisCalc := True, inSession := '3')

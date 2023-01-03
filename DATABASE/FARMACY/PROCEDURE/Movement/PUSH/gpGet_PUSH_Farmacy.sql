@@ -320,8 +320,9 @@ BEGIN
 
    IF inNumberPUSH = 1 AND vbUserId IN (3, 758920)
    THEN
-      WITH tmpCheckAll AS (
-              SELECT Movement.ID                                                             AS ID
+
+     CREATE TEMP TABLE tmpCheckAll ON COMMIT DROP AS
+             (SELECT Movement.ID                                                             AS ID
                    , Movement.OperDate                                                       AS OperDate
                    , MovementLinkObject_Unit.ObjectId                                        AS UnitId
                    , MLO_Insert.ObjectId                                                     AS UserID
@@ -343,8 +344,11 @@ BEGIN
                 AND Movement.OperDate < CURRENT_DATE
                 AND DATE_TRUNC ('DAY', MovementDate_Insert.ValueData) = CURRENT_DATE - INTERVAL '1 day'
                 AND Movement.DescId = zc_Movement_Check()
-                AND Movement.StatusId = zc_Enum_Status_Complete()),
-           tmpCheckUser AS (
+                AND Movement.StatusId = zc_Enum_Status_Complete());
+                   
+     ANALYSE tmpCheckAll;
+   
+      WITH tmpCheckUser AS (
               SELECT Movement.UserID                            AS UserID
                    , count(*)                                   AS CountCheck
               FROM tmpCheckAll AS Movement
@@ -1173,4 +1177,5 @@ LANGUAGE plpgsql VOLATILE;
 -- тест
 -- SELECT * FROM gpGet_PUSH_Farmacy('12198759')
 -- 
-SELECT * FROM gpGet_PUSH_Farmacy(1, '3')
+
+SELECT * FROM gpGet_PUSH_Farmacy(1,'3')

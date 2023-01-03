@@ -49,6 +49,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserUpdateMarketingId Integer
              , UserUpdateMarketingName TVarChar
              , LimitCash TFloat
+             , AddMarkupTabletki TFloat
              ) AS
 $BODY$
 BEGIN
@@ -103,6 +104,7 @@ BEGIN
         , Object_UserUpdateMarketing.Id                                            AS UserUpdateMarketingId
         , Object_UserUpdateMarketing.ValueData                                     AS UserUpdateMarketingName
         , ObjectFloat_CashSettings_LimitCash.ValueData                             AS LimitCash
+        , ObjectFloat_CashSettings_AddMarkupTabletki.ValueData                     AS AddMarkupTabletki
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -238,6 +240,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_LimitCash
                               ON ObjectFloat_CashSettings_LimitCash.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_LimitCash.DescId = zc_ObjectFloat_CashSettings_LimitCash()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AddMarkupTabletki
+                              ON ObjectFloat_CashSettings_AddMarkupTabletki.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AddMarkupTabletki.DescId = zc_ObjectFloat_CashSettings_AddMarkupTabletki()
 
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_UserUpdateMarketing
                ON ObjectLink_CashSettings_UserUpdateMarketing.ObjectId = Object_CashSettings.Id

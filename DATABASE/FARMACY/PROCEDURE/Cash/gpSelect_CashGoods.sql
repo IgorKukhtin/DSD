@@ -62,7 +62,7 @@ BEGIN
               
      WHERE Object_User.Id = vbUserId;   
      
-     RAISE notice '1 <%>', CLOCK_TIMESTAMP();
+     -- RAISE notice '1 <%>', CLOCK_TIMESTAMP();
 
      SELECT ObjectLink_Unit_Juridical.ChildObjectId
           , ObjectLink_Juridical_Retail.ChildObjectId
@@ -82,10 +82,38 @@ BEGIN
      WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
        AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
 
-     RAISE notice '2 <%>', CLOCK_TIMESTAMP();
+     -- RAISE notice '2 <%>', CLOCK_TIMESTAMP();
      
-    --
-    CREATE TEMP TABLE _GoodsPriceAll (
+          -- Список цены + ТОП
+     CREATE TEMP TABLE GoodsPrice ON COMMIT DROP AS
+             (SELECT ObjectLink_Price_Goods.ChildObjectId              AS GoodsId,
+                     COALESCE (ObjectBoolean_Top.ValueData, FALSE)     AS isTOP,
+                     COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup,
+                     MCS_Value.ValueData                               AS MCSValue
+              FROM ObjectLink AS ObjectLink_Price_Unit
+                   INNER JOIN ObjectLink AS ObjectLink_Price_Goods
+                                         ON ObjectLink_Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                        AND ObjectLink_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
+                                           ON ObjectBoolean_Top.ObjectId  = ObjectLink_Price_Unit.ObjectId
+                                          AND ObjectBoolean_Top.DescId    = zc_ObjectBoolean_Price_Top()
+                   LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
+                                         ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                        AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+                   LEFT JOIN ObjectFloat AS MCS_Value
+                                         ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                        AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+              WHERE ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                AND (ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0 OR MCS_Value.ValueData <> 0)
+             );
+     
+     ANALYSE GoodsPrice;
+     
+     -- RAISE notice '21 <%>', CLOCK_TIMESTAMP();
+     
+     --
+     CREATE TEMP TABLE _GoodsPriceAll (
                              GoodsId Integer,
                              JuridicalId Integer,
                              ContractId Integer,
@@ -119,29 +147,6 @@ BEGIN
         FROM DD AS D1
             LEFT OUTER JOIN DD AS D2 ON D1.MarginCategoryId = D2.MarginCategoryId AND D1.ORD = D2.ORD-1)
 
-          -- Список цены + ТОП
-        , GoodsPrice AS
-             (SELECT ObjectLink_Price_Goods.ChildObjectId              AS GoodsId,
-                     COALESCE (ObjectBoolean_Top.ValueData, FALSE)     AS isTOP,
-                     COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup,
-                     MCS_Value.ValueData                               AS MCSValue
-              FROM ObjectLink AS ObjectLink_Price_Unit
-                   INNER JOIN ObjectLink AS ObjectLink_Price_Goods
-                                         ON ObjectLink_Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                        AND ObjectLink_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
-                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
-                                           ON ObjectBoolean_Top.ObjectId  = ObjectLink_Price_Unit.ObjectId
-                                          AND ObjectBoolean_Top.DescId    = zc_ObjectBoolean_Price_Top()
-                   LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
-                                         ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                        AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
-                   LEFT JOIN ObjectFloat AS MCS_Value
-                                         ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                        AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
-              WHERE ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
-                AND (ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0 OR MCS_Value.ValueData <> 0)
-             )
           , tmpContractSettings AS (SELECT Object_ContractSettings.Id               AS Id
                                          , Object_ContractSettings.isErased         AS isErased
                                          , ObjectLink_MainJuridical.ChildObjectId   AS MainJuridicalId
@@ -396,14 +401,19 @@ BEGIN
           OR COALESCE(tmpExpirationDate.ExpirationDate, zc_DateEnd()) <=
              CURRENT_DATE + (COALESCE(tmpExpirationDateMonth.DateMonth::Integer, 0)::tvarchar||' MONTH')::INTERVAL);
 
-     RAISE notice '3 <%>', CLOCK_TIMESTAMP();
+     -- RAISE notice '3 <%>', CLOCK_TIMESTAMP();
 
      ANALYSE _GoodsPriceAll;
      
-     RETURN QUERY
-     WITH GoodsPriceAll AS (SELECT
+     
+     CREATE TEMP TABLE GoodsPriceAll ON COMMIT DROP AS 
+                          (SELECT
                                   ROW_NUMBER() OVER (PARTITION BY _GoodsPriceAll.GoodsId ORDER BY _GoodsPriceAll.Price, _GoodsPriceAll.ContractId)::Integer AS Ord,
                                   _GoodsPriceAll.GoodsId           AS GoodsId,
+                                  Object_Goods.ObjectCode          AS GoodsCode,
+                                  CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods.NameUkr, '') <> ''
+                                       THEN Object_Goods.NameUkr
+                                       ELSE Object_Goods.Name END  AS GoodsName,
                                   _GoodsPriceAll.JuridicalId       AS JuridicalId,
                                   _GoodsPriceAll.ContractId        AS ContractId,
                                   _GoodsPriceAll.AreaId            AS AreaId,
@@ -418,8 +428,28 @@ BEGIN
                                   _GoodsPriceAll.isFirst           AS isFirst,
                                   _GoodsPriceAll.isSecond          AS isSecond,
                                   _GoodsPriceAll.isResolution_224  AS isResolution_224
-                            FROM _GoodsPriceAll)
-       , tmpGoodsDiscountTools AS (SELECT ObjectLink_DiscountExternal.ChildObjectId  AS DiscountExternalID
+                            FROM _GoodsPriceAll
+                            
+                                 INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = _GoodsPriceAll.GoodsId
+                                 INNER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                            );
+                            
+     ANALYSE GoodsPriceAll;
+          
+     -- RAISE notice '31 <%>', CLOCK_TIMESTAMP();
+
+     CREATE TEMP TABLE tmpGoodsSP_1303 ON COMMIT DROP AS 
+                            (SELECT * 
+                             FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := vbUnitId, inGoodsId := 0, inisCalc := COALESCE (vbPartnerMedicalId, 0) > 0, inSession := inSession)
+                             );
+
+     ANALYSE tmpGoodsSP_1303;
+     
+
+     -- RAISE notice '32 <%>', CLOCK_TIMESTAMP();
+     
+     RETURN QUERY
+     WITH tmpGoodsDiscountTools AS (SELECT ObjectLink_DiscountExternal.ChildObjectId  AS DiscountExternalID
                                    FROM Object AS Object_DiscountExternalTools
                                          LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
                                                               ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalTools.Id
@@ -452,16 +482,11 @@ BEGIN
                                   AND Object_BarCode.isErased = False
                                   AND COALESCE(ObjectBoolean_GoodsForProject.ValueData, False) = TRUE
                                   AND COALESCE(tmpGoodsDiscountTools.DiscountExternalID, 0) = 0)
-       , tmpGoodsSP_1303 AS (SELECT * 
-                             FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := vbUnitId, inGoodsId := 0, inisCalc := COALESCE (vbPartnerMedicalId, 0) > 0, inSession := inSession)
-                             )
 
      SELECT
               GoodsPriceAll.GoodsId             AS Id,
-              Object_Goods.ObjectCode           AS GoodsCode,
-              CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods.NameUkr, '') <> ''
-                   THEN Object_Goods.NameUkr
-                   ELSE Object_Goods.Name END   AS GoodsName,
+              GoodsPriceAll.GoodsCode,
+              GoodsPriceAll.GoodsName,
               Object_Juridical.ValueData        AS JuridicalName,
               Object_Contract.ValueData         AS ContractName,
               Object_Area.ValueData             AS AreaName,
@@ -484,9 +509,6 @@ BEGIN
 
      FROM GoodsPriceAll
 
-          INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = GoodsPriceAll.GoodsId
-          INNER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
-
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = GoodsPriceAll.JuridicalId
           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = GoodsPriceAll.ContractId
           LEFT JOIN Object AS Object_Area ON Object_Area.Id = GoodsPriceAll.AreaId
@@ -496,7 +518,7 @@ BEGIN
      WHERE GoodsPriceAll.Ord = 1
        AND COALESCE(tmpGoodsDiscount.ID, 0) = 0;
 
-     RAISE notice '4 <%>', CLOCK_TIMESTAMP();
+      -- RAISE notice '4 <%>', CLOCK_TIMESTAMP();
 
 END;
 $BODY$

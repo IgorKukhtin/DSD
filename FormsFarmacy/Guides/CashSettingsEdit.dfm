@@ -2,7 +2,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   Left = 0
   Top = 0
   Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
-  ClientHeight = 625
+  ClientHeight = 641
   ClientWidth = 898
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -31,7 +31,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxButton1: TcxButton
     Left = 230
-    Top = 583
+    Top = 604
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -41,7 +41,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxButton2: TcxButton
     Left = 604
-    Top = 583
+    Top = 604
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -575,6 +575,21 @@ object CashSettingsEditForm: TCashSettingsEditForm
       #1082#1080#1088#1086#1074#1082#1080
     Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1086#1082#1091#1087#1082#1080' '#1085#1072#1083#1080#1095#1085#1099#1084#1080
   end
+  object ceAddMarkupTabletki: TcxCurrencyEdit
+    Left = 404
+    Top = 575
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.EditFormat = ',0.00'
+    TabOrder = 77
+    Width = 121
+  end
+  object cxLabel35: TcxLabel
+    Left = 20
+    Top = 576
+    Hint = #1044#1086#1087' '#1085#1072#1094#1077#1085#1082#1072' '#1085#1072' '#1058#1072#1073#1083#1077#1090#1082#1080' '#1085#1072' '#1087#1086#1079' '#1087#1086' '#1074#1099#1089#1090#1072#1074#1083#1077#1085#1085#1099#1084' '#1085#1072#1094#1077#1085#1082#1072#1084
+    Caption = #1044#1086#1087' '#1085#1072#1094#1077#1085#1082#1072' '#1085#1072' '#1058#1072#1073#1083#1077#1090#1082#1080' '#1085#1072' '#1087#1086#1079' '#1087#1086' '#1074#1099#1089#1090#1072#1074#1083#1077#1085#1085#1099#1084' '#1085#1072#1094#1077#1085#1082#1072#1084
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -929,6 +944,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAddMarkupTabletki'
+        Value = Null
+        Component = ceAddMarkupTabletki
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1228,6 +1251,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Name = 'LimitCash'
         Value = Null
         Component = ceLimitCash
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddMarkupTabletki'
+        Value = Null
+        Component = ceAddMarkupTabletki
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

@@ -51,6 +51,33 @@ BEGIN
    INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
    FROM lpSelect_PartionDateKind_SetDate ();
 
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMI_Child'))
+   THEN
+     DROP TABLE tmpMI_Child;
+   END IF;
+	
+   CREATE TEMP TABLE MI_Master ON COMMIT DROP AS 
+                                (SELECT MovementItem.Id                         AS Id
+                                      , MovementItem.ObjectId                   AS GoodsId
+                                      , MovementItem.Amount                     AS Amount
+                                      , MIFloat_ContainerId.ValueData::Integer  AS ContainerId
+                                      , MIDate_ExpirationDate.ValueData         AS NewExpirationDate
+                                      , MovementItem.isErased                   AS isErased
+                                 FROM MovementItem
+                                     LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                                 ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
+                                     LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                                ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
+                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_ExpirationDate()
+
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId = zc_MI_Master()
+                                   AND (MovementItem.isErased = False OR inIsErased = True OR inShowAll = True)
+                                 );
+                                 
+   ANALYSE MI_Master;
 
     IF inShowAll = TRUE
     THEN
@@ -119,24 +146,6 @@ BEGIN
                                      WHERE Container.DescId = zc_Container_Count()
                                        AND Container.WhereObjectId = vbUnitId
                                        AND Container.Amount > 0)
-                 , MI_Master AS (SELECT MovementItem.Id                         AS Id
-                                      , MovementItem.ObjectId                   AS GoodsId
-                                      , MovementItem.Amount                     AS Amount
-                                      , MIFloat_ContainerId.ValueData::Integer  AS ContainerId
-                                      , MIDate_ExpirationDate.ValueData         AS NewExpirationDate
-                                      , MovementItem.isErased                   AS isErased
-                                 FROM MovementItem
-                                     LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
-                                                                 ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
-
-                                     LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
-                                                                ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
-                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_ExpirationDate()
-
-                                 WHERE MovementItem.MovementId = inMovementId
-                                   AND MovementItem.DescId = zc_MI_Master()
-                                 )
                  , tmpPartionDateKind AS (SELECT Object_PartionDateKind.Id
                                                , Object_PartionDateKind.ValueData
                                           FROM Object AS Object_PartionDateKind
@@ -189,26 +198,7 @@ BEGIN
         -- Результат такой
         RETURN QUERY
                WITH
-                   MI_Master AS (SELECT MovementItem.Id                         AS Id
-                                      , MovementItem.ObjectId                   AS GoodsId
-                                      , MovementItem.Amount                     AS Amount
-                                      , MIFloat_ContainerId.ValueData::Integer  AS ContainerId
-                                      , MIDate_ExpirationDate.ValueData         AS NewExpirationDate
-                                      , MovementItem.isErased                   AS isErased
-                                 FROM MovementItem
-                                     LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
-                                                                 ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
-
-                                     LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
-                                                                ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
-                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_ExpirationDate()
-
-                                 WHERE MovementItem.MovementId = inMovementId
-                                   AND MovementItem.DescId = zc_MI_Master()
-                                   AND (MovementItem.isErased = False OR inIsErased = True)
-                                 )
-                 , tmpContainerPD AS (SELECT Container.Id                       AS Id
+                   tmpContainerPD AS (SELECT Container.Id                       AS Id
                                            , Container.ParentId                 AS ParentId
                                            , Container.Amount                   AS Amount
                                            , ContainerLinkObject.ObjectId       AS PartionGoodsId
@@ -319,3 +309,6 @@ $BODY$
  01.07.20                                                      *
 */
 -- select * from gpSelect_MovementItem_SendPartionDateChange(inMovementId := 19386934 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
+
+select * from gpSelect_MovementItem_SendPartionDateChange(inMovementId := 26943906 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

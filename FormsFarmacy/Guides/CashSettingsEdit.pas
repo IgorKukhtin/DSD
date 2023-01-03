@@ -103,6 +103,8 @@ type
     cxLabel33: TcxLabel;
     ceLimitCash: TcxCurrencyEdit;
     cxLabel34: TcxLabel;
+    ceAddMarkupTabletki: TcxCurrencyEdit;
+    cxLabel35: TcxLabel;
   private
     { Private declarations }
   public

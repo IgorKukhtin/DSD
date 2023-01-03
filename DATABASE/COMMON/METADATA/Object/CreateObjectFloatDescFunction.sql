@@ -1,5 +1,4 @@
---------------------------- !!!!!!!!!!!!!!!!!!!
---------------------------- !!! НОВАЯ СХЕМА !!!
+ СХЕМА !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReplServer_CountTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReplServer_CountTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -2348,9 +2347,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_LimitCash() RETURNS Integ
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_LimitCash', 'Ограничение при покупки наличными' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_LimitCash');
   
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AddMarkupTabletki() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AddMarkupTabletki'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AddMarkupTabletki', 'Доп наценка на Таблетки на поз по выставленным наценкам' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AddMarkupTabletki');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 02.01.23                                                                                      * zc_ObjectFloat_CashSettings_AddMarkupTabletki
  25.11.22                                                                                      * zc_ObjectFloat_CashSettings_LimitCash
  13.10.22                                                                                      * zc_ObjectFloat_CashSettings_NormNewMobileOrders
  26.09.22                                                                                      * zc_ObjectFloat_User_InternshipConfirmation

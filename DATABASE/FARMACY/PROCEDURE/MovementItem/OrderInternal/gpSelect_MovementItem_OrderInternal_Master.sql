@@ -500,7 +500,7 @@ BEGIN
                               INNER JOIN Object AS Object_Goods
                                                 ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
                                                AND Object_Goods.isErased = FALSE
-                              INNER JOIN tmpGoods_PriceList ON tmpGoods_PriceList.GoodsId = ObjectLink_Goods_Object.ObjectId
+                              LEFT JOIN tmpGoods_PriceList ON tmpGoods_PriceList.GoodsId = ObjectLink_Goods_Object.ObjectId
 
                               LEFT JOIN tmpMI_Master ON tmpMI_Master.ObjectId = ObjectLink_Goods_Object.ObjectId
 
@@ -4592,4 +4592,4 @@ $BODY$
 
 --select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26893369    , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3') order by GoodsId;
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 30450998 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 30587884  , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
