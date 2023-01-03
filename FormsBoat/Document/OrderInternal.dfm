@@ -223,7 +223,6 @@ object OrderInternalForm: TOrderInternalForm
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
-        ExplicitLeft = -3
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
@@ -231,8 +230,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 206
           Align = alClient
           TabOrder = 1
-          ExplicitLeft = 2
-          ExplicitTop = 3
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -433,7 +430,7 @@ object OrderInternalForm: TOrderInternalForm
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
                 item
-                  Action = actGoodsChoiceForm
+                  Action = actChoiceFormOrderClientItem
                   Default = True
                   Kind = bkEllipsis
                 end>
@@ -577,8 +574,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 117
           Align = alBottom
           TabOrder = 2
-          ExplicitLeft = 2
-          ExplicitTop = 217
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -732,7 +727,7 @@ object OrderInternalForm: TOrderInternalForm
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
                 item
-                  Action = actGoodsChoiceForm
+                  Action = actChoiceFormOrderClientItem
                   Default = True
                   Kind = bkEllipsis
                 end>
@@ -824,8 +819,6 @@ object OrderInternalForm: TOrderInternalForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid1
-          ExplicitLeft = -8
-          ExplicitTop = 203
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
@@ -834,8 +827,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 170
           Align = alBottom
           TabOrder = 0
-          ExplicitLeft = 40
-          ExplicitTop = 392
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -1088,8 +1079,6 @@ object OrderInternalForm: TOrderInternalForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Detail
-          ExplicitLeft = 2
-          ExplicitTop = 346
         end
       end
     end
@@ -1262,6 +1251,10 @@ object OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
         end
         item
           Visible = True
@@ -1488,6 +1481,7 @@ object OrderInternalForm: TOrderInternalForm
     object bbSetErasedChild: TdxBarButton
       Action = SetErasedChild
       Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
     end
     object bbOpenDocument: TdxBarButton
       Action = actOpenForm
@@ -1511,6 +1505,12 @@ object OrderInternalForm: TOrderInternalForm
     object bbSetUnErasedDetail: TdxBarButton
       Action = SetUnErasedDetail
       Category = 0
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1088#1072#1073#1086#1090#1091
+    end
+    object bb: TdxBarButton
+      Action = SetUnErasedChild
+      Category = 0
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1575,6 +1575,9 @@ object OrderInternalForm: TOrderInternalForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMI_Child
         end
         item
           StoredProc = spSelectMI_Detail
@@ -1727,7 +1730,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -1758,7 +1760,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
     end
@@ -1776,7 +1777,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -2596,6 +2596,24 @@ object OrderInternalForm: TOrderInternalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object SetUnErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spUnErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIChild
+        end
+        item
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ChildDS
     end
   end
   object MasterDS: TDataSource
@@ -3471,31 +3489,6 @@ object OrderInternalForm: TOrderInternalForm
     Left = 728
     Top = 192
   end
-  object spErasedMIChild: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_OrderInternal_SetErased_Child'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Value = 0
-        Component = ChildCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 238
-    Top = 447
-  end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
     DataSets = <>
@@ -3850,5 +3843,55 @@ object OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 670
     Top = 503
+  end
+  object spErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_OrderInternal_SetErased_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 638
+    Top = 391
+  end
+  object spUnErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_OrderInternal_SetUnErased_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 550
+    Top = 391
   end
 end

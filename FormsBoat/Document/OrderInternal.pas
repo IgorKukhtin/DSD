@@ -173,7 +173,6 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     SetErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
-    spErasedMIChild: TdsdStoredProc;
     getMovementForm: TdsdStoredProc;
     actOpenForm: TdsdOpenForm;
     bbOpenDocument: TdxBarButton;
@@ -229,6 +228,10 @@ type
     bbSetUnErasedDetail: TdxBarButton;
     cxTopSplitter: TcxSplitter;
     cxSplitter2: TcxSplitter;
+    SetUnErasedChild: TdsdUpdateErased;
+    spErasedMIChild: TdsdStoredProc;
+    spUnErasedMIChild: TdsdStoredProc;
+    bb: TdxBarButton;
 
   private
   public

@@ -14,7 +14,6 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = actChoiceGuides
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -1345,7 +1344,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = actUpdate
+        Action = actChoiceGuides
       end>
     ActionItemList = <
       item
