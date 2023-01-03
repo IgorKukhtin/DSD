@@ -249,6 +249,10 @@ type
     bbInsert_MI_Send_byOrderInternal: TdxBarButton;
     ProdColorName: TcxGridDBColumn;
     Comment_goods: TcxGridDBColumn;
+    actOrderClientChoiceItemFormDet: TOpenChoiceForm;
+    macInsert_MI_Send_byOrderDetail_2: TMultiAction;
+    bbInsert_MI_Send_byOrderDetail_2: TdxBarButton;
+    OpenChoiceForm1: TOpenChoiceForm;
   private
   public
   end;
