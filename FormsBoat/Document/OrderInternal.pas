@@ -238,6 +238,7 @@ type
     actUpdateRecordBoat2: TOpenChoiceForm;
     actUpdateRecordBoat: TdsdInsertUpdateAction;
     bbUpdateRecordBoat: TdxBarButton;
+    bbChoiceFormOrderClientItem: TdxBarButton;
 
   private
   public

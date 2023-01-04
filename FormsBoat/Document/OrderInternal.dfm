@@ -1228,6 +1228,10 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbChoiceFormOrderClientItem'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -1533,6 +1537,10 @@ object OrderInternalForm: TOrderInternalForm
     object bbUpdateRecordBoat: TdxBarButton
       Action = actOrderClientInsertBoatForm
       Caption = #1080#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      Category = 0
+    end
+    object bbChoiceFormOrderClientItem: TdxBarButton
+      Action = actChoiceFormOrderClientItem
       Category = 0
     end
   end
@@ -2500,8 +2508,9 @@ object OrderInternalForm: TOrderInternalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'OrderClientJournalChoiceItemForm'
-      ImageIndex = 47
+      Caption = #1080#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      ImageIndex = 1
       FormName = 'TOrderClientJournalChoiceItemForm'
       FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
       FormNameParam.DataType = ftString
