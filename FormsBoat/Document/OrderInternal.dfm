@@ -1748,7 +1748,7 @@ object OrderInternalForm: TOrderInternalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object SetErasedDetail: TdsdUpdateErased
-      Category = 'DSDLib'
+      Category = 'Detail'
       MoveParams = <>
       StoredProc = spErasedMIDetail
       StoredProcList = <
@@ -1797,7 +1797,7 @@ object OrderInternalForm: TOrderInternalForm
       isSetErased = False
     end
     object SetUnErasedDetail: TdsdUpdateErased
-      Category = 'DSDLib'
+      Category = 'Detail'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spUnErasedMIDetail
@@ -2047,7 +2047,7 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndex = 54
     end
     object InsertRecordDetail: TInsertRecord
-      Category = 'DSDLib'
+      Category = 'Detail'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3242,8 +3242,8 @@ object OrderInternalForm: TOrderInternalForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 526
-    Top = 82
+    Left = 454
+    Top = 50
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -3853,12 +3853,12 @@ object OrderInternalForm: TOrderInternalForm
     PacketRecords = 0
     Params = <>
     Left = 856
-    Top = 391
+    Top = 511
   end
   object DetailDS: TDataSource
     DataSet = DetailCDS
-    Left = 870
-    Top = 399
+    Left = 918
+    Top = 519
   end
   object DetailViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3886,8 +3886,8 @@ object OrderInternalForm: TOrderInternalForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 939
-    Top = 409
+    Left = 971
+    Top = 497
   end
   object spSelectMI_Detail: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderInternal_Detail'
