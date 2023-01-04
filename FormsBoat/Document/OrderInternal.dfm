@@ -2500,10 +2500,10 @@ object OrderInternalForm: TOrderInternalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'OrderClientJournalChoiceForm'
+      Caption = 'OrderClientJournalChoiceItemForm'
       ImageIndex = 47
-      FormName = 'TOrderClientJournalChoiceForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      FormName = 'TOrderClientJournalChoiceItemForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2556,6 +2556,30 @@ object OrderInternalForm: TOrderInternalForm
           Component = MasterCDS
           ComponentItem = 'isEnabled'
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsChildOnly'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -3914,18 +3938,19 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReceiptServiceId'
-        Value = Null
-        Component = DetailCDS
-        ComponentItem = 'ReceiptServiceId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inPersonalId'
         Value = Null
         Component = DetailCDS
         ComponentItem = 'PersonalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptServiceName'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'ReceiptServiceName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
