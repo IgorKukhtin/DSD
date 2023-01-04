@@ -222,6 +222,14 @@ type
     bbInsertRecordDetail: TdxBarButton;
     bbSetErasedDetail: TdxBarButton;
     bbSetUnErasedDetail: TdxBarButton;
+    actChoiceFormOrderClientItem: TOpenChoiceForm;
+    InsertRecordOrderClientItem: TInsertRecord;
+    bbInsertRecordOrderClientItem: TdxBarButton;
+    actOrderClientInsertBoatForm: TOpenChoiceForm;
+    InsertRecordBoat: TInsertRecord;
+    bbChoiceFormOrderClientItem: TdxBarButton;
+    bbInsertRecordBoat: TdxBarButton;
+    bbOrderClientInsertBoatForm: TdxBarButton;
   private
   public
   end;

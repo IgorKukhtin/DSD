@@ -1,15 +1,17 @@
 -- Function: gpInsertUpdate_MovementItem_ProductionUnion()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionUnion(Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionUnion(Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ProductionUnion(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inObjectId            Integer   , -- Лодка/ Комплектующие
-    IN inReceiptProdModelId  Integer   , -- 
-    IN inAmount              TFloat    , -- Количество
-    IN inComment             TVarChar  , --
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId             Integer   , -- Ключ объекта <Документ> 
+    IN inMovementId_OrderClient Integer   , -- Заказ Клиента
+    IN inObjectId               Integer   , -- Лодка/ Комплектующие
+    IN inReceiptProdModelId     Integer   , -- 
+    IN inAmount                 TFloat    , -- Количество
+    IN inComment                TVarChar  , --
+    IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -29,13 +31,14 @@ BEGIN
      SELECT tmp.ioId
             INTO ioId 
      FROM lpInsertUpdate_MovementItem_ProductionUnion (ioId
-                                          , inMovementId
-                                          , inObjectId
-                                          , inReceiptProdModelId
-                                          , inAmount
-                                          , inComment
-                                          , vbUserId
-                                          ) AS tmp;
+                                                     , inMovementId
+                                                     , inMovementId_OrderClient
+                                                     , inObjectId
+                                                     , inReceiptProdModelId
+                                                     , inAmount
+                                                     , inComment
+                                                     , vbUserId
+                                                     ) AS tmp;
 
 
      -- пересчитали Итоговые суммы
@@ -52,6 +55,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.01.23         *
  12.07.21         *
 */
 

@@ -3243,7 +3243,7 @@ object OrderInternalForm: TOrderInternalForm
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
     Left = 454
-    Top = 50
+    Top = 34
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
