@@ -16,6 +16,7 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbId Integer;
    DECLARE vbPrice TFloat;
+   DECLARE vbisFixedPercent boolean;
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     vbUserId := inSession;
@@ -62,6 +63,10 @@ BEGIN
     
 
     SELECT Id INTO vbId from MovementItem Where MovementId = COALESCE(inMovementId,0) AND ObjectId = vbGoodsId;
+    
+    vbisFixedPercent := COALESCE ((SELECT MovementItemBoolean.ValueData FROM MovementItemBoolean
+                                   WHERE MovementItemBoolean.MovementItemId = vbId
+                                     AND MovementItemBoolean.DescId = zc_MIBoolean_FixedPercent()) , False);
 
     -- сохранили <Ёлемент документа>
     PERFORM lpInsertUpdate_MovementItem_PromoUnit (ioId                 := COALESCE(vbId,0)
@@ -71,6 +76,7 @@ BEGIN
                                                  , inAmountPlanMax      := inAmountPlanMax
                                                  , inPrice              := COALESCE(vbPrice,0) ::TFloat
                                                  , inComment            := '' ::TVarChar
+                                                 , inisFixedPercent     := vbisFixedPercent
                                                  , inUserId             := vbUserId
                                                 );
 

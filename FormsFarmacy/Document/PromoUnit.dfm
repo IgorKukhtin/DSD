@@ -3,27 +3,27 @@ inherited PromoUnitForm: TPromoUnitForm
   ClientHeight = 479
   ClientWidth = 979
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 995
-  ExplicitHeight = 518
+  ExplicitWidth = 997
+  ExplicitHeight = 526
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 123
+    Top = 124
     Width = 979
-    Height = 356
-    ExplicitTop = 123
+    Height = 355
+    ExplicitTop = 124
     ExplicitWidth = 979
-    ExplicitHeight = 356
-    ClientRectBottom = 356
+    ExplicitHeight = 355
+    ClientRectBottom = 355
     ClientRectRight = 979
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 979
-      ExplicitHeight = 332
+      ExplicitHeight = 331
       inherited cxGrid: TcxGrid
         Width = 979
-        Height = 324
+        Height = 323
         ExplicitWidth = 979
-        ExplicitHeight = 324
+        ExplicitHeight = 323
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -88,7 +88,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 52
+            Width = 49
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -96,7 +96,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 260
+            Width = 244
           end
           object Koeff: TcxGridDBColumn
             Caption = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090
@@ -107,7 +107,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 68
+            Width = 63
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -116,7 +116,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 74
+            Width = 70
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -126,7 +126,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Properties.DisplayFormat = ',0.000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Width = 70
           end
           object AmountPlanMax: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080
@@ -136,7 +136,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Properties.DisplayFormat = ',0.000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 73
+            Width = 69
           end
           object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -146,7 +146,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 84
+            Width = 78
           end
           object SummPlanMax: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080
@@ -156,7 +156,15 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 82
+            Width = 77
+          end
+          object isFixedPercent: TcxGridDBColumn
+            Caption = #1060#1080#1082#1089'. '#1074#1099#1087#1086#1083#1085'. '#1087#1083#1072#1085#1072
+            DataBinding.FieldName = 'isFixedPercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1086#1077' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1077' '#1087#1083#1072#1085#1072
+            Width = 69
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -164,13 +172,13 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 197
+            Width = 176
           end
         end
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 324
+        Top = 323
         Width = 979
         Height = 8
         Touch.ParentTabletOptions = False
@@ -450,7 +458,7 @@ inherited PromoUnitForm: TPromoUnitForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -874,6 +882,15 @@ inherited PromoUnitForm: TPromoUnitForm
         Component = MasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisFixedPercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isFixedPercent'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

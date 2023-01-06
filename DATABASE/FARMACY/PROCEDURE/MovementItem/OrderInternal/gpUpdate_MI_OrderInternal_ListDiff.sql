@@ -58,6 +58,8 @@ BEGIN
                   LEFT JOIN tmpMIFloat_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = tmpMI.Id
                   LEFT JOIN tmpMI_String            AS tmpMI_String         ON tmpMI_String.MovementItemId = tmpMI.Id
                   ;
+                  
+     ANALYSE _tmp_MI;
 
      -- Данные из док. отказ
      CREATE TEMP TABLE _tmpListDiff_MI (MovementId Integer, Id Integer, GoodsId Integer, Amount TFloat, Comment TVarChar, DiffKindName TVarChar) ON COMMIT DROP;
@@ -122,6 +124,8 @@ BEGIN
                      LEFT JOIN tmpMI_MovementId ON tmpMI_MovementId.MovementItemId = tmpListDiff_MI_All.Id
                      LEFT JOIN tmpMI_Comment    ON tmpMI_Comment.MovementItemId    = tmpListDiff_MI_All.Id
                 WHERE tmpMI_MovementId.ValueData IS NULL;
+                
+     ANALYSE _tmpListDiff_MI;
            
      -- сохраняем свойства, если такого товара нет в заказе дописываем
      PERFORM lpInsertUpdate_MI_OrderInternal_ListDiff (inId             := COALESCE (_tmp_MI.Id, 0)
@@ -207,10 +211,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
---
-
- /*lpInsertUpdate_MovementItemFloat (zc_MIFloat_ListDiff(), COALESCE (_tmp_MI.Id, 0), COALESCE (_tmp_MI.ListDiffAmount,0) + COALESCE (tmpListDiff_MI.Amount, 0) )   -- сохранили свойство кол-во отказ
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), COALESCE (_tmp_MI.Id, 0), COALESCE (_tmp_MI.AmountManual,0) + COALESCE (tmpListDiff_MI.Amount, 0) ) -- сохранили свойство <Ручное количество>
-           , lpInsert_MovementItemProtocol (_tmp_MI.Id, vbUserId, FALSE) 
-           */
-           
+-- select * from gpUpdate_MI_OrderInternal_ListDiff(inMovementId := 30600304 , inUnitId := 16240371 ,  inSession := '3');           

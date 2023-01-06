@@ -22,6 +22,7 @@ BEGIN
                                                  , inAmountPlanMax      := 0::TFloat
                                                  , inPrice              := COALESCE(MovementItemFloat_Price.ValueData,0)
                                                  , inComment            := ''::TVarChar
+                                                 , inisFixedPercent     := False
                                                  , inUserId             := vbUserId)
     FROM MovementItem
         LEFT OUTER JOIN MovementItemFloat AS MovementItemFloat_Price
