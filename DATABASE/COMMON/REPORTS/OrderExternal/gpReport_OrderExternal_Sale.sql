@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal_Sale(
     IN inIsByDoc            Boolean   ,
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
+RETURNS TABLE (MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime
                -- Дата/время отгрузки
              , OperDate_CarInfo TDateTime
                -- Дата смены
@@ -25,7 +25,7 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , DayOfWeekName_CarInfo_date TVarChar
              
                --
-             , OperDate_Sale TDateTime, OperDatePartner_Sale TDateTime 
+             , MovementId_Sale Integer, OperDate_Sale TDateTime, OperDatePartner_Sale TDateTime 
              , InvNumber TVarChar, InvNumberOrderPartner TVarChar, InvNumber_Order TVarChar
              , FromDescName TVarChar, FromId Integer, FromCode Integer, FromName TVarChar
              , RouteId Integer, RouteName TVarChar
@@ -911,7 +911,9 @@ BEGIN
                              --
                            , tmp.OperDate_Sale
                            , tmp.OperDatePartner_Sale
-                           , tmp.InvNumber_Sale
+                           , tmp.InvNumber_Sale 
+                           , tmp.MovementId_Sale 
+                           , tmp.MovementId_Order 
                            , tmp.InvNumber_Order
                            , tmp.InvNumberPartner_Order
                            , tmp.FromId
@@ -1010,7 +1012,8 @@ BEGIN
                     )
        -- запрос
        SELECT
-             tmpMovement.OperDate_Order        ::TDateTime    AS OperDate
+             COALESCE (tmpMovement.MovementId_Order,-1) ::Integer AS MovementId
+           , tmpMovement.OperDate_Order        ::TDateTime    AS OperDate
            , tmpMovement.OperDatePartner_Order ::TDateTime    AS OperDatePartner
              -- Дата/время отгрузки
            , tmpMovement.OperDate_CarInfo      ::TDateTime    AS OperDate_CarInfo
@@ -1023,6 +1026,7 @@ BEGIN
            , tmpWeekDay_CarInfo_date.DayOfWeekName      ::TVarChar AS DayOfWeekName_CarInfo_date
 
              --
+           , COALESCE (tmpMovement.MovementId_Sale,-1) ::Integer AS MovementId_Sale
            , tmpMovement.OperDate_Sale         ::TDateTime 
            , tmpMovement.OperDatePartner_Sale  ::TDateTime 
            , tmpMovement.InvNumber_Sale         ::TVarChar     AS InvNumber
@@ -1192,6 +1196,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.01.23         *
  11.07.18         * 
  06.07.18         *
  09.12.15         * add

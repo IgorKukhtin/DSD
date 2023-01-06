@@ -119,6 +119,16 @@ type
     OperDate_CarInfo: TcxGridDBColumn;
     OperDate_CarInfo_date: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
+    getMovementSaleForm: TdsdStoredProc;
+    getMovementOrderForm: TdsdStoredProc;
+    actMovementOrderForm: TdsdExecStoredProc;
+    actMovementSaleForm: TdsdExecStoredProc;
+    actOpenFormSale: TdsdOpenForm;
+    macOpenDocumentSale: TMultiAction;
+    macOpenDocumentOrder: TMultiAction;
+    bbOpenDocumentOrder: TdxBarButton;
+    bbOpenDocumentSale: TdxBarButton;
+    actOpenFormOrder: TdsdOpenForm;
   private
     { Private declarations }
   public

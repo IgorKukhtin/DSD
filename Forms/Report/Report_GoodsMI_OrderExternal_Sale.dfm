@@ -15,17 +15,19 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1092
-    ExplicitHeight = 296
+    ExplicitHeight = 286
     ClientRectBottom = 286
     ClientRectRight = 1092
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1092
-      ExplicitHeight = 296
+      ExplicitHeight = 286
       inherited cxGrid: TcxGrid
         Width = 1092
         Height = 286
+        ExplicitLeft = -8
+        ExplicitTop = -48
         ExplicitWidth = 1092
-        ExplicitHeight = 296
+        ExplicitHeight = 286
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1409,7 +1411,34 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   inherited ActionList: TActionList
     Left = 407
     Top = 239
-    object actRefreshDoc: TdsdDataSetRefresh [0]
+    object actOpenFormOrder: TdsdOpenForm [0]
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = 'actOpenForm'
+      FormName = 'NULL'
+      FormNameParam.Value = ''
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 43101d
+          Component = deStart
+          ComponentItem = 'OperDate'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actRefreshDoc: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1424,8 +1453,62 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actOpenFormSale: TdsdOpenForm [2]
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = 'actOpenFormSale'
+      FormName = 'NULL'
+      FormNameParam.Value = ''
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 43101d
+          Component = deStart
+          ComponentItem = 'OperDate'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Sale'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     inherited actRefresh: TdsdDataSetRefresh
       TabSheet = tsMain
+    end
+    object macOpenDocumentOrder: TMultiAction [4]
+      Category = 'OpenForm'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actMovementOrderForm
+        end
+        item
+          Action = actOpenFormOrder
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1082#1072#1079
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1082#1072#1079
+      ImageIndex = 28
     end
     object actPrint_byType: TdsdPrintAction
       Category = 'Print_old'
@@ -1891,6 +1974,42 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actMovementOrderForm: TdsdExecStoredProc
+      Category = 'OpenForm'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementOrderForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementOrderForm
+        end>
+      Caption = 'actMovementForm'
+    end
+    object actMovementSaleForm: TdsdExecStoredProc
+      Category = 'OpenForm'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementSaleForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementSaleForm
+        end>
+      Caption = 'actMovementForm'
+    end
+    object macOpenDocumentSale: TMultiAction
+      Category = 'OpenForm'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actMovementSaleForm
+        end
+        item
+          Action = actOpenFormSale
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
+      ImageIndex = 28
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -2010,6 +2129,30 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenDocumentOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenDocumentSale'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintNew'
         end
         item
@@ -2065,6 +2208,15 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     end
     object bbPrintNew: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbOpenDocumentOrder: TdxBarButton
+      Action = macOpenDocumentOrder
+      Category = 0
+    end
+    object bbOpenDocumentSale: TdxBarButton
+      Action = macOpenDocumentSale
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1072
       Category = 0
     end
   end
@@ -2130,7 +2282,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 904
+    Left = 944
     Top = 8
   end
   object FormParams: TdsdFormParams
@@ -2254,5 +2406,55 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       end>
     Left = 616
     Top = 65532
+  end
+  object getMovementSaleForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 848
+    Top = 216
+  end
+  object getMovementOrderForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 256
   end
 end
