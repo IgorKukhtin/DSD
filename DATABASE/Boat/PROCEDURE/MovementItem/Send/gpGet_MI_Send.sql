@@ -1,9 +1,11 @@
 -- Function: gpGet_MI_Send()
 
 DROP FUNCTION IF EXISTS gpGet_MI_Send (Integer, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Send (Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Send(
-    IN inMovementId        Integer    , -- Ключ объекта <Документ>
+    IN inMovementId        Integer    , -- Ключ объекта <Документ>  
+    IN inMovementId_OrderClient Integer, --докуметн заказ
     IN inGoodsId           Integer    , -- вариант когда вібирают товар из справочника
     IN inPartNumber        TVarChar   , --
     IN inAmount            TFloat     , --
@@ -24,7 +26,9 @@ RETURNS TABLE (Id                 Integer
              , Price              TFloat
              , TotalCount         TFloat
              , Amount             TFloat
-             , AmountRemainsFrom  TFloat
+             , AmountRemainsFrom  TFloat  
+             , MovementId_OrderClient Integer
+             , InvNumberFull_OrderClient TVarChar
               )
 AS
 $BODY$
@@ -64,18 +68,24 @@ BEGIN
 
      , tmpMI AS (SELECT MI.ObjectId                                  AS GoodsId
                       , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                      , MIFloat_MovementId.ValueData      :: Integer AS MovementId_OrderClient
                       , SUM (MI.Amount)                              AS Amount
                  FROM MovementItem AS MI
                       LEFT JOIN MovementItemString AS MIString_PartNumber
                                                    ON MIString_PartNumber.MovementItemId = MI.Id
                                                   AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+                      LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                  ON MIFloat_MovementId.MovementItemId = MI.Id
+                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                  WHERE MI.MovementId = inMovementId
                    AND MI.DescId     = zc_MI_Master()
                    AND MI.ObjectId   = inGoodsId
                    AND MI.isErased   = FALSE
-                   AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
+                   AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'') 
+                   AND COALESCE (MIFloat_MovementId.ValueData,0)::Integer = COALESCE (inMovementId_OrderClient,0)
                  GROUP BY MI.ObjectId
                         , COALESCE (MIString_PartNumber.ValueData, '')
+                        , MIFloat_MovementId.ValueData      :: Integer
                 )
 
            SELECT -1                               :: Integer AS Id
@@ -95,6 +105,9 @@ BEGIN
                 , COALESCE (inAmount,1)             :: TFloat AS Amount
 
                 , COALESCE (tmpRemains.Remains, 0)                         :: TFloat AS AmountRemainsFrom
+
+              , Movement_OrderClient.Id                                   AS MovementId_OrderClient
+              , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
   
            FROM Object AS Object_Goods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId    = Object_Goods.Id
@@ -122,6 +135,7 @@ BEGIN
                 LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = Object_Goods.Id
                                     AND tmpRemains.PartNumber = COALESCE (inPartNumber,'')
 
+                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
            WHERE Object_Goods.Id = inGoodsId
               AND inGoodsId <> 0
           UNION
@@ -141,6 +155,8 @@ BEGIN
                 , 1  ::TFloat           AS TotalCount
                 , 1  :: TFloat          AS Amount
                 , 0  ::TFloat           AS AmountRemains
+                , 0                     AS MovementId_OrderClient
+                , '' ::TVarChar         AS InvNumberFull_OrderClient                
            WHERE inGoodsId = 0
           ;
 

@@ -404,6 +404,14 @@ object SendItemEditForm: TSendItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = FormParams
@@ -518,6 +526,21 @@ object SendItemEditForm: TSendItemEditForm
         Name = 'PartnerName'
         Value = Null
         Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -745,7 +768,8 @@ object SendItemEditForm: TSendItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 225
+    Left = 257
+    Top = 8
   end
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
@@ -828,10 +852,11 @@ object SendItemEditForm: TSendItemEditForm
   object GuidesOrderClient: TdsdGuides
     KeyField = 'Id'
     LookupControl = edOrderClient
-    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+    Key = '0'
+    FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TOrderClientJournalChoiceForm'
+    FormName = 'TOrderClientJournalChoiceItemForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -844,7 +869,7 @@ object SendItemEditForm: TSendItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_Full2'
+        Name = 'InvNumber_Full'
         Value = ''
         Component = GuidesOrderClient
         ComponentItem = 'TextValue'
@@ -853,11 +878,32 @@ object SendItemEditForm: TSendItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ProductName_Full'
+        Name = 'ObjectId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectName'
         Value = ''
+        Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article_Object'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectCode'
+        Value = Null
+        Component = edGoodsCode
         MultiSelectSeparator = ','
       end>
     Left = 288

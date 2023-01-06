@@ -1084,6 +1084,21 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'ObjectCode'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ObjectCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article_Object'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Article_Object'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'Amount_basis'
           Value = Null
           Component = ClientDataSet

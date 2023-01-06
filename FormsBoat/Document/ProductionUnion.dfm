@@ -1167,10 +1167,6 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordGoods'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -2210,6 +2206,70 @@ object ProductionUnionForm: TProductionUnionForm
       Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076
       ImageIndex = 27
     end
+    object actOrderClientInsertBoatForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      ImageIndex = 1
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ClientName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromName_OrderClient'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsEnabled'
+          Value = Null
+          DataType = ftBoolean
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actUpdateDetailDS: TdsdUpdateDataSet
       Category = 'Detail'
       MoveParams = <>
@@ -2439,77 +2499,16 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object InsertRecordOrderClientItem: TInsertRecord
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
       Action = actChoiceFormOrderClientItem
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 0
-    end
-    object actOrderClientInsertBoatForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
-      ImageIndex = 1
-      FormName = 'TOrderClientJournalChoiceForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementId_OrderClient'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber_Full'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumberFull_OrderClient'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ProductId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ObjectId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ProductName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ObjectName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ClientName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'FromName_OrderClient'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'IsEnabled'
-          Value = Null
-          DataType = ftBoolean
-          ParamType = ptUnknown
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
     end
   end
   object MasterDS: TDataSource
