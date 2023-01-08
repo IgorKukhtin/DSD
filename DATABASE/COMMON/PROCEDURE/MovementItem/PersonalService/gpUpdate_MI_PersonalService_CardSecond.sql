@@ -458,7 +458,7 @@ from _tmpMI where _tmpMI.MemberId = 239655)
 -- !!!тест 
 -- PERFORM gpComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
 -- RAISE EXCEPTION 'ок' ;
-IF vbUserId = 5
+IF vbUserId = 5 and 1=1
 THEN
     RAISE EXCEPTION 'Ошибка.test=ok';
 END IF;
