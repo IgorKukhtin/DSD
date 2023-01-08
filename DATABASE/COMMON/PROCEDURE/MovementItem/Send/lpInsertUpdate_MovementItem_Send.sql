@@ -38,6 +38,7 @@ BEGIN
 
  
      -- с ЦЕХа Упаковки и с Базы ГП на Распределительный комплекс.
+     IF inUserId <> 5 THEN
      IF      -- 1.1.
              (EXISTS (SELECT 1
                       FROM MovementLinkObject AS MLO
@@ -108,9 +109,10 @@ BEGIN
                                   ;
          END IF;
      END IF;
+     END IF;
 
-     -- почти все на <ЦЕХ упаковки>
-     IF NOT (-- 1.1.
+     -- почти все на <ЦЕХ упаковки>, с такими исключениями:
+     IF NOT (-- 1.1. Склад База ГП -> Склад База ГП (Ирна)
              (EXISTS (SELECT 1
                       FROM MovementLinkObject AS MLO
                       WHERE MLO.MovementId = inMovementId
@@ -126,7 +128,7 @@ BEGIN
                         AND MLO.ObjectId = 8020714
                      )
              )
-          -- 1.2.
+          -- 1.2. Склад База ГП (Ирна) -> Склад База ГП
           OR (EXISTS (SELECT 1
                       FROM MovementLinkObject AS MLO
                       WHERE MLO.MovementId = inMovementId
@@ -142,7 +144,9 @@ BEGIN
                         AND MLO.ObjectId = 8020714
                      )
              )
-          -- 2.1.
+
+          -- 2.1. ЦЕХ упаковки -> ...
+          --               ... ->  ЦЕХ упаковки
           OR EXISTS (SELECT 1
                      FROM MovementLinkObject AS MLO
                      WHERE MLO.MovementId = inMovementId
@@ -150,7 +154,57 @@ BEGIN
                        -- ЦЕХ упаковки
                        AND MLO.ObjectId = 8451
                     )
+
+             -- 3.1. Склад База ГП -> Розподільчий комплекс
+          OR (EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_From()
+                        -- Склад База ГП
+                        AND MLO.ObjectId = 8458
+                     )
+          AND EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_To()
+                        -- Розподільчий комплекс
+                        AND MLO.ObjectId = 8459 
+                     )
+             )
+          -- 3.2. ЦЕХ упаковки -> Розподільчий комплекс
+          OR (EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_From()
+                        -- ЦЕХ упаковки
+                        AND MLO.ObjectId = 8451
+                     )
+          AND EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_To()
+                        -- Розподільчий комплекс
+                        AND MLO.ObjectId = 8459 
+                     )
+             )
             )
+
+          -- 0. Розподільчий комплекс -> ЦЕХ упаковки
+          OR (EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_From()
+                        -- Розподільчий комплекс
+                        AND MLO.ObjectId = 8459 
+                     )
+          AND EXISTS (SELECT 1
+                      FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_To()
+                        -- ЦЕХ упаковки
+                        AND MLO.ObjectId = 8451
+                     )
+             )
      THEN
 
          -- Проверка zc_ObjectBoolean_GoodsByGoodsKind_Order
