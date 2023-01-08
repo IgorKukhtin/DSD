@@ -29,7 +29,7 @@ BEGIN
    --IF vbMovementDescId IN (zc_Movement_Inventory()) THEN RETURN; END IF;
    
 
-   --IF vbOperDate < '08.11.2022' THEN RETURN; END IF;
+   -- IF vbOperDate < '17.12.2022' THEN RETURN; END IF;
      
 
 
