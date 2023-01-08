@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_GlobalConst()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_GlobalConst (TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_GlobalConst (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GlobalConst(
     IN inIP          TVarChar,
@@ -26,7 +26,7 @@ BEGIN
                                                      AND LOWER (pg_PROC.query) LIKE LOWER ('%' || gpSelect.Name ||'(%')
                )
      -- AND vbUserId = zfCalc_UserAdmin() :: Integer
-        AND 1=0
+        AND 1=1
  
      THEN -- !!! ОТКЛЮЧИЛИ !!!
           PERFORM pg_cancel_backend (tmp.pId)
@@ -117,6 +117,10 @@ BEGIN
                                                                                                         AND query NOT LIKE '%gpReport_GoodsBalance%'
                                  )
           , tmpProcess_Vacuum AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%VACUUM%')
+          , tmpProcess_Waiting AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE waiting = TRUE)
+          , tmpProcess_Time1 AS (SELECT Query_start FROM tmpProcess ORDER BY Query_start ASC LIMIT 1)
+          , tmpProcess_Time2 AS (SELECT Query_start FROM tmpProcess WHERE Query_start > (SELECT Query_start FROM tmpProcess_Time1) ORDER BY Query_start ASC LIMIT 1)
+          , tmpProcess_Time3 AS (SELECT Query_start FROM tmpProcess WHERE Query_start > (SELECT Query_start FROM tmpProcess_Time2) ORDER BY Query_start ASC LIMIT 1)
        -- Результат
        SELECT Object_GlobalConst.Id
             , CASE WHEN Object_GlobalConst.Id = 418996 -- актуальность данных Integer
@@ -134,14 +138,14 @@ BEGIN
                         THEN 'Кол-во АП = <' || COALESCE ((SELECT Res FROM tmpProcess_All), '0') || '> из которых :'
 
                           || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_HistoryCost), '0') <> '0'
-                                       THEN ' Расчет С/С = <' || COALESCE ((SELECT Res FROM tmpProcess_HistoryCost), '0') || '>'
+                                       THEN ' Р.С/С = <' || COALESCE ((SELECT Res FROM tmpProcess_HistoryCost), '0') || '>'
                                   ELSE ''
                                 --ELSE ' Расчет С/С = < 1 >'
                              END
                           -- || ' Расчет С/С = <1>'
 
                           || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Vacuum), '0') <> '0'
-                                       THEN ' ВАКУУМ = <' || COALESCE ((SELECT Res FROM tmpProcess_Vacuum), '0') || '>'
+                                       THEN ' VAC = <' || COALESCE ((SELECT Res FROM tmpProcess_Vacuum), '0') || '>'
                                   ELSE ''
                              END
 
@@ -151,17 +155,17 @@ BEGIN
                              END
 
                           || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Inv), '0') <> '0'
-                                       THEN ' Инвент. = <' || COALESCE ((SELECT Res FROM tmpProcess_Inv), '0') || '>'
+                                       THEN ' Инв. = <' || COALESCE ((SELECT Res FROM tmpProcess_Inv), '0') || '>'
                                   ELSE ''
                              END
 
                           || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Rep1), '0') <> '0'
-                                       THEN ' О-Пр/Вз = <' || COALESCE ((SELECT Res FROM tmpProcess_Rep1), '0') || '>'
+                                       THEN ' О-Пр/В = <' || COALESCE ((SELECT Res FROM tmpProcess_Rep1), '0') || '>'
                                   ELSE ''
                              END
 
                           || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Rep2), '0') <> '0'
-                                       THEN ' О-Двж = <'    || COALESCE ((SELECT Res FROM tmpProcess_Rep2), '0') || '>'
+                                       THEN ' О-Дв = <'    || COALESCE ((SELECT Res FROM tmpProcess_Rep2), '0') || '>'
                                   ELSE ''
                              END
 
@@ -171,6 +175,12 @@ BEGIN
                              END
 
                           || ' О-др. = <'   || COALESCE ((SELECT Res FROM tmpProcess_RepOth), '0') || '>'
+                          
+                      || '  *= <'   || COALESCE ((SELECT EXTRACT(EPOCH FROM AGE (CLOCK_TIMESTAMP(), Query_start)) :: Integer :: TVarChar FROM tmpProcess_Time1), '') || '>'
+                          || ' <'   || COALESCE ((SELECT EXTRACT(EPOCH FROM AGE (CLOCK_TIMESTAMP(), Query_start)) :: Integer :: TVarChar FROM tmpProcess_Time2), '') || '>'
+                          || ' <'   || COALESCE ((SELECT EXTRACT(EPOCH FROM AGE (CLOCK_TIMESTAMP(), Query_start)) :: Integer :: TVarChar FROM tmpProcess_Time3), '') || '>'
+                          || ' <'   || COALESCE ((SELECT Res FROM tmpProcess_Waiting), '0') || '>'
+                          
 
                           -- || '  <'   || COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = zc_Enum_GlobalConst_ConnectParam()), '') || '>'
 
