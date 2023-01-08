@@ -70,7 +70,7 @@ BEGIN
                  WHEN vbUserId = 9457 AND 1=1 THEN 'innafelon@gmail.com' 
                --WHEN tmp.outExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110()) THEN 'ashtu@ua.fm'
                --WHEN vbUserId = 1329039 AND 1=1 THEN 'ashtu@ua.fm'
-                 ELSE tmpExportJuridical.ContactPersonMail || ';ashtu@ua.fm'
+                 ELSE tmpExportJuridical.ContactPersonMail || ';ashtu@ua.fm' || ';24447183@ukr.net'
             END :: TVarChar AS AddressTo
           , gpGet_Host.Value                     AS Host
           , gpGet_Port.Value                     AS Port
