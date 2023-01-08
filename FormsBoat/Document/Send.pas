@@ -253,6 +253,9 @@ type
     macInsert_MI_Send_byOrderDetail_2: TMultiAction;
     bbInsert_MI_Send_byOrderDetail_2: TdxBarButton;
     OpenChoiceForm1: TOpenChoiceForm;
+    actUpdate: TdsdInsertUpdateAction;
+    macUpdate: TMultiAction;
+    bbmacUpdate: TdxBarButton;
   private
   public
   end;

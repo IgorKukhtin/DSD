@@ -1228,6 +1228,10 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbChoiceFormOrderClientItem'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -1535,6 +1539,10 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1080#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
       Category = 0
     end
+    object bbChoiceFormOrderClientItem: TdxBarButton
+      Action = actChoiceFormOrderClientItem
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1740,7 +1748,7 @@ object OrderInternalForm: TOrderInternalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object SetErasedDetail: TdsdUpdateErased
-      Category = 'DSDLib'
+      Category = 'Detail'
       MoveParams = <>
       StoredProc = spErasedMIDetail
       StoredProcList = <
@@ -1789,7 +1797,7 @@ object OrderInternalForm: TOrderInternalForm
       isSetErased = False
     end
     object SetUnErasedDetail: TdsdUpdateErased
-      Category = 'DSDLib'
+      Category = 'Detail'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spUnErasedMIDetail
@@ -2039,7 +2047,7 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndex = 54
     end
     object InsertRecordDetail: TInsertRecord
-      Category = 'DSDLib'
+      Category = 'Detail'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2500,10 +2508,11 @@ object OrderInternalForm: TOrderInternalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'OrderClientJournalChoiceForm'
-      ImageIndex = 47
-      FormName = 'TOrderClientJournalChoiceForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      Caption = #1080#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      ImageIndex = 1
+      FormName = 'TOrderClientJournalChoiceItemForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2556,6 +2565,30 @@ object OrderInternalForm: TOrderInternalForm
           Component = MasterCDS
           ComponentItem = 'isEnabled'
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsChildOnly'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -3209,8 +3242,8 @@ object OrderInternalForm: TOrderInternalForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 526
-    Top = 82
+    Left = 454
+    Top = 34
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -3820,12 +3853,12 @@ object OrderInternalForm: TOrderInternalForm
     PacketRecords = 0
     Params = <>
     Left = 856
-    Top = 391
+    Top = 511
   end
   object DetailDS: TDataSource
     DataSet = DetailCDS
-    Left = 870
-    Top = 399
+    Left = 918
+    Top = 519
   end
   object DetailViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3853,8 +3886,8 @@ object OrderInternalForm: TOrderInternalForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 939
-    Top = 409
+    Left = 971
+    Top = 497
   end
   object spSelectMI_Detail: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderInternal_Detail'
@@ -3914,18 +3947,19 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReceiptServiceId'
-        Value = Null
-        Component = DetailCDS
-        ComponentItem = 'ReceiptServiceId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inPersonalId'
         Value = Null
         Component = DetailCDS
         ComponentItem = 'PersonalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptServiceName'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'ReceiptServiceName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

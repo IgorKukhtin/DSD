@@ -49,6 +49,12 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_OrderExternal());
      vbUserId:= lpGetUserBySession (inSession);
 
+    IF COALESCE (inMovementId, 0) < 0
+    THEN
+        RAISE EXCEPTION 'Ошибка. Невозможно открыть пустой документ.';
+    END IF;
+
+
      -- создаем док по маске
      IF COALESCE (inMask, False) = True
      THEN

@@ -241,12 +241,12 @@ BEGIN
           PERFORM  gpUpdate_Goods_SummaWages (T1.goodsid, 50, zfCalc_UserAdmin())
           FROM gpSelect_MovementItem_Promo(inMovementId := 20813880 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') AS T1
                INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = T1.goodsid
-          WHERE COALESCE(Object_Goods_Retail.SummaWages, 0) <> 50;
+          WHERE COALESCE(Object_Goods_Retail.SummaWages, 0) <> 60;
 
           PERFORM  gpUpdate_Goods_SummaWagesStore (T1.goodsid, 10, zfCalc_UserAdmin())
           FROM gpSelect_MovementItem_Promo(inMovementId := 20813880 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') AS T1
                INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = T1.goodsid
-          WHERE COALESCE(Object_Goods_Retail.SummaWagesStore, 0) <> 10;    
+          WHERE COALESCE(Object_Goods_Retail.SummaWagesStore, 0) <> 12;    
       END IF;
     EXCEPTION
        WHEN others THEN

@@ -47,6 +47,7 @@ type
     bbUpdateKoeff: TdxBarButton;
     spUpdateKoeff: TdsdStoredProc;
     actUpdateKoeff: TdsdExecStoredProc;
+    isFixedPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

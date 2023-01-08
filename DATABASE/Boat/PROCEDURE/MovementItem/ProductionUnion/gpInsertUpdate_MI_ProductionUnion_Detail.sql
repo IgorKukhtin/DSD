@@ -1,9 +1,9 @@
--- Function: gpInsertUpdate_MI_OrderInternal_Detail()
+-- Function: gpInsertUpdate_MI_ProductionUnion_Detail()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_OrderInternal_Detail(Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_OrderInternal_Detail(Integer, Integer, Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Detail(Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Detail(Integer, Integer, Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_OrderInternal_Detail(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Detail(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>  
     IN inParentId               Integer   , -- 
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
@@ -24,7 +24,7 @@ $BODY$
    DECLARE vbReceiptServiceId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_OrderInternal());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_ProductionUnion());
      vbUserId := lpGetUserBySession (inSession);
      
      -- проверка
@@ -65,7 +65,7 @@ BEGIN
      -- сохранили <Элемент документа>
      SELECT tmp.ioId
             INTO ioId
-     FROM lpInsertUpdate_MI_OrderInternal_Detail (ioId
+     FROM lpInsertUpdate_MI_ProductionUnion_Detail (ioId
                                                 , inParentId
                                                 , inMovementId
                                                 , vbReceiptServiceId
@@ -86,7 +86,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 03.01.23         *
+ 04.01.23         *
 */
 
 -- тест

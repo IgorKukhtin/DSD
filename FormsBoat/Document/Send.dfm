@@ -579,7 +579,6 @@ object SendForm: TSendForm
               item
                 Action = actGoodsChoiceForm
                 Default = True
-                Enabled = False
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
@@ -1220,6 +1219,10 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbmacUpdate'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -1550,6 +1553,10 @@ object SendForm: TSendForm
     end
     object bbInsert_MI_Send_byOrderDetail_2: TdxBarButton
       Action = macInsert_MI_Send_byOrderDetail_2
+      Category = 0
+    end
+    object bbmacUpdate: TdxBarButton
+      Action = macUpdate
       Category = 0
     end
   end
@@ -2142,7 +2149,7 @@ object SendForm: TSendForm
           Name = 'Key'
           Value = Null
           Component = FormParams
-          ComponentItem = 'MovementId_OrderInternal'
+          ComponentItem = 'MovementId_OrderClient'
           MultiSelectSeparator = ','
         end
         item
@@ -2850,6 +2857,90 @@ object SendForm: TSendForm
       DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
     end
+    object macUpdate: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 1
+      WithoutNext = True
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 1
+      FormName = 'TSendItemEditForm'
+      FormNameParam.Value = 'TSendItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_OrderClient'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBarCode'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAmount'
+          Value = 1.000000000000000000
+          Component = MasterCDS
+          ComponentItem = 'Amount'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = '-1'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      ActionType = acUpdate
+      DataSource = MasterDS
+      IdFieldName = 'Id'
+    end
     object mactAdd: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -2880,6 +2971,12 @@ object SendForm: TSendForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_OrderClient'
+          Value = '0'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
