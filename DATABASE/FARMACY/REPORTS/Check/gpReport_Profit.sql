@@ -1,8 +1,5 @@
 -- Function:  gpReport_Profit()
 
-DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, TFloat,TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
@@ -49,13 +46,12 @@ BEGIN
     
     vbStartDate:= DATE_TRUNC('month', inStartDate) - (inMonth ||' MONTH' ):: Interval;
     vbEndDate  := DATE_TRUNC('month', inStartDate);
-
-    -- –езультат
-    OPEN Cursor1 FOR
-          
-    WITH
+    
+raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+    
         -- список подразделений
-          tmpUnit AS (SELECT inUnitId                                  AS UnitId
+    CREATE TEMP TABLE tmpUnit ON COMMIT DROP AS
+                    (SELECT inUnitId                                  AS UnitId
                       WHERE COALESCE (inUnitId, 0) <> 0 
                      UNION 
                       SELECT ObjectLink_Unit_Juridical.ObjectId        AS UnitId
@@ -74,9 +70,74 @@ BEGIN
                       WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                         AND COALESCE (inUnitId, 0) = 0
                         AND COALESCE (inJuridicalOurId, 0) = 0  
-                     )
+                     );
 
-        , tmpGoodsPromoAll AS (SELECT DISTINCT
+    ANALYSE tmpUnit;
+        
+    -- продажи товаров со скидкой
+    CREATE TEMP TABLE tmpReport_PriceChange ON COMMIT DROP AS
+                               (SELECT tmp.UnitId
+                                     , SUM (COALESCE (tmp.AmountChange,0)) AS AmountChange
+                                     , SUM (COALESCE (tmp.SummaChange,0))  AS SummaChange
+                                FROM gpReport_Check_PriceChange(inUnitId := inUnitId, inRetailId:= vbObjectId, inJuridicalId:= 0, inStartDate := inStartDate, inEndDate := inEndDate, inisUnitList := FALSE, inisDetails := TRUE, inSession := inSession) AS tmp
+                                GROUP BY tmp.UnitId
+                                HAVING SUM (COALESCE (tmp.AmountChange,0)) <> 0
+                                    OR SUM (COALESCE (tmp.SummaChange,0)) <> 0
+                               );
+                               
+    ANALYSE tmpReport_PriceChange;
+                               
+raise notice 'Value 2: %', CLOCK_TIMESTAMP();
+                               
+     -- продажасроковых товаров
+    CREATE TEMP TABLE tmpReport_CheckPartionDate ON COMMIT DROP AS
+                                    (SELECT tmp.UnitId
+                                          , SUM (COALESCE (tmp.Summ,0))    AS Summ
+                                          , SUM (COALESCE (tmp.SumSale,0)) AS SumSale
+                                          , SUM (COALESCE (tmp.SummSaleDiff,0)) AS SummSaleDiff
+                                          , SUM (COALESCE (tmp.Amount,0))  AS Amount
+                                     FROM gpReport_CheckPartionDate (inUnitId := inUnitId, inRetailId:= vbObjectId, inJuridicalId:=0, inStartDate := inStartDate, inEndDate := inEndDate, inIsExpirationDate:= FALSE, inIsPartionDateKind:=FALSE, inisUnitList := FALSE, inSession := inSession) AS tmp
+                                     GROUP BY tmp.UnitId
+                                     HAVING  SUM (COALESCE (tmp.Amount,0)) <> 0
+                                     );
+                               
+    ANALYSE tmpReport_CheckPartionDate;
+    
+raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+
+        -- данные из проводок
+    CREATE TEMP TABLE tmpData_Container_All ON COMMIT DROP AS
+                               (SELECT MIContainer.MovementItemId AS MI_Id
+                                     , COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
+                                     , MIContainer.MovementId                          AS MovementId
+                                     , MIContainer.OperDate                            AS OperDate
+                                     , MIContainer.WhereObjectId_analyzer              AS UnitId
+                                     , MIContainer.ObjectId_Analyzer                   AS GoodsId
+                                     , COALESCE (MIContainer.Price,0)                  AS Price
+                                     , SUM (COALESCE (-1 * MIContainer.Amount, 0))     AS Amount
+                                     , COALESCE (MIContainer.ObjectIntId_analyzer,0)   AS ObjectIntId_analyzer
+                                FROM MovementItemContainer AS MIContainer
+                                WHERE MIContainer.DescId = zc_MIContainer_Count()
+                                  AND MIContainer.MovementDescId = zc_Movement_Check()
+                                  AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
+                                  AND MIContainer.WhereObjectId_analyzer IN (SELECT tmpUnit.UnitId FROM tmpUnit)
+                                GROUP BY MIContainer.WhereObjectId_analyzer
+                                       , MIContainer.ObjectId_analyzer    
+                                       , COALESCE (MIContainer.AnalyzerId,0)
+                                       , MIContainer.MovementItemId
+                                       , MIContainer.MovementId
+                                       , COALESCE (MIContainer.Price,0)
+                                       , COALESCE (MIContainer.ObjectIntId_analyzer,0)
+                                       , MIContainer.OperDate
+                               );
+
+    ANALYSE tmpData_Container_All;
+    
+raise notice 'Value 4: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpListGodsMarket ON COMMIT DROP AS (
+      WITH
+       tmpGoodsPromoAll AS (SELECT DISTINCT
                                    MI_Goods.ObjectId  AS GoodsId        -- здесь товар
                                  , MovementDate_StartPromo.ValueData  AS StartDate_Promo
                                  , MovementDate_EndPromo.ValueData    AS EndDate_Promo 
@@ -118,39 +179,22 @@ BEGIN
                                                                         AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                               INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
                                                                          AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                        WHERE  ObjectLink_Child_R.ChildObjectId<>0
-                      ) 
-   , tmpListGodsMarket AS (SELECT DISTINCT tmpGoodsPromo.GoodsId
-/*                                , tmpGoodsPromo.StartDate_Promo 
-                                , tmpGoodsPromo.EndDate_Promo*/
+                        WHERE  ObjectLink_Child_R.ChildObjectId <> 0) 
+                        
+                           SELECT DISTINCT tmpGoodsPromo.GoodsId
                            FROM tmpGoodsPromo
                            WHERE tmpGoodsPromo.StartDate_Promo <= inEndDate
                              AND tmpGoodsPromo.EndDate_Promo >= inStartDate
-                           )
-    --,   tmpGoodsPromo33 AS (SELECT DISTINCT tmpGoodsPromo_2.GoodsId FROM tmpGoodsPromo_2)
+                           );
+                           
+    ANALYSE tmpListGodsMarket;
     
-        -- продажи товаров со скидкой
-        , tmpReport_PriceChange AS (SELECT tmp.UnitId
-                                         , SUM (COALESCE (tmp.AmountChange,0)) AS AmountChange
-                                         , SUM (COALESCE (tmp.SummaChange,0))  AS SummaChange
-                                    FROM gpReport_Check_PriceChange(inUnitId := 0, inRetailId:= vbObjectId, inJuridicalId:= 0, inStartDate := inStartDate, inEndDate := inEndDate, inisUnitList := FALSE, inisDetails := TRUE, inSession := inSession) AS tmp
-                                    GROUP BY tmp.UnitId
-                                    HAVING SUM (COALESCE (tmp.AmountChange,0)) <> 0
-                                        OR SUM (COALESCE (tmp.SummaChange,0)) <> 0
-                                   )
-         -- продажасроковых товаров
-        , tmpReport_CheckPartionDate AS (SELECT tmp.UnitId
-                                              , SUM (COALESCE (tmp.Summ,0))    AS Summ
-                                              , SUM (COALESCE (tmp.SumSale,0)) AS SumSale
-                                              , SUM (COALESCE (tmp.SummSaleDiff,0)) AS SummSaleDiff
-                                              , SUM (COALESCE (tmp.Amount,0))  AS Amount
-                                         FROM gpReport_CheckPartionDate (inUnitId :=0, inRetailId:= vbObjectId, inJuridicalId:=0, inStartDate := inStartDate, inEndDate := inEndDate, inIsExpirationDate:= FALSE, inIsPartionDateKind:=FALSE, inisUnitList := FALSE, inSession := inSession) AS tmp
-                                         GROUP BY tmp.UnitId
-                                         HAVING  SUM (COALESCE (tmp.Amount,0)) <> 0
-                                         )
+raise notice 'Value 5: %', CLOCK_TIMESTAMP();
 
           -- таблица остатков
-        , tmpContainer AS (SELECT Container.Id            AS ContainerId
+    CREATE TEMP TABLE tmpRemains_All ON COMMIT DROP AS ( 
+      WITH
+          tmpContainer AS (SELECT Container.Id            AS ContainerId
                                 , Container.ObjectId      AS GoodsId
                                 , Container.WhereObjectId AS UnitId
                                 , COALESCE (Container.Amount,0) AS Amount
@@ -159,9 +203,9 @@ BEGIN
                            WHERE Container.DescId = zc_Container_Count()
                              AND Container.WhereObjectId IN (SELECT tmpUnit.UnitId FROM tmpUnit)
                             --AND Container.Amount <> 0
-                           GROUP BY Container.Id, Container.ObjectId, Container.Amount, Container.WhereObjectId
-                           )
-        , tmpRemains_All AS (SELECT tmp.GoodsId
+                           GROUP BY Container.Id, Container.ObjectId, Container.Amount, Container.WhereObjectId)
+
+                             SELECT tmp.GoodsId
                                   , tmp.UnitId
                                   , SUM (tmp.RemainsStart) AS RemainsStart
                                   , SUM (tmp.RemainsEnd)   AS RemainsEnd
@@ -183,8 +227,18 @@ BEGIN
                                    ) AS tmp
                              GROUP BY tmp.GoodsId
                                     , tmp.UnitId
-                            )
-        , tmpPrice AS (SELECT Price_Goods.ChildObjectId           AS GoodsId
+                            );
+                           
+    ANALYSE tmpRemains_All;
+    
+raise notice 'Value 6: %', CLOCK_TIMESTAMP();
+
+
+    -- –езультат
+    OPEN Cursor1 FOR
+          
+    WITH
+          tmpPrice AS (SELECT Price_Goods.ChildObjectId           AS GoodsId
                             , ObjectLink_Price_Unit.ChildObjectId AS UnitId
                             , ObjectLink_Price_Unit.ObjectId      AS PriceId
                        FROM tmpUnit
@@ -257,30 +311,6 @@ BEGIN
                          GROUP BY tmpRemains_All.UnitId
                         )
                                 
-        -- данные из проводок
-        , tmpData_Container_All AS (SELECT MIContainer.MovementItemId AS MI_Id
-                                     , COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
-                                     , MIContainer.MovementId                          AS MovementId
-                                     , MIContainer.OperDate                            AS OperDate
-                                     , MIContainer.WhereObjectId_analyzer              AS UnitId
-                                     , MIContainer.ObjectId_Analyzer                   AS GoodsId
-                                     , COALESCE (MIContainer.Price,0)                  AS Price
-                                     , SUM (COALESCE (-1 * MIContainer.Amount, 0))     AS Amount
-                                     , COALESCE (MIContainer.ObjectIntId_analyzer,0)   AS ObjectIntId_analyzer
-                                FROM MovementItemContainer AS MIContainer
-                                WHERE MIContainer.DescId = zc_MIContainer_Count()
-                                  AND MIContainer.MovementDescId = zc_Movement_Check()
-                                  AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
-                                GROUP BY MIContainer.WhereObjectId_analyzer
-                                       , MIContainer.ObjectId_analyzer    
-                                       , COALESCE (MIContainer.AnalyzerId,0)
-                                       , MIContainer.MovementItemId
-                                       , MIContainer.MovementId
-                                       , COALESCE (MIContainer.Price,0)
-                                       , COALESCE (MIContainer.ObjectIntId_analyzer,0)
-                                       , MIContainer.OperDate
-                               )
-
         , tmpData_Container_Sum AS (SELECT MIContainer.MI_Id                           AS MI_Id
                                      , MIContainer.MovementId                          AS MovementId
                                      , MIContainer.UnitId                              AS UnitId
@@ -772,33 +802,15 @@ BEGIN
               
     RETURN NEXT Cursor1;
     
+raise notice 'Value 10: %', CLOCK_TIMESTAMP();
+    
+    
     -- –езультат 2
     OPEN Cursor2 FOR
     WITH
-        -- список подразделений
-          tmpUnit AS (SELECT inUnitId                                  AS UnitId
-                      WHERE COALESCE (inUnitId, 0) <> 0 
-                     UNION 
-                      SELECT ObjectLink_Unit_Juridical.ObjectId        AS UnitId
-                      FROM ObjectLink AS ObjectLink_Unit_Juridical
-                      WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                        AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalOurId)
-                        AND COALESCE (inUnitId, 0) = 0
-                        AND COALESCE (inJuridicalOurId, 0) <> 0
-                     UNION
-                      SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                      FROM ObjectLink AS ObjectLink_Unit_Juridical
-                         INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                              AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                      WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                        AND COALESCE (inUnitId, 0) = 0
-                        AND COALESCE (inJuridicalOurId, 0) = 0  
-                     )
 
         -- данные из проводок
-        , tmpData_ContainerAll AS (SELECT MIContainer.MovementItemId                      AS MI_Id
+          tmpData_ContainerAll AS (SELECT MIContainer.MovementItemId                      AS MI_Id
                                         , DATE_TRUNC('Month', MIContainer.OperDate)       AS OperDate
                                         , MIContainer.MovementId                          AS MovementId
                                         , COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
@@ -1024,6 +1036,9 @@ BEGIN
        ORDER BY tmp.OperDate;
               
     RETURN NEXT Cursor2;
+    
+raise notice 'Value 20: %', CLOCK_TIMESTAMP();
+    
 
 END;
 $BODY$
@@ -1043,4 +1058,4 @@ $BODY$
 --select * from gpReport_Profit22(inStartDate := ('01.02.2020')::TDateTime , inEndDate := ('01.02.2020')::TDateTime , inJuridical1Id := 59611 , inJuridical2Id := 183352 , inJuridicalOurId:= 0, inUnitId:= 0, inMonth:=1,  inSession := '3');
 --FETCH ALL "<unnamed portal 46>";
 
-select * from gpReport_Profit(inStartDate := ('01.06.2021')::TDateTime , inEndDate := ('30.06.2021')::TDateTime , inJuridical1Id := 0 , inJuridical2Id := 0 , inJuridicalOurId := 0 , inUnitId := 183289 , inMonth := 0 ,  inSession := '3');
+select * from gpReport_Profit(inStartDate := ('02.11.2022')::TDateTime , inEndDate := ('30.11.2022')::TDateTime , inJuridical1Id := 0 , inJuridical2Id := 0 , inJuridicalOurId := 0 , inUnitId := 183292 , inMonth := 0 ,  inSession := '3');

@@ -154,6 +154,7 @@ type
     FCountO : Integer;
     FCountAllO : Integer;
     FCountYes : Integer;
+    FCountFixedPercent : Integer;
     FStyle : TcxStyle;
 
     FUnitCalck : Integer;
@@ -348,6 +349,7 @@ begin
         12 : DataBinding.FieldName := 'PercentAmountPlanAwardTab' + IntToStr(cdsListBands.FieldByName('UnitID').AsInteger);
         13 : DataBinding.FieldName := 'AmountTheFineTab' + IntToStr(cdsListBands.FieldByName('UnitID').AsInteger);
         14 : DataBinding.FieldName := 'BonusAmountTab' + IntToStr(cdsListBands.FieldByName('UnitID').AsInteger);
+        15 : DataBinding.FieldName := 'isFixedPercent' + IntToStr(cdsListBands.FieldByName('UnitID').AsInteger);
       end;
       Name := 'col' + DataBinding.FieldName;
       Tag := nIndexUnit;
@@ -411,6 +413,12 @@ begin
     Field.DataSet := ClientDataSet;
   end;
 
+  Field := TBooleanField.Create(Self);
+  Field.FieldKind := fkCalculated;
+  Field.FieldName := 'isFixedPercent';
+  Field.Name := 'cds' + Field.FieldName;
+  Field.DataSet := ClientDataSet;
+
   for I := 0 to FUnit.Count - 1 do
   begin
     for J := 1 to 10 do
@@ -441,7 +449,7 @@ begin
   if not ClientDataSet.Active then Exit;
 
   if FCountYes <> 0 then
-    Dataset['TotalExecutionLine'] := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100
+    Dataset['TotalExecutionLine'] := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100 + FCountFixedPercent
   else Dataset['TotalExecutionLine'] := 0;
 
   if FCountYes <> 0 then
@@ -509,6 +517,7 @@ begin
   FCountO := 0;
   FCountAllO := 0;
   FCountYes := 0;
+  FCountFixedPercent := 0;
   try
     ClientDataSet.AfterPost :=  Nil;
     ClientDataSet.DisableControls;
@@ -524,6 +533,12 @@ begin
         (ClientDataSet.FieldByName('Amount').AsCurrency * IfThen( ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).AsCurrency = 0,
          ClientDataSet.FieldByName('Koeff').AsCurrency,
          ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).AsCurrency) < ClientDataSet.FieldByName('AmountPlan').AsCurrency) then Inc(FCountAllO);
+      if ClientDataSet.FieldByName('isFixedPercent').AsBoolean AND
+        (ClientDataSet.FieldByName('Amount').AsCurrency > 0) AND
+        (ClientDataSet.FieldByName('AmountPlanTab').AsCurrency > 0) AND
+        (ClientDataSet.FieldByName('Amount').AsCurrency * IfThen( ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).AsCurrency = 0,
+         ClientDataSet.FieldByName('Koeff').AsCurrency,
+         ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).AsCurrency) >= ClientDataSet.FieldByName('AmountPlanTab').AsCurrency) then Inc(FCountFixedPercent);
       ClientDataSet.Edit;
       if ClientDataSet.FieldByName('AmountPlanTab').AsCurrency >= 0.1 then
       begin
@@ -564,7 +579,7 @@ begin
     if not ClientDataSet.Active then Exit;
 
     if FCountYes <> 0 then
-      cdsResult.FieldByName('TotalExecutionLine').AsCurrency := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100
+      cdsResult.FieldByName('TotalExecutionLine').AsCurrency := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100 + FCountFixedPercent
     else cdsResult.FieldByName('TotalExecutionLine').AsCurrency := 0;
 
     if FCountYes <> 0 then
@@ -760,6 +775,9 @@ begin
         Dataset['BonusAmountTab'] := RoundTo(Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]] * Dataset['Price' + FUnit.Strings[FUnitCalck]] * 0.03, -2)
       else Dataset['BonusAmountTab'] := 0;
     end else Dataset['BonusAmountTab'] := nSum;
+
+    Dataset['isFixedPercent'] := Dataset['isFixedPercent' + FUnit.Strings[FUnitCalck]];
+
   finally
     cdsUnitCategory.RecNo := rnUnitCategory;
     cdsUnit.RecNo := rnUnit;
@@ -884,6 +902,7 @@ begin
   FCountO := 0;
   FCountAllO := 0;
   FUnitCalck := 0;
+  FCountFixedPercent := 0;
   FAmountPlan := Nil;
   FAmountPlanAward := Nil;
   UserSettingsStorageAddOn.LoadUserSettings;
