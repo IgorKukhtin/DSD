@@ -3,27 +3,27 @@ inherited OrderInternalForm: TOrderInternalForm
   ClientHeight = 529
   ClientWidth = 1229
   AddOnFormData.PUSHMessage = actPUSHInfo
-  ExplicitWidth = 1245
-  ExplicitHeight = 568
+  ExplicitWidth = 1247
+  ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 75
+    Top = 79
     Width = 1229
-    Height = 454
-    ExplicitTop = 75
+    Height = 450
+    ExplicitTop = 79
     ExplicitWidth = 1229
-    ExplicitHeight = 454
-    ClientRectBottom = 454
+    ExplicitHeight = 450
+    ClientRectBottom = 450
     ClientRectRight = 1229
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1229
-      ExplicitHeight = 430
+      ExplicitHeight = 426
       inherited cxGrid: TcxGrid
         Width = 1229
-        Height = 200
+        Height = 196
         ExplicitWidth = 1229
-        ExplicitHeight = 200
+        ExplicitHeight = 196
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1002,7 +1002,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 205
+        Top = 201
         Width = 1229
         Height = 225
         Align = alBottom
@@ -1253,7 +1253,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 200
+        Top = 196
         Width = 1229
         Height = 5
         AlignSplitter = salBottom
@@ -1309,7 +1309,7 @@ inherited OrderInternalForm: TOrderInternalForm
       ExplicitLeft = 5
       ExplicitTop = 22
       ExplicitWidth = 142
-      ExplicitHeight = 22
+      ExplicitHeight = 21
       Width = 142
     end
     object edUnit: TcxButtonEdit
@@ -2150,7 +2150,7 @@ inherited OrderInternalForm: TOrderInternalForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2690,6 +2690,9 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Action = actPUSHInfo
+      end
+      item
+        Action = actRefresh
       end>
     Left = 208
     Top = 152
