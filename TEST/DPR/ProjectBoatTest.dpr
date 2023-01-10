@@ -337,7 +337,9 @@ uses
   OrderInternal in '..\..\FormsBoat\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
   OrderClientJournalChoiceItem in '..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas' {OrderClientJournalChoiceItemForm: TParentForm},
   ReceiptGoodsLine in '..\..\FormsBoat\Guides\ReceiptGoodsLine.pas' {ReceiptGoodsLineForm: TParentForm},
-  OrderInternalJournalChoice in '..\..\FormsBoat\Document\OrderInternalJournalChoice.pas' {OrderInternalJournalChoiceForm: TParentForm};
+  OrderInternalJournalChoice in '..\..\FormsBoat\Document\OrderInternalJournalChoice.pas' {OrderInternalJournalChoiceForm: TParentForm},
+  Report_OrderInternal in '..\..\FormsBoat\Report\Report_OrderInternal.pas' {Report_OrderInternalForm: TParentForm},
+  Report_OrderInternalDialog in '..\..\FormsBoat\Report\Report_OrderInternalDialog.pas' {Report_OrderInternalDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
