@@ -242,6 +242,7 @@ BEGIN
             Amount TFloat,
             Price TFloat,
             Koeff TFloat,
+            isFixedPercent Boolean,
 
             AmountPlan TFloat,
             AmountPlanMax TFloat,
@@ -272,7 +273,8 @@ BEGIN
               Price,
               Koeff,
               AmountPlan,
-              AmountPlanMax)
+              AmountPlanMax,
+              isFixedPercent)
       WITH tmpPromoUnit AS (SELECT
                        MovementLinkObject_UnitCategory.ObjectId              AS UnitCategoryID
                      , MI_PromoUnit.ObjectId                                 AS GoodsId
@@ -280,6 +282,7 @@ BEGIN
                      , MI_PromoUnit.Amount                                   AS AmountPlan
                      , MIFloat_AmountPlanMax.ValueData::TFloat               AS AmountPlanMax
                      , MIFloat_Koeff.ValueData::TFloat                       AS Koeff
+                     , COALESCE (MIBoolean_FixedPercent.ValueData, FALSE)    AS isFixedPercent
            FROM Movement AS Movement_PromoUnit
 
                 INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
@@ -300,6 +303,10 @@ BEGIN
                 LEFT JOIN MovementItemFloat AS MIFloat_Koeff
                                             ON MIFloat_Koeff.MovementItemId = MI_PromoUnit.Id
                                            AND MIFloat_Koeff.DescId = zc_MIFloat_Koeff()
+
+                LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
+                                              ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id
+                                             AND MIBoolean_FixedPercent.DescId = zc_MIBoolean_FixedPercent()
 
        WHERE Movement_PromoUnit.StatusId = zc_Enum_Status_Complete()
          AND Movement_PromoUnit.DescId = zc_Movement_PromoUnit()
@@ -345,6 +352,7 @@ BEGIN
            , NULLIF(PromoUnit.Koeff, 0)                            AS Koeff
            , PromoUnit.AmountPlan                                  AS AmountPlan
            , PromoUnit.AmountPlanMax                               AS AmountPlanMax
+           , PromoUnit.isFixedPercent                              AS isFixedPercent
        FROM tmpUserUnitDayTable AS UserUnitDayTable
 
             LEFT JOIN tmpGoods AS Goods ON 1 = 1
@@ -369,7 +377,8 @@ BEGIN
               Price,
               Koeff,
               AmountPlan,
-              AmountPlanMax)
+              AmountPlanMax,
+              isFixedPercent)
       WITH tmpPromoUnit AS (SELECT
                        MovementLinkObject_UnitCategory.ObjectId              AS UnitCategoryID
                      , MI_PromoUnit.ObjectId                                 AS GoodsId
@@ -377,6 +386,7 @@ BEGIN
                      , MI_PromoUnit.Amount                                   AS AmountPlan
                      , MIFloat_AmountPlanMax.ValueData::TFloat               AS AmountPlanMax
                      , MIFloat_Koeff.ValueData::TFloat                       AS Koeff
+                     , COALESCE (MIBoolean_FixedPercent.ValueData, FALSE)    AS isFixedPercent
            FROM Movement AS Movement_PromoUnit
 
                 INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
@@ -397,6 +407,10 @@ BEGIN
                 LEFT JOIN MovementItemFloat AS MIFloat_Koeff
                                             ON MIFloat_Koeff.MovementItemId = MI_PromoUnit.Id
                                            AND MIFloat_Koeff.DescId = zc_MIFloat_Koeff()
+
+                LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
+                                              ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id
+                                             AND MIBoolean_FixedPercent.DescId = zc_MIBoolean_FixedPercent()
 
        WHERE Movement_PromoUnit.StatusId = zc_Enum_Status_Complete()
          AND Movement_PromoUnit.DescId = zc_Movement_PromoUnit()
@@ -443,6 +457,7 @@ BEGIN
            , NULLIF(PromoUnit.Koeff, 0)                            AS Koeff
            , PromoUnit.AmountPlan                                  AS AmountPlan
            , PromoUnit.AmountPlanMax                               AS AmountPlanMax
+           , PromoUnit.isFixedPercent                              AS isFixedPercent
        FROM tmpUserUnitDayTable AS UserUnitDayTable
 
             INNER JOIN ObjectLink AS ObjectLink_Unit_Category
@@ -539,7 +554,8 @@ BEGIN
 
        -- Собираем Общий % выполнения построчный:
      UPDATE tmpResult SET
-          TotalExecutionLine = ROUND(CASE WHEN Implementation.CountConsider <> 0 THEN 1.0 * Implementation.CountAmount / Implementation.CountConsider * 100 ELSE 0 END, 2)
+          TotalExecutionLine = ROUND(CASE WHEN Implementation.CountConsider <> 0 THEN 1.0 * Implementation.CountAmount / Implementation.CountConsider * 100 ELSE 0 END+ 
+                                               COALESCE (Implementation.CountFixedPercent, 0), 2)
         , CountAmount   = Implementation.CountAmount
         , CountConsider = Implementation.CountConsider
         , CountRecord   = Implementation.CountRecord
@@ -547,6 +563,9 @@ BEGIN
              SUM(CASE WHEN Implementation.Amount > 0 AND Implementation.AmountPlanTab > 0 AND
                  Implementation.Amount >= Implementation.AmountPlanTab then 1 else 0 end)::Integer  AS CountAmount,
              SUM(CASE WHEN Implementation.AmountPlanTab >= 0.1 then 1 else 0 end)::Integer          AS CountConsider,
+             SUM(CASE WHEN COALESCE(Implementation.isFixedPercent, False) = TRUE AND
+                 Implementation.Amount > 0 AND Implementation.AmountPlanTab > 0 AND
+                 Implementation.Amount >= Implementation.AmountPlanTab then 1 else 0 end)::Integer  AS CountFixedPercent,             
              Count(*)::Integer                                                                      AS CountRecord
            FROM
              (WITH tmpPromoUnitKoeff AS (SELECT MI_PromoUnit.ObjectId                             AS GoodsId
@@ -572,8 +591,9 @@ BEGIN
                                             AND MovementLinkObject_UnitCategory.ObjectId = 7779481)
                                             
               SELECT Implementation.UserID AS UserID,
-                     Sum(Implementation.Amount) /** MAX(COALESCE (Implementation.Koeff, PromoUnitKoeff.Koeff, 1))*/ AS Amount,
-                     MAX(Implementation.AmountPlanTab) AS AmountPlanTab
+                     Sum(Implementation.Amount) AS Amount,
+                     MAX(Implementation.AmountPlanTab) AS AmountPlanTab,
+                     SUM(CASE WHEN COALESCE(Implementation.isFixedPercent, False) = TRUE then 1 else 0 end)::Integer > 0 AS isFixedPercent
               FROM tmpImplementation AS Implementation
                    INNER JOIN (SELECT tmpResult.UnitID, tmpResult.UserID FROM tmpResult) AS T1
                            ON Implementation.UserID = T1.UserID
@@ -719,4 +739,4 @@ $BODY$
 
 -- тест
 -- 
-select * from gpReport_ImplementationPlanEmployeeUser(inStartDate := ('22.06.2022')::TDateTime ,  inSession := '3');
+select * from gpReport_ImplementationPlanEmployeeUser(inStartDate := ('01.01.2023')::TDateTime ,  inSession := '20194482');

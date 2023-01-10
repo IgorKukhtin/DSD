@@ -307,6 +307,8 @@ BEGIN
               , -Amount
               , OperDate
            FROM tmpItem;
+           
+    ANALYSE _tmpMIContainer_insert;
 
       -- ѕроводки если затронуты контейнера сроков
     IF EXISTS(SELECT 1 FROM Container WHERE Container.WhereObjectId = vbUnitId
@@ -349,6 +351,8 @@ BEGIN
                , -Amount
                , OperDate
             FROM tmpItem;
+            
+        ANALYSE _tmpMIContainer_insert;
 
     END IF;
 

@@ -1,7 +1,5 @@
 -- Function: gpReport_CheckPartionDate()
 
-DROP FUNCTION IF EXISTS gpReport_CheckPartionDate (Integer, TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_CheckPartionDate (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckPartionDate (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckPartionDate(
@@ -57,10 +55,10 @@ BEGIN
     INTO vbDate180, vbDate90, vbDate30, vbOperDate
     FROM lpSelect_PartionDateKind_SetDate ();
 
+--raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
-    -- Результат
-    RETURN QUERY
-    WITH
+    CREATE TEMP TABLE tmpMovement_PD ON COMMIT DROP AS (
+     WITH
         tmpUnit AS (SELECT inUnitId                                  AS UnitId
                     WHERE COALESCE (inUnitId, 0) <> 0
                       AND inisUnitList = FALSE
@@ -96,23 +94,41 @@ BEGIN
                           AND Movement.DescId = zc_Movement_Check()
                         )
 
-      , tmpMovement AS (SELECT Movement.*
+                 SELECT Movement.*
                         FROM tmpMovementAll AS Movement
                              INNER JOIN tmpUnit ON tmpUnit.UnitId = Movement.UnitId
                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.DescId = zc_Movement_Check()
-                        )
-      , tmpMI_Child AS (SELECT *
-                        FROM MovementItem
-                        WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                          AND MovementItem.DescId = zc_MI_Child()
-                          AND MovementItem.IsErased = FALSE
-                        )
+                        );
+                        
+    ANALYSE tmpMovement_PD;
+                        
+--raise notice 'Value 2: %', CLOCK_TIMESTAMP();                        
+                        
+    CREATE TEMP TABLE tmpMI_Child_PD ON COMMIT DROP AS
+                       (SELECT MovementItem.Id
+                             , MovementItem.MovementId
+                             , MovementItem.ParentId
+                             , MovementItem.ObjectId
+                             , MovementItem.Amount
+                        FROM  tmpMovement_PD AS tmpMovement
+                        
+                              INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id 
+                                                     AND MovementItem.DescId = zc_MI_Child()
+                                                     AND MovementItem.IsErased = FALSE
+                        );
+                        
+    ANALYSE tmpMI_Child_PD;
 
-      , tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
+--raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+
+    -- Результат
+    RETURN QUERY
+    WITH
+        tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
                                         , MovementItemFloat.ValueData :: Integer AS ContainerId
                                    FROM MovementItemFloat
-                                   WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child)
+                                   WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child_PD AS tmpMI_Child)
                                      AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
                                    )
       --
@@ -192,7 +208,7 @@ BEGIN
 
       , tmpMI_Master AS (SELECT MovementItem.*
                          FROM MovementItem
-                         WHERE MovementItem.Id IN (SELECT DISTINCT tmpMI_Child.ParentId FROM tmpMI_Child)
+                         WHERE MovementItem.Id IN (SELECT DISTINCT tmpMI_Child.ParentId FROM tmpMI_Child_PD AS tmpMI_Child)
                            AND MovementItem.DescId = zc_MI_Master()
                            AND MovementItem.IsErased = FALSE
                          )
@@ -240,7 +256,7 @@ BEGIN
                          , (MIFloat_PriceSale.ValueData * tmpMI_Child.Amount - MIFloat_Price.ValueData * tmpMI_Child.Amount)            AS SummSaleDiff  -- разница суммы по цене продажи и цене без скидки
                          , tmpIncome.ExpirationDate
                          , tmpIncome.PartionDateKindId
-                    FROM tmpMI_Child
+                    FROM tmpMI_Child_PD AS tmpMI_Child
                          LEFT JOIN tmpIncome ON tmpIncome.MovementItemId = tmpMI_Child.Id
                          LEFT JOIN tmpMI_Master ON tmpMI_Master.Id = tmpMI_Child.ParentId
                          LEFT JOIN tmpMIFloat_PriceSale AS MIFloat_PriceSale
@@ -280,11 +296,14 @@ BEGIN
         FROM tmpData
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
 
-           LEFT JOIN tmpMovement ON tmpMovement.Id = tmpData.MovementId
+           LEFT JOIN tmpMovement_PD AS tmpMovement ON tmpMovement.Id = tmpData.MovementId
 
            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmpData.PartionDateKindId
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovement.UnitId
         ;
+        
+--raise notice 'Value 4: %', CLOCK_TIMESTAMP();
+        
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -297,6 +316,6 @@ $BODY$
  21.06.19         *
 */
 
--- тест
---SELECT * FROM gpReport_CheckPartionDate (inUnitId :=494882, inRetailId:= 0, inJuridicalId:=0, inStartDate := '01.06.2020' ::TDateTime, inEndDate := '02.06.2020' ::TDateTime, inIsExpirationDate:= TRUE, inIsPartionDateKind:=True, inisUnitList := false, inSession := '3' :: TVarChar);
+-- тест SELECT * FROM gpReport_CheckPartionDate (inUnitId :=494882, inRetailId:= 0, inJuridicalId:=0, inStartDate := '01.12.2022' ::TDateTime, inEndDate := '31.12.2022' ::TDateTime, inIsExpirationDate:= TRUE, inIsPartionDateKind:=True, inisUnitList := false, inSession := '3' :: TVarChar);
 
+SELECT * FROM gpReport_CheckPartionDate (inUnitId :=0, inRetailId:= 4, inJuridicalId:=0, inStartDate := '01.12.2022' ::TDateTime, inEndDate := '31.12.2022' ::TDateTime, inIsExpirationDate:= TRUE, inIsPartionDateKind:=True, inisUnitList := false, inSession := '3' :: TVarChar);
