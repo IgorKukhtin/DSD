@@ -78,15 +78,15 @@ object SendForm: TSendForm
     end
     object cxLabel3: TcxLabel
       Left = 185
-      Top = 5
+      Top = 0
       Hint = #1054#1090' '#1082#1086#1075#1086
       Caption = #1054#1090' '#1082#1086#1075#1086
       ParentShowHint = False
       ShowHint = True
     end
     object cxLabel4: TcxLabel
-      Left = 186
-      Top = 45
+      Left = 185
+      Top = 50
       Caption = #1050#1086#1084#1091
     end
     object cxLabel11: TcxLabel

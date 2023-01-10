@@ -339,7 +339,12 @@ uses
   ReceiptGoodsLine in '..\..\FormsBoat\Guides\ReceiptGoodsLine.pas' {ReceiptGoodsLineForm: TParentForm},
   OrderInternalJournalChoice in '..\..\FormsBoat\Document\OrderInternalJournalChoice.pas' {OrderInternalJournalChoiceForm: TParentForm},
   Report_OrderInternal in '..\..\FormsBoat\Report\Report_OrderInternal.pas' {Report_OrderInternalForm: TParentForm},
-  Report_OrderInternalDialog in '..\..\FormsBoat\Report\Report_OrderInternalDialog.pas' {Report_OrderInternalDialogForm: TParentForm};
+  Report_OrderInternalDialog in '..\..\FormsBoat\Report\Report_OrderInternalDialog.pas' {Report_OrderInternalDialogForm: TParentForm},
+  GoogleOTP in '..\..\SOURCE\GoogleOTP.pas',
+  GoogleOTPDialogPsw in '..\..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
+  GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
+  Report_Send in '..\..\FormsBoat\Report\Report_Send.pas' {Report_SendForm: TParentForm},
+  Report_SendDialog in '..\..\FormsBoat\Report\Report_SendDialog.pas' {Report_SendDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
