@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpCheckLogin(
     IN inUserLogin      TVarChar,
     IN inUserPassword   TVarChar,
     IN inIP             TVarChar,
- INOUT ioisGoogleOTP    Boolean,
+ INOUT ioIsGoogleOTP    Boolean,
  INOUT ioGoogleSecret   TVarChar,
  INOUT Session          TVarChar
 )
@@ -130,4 +130,4 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM LoginProtocol order by 1 desc
--- SELECT * FROM gpCheckLogin(inUserLogin := 'Админ' , inUserPassword := 'qsxqsxw1' , inIP := '192.168.43.29' , ioisGoogleOTP := 'False' , ioGoogleSecret := '' ,  Session := '');
+-- SELECT * FROM gpCheckLogin(inUserLogin := 'Админ' , inUserPassword := 'qsxqsxw1' , inIP := '192.168.43.29' , ioIsGoogleOTP := 'False' , ioGoogleSecret := '' ,  Session := '');
