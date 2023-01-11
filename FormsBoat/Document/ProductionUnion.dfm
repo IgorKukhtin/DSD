@@ -1333,7 +1333,6 @@ object ProductionUnionForm: TProductionUnionForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
     object bbGridToExel: TdxBarButton
       Action = GridToExcel
@@ -1687,8 +1686,8 @@ object ProductionUnionForm: TProductionUnionForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Send'
-      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportName = 'PrintMovement_ProductionUnion'
+      ReportNameParam.Value = 'PrintMovement_ProductionUnion'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''

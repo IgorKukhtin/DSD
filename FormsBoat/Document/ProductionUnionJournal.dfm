@@ -541,7 +541,6 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
@@ -988,8 +987,8 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_ProductionUnion'
+      ReportNameParam.Value = 'PrintMovement_ProductionUnion'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
