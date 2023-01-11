@@ -69,6 +69,13 @@ END IF;
                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                                               ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
                                                              AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+
+                                         --  только строки, которые содержат в графе "№ карт. ЗП (Ф2)" признак "UA".
+                                         INNER JOIN ObjectString AS ObjectString_CardSecond
+                                                                 ON ObjectString_CardSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
+                                                                AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
+                                                                AND ObjectString_CardSecond.ValueData ILIKE '%UA%'
+
                                     WHERE ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
                                       AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId        = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
                                    )
@@ -119,6 +126,13 @@ END IF;
                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                                               ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
                                                              AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
+
+                                         --  только строки, которые содержат в графе "№ карт. ЗП (Ф2)" признак "UA".
+                                         INNER JOIN ObjectString AS ObjectString_CardSecond
+                                                                 ON ObjectString_CardSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
+                                                                AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
+                                                                AND ObjectString_CardSecond.ValueData ILIKE '%UA%'
+
                                     WHERE ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
                                       AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId        = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
                                    )

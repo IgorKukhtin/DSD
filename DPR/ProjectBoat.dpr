@@ -89,7 +89,10 @@ uses
   DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
   DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
   DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
-  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas';
+  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
+  GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
+  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
+  GoogleOTP in '..\SOURCE\GoogleOTP.pas';
 
 {$R *.res}
 
@@ -113,7 +116,7 @@ begin
       TUpdater.AutomaticUpdateProgram;
       TUpdater.AutomaticCheckConnect;
       Application.CreateForm(TdmMain, dmMain);
-      Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 

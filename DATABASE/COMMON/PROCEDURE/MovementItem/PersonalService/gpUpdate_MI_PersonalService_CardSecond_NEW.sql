@@ -1,5 +1,5 @@
 -- Function: gpUpdate_MI_PersonalService_CardSecond()
-
+-- !!!Õ≈ –¿¡Œ◊¿ﬂ!!!
 DROP FUNCTION IF EXISTS gpUpdate_MI_PersonalService_CardSecond (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_PersonalService_CardSecond(

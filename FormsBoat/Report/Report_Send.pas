@@ -1,4 +1,4 @@
-unit Report_OrderInternal;
+unit Report_Send;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_OrderInternalForm = class(TAncestorReportForm)
+  TReport_SendForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
@@ -43,7 +43,7 @@ type
     actGetForm: TdsdExecStoredProc;
     bbOpenFormClient: TdxBarButton;
     FormParams: TdsdFormParams;
-    actOpenFormOrderInternal: TdsdOpenForm;
+    actOpenFormSend: TdsdOpenForm;
     actOpenFormOrderClient: TdsdOpenForm;
     bbOpenFormPartner: TdxBarButton;
     actRefreshEmpty: TdsdDataSetRefresh;
@@ -56,6 +56,12 @@ type
     FieldFilter_Article: TdsdFieldFilter;
     bbedSearchArticle: TdxBarControlContainerItem;
     bblbSearchArticle: TdxBarControlContainerItem;
+    cxLabel4: TcxLabel;
+    edFrom: TcxButtonEdit;
+    GuidesFrom: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edTo: TcxButtonEdit;
+    GuidesTo: TdsdGuides;
   private
     { Private declarations }
   public
@@ -66,6 +72,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_OrderInternalForm);
+  RegisterClass(TReport_SendForm);
 
 end.

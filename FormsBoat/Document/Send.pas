@@ -256,6 +256,9 @@ type
     actUpdate: TdsdInsertUpdateAction;
     macUpdate: TMultiAction;
     bbmacUpdate: TdxBarButton;
+    actPrint3: TdsdPrintAction;
+    bbPrint3: TdxBarButton;
+    spSelectPrint_Master: TdsdStoredProc;
   private
   public
   end;

@@ -13,19 +13,19 @@ inherited Report_OrderInternalForm: TReport_OrderInternalForm
     Width = 1071
     Height = 274
     TabOrder = 3
-    ExplicitTop = 80
+    ExplicitTop = 59
     ExplicitWidth = 1071
-    ExplicitHeight = 261
+    ExplicitHeight = 274
     ClientRectBottom = 274
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
-      ExplicitHeight = 261
+      ExplicitHeight = 274
       inherited cxGrid: TcxGrid
         Width = 1071
         Height = 274
         ExplicitWidth = 1071
-        ExplicitHeight = 261
+        ExplicitHeight = 274
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -68,6 +68,11 @@ inherited Report_OrderInternalForm: TReport_OrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSend_child
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = InvNumber
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -143,9 +148,9 @@ inherited Report_OrderInternalForm: TReport_OrderInternalForm
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
             Width = 70
           end
-          object FromName: TcxGridDBColumn
+          object FromName_OrderClient: TcxGridDBColumn
             Caption = 'Kunden'
-            DataBinding.FieldName = 'FromName'
+            DataBinding.FieldName = 'FromName_OrderClient'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1090' '#1082#1086#1075#1086
@@ -593,7 +598,7 @@ inherited Report_OrderInternalForm: TReport_OrderInternalForm
         end>
       Caption = 'actGetForm'
     end
-    object actOpenFormClient: TdsdOpenForm
+    object actOpenFormOrderInternal: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
@@ -623,7 +628,7 @@ inherited Report_OrderInternalForm: TReport_OrderInternalForm
         end>
       isShowModal = False
     end
-    object actOpenFormPartner: TdsdOpenForm
+    object actOpenFormOrderClient: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
@@ -806,11 +811,11 @@ inherited Report_OrderInternalForm: TReport_OrderInternalForm
       Category = 0
     end
     object bbOpenFormClient: TdxBarButton
-      Action = actOpenFormClient
+      Action = actOpenFormOrderInternal
       Category = 0
     end
     object bbOpenFormPartner: TdxBarButton
-      Action = actOpenFormPartner
+      Action = actOpenFormOrderClient
       Category = 0
     end
     object bbedSearchArticle: TdxBarControlContainerItem

@@ -1404,7 +1404,10 @@ uses
   GoodsKindNewEdit in '..\..\Forms\Guides\GoodsKindNewEdit.pas' {GoodsKindNewEditForm: TParentForm},
   GoodsKindNew in '..\..\Forms\Guides\GoodsKindNew.pas' {GoodsKindNewForm: TParentForm},
   GoodsKindNew_Object in '..\..\Forms\Guides\GoodsKindNew_Object.pas' {GoodsKindNew_ObjectForm: TParentForm},
-  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm};
+  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
+  GoogleOTPDialogPsw in '..\..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
+  GoogleOTP in '..\..\SOURCE\GoogleOTP.pas',
+  GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -329,8 +329,8 @@
       Category = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
-      FormName = 'TReport_MovementSendForm'
-      FormNameParam.Value = 'TReport_MovementSendForm'
+      FormName = 'TReport_SendForm'
+      FormNameParam.Value = 'TReport_SendForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -1361,7 +1361,6 @@
       end
       object miReport_Send: TMenuItem
         Action = actReport_Send
-        Enabled = False
       end
       object miReport_MovementLoss: TMenuItem
         Action = actReport_Loss

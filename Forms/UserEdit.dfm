@@ -145,23 +145,25 @@
     Width = 82
   end
   object cxLabel8: TcxLabel
-    Left = 13
-    Top = 390
+    Left = 118
+    Top = 448
     Caption = #8470' '#1090#1077#1083#1077#1092#1086#1085#1072' '#1076#1083#1103' '#1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1080
+    Visible = False
   end
   object edPhoneAuthent: TcxTextEdit
-    Left = 13
-    Top = 410
+    Left = 71
+    Top = 458
     Properties.PasswordChar = '*'
     TabOrder = 20
+    Visible = False
     Width = 185
   end
   object cbisProjectAuthent: TcxCheckBox
-    Left = 204
-    Top = 410
-    Caption = #1040#1091#1090#1077#1085#1090'-'#1094#1080#1103
+    Left = 13
+    Top = 404
+    Caption = #1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1103' - Google Authenticator'
     TabOrder = 21
-    Width = 87
+    Width = 257
   end
   object ActionList: TActionList
     Left = 269
