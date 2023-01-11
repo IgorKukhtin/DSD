@@ -113,6 +113,10 @@ type
     macUpdate_UserRole_byMask: TMultiAction;
     bbUpdate_UserRole_forMask: TdxBarButton;
     actRefresh_Role: TdsdDataSetRefresh;
+    isKeyAuthent: TcxGridDBColumn;
+    spUpdate_KeyAuthent: TdsdStoredProc;
+    bbUpdate_KeyAuthent: TdxBarButton;
+    actUpdate_KeyAuthent: TdsdExecStoredProc;
   private
     { Private declarations }
   public
