@@ -100,6 +100,9 @@ type
     bbPrintStickerTermo: TdxBarButton;
     actPrint2: TdsdPrintAction;
     bbPrint2: TdxBarButton;
+    actPrint3: TdsdPrintAction;
+    bbPrint3: TdxBarButton;
+    spSelectPrint_Master: TdsdStoredProc;
   private
   public
   end;

@@ -452,6 +452,14 @@ object SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -533,6 +541,12 @@ object SendJournalForm: TSendJournalForm
     object bbPrint2: TdxBarButton
       Action = actPrint2
       Category = 0
+    end
+    object bbPrint3: TdxBarButton
+      Action = actPrint3
+      Caption = #1055#1077#1095#1072#1090#1100' '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Category = 0
+      ImageIndex = 15
     end
   end
   object ActionList: TActionList
@@ -634,6 +648,54 @@ object SendJournalForm: TSendJournalForm
         end>
       ReportName = 'PrintMovement_Send_2'
       ReportNameParam.Value = 'PrintMovement_Send_2'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint3: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Master
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Master
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsCode;GoodsName;ProductName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Send_3'
+      ReportNameParam.Value = 'PrintMovement_Send_3'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1369,5 +1431,29 @@ object SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 233
     Top = 346
+  end
+  object spSelectPrint_Master: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_SendMaster_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 615
+    Top = 256
   end
 end
