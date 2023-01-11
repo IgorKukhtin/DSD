@@ -940,12 +940,14 @@ BEGIN
                           )
        , tmpRemainsDiscount AS (SELECT Container.ObjectId         AS GoodsId
                                      , Container.WhereObjectId    AS UnitId
+                                     , SUM(CASE WHEN COALESCE (ContainerPD.Id, 0) = 0 AND COALESCE (DiscountExternalSupplier.DiscountExternalId, 0) <> 0 
+                                                     AND Container.Amount >= 1 THEN FLOOR(Container.Amount) ELSE 0 END) AS AmountDiscount
                                      , SUM(Container.Amount)      AS Amount
                                 FROM (SELECT DISTINCT tmpGoodsDiscount.GoodsId, tmpGoodsDiscount.DiscountExternalId FROM tmpGoodsDiscount) AS GoodsDiscount
                                 
                                      JOIN Container ON Container.ObjectId = GoodsDiscount.GoodsId
-                                                   AND Container.Amount >= 1
                                                    AND Container.DescId = zc_Container_Count() 
+                                                   AND Container.Amount > 0
    
                                      JOIN containerlinkobject AS CLI_MI
                                                           ON CLI_MI.containerid = Container.Id
@@ -980,8 +982,6 @@ BEGIN
                                                                                                                AND DiscountExternalSupplier.DiscountExternalId =  GoodsDiscount.DiscountExternalId
                                                                                                                AND DiscountExternalSupplier.JuridicalId = MovementLinkObject_From.ObjectId
                                                         
-                               WHERE COALESCE (ContainerPD.Id, 0) = 0
-                                 AND COALESCE (DiscountExternalSupplier.DiscountExternalId, 0) <> 0
                                GROUP BY Container.ObjectId
                                       , Container.WhereObjectId
          )
@@ -1048,6 +1048,13 @@ BEGIN
              , CASE WHEN (tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
                                             COALESCE (PDGoodsRemains.Amount, 0) -
                                             COALESCE (Reserve_TP.Amount, 0)) <= 0 THEN NULL
+                    WHEN COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 AND
+                         (RemainsDiscount.AmountDiscount - COALESCE (tmpMI_Deferred.Amount, 0) -
+                                            COALESCE (PDGoodsRemains.Amount, 0) -
+                                            COALESCE (Reserve_TP.Amount, 0)) <= 0 THEN NULL
+                    WHEN COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 THEN RemainsDiscount.AmountDiscount - COALESCE (tmpMI_Deferred.Amount, 0) -
+                                            COALESCE (PDGoodsRemains.Amount, 0) -
+                                            COALESCE (Reserve_TP.Amount, 0)
                     ELSE (tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
                                             COALESCE (PDGoodsRemains.Amount, 0) -
                                             COALESCE (Reserve_TP.Amount, 0))
@@ -1103,7 +1110,7 @@ BEGIN
              
              
              , CASE WHEN COALESCE((tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) - COALESCE (PDGoodsRemains.Amount, 0)), 0) <= 0
-                      OR COALESCE (RemainsDiscount.GoodsId, 0) = 0
+                      OR COALESCE (RemainsDiscount.AmountDiscount, 0) = 0
                     THEN NULL
                     WHEN COALESCE(Price_Unit.Price, 0) > 0 AND COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 AND GoodsDiscount.isDiscountSite = TRUE
                     THEN ROUND(CASE WHEN COALESCE(GoodsDiscount.MaxPrice, 0) = 0 OR Price_Unit.Price < GoodsDiscount.MaxPrice
@@ -1210,29 +1217,8 @@ BEGIN
         ORDER BY Price_Unit.Price
        ;
        
-    
-       
+           
 --       RAISE notice '<%>', (SELECT COUNT (*) FROM _tmpGoodsMinPrice_List);
-       
-
-    -- !!!Протокол - отладка Скорости!!!
-/*    IF vbUserId > 0 OR 1=0
-    THEN
-        PERFORM lpInsert_ResourseProtocol (inOperDate     := vbOperDate_Begin1 -- для расчета - сколько всего выполнялась проц
-                                         , inTime2        := (vbOperDate_Begin2 - vbOperDate_Begin1) :: INTERVAL -- сколько всего выполнялась проц    ДО lpSelectMinPrice_List
-                                         , inTime3        := (vbOperDate_Begin3 - vbOperDate_Begin2) :: INTERVAL -- сколько всего выполнялась проц       lpSelectMinPrice_List
-                                         , inTime4        := (CLOCK_TIMESTAMP() - vbOperDate_Begin3) :: INTERVAL -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
-                                         , inProcName     := 'gpSelect_GoodsOnUnit_ForSite'
-                                         , inProtocolData := '(' || (SELECT COUNT(*) FROM _tmpUnitMinPrice_List)  :: TVarChar || ')'
-                                                          || '(' || (SELECT COUNT(*) FROM _tmpGoodsMinPrice_List) :: TVarChar || ')'
-                                                          || '(' || (SELECT COUNT(*) FROM _tmpList)               :: TVarChar || ')'
-                                                        || ' - ' || CHR (39) || inUnitId_list  || CHR (39)
-                                                        || ' , ' || CHR (39) || inGoodsId_list || CHR (39)
-                                                        || ' , ' || CHR (39) || inSession      || CHR (39)
-                                         , inUserId       := vbUserId
-                                          );
-    END IF;
-*/
 
 END;
 $BODY$
@@ -1246,27 +1232,10 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM ResourseProtocol ORDER BY Id DESC LIMIT 4000
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '1781716', inGoodsId_list:= '47761', inSession:= zfCalc_UserSite()) ORDER BY 1;
---
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inFrontSite := False, inSession:= zfCalc_UserSite()) ORDER BY 1;
---
---SELECT * FROM gpSelect_GoodsOnUnit_ForSite('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', False, zfCalc_UserSite()) AS p ORDER BY p.price_unit
-
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377610', inGoodsId_list:= '2149403', inFrontSite := False, inSession:= zfCalc_UserSite());
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '0', inGoodsId_list:= '53275', inFrontSite := True, inSession:= zfCalc_UserSite());
-
---SELECT p.* FROM gpselect_goodsonunit_forsite ('183292,11769526,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375626,375627,11152911,10128935,472116', '24970,31333,393553,15610,5878,31561,1849,976003,31285,1594,4534,27658,6430,31000,14941,19093,38173,18922,18916,29449,19696,5486995,28516,26422,21748,15172,3002798,54604,358750,2503', TRUE, zfCalc_UserSite()) AS p
--- SELECT p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '22579,54100,6994,352890,54649,29983,48988,964555,54625,54613,28849,54640,30310,34831,982510,1106785,1243320,2366715,1243457,34867,50134,4509209,22573,50725,1106995,1960400,50152,51202,34846,28858', TRUE, zfCalc_UserSite()) AS p
---
-
---SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('15212291,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,377574,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089,10128935', 
---  '13516058', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.UnitId;
 
 
-SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpselect_goodsonunit_forsite ('16240371,8156016,377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', 
-                                                                                             '6649, 33004, 5925154, 5925280, 16290423', TRUE, zfCalc_UserSite()) AS p
+SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpselect_goodsonunit_forsite ('16240371,8156016,377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,377605,494882,10779386,183289,8393158,6309262,13311246,377613,377594,377574,15212291,13711869,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', 
+                                                                                             '18308538', TRUE, zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  LEFT JOIN OBJECT AS OBJECT_Goods ON OBJECT_Goods.ID = p.Id;
  
--- SELECT p.* FROM gpselect_goodsonunit_forsite ('4135547', '11923', TRUE, zfCalc_UserSite()) AS p

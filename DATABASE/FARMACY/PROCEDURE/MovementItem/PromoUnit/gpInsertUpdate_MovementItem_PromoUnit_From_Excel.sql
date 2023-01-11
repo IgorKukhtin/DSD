@@ -16,6 +16,7 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbId Integer;
    DECLARE vbPrice TFloat;
+   DECLARE vbAddBonusPercent TFloat;
    DECLARE vbisFixedPercent boolean;
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
@@ -67,6 +68,11 @@ BEGIN
     vbisFixedPercent := COALESCE ((SELECT MovementItemBoolean.ValueData FROM MovementItemBoolean
                                    WHERE MovementItemBoolean.MovementItemId = vbId
                                      AND MovementItemBoolean.DescId = zc_MIBoolean_FixedPercent()) , False);
+                                     
+    vbAddBonusPercent := COALESCE ((SELECT MovementItemFloat.ValueData FROM MovementItemFloat
+                                    WHERE MovementItemFloat.MovementItemId = vbId
+                                      AND MovementItemFloat.DescId = zc_MIBoolean_FixedPercent()) , 0);
+                    
 
     -- сохранили <Ёлемент документа>
     PERFORM lpInsertUpdate_MovementItem_PromoUnit (ioId                 := COALESCE(vbId,0)
@@ -77,6 +83,7 @@ BEGIN
                                                  , inPrice              := COALESCE(vbPrice,0) ::TFloat
                                                  , inComment            := '' ::TVarChar
                                                  , inisFixedPercent     := vbisFixedPercent
+                                                 , inAddBonusPercent    := vbAddBonusPercent
                                                  , inUserId             := vbUserId
                                                 );
 

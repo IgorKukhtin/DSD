@@ -28,8 +28,15 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       Left = 101
       Top = 5
       EditValue = 43221d
+      ParentFont = False
       Properties.SaveTime = False
       Properties.ShowTime = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
       TabOrder = 0
       Width = 85
     end
@@ -112,9 +119,9 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
   end
   object Panel2: TPanel
     Left = 0
-    Top = 85
+    Top = 89
     Width = 1252
-    Height = 575
+    Height = 571
     Align = alClient
     BevelOuter = bvNone
     ShowCaption = False
@@ -123,7 +130,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       Left = 0
       Top = 0
       Width = 1252
-      Height = 428
+      Height = 424
       Align = alClient
       TabOrder = 0
       object cxImplementationPlanEmployeeDBBandedTableView1: TcxGridDBBandedTableView
@@ -316,6 +323,29 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Position.ColIndex = 7
           Position.RowIndex = 0
         end
+        object colisisFixedPercent: TcxGridDBBandedColumn
+          Caption = #1060#1080#1082#1089'. '#1074#1099#1087#1086#1083#1085'. '#1087#1083#1072#1085#1072
+          DataBinding.FieldName = 'isFixedPercent'
+          HeaderAlignmentHorz = taCenter
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
+          Width = 62
+          Position.BandIndex = 0
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object colAddBonusPercent: TcxGridDBBandedColumn
+          Caption = #1044#1086#1087'. '#1087#1088#1086#1094#1077#1085#1090' '#1073#1086#1085#1091#1089#1080#1088#1086#1074#1072#1085#1080#1103
+          DataBinding.FieldName = 'AddBonusPercent'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
+          Width = 62
+          Position.BandIndex = 0
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
       end
       object cxImplementationPlanEmployeeLevel1: TcxGridLevel
         GridView = cxImplementationPlanEmployeeDBBandedTableView1
@@ -323,7 +353,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object cxSplitter1: TcxSplitter
       Left = 0
-      Top = 428
+      Top = 424
       Width = 1252
       Height = 8
       AlignSplitter = salBottom
@@ -331,7 +361,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object Panel3: TPanel
       Left = 0
-      Top = 436
+      Top = 432
       Width = 1252
       Height = 139
       Align = alBottom
@@ -556,7 +586,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -575,7 +605,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

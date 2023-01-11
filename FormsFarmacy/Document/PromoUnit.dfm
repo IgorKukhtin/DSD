@@ -88,7 +88,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 49
+            Width = 46
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -96,7 +96,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 244
+            Width = 229
           end
           object Koeff: TcxGridDBColumn
             Caption = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090
@@ -107,7 +107,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 63
+            Width = 59
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -116,7 +116,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 66
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -126,7 +126,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Properties.DisplayFormat = ',0.000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 65
           end
           object AmountPlanMax: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080
@@ -136,7 +136,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Properties.DisplayFormat = ',0.000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 69
+            Width = 65
           end
           object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -146,7 +146,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 78
+            Width = 73
           end
           object SummPlanMax: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080
@@ -156,7 +156,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 77
+            Width = 72
           end
           object isFixedPercent: TcxGridDBColumn
             Caption = #1060#1080#1082#1089'. '#1074#1099#1087#1086#1083#1085'. '#1087#1083#1072#1085#1072
@@ -164,7 +164,16 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1086#1077' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1077' '#1087#1083#1072#1085#1072
-            Width = 69
+            Width = 65
+          end
+          object AddBonusPercent: TcxGridDBColumn
+            Caption = #1044#1086#1087'. '#1087#1088#1086#1094#1077#1085#1090' '#1073#1086#1085#1091#1089#1080#1088#1086#1074#1072#1085#1080#1103
+            DataBinding.FieldName = 'AddBonusPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 71
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -172,7 +181,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 176
+            Width = 154
           end
         end
       end
@@ -891,6 +900,15 @@ inherited PromoUnitForm: TPromoUnitForm
         Component = MasterCDS
         ComponentItem = 'isFixedPercent'
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAddBonusPercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AddBonusPercent'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

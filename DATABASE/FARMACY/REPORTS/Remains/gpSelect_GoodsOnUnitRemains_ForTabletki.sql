@@ -278,6 +278,8 @@ BEGIN
                                  )
           -- Товары дисконтной программы
           , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId                        AS GoodsMainId
+                                      , Object_Goods_Retail.Id                                 AS GoodsId
+                                      , tmpUnitDiscount.DiscountExternalId                     AS DiscountExternalId
                                       , COALESCE (ObjectBoolean_DiscountSite.ValueData, False) AS isDiscountSite
                                                    
                                       , MAX(ObjectFloat_MaxPrice.ValueData)                    AS MaxPrice 
@@ -314,8 +316,56 @@ BEGIN
                                    AND Object_Object.isErased = False
                                    AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
                                  GROUP BY Object_Goods_Retail.GoodsMainId 
+                                        , Object_Goods_Retail.Id
+                                        , tmpUnitDiscount.DiscountExternalId
                                         , ObjectBoolean_DiscountSite.ValueData
                           )
+       , tmpRemainsDiscount AS (SELECT Container.ObjectId         AS GoodsId
+                                     , SUM(CASE WHEN COALESCE (ContainerPD.Id, 0) = 0 AND COALESCE (DiscountExternalSupplier.DiscountExternalId, 0) <> 0 
+                                                     AND Container.Amount >= 1 THEN FLOOR(Container.Amount) ELSE 0 END) AS AmountDiscount
+                                     , SUM(Container.Amount)      AS Amount
+                                FROM (SELECT DISTINCT tmpGoodsDiscount.GoodsId, tmpGoodsDiscount.DiscountExternalId FROM tmpGoodsDiscount) AS GoodsDiscount
+                                
+                                     JOIN Container ON Container.ObjectId = GoodsDiscount.GoodsId
+                                                   AND Container.DescId = zc_Container_Count() 
+                                                   AND Container.Amount > 0
+                                                   AND Container.WhereObjectId = inUnitId
+   
+                                     JOIN containerlinkobject AS CLI_MI
+                                                          ON CLI_MI.containerid = Container.Id
+                                                         AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+                                     LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                     -- элемент прихода
+                                     LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                     -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                     LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                 ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                                AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                     -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                     LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                                          -- AND 1=0
+                                     LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                                      ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                                     AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                     LEFT OUTER JOIN Movement AS Movement_Income
+                                                              ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)  --Object_PartionMovementItem.ObjectCode
+
+                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                  ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                        
+                                     LEFT JOIN Container AS ContainerPD
+                                                         ON ContainerPD.ParentId = Container.Id
+                                                        AND ContainerPD.Amount > 0
+                                                        AND ContainerPD.DescId = zc_Container_CountPartionDate()
+                                                        
+                                     LEFT JOIN gpSelect_Object_DiscountExternalSupplier(inSession := inSession) AS DiscountExternalSupplier
+                                                                                                                ON DiscountExternalSupplier.isErased = False
+                                                                                                               AND DiscountExternalSupplier.DiscountExternalId =  GoodsDiscount.DiscountExternalId
+                                                                                                               AND DiscountExternalSupplier.JuridicalId = MovementLinkObject_From.ObjectId
+                                                        
+                               GROUP BY Container.ObjectId
+                               )
                 -- Цена со скидкой
           , tmpPriceChange AS (SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId                                                    AS GoodsId
                                     , COALESCE (PriceChange_Value_Unit.ValueData, PriceChange_Value_Retail.ValueData)                        AS PriceChange
@@ -429,7 +479,8 @@ BEGIN
                                                                                       ELSE Object_Price.Price END, CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                                                                                                                         COALESCE(GoodsDiscount.GoodsMainId, 0) <> 0) END
                                                                                            ,'FM9999990.00')
-                               ||'" Quantity="'||CAST((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (Reserve_TP.Amount, 0)) AS TVarChar)
+                               ||'" Quantity="'||CAST((CASE WHEN COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 THEN RemainsDiscount.AmountDiscount ELSE Remains.Amount END - 
+                                                       coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (Reserve_TP.Amount, 0)) AS TVarChar)
                                ||'" PriceReserve="'||to_char(CASE WHEN COALESCE(Object_Price.Price, 0) > 0 AND COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 AND GoodsDiscount.isDiscountSite = TRUE
                                                            THEN ROUND(CASE WHEN COALESCE(GoodsDiscount.MaxPrice, 0) = 0 OR Object_Price.Price < GoodsDiscount.MaxPrice
                                                                            THEN Object_Price.Price ELSE GoodsDiscount.MaxPrice END * (100 - GoodsDiscount.DiscountProcent) / 100, 1)
@@ -461,10 +512,12 @@ BEGIN
 
                              LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods_Main.Id
                              LEFT JOIN tmpGoodsDiscount AS GoodsDiscount ON GoodsDiscount.GoodsMainId = Object_Goods_Main.Id
+                             LEFT JOIN tmpRemainsDiscount AS RemainsDiscount ON RemainsDiscount.GoodsId = Object_Goods_Retail.Id
 
                              -- штрих-код производителя
                              LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Main.Id
-                        WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (Reserve_TP.Amount, 0)) > 0
+                        WHERE (CASE WHEN COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 THEN RemainsDiscount.AmountDiscount ELSE Remains.Amount END - 
+                                         COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (Reserve_TP.Amount, 0)) > 0
                           AND Object_Goods_Main.Name NOT ILIKE '%Спеццена%'
                           AND Object_Goods_Main.ObjectCode NOT IN (3274, 17789)                          
                       UNION ALL
@@ -539,4 +592,4 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 
 --Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(10128935 ,'3');
 --Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(8156016  ,'3');
-Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(375626    ,'3');
+Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(16001195   ,'3') --  where RowData ILIKE '%Гептрал%';
