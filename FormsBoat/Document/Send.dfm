@@ -78,15 +78,15 @@ object SendForm: TSendForm
     end
     object cxLabel3: TcxLabel
       Left = 185
-      Top = 5
+      Top = 0
       Hint = #1054#1090' '#1082#1086#1075#1086
       Caption = #1054#1090' '#1082#1086#1075#1086
       ParentShowHint = False
       ShowHint = True
     end
     object cxLabel4: TcxLabel
-      Left = 186
-      Top = 45
+      Left = 185
+      Top = 50
       Caption = #1050#1086#1084#1091
     end
     object cxLabel11: TcxLabel
@@ -1348,6 +1348,14 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1557,6 +1565,10 @@ object SendForm: TSendForm
     end
     object bbmacUpdate: TdxBarButton
       Action = macUpdate
+      Category = 0
+    end
+    object bbPrint3: TdxBarButton
+      Action = actPrint3
       Category = 0
     end
   end
@@ -3128,6 +3140,54 @@ object SendForm: TSendForm
       Caption = 'actInsert_MI_Send_byOrderInternal'
       ImageIndex = 49
     end
+    object actPrint3: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Master
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Master
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsCode;GoodsName;ProductName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Send_3'
+      ReportNameParam.Value = 'PrintMovement_Send_3'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3687,8 +3747,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 471
-    Top = 296
+    Left = 503
+    Top = 264
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Send'
@@ -4318,5 +4378,29 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 830
     Top = 319
+  end
+  object spSelectPrint_Master: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_SendMaster_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 615
+    Top = 256
   end
 end

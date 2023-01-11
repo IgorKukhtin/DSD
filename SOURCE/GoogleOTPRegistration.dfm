@@ -54,8 +54,6 @@ object GoogleOTPRegistrationForm: TGoogleOTPRegistrationForm
     Transparent = True
     ExplicitLeft = 48
     ExplicitTop = 96
-    ExplicitWidth = 140
-    ExplicitHeight = 100
     Height = 221
     Width = 308
   end

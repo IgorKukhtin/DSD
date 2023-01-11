@@ -78,7 +78,7 @@ object GoogleOTPDialogPswForm: TGoogleOTPDialogPswForm
     object LabelNumberValue: TLabel
       Left = 0
       Top = 0
-      Width = 322
+      Width = 205
       Height = 14
       Align = alTop
       Alignment = taCenter
@@ -89,7 +89,6 @@ object GoogleOTPDialogPswForm: TGoogleOTPDialogPswForm
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitWidth = 205
     end
     object NumberValueEdit: TcxCurrencyEdit
       Left = 102

@@ -59,13 +59,20 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-    LoadReportFromFile('PrintMovement_OrderInternal', ReportPath + '\PrintMovement_OrderInternal.fr3');
-     exit;
+
+    LoadReportFromFile('PrintMovement_ProductionUnion', ReportPath + '\PrintMovement_ProductionUnion.fr3');
+    exit;
     {
+    LoadReportFromFile('PrintMovement_OrderInternal', ReportPath + '\PrintMovement_OrderInternal.fr3');
+    exit;
+
     LoadReportFromFile('Отчет Движение по комплектующим (кол-во)', ReportPath + '\Отчет Движение по комплектующим (кол-во).fr3');
     LoadReportFromFile('Отчет Движение по комплектующим (вх цена)', ReportPath + '\Отчет Движение по комплектующим (вх цена).fr3');
     exit;
-
+    }
+    LoadReportFromFile('PrintMovement_Send_3', ReportPath + '\PrintMovement_Send_3.fr3');
+    exit;
+    {
     LoadReportFromFile('PrintMovement_Send_2', ReportPath + '\PrintMovement_Send_2.fr3');
     LoadReportFromFile('PrintMovement_Send', ReportPath + '\PrintMovement_Send.fr3');
     LoadReportFromFile('PrintMovement_IncomeSticker', ReportPath + '\PrintMovement_IncomeSticker.fr3');
