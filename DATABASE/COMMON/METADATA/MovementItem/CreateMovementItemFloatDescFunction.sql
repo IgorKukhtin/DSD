@@ -1585,10 +1585,14 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_PriceLoad() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_PriceLoad', 'Цена загруженная' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceLoad');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_AddBonusPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AddBonusPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_AddBonusPercent', 'Доп. процент бонусирования' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AddBonusPercent');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 10.01.23                                                                                                     * zc_MIFloat_AddBonusPercent
  17.09.22                                                                                                     * zc_MIFloat_PriceLoad
  13.09.22         * zc_MIFloat_CountReal
  30.08.22         * zc_MIFloat_CountPartner

@@ -176,6 +176,29 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
           Position.ColIndex = 2
           Position.RowIndex = 0
         end
+        object colisFixedPercent: TcxGridDBBandedColumn
+          Caption = #1060#1080#1082#1089'. '#1074#1099#1087#1086#1083#1085'. '#1087#1083#1072#1085#1072
+          DataBinding.FieldName = 'isFixedPercent'
+          HeaderAlignmentHorz = taCenter
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
+          Width = 62
+          Position.BandIndex = 0
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object colAddBonusPercent: TcxGridDBBandedColumn
+          Caption = #1044#1086#1087'. '#1087#1088#1086#1094#1077#1085#1090' '#1073#1086#1085#1091#1089#1080#1088#1086#1074#1072#1085#1080#1103
+          DataBinding.FieldName = 'AddBonusPercent'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
+          Width = 62
+          Position.BandIndex = 0
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
         object colAmount: TcxGridDBBandedColumn
           Tag = 1
           Caption = #1042#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086

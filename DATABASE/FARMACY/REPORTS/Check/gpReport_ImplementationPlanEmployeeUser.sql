@@ -243,6 +243,7 @@ BEGIN
             Price TFloat,
             Koeff TFloat,
             isFixedPercent Boolean,
+            AddBonusPercent TFloat,
 
             AmountPlan TFloat,
             AmountPlanMax TFloat,
@@ -274,7 +275,8 @@ BEGIN
               Koeff,
               AmountPlan,
               AmountPlanMax,
-              isFixedPercent)
+              isFixedPercent,
+              AddBonusPercent)
       WITH tmpPromoUnit AS (SELECT
                        MovementLinkObject_UnitCategory.ObjectId              AS UnitCategoryID
                      , MI_PromoUnit.ObjectId                                 AS GoodsId
@@ -283,6 +285,7 @@ BEGIN
                      , MIFloat_AmountPlanMax.ValueData::TFloat               AS AmountPlanMax
                      , MIFloat_Koeff.ValueData::TFloat                       AS Koeff
                      , COALESCE (MIBoolean_FixedPercent.ValueData, FALSE)    AS isFixedPercent
+                     , MIFloat_AddBonusPercent.ValueData::TFloat             AS AddBonusPercent
            FROM Movement AS Movement_PromoUnit
 
                 INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
@@ -303,6 +306,10 @@ BEGIN
                 LEFT JOIN MovementItemFloat AS MIFloat_Koeff
                                             ON MIFloat_Koeff.MovementItemId = MI_PromoUnit.Id
                                            AND MIFloat_Koeff.DescId = zc_MIFloat_Koeff()
+
+                LEFT JOIN MovementItemFloat AS MIFloat_AddBonusPercent
+                                            ON MIFloat_AddBonusPercent.MovementItemId = MI_PromoUnit.Id
+                                           AND MIFloat_AddBonusPercent.DescId = zc_MIFloat_AddBonusPercent()
 
                 LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
                                               ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id
@@ -353,6 +360,7 @@ BEGIN
            , PromoUnit.AmountPlan                                  AS AmountPlan
            , PromoUnit.AmountPlanMax                               AS AmountPlanMax
            , PromoUnit.isFixedPercent                              AS isFixedPercent
+           , PromoUnit.AddBonusPercent                             AS AddBonusPercent
        FROM tmpUserUnitDayTable AS UserUnitDayTable
 
             LEFT JOIN tmpGoods AS Goods ON 1 = 1
@@ -378,7 +386,8 @@ BEGIN
               Koeff,
               AmountPlan,
               AmountPlanMax,
-              isFixedPercent)
+              isFixedPercent,
+              AddBonusPercent)
       WITH tmpPromoUnit AS (SELECT
                        MovementLinkObject_UnitCategory.ObjectId              AS UnitCategoryID
                      , MI_PromoUnit.ObjectId                                 AS GoodsId
@@ -387,6 +396,7 @@ BEGIN
                      , MIFloat_AmountPlanMax.ValueData::TFloat               AS AmountPlanMax
                      , MIFloat_Koeff.ValueData::TFloat                       AS Koeff
                      , COALESCE (MIBoolean_FixedPercent.ValueData, FALSE)    AS isFixedPercent
+                     , MIFloat_AddBonusPercent.ValueData::TFloat             AS AddBonusPercent
            FROM Movement AS Movement_PromoUnit
 
                 INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
@@ -407,6 +417,10 @@ BEGIN
                 LEFT JOIN MovementItemFloat AS MIFloat_Koeff
                                             ON MIFloat_Koeff.MovementItemId = MI_PromoUnit.Id
                                            AND MIFloat_Koeff.DescId = zc_MIFloat_Koeff()
+
+                LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
+                                              ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id
+                                             AND MIBoolean_FixedPercent.DescId = zc_MIBoolean_FixedPercent()
 
                 LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
                                               ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id
@@ -458,6 +472,7 @@ BEGIN
            , PromoUnit.AmountPlan                                  AS AmountPlan
            , PromoUnit.AmountPlanMax                               AS AmountPlanMax
            , PromoUnit.isFixedPercent                              AS isFixedPercent
+           , PromoUnit.AddBonusPercent                             AS AddBonusPercent
        FROM tmpUserUnitDayTable AS UserUnitDayTable
 
             INNER JOIN ObjectLink AS ObjectLink_Unit_Category
@@ -502,7 +517,7 @@ BEGIN
             BonusAmountTab = CASE WHEN Amount >= AmountPlanMax AND COALESCE(AmountPlanMax, 0) > 0 AND vbDateStart >= '01.04.2022' AND vbDateStart <= '01.05.2022'
                                   THEN 1.0 * ROUND(AmountPlanMax * Price * 0.03, 2)
                                   WHEN Amount >= AmountPlanMaxTab AND COALESCE(AmountPlanMax, 0) > 0 AND vbDateStart <> '01.04.2022' AND vbDateStart <> '01.05.2022'
-                                  THEN 1.0 * Amount * Price * UnitCategory.PremiumImplPlan / 100 
+                                  THEN 1.0 * Amount * Price * (UnitCategory.PremiumImplPlan + COALESCE(AddBonusPercent, 0)) / 100 
                                   ELSE 0 END
      FROM (SELECT
             Object_UnitCategory.Id                       AS UnitCategoryId

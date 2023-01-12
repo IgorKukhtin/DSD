@@ -117,6 +117,8 @@ type
     cdsResultAwarding: TStringField;
     cdsResultTotal: TCurrencyField;
     spGetTotal: TdsdStoredProc;
+    colisFixedPercent: TcxGridDBBandedColumn;
+    colAddBonusPercent: TcxGridDBBandedColumn;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
@@ -346,7 +348,6 @@ begin
         12 : DataBinding.FieldName := 'PercentAmountPlanAwardTab' + IntToStr(cdsListBands.FieldByName('UnitID').AsInteger);
         13 : DataBinding.FieldName := 'AmountTheFineTab' + IntToStr(cdsListBands.FieldByName('UnitID').AsInteger);
         14 : DataBinding.FieldName := 'BonusAmountTab' + IntToStr(cdsListBands.FieldByName('UnitID').AsInteger);
-        15 : DataBinding.FieldName := 'isFixedPercent' + IntToStr(cdsListBands.FieldByName('UnitID').AsInteger);
       end;
       Name := 'col' + DataBinding.FieldName;
       Tag := nIndexUnit;
@@ -393,7 +394,7 @@ begin
     Field.DataSet := ClientDataSet;
   end;
 
-  for I := 1 to 7 do
+  for I := 1 to 8 do
   begin
     Field := TCurrencyField.Create(Self);
     Field.FieldKind := fkCalculated;
@@ -405,6 +406,7 @@ begin
       5 : Field.FieldName := 'AmountPlanAward';
       6 : Field.FieldName := 'AmountTheFineTab';
       7 : Field.FieldName := 'BonusAmountTab';
+      8 : Field.FieldName := 'AddBonusPercent';
     end;
     Field.Name := 'cds' + Field.FieldName;
     Field.DataSet := ClientDataSet;
@@ -659,7 +661,7 @@ begin
       begin
         if cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategory.Strings[I], []) then
           nSum := Dataset['AmountPlanAward' + FUnit.Strings[I]] * Dataset['Price' + FUnit.Strings[I]] *
-          cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency / 100;
+          (cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency + Dataset['AddBonusPercent' + FUnit.Strings[I]]) / 100;
       end;
       Dataset['BonusAmount' + FUnit.Strings[I]] := nSum;
 
@@ -697,7 +699,7 @@ begin
       begin
         if cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategory.Strings[I], []) then
           nSum := Dataset['Amount' + FUnit.Strings[I]] * Dataset['Price' + FUnit.Strings[I]] *
-          cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency / 100;
+          (cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency + Dataset['AddBonusPercent' + FUnit.Strings[I]]) / 100;
       end;
       Dataset['BonusAmountTab' + FUnit.Strings[I]] := nSum;
     end;
@@ -748,11 +750,13 @@ begin
     begin
       if cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategoryID, []) then
         nSum := Dataset['Amount'] * Dataset['Price' + FUnit.Strings[FUnitCalck]] *
-        cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency / 100;
+        (cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency + Dataset['AddBonusPercent' + FUnit.Strings[FUnitCalck]]) / 100;
     end;
     Dataset['BonusAmountTab'] := nSum;
 
     Dataset['isFixedPercent'] := Dataset['isFixedPercent' + FUnit.Strings[FUnitCalck]];
+
+    Dataset['AddBonusPercent'] := Dataset['AddBonusPercent' + FUnit.Strings[FUnitCalck]];
 
   finally
     cdsUnitCategory.RecNo := rnUnitCategory;
@@ -808,7 +812,19 @@ procedure TReport_ImplementationPlanEmployeeCashForm.colGroupNameStylesGetConten
   Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
-  if cbHighlightStrings.Checked then
+  if ARecord.Values[colisFixedPercent.Index] or (ARecord.Values[colAddBonusPercent.Index] <> 0) then
+  begin
+    FStyle.TextColor := clWindowText;
+    FStyle.Color := $00BAE1FE;
+    AStyle := FStyle
+  end else
+  begin
+    FStyle.TextColor := clWindowText;
+    FStyle.Color := clWindow;
+    AStyle := FStyle
+  end;
+
+  if cbHighlightStrings.Checked and (AItem.Index <> colisFixedPercent.Index) and (AItem.Index <> colAddBonusPercent.Index) then
   begin
     if StartOfTheMonth(deStart.Date) < StartOfTheMonth(Date)  then
     begin

@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_PromoUnit()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoUnit (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoUnit (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Boolean, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoUnit(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoUnit(
     IN inPrice               TFloat    , -- Цена
     IN inComment             TVarChar  , -- примечание
     IN inisFixedPercent      Boolean   , -- Фиксированный процент выполнения
+    IN inAddBonusPercent     TFloat    , -- Доп. процент бонусирования
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -28,6 +29,10 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMax(), ioId, inAmountPlanMax);
+
+
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AddBonusPercent(), ioId, inAddBonusPercent);
 
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);

@@ -48,6 +48,7 @@ type
     spUpdateKoeff: TdsdStoredProc;
     actUpdateKoeff: TdsdExecStoredProc;
     isFixedPercent: TcxGridDBColumn;
+    AddBonusPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public
