@@ -243,17 +243,25 @@ BEGIN
                              FROM (SELECT DISTINCT tmpMI_result.GoodsId, tmpMI_result.GoodsKindId FROM tmpMI_result) AS tmpGoods
                                   INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                         ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
-                                                       AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                                                       AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
                                   INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                        ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
-                                                       AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                        ON ObjectLink_Receipt_GoodsKind.ObjectId      = ObjectLink_Receipt_Goods.ObjectId
+                                                       AND ObjectLink_Receipt_GoodsKind.DescId        = zc_ObjectLink_Receipt_GoodsKind()
                                                        AND ObjectLink_Receipt_GoodsKind.ChildObjectId = tmpGoods.GoodsKindId
-                                  INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                  INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_Receipt_Goods.ObjectId
                                                                      AND Object_Receipt.isErased = FALSE
+                                  -- Главная
                                   INNER JOIN ObjectBoolean AS ObjectBoolean_Main
-                                                           ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
-                                                          AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                           ON ObjectBoolean_Main.ObjectId  = Object_Receipt.Id
+                                                          AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Receipt_Main()
                                                           AND ObjectBoolean_Main.ValueData = TRUE
+                                  -- !!!Рецептура отключена!!!
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Disabled
+                                                          ON ObjectBoolean_Disabled.ObjectId  = Object_Receipt.Id
+                                                         AND ObjectBoolean_Disabled.DescId    = zc_ObjectBoolean_Receipt_Disabled()
+                                                         AND ObjectBoolean_Disabled.ValueData = TRUE
+                             WHERE ObjectBoolean_Disabled.ObjectId IS NULL
+                             
                              GROUP BY tmpGoods.GoodsId
                                     , tmpGoods.GoodsKindId
                             )
@@ -317,6 +325,7 @@ BEGIN
                LEFT JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
                                        ON ObjectBoolean_ParentMulti.ObjectId = tmpReceipt.ReceiptId
                                       AND ObjectBoolean_ParentMulti.DescId = zc_ObjectBoolean_Receipt_ParentMulti()
+                                    --AND 1=0
                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent
                                     ON ObjectLink_Receipt_Parent.ObjectId = tmpReceipt.ReceiptId
                                    AND ObjectLink_Receipt_Parent.DescId   = zc_ObjectLink_Receipt_Parent()
@@ -453,16 +462,29 @@ BEGIN
            , tmpResult_child AS (-- взяли данные, которые будут в zc_MI_Child
                                  SELECT _tmpResult.* FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Child()  AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount > 0)
 
-           , tmpReceipt_find AS (-- взяли данные - у товара нет прямой ссылки - из чего он делается
+       , tmpReceipt_find_all AS (-- взяли ВСЕ данные - у товара нет прямой ссылки - из чего он делается
                        SELECT tmpResult_master.OperDate, tmpResult_master.GoodsId, ObjectLink_ReceiptChild_Goods.ChildObjectId AS GoodsId_child
-                           ,  ROW_NUMBER() OVER (PARTITION BY tmpResult_master.OperDate, tmpResult_master.GoodsId ORDER BY COALESCE (ObjectFloat_Value.ValueData, 0) DESC) AS Ord --  № п/п
+                            , tmpResult_master.ReceiptId_in
+                            , tmpResult_master.ReceiptId_child
+                            , ObjectFloat_Value.ValueData AS Value
                        FROM tmpResult_master
                               INNER JOIN ObjectFloat AS ObjectFloat_Value_master
-                                                     ON ObjectFloat_Value_master.ObjectId = tmpResult_master.ReceiptId_in
+                                                     ON ObjectFloat_Value_master.ObjectId = ABS (tmpResult_master.ReceiptId_in) :: Integer
                                                     AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
                                                     AND ObjectFloat_Value_master.ValueData <> 0
+                              INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ABS (tmpResult_master.ReceiptId_in) :: Integer
+                                                                 AND Object_Receipt.isErased = FALSE
+                              -- !!!Рецептура отключена!!!
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Disabled
+                                                      ON ObjectBoolean_Disabled.ObjectId  = Object_Receipt.Id
+                                                     AND ObjectBoolean_Disabled.DescId    = zc_ObjectBoolean_Receipt_Disabled()
+                                                     AND ObjectBoolean_Disabled.ValueData = TRUE
+                              LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                   ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
+                                                  AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
+
                               INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
-                                                    ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = tmpResult_master.ReceiptId_in
+                                                    ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = ABS (tmpResult_master.ReceiptId_in) :: Integer
                                                    AND ObjectLink_ReceiptChild_Receipt.DescId        = zc_ObjectLink_ReceiptChild_Receipt()
                               INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id       = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                                       AND Object_ReceiptChild.isErased = FALSE
@@ -481,7 +503,118 @@ BEGIN
                                                                 OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                                   )
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
-                         AND tmpResult_master.ReceiptId_child = 0
+                         AND ObjectBoolean_Disabled.ObjectId IS NULL
+                         AND COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) NOT IN (zc_GoodsKind_WorkProgress()/*, zc_GoodsKind_Basis()*/)
+                      )
+           , tmpReceipt_find AS (-- взяли данные - у товара нет прямой ссылки - из чего он делается
+                       SELECT tmpReceipt_find_all.OperDate, tmpReceipt_find_all.GoodsId, tmpReceipt_find_all.GoodsId_child
+                           ,  ROW_NUMBER() OVER (PARTITION BY tmpReceipt_find_all.OperDate, tmpReceipt_find_all.GoodsId ORDER BY COALESCE (tmpReceipt_find_all.Value, 0) DESC) AS Ord
+                       FROM tmpReceipt_find_all
+                       WHERE tmpReceipt_find_all.ReceiptId_in > 0
+                         AND tmpReceipt_find_all.ReceiptId_child = 0
+                      )
+      -- ВСЕ - из каких ГП упаковываем НОВЫЕ ГП
+    , tmpReceipt_next_find AS (SELECT tmpReceipt_find_all.OperDate, tmpReceipt_find_all.GoodsId, tmpReceipt_find_all.GoodsId_child
+                               FROM tmpReceipt_find_all
+                                      LEFT JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
+                                                              ON ObjectBoolean_ParentMulti.ObjectId  = ABS (tmpReceipt_find_all.ReceiptId_in) :: Integer
+                                                             AND ObjectBoolean_ParentMulti.DescId    = zc_ObjectBoolean_Receipt_ParentMulti()
+                                                             AND ObjectBoolean_ParentMulti.ValueData = TRUE
+                               WHERE tmpReceipt_find_all.GoodsId <> tmpReceipt_find_all.GoodsId_child
+                                 AND ObjectBoolean_ParentMulti.ObjectId > 0
+                               --AND ObjectBoolean_ParentMulti.ObjectId IS NULL
+                              )
+   -- ВСЕ - Если из А упак В и С, тогда В <-> С
+ , tmpReceipt_next AS (-- 
+                       SELECT tmpReceipt_next_find.OperDate, tmpReceipt_next_find.GoodsId, ObjectLink_Receipt_Goods.ChildObjectId AS GoodsId_child
+                       FROM tmpReceipt_next_find
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                   ON ObjectLink_ReceiptChild_Goods.ChildObjectId = tmpReceipt_next_find.GoodsId_child
+                                                  AND ObjectLink_ReceiptChild_Goods.DescId        = zc_ObjectLink_ReceiptChild_Goods()
+                              INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id       = ObjectLink_ReceiptChild_Goods.ObjectId
+                                                                      AND Object_ReceiptChild.isErased = FALSE
+
+                              INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                    ON ObjectLink_ReceiptChild_Receipt.ObjectId = Object_ReceiptChild.Id
+                                                   AND ObjectLink_ReceiptChild_Receipt.DescId   = zc_ObjectLink_ReceiptChild_Receipt()
+                              INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_ReceiptChild_Receipt.ChildObjectId
+                                                                 AND Object_Receipt.isErased = FALSE
+                              -- !!!Рецептура отключена!!!
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Disabled
+                                                      ON ObjectBoolean_Disabled.ObjectId  = Object_Receipt.Id
+                                                     AND ObjectBoolean_Disabled.DescId    = zc_ObjectBoolean_Receipt_Disabled()
+                                                     AND ObjectBoolean_Disabled.ValueData = TRUE
+
+                              INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                    ON ObjectLink_Receipt_Goods.ObjectId = Object_Receipt.Id
+                                                   AND ObjectLink_Receipt_Goods.DescId   = zc_ObjectLink_Receipt_Goods()
+                              INNER JOIN ObjectFloat AS ObjectFloat_Value_master
+                                                     ON ObjectFloat_Value_master.ObjectId = Object_Receipt.Id
+                                                    AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
+                                                    AND ObjectFloat_Value_master.ValueData <> 0
+
+                              INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                     ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                                    AND ObjectFloat_Value.ValueData <> 0
+                              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                   ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                                  AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                              INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                              AND (Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()             -- Доходы
+                                                                OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                                  )
+                       WHERE ObjectBoolean_Disabled.ObjectId IS NULL
+                      )
+
+, tmpReceipt_child_find AS (-- взяли данные - у товара нет прямой ссылки - из чего он делается
+                       SELECT DISTINCT
+                              tmpResult_master.OperDate, tmpResult_master.GoodsId, ObjectLink_Receipt_Goods.ChildObjectId AS GoodsId_child
+                         --,  ROW_NUMBER() OVER (PARTITION BY tmpResult_master.OperDate, tmpResult_master.GoodsId ORDER BY COALESCE (ObjectFloat_Value.ValueData, 0) DESC) AS Ord --  № п/п
+                       FROM tmpResult_master
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                   ON ObjectLink_ReceiptChild_Goods.ChildObjectId = tmpResult_master.GoodsId
+                                                  AND ObjectLink_ReceiptChild_Goods.DescId        = zc_ObjectLink_ReceiptChild_Goods()
+                              INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id       = ObjectLink_ReceiptChild_Goods.ObjectId
+                                                                      AND Object_ReceiptChild.isErased = FALSE
+
+                              INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                    ON ObjectLink_ReceiptChild_Receipt.ObjectId = Object_ReceiptChild.Id
+                                                   AND ObjectLink_ReceiptChild_Receipt.DescId   = zc_ObjectLink_ReceiptChild_Receipt()
+                              INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_ReceiptChild_Receipt.ChildObjectId
+                                                                 AND Object_Receipt.isErased = FALSE
+                              -- !!!Рецептура отключена!!!
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Disabled
+                                                      ON ObjectBoolean_Disabled.ObjectId  = Object_Receipt.Id
+                                                     AND ObjectBoolean_Disabled.DescId    = zc_ObjectBoolean_Receipt_Disabled()
+                                                     AND ObjectBoolean_Disabled.ValueData = TRUE
+                              LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                   ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
+                                                  AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
+
+                              INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                    ON ObjectLink_Receipt_Goods.ObjectId = Object_Receipt.Id
+                                                   AND ObjectLink_Receipt_Goods.DescId   = zc_ObjectLink_Receipt_Goods()
+                              INNER JOIN ObjectFloat AS ObjectFloat_Value_master
+                                                     ON ObjectFloat_Value_master.ObjectId = Object_Receipt.Id
+                                                    AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
+                                                    AND ObjectFloat_Value_master.ValueData <> 0
+
+
+                              INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                     ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                                    AND ObjectFloat_Value.ValueData <> 0
+                              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                   ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                                  AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                              INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                              AND (Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()             -- Доходы
+                                                                OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                                  )
+                       WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                         AND ObjectBoolean_Disabled.ObjectId IS NULL
+                         AND COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) NOT IN (zc_GoodsKind_WorkProgress()/*, zc_GoodsKind_Basis()*/)
                       )
           /*, tmpAll2 AS (-- -- данные zc_MI_Master, еще могут делаться из самих себя
                         SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff
@@ -502,12 +635,69 @@ BEGIN
                         WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
                        )*/
           , tmpAll_all AS (-- данные zc_MI_Master, если будут делаться из найденных "главных" товаров
-                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId_child, 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
+                       SELECT DISTINCT 0 AS ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId_child, 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
                       UNION
-                       SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child,  0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+                       SELECT DISTINCT 0 AS ReceiptId_in, tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child,  0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+                    --UNION
+                    -- SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId_child, tmpReceipt_find.GoodsId,   0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+                    --UNION
+                    -- SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId_child, tmpResult_master.GoodsId, 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
+                    
+                      UNION
+                       -- замена - Если из А упак В, тогда из В упак А
+                       SELECT DISTINCT 5 AS ReceiptId_in, tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId, tmpReceipt_find.GoodsId_child,   0 AS Koeff, 0 AS ContainerId
+                       FROM tmpReceipt_child_find AS tmpReceipt_find
+                            -- эти уже есть, не надо дублировать
+                            LEFT JOIN
+                           (SELECT tmpResult_master.GoodsId, tmpResult_master.GoodsId_child FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
+                           UNION
+                            SELECT tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child  FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+                           ) AS tmpCheck
+                             ON tmpCheck.GoodsId       = tmpReceipt_find.GoodsId
+                            AND tmpCheck.GoodsId_child = tmpReceipt_find.GoodsId_child
+
+                       WHERE tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+                         -- не надо дублировать
+                         AND tmpCheck.GoodsId IS NULL
+
+                      UNION
+                       -- ВСЕ - Если из А упак В и Ассорти, тогда В -> Ассорти
+                       SELECT DISTINCT 5 AS ReceiptId_in, tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId, tmpReceipt_find.GoodsId_child,   0 AS Koeff, 0 AS ContainerId
+                       FROM tmpReceipt_next AS tmpReceipt_find
+                            -- эти уже есть, не надо дублировать
+                            LEFT JOIN
+                           (SELECT tmpResult_master.GoodsId, tmpResult_master.GoodsId_child FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
+                           UNION
+                            SELECT tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child  FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+                           ) AS tmpCheck
+                             ON tmpCheck.GoodsId       = tmpReceipt_find.GoodsId
+                            AND tmpCheck.GoodsId_child = tmpReceipt_find.GoodsId_child
+                       WHERE tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+                         -- не надо дублировать
+                         AND tmpCheck.GoodsId IS NULL
+
+                    --UNION
+                       -- ВСЕ - Если из А упак В и Ассорти, тогда Ассорти -> В
+                     --SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId_child, tmpReceipt_find.GoodsId,   0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_next AS tmpReceipt_find WHERE tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+                    
+-- UNION
+-- SELECT DISTINCT tmpResult_master.OperDate, 2537, 8003459, 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master
+-- UNION
+-- SELECT DISTINCT tmpResult_master.OperDate, 8003459, 2537, 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master
+
+
+/*
+ UNION
+ SELECT DISTINCT tmpResult_master.OperDate, 5445599 , 489150, 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master
+UNION
+ SELECT DISTINCT tmpResult_master.OperDate, 489150, 5445599 , 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master
+*/
+
+
+
                       UNION
                        -- тоже самое - но заменяем на zc_ObjectLink_GoodsByGoodsKind_GoodsMain
-                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId,  OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
+                       SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId,  OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
                        FROM tmpResult_master
                             INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpResult_master.GoodsId_child
                                                  AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
@@ -517,10 +707,14 @@ BEGIN
                          AND tmpResult_master.GoodsId_child > 0
                          AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
                       UNION
-                       SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,   OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_find  INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpReceipt_find.GoodsId_child  AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain() INNER JOIN ObjectLink AS OL_Goods ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId AND OL_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods() WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+                       SELECT DISTINCT 0 as ReceiptId_in, tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,   OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
+                       FROM tmpReceipt_find 
+                            INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpReceipt_find.GoodsId_child AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
+                            INNER JOIN ObjectLink AS OL_Goods ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId AND OL_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                       WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
                       UNION
                        -- + могут делаться из самих себя
-                        SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
+                        SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId, OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
                         FROM tmpResult_master
                              INNER JOIN ObjectLink AS OL_GoodsMain
                                                    ON OL_GoodsMain.ChildObjectId = tmpResult_master.GoodsId
@@ -535,7 +729,7 @@ BEGIN
                           AND (ABS (100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) >  4)
                       UNION
                        -- данные zc_MI_Master, еще могут делаться из самих себя
-                        SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff
+                        SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff
                                -- если до 5% - тогда !!!ТОЛЬКО!!! сам в себя
                              , CASE WHEN tmpResult_master.OperCount + tmpResult_master.OperCount_two = 0
                                         THEN 0
@@ -552,47 +746,7 @@ BEGIN
                                                AND tmp.ContainerId = tmpResult_master.ContainerId
                         WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
                        )
-          , tmpAll AS (-- данные All
-                       SELECT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all.GoodsId_child, tmpAll_all.Koeff, tmpAll_all.ContainerId FROM tmpAll_all
-                      UNION
-                       SELECT DISTINCT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all_2.GoodsId_child, tmpAll_all.Koeff, tmpAll_all.ContainerId
-                       FROM tmpAll_all
-                            LEFT JOIN _tmpResult AS _tmpResult_1 ON _tmpResult_1.GoodsId       = tmpAll_all.GoodsId
-                                                                AND _tmpResult_1.ReceiptId_in  < 0
-                            LEFT JOIN _tmpResult AS _tmpResult_2 ON _tmpResult_2.GoodsId       = tmpAll_all.GoodsId_child
-                                                                AND _tmpResult_2.ReceiptId_in  < 0
-                            -- все GoodsId, которые делаются из GoodsId_child
-                            INNER JOIN tmpAll_all AS tmpAll_all_1 ON tmpAll_all_1.GoodsId_child = tmpAll_all.GoodsId_child
-                            -- все GoodsId, нужны их GoodsId_child
-                            INNER JOIN tmpAll_all AS tmpAll_all_2 ON tmpAll_all_2.GoodsId       = tmpAll_all_1.GoodsId
-                       WHERE _tmpResult_1.GoodsId IS NULL AND _tmpResult_2.GoodsId IS NULL
-/*                      UNION
-                       -- + если делаются из одинакового, тогда могут и между собой
-                       SELECT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all_find.GoodsId, tmpAll_all.Koeff, tmpAll_all.ContainerId
-                       FROM tmpAll_all
-                            INNER JOIN tmpAll_all AS tmpAll_all_find ON tmpAll_all_find.GoodsId_child = tmpAll_all.GoodsId_child
-                                                                    AND tmpAll_all_find.Koeff         = tmpAll_all.Koeff
-                                                                    AND tmpAll_all_find.ContainerId   = tmpAll_all.ContainerId
-                                                                    AND tmpAll_all_find.GoodsId       <> tmpAll_all.GoodsId
-                       WHERE tmpAll_all.GoodsId     <> tmpAll_all.GoodsId_child
-                         AND tmpAll_all.ContainerId = 0
-                         AND tmpAll_all.Koeff       = 0*/
-                       -- 
-                       /*-- данные zc_MI_Master, если будут делаться из найденных "главных" товаров
-                       SELECT DISTINCT tmpAll2.OperDate, tmpAll2.GoodsId, tmpAll2.GoodsId_child, tmpAll2.Koeff, tmpAll2.ContainerId
-                        FROM tmpAll2
-                      UNION
-                       -- данные zc_MI_Master, еще могут делаться из самих себя
-                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff
-                              -- если до 5% - тогда !!!ТОЛЬКО!!! сам в себя
-                            , 0 AS ContainerId
-                       FROM tmpResult_master
-                            LEFT JOIN tmpAll2 ON tmpAll2.OperDate = tmpResult_master.OperDate
-                                             AND tmpAll2.GoodsId  = tmpResult_master.GoodsId
-                       WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
-                         AND tmpAll2.GoodsId IS NULL*/
-                      UNION
-                       -- данные zc_MI_Master, когда будут делаться из товаров если ParentMulti
+        , tmpKoeff AS (-- данные zc_MI_Master, когда будут делаться из товаров если ParentMulti
                        SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, ObjectLink_ReceiptChild_Goods.ChildObjectId AS GoodsId_child
                             , CASE WHEN (ObjectFloat_Value_master.ValueData * CASE WHEN ObjectLink_Measure_master.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight_master.ValueData ELSE 1 END) <> 0
                                         THEN (ObjectFloat_Value.ValueData        * CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
@@ -607,8 +761,8 @@ BEGIN
                                                     AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
                                                     AND ObjectFloat_Value_master.ValueData <> 0
                               INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
-                                                   ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = (-1 * tmpResult_master.ReceiptId_in) :: Integer
-                                                  AND ObjectLink_ReceiptChild_Receipt.DescId        = zc_ObjectLink_ReceiptChild_Receipt()
+                                                    ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = (-1 * tmpResult_master.ReceiptId_in) :: Integer
+                                                   AND ObjectLink_ReceiptChild_Receipt.DescId        = zc_ObjectLink_ReceiptChild_Receipt()
                               INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id       = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                                       AND Object_ReceiptChild.isErased = FALSE
                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
@@ -643,6 +797,70 @@ BEGIN
                                                    AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                      )
+
+          , tmpAll AS (-- данные All
+                       SELECT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all.GoodsId_child, tmpAll_all.Koeff, tmpAll_all.ContainerId
+                       FROM tmpAll_all
+                            LEFT JOIN tmpKoeff AS tmpKoeff_ch
+                                               ON tmpKoeff_ch.GoodsId       = tmpAll_all.GoodsId
+                                              AND tmpKoeff_ch.GoodsId_child = tmpAll_all.GoodsId_child
+                       WHERE tmpKoeff_ch.GoodsId IS NULL
+
+                      UNION
+                       SELECT DISTINCT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all_2.GoodsId_child, tmpAll_all.Koeff, tmpAll_all.ContainerId
+                       FROM tmpAll_all
+                            LEFT JOIN _tmpResult AS _tmpResult_1 ON _tmpResult_1.GoodsId       = tmpAll_all.GoodsId
+                                                                AND _tmpResult_1.ReceiptId_in  < 0
+                            LEFT JOIN _tmpResult AS _tmpResult_2 ON _tmpResult_2.GoodsId       = tmpAll_all.GoodsId_child
+                                                                AND _tmpResult_2.ReceiptId_in  < 0
+                            -- все GoodsId, которые делаются из GoodsId_child
+                            INNER JOIN tmpAll_all AS tmpAll_all_1 ON tmpAll_all_1.GoodsId_child = tmpAll_all.GoodsId_child
+                                                               --AND tmpAll_all_1.ReceiptId_in  >= 0
+                            -- все GoodsId, нужны их GoodsId_child
+                            INNER JOIN tmpAll_all AS tmpAll_all_2 ON tmpAll_all_2.GoodsId       = tmpAll_all_1.GoodsId
+                                                               --AND tmpAll_all_2.ReceiptId_in  >= 0
+                       WHERE _tmpResult_1.GoodsId IS NULL AND _tmpResult_2.GoodsId IS NULL
+                         AND tmpAll_all.ReceiptId_in <> 5
+                         -- !!! дублирует ВСУ, ОТКЛЮЧИЛИ !!!
+                         AND 1=0
+
+-- and tmpAll_all.GoodsId <> 2357 
+-- and tmpAll_all_2.GoodsId_child <> 427122 
+-- select * from object where Id = 427122 
+ -- and 1=0
+
+                      UNION
+                       -- данные zc_MI_Master, когда будут делаться из товаров если ParentMulti
+                       SELECT DISTINCT tmpKoeff.OperDate, tmpKoeff.GoodsId, tmpKoeff.GoodsId_child
+                            , tmpKoeff.Koeff
+                            , tmpKoeff.ContainerId
+                       FROM tmpKoeff
+
+                     UNION
+                       -- ВСЕ - Если из А упак В и Ассорти, тогда В -> Ассорти
+                       SELECT tmpKoeff.OperDate, tmpKoeff.GoodsId, tmpReceipt_next.GoodsId_child
+                            , MAX (tmpKoeff.Koeff) AS Koeff
+                            , MAX (tmpKoeff.ContainerId) AS ContainerId
+                       FROM tmpKoeff
+                            JOIN tmpReceipt_next ON tmpReceipt_next.GoodsId = tmpKoeff.GoodsId
+                            LEFT JOIN tmpKoeff AS tmpKoeff_ch
+                                               ON tmpKoeff_ch.GoodsId       = tmpKoeff.GoodsId
+                                              AND tmpKoeff_ch.GoodsId_child = tmpReceipt_next.GoodsId_child
+                            LEFT JOIN tmpAll_all ON tmpAll_all.GoodsId       = tmpKoeff.GoodsId
+                                                AND tmpAll_all.GoodsId_child = tmpReceipt_next.GoodsId_child
+                            
+                       WHERE tmpKoeff_ch.GoodsId IS NULL AND tmpAll_all.GoodsId IS NULL
+                       GROUP BY tmpKoeff.OperDate, tmpKoeff.GoodsId, tmpReceipt_next.GoodsId_child
+
+                    /*UNION
+                       -- ВСЕ - Если из А упак В и Ассорти, тогда Ассорти -> В
+                       SELECT tmpKoeff.OperDate, tmpKoeff.GoodsId, tmpReceipt_next.GoodsId
+                            , MAX (tmpKoeff.Koeff) AS Koeff
+                            , MAX (tmpKoeff.ContainerId) AS ContainerId
+                       FROM tmpKoeff
+                            JOIN tmpReceipt_next ON tmpReceipt_next.GoodsId_child = tmpKoeff.GoodsId
+                       GROUP BY tmpKoeff.OperDate, tmpKoeff.GoodsId, tmpReceipt_next.GoodsId*/
                       )
           , tmpAll_total AS (-- итог по будущим zc_MI_Master, если бы товаром был "из чего будет делаться"
                              SELECT tmpResult_master.OperDate, tmpAll.GoodsId_child, tmpAll.ContainerId
@@ -904,7 +1122,8 @@ BEGIN
     -- Проверка
     -- IF EXISTS (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
     IF 1 <> (SELECT COUNT(*) FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp)
-    THEN RAISE EXCEPTION 'Error.Many find MovementId: Date = <%>  Min = <%>  Max = <%> Count = <%>', (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
+    THEN 
+         RAISE EXCEPTION 'Error.Many find MovementId: Date = <%>  Min = <%>  Max = <%> Count = <%>', (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
                                                                                WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
                                                                                                       ORDER BY tmp.OperDate LIMIT 1)
                                                                                                    , (SELECT tmp.MovementId FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp

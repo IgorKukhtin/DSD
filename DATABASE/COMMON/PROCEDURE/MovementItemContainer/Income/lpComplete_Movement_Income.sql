@@ -110,9 +110,9 @@ BEGIN
 
 
      -- формируются Партии для Сырья
-     PERFORM lpInsertUpdate_MovementItemString (inDescId:= zc_MIString_PartionGoodsCalc()
+     PERFORM lpInsertUpdate_MovementItemString (inDescId        := zc_MIString_PartionGoodsCalc()
                                               , inMovementItemId:= MovementItem.Id
-                                              , inValueData:= zfCalc_PartionGoods (Object_Goods.ObjectCode, Object_Partner.ObjectCode, Movement.OperDate)
+                                              , inValueData     := zfCalc_PartionGoods (Object_Goods.ObjectCode, Object_Partner.ObjectCode, Movement.OperDate)
                                                )
      FROM MovementItem
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -122,14 +122,96 @@ BEGIN
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_From.ObjectId
 
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_PartionCount
+                                  ON ObjectBoolean_Goods_PartionCount.ObjectId = MovementItem.ObjectId
+                                 AND ObjectBoolean_Goods_PartionCount.DescId   = zc_ObjectBoolean_Goods_PartionCount()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_PartionSumm
+                                  ON ObjectBoolean_Goods_PartionSumm.ObjectId = MovementItem.ObjectId
+                                 AND ObjectBoolean_Goods_PartionSumm.DescId   = zc_ObjectBoolean_Goods_PartionSumm()
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
      WHERE MovementItem.MovementId = inMovementId
-       AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
+       AND (View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
+         OR (ObjectBoolean_Goods_PartionCount.ValueData = TRUE
+             AND View_InfoMoney.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
+            )
+         OR (ObjectBoolean_Goods_PartionSumm.ValueData = TRUE
+             AND View_InfoMoney.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
+            )
+         OR (MovementItem.ObjectId IN (6612355 -- 94185 Эт Мясо курей в собственном соку 525г 320х71 Варто
+                                      )
+             AND inUserId = 5
+            )
+           )
      ;
-     
+
+
+     -- параметр
+     vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     vbOperDatePartner:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner());
+
+     -- замена
+     IF EXISTS (SELECT 1
+                FROM Movement
+                     INNER JOIN MovementLinkObject AS MLO_Contract
+                                                   ON MLO_Contract.MovementId = Movement.Id
+                                                  AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                                  AND MLO_Contract.ObjectId   = vbContractId
+                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = FALSE
+                     INNER JOIN MovementItem AS MovementItem_curr
+                                             ON MovementItem_curr.MovementId = inMovementId
+                                            AND MovementItem_curr.DescId     = zc_MI_Master()
+                                            AND MovementItem_curr.isErased   = FALSE
+                                            AND MovementItem_curr.ObjectId   = MovementItem.ObjectId
+                     LEFT JOIN MovementBoolean AS MB_ChangePriceUser
+                                               ON MB_ChangePriceUser.MovementId = inMovementId
+                                              AND MB_ChangePriceUser.DescId     = zc_MovementBoolean_ChangePriceUser()
+                                              AND MB_ChangePriceUser.ValueData   = TRUE
+                WHERE Movement.DescId    = zc_Movement_ContractGoods()
+                  AND Movement.StatusId  = zc_Enum_Status_Complete()
+                  AND Movement.OperDate  <= vbOperDatePartner
+                  --
+                  AND MB_ChangePriceUser.MovementId IS NULL
+               )
+     THEN
+         -- сохранили свойство <Скидка в цене>
+         PERFORM lpInsertUpdate_MovemenTFloat (zc_MovementFloat_ChangePrice()
+                                             , inMovementId
+                                             , COALESCE ((SELECT MIFloat.ValueData
+                                                          FROM Movement
+                                                               INNER JOIN MovementLinkObject AS MLO_Contract
+                                                                                             ON MLO_Contract.MovementId = Movement.Id
+                                                                                            AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                                                                            AND MLO_Contract.ObjectId   = vbContractId
+                                                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                                                      AND MovementItem.isErased   = FALSE
+                                                               LEFT JOIN MovementItemFloat AS MIFloat ON MIFloat.MovementItemId = MovementItem.Id
+                                                                                          AND MIFloat.DescId         = zc_MIFloat_ChangePrice()
+                                                               INNER JOIN MovementItem AS MovementItem_curr
+                                                                                       ON MovementItem_curr.MovementId = inMovementId
+                                                                                      AND MovementItem_curr.DescId     = zc_MI_Master()
+                                                                                      AND MovementItem_curr.isErased   = FALSE
+                                                                                      AND MovementItem_curr.ObjectId   = MovementItem.ObjectId
+                                                          WHERE Movement.DescId    = zc_Movement_ContractGoods()
+                                                            AND Movement.StatusId  = zc_Enum_Status_Complete()
+                                                            AND Movement.OperDate  <= vbOperDatePartner
+                                                          ORDER BY Movement.OperDate DESC, COALESCE (MIFloat.ValueData, 0) DESC
+                                                          LIMIT 1
+                                                         ), 0)
+                                              );
+
+         -- пересчитали Итоговые суммы по накладной
+         PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (inMovementId);
+
+     END IF;
+
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Сотруднику (заготовитель) и для формирования Аналитик в проводках
      SELECT _tmp.PriceWithVAT, _tmp.VATPercent, _tmp.DiscountPercent, _tmp.ExtraChargesPercent, _tmp.ChangePrice
@@ -241,7 +323,7 @@ BEGIN
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_CardFuel()   THEN Object_From.Id ELSE 0 END, 0) AS CardFuelId_From
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_TicketFuel() THEN Object_From.Id ELSE 0 END, 0) AS TicketFuelId_From
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()       THEN Object_From.Id ELSE 0 END, 0) AS UnitId_From
-                
+
                   -- УП Статью назначения берем: ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
                 , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_From -- COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, COALESCE (ObjectLink_Juridical_InfoMoney.ChildObjectId, 0)) AS InfoMoneyId_From
 
@@ -282,7 +364,7 @@ BEGIN
                             END, 0) AS AccountDirectionId_To
                 , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE)  AS isPartionDate_Unit
 
-                , COALESCE (MovementLinkObject_PersonalPacker.ObjectId, 0) AS MemberId_Packer
+                , COALESCE (ObjectLink_Personal_Member.ChildObjectId, MovementLinkObject_PersonalPacker.ObjectId, 0) AS MemberId_Packer
                 , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0) AS PaidKindId
                 , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
 
@@ -453,6 +535,9 @@ BEGIN
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalPacker
                                              ON MovementLinkObject_PersonalPacker.MovementId = Movement.Id
                                             AND MovementLinkObject_PersonalPacker.DescId = zc_MovementLinkObject_PersonalPacker()
+                LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                     ON ObjectLink_Personal_Member.ObjectId = MovementLinkObject_PersonalPacker.ObjectId
+                                    AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                              ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -699,7 +784,7 @@ BEGIN
 
             , 0 AS ContainerId_GoodsTicketFuel
             , _tmp.GoodsId_TicketFuel
-            
+
             , 0 AS ContainerId_Goods_Unit
             , _tmp.GoodsId_Unit
 
@@ -915,7 +1000,7 @@ BEGIN
                           WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                           ELSE 0
-                     END AS GoodsKindId 
+                     END AS GoodsKindId
                    , CASE WHEN MILinkObject_Asset.ObjectId > 0 THEN MILinkObject_Asset.ObjectId WHEN vbMovementDescId = zc_Movement_IncomeAsset() AND Object_Goods.DescId = zc_Object_Asset() THEN Object_Goods.Id ELSE 0 END AS AssetId
                    , COALESCE (MILinkObject_Unit.ObjectId, 0)  AS UnitId_Asset
                    , CASE WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
@@ -1253,7 +1338,7 @@ BEGIN
      END IF;
 
 
-     -- формируются Партии товара, ЕСЛИ надо ...
+     -- №1 - формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbMovementDescId = zc_Movement_IncomeAsset()
                                                  OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                                                     THEN lpInsertFind_Object_PartionGoods (inMovementId    := inMovementId
@@ -1296,6 +1381,14 @@ BEGIN
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
         -- OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
         OR vbMovementDescId = zc_Movement_IncomeAsset()
+     ;
+
+
+     -- №2 - формируются Партии товара, ЕСЛИ надо ...
+     UPDATE _tmpItem SET PartionGoodsId = lpInsertFind_Object_PartionGoods (inValue:= _tmpItem.PartionGoods)
+     WHERE _tmpItem.PartionGoodsId = 0
+       AND _tmpItem.PartionGoods <> ''
+       AND (_tmpItem.isPartionCount = TRUE OR _tmpItem.isPartionSumm = TRUE)
      ;
 
 
@@ -2657,7 +2750,7 @@ END IF;
      ;
 
      -- 1.2.1.2. определяется ContainerId_Goods для проводок по количественному учету - если спецодежда
-     UPDATE _tmpItemPartion_20202 SET ContainerId_Goods = 
+     UPDATE _tmpItemPartion_20202 SET ContainerId_Goods =
                                              lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId
                                                                                 , inCarId                  := vbCarId
@@ -3658,6 +3751,9 @@ RAISE EXCEPTION '<%>   %'
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (inMovementId);
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId

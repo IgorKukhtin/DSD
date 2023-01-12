@@ -134,7 +134,10 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, tmp.EndDate)
        FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId                          AS Id
                                    , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart()) AS StartDate
-                                   , ROW_NUMBER() OVER (ORDER BY COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart()) ASC) AS Ord
+                                   , COALESCE (ObjectLink_BonusKind.ChildObjectId, ObjectLink_Contract.ObjectId) AS BonusKindId
+                                   , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectLink_BonusKind.ChildObjectId, ObjectLink_Contract.ObjectId)
+                                                        ORDER BY COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart()) ASC
+                                                       ) AS Ord
                               FROM ObjectLink AS ObjectLink_Contract
                                    INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
                                                          ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
@@ -146,13 +149,19 @@ BEGIN
                                                         ON ObjectDate_StartDate.ObjectId  = ObjectLink_Contract.ObjectId
                                                        AND ObjectDate_StartDate.DescId    = zc_ObjectDate_ContractCondition_StartDate()
                                                      --AND ObjectDate_StartDate.ValueData > zc_DateStart()
+                                   -- еще такая группировка
+                                   LEFT JOIN ObjectLink AS ObjectLink_BonusKind
+                                                        ON ObjectLink_BonusKind.ObjectId      = ObjectLink_Contract.ObjectId
+                                                       AND ObjectLink_BonusKind.DescId        = zc_ObjectLink_ContractCondition_BonusKind()
+
                               WHERE ObjectLink_Contract.ChildObjectId = inContractId
                                 AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
                              )
              SELECT tmpData.Id, COALESCE (tmpData_next.StartDate - INTERVAL '1 DAY', zc_DateEnd()) AS EndDate
              FROM tmpData
-                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord       = tmpData.Ord + 1
-                                                   AND tmpData_next.StartDate > zc_DateStart()
+                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord         = tmpData.Ord + 1
+                                                   AND tmpData_next.BonusKindId = tmpData.BonusKindId
+                                                   AND tmpData_next.StartDate   > zc_DateStart()
              ) AS tmp
       ;
 
@@ -218,12 +227,22 @@ BEGIN
        FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId                          AS Id
                                    , ObjectDate_StartDate.ValueData                        AS StartDate
                                    , COALESCE (ObjectLink_ContractConditionKind.ChildObjectId, ObjectLink_Contract.ObjectId) AS ObjectId
-                                   , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectLink_ContractConditionKind.ChildObjectId, ObjectLink_Contract.ObjectId) ORDER BY ObjectDate_StartDate ASC) AS Ord
+                                   , COALESCE (ObjectLink_BonusKind.ChildObjectId, ObjectLink_Contract.ObjectId)             AS BonusKindId
+                                   , ROW_NUMBER() OVER (PARTITION BY ObjectLink_BonusKind.ChildObjectId
+                                                                   , COALESCE (ObjectLink_ContractConditionKind.ChildObjectId, ObjectLink_Contract.ObjectId)
+                                                        ORDER BY ObjectDate_StartDate ASC
+                                                       ) AS Ord
                               FROM ObjectLink AS ObjectLink_Contract
                                    LEFT JOIN ObjectLink AS ObjectLink_ContractConditionKind
                                                         ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
                                                        AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
                                                      --AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
+
+                                   -- еще такая группировка
+                                   LEFT JOIN ObjectLink AS ObjectLink_BonusKind
+                                                        ON ObjectLink_BonusKind.ObjectId      = ObjectLink_Contract.ObjectId
+                                                       AND ObjectLink_BonusKind.DescId        = zc_ObjectLink_ContractCondition_BonusKind()
+
                                    INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_Contract.ObjectId
                                                                                 AND Object_ContractCondition.isErased = FALSE
                                    INNER JOIN ObjectDate AS ObjectDate_StartDate
@@ -235,9 +254,10 @@ BEGIN
                              )
              SELECT tmpData.Id, COALESCE (tmpData_next.StartDate - INTERVAL '1 DAY', zc_DateEnd()) AS EndDate
              FROM tmpData
-                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord       = tmpData.Ord + 1
-                                                   AND tmpData_next.ObjectId  = tmpData.ObjectId
-                                                   AND tmpData_next.StartDate > zc_DateStart()
+                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord          = tmpData.Ord + 1
+                                                   AND tmpData_next.ObjectId     = tmpData.ObjectId
+                                                   AND tmpData_next.BonusKindId  = tmpData.BonusKindId
+                                                   AND tmpData_next.StartDate    > zc_DateStart()
              ) AS tmp
       ;
    END IF;

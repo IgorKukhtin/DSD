@@ -428,6 +428,7 @@ BEGIN
                                      
             -- эл.подписи
             LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id
+      where vbUserId NOT IN (/*5,*/ 9457) or tmpMovement.PersonalServiceListId <> 416828
             ;
 
 END;

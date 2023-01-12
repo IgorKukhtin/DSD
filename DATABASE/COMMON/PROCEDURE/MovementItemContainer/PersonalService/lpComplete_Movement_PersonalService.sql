@@ -1145,7 +1145,7 @@ BEGIN
      -- 4.10. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты) - ДА надо "минус" <Налоги - удержания с ЗП> И <Алименты - удержания> И <Удержания сторонними юр.л.> 
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummToPay(), tmpMovement.MovementItemId, -1 * OperSumm
                                                                                                  + tmpMovement.SummSocialAdd
-                                                                                                 + tmpMovement.SummHouseAdd
+                                                                                               --+ tmpMovement.SummHouseAdd
                                                                                                  - tmpMovement.SummTransport
                                                                                                  + tmpMovement.SummTransportAdd
                                                                                                  + tmpMovement.SummTransportAddLong
