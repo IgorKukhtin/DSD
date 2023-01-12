@@ -75,10 +75,15 @@ BEGIN
                                                              ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                             AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                                               ON MovementBoolean_MobileApplication.MovementId = Movement.Id
+                                                              AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+
                                 WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', inOperDate) -  INTERVAL '1 MONTH' + INTERVAL '4 DAY'
                                   AND Movement.OperDate < DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' + INTERVAL '4 DAY'
                                   AND Movement.DescId = zc_Movement_Check()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  AND COALESCE(MovementBoolean_MobileApplication.ValueData, False) = False
                                 UNION ALL
                                 SELECT Movement.*
                                      , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
@@ -174,4 +179,5 @@ ALTER FUNCTION gpReport_Movement_WagesVIP_CalcMonth (TDateTime, TVarChar) OWNER 
 
 -- тест
 -- 
-SELECT * FROM gpReport_Movement_WagesVIP_CalcMonth (inOperDate:= '01.01.2022', inSession:= zfCalc_UserAdmin());
+
+select * from gpReport_Movement_WagesVIP_CalcMonth(inOperDate := ('01.01.2023')::TDateTime ,  inSession := '3');

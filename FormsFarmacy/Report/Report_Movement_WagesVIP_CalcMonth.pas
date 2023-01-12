@@ -16,7 +16,6 @@ uses
 
 type
   TReport_Movement_WagesVIP_CalcMonthForm = class(TAncestorDBGridForm)
-    SummPhone: TcxGridDBColumn;
     dsdUpdateMaster: TdsdUpdateDataSet;
     dsdSetErased: TdsdUpdateErased;
     dsdUnErased: TdsdUpdateErased;
@@ -30,13 +29,16 @@ type
     OperDate: TcxGridDBColumn;
     actOpenUser: TOpenChoiceForm;
     dxBarButton1: TdxBarButton;
-    SummSale: TcxGridDBColumn;
+    HoursWork: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     dxBarButton2: TdxBarButton;
-    SummCalc: TcxGridDBColumn;
-    SummNP: TcxGridDBColumn;
-    SummTotal: TcxGridDBColumn;
+    TotalAmount: TcxGridDBColumn;
+    AmountAccrued: TcxGridDBColumn;
+    ApplicationAward: TcxGridDBColumn;
     FormParams: TdsdFormParams;
+    UserCode: TcxGridDBColumn;
+    UserName: TcxGridDBColumn;
+    PayrollTypeVIPName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,55 +1,55 @@
 inherited Report_Movement_WagesVIP_CalcMonthForm: TReport_Movement_WagesVIP_CalcMonthForm
   Caption = #1055#1086#1076#1088#1086#1073#1085#1086' '#1087#1086' '#1076#1085#1103#1084' '#1047'/'#1055' VIP '#1084#1077#1085#1077#1076#1078#1077#1088#1086#1074
   ClientHeight = 339
-  ClientWidth = 573
+  ClientWidth = 825
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 589
-  ExplicitHeight = 378
+  ExplicitWidth = 843
+  ExplicitHeight = 386
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 573
-    Height = 313
-    ExplicitWidth = 882
-    ExplicitHeight = 313
-    ClientRectBottom = 313
-    ClientRectRight = 573
+    Width = 825
+    Height = 312
+    ExplicitTop = 27
+    ExplicitWidth = 573
+    ExplicitHeight = 312
+    ClientRectBottom = 312
+    ClientRectRight = 825
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 882
-      ExplicitHeight = 313
+      ExplicitWidth = 573
+      ExplicitHeight = 312
       inherited cxGrid: TcxGrid
         Left = 3
-        Width = 570
-        Height = 313
+        Width = 822
+        Height = 312
         ExplicitLeft = 3
-        ExplicitWidth = 879
-        ExplicitHeight = 313
+        ExplicitWidth = 570
+        ExplicitHeight = 312
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = SummPhone
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = SummSale
+              Column = HoursWork
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = SummNP
+              Column = AmountAccrued
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = SummTotal
+              Column = ApplicationAward
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = SummCalc
+              Column = TotalAmount
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -67,27 +67,39 @@ inherited Report_Movement_WagesVIP_CalcMonthForm: TReport_Movement_WagesVIP_Calc
             HeaderAlignmentVert = vaCenter
             Width = 83
           end
-          object SummPhone: TcxGridDBColumn
-            Caption = #1047#1072#1082#1072#1079#1099' '#1087#1086' '#1090#1077#1083#1077#1092#1086#1085#1091
-            DataBinding.FieldName = 'SummPhone'
+          object UserCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'UserCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object UserName: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+            DataBinding.FieldName = 'UserName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 165
+          end
+          object PayrollTypeVIPName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'PayrollTypeVIPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 129
+          end
+          object HoursWork: TcxGridDBColumn
+            Caption = #1054#1090#1088#1072#1073#1086#1090#1072#1085#1086' '#1095#1072#1089#1086#1074
+            DataBinding.FieldName = 'HoursWork'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 81
           end
-          object SummSale: TcxGridDBColumn
-            Caption = #1047#1072#1082#1072#1079#1099
-            DataBinding.FieldName = 'SummSale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object SummNP: TcxGridDBColumn
-            Caption = #1053#1086#1074#1072#1103' '#1087#1086#1095#1090#1072
-            DataBinding.FieldName = 'SummNP'
+          object AmountAccrued: TcxGridDBColumn
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
+            DataBinding.FieldName = 'AmountAccrued'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -95,9 +107,9 @@ inherited Report_Movement_WagesVIP_CalcMonthForm: TReport_Movement_WagesVIP_Calc
             Options.Editing = False
             Width = 90
           end
-          object SummTotal: TcxGridDBColumn
-            Caption = #1041#1072#1079#1072' '#1088#1072#1089#1095#1077#1090#1072
-            DataBinding.FieldName = 'SummTotal'
+          object ApplicationAward: TcxGridDBColumn
+            Caption = #1055#1088#1077#1084#1080#1103' '#1079#1072' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
+            DataBinding.FieldName = 'ApplicationAward'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -105,9 +117,9 @@ inherited Report_Movement_WagesVIP_CalcMonthForm: TReport_Movement_WagesVIP_Calc
             Options.Editing = False
             Width = 90
           end
-          object SummCalc: TcxGridDBColumn
-            Caption = #1042' '#1079#1072#1088#1087#1083#1072#1090#1091
-            DataBinding.FieldName = 'SummCalc'
+          object TotalAmount: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086
+            DataBinding.FieldName = 'TotalAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -121,7 +133,7 @@ inherited Report_Movement_WagesVIP_CalcMonthForm: TReport_Movement_WagesVIP_Calc
         Left = 0
         Top = 0
         Width = 3
-        Height = 313
+        Height = 312
         Control = cxGrid
       end
     end
@@ -261,7 +273,7 @@ inherited Report_Movement_WagesVIP_CalcMonthForm: TReport_Movement_WagesVIP_Calc
     Top = 96
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Movement_WagesVIP_CalcMonth'
+    StoredProcName = 'gpReport_Movement_WagesVIP_CalcMonthUser'
     Params = <
       item
         Name = 'inOperDate'
@@ -281,7 +293,7 @@ inherited Report_Movement_WagesVIP_CalcMonthForm: TReport_Movement_WagesVIP_Calc
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
