@@ -151,6 +151,8 @@ type
     ceCash: TcxButtonEdit;
     cxLabel14: TcxLabel;
     GuidesCash: TdsdGuides;
+    isChild: TcxGridDBColumn;
+    isChild_err: TcxGridDBColumn;
   private
   public
   end;
