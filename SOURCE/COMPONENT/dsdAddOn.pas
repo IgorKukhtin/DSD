@@ -2355,7 +2355,7 @@ procedure TdsdDBViewAddOn.lpSetEdFilterPos(inKey: Char);
 // процедура устанавливает контрол для внесения значения фильтра и позиционируется на заголовке колонки
 var pRect:TRect;
 begin
- if (not edFilter.Visible) then
+ if (not edFilter.Visible) and (Pos('Grid', Screen.ActiveControl.ClassName) > 0) then
    with View.Controller do begin
      // позиционируем контрол на место заголовка
      try

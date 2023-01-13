@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer
              , Price TFloat
              , Summ TFloat, SummPlanMax TFloat 
              , Comment TVarChar
+             , isFixedPercent Boolean
+             , AddBonusPercent TFloat
              , isErased Boolean
               )
 AS
@@ -57,6 +59,8 @@ BEGIN
                                 , COALESCE(MI_PromoUnit.Amount,0) * COALESCE(MIFloat_Price.ValueData,0) AS Summ
                                 , COALESCE(MIFloat_AmountPlanMax.ValueData,0) * COALESCE(MIFloat_Price.ValueData,0) AS SummPlanMax
                                 , MIString_Comment.ValueData       ::TVarChar AS Comment
+                                , COALESCE (MIBoolean_FixedPercent.ValueData, FALSE)                                AS isFixedPercent
+                                , MIFloat_AddBonusPercent.ValueData                                                 AS AddBonusPercent
                                 , MI_PromoUnit.IsErased
                          FROM MovementItem AS MI_PromoUnit
                              LEFT JOIN MovementItemString AS MIString_Comment
@@ -69,6 +73,13 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MI_PromoUnit.Id
                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                             LEFT JOIN MovementItemFloat AS MIFloat_AddBonusPercent
+                                                         ON MIFloat_AddBonusPercent.MovementItemId = MI_PromoUnit.Id
+                                                        AND MIFloat_AddBonusPercent.DescId = zc_MIFloat_AddBonusPercent()
+
+                             LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
+                                                           ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id
+                                                          AND MIBoolean_FixedPercent.DescId = zc_MIBoolean_FixedPercent()
                          WHERE MI_PromoUnit.MovementId = inMovementId
                            AND MI_PromoUnit.DescId = zc_MI_Master()
                            AND (MI_PromoUnit.isErased = FALSE or inIsErased = TRUE)
@@ -84,6 +95,8 @@ BEGIN
                  , MI_PromoUnit.Summ              ::TFloat   AS Summ
                  , MI_PromoUnit.SummPlanMax       ::TFloat   AS SummPlanMax
                  , COALESCE(MI_PromoUnit.Comment, '') ::TVarChar AS Comment
+                 , COALESCE(MI_PromoUnit.isFixedPercent, False) ::TVarChar AS isFixedPercent
+                 , MI_PromoUnit.AddBonusPercent              AS AddBonusPercent
                  , COALESCE(MI_PromoUnit.IsErased,FALSE)     AS isErased
             FROM tmpPrice
                 FULL OUTER JOIN MI_PromoUnit ON tmpPrice.GoodsId = MI_PromoUnit.GoodsId
@@ -103,6 +116,8 @@ BEGIN
                 , (COALESCE(MI_PromoUnit.Amount,0) * COALESCE(MIFloat_Price.ValueData,0))           ::TFloat AS Summ
                 , (COALESCE(MIFloat_AmountPlanMax.ValueData,0) * COALESCE(MIFloat_Price.ValueData,0)) ::TFloat AS SummPlanMax
                 , MIString_Comment.ValueData       ::TVarChar AS Comment
+                , COALESCE (MIBoolean_FixedPercent.ValueData, FALSE)                                         AS isFixedPercent
+                , MIFloat_AddBonusPercent.ValueData                                                          AS AddBonusPercent
                 , MI_PromoUnit.IsErased
            FROM MovementItem AS MI_PromoUnit
               LEFT JOIN MovementItemString AS MIString_Comment
@@ -115,6 +130,13 @@ BEGIN
               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MI_PromoUnit.Id
                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+              LEFT JOIN MovementItemFloat AS MIFloat_AddBonusPercent
+                                          ON MIFloat_AddBonusPercent.MovementItemId = MI_PromoUnit.Id
+                                         AND MIFloat_AddBonusPercent.DescId = zc_MIFloat_AddBonusPercent()
+
+              LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
+                                            ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id
+                                           AND MIBoolean_FixedPercent.DescId = zc_MIBoolean_FixedPercent()
 
               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_PromoUnit.ObjectId                                         
            WHERE MI_PromoUnit.MovementId = inMovementId

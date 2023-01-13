@@ -896,11 +896,13 @@ BEGIN
                           )
        , tmpRemainsDiscount AS (SELECT Container.ObjectId         AS GoodsId
                                      , Container.WhereObjectId    AS UnitId
+                                     , SUM(CASE WHEN COALESCE (ContainerPD.Id, 0) = 0 AND COALESCE (DiscountExternalSupplier.DiscountExternalId, 0) <> 0 
+                                                     AND Container.Amount >= 1 THEN FLOOR(Container.Amount) ELSE 0 END) AS AmountDiscount
                                      , SUM(Container.Amount)      AS Amount
                                 FROM (SELECT DISTINCT tmpGoodsDiscount.GoodsId, tmpGoodsDiscount.DiscountExternalId FROM tmpGoodsDiscount) AS GoodsDiscount
                                 
                                      JOIN Container ON Container.ObjectId = GoodsDiscount.GoodsId
-                                                   AND Container.Amount >= 1
+                                                   AND Container.Amount > 0
                                                    AND Container.DescId = zc_Container_Count() 
    
                                      JOIN containerlinkobject AS CLI_MI
@@ -936,8 +938,6 @@ BEGIN
                                                                                                                AND DiscountExternalSupplier.DiscountExternalId =  GoodsDiscount.DiscountExternalId
                                                                                                                AND DiscountExternalSupplier.JuridicalId = MovementLinkObject_From.ObjectId
                                                         
-                               WHERE COALESCE (ContainerPD.Id, 0) = 0
-                                 AND COALESCE (DiscountExternalSupplier.DiscountExternalId, 0) <> 0
                                GROUP BY Container.ObjectId
                                       , Container.WhereObjectId
          )
@@ -982,6 +982,13 @@ BEGIN
              , CASE WHEN (tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
                                             COALESCE (PDGoodsRemains.Amount, 0) -
                                             COALESCE (Reserve_TP.Amount, 0)) <= 0 THEN NULL
+                    WHEN COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 AND
+                         (RemainsDiscount.AmountDiscount - COALESCE (tmpMI_Deferred.Amount, 0) -
+                                            COALESCE (PDGoodsRemains.Amount, 0) -
+                                            COALESCE (Reserve_TP.Amount, 0)) <= 0 THEN NULL
+                    WHEN COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 THEN RemainsDiscount.AmountDiscount - COALESCE (tmpMI_Deferred.Amount, 0) -
+                                            COALESCE (PDGoodsRemains.Amount, 0) -
+                                            COALESCE (Reserve_TP.Amount, 0)
                     ELSE (tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
                                             COALESCE (PDGoodsRemains.Amount, 0) -
                                             COALESCE (Reserve_TP.Amount, 0))
@@ -1228,5 +1235,5 @@ $BODY$
 
 -- тест
  
-SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '18308538', zfCalc_UserSite()) AS p
+SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '5925154, 5925280', zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId

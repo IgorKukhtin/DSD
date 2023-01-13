@@ -154,7 +154,7 @@ BEGIN
                            , MIContainer.isActive                            AS isActive
                            , CASE WHEN inisCalculated = TRUE THEN COALESCE (MIBoolean_Calculated.ValueData, FALSE) ELSE FALSE END  ::Boolean AS isCalculated
                            , CASE WHEN inIsStorageLine = TRUE THEN MILinkObject_StorageLine.ObjectId ELSE 0 END AS StorageLineId
-                           , MILinkObject_GoodsKind.ObjectId                 AS GoodsKindId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                       FROM tmpMovement
                            JOIN MovementItemContainer AS MIContainer
                                                       ON MIContainer.MovementId = tmpMovement.MovementId
@@ -186,7 +186,7 @@ BEGIN
                              , MIContainer.isActive
                              , CASE WHEN inIsStorageLine = TRUE THEN MILinkObject_StorageLine.ObjectId ELSE 0 END
                              , CASE WHEN inisCalculated = TRUE THEN COALESCE (MIBoolean_Calculated.ValueData, FALSE) ELSE FALSE END
-                             , MILinkObject_GoodsKind.ObjectId
+                             , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
                              , tmpMovement.FromId
                              , tmpMovement.ToId
                       )

@@ -27,7 +27,7 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
 BEGIN
 
-  IF inUserId = 5
+  IF inUserId IN (5, 6604558) -- Голота К.О.
   THEN
       RETURN;
   END IF;

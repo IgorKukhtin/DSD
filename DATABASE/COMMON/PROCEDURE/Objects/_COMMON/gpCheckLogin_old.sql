@@ -1,48 +1,47 @@
--- Function: gpCheckLogin(TVarChar, TVarChar, TVarChar)
+ -- Function: gpCheckLogin(TVarChar, TVarChar, TVarChar)
 
--- DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar);
--- DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, Boolean, TVarChar, TVarChar);
+ DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpCheckLogin(
-    IN inUserLogin      TVarChar,
-    IN inUserPassword   TVarChar,
-    IN inIP             TVarChar,
- INOUT ioIsGoogleOTP    Boolean,
- INOUT ioGoogleSecret   TVarChar,
- INOUT Session          TVarChar
+    IN inUserLogin    TVarChar,
+    IN inUserPassword TVarChar,
+    IN inIP           TVarChar,
+ INOUT ioPhoneAuthent TVarChar,
+ INOUT Session        TVarChar
 )
 RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbIsCreate Boolean;
+  DECLARE vbIsProjectAuthent Boolean;
 BEGIN
 
      -- Определися пользователь + сессия (потом будем шифровать)
     SELECT CASE WHEN Object_User.Id = 5
                 THEN FALSE
                 WHEN Object_User.Id = 5 OR 1=0
-                THEN -- Схема для действия пароля только 25 HOUR, временно откл.
-                     CASE WHEN COALESCE (ObjectDate_User_GUID.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP
+                THEN CASE WHEN COALESCE (ObjectDate_User_GUID.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP
                             OR COALESCE (ObjectDate_User_GUID.ValueData, zc_DateStart()) > CURRENT_TIMESTAMP + INTERVAL '25 HOUR'
                                THEN TRUE
                                ELSE FALSE
                           END
                 ELSE FALSE
-           END AS isCreate
+           END
          , Object_User.Id
-         , CASE WHEN Object_User.Id IN (5) AND inIP = '192.168.0.102' THEN TRUE
-                --WHEN 1=1 THEN COALESCE(ObjectBoolean_ProjectAuthent.ValueData, FALSE)
-                WHEN Object_User.Id IN (5, 14610) THEN COALESCE(ObjectBoolean_ProjectAuthent.ValueData, FALSE)
-                WHEN Object_User.ObjectCode IN (2596, 2790, 20, 19, 2727) THEN COALESCE(ObjectBoolean_ProjectAuthent.ValueData, FALSE)
-                ELSE FALSE
-           END AS isGoogleOTP
-         , COALESCE(ObjectString_GoogleSecret.ValueData, '')
-
-           INTO vbIsCreate, vbUserId, ioIsGoogleOTP, ioGoogleSecret
-
+         , CASE WHEN inIP = '192.168.0.101' AND 1=0 THEN FALSE
+                ELSE ObjectBoolean_ProjectAuthent.ValueData
+           END
+         , CASE WHEN ObjectBoolean_ProjectAuthent.ValueData = TRUE  AND inIP = '192.168.0.104'   AND 1=0 THEN '0674464560'
+                WHEN ObjectBoolean_ProjectAuthent.ValueData = TRUE  AND inIP = '169.254.104.227' AND 1=0 THEN '0674464560'
+                WHEN ObjectBoolean_ProjectAuthent.ValueData = TRUE  THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
+                WHEN Object_User.Id = 5 AND inIP = '192.168.43.157' THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
+                WHEN Object_User.Id = 5 AND 1=0 AND inIP = '62.149.5.248'   THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
+                WHEN Object_User.Id = 5 AND inIP = '10.0.0.4'       THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
+                ELSE '' END
+           INTO vbIsCreate, vbUserId, vbIsProjectAuthent, ioPhoneAuthent
     FROM Object AS Object_User
          JOIN ObjectString AS UserPassword
                            ON UserPassword.ValueData = inUserPassword AND inUserPassword <> ''
@@ -55,9 +54,10 @@ BEGIN
          LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectAuthent
                                  ON ObjectBoolean_ProjectAuthent.ObjectId = Object_User.Id
                                 AND ObjectBoolean_ProjectAuthent.DescId   = zc_ObjectBoolean_User_ProjectAuthent()
-         LEFT JOIN ObjectString AS ObjectString_GoogleSecret
-                                ON ObjectString_GoogleSecret.ObjectId = Object_User.Id
-                               AND ObjectString_GoogleSecret.DescId   = zc_ObjectString_User_SMS()
+                                AND 1=0
+         LEFT JOIN ObjectString AS ObjectString_PhoneAuthent
+                                ON ObjectString_PhoneAuthent.ObjectId = Object_User.Id
+                               AND ObjectString_PhoneAuthent.DescId   = zc_ObjectString_User_PhoneAuthent()
 
     WHERE Object_User.ValueData = inUserLogin
       AND Object_User.isErased = FALSE
@@ -68,7 +68,13 @@ BEGIN
     IF NOT FOUND THEN
        RAISE EXCEPTION 'Неправильный логин или пароль.';
     ELSE
-    
+
+        -- Проверка
+        IF vbIsProjectAuthent = TRUE AND ioPhoneAuthent = ''
+        THEN
+           RAISE EXCEPTION 'Не установлен № телефона для идентификации.';
+        END IF;
+
         --
         IF vbUserId = 5 OR 1=0
         THEN IF vbIsCreate = TRUE
@@ -124,11 +130,10 @@ END;$BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 30.12.22                                                       *              
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  02.09.15                                        *
 */
 
 -- тест
 -- SELECT * FROM LoginProtocol order by 1 desc
--- SELECT * FROM gpCheckLogin(inUserLogin := 'Админ' , inUserPassword := 'qsxqsxw1' , inIP := '192.168.43.29' , ioIsGoogleOTP := 'False' , ioGoogleSecret := '' ,  Session := '');
+-- SELECT * FROM gpCheckLogin ('Админ', 'qsxqsxw1', '', '067-1234567', '')

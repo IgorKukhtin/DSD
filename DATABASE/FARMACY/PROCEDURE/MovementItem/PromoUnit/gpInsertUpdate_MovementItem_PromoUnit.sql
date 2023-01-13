@@ -1,5 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_PromoUnit()
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoUnit (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoUnit (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoUnit(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoUnit(
    OUT outSummPlanMax        TFloat    , -- Сумма
     IN inComment             TVarChar  , -- примечание
     IN inisFixedPercent      Boolean   , -- Фиксированный процент выполнения
+    IN inAddBonusPercent     TFloat    , -- Доп. процент бонусирования
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -39,6 +40,7 @@ BEGIN
                                                  , inPrice              := inPrice
                                                  , inComment            := inComment
                                                  , inisFixedPercent     := inisFixedPercent
+                                                 , inAddBonusPercent    := inAddBonusPercent
                                                  , inUserId             := vbUserId
                                                 );
     -- пересчитали Итоговые суммы по накладной

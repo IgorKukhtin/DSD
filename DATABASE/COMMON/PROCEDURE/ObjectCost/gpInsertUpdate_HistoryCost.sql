@@ -248,6 +248,16 @@ end if;
                                     )
                              )
        -- , tmpAccount_60000 AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_60000()) -- Прибыль будущих периодов
+      , tmpMIFloat_Summ AS (SELECT MIFloat_Summ.MovementItemId, MIFloat_Summ.DescId, MIFloat_Summ.ValueData
+                            FROM MovementItem
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                             ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                            WHERE MovementItem.MovementId = 24210332 -- ЦЕХ упаковки - 30.12.2022
+                              AND MovementItem.DescId = zc_MI_Master()
+                              AND MovementItem.isErased = FALSE
+                              AND inEndDate < '01.01.2023'
+                           )
 
 
      INSERT INTO _tmpMaster (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm)
@@ -311,8 +321,20 @@ end if;
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartCount
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartSumm
                      -- Income
-                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod /*AND MIContainer.Amount > 0*/ THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeCount
-                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod /*AND MIContainer.Amount > 0*/ THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeSumm
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod /*AND MIContainer.Amount > 0*/
+                                                                                                THEN MIContainer.Amount
+                                                                                                WHEN MIContainer.MovementDescId IN (zc_Movement_Inventory()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod
+                                                                                                     AND MIFloat_Summ.ValueData <> 0
+                                                                                                THEN MIContainer.Amount
+                                                                                                ELSE 0
+                                                                                           END), 0) ELSE 0 END AS IncomeCount
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod /*AND MIContainer.Amount > 0*/
+                                                                                                THEN MIContainer.Amount
+                                                                                                WHEN MIContainer.MovementDescId IN (zc_Movement_Inventory()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod
+                                                                                                     AND MIFloat_Summ.ValueData <> 0
+                                                                                                THEN MIContainer.Amount
+                                                                                                ELSE 0
+                                                                                           END), 0) ELSE 0 END AS IncomeSumm
                      -- SendOnPrice
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.isActive = TRUE /*MIContainer.Amount > 0*/ THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceCountIn
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.isActive = TRUE /*MIContainer.Amount > 0*/ THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceSummIn
@@ -361,6 +383,11 @@ end if;
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                                 ON MovementLinkObject_User.MovementId = MIContainer.MovementId
                                                AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                   LEFT JOIN tmpMIFloat_Summ AS MIFloat_Summ
+                                             ON MIFloat_Summ.MovementItemId = MIContainer.MovementItemId
+                                            AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                                            AND MIContainer.MovementId = 24210332 -- ЦЕХ упаковки - 30.12.2022
+                                               
               GROUP BY Container.Id
                      , Container.UnitId
                      , Container.isHistoryCost_ReturnIn
@@ -1703,6 +1730,10 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 
 -- филиал Киев
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 8379, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
+
+-- Ручная цена взяли у всех Container.ParentId = 4220656 
+--INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
+--select 3520285, '01.11.2022', '30.11.2022', 72.5501, 72.5501, 1, 72.5501, 0, 0,0, 0,0, 0,0, 0,0, 0
 
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100

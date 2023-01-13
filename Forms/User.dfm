@@ -27,8 +27,6 @@ object UserForm: TUserForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 320
-    ExplicitTop = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -215,13 +213,13 @@ object UserForm: TUserForm
         Width = 85
       end
       object isProjectAuthent: TcxGridDBColumn
-        Caption = #1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1103
+        Caption = 'Google Authenticator'
         DataBinding.FieldName = 'isProjectAuthent'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1103' ('#1044#1072'/'#1053#1077#1090')'
+        HeaderHint = #1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1103' - Google Authenticator ('#1044#1072'/'#1053#1077#1090')'
         Options.Editing = False
-        Width = 63
+        Width = 85
       end
       object BillNumberMobile: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1089' '#1084#1086#1073'. '#1091#1089#1090#1088'-'#1074#1072
@@ -240,6 +238,7 @@ object UserForm: TUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 100
       end
       object clUpdateMobileTo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1089#1080#1085#1093#1088'. '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090'-'#1074#1072
@@ -247,6 +246,7 @@ object UserForm: TUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 100
       end
       object GUID: TcxGridDBColumn
         Caption = 'UUID '#1089#1077#1089#1089#1080#1080
@@ -265,6 +265,15 @@ object UserForm: TUserForm
         HeaderHint = #1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103' UUID-'#1089#1077#1089#1089#1080#1080
         Options.Editing = False
         Width = 85
+      end
+      object isKeyAuthent: TcxGridDBColumn
+        Caption = #1057#1077#1082#1088#1077#1090#1085#1099#1081' '#1050#1083#1102#1095' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isKeyAuthent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1086#1079#1076#1072#1085' '#1057#1077#1082#1088#1077#1090#1085#1099#1081' '#1050#1083#1102#1095' '#1076#1083#1103' Google Authenticator'
+        Options.Editing = False
+        Width = 80
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -557,6 +566,18 @@ object UserForm: TUserForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_KeyAuthent'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -636,6 +657,10 @@ object UserForm: TUserForm
       Action = macUpdate_UserRole_byMask
       Category = 0
     end
+    object bbUpdate_KeyAuthent: TdxBarButton
+      Action = actUpdate_KeyAuthent
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -652,6 +677,7 @@ object UserForm: TUserForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -1071,6 +1097,26 @@ object UserForm: TUserForm
       Caption = 'Update_UserRole_byMask'
       ImageIndex = 27
     end
+    object actUpdate_KeyAuthent: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_KeyAuthent
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_KeyAuthent
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1057#1077#1082#1088#1077#1090#1085#1099#1081' '#1050#1083#1102#1095' '#1076#1083#1103' Google Authenticator'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1057#1077#1082#1088#1077#1090#1085#1099#1081' '#1050#1083#1102#1095' '#1076#1083#1103' Google Authenticator'
+      ImageIndex = 10
+      QuestionBeforeExecute = 
+        #1057#1077#1082#1088#1077#1090#1085#1099#1081' '#1050#1083#1102#1095' '#1073#1091#1076#1077#1090' '#1091#1076#1072#1083#1077#1085'. '#1055#1088#1080' '#1089#1083#1077#1076#1091#1102#1097#1077#1084' '#1074#1093#1086#1076#1077' '#1074' '#1087#1088#1086#1075#1088#1072#1084#1084#1091', '#1073#1091 +
+        #1076#1077#1090' '#1087#1088#1077#1076#1083#1086#1076#1078#1077#1085#1086' '#1086#1090#1089#1082#1072#1085#1080#1088#1086#1074#1072#1090#1100' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1086#1084'  '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1077' '#1057#1077#1082#1088#1077#1090#1085#1099#1081 +
+        ' '#1050#1083#1102#1095' '#1076#1083#1103' Google Authenticator.'#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_User'
@@ -1437,5 +1483,22 @@ object UserForm: TUserForm
     PackSize = 1
     Left = 704
     Top = 136
+  end
+  object spUpdate_KeyAuthent: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_User_GoogleSecret_null'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUserId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 272
   end
 end

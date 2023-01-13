@@ -1,6 +1,6 @@
 -- Function: gpUpdate_Object_User_GoogleSecret()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_User_GoogleSecret (TVarChar, TVarChar);
+ DROP FUNCTION IF EXISTS gpUpdate_Object_User_GoogleSecret (TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_User_GoogleSecret(
@@ -19,7 +19,8 @@ BEGIN
 
   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_SMS(), vbUserId, inGoogleSecret);
 
-  PERFORM lpInsert_ObjectProtocol (vbUserId, vbUserId);  -- Cохранили протокол
+  -- Cохранили протокол
+  PERFORM lpInsert_ObjectProtocol (inObjectId:= vbUserId, inUserId:= vbUserId);
  
 END;
 $BODY$

@@ -503,6 +503,65 @@ BEGIN
                                        AND tmpContainer_all.Ord            = 1 -- на всякий случай - № п/п
               ;
 
+     -- Если дублируются товары + св-ва
+     IF EXISTS (SELECT 1
+                FROM _tmpItem
+                WHERE _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                  AND _tmpItem.OperCount > 0
+                GROUP BY _tmpItem.ContainerId_Goods
+                       , _tmpItem.GoodsId
+                       , _tmpItem.GoodsKindId
+                       , _tmpItem.GoodsKindId_complete
+                       , _tmpItem.AssetId
+                       , _tmpItem.PartionGoods
+                       , _tmpItem.PartionGoodsDate
+                       , _tmpItem.PartionGoodsId
+                HAVING COUNT (*) > 1
+               )
+     THEN
+          -- сохранили Итого
+          UPDATE _tmpItem SET OperCount      = tmp.OperCount
+                            , OperCountCount = tmp.OperCountCount
+                            , OperSumm       = tmp.OperSumm
+          FROM (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId
+                     , SUM (_tmpItem.OperCount) AS OperCount, SUM (_tmpItem.OperCountCount) AS OperCountCount, SUM (_tmpItem.OperSumm) AS OperSumm
+                FROM _tmpItem
+                WHERE _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                  AND _tmpItem.OperCount > 0
+                GROUP BY _tmpItem.ContainerId_Goods
+                       , _tmpItem.GoodsId
+                       , _tmpItem.GoodsKindId
+                       , _tmpItem.GoodsKindId_complete
+                       , _tmpItem.AssetId
+                       , _tmpItem.PartionGoods
+                       , _tmpItem.PartionGoodsDate
+                       , _tmpItem.PartionGoodsId
+               ) AS tmp
+          WHERE tmp.MovementItemId = _tmpItem.MovementItemId
+         ;
+          -- удалили
+          DELETE FROM _tmpItem
+          WHERE _tmpItem.MovementItemId IN (SELECT tmp.MovementItemId
+                                            FROM (SELECT _tmpItem.MovementItemId
+                                                       , ROW_NUMBER() OVER (PARTITION BY _tmpItem.ContainerId_Goods
+                                                                                       , _tmpItem.GoodsId
+                                                                                       , _tmpItem.GoodsKindId
+                                                                                       , _tmpItem.GoodsKindId_complete
+                                                                                       , _tmpItem.AssetId
+                                                                                       , _tmpItem.PartionGoods
+                                                                                       , _tmpItem.PartionGoodsDate
+                                                                                       , _tmpItem.PartionGoodsId
+                                                                            ORDER BY _tmpItem.MovementItemId DESC) AS Ord
+                                                  FROM _tmpItem
+                                                  WHERE _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                    AND _tmpItem.OperCount > 0
+                                                 ) AS tmp
+                                            WHERE tmp.Ord > 1
+                                           );
+          
+         
+     END IF;
+               
 
      -- формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId = CASE --
@@ -1093,8 +1152,13 @@ BEGIN
 
                           WHEN vbOperDate IN ('30.06.2015') AND vbPriceListId = 0
                                THEN _tmpItem.OperSumm -- !!!в первый раз, преход с Integer!!!
+
                           WHEN inMovementId = 2184096 -- Кротон хранение - 31.07.2015
                                THEN _tmpItem.OperSumm -- !!!тоже в первый раз, преход с Integer!!!
+                               
+                          WHEN inMovementId = 24210332 -- ЦЕХ упаковки - 30.12.2022
+                               THEN _tmpItem.OperSumm -- !!!тоже 1 раз!!!
+                                
 
                           -- WHEN vbPriceListId <> 0 AND View_Account.AccountDirectionId = zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
                           --      THEN 0 -- !!!этот счет по филиалам всегда выравниваем в 0!!!
@@ -1115,7 +1179,8 @@ BEGIN
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
                                                         AND (vbOperDate >= '01.07.2015' OR vbPriceListId <> 0)
-                                                        AND inMovementId <> 2184096 -- Кротон хранение - 31.07.2015
+                                                        AND inMovementId <> 2184096  -- Кротон хранение - 31.07.2015
+                                                        AND inMovementId <> 24210332 -- ЦЕХ упаковки - 30.12.2022
                                                         AND (vbUnitId NOT IN (8413   -- Склад ГП ф.Кривой Рог
                                                                             , 8417   -- Склад ГП ф.Николаев (Херсон)
                                                                             , 8425   -- Склад ГП ф.Харьков
@@ -1192,7 +1257,8 @@ BEGIN
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
               WHERE vbPriceListId = 0
-                 AND inMovementId <> 2184096 -- Кротон хранение - 31.07.2015
+                 AND inMovementId <> 2184096  -- Кротон хранение - 31.07.2015
+                 AND inMovementId <> 24210332 -- ЦЕХ упаковки - 30.12.2022
                  AND (_tmpRemainsCount.ContainerId_Goods IN (SELECT _tmpItem.ContainerId_Goods FROM _tmpItem WHERE _tmpItem.OperCount <> 0)
                    OR _tmpRemainsCount.OperCount_find <> 0
                    OR vbIsLastOnMonth = FALSE

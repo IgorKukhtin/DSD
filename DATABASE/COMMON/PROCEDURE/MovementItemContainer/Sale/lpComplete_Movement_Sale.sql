@@ -2556,7 +2556,7 @@ END IF;
                                       ON ContainerObjectCost_Basis.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id)
                                      AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
              LEFT JOIN HistoryCost ON HistoryCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id) -- HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
-                                  AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                                  AND CASE WHEN vbOperDatePartner < vbOperDate AND 1=0 THEN vbOperDatePartner ELSE vbOperDate END BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                 -- !!!
              OR _tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0) <> 0  -- здесь нули !!!НЕ НУЖНЫ!!!
              OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- !!!
@@ -3816,7 +3816,8 @@ END IF;
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
      IF inUserId <> zc_Enum_Process_Auto_PrimeCost()
-        AND inUserId <> 343013 -- Нагорная Я.Г.
+        AND inUserId <> 343013  -- Нагорная Я.Г.
+        AND inUserId <> 6604558 -- Голота К.О.
         -- AND inUserId <> 9459   -- Малахова Т.Н.
         -- AND inUserId <> zfCalc_UserMain()
         -- AND inUserId <> 5

@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , isDateOut Boolean
              , DateOut TDateTime
              , PhoneAuthent TVarChar
-             , isProjectAuthent Boolean
+             , isProjectAuthent Boolean, isKeyAuthent Boolean
              , GUID TVarChar
              , Data_GUID TDateTime
               )
@@ -85,10 +85,12 @@ END IF;
        , CASE WHEN COALESCE (tmpPersonal.isDateOut, FALSE) = FALSE THEN NULL ELSE tmpPersonal.DateOut END :: TDateTime AS DateOut
        
        , COALESCE (ObjectString_PhoneAuthent.ValueData, '')       ::TVarChar AS PhoneAuthent
-       , COALESCE (ObjectBoolean_ProjectAuthent.ValueData, FALSE) ::Boolean AS isProjectAuthent
+       , COALESCE (ObjectBoolean_ProjectAuthent.ValueData, FALSE) ::Boolean  AS isProjectAuthent
+       , CASE WHEN ObjectString_User_SMS.ValueData <> '' THEN TRUE ELSE FALSE END ::Boolean AS isKeyAuthent
        
        , ObjectString_GUID.ValueData ::TVarChar AS GUID
        , COALESCE (ObjectDate_User_GUID.ValueData, NULL) ::TDateTime AS Data_GUID
+
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
                                ON ObjectString_User_.ObjectId = Object_User.Id
@@ -129,6 +131,10 @@ END IF;
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectAuthent
                                 ON ObjectBoolean_ProjectAuthent.ObjectId = Object_User.Id
                                AND ObjectBoolean_ProjectAuthent.DescId = zc_ObjectBoolean_User_ProjectAuthent()
+        LEFT JOIN ObjectString AS ObjectString_User_SMS
+                               ON ObjectString_User_SMS.ObjectId = Object_User.Id
+                              AND ObjectString_User_SMS.DescId   = zc_ObjectString_User_SMS()
+                               
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                 ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id

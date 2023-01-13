@@ -1,54 +1,11 @@
--- Function: lpUpdate_Movement_ProductionUnion_Pack (Boolean, TDateTime, TDateTime, Integer, Integer, Integer)
-
-DROP FUNCTION IF EXISTS lpUpdate_Movement_ProductionUnion_Pack (Boolean, TDateTime, TDateTime, Integer, Integer);
-
-CREATE OR REPLACE FUNCTION lpUpdate_Movement_ProductionUnion_Pack(
-    IN inIsUpdate     Boolean   , --
-    IN inStartDate    TDateTime , --
-    IN inEndDate      TDateTime , --
-    IN inUnitId       Integer,    -- 
-    IN inUserId       Integer     -- Пользователь
-)                              
-RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, isDelete Boolean, DescId_mi Integer, MovementItemId Integer, ContainerId Integer
-             , OperCount TFloat, OperCount_Weight TFloat, OperCount_two TFloat, OperCount_Weight_two TFloat
-             , ReceiptCode_master Integer, ReceiptName_master TVarChar
-             , GoodsCode_master Integer, GoodsName_master TVarChar, GoodsKindName_master TVarChar
-             , GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindName TVarChar
-             , MovementItemId_master Integer, ContainerId_master Integer
-              )
-AS
-$BODY$
-BEGIN
-     -- ЦЕХ упаковки мясо
-     -- if inUnitId <> 951601  then return; end if;
-
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpResult'))
-     THEN
-         DELETE FROM _tmpResult;
-         DELETE FROM _tmpResult_child;
-     ELSE
-         -- таблица - 
-         CREATE TEMP TABLE _tmpResult (MovementId Integer, OperDate TDateTime, MovementItemId Integer, ContainerId Integer, GoodsId Integer, ReceiptId_in Integer, ReceiptId_child Integer, GoodsId_child Integer, DescId_mi Integer, OperCount TFloat, OperCount_Weight TFloat, OperCount_two TFloat, OperCount_Weight_two TFloat, isDelete Boolean) ON COMMIT DROP;
-         CREATE TEMP TABLE _tmpResult_child (MovementId Integer, OperDate TDateTime, MovementItemId_master Integer, MovementItemId Integer, ContainerId_master Integer, ContainerId Integer, GoodsId Integer, OperCount TFloat, isDelete Boolean) ON COMMIT DROP;
-     END IF;
 
      -- данные по приход/расход "цех Упаковки" + найденные MovementItemId (!!!для zc_MI_Child!!! здесь не определяется)
-     INSERT INTO _tmpResult (MovementId, OperDate, MovementItemId, ContainerId, GoodsId, ReceiptId_in, ReceiptId_child, GoodsId_child, DescId_mi, OperCount, OperCount_Weight, OperCount_two, OperCount_Weight_two, isDelete)
+     
              WITH tmpUnit AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect -- Склады База + Реализации
                              UNION
                               SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8460) AS lfSelect -- Возвраты общие
                              UNION
                               SELECT Object.Id AS UnitId FROM Object WHERE Object.Id = 8452 -- Склад ПЕРЕПАК
-                             UNION
-                              -- Участок мясного сырья
-                              SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS lfSelect WHERE inUnitId = 951601 -- ЦЕХ упаковки мясо
-                             UNION
-                              -- ЦЕХ Тушенка
-                              SELECT Object.Id AS UnitId FROM Object WHERE Object.Id = 2790412 AND inUnitId = 8006902 -- ЦЕХ упаковки Тушенки
-                             UNION
-                              -- Склад База ГП (Ирна)
-                              SELECT Object.Id AS UnitId FROM Object WHERE Object.Id = 8020714 AND inUnitId = 8006902 -- ЦЕХ упаковки (Ирна)
                              )
               , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                              FROM Object_InfoMoney_View AS View_InfoMoney
@@ -76,9 +33,9 @@ BEGIN
                                   FROM MovementItemContainer AS MIContainer
                                        INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.ObjectExtId_Analyzer
                                        INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
-                                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                  WHERE MIContainer.OperDate BETWEEN '10.12.2022' AND '10.12.2022'
                                     AND MIContainer.DescId                 = zc_MIContainer_Count()
-                                    AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                                    AND MIContainer.WhereObjectId_Analyzer = 8451 -- inUnitId
                                     AND MIContainer.MovementDescId         = zc_Movement_Send()
                                   GROUP BY MIContainer.ContainerId
                                          , MIContainer.OperDate
@@ -100,10 +57,10 @@ BEGIN
                                                                  ON MovementBoolean_isAuto.MovementId = MIContainer.MovementId
                                                                 AND MovementBoolean_isAuto.DescId     = zc_MovementBoolean_isAuto()
                                                                 AND MovementBoolean_isAuto.ValueData  = TRUE
-                                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                  WHERE MIContainer.OperDate BETWEEN '10.12.2022' AND '10.12.2022'
                                     AND MIContainer.DescId                 = zc_MIContainer_Count()
-                                    AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                                    AND MIContainer.ObjectExtId_Analyzer   = inUnitId
+                                    AND MIContainer.WhereObjectId_Analyzer = 8451 -- inUnitId
+                                    AND MIContainer.ObjectExtId_Analyzer   = 8451 -- inUnitId
                                     AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
                                     AND MovementBoolean_isAuto.MovementId  IS NULL
                                   GROUP BY MIContainer.ContainerId
@@ -117,9 +74,9 @@ BEGIN
                                        , SUM (MIContainer.Amount) AS OperCount
                                   FROM MovementItemContainer AS MIContainer 
                                        INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
-                                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                  WHERE MIContainer.OperDate BETWEEN '10.12.2022' AND '10.12.2022'
                                     AND MIContainer.DescId                 = zc_MIContainer_Count()
-                                    AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                                    AND MIContainer.WhereObjectId_Analyzer = 8451 -- inUnitId
                                     -- AND MIContainer.ObjectExtId_Analyzer   <> inUnitId -- От кого пришло
                                     AND MIContainer.ObjectExtId_Analyzer   = 981821 -- ЦЕХ шприц. мясо
                                     AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
@@ -134,10 +91,10 @@ BEGIN
                                        , -1 * SUM (MIContainer.Amount) AS OperCount
                                   FROM MovementItemContainer AS MIContainer 
                                        INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
-                                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                  WHERE MIContainer.OperDate BETWEEN '10.12.2022' AND '10.12.2022'
                                     AND MIContainer.DescId                 = zc_MIContainer_Count()
-                                    AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                                    AND MIContainer.ObjectExtId_Analyzer   <> inUnitId -- Кому ушло
+                                    AND MIContainer.WhereObjectId_Analyzer = 8451 -- inUnitId
+                                    AND MIContainer.ObjectExtId_Analyzer   <> 8451 -- inUnitId -- Кому ушло
                                     AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
                                     AND MIContainer.isActive               = FALSE
                                   GROUP BY MIContainer.ContainerId
@@ -150,9 +107,9 @@ BEGIN
                                        , -1 * SUM (MIContainer.Amount) AS OperCount
                                   FROM MovementItemContainer AS MIContainer 
                                        INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
-                                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                  WHERE MIContainer.OperDate BETWEEN '10.12.2022' AND '10.12.2022'
                                     AND MIContainer.DescId                 = zc_MIContainer_Count()
-                                    AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                                    AND MIContainer.WhereObjectId_Analyzer = 8451 -- inUnitId
                                     AND MIContainer.MovementDescId         = zc_Movement_Loss()
                                     AND MIContainer.isActive               = FALSE
                                   GROUP BY MIContainer.ContainerId
@@ -177,10 +134,10 @@ BEGIN
                                                                 ON MLM_ProductionUnion.MovementId      = MIContainer.MovementId
                                                                AND MLM_ProductionUnion.DescId          = zc_MovementLinkMovement_Production()
                                                                AND MLM_ProductionUnion.MovementChildId > 0
-                            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                            WHERE MIContainer.OperDate BETWEEN '10.12.2022' AND '10.12.2022'
                               AND MIContainer.DescId                 = zc_MIContainer_Count()
-                              AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                              AND MIContainer.AnalyzerId             = inUnitId
+                              AND MIContainer.WhereObjectId_Analyzer = 8451 -- inUnitId
+                              AND MIContainer.AnalyzerId             = 8451 -- inUnitId
                               AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
                               AND MLM_ProductionUnion.MovementId     IS NULL
                            )
@@ -243,25 +200,17 @@ BEGIN
                              FROM (SELECT DISTINCT tmpMI_result.GoodsId, tmpMI_result.GoodsKindId FROM tmpMI_result) AS tmpGoods
                                   INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                         ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
-                                                       AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
+                                                       AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
                                   INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                        ON ObjectLink_Receipt_GoodsKind.ObjectId      = ObjectLink_Receipt_Goods.ObjectId
-                                                       AND ObjectLink_Receipt_GoodsKind.DescId        = zc_ObjectLink_Receipt_GoodsKind()
+                                                        ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                       AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
                                                        AND ObjectLink_Receipt_GoodsKind.ChildObjectId = tmpGoods.GoodsKindId
-                                  INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_Receipt_Goods.ObjectId
+                                  INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
                                                                      AND Object_Receipt.isErased = FALSE
-                                  -- Главная
                                   INNER JOIN ObjectBoolean AS ObjectBoolean_Main
-                                                           ON ObjectBoolean_Main.ObjectId  = Object_Receipt.Id
-                                                          AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Receipt_Main()
+                                                           ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                                          AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
                                                           AND ObjectBoolean_Main.ValueData = TRUE
-                                  -- !!!Рецептура отключена!!!
-                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Disabled
-                                                          ON ObjectBoolean_Disabled.ObjectId  = Object_Receipt.Id
-                                                         AND ObjectBoolean_Disabled.DescId    = zc_ObjectBoolean_Receipt_Disabled()
-                                                         AND ObjectBoolean_Disabled.ValueData = TRUE
-                             WHERE ObjectBoolean_Disabled.ObjectId IS NULL
-                             
                              GROUP BY tmpGoods.GoodsId
                                     , tmpGoods.GoodsKindId
                             )
@@ -293,7 +242,7 @@ BEGIN
 
           -- Результат:
           -- элементы Прихода с пр-ва
-          SELECT tmpMI_result.MovementId
+, _tmpResult AS (          SELECT tmpMI_result.MovementId
                , tmpMI_result.OperDate
                , tmpMI_result.MovementItemId
                , tmpMI_result.ContainerId
@@ -420,26 +369,9 @@ BEGIN
                LEFT JOIN tmpMI_list ON tmpMI_list.MovementItemId = tmpMI_all.MovementItemId
           WHERE tmpMI_all.DescId_mi = zc_MI_Master() -- !!!только для zc_MI_Master!!!
             AND tmpMI_list.MovementItemId IS NULL
-         ;
+         )
 
-
-     -- !!!Выход, т.к. иногда данных нет!!!
-     IF     NOT EXISTS (SELECT 1 FROM _tmpResult WHERE _tmpResult.isDelete = TRUE)
-        AND NOT EXISTS (SELECT 1 FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master())
-     THEN
-         RETURN;
-     END IF;
-
-
---   RAISE EXCEPTION '<%>  %', 
---     (select sum (tmpResult_master.OperCount + tmpResult_master.OperCount_two) from _tmpResult AS tmpResult_master where tmpResult_master.GoodsId = 2480 and  tmpResult_master.DescId_mi = zc_MI_Child())
--- ,          (select sum (tmpResult_master.OperCount + tmpResult_master.OperCount_two) from _tmpResult AS tmpResult_master where tmpResult_master.GoodsId = 2480 and  tmpResult_master.DescId_mi = zc_MI_Master())
--- ;
-
-
-     -- данные
-     INSERT INTO _tmpResult_child (MovementId, OperDate, MovementItemId_master, MovementItemId, ContainerId_master, ContainerId, GoodsId, OperCount, isDelete)
-       WITH tmpResult_MI_all AS (-- находим ParentId всем существующим элементам Расхода на пр-во
+       , tmpResult_MI_all AS (-- находим ParentId всем существующим элементам Расхода на пр-во
                                  SELECT _tmpResult.*, MovementItem.ParentId
                                  FROM _tmpResult
                                       INNER JOIN MovementItem ON MovementItem.Id = _tmpResult.MovementItemId
@@ -474,15 +406,6 @@ BEGIN
                                                     AND ObjectFloat_Value_master.ValueData <> 0
                               INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ABS (tmpResult_master.ReceiptId_in) :: Integer
                                                                  AND Object_Receipt.isErased = FALSE
-                              -- !!!Рецептура отключена!!!
-                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Disabled
-                                                      ON ObjectBoolean_Disabled.ObjectId  = Object_Receipt.Id
-                                                     AND ObjectBoolean_Disabled.DescId    = zc_ObjectBoolean_Receipt_Disabled()
-                                                     AND ObjectBoolean_Disabled.ValueData = TRUE
-                              LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                   ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
-                                                  AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
-
                               INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
                                                     ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = ABS (tmpResult_master.ReceiptId_in) :: Integer
                                                    AND ObjectLink_ReceiptChild_Receipt.DescId        = zc_ObjectLink_ReceiptChild_Receipt()
@@ -503,8 +426,6 @@ BEGIN
                                                                 OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                                   )
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
-                         AND ObjectBoolean_Disabled.ObjectId IS NULL
-                         AND COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) NOT IN (zc_GoodsKind_WorkProgress()/*, zc_GoodsKind_Basis()*/)
                       )
            , tmpReceipt_find AS (-- взяли данные - у товара нет прямой ссылки - из чего он делается
                        SELECT tmpReceipt_find_all.OperDate, tmpReceipt_find_all.GoodsId, tmpReceipt_find_all.GoodsId_child
@@ -539,11 +460,6 @@ BEGIN
                                                    AND ObjectLink_ReceiptChild_Receipt.DescId   = zc_ObjectLink_ReceiptChild_Receipt()
                               INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_ReceiptChild_Receipt.ChildObjectId
                                                                  AND Object_Receipt.isErased = FALSE
-                              -- !!!Рецептура отключена!!!
-                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Disabled
-                                                      ON ObjectBoolean_Disabled.ObjectId  = Object_Receipt.Id
-                                                     AND ObjectBoolean_Disabled.DescId    = zc_ObjectBoolean_Receipt_Disabled()
-                                                     AND ObjectBoolean_Disabled.ValueData = TRUE
 
                               INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                     ON ObjectLink_Receipt_Goods.ObjectId = Object_Receipt.Id
@@ -564,12 +480,10 @@ BEGIN
                                                               AND (Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()             -- Доходы
                                                                 OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                                   )
-                       WHERE ObjectBoolean_Disabled.ObjectId IS NULL
                       )
 
 , tmpReceipt_child_find AS (-- взяли данные - у товара нет прямой ссылки - из чего он делается
-                       SELECT DISTINCT
-                              tmpResult_master.OperDate, tmpResult_master.GoodsId, ObjectLink_Receipt_Goods.ChildObjectId AS GoodsId_child
+                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, ObjectLink_Receipt_Goods.ChildObjectId AS GoodsId_child
                          --,  ROW_NUMBER() OVER (PARTITION BY tmpResult_master.OperDate, tmpResult_master.GoodsId ORDER BY COALESCE (ObjectFloat_Value.ValueData, 0) DESC) AS Ord --  № п/п
                        FROM tmpResult_master
                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
@@ -583,14 +497,6 @@ BEGIN
                                                    AND ObjectLink_ReceiptChild_Receipt.DescId   = zc_ObjectLink_ReceiptChild_Receipt()
                               INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_ReceiptChild_Receipt.ChildObjectId
                                                                  AND Object_Receipt.isErased = FALSE
-                              -- !!!Рецептура отключена!!!
-                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Disabled
-                                                      ON ObjectBoolean_Disabled.ObjectId  = Object_Receipt.Id
-                                                     AND ObjectBoolean_Disabled.DescId    = zc_ObjectBoolean_Receipt_Disabled()
-                                                     AND ObjectBoolean_Disabled.ValueData = TRUE
-                              LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                   ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
-                                                  AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
 
                               INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                     ON ObjectLink_Receipt_Goods.ObjectId = Object_Receipt.Id
@@ -613,8 +519,6 @@ BEGIN
                                                                 OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                                   )
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
-                         AND ObjectBoolean_Disabled.ObjectId IS NULL
-                         AND COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) NOT IN (zc_GoodsKind_WorkProgress()/*, zc_GoodsKind_Basis()*/)
                       )
           /*, tmpAll2 AS (-- -- данные zc_MI_Master, еще могут делаться из самих себя
                         SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff
@@ -642,14 +546,15 @@ BEGIN
                     -- SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId_child, tmpReceipt_find.GoodsId,   0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
                     --UNION
                     -- SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId_child, tmpResult_master.GoodsId, 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
-                    
+                  /*  
                       UNION
+
+
                        -- замена - Если из А упак В, тогда из В упак А
                        SELECT DISTINCT 5 AS ReceiptId_in, tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId, tmpReceipt_find.GoodsId_child,   0 AS Koeff, 0 AS ContainerId
                        FROM tmpReceipt_child_find AS tmpReceipt_find
                             -- эти уже есть, не надо дублировать
-                            LEFT JOIN
-                           (SELECT tmpResult_master.GoodsId, tmpResult_master.GoodsId_child FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
+                          left join  (SELECT tmpResult_master.GoodsId, tmpResult_master.GoodsId_child FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
                            UNION
                             SELECT tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child  FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
                            ) AS tmpCheck
@@ -659,14 +564,15 @@ BEGIN
                        WHERE tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
                          -- не надо дублировать
                          AND tmpCheck.GoodsId IS NULL
-
+-- and 1=0
+*/
                       UNION
+
                        -- ВСЕ - Если из А упак В и Ассорти, тогда В -> Ассорти
                        SELECT DISTINCT 5 AS ReceiptId_in, tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId, tmpReceipt_find.GoodsId_child,   0 AS Koeff, 0 AS ContainerId
                        FROM tmpReceipt_next AS tmpReceipt_find
                             -- эти уже есть, не надо дублировать
-                            LEFT JOIN
-                           (SELECT tmpResult_master.GoodsId, tmpResult_master.GoodsId_child FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
+                          left join  (SELECT tmpResult_master.GoodsId, tmpResult_master.GoodsId_child FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
                            UNION
                             SELECT tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child  FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
                            ) AS tmpCheck
@@ -675,10 +581,8 @@ BEGIN
                        WHERE tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
                          -- не надо дублировать
                          AND tmpCheck.GoodsId IS NULL
+-- and 1=0
 
-                    --UNION
-                       -- ВСЕ - Если из А упак В и Ассорти, тогда Ассорти -> В
-                     --SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId_child, tmpReceipt_find.GoodsId,   0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_next AS tmpReceipt_find WHERE tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
                     
 -- UNION
 -- SELECT DISTINCT tmpResult_master.OperDate, 2537, 8003459, 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master
@@ -695,56 +599,7 @@ UNION
 
 
 
-                      UNION
-                       -- тоже самое - но заменяем на zc_ObjectLink_GoodsByGoodsKind_GoodsMain
-                       SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId,  OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
-                       FROM tmpResult_master
-                            INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpResult_master.GoodsId_child
-                                                 AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
-                            INNER JOIN ObjectLink AS OL_Goods ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId
-                                                 AND OL_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                       WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
-                         AND tmpResult_master.GoodsId_child > 0
-                         AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
-                      UNION
-                       SELECT DISTINCT 0 as ReceiptId_in, tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,   OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
-                       FROM tmpReceipt_find 
-                            INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpReceipt_find.GoodsId_child AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
-                            INNER JOIN ObjectLink AS OL_Goods ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId AND OL_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                       WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
-                      UNION
-                       -- + могут делаться из самих себя
-                        SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId, OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
-                        FROM tmpResult_master
-                             INNER JOIN ObjectLink AS OL_GoodsMain
-                                                   ON OL_GoodsMain.ChildObjectId = tmpResult_master.GoodsId
-                                                  AND OL_GoodsMain.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
-                             INNER JOIN ObjectLink AS OL_Goods
-                                                   ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId
-                                                  AND OL_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                             LEFT JOIN (SELECT tmpResult_child.OperDate, tmpResult_child.ContainerId, SUM (tmpResult_child.OperCount) AS OperCount FROM tmpResult_child GROUP BY tmpResult_child.OperDate, tmpResult_child.ContainerId
-                                       ) AS tmp ON tmp.OperDate    = tmpResult_master.OperDate
-                                               AND tmp.ContainerId = tmpResult_master.ContainerId
-                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
-                          AND (ABS (100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) >  4)
-                      UNION
-                       -- данные zc_MI_Master, еще могут делаться из самих себя
-                        SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff
-                               -- если до 5% - тогда !!!ТОЛЬКО!!! сам в себя
-                             , CASE WHEN tmpResult_master.OperCount + tmpResult_master.OperCount_two = 0
-                                        THEN 0
-                                    WHEN ((100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) <  4
-                                      AND (100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) > -4
-                                          )
-                                     -- or tmpResult_master.GoodsId = 7837
-                                        THEN tmpResult_master.ContainerId
-                                    ELSE 0
-                               END AS ContainerId
-                        FROM tmpResult_master
-                             LEFT JOIN (SELECT tmpResult_child.OperDate, tmpResult_child.ContainerId, SUM (tmpResult_child.OperCount) AS OperCount FROM tmpResult_child GROUP BY tmpResult_child.OperDate, tmpResult_child.ContainerId
-                                       ) AS tmp ON tmp.OperDate    = tmpResult_master.OperDate
-                                               AND tmp.ContainerId = tmpResult_master.ContainerId
-                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                     
                        )
         , tmpKoeff AS (-- данные zc_MI_Master, когда будут делаться из товаров если ParentMulti
                        SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, ObjectLink_ReceiptChild_Goods.ChildObjectId AS GoodsId_child
@@ -800,12 +655,11 @@ UNION
                       )
 
           , tmpAll AS (-- данные All
-                       SELECT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all.GoodsId_child, tmpAll_all.Koeff, tmpAll_all.ContainerId
-                       FROM tmpAll_all
+                       SELECT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all.GoodsId_child, tmpAll_all.Koeff, tmpAll_all.ContainerId FROM tmpAll_all
                             LEFT JOIN tmpKoeff AS tmpKoeff_ch
                                                ON tmpKoeff_ch.GoodsId       = tmpAll_all.GoodsId
                                               AND tmpKoeff_ch.GoodsId_child = tmpAll_all.GoodsId_child
-                       WHERE tmpKoeff_ch.GoodsId IS NULL
+                       WHERE tmpKoeff_ch.GoodsId IS NULL  
 
                       UNION
                        SELECT DISTINCT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all_2.GoodsId_child, tmpAll_all.Koeff, tmpAll_all.ContainerId
@@ -822,21 +676,19 @@ UNION
                                                                --AND tmpAll_all_2.ReceiptId_in  >= 0
                        WHERE _tmpResult_1.GoodsId IS NULL AND _tmpResult_2.GoodsId IS NULL
                          AND tmpAll_all.ReceiptId_in <> 5
-                         -- !!! дублирует ВСУ, ОТКЛЮЧИЛИ !!!
-                         AND 1=0
+and 1=0
 
 -- and tmpAll_all.GoodsId <> 2357 
 -- and tmpAll_all_2.GoodsId_child <> 427122 
 -- select * from object where Id = 427122 
  -- and 1=0
-
                       UNION
                        -- данные zc_MI_Master, когда будут делаться из товаров если ParentMulti
                        SELECT DISTINCT tmpKoeff.OperDate, tmpKoeff.GoodsId, tmpKoeff.GoodsId_child
                             , tmpKoeff.Koeff
                             , tmpKoeff.ContainerId
                        FROM tmpKoeff
-
+-- where 1=0
                      UNION
                        -- ВСЕ - Если из А упак В и Ассорти, тогда В -> Ассорти
                        SELECT tmpKoeff.OperDate, tmpKoeff.GoodsId, tmpReceipt_next.GoodsId_child
@@ -847,10 +699,13 @@ UNION
                             LEFT JOIN tmpKoeff AS tmpKoeff_ch
                                                ON tmpKoeff_ch.GoodsId       = tmpKoeff.GoodsId
                                               AND tmpKoeff_ch.GoodsId_child = tmpReceipt_next.GoodsId_child
-                            LEFT JOIN tmpAll_all ON tmpAll_all.GoodsId       = tmpKoeff.GoodsId
-                                                AND tmpAll_all.GoodsId_child = tmpReceipt_next.GoodsId_child
-                            
-                       WHERE tmpKoeff_ch.GoodsId IS NULL AND tmpAll_all.GoodsId IS NULL
+
+                            LEFT JOIN tmpAll_all
+                                               ON tmpAll_all.GoodsId       = tmpKoeff.GoodsId
+                                              AND tmpAll_all.GoodsId_child = tmpReceipt_next.GoodsId_child
+
+                       WHERE tmpKoeff_ch.GoodsId IS NULL
+  and 1=0
                        GROUP BY tmpKoeff.OperDate, tmpKoeff.GoodsId, tmpReceipt_next.GoodsId_child
 
                     /*UNION
@@ -960,6 +815,8 @@ UNION
                                                            AND tmpResult_new.OperCount   =  tmp.OperCount
                               GROUP BY tmp.OperDate, tmp.ContainerId
                              )
+
+, _tmpResult_child  as (
           -- элементы
           SELECT tmpResult_new.MovementId
                , tmpResult_new.OperDate
@@ -1001,371 +858,11 @@ UNION
           FROM tmpResult_MI_all
                LEFT JOIN tmpResult_new ON tmpResult_new.MovementItemId = tmpResult_MI_all.MovementItemId
           WHERE tmpResult_new.MovementItemId IS NULL
-      ;
-
-
-     -- !!!не всегда!!!
-     IF inIsUpdate = TRUE
-     THEN
-
-     -- Проверка - элементы - Master
-     IF EXISTS (SELECT 1 FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0)
-     THEN
-         RAISE EXCEPTION 'Error. Master.Amount < 0 : (%) <%>  <%> Amount = <%> + <%> Count = <%> <%>'
-                               , (SELECT _tmpResult.ContainerId   FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0 ORDER BY _tmpResult.GoodsId LIMIT 1)
-                               , lfGet_Object_ValueData ((SELECT _tmpResult.GoodsId FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0 ORDER BY _tmpResult.GoodsId LIMIT 1))
-                               , lfGet_Object_ValueData ((SELECT CLO_GoodsKind.ObjectId FROM _tmpResult LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = _tmpResult.ContainerId AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind() WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0 ORDER BY _tmpResult.GoodsId LIMIT 1))
-                               , (SELECT _tmpResult.OperCount     FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0 ORDER BY _tmpResult.GoodsId LIMIT 1)
-                               , (SELECT _tmpResult.OperCount_two FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0 ORDER BY _tmpResult.GoodsId LIMIT 1)
-                               , (SELECT COUNT (*) FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0)
-                               , DATE (inStartDate)
-                                ;
-     END IF;
-     -- Проверка - элементы - Child
-     IF 1=0 OR EXISTS (SELECT 1 FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0)
-     THEN
-         RAISE EXCEPTION 'Error. Child.Amount < 0 : * % * % *** (%)+(%)=(%) <%>  <%> Amount = <%> Count = <%> <%>'
-                               , (SELECT STRING_AGG (_tmpResult_child.ContainerId_master :: TVarChar, ';') FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849)
-                               , (SELECT STRING_AGG (_tmpResult_child.OperCount :: TVarChar, ';') FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849)
-                               -- , (SELECT sum (_tmpResult_child.OperCount) FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849 )
-                               -- , (SELECT count(*) FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849 )
-                               -- , (SELECT _tmpResult_child.OperCount FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849 and _tmpResult_child.ContainerId_master = 119924)
-                               -- , (SELECT _tmpResult_child.OperCount FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849 and _tmpResult_child.ContainerId_master = 451446)
-
-                               , (SELECT MIN (_tmpResult_child.ContainerId_master) FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.ContainerId IN
-                                 (SELECT _tmpResult_child.ContainerId FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1)
-                                 )
-                               , (SELECT MAX (_tmpResult_child.ContainerId_master) FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.ContainerId IN
-                                 (SELECT _tmpResult_child.ContainerId FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1)
-                                 )
-                               , (SELECT _tmpResult_child.ContainerId FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1)
-                               , lfGet_Object_ValueData ((SELECT _tmpResult_child.GoodsId FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1))
-                               , lfGet_Object_ValueData ((SELECT CLO_GoodsKind.ObjectId FROM _tmpResult_child LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = _tmpResult_child.ContainerId AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind() WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1))
-                               , (SELECT _tmpResult_child.OperCount   FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1)
-                               , (SELECT COUNT (*) FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0)
-                               , DATE (inStartDate)
-                                ;
-     END IF;
-
-     -- Распроводим
-     PERFORM lpUnComplete_Movement (inMovementId     := tmp.MovementId
-                                  , inUserId         := inUserId)
-     FROM (SELECT _tmpResult.MovementId FROM _tmpResult WHERE _tmpResult.isDelete = FALSE AND _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId) AS tmp
-          INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                             AND Movement.StatusId = zc_Enum_Status_Complete();
-
-     -- удаляются документы !!!важно MovementItemId = 0!!!
-     PERFORM lpSetErased_Movement (inMovementId:= tmp.MovementId
-                                 , inUserId    := inUserId
-                                  )
-     FROM (SELECT _tmpResult.MovementId FROM _tmpResult WHERE _tmpResult.isDelete = TRUE AND _tmpResult.MovementId <> 0 AND _tmpResult.MovementItemId = 0 GROUP BY _tmpResult.MovementId) AS tmp
-    ;
-     -- удаляются элементы - Master
-     PERFORM lpSetErased_MovementItem (inMovementItemId:= _tmpResult.MovementItemId
-                                     , inUserId        := inUserId
-                                      )
-     FROM _tmpResult
-          LEFT JOIN _tmpResult AS _tmpResult_movement ON _tmpResult_movement.MovementId     = _tmpResult.MovementId
-                                                     AND _tmpResult_movement.isDelete       = TRUE
-                                                     AND _tmpResult_movement.MovementItemId = 0 -- !!!важно MovementItemId = 0!!!
-          LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = _tmpResult.MovementItemId
-                                                    AND MIB_Close.DescId         = zc_MIBoolean_Close()
-                                                    AND MIB_Close.ValueData      = TRUE
-     WHERE _tmpResult.isDelete = TRUE AND _tmpResult.MovementItemId <> 0
-       AND _tmpResult_movement.MovementId IS NULL -- т.е. только те которые не попали в удаление документов
-       -- Закрыт для пересчета
-       AND MIB_Close.MovementItemId IS NULL
-    ;
-     -- удаляются элементы - Child
-     PERFORM lpSetErased_MovementItem (inMovementItemId:= _tmpResult_child.MovementItemId
-                                     , inUserId        := inUserId
-                                      )
-     FROM _tmpResult_child
-          LEFT JOIN _tmpResult AS _tmpResult_movement ON _tmpResult_movement.MovementId     = _tmpResult_child.MovementId
-                                                     AND _tmpResult_movement.isDelete       = TRUE
-                                                     AND _tmpResult_movement.MovementItemId = 0 -- !!!важно MovementItemId = 0!!!
-          LEFT JOIN MovementItem AS MI_Check ON MI_Check.Id = _tmpResult_child.MovementItemId
-          LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = MI_Check.ParentId
-                                                    AND MIB_Close.DescId         = zc_MIBoolean_Close()
-                                                    AND MIB_Close.ValueData      = TRUE
-     WHERE _tmpResult_child.isDelete = TRUE -- AND _tmpResult_child.MovementItemId <> 0
-       AND _tmpResult_movement.MovementId IS NULL -- т.е. только те которые не попали в удаление документов
-       -- Закрыт для пересчета
-       AND MIB_Close.MovementItemId IS NULL
-    ;
-
-     -- создаются документы - <Производство смешивание>
-     UPDATE _tmpResult SET MovementId = CASE WHEN _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE THEN tmp.MovementId ELSE _tmpResult.MovementId END -- !!!иначе InsertUpdate_Movement для каждой записи!!!
-     FROM (SELECT tmp.OperDate
-                , lpInsertUpdate_Movement_ProductionUnion (ioId                    := 0
-                                                         , inInvNumber             := CAST (NEXTVAL ('movement_ProductionUnion_seq') AS TVarChar)
-                                                         , inOperDate              := tmp.OperDate
-                                                         , inFromId                := inUnitId
-                                                         , inToId                  := inUnitId
-                                                         , inDocumentKindId        := 0
-                                                         , inIsPeresort            := FALSE
-                                                         , inUserId                := inUserId
-                                                          ) AS MovementId
-           FROM (SELECT _tmpResult.OperDate
-                 FROM _tmpResult
-                 WHERE _tmpResult.MovementId = 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE
-                 GROUP BY _tmpResult.OperDate
-                 ) AS tmp
-          ) AS tmp
-     WHERE _tmpResult.OperDate = tmp.OperDate
-       AND _tmpResult.MovementId = 0
-       -- AND _tmpResult.DescId_mi = zc_MI_Master() -- !!!иначе InsertUpdate_Movement для каждой записи!!!
-       -- AND _tmpResult.isDelete = FALSE           -- !!!иначе InsertUpdate_Movement для каждой записи!!!
-    ;
-
-
-    -- Проверка
-    -- IF EXISTS (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
-    IF 1 <> (SELECT COUNT(*) FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp)
-    THEN 
-         RAISE EXCEPTION 'Error.Many find MovementId: Date = <%>  Min = <%>  Max = <%> Count = <%>', (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
-                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
-                                                                                                      ORDER BY tmp.OperDate LIMIT 1)
-                                                                                                   , (SELECT tmp.MovementId FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
-                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
-                                                                                                      ORDER BY tmp.OperDate, tmp.MovementId LIMIT 1)
-                                                                                                   , (SELECT tmp.MovementId FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
-                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
-                                                                                                      ORDER BY tmp.OperDate, tmp.MovementId DESC LIMIT 1)
-                                                                                                   , (SELECT COUNT(*) FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
-                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
-                                                                                                     )
-        ;
-    END IF;
-
-     -- сохраняются элементы - Master
-     UPDATE _tmpResult SET MovementItemId = lpInsertUpdate_MI_ProductionUnion_Master
-                                                  (ioId                     := _tmpResult.MovementItemId
-                                                 , inMovementId             := _tmpResult.MovementId
-                                                 , inGoodsId                := _tmpResult.GoodsId
-                                                 , inAmount                 := _tmpResult.OperCount + _tmpResult.OperCount_two
-                                                 , inCount                  := 0
-                                                 , inCuterWeight            := 0
-                                                 , inPartionGoodsDate       := NULL
-                                                 , inPartionGoods           := NULL
-                                                 , inGoodsKindId            := tmp.GoodsKindId
-                                                 , inGoodsKindId_Complete   := NULL
-                                                 , inUserId                 := inUserId
-                                                  )
-     FROM (SELECT DISTINCT _tmpResult.ContainerId, CLO_GoodsKind.ObjectId AS GoodsKindId, _tmpResult.MovementItemId
-           FROM _tmpResult
-                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                              ON CLO_GoodsKind.ContainerId = _tmpResult.ContainerId
-                                             AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-           WHERE _tmpResult.DescId_mi   = zc_MI_Master()
-             AND _tmpResult.isDelete    = FALSE
-          ) AS tmp
-          LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = tmp.MovementItemId
-                                                    AND MIB_Close.DescId         = zc_MIBoolean_Close()
-                                                    AND MIB_Close.ValueData      = TRUE
-     WHERE _tmpResult.ContainerId = tmp.ContainerId
-       AND _tmpResult.DescId_mi   = zc_MI_Master()
-       AND _tmpResult.isDelete    = FALSE
-       -- Закрыт для пересчета
-       AND MIB_Close.MovementItemId IS NULL
-      ;
-
-
-     -- сохраняются элементы - Child из распределения
-     PERFORM lpInsertUpdate_MI_ProductionUnion_Child
-                                                  (ioId                     := _tmpResult_child.MovementItemId
-                                                 , inMovementId             := _tmpResult.MovementId
-                                                 , inGoodsId                := _tmpResult_child.GoodsId
-                                                 , inAmount                 := _tmpResult_child.OperCount
-                                                 , inParentId               := _tmpResult.MovementItemId
-                                                 , inPartionGoodsDate       := NULL
-                                                 , inPartionGoods           := NULL
-                                                 , inGoodsKindId            := CLO_GoodsKind.ObjectId
-                                                 , inGoodsKindCompleteId    := NULL
-                                                 , inCount_onCount          := 0
-                                                 , inUserId                 := inUserId
-                                                  )
-     FROM _tmpResult_child
-          LEFT JOIN _tmpResult ON _tmpResult.ContainerId = _tmpResult_child.ContainerId_master
-                              AND _tmpResult.OperDate    = _tmpResult_child.OperDate
-                              AND _tmpResult.DescId_mi   = zc_MI_Master()
-                              AND _tmpResult.isDelete    = FALSE
-          LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                        ON CLO_GoodsKind.ContainerId = _tmpResult_child.ContainerId
-                                       AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-          LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = _tmpResult.MovementItemId
-                                                    AND MIB_Close.DescId         = zc_MIBoolean_Close()
-                                                    AND MIB_Close.ValueData      = TRUE
-     WHERE _tmpResult_child.isDelete    = FALSE
-       -- Закрыт для пересчета
-       AND MIB_Close.MovementItemId IS NULL
-    ;
-
-     -- сохраняются элементы - Child из рецепта
-     PERFORM lpInsertUpdate_MI_ProductionUnion_Child
-                                                  (ioId                     := 0
-                                                 , inMovementId             := _tmpResult.MovementId
-                                                 , inGoodsId                := ObjectLink_ReceiptChild_Goods.ChildObjectId
-                                                 , inAmount                 := (_tmpResult.OperCount + _tmpResult.OperCount_two) * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData
-                                                 , inParentId               := _tmpResult.MovementItemId
-                                                 , inPartionGoodsDate       := NULL
-                                                 , inPartionGoods           := NULL
-                                                 , inGoodsKindId            := ObjectLink_ReceiptChild_GoodsKind.ChildObjectId
-                                                 , inGoodsKindCompleteId    := NULL
-                                                 , inCount_onCount          := 0
-                                                 , inUserId                 := inUserId
-                                                  )
-     FROM _tmpResult
-                              INNER JOIN ObjectFloat AS ObjectFloat_Value_master
-                                                     ON ObjectFloat_Value_master.ObjectId = ABS (_tmpResult.ReceiptId_in) :: Integer
-                                                    AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
-                                                    AND ObjectFloat_Value_master.ValueData <> 0
-                              INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
-                                                   ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = ABS (_tmpResult.ReceiptId_in) :: Integer
-                                                  AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
-                              INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
-                                                                      AND Object_ReceiptChild.isErased = FALSE
-                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
-                                                   ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
-                                                  AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
-                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
-                                                   ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
-                                                  AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
-                              INNER JOIN ObjectFloat AS ObjectFloat_Value
-                                                     ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
-                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
-                                                    AND ObjectFloat_Value.ValueData <> 0
-                              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                                   ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
-                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                              INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                              AND Object_InfoMoney_View.InfoMoneyGroupId        <> zc_Enum_InfoMoneyGroup_30000()       -- Доходы
-                                                              AND (Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
-                                                                OR inUnitId = 8451 -- Цех Упаковки
-                                                                  )
-                                                              AND Object_InfoMoney_View.InfoMoneyDestinationId  <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные  + Ирна
-                             LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = _tmpResult.MovementItemId
-                                                                       AND MIB_Close.DescId         = zc_MIBoolean_Close()
-                                                                       AND MIB_Close.ValueData      = TRUE
-
-     WHERE _tmpResult.DescId_mi = zc_MI_Master()
-       AND _tmpResult.isDelete  = FALSE
-       -- Закрыт для пересчета
-       AND MIB_Close.MovementItemId IS NULL
-      ;
-
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();
-     -- !!!Проводим но не ВСЁ!!!
-     PERFORM lpComplete_Movement_ProductionUnion (inMovementId     := tmp.MovementId
-                                                , inIsHistoryCost  := TRUE
-                                                , inUserId         := inUserId)
-     FROM (SELECT _tmpResult.MovementId FROM _tmpResult WHERE _tmpResult.isDelete = FALSE AND _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() GROUP BY _tmpResult.MovementId) AS tmp
-          INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
-    ;
-
-     END IF; -- if inIsUpdate = TRUE -- !!!т.е. не всегда!!!
-
-
-    IF 1=1 OR inUserId = zfCalc_UserAdmin() :: Integer
-    THEN
-
-    -- Результат
-    RETURN QUERY
-    SELECT _tmpResult.MovementId
-         , _tmpResult.OperDate
-         , Movement.InvNumber
-         , _tmpResult.isDelete
-         , _tmpResult.DescId_mi
-         , _tmpResult.MovementItemId, _tmpResult.ContainerId
-         , _tmpResult.OperCount
-         , _tmpResult.OperCount_Weight
-         , _tmpResult.OperCount_two
-         , _tmpResult.OperCount_Weight_two
-         , Object_Receipt_master.ObjectCode AS ReceiptCode_master
-         , Object_Receipt_master.ValueData  AS ReceiptName_master
-         , Object_Goods_master.ObjectCode AS GoodsCode_master
-         , Object_Goods_master.ValueData  AS GoodsName_master
-         , NULL :: TVarChar AS GoodsKindName_master
-
-         , Object_Goods.ObjectCode AS GoodsCode
-         , Object_Goods.ValueData  AS GoodsName
-         , Object_GoodsKind.ValueData AS GoodsKindName
-         , 0 AS MovementItemId_master
-         , 0 AS ContainerId_master
-
-    FROM _tmpResult
-         LEFT JOIN Movement ON Movement.Id = _tmpResult.MovementId
-         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpResult.GoodsId
-         LEFT JOIN Object AS Object_Goods_master ON Object_Goods_master.Id = _tmpResult.GoodsId_child
-         LEFT JOIN Object AS Object_Receipt_master ON Object_Receipt_master.Id = ABS (_tmpResult.ReceiptId_in) :: Integer
-         LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                       ON CLO_GoodsKind.ContainerId = _tmpResult.ContainerId
-                                      AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = CLO_GoodsKind.ObjectId
-   UNION ALL
-    SELECT _tmpResult.MovementId
-         , _tmpResult.OperDate
-         , Movement.InvNumber
-         , _tmpResult_child.isDelete
-         , -1 AS DescId_mi
-         , _tmpResult_child.MovementItemId, _tmpResult_child.ContainerId
-         , _tmpResult_child.OperCount
-         , _tmpResult.OperCount_Weight
-         , _tmpResult.OperCount_two
-         , _tmpResult.OperCount_Weight_two
-         , Object_Receipt_master.ObjectCode AS ReceiptCode_master
-         , Object_Receipt_master.ValueData  AS ReceiptName_master
-         , Object_Goods_master.ObjectCode AS GoodsCode_master
-         , Object_Goods_master.ValueData  AS GoodsName_master
-         , Object_GoodsKind_master.ValueData AS GoodsKindName_master
-         , Object_Goods.ObjectCode AS GoodsCode
-         , Object_Goods.ValueData  AS GoodsName
-         , Object_GoodsKind.ValueData AS GoodsKindName
-         , _tmpResult_child.MovementItemId_master
-         , _tmpResult_child.ContainerId_master
-    FROM _tmpResult_child
-         LEFT JOIN _tmpResult ON _tmpResult.ContainerId = _tmpResult_child.ContainerId_master
-                             AND _tmpResult.DescId_mi   = zc_MI_Master()
-                             AND _tmpResult.OperDate    = _tmpResult_child.OperDate
-                             AND _tmpResult.isDelete    = FALSE
-
-         LEFT JOIN Movement ON Movement.Id = _tmpResult.MovementId
-         LEFT JOIN Object AS Object_Goods_master ON Object_Goods_master.Id = _tmpResult.GoodsId
-         LEFT JOIN Object AS Object_Receipt_master ON Object_Receipt_master.Id = ABS (_tmpResult.ReceiptId_in) :: Integer
-         LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_master
-                                       ON CLO_GoodsKind_master.ContainerId = _tmpResult.ContainerId
-                                      AND CLO_GoodsKind_master.DescId = zc_ContainerLinkObject_GoodsKind()
-         LEFT JOIN Object AS Object_GoodsKind_master ON Object_GoodsKind_master.Id = CLO_GoodsKind_master.ObjectId
-
-         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpResult_child.GoodsId
-         LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                       ON CLO_GoodsKind.ContainerId = _tmpResult_child.ContainerId
-                                      AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = CLO_GoodsKind.ObjectId
-    ;
-    END IF;
-
-
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE;
-
-/*-------------------------------------------------------------------------------
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 18.07.15                                        *
-*/
-
--- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '10.03.2019', inEndDate:= '10.03.2019', inUnitId:= 8451,   inUserId:= zc_Enum_Process_Auto_Pack()) -- Цех Упаковки
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '10.03.2019', inEndDate:= '10.03.2019', inUnitId:= 951601, inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки мясо
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '27.04.2022', inEndDate:= '27.04.2022', inUnitId:= 8006902,inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки Тушенки
-
--- where ContainerId = 568111
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '11.08.2016', inEndDate:= '11.08.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
--- where ContainerId = 119808 119834 -- select * from MovementItemContainer where MovementItemId = 50132454 
--- where (DescId_mi < 0 and GoodsCode in (101, 2207)) or (DescId_mi IN (  1,  zc_MI_Child())   and (GoodsCode in (101, 2207) or GoodsCode_master = 101))
--- where GoodsCode in (101, 2207) or GoodsCode_master in (101, 2207)
--- order by DescId_mi desc, GoodsName_master, GoodsKindName_master, GoodsName, GoodsKindName, OperDate
--- select * from gpUpdate_Movement_ProductionUnion_Pack(inStartDate := ('02.02.2021')::TDateTime , inEndDate := ('02.02.2021')::TDateTime , inUnitId := 8451 ,  inSession := '5')
+)
+/* select * from Object WHERE id in (
+select GoodsId_child from tmpAll -- _tmpResult_child 
+where goodsId  = 2507  -- and GoodsId_child = 
+)*/
+select * from tmpAll where goodsId  = 489150   -- and GoodsId_child =  
+order by GoodsId_child
+ -- select * from Object WHERE id = 2507

@@ -537,7 +537,7 @@ BEGIN
                               -- LEFT JOIN tmpOF_Goods_MinimumLot  AS ObjectFloat_Goods_MinimumLot
                               --                       ON ObjectFloat_Goods_MinimumLot.ObjectId = ObjectLink_Goods_Object.ObjectId
                                                --     AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
-                         WHERE (inShowAll = TRUE OR tmpMI_Master.Id is not NULL)
+                         WHERE (inShowAll = TRUE AND tmpGoods_PriceList.GoodsId is not NULL OR tmpMI_Master.Id is not NULL)
                            AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                            AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                         );
@@ -1912,7 +1912,7 @@ BEGIN
 --raise notice 'Value 4: %', CLOCK_TIMESTAMP();
 
 -- lpCreateTempTable_OrderInternal Конец процедуры
---      raise notice 'Value: %', 21;
+----      raise notice 'Value: %', 21;
 
    --RAISE EXCEPTION 'Ошибка.';
      RETURN QUERY
@@ -4533,7 +4533,7 @@ BEGIN
 
             LEFT JOIN tmpGoodsDiscountJuridical ON tmpGoodsDiscountJuridical.GoodsMainId = tmpGoodsMain.GoodsMainId
                                                AND tmpGoodsDiscountJuridical.JuridicalId = tmpMI.JuridicalId
-           ;
+        ;
            
 --raise notice 'Value 4: %', CLOCK_TIMESTAMP();
 
@@ -4592,4 +4592,5 @@ $BODY$
 
 --select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26893369    , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3') order by GoodsId;
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 30587884  , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 30645729 , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
