@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_MI_PersonalService_SummService_Load()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_SummService_Load (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_SummService_Load (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_SummService_Load (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_SummService_Load(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inPersonalCode        Integer   , --Integer
+    IN inPersonalCode        Integer   , --Integer  
+    IN inPositionName        TVarChar  , --
     IN inFIO                 TVarChar  , -- ФИО
     IN inFineSubjectName     TVarChar  , -- Вид нарушений
     IN inUnitFineSubjectName TVarChar  , -- Кем налагается взыскание
@@ -17,6 +19,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPersonalId Integer;
+   DECLARE vbPositionId Integer;
    DECLARE vbFineSubjectId Integer;
    DECLARE vbUnitFineSubjectId Integer; 
    DECLARE vbCodePersonal Integer;
@@ -49,9 +52,31 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.У <%> не заполненное поле <Код> в файле Excel для суммы <%> <%>.', inFIO, inSummService, inFineSubjectName;
      END IF;
 
+     -- проверка
+     IF COALESCE (inPositionName, '') = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.У <%> не заполненное поле <Должность> в файле Excel для суммы <%> <%>.', inFIO, inSummService, inFineSubjectName;
+     END IF;
+     
 
-     -- поиск сотрудника по коду
-     vbPersonalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND Object.ObjectCode = inPersonalCode);
+     -- поиск должности
+     vbPositionId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Position() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inPositionName)));
+
+     -- проверка если не нашли должность
+     IF COALESCE (vbPositionId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.У <%> не найдена <Должность> в справочнике.', inFIO, inPositionName;
+     END IF;
+
+     -- поиск сотрудника по коду и должности
+     vbPersonalId := (SELECT Object.Id 
+                      FROM Object
+                           INNER JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                 ON ObjectLink_Personal_Position.ObjectId = Object.Id
+                                                AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                                AND ObjectLink_Personal_Position.ChildObjectId = vbPositionId
+                      WHERE Object.DescId = zc_Object_Personal()
+                        AND Object.ObjectCode = inPersonalCode);
      
      /*vbPersonalId:= (WITH tmpPersonal AS (SELECT ObjectLink_Personal_Member.ObjectId AS PersonalId
                                                , ROW_NUMBER() OVER (PARTITION BY ObjectString_INN.ValueData
@@ -163,7 +188,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 13.01.23         *
  30.12.22         *
 */
 
