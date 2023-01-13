@@ -27,8 +27,10 @@
  
    -- определяем <Статус>
    SELECT StatusId, DescId INTO vbStatusId, vbMovementDescId FROM Movement WHERE Id = vbMovementId;
+
    -- проверка - проведенные/удаленные документы Изменять нельзя
    IF vbStatusId <> zc_Enum_Status_UnComplete() AND vbDescId <> zc_MI_Sign()
+      AND (vbMovementDescId <> zc_Movement_Cash() OR vbDescId <> zc_MI_Child())
    THEN
 
        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);

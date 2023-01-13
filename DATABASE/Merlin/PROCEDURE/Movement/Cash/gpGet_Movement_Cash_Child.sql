@@ -61,8 +61,9 @@ BEGIN
             LEFT JOIN (SELECT SUM (MovementItem.Amount) AS Amount
                        FROM MovementItem
                        WHERE MovementItem.MovementId = inMovementId
-                         AND MovementItem.DescId = zc_MI_Child()
-                       ) AS tmpChild On 1= 1
+                         AND MovementItem.DescId     = zc_MI_Child()
+                         AND MovementItem.isErased   = FALSE
+                      ) AS tmpChild On 1= 1
 
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 
@@ -129,8 +130,9 @@ BEGIN
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
        FROM Movement
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                  AND MovementItem.DescId = zc_MI_Child()
-                                  AND MovementItem.Id = inMI_Id_child
+                                  AND MovementItem.DescId     = zc_MI_Child()
+                                  AND MovementItem.Id         = inMI_Id_child
+                                  AND MovementItem.isErased   = FALSE
 
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 

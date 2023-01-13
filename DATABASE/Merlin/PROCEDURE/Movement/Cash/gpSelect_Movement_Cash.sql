@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inIsErased          Boolean   , --
-    IN inKindName          TVarChar  , -- zc_Enum_InfoMoney_In or zc_Enum_InfoMoney_Out 
+    IN inKindName          TVarChar  , -- zc_Enum_InfoMoney_In or zc_Enum_InfoMoney_Out
     IN inCashId            Integer   ,
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -30,7 +30,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_corr Integer
              , UserId_1 Integer, isSign_User1 Boolean, OperDate_User1 TDateTime
              , UserId_2 Integer, isSign_User2 Boolean, OperDate_User2 TDateTime
              , UserId_3 Integer, isSign_User3 Boolean, OperDate_User3 TDateTime
-               )
+             , isChild Boolean, isChild_err Boolean
+              )
 
 AS
 $BODY$
@@ -58,28 +59,39 @@ BEGIN
                                                   AND Movement.StatusId = tmpStatus.StatusId
                           )
 
-        , tmpData AS (SELECT tmpMovement.Id AS MovementId
+    , tmpData_all AS (SELECT tmpMovement.Id AS MovementId
                            , tmpMovement.InvNumber
                            , tmpMovement.OperDate
                            , tmpMovement.StatusId
                            , MovementItem.Id       AS MI_Id
                            , MovementItem.ObjectId AS ObjectId
                            , MovementItem.Amount   AS Amount
+                           , MovementItem.DescId   AS MovementItemDescId
                       FROM tmpMovement
                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
-                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.DescId     IN (zc_MI_Master(), zc_MI_Child())
                                                   AND MovementItem.isErased   = FALSE
                                                   AND ((MovementItem.Amount <= 0 AND inKindName = 'zc_Enum_InfoMoney_Out')
                                                     OR (MovementItem.Amount >  0 AND inKindName = 'zc_Enum_InfoMoney_In')
                                                       )
                                                   AND (MovementItem.ObjectId = inCashId OR inCashId = 0)
                      )
-          -- 
+        , tmpData AS (SELECT tmpData_all.MovementId
+                           , tmpData_all.InvNumber
+                           , tmpData_all.OperDate
+                           , tmpData_all.StatusId
+                           , tmpData_all.MI_Id
+                           , tmpData_all.ObjectId
+                           , tmpData_all.Amount
+                      FROM tmpData_all
+                      WHERE tmpData_all.MovementItemDescId = zc_MI_Master()
+                     )
+          --
         , tmpMI_Sign AS (SELECT tmp.MovementId
                               , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_1() AND tmp.isErased = FALSE THEN tmp.UserId   ELSE 0  END) AS UserId_1
                               , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_2() AND tmp.isErased = FALSE THEN tmp.UserId   ELSE 0  END) AS UserId_2
                               , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_3() AND tmp.isErased = FALSE THEN tmp.UserId   ELSE 0  END) AS UserId_3
-                              
+
                               , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_1() THEN tmp.MovementItemId   ELSE 0  END) AS Id_mi_1
                               , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_2() THEN tmp.MovementItemId   ELSE 0  END) AS Id_mi_2
                               , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_3() THEN tmp.MovementItemId   ELSE 0  END) AS Id_mi_3
@@ -92,8 +104,8 @@ BEGIN
                                                            AND MovementItem.DescId     = zc_MI_Sign()
                               ) AS tmp
                          GROUP BY tmp.MovementId
-                         )
-
+                        )
+       -- Результат
        SELECT
              tmpData.MovementId                   AS Id
            , zfConvert_StringToNumber(tmpData.InvNumber) AS InvNumber
@@ -125,7 +137,7 @@ BEGIN
            , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
            , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
-           
+
            , Object_Insert.ValueData            AS InsertName
            , MovementDate_Insert.ValueData      AS InsertDate
            , Object_Update.ValueData            AS UpdateName
@@ -146,8 +158,24 @@ BEGIN
            , CASE WHEN tmpMI_Sign.UserId_3 > 0 THEN TRUE ELSE FALSE END ::Boolean
            , MID_Sign_User3.ValueData
 
+           , CASE WHEN tmpData_Child.MovementId > 0 AND COALESCE (MovementBoolean_Sign.ValueData, FALSE) = FALSE
+                       THEN TRUE
+                       ELSE FALSE
+             END :: Boolean AS isChild
+
+           , CASE WHEN tmpData_Child.MovementId > 0 AND tmpData.Amount <> tmpData_Child.Amount AND COALESCE (MovementBoolean_Sign.ValueData, FALSE) = FALSE
+                       THEN TRUE
+                       ELSE FALSE
+             END :: Boolean AS isChild_err
+
        FROM tmpData
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId
+
+            LEFT JOIN (SELECT tmpData_all.MovementId, SUM (tmpData_all.Amount) AS Amount FROM tmpData_all WHERE tmpData_all.MovementItemDescId = zc_MI_Child()
+                       GROUP BY tmpData_all.MovementId
+                      ) AS tmpData_Child
+                        ON tmpData_Child.MovementId = tmpData.MovementId
+
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Sign
                                       ON MovementBoolean_Sign.MovementId = tmpData.MovementId
@@ -169,7 +197,7 @@ BEGIN
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
             --
-            
+
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = tmpData.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
@@ -205,12 +233,12 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Update_mi
                                        ON MIDate_Update_mi.MovementItemId = tmpData.MI_Id
                                       AND MIDate_Update_mi.DescId = zc_MIDate_Update()
- 
+
             LEFT JOIN MovementItemLinkObject AS MILO_Insert_mi
                                              ON MILO_Insert_mi.MovementItemId = tmpData.MI_Id
                                             AND MILO_Insert_mi.DescId = zc_MILinkObject_Insert()
             LEFT JOIN Object AS Object_Insert_mi ON Object_Insert_mi.Id = MILO_Insert_mi.ObjectId
- 
+
             LEFT JOIN MovementItemLinkObject AS MILO_Update_mi
                                              ON MILO_Update_mi.MovementItemId = tmpData.MI_Id
                                             AND MILO_Update_mi.DescId = zc_MILinkObject_Update()
@@ -218,7 +246,7 @@ BEGIN
 
 
             LEFT JOIN tmpMI_Sign ON tmpMI_Sign.MovementId = tmpData.MovementId
-            
+
             LEFT JOIN MovementItemDate AS MID_Sign_User1
                                        ON MID_Sign_User1.MovementItemId = tmpMI_Sign.Id_mi_1
                                       AND MID_Sign_User1.DescId         = zc_MIDate_Insert()
@@ -255,4 +283,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('01.10.2022')::TDateTime , inIsErased := 'False' , inKindName := 'zc_Enum_InfoMoney_In', inCashId:= 0, inSession := '5');
+-- SELECT * FROM gpSelect_Movement_Cash(inStartDate := ('01.01.2023')::TDateTime , inEndDate := ('01.10.2023')::TDateTime , inIsErased := 'False' , inKindName := 'zc_Enum_InfoMoney_In', inCashId:= 0, inSession := '5');

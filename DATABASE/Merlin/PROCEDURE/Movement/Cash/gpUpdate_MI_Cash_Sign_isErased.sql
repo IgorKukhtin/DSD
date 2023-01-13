@@ -26,7 +26,7 @@ BEGIN
                 );
 
      -- Проверка
-     IF COALESCE (vbId_mi, 0) = 0
+     IF COALESCE (vbId_mi, 0) = 0 AND 1=0
      THEN
         RAISE EXCEPTION 'Ошибка.Нельзя отменить <Разрешение корректировки>.Элемент не найден.';
      END IF;
@@ -66,19 +66,30 @@ BEGIN
          IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
          THEN
              -- Распроводим Документ
-             PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= vbUserId);
+             PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= -1 * vbUserId);
          END IF;
 
          -- Проводим
-         PERFORM lpComplete_Movement_Cash (inMovementId:= inMovementId, inUserId:= vbUserId);
+         PERFORM lpComplete_Movement_Cash (inMovementId:= inMovementId, inUserId:= -1 * vbUserId);
 
      ELSE
+         -- Проверка
+         IF COALESCE (vbId_mi, 0) = 0
+         THEN
+            RAISE EXCEPTION 'Ошибка.Нельзя отменить <Разрешение корректировки>.Элемент не найден.';
+         END IF;
+
          -- Удаляем ОДНУ подпись
-         PERFORM lpSetErased_MovementItem (inMovementItemId:= vbId_mi, inUserId:= vbUserId);
+         PERFORM lpSetErased_MovementItem (inMovementItemId:= vbId_mi, inUserId:= -1 * vbUserId);
+
      END IF;
 
-     -- сохранили свойство < Дата/время подписания>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbId_mi, CURRENT_TIMESTAMP);
+     IF vbId_mi > 0
+     THEN
+         -- сохранили свойство < Дата/время подписания>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbId_mi, CURRENT_TIMESTAMP);
+
+     END IF;
 
 
 END;

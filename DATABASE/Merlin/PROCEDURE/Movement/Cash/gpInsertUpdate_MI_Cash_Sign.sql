@@ -111,11 +111,11 @@ BEGIN
          IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
          THEN
              -- Распроводим Документ
-             PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= vbUserId);
+             PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= -1 * vbUserId);
          END IF;
 
          -- Проводим
-         PERFORM lpComplete_Movement_Cash (inMovementId:= inMovementId, inUserId:= vbUserId);
+         PERFORM lpComplete_Movement_Cash (inMovementId:= inMovementId, inUserId:= -1 * vbUserId);
 
 
      ELSE

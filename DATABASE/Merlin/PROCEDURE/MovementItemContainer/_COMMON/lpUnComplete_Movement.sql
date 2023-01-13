@@ -37,7 +37,7 @@ BEGIN
   THEN 
       IF inUserId > 0 OR (vbOperDate < '01.02.2022' AND vbDescId NOT IN (zc_Movement_Service(), zc_Movement_ServiceItemAdd()))
       THEN
-         -- RAISE EXCEPTION 'Îøèáêà. %   %.', vbDescId , zc_Movement_ServiceItemAdd();
+          -- RAISE EXCEPTION 'Îøèáêà. %   %.', vbDescId , zc_Movement_ServiceItemAdd();
           PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
                                     , inMovementId    := inMovementId
                                     , inMovementDescId:= vbDescId

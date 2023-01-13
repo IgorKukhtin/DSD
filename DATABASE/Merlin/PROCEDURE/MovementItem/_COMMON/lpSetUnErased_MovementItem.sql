@@ -10,9 +10,10 @@ CREATE OR REPLACE FUNCTION lpSetUnErased_MovementItem(
   RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbMovementId Integer;
-   DECLARE vbStatusId Integer;
-   DECLARE vbDescId     Integer;
+    DECLARE vbMovementId Integer;
+    DECLARE vbStatusId   Integer;
+    DECLARE vbDescId     Integer;
+    DECLARE vbMovementDescId Integer;
 BEGIN
    -- устанавливаем новое значение
    outIsErased := FALSE;
@@ -25,10 +26,11 @@ BEGIN
    -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
  
    -- определяем <Статус>
-   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
+   SELECT StatusId, DescId INTO vbStatusId, vbMovementDescId FROM Movement WHERE Id = vbMovementId;
  
    -- проверка - проведенные/удаленные документы Изменять нельзя
    IF vbStatusId <> zc_Enum_Status_UnComplete() AND vbDescId <> zc_MI_Sign()
+      AND (vbMovementDescId <> zc_Movement_Cash() OR vbDescId <> zc_MI_Child())
    THEN
        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;

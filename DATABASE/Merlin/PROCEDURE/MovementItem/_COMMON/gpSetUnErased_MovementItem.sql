@@ -6,23 +6,47 @@ CREATE OR REPLACE FUNCTION gpSetUnErased_MovementItem(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
-)                              
+)
   RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId     Integer;
+   DECLARE vbMovementId Integer;
 BEGIN
-  -- проверка прав пользователя на вызов процедуры
-  -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_???());
-  vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_???());
+     vbUserId:= lpGetUserBySession (inSession);
 
-  -- устанавливаем новое значение
-  outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
+
+     -- нашли
+     vbMovementId:= (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inMovementItemId);
+
+     -- Если Проведен
+     /*IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = vbMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         -- Распровели
+         PERFORM lpUnComplete_Movement (vbMovementId, vbUserId);
+     END IF;*/
+
+
+     -- устанавливаем новое значение
+     outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
+
+
+     -- проводим Документ
+     /*IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId AND Movement.DescId = zc_Movement_Cash())
+     THEN
+          PERFORM lpComplete_Movement_Cash (inMovementId := vbMovementId
+                                          , inUserId     := vbUserId
+                                           );
+     ELSE
+         RAISE EXCEPTION 'Ошибка.';
+     END IF;*/
+
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSetUnErased_MovementItem (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
