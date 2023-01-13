@@ -190,7 +190,10 @@ uses
   ServiceItemJournal_history in '..\..\FormsMerlin\Document\ServiceItemJournal_history.pas' {ServiceItemJournal_historyForm: TParentForm},
   ServiceItemAddUpdate in '..\..\FormsMerlin\Document\ServiceItemAddUpdate.pas' {ServiceItemAddUpdateForm: TParentForm},
   ServiceItemAddJournal_history in '..\..\FormsMerlin\Document\ServiceItemAddJournal_history.pas' {ServiceItemAddJournal_historyForm: TParentForm},
-  Report_UnitRent_service in '..\..\FormsMerlin\Report\Report_UnitRent_service.pas' {Report_UnitRent_serviceForm: TParentForm};
+  Report_UnitRent_service in '..\..\FormsMerlin\Report\Report_UnitRent_service.pas' {Report_UnitRent_serviceForm: TParentForm},
+  GoogleOTP in '..\..\SOURCE\GoogleOTP.pas',
+  GoogleOTPDialogPsw in '..\..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
+  GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
