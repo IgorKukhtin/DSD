@@ -1,11 +1,12 @@
 -- Function: gpInsert_Movement_Sale_InsuranceCompanies()
 
-DROP FUNCTION IF EXISTS gpInsert_Movement_Sale_InsuranceCompanies (Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Sale_InsuranceCompanies (Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_Sale_InsuranceCompanies(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInsuranceCompaniesId  Integer    , -- Страховые компании
     IN inMemberICId            Integer    , -- ФИО покупателя (Страховой компании)
+    IN inChangePercent         TFloat     , -- Процент скидки
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -46,6 +47,12 @@ BEGIN
     -- сохранили связь с <вид соц.проекта>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SPKind(), ioId, zc_Enum_SPKind_InsuranceCompanies());
 
+    -- сохранили <% Скидки>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+    
+    -- сохранили протокол
+    PERFORM lpInsert_MovementProtocol (ioId, vbUserId, False);
+
    
 END;
 $BODY$
@@ -56,3 +63,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  23.03.21                                                       *
 */
+
+
+select * from gpInsert_Movement_Sale_InsuranceCompanies(ioId := 0 , inInsuranceCompaniesId := 17988780 , inMemberICId := 18229600 , inChangePercent := 90.0 ,  inSession := '3');

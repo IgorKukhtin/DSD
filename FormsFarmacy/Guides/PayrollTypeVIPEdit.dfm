@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099' '#1042#1048#1055' '#1084#1077#1085#1077#1076#1078#1077#1088#1086#1074
-  ClientHeight = 303
+  ClientHeight = 355
   ClientWidth = 436
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 97
-    Top = 258
+    Top = 306
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 247
-    Top = 258
+    Top = 306
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -97,6 +97,19 @@
     Left = 20
     Top = 99
     Caption = ' '#1050#1086#1088#1086#1090#1082#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '
+  end
+  object ceRate: TcxCurrencyEdit
+    Left = 20
+    Top = 271
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 12
+    Width = 186
+  end
+  object cxLabel3: TcxLabel
+    Left = 20
+    Top = 252
+    Caption = #1057#1090#1072#1074#1082#1072' '#1079#1072' '#1089#1084#1077#1085#1091
   end
   object ActionList: TActionList
     Left = 252
@@ -203,6 +216,14 @@
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRate'
+        Value = Null
+        Component = ceRate
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 188
@@ -263,6 +284,13 @@
         Name = 'PercentOther'
         Value = Null
         Component = cePercentOther
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Rate'
+        Value = Null
+        Component = ceRate
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

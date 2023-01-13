@@ -1763,6 +1763,43 @@ type
     property InfoAfterExecute;
   end;
 
+  TdsdeSputnikSendSMS = class(TdsdCustomAction)
+  private
+
+    FUserName: TdsdParam;
+    FPassword: TdsdParam;
+    FFrom: TdsdParam;
+    FText: TdsdParam;
+    FPhone: TdsdParam;
+    FSend: TdsdParam;
+
+    FIdHTTP: TIdHTTP;
+    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+
+  protected
+
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+
+    property UserNameParam: TdsdParam read FUserName write FUserName;
+    property PasswordParam: TdsdParam read FPassword write FPassword;
+    property FromParam: TdsdParam read FFrom write FFrom;
+    property TextParam: TdsdParam read FText write FText;
+    property PhoneParam: TdsdParam read FPhone write FPhone;
+    property SendParam: TdsdParam read FSend write FSend;
+
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property QuestionBeforeExecute;
+    property ShortCut;
+    property SecondaryShortCuts;
+    property InfoAfterExecute;
+  end;
+
 procedure Register;
 
 implementation
@@ -1836,6 +1873,7 @@ begin
   RegisterActions('DSDLib', [TdsdLoadAgilis], TdsdLoadAgilis);
   RegisterActions('DSDLib', [TdsdLoadFile_https], TdsdLoadFile_https);
   RegisterActions('DSDLib', [TdsdeSputnikContactsMessages], TdsdeSputnikContactsMessages);
+  RegisterActions('DSDLib', [TdsdeSputnikSendSMS], TdsdeSputnikSendSMS);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -8473,6 +8511,129 @@ begin
   finally
     FDataSet.EnableControls;
   end;
+
+end;
+
+{  TdsdeSputnikSendSMS  }
+
+constructor TdsdeSputnikSendSMS.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FIdHTTP := TIdHTTP.Create;
+  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
+  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
+
+  FUserName := TdsdParam.Create(nil);
+  FUserName.DataType := ftString;
+  FUserName.Value := '';
+
+  FPassword := TdsdParam.Create(nil);
+  FPassword.DataType := ftString;
+  FPassword.Value := '';
+
+  FFrom := TdsdParam.Create(nil);
+  FFrom.DataType := ftString;
+  FFrom.Value := '';
+
+  FText := TdsdParam.Create(nil);
+  FText.DataType := ftString;
+  FText.Value := '';
+
+  FPhone := TdsdParam.Create(nil);
+  FPhone.DataType := ftString;
+  FPhone.Value := '';
+
+  FSend := TdsdParam.Create(nil);
+  FSend.DataType := ftBoolean;
+  FSend.Value := True;
+
+end;
+
+destructor TdsdeSputnikSendSMS.Destroy;
+begin
+  FreeAndNil(FUserName);
+  FreeAndNil(FPassword);
+  FreeAndNil(FFrom);
+  FreeAndNil(FText);
+  FreeAndNil(FPhone);
+  FreeAndNil(FSend);
+
+  FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
+  FreeAndNil(FIdHTTP);
+  inherited;
+end;
+
+
+function TdsdeSputnikSendSMS.LocalExecute: Boolean;
+var jsonItem : TJSONObject;
+    S, Json : String; JsonToSend: TStringStream;
+begin
+  Result := False;
+
+  if not FSend.Value then
+  begin
+    Result := True;
+    Exit;
+  end;
+
+  if FFrom.Value = '' then
+  begin
+    ShowMessage('Не заполнен отправитель.');
+    Exit;
+  end;
+
+  if FText.Value = '' then
+  begin
+    ShowMessage('Не заполнен текст сообщения.');
+    Exit;
+  end;
+
+  if FPhone.Value = '' then
+  begin
+    ShowMessage('Не заполнен номер телефона.');
+    Exit;
+  end;
+
+  FIdHTTP.Request.Clear;
+  FIdHTTP.Request.CustomHeaders.Clear;
+  FIdHTTP.Request.ContentType := 'application/json';
+  FIdHTTP.Request.Accept := 'application/json';
+  FIdHTTP.Request.AcceptEncoding := 'gzip, deflate';
+  FIdHTTP.Request.Connection := 'keep-alive';
+  FIdHTTP.Request.ContentEncoding := 'utf-8';
+  FIdHTTP.Request.BasicAuthentication := True;
+  FIdHTTP.Request.Username := FUserName.Value;
+  FIdHTTP.Request.Password := FPassword.Value;
+  FIdHTTP.Request.UserAgent:='';
+
+  Json := '{"from":"' + FFrom.Value +
+          '","text":"' +
+          StringReplace(StringReplace(FText.Value, '\', '\\', [rfReplaceAll, rfIgnoreCase]), '"', '\"', [rfReplaceAll, rfIgnoreCase]) +
+          '","phoneNumbers":["' + FPhone.Value + '"]}';
+
+  JsonToSend := TStringStream.Create(Json, TEncoding.UTF8);
+  try
+    try
+      S := FIdHTTP.Post(TIdURI.URLEncode('https://esputnik.com/api/v1/message/sms'), JsonToSend);
+    except
+    end;
+  finally
+    JsonToSend.Free;
+  end;
+
+  if FIdHTTP.ResponseCode = 200 then
+  begin
+    jsonItem := TJSONObject.ParseJSONValue(S) as TJSONObject;
+    if jsonItem.Get('results').JsonValue <> Nil then
+    begin
+      jsonItem := TJSONObject(jsonItem.Get('results').JsonValue);
+      Result := jsonItem.Get('status').JsonValue.Value = 'OK';
+    end;
+    if not Result then ShowMessage('Ошибка отправки СМС сообщений для контакта: ' + jsonItem.ToString);
+  end else ShowMessage('Ошибка отправки СМС сообщений для контакта: ' + FIdHTTP.ResponseText);
 
 end;
 

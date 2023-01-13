@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_PayrollTypeVIP(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar
-             , PercentPhone TFloat, PercentOther TFloat
+             , PercentPhone TFloat, PercentOther TFloat, Rate TFloat
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -31,6 +31,7 @@ BEGIN
            
            , CAST (Null as TFloat)  AS PercentPhone
            , CAST (Null as TFloat)  AS PercentOther 
+           , CAST (Null as TFloat)  AS Rate 
 
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -45,6 +46,7 @@ BEGIN
 
            , ObjectFloat_PercentPhone.ValueData             AS PercentPhone
            , ObjectFloat_PercentOther.ValueData             AS PercentOther 
+           , ObjectFloat_Rate.ValueData                     AS Rate 
 
            , Object_PayrollTypeVIP.isErased                 AS isErased
 
@@ -57,6 +59,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_PercentOther
                                   ON ObjectFloat_PercentOther.ObjectId = Object_PayrollTypeVIP.Id
                                  AND ObjectFloat_PercentOther.DescId = zc_ObjectFloat_PayrollTypeVIP_PercentOther()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Rate
+                                  ON ObjectFloat_Rate.ObjectId = Object_PayrollTypeVIP.Id
+                                 AND ObjectFloat_Rate.DescId = zc_ObjectFloat_PayrollTypeVIP_Rate()
 
             LEFT JOIN ObjectString AS ObjectString_ShortName
                                    ON ObjectString_ShortName.ObjectId = Object_PayrollTypeVIP.Id 
@@ -78,4 +84,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_PayrollTypeVIP (17737396 , '3')
+-- SELECT * FROM gpGet_Object_PayrollTypeVIP (17737396 , '3')`

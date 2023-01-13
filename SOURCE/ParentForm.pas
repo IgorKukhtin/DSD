@@ -820,6 +820,7 @@ initialization
   RegisterClass (TdsdLoadAgilis);
   RegisterClass (TdsdLoadFile_https);
   RegisterClass (TdsdeSputnikContactsMessages);
+  RegisterClass (TdsdeSputnikSendSMS);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

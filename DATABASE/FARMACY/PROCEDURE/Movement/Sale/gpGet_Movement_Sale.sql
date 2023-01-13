@@ -46,6 +46,7 @@ RETURNS TABLE (Id Integer
              , isDeferred Boolean
              , isNP Boolean
              , MedicSPForm TVarChar 
+             , ChangePercent TFloat
              )
 AS
 $BODY$
@@ -109,6 +110,7 @@ BEGIN
           , FALSE::Boolean                                       AS isDeferred
           , CASE WHEN inSession IN ('8720522', '374175', '19085095') THEN TRUE ELSE FALSE END::Boolean AS isNP
           , 'TMedicSP_ObjectForm' ::TVarChar                     AS MedicSPForm
+          , NULL::TFloat                                         AS ChangePercent
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
 
@@ -179,6 +181,10 @@ BEGIN
           , COALESCE (MovementBoolean_NP.ValueData, FALSE) ::Boolean  AS isNP
           , CASE WHEN COALESCE(Movement_Sale.JuridicalId, 0) = 1152890 
                  THEN 'TMedicSP_ICForm' ELSE 'TMedicSP_ObjectForm' END ::TVarChar  AS MedicSPForm
+                 
+          , CASE WHEN COALESCE(Object_InsuranceCompanies.Id, 0) > 0 
+                 THEN COALESCE(MovementFloat_ChangePercent.ValueData, 100)
+                 ELSE NULL END :: TFloat                                 AS ChangePercent
           
         FROM Movement_Sale_View AS Movement_Sale
 
@@ -209,6 +215,9 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_InsuranceCardNumber
                                 ON ObjectString_InsuranceCardNumber.ObjectId = Object_MemberIC.Id
                                AND ObjectString_InsuranceCardNumber.DescId = zc_ObjectString_MemberIC_InsuranceCardNumber() 
+         LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                 ON MovementFloat_ChangePercent.MovementId = Movement_Sale.Id
+                                AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
         WHERE Movement_Sale.Id =  inMovementId;
     END IF;
 

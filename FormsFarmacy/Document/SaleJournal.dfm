@@ -8,8 +8,8 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Sale
-  ExplicitWidth = 763
-  ExplicitHeight = 530
+  ExplicitWidth = 765
+  ExplicitHeight = 538
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -599,10 +599,36 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       isShowModal = True
     end
-    object actExecInsert_InsuranceCompanies: TdsdExecStoredProc
+    object actChangePercentDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
       BeforeAction = actChoiceMemberIC
+      Caption = 'actChangePercentDialog'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ChangePercent'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' % '#1089#1082#1080#1076#1082#1080
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actExecInsert_InsuranceCompanies: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actChangePercentDialog
       PostDataSetBeforeExecute = False
       StoredProc = spInsert_InsuranceCompanies
       StoredProcList = <
@@ -781,6 +807,12 @@ inherited SaleJournalForm: TSaleJournalForm
       item
         Name = 'MemberICID'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = 100.000000000000000000
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 32
@@ -961,6 +993,15 @@ inherited SaleJournalForm: TSaleJournalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'MemberICID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ChangePercent'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

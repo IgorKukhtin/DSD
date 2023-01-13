@@ -1277,10 +1277,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceComparisonBIG3Form'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceComparisonBIG3Form');
 
-}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_WagesVIP_CalcMonthForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_WagesVIP_CalcMonthForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Layout_OutOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Layout_OutOrderForm');
 

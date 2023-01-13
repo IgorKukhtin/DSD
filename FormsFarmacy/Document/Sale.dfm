@@ -3,27 +3,27 @@ inherited SaleForm: TSaleForm
   ClientHeight = 542
   ClientWidth = 794
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 810
-  ExplicitHeight = 581
+  ExplicitWidth = 812
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 251
+    Top = 252
     Width = 794
-    Height = 291
-    ExplicitTop = 225
+    Height = 290
+    ExplicitTop = 252
     ExplicitWidth = 794
-    ExplicitHeight = 317
-    ClientRectBottom = 291
+    ExplicitHeight = 290
+    ClientRectBottom = 290
     ClientRectRight = 794
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 794
-      ExplicitHeight = 294
+      ExplicitHeight = 266
       inherited cxGrid: TcxGrid
         Width = 794
-        Height = 169
+        Height = 168
         ExplicitWidth = 794
-        ExplicitHeight = 196
+        ExplicitHeight = 168
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -40,6 +40,11 @@ inherited SaleForm: TSaleForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummIC
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -144,6 +149,16 @@ inherited SaleForm: TSaleForm
             Options.Editing = False
             Width = 72
           end
+          object SummIC: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+            DataBinding.FieldName = 'SummIC'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 72
+          end
           object isSP: TcxGridDBColumn
             Caption = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1077
             DataBinding.FieldName = 'isSP'
@@ -194,13 +209,12 @@ inherited SaleForm: TSaleForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 177
+        Top = 176
         Width = 794
         Height = 90
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 204
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -373,13 +387,12 @@ inherited SaleForm: TSaleForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 169
+        Top = 168
         Width = 794
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 196
       end
     end
   end
@@ -579,7 +592,7 @@ inherited SaleForm: TSaleForm
         end>
       Properties.ReadOnly = True
       TabOrder = 26
-      Width = 398
+      Width = 298
     end
     object cxLabel10: TcxLabel
       Left = 8
@@ -679,6 +692,19 @@ inherited SaleForm: TSaleForm
       Top = 185
       Caption = #1053#1086#1084#1077#1088' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1072#1088#1090#1099
     end
+    object ceChangePercent: TcxCurrencyEdit
+      Left = 559
+      Top = 59
+      Properties.DisplayFormat = ',0.00;-,0.00; ;'
+      Properties.ReadOnly = True
+      TabOrder = 40
+      Width = 95
+    end
+    object cxLabel22: TcxLabel
+      Left = 559
+      Top = 116
+      Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
+    end
   end
   object cxLabel8: TcxLabel [2]
     Left = 379
@@ -739,8 +765,8 @@ inherited SaleForm: TSaleForm
   end
   object cxLabel18: TcxLabel [9]
     Left = 559
-    Top = 116
-    Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
+    Top = 44
+    Caption = '% '#1089#1082#1080#1076#1082#1080' '#1089#1090#1088'. '#1082#1086#1084'.'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67
@@ -1288,7 +1314,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1417,7 +1443,6 @@ inherited SaleForm: TSaleForm
           Visible = True
           ItemName = 'bbGridToExcel'
         end>
-      Visible = True
     end
     object bbPrintCheck: TdxBarButton
       Action = macPrintCheck
@@ -1917,6 +1942,13 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'MedicSPForm'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = Null
+        Component = ceChangePercent
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 176
