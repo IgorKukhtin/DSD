@@ -6,8 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_SummService_Load (Inte
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_SummService_Load(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPersonalCode        Integer   , --Integer  
-    IN inPositionName        TVarChar  , --
     IN inFIO                 TVarChar  , -- ФИО
+    IN inPositionName        TVarChar  , --
     IN inFineSubjectName     TVarChar  , -- Вид нарушений
     IN inUnitFineSubjectName TVarChar  , -- Кем налагается взыскание
     IN inComment             TVarChar  , -- примечание
@@ -59,8 +59,18 @@ BEGIN
      END IF;
      
 
+     -- проверка должности
+     IF 1 < (SELECT COUNT(*)
+             FROM Object
+             WHERE Object.DescId = zc_Object_Position() AND TRIM (Object.ValueData) ILIKE TRIM (inPositionName) AND Object.isErased = FALSE
+            )
+            AND 1=1
+     THEN
+         RAISE EXCEPTION 'Ошибка.Должность <%> не уникальна в справочнике должностей.', inPositionName;
+     END IF;
+
      -- поиск должности
-     vbPositionId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Position() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inPositionName)));
+     vbPositionId := (SELECT MAX (Object.Id) FROM Object WHERE Object.DescId = zc_Object_Position() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inPositionName));
 
      -- проверка если не нашли должность
      IF COALESCE (vbPositionId, 0) = 0
@@ -68,7 +78,8 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.У <%> не найдена <Должность> = <%> в справочнике.', inFIO, inPositionName;
      END IF;
 
-     -- проверка
+
+     -- проверка сотрудника
      IF 1 < (SELECT COUNT(*)
              FROM Object
                   INNER JOIN ObjectLink AS ObjectLink_Personal_Position
@@ -77,12 +88,13 @@ BEGIN
                                        AND ObjectLink_Personal_Position.ChildObjectId = vbPositionId
              WHERE Object.DescId = zc_Object_Personal() AND Object.ObjectCode = inPersonalCode AND Object.isErased = FALSE
             )
+            AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Код сотрудника <%> и должность <%> не уникальны в справочнике сотрудников.', inPersonalCode, lfGet_Object_ValueData_sh (vbPositionId);
      END IF;
 
      -- поиск сотрудника по коду и должности
-     vbPersonalId := (SELECT Object.Id 
+     vbPersonalId := (SELECT MAX (Object.Id)
                       FROM Object
                            INNER JOIN ObjectLink AS ObjectLink_Personal_Position
                                                  ON ObjectLink_Personal_Position.ObjectId = Object.Id
@@ -132,21 +144,21 @@ BEGIN
      -- проверка
      IF COALESCE (vbPersonalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Сотрудник <%> не найден с ИНН = <%> и суммой <%> .', inFIO, inPersonalCode, inSummService;
+         RAISE EXCEPTION 'Ошибка.Сотрудник <%> не найден с кодом = <%> и должность = <%>(%) и суммой <%> .', inFIO, inPersonalCode, inPositionName, vbPositionId, inSummService;
      END IF;
 
      --находим Вид начисления
      vbFineSubjectId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_FineSubject() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inFineSubjectName)) );
      IF COALESCE (vbFineSubjectId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Вид нарушений <%> не найден для Сотрудника <%> с ИНН <%> и суммой <%> .', inFineSubjectName, inFIO, inPersonalCode, inSummService;
+         RAISE EXCEPTION 'Ошибка.Вид нарушений <%> не найден для Сотрудника <%> с кодом <%> и суммой <%> .', inFineSubjectName, inFIO, inPersonalCode, inSummService;
      END IF;
 
      --находим 
      vbUnitFineSubjectId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inUnitFineSubjectName)) );
      IF COALESCE (vbUnitFineSubjectId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Подразделение- Кем налагается взыскание <%> не найдено для Сотрудника <%> с ИНН <%> и суммой <%> .', inUnitFineSubjectName, inFIO, inPersonalCode, inSummService;
+         RAISE EXCEPTION 'Ошибка.Подразделение- Кем налагается взыскание <%> не найдено для Сотрудника <%> с кодом <%> и суммой <%> .', inUnitFineSubjectName, inFIO, inPersonalCode, inSummService;
      END IF;
 
 
