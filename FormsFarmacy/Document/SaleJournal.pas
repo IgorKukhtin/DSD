@@ -51,6 +51,7 @@ type
     spInsert_InsuranceCompanies: TdsdStoredProc;
     GoodsCode: TcxGridDBColumn;
     JuridicalMainName: TcxGridDBColumn;
+    actChangePercentDialog: TExecuteDialog;
   private
     { Private declarations }
   public

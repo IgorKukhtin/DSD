@@ -57,7 +57,7 @@ type
     spSelect_PayrollTypeVIP: TdsdStoredProc;
     ApplicationAward: TcxGridDBColumn;
     TotalSum: TcxGridDBColumn;
-    cxLabel9: TcxLabel;
+    colRate: TcxGridDBColumn;
   private
     { Private declarations }
   public

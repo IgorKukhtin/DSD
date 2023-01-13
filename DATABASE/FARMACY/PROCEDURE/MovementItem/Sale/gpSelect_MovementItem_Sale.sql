@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , NDSKindId Integer, NDSKindCode Integer, NDSKindName TVarChar, NDS TFloat
              , Amount TFloat, AmountDeferred TFloat, AmountRemains TFloat
              , Price TFloat, PriceSale TFloat, ChangePercent TFloat
-             , Summ TFloat
+             , Summ TFloat, SummIC TFloat
              , isSP Boolean
              , isResolution_224 Boolean
              , isErased Boolean
@@ -29,6 +29,7 @@ $BODY$
     DECLARE vbRetailId Integer;   
     DECLARE vbisNP Boolean;   
     DECLARE vbInsuranceCompaniesId Integer;   
+    DECLARE vbChangePercent TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
@@ -41,7 +42,10 @@ BEGIN
          , COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4)
          , COALESCE (MovementBoolean_NP.ValueData, FALSE)
          , MLO_InsuranceCompanies.ObjectId  
-    INTO vbUnitId, vbSPKindId, vbStatusId, vbRetailId, vbisNP, vbInsuranceCompaniesId
+         , CASE WHEN COALESCE(MLO_InsuranceCompanies.ObjectId, 0) > 0 
+                THEN COALESCE(MovementFloat_ChangePercent.ValueData, 100)
+                ELSE NULL END :: TFloat
+    INTO vbUnitId, vbSPKindId, vbStatusId, vbRetailId, vbisNP, vbInsuranceCompaniesId, vbChangePercent
     FROM Movement
          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -65,6 +69,10 @@ BEGIN
          LEFT JOIN MovementLinkObject AS MLO_InsuranceCompanies
                                       ON MLO_InsuranceCompanies.MovementId = Movement.Id
                                      AND MLO_InsuranceCompanies.DescId = zc_MovementLinkObject_InsuranceCompanies()
+
+         LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                 ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
                                      
     WHERE Movement.ID = inMovementId;
 
@@ -89,9 +97,11 @@ BEGIN
                                         , MIFloat_Price.ValueData            AS Price
                                         , COALESCE (MIFloat_PriceSale.ValueData, MIFloat_Price.ValueData) AS PriceSale
                                         , MIFloat_ChangePercent.ValueData    AS ChangePercent
+                                        , MIFloat_Summ.ValueData             AS Summ
                                         , CASE WHEN COALESCE(vbInsuranceCompaniesId, 0) = 0
-                                               THEN MIFloat_Summ.ValueData
-                                               ELSE ROUND(MovementItem.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2) END::TFloat AS Summ
+                                               THEN NULL
+                                               ELSE ROUND(MovementItem.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2) - 
+                                                          COALESCE(MIFloat_Summ.ValueData , 0) END::TFloat AS SummIC
                                         , MIBoolean_Sp.ValueData             AS isSp
                                         , MovementItem.isErased              AS isErased
                                      FROM  MovementItem
@@ -207,6 +217,7 @@ BEGIN
                                         , MovementItem_Sale.PriceSale                            AS PriceSale 
                                         , MovementItem_Sale.ChangePercent                        AS ChangePercent
                                         , MovementItem_Sale.Summ
+                                        , MovementItem_Sale.SummIC
                                         , MovementItem_Sale.isSP 
                                         , MovementItem_Sale.IsErased
                                    FROM tmpRemains
@@ -234,9 +245,10 @@ BEGIN
                  , COALESCE(tmpRemainsFull.Price, tmpPriceSite.Price, tmpPrice.Price)        AS Price
                  , COALESCE(tmpRemainsFull.PriceSale, tmpPriceSite.Price, tmpPrice.Price)    AS PriceSale
                  , CASE WHEN vbSPKindId IN (zc_Enum_SPKind_1303(), zc_Enum_SPKind_InsuranceCompanies()) 
-                        THEN COALESCE (tmpRemainsFull.ChangePercent, 100) 
+                        THEN COALESCE (tmpRemainsFull.ChangePercent, vbChangePercent, 100) 
                         ELSE tmpRemainsFull.ChangePercent END :: TFloat  AS ChangePercent
                  , tmpRemainsFull.Summ
+                 , tmpRemainsFull.SummIC
                  , tmpRemainsFull.isSP        ::Boolean
                  , tmpMarion.isResolution_224 ::Boolean
                  , COALESCE(tmpRemainsFull.IsErased,FALSE)               AS isErased
@@ -278,9 +290,11 @@ BEGIN
                                            , MIFloat_Price.ValueData            AS Price
                                            , COALESCE (MIFloat_PriceSale.ValueData, MIFloat_Price.ValueData) AS PriceSale
                                            , MIFloat_ChangePercent.ValueData    AS ChangePercent
+                                           , MIFloat_Summ.ValueData             AS Summ
                                            , CASE WHEN COALESCE(vbInsuranceCompaniesId, 0) = 0
-                                                  THEN MIFloat_Summ.ValueData
-                                                  ELSE ROUND(MovementItem.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2) END::TFloat AS Summ
+                                                  THEN Null
+                                                  ELSE ROUND(MovementItem.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2) -
+                                                       COALESCE (MIFloat_Summ.ValueData, 0) END::TFloat AS SummIC
                                            , MIBoolean_Sp.ValueData             AS isSp
                                            , MovementItem.isErased              AS isErased
                                       FROM  MovementItem
@@ -389,6 +403,7 @@ BEGIN
               , MovementItem_Sale.PriceSale
               , MovementItem_Sale.ChangePercent
               , MovementItem_Sale.Summ
+              , MovementItem_Sale.SummIC
               , MovementItem_Sale.isSP
               , tmpMarion.isResolution_224 ::Boolean
               , MovementItem_Sale.IsErased    AS isErased
@@ -434,4 +449,4 @@ $BODY$
 */
 -- 
 
-select * from gpSelect_MovementItem_Sale(inMovementId := 23407745  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_Sale(inMovementId := 30678777   , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

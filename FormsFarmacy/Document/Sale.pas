@@ -147,6 +147,9 @@ type
     actExecuteDialog_Update_ChangePercent: TExecuteDialog;
     spUpdate_ChangePercent: TdsdStoredProc;
     dxBarButton8: TdxBarButton;
+    ceChangePercent: TcxCurrencyEdit;
+    cxLabel22: TcxLabel;
+    SummIC: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -4,38 +4,38 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ParentForm, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
-  Vcl.Menus, dsdGuides, Data.DB,
-  Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
-  cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
-  Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
-  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  dxSkinsDefaultPainters, cxCheckBox;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDBGrid, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles, cxCustomData, cxFilter,
+  cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
+  Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
+  Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxGrid, cxPC, cxButtonEdit, Vcl.ExtCtrls, cxSplitter, cxDropDownEdit,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  dxBarBuiltInMenu, cxNavigator, cxCalendar, cxCurrencyEdit;
 
 type
-  TWagesVIP_UserForm = class(TParentForm)
-    edMemberName: TcxTextEdit;
-    cxLabel1: TcxLabel;
-    cxButton1: TcxButton;
-    spGet: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cxPropertiesStore: TcxPropertiesStore;
-    edOperDate: TcxDateEdit;
-    cxLabel11: TcxLabel;
-    edAmountAccrued: TcxCurrencyEdit;
-    cxLabel3: TcxLabel;
-    edHoursWork: TcxCurrencyEdit;
-    cxLabel4: TcxLabel;
-    ActionList1: TActionList;
+  TWagesVIP_UserForm = class(TAncestorDBGridForm)
+    bbSetErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
+    bbSetErasedChild: TdxBarButton;
+    bbUnErasedChild: TdxBarButton;
+    bbdsdChoiceGuides: TdxBarButton;
+    cxSplitter1: TcxSplitter;
+    OperDate: TcxGridDBColumn;
+    dxBarButton1: TdxBarButton;
+    HoursWork: TcxGridDBColumn;
+    dxBarButton2: TdxBarButton;
+    TotalAmount: TcxGridDBColumn;
+    AmountAccrued: TcxGridDBColumn;
+    ApplicationAward: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+    UserCode: TcxGridDBColumn;
+    UserName: TcxGridDBColumn;
+    PayrollTypeVIPName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    actRefresh: TdsdDataSetRefresh;
+    dxBarButton3: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
-    FormClose: TdsdFormClose;
-    edApplicationAward: TcxCurrencyEdit;
-    cxLabel2: TcxLabel;
-    edTotalSum: TcxCurrencyEdit;
-    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public
@@ -45,6 +45,7 @@ type
 implementation
 
 {$R *.dfm}
+
 initialization
   RegisterClass(TWagesVIP_UserForm);
 

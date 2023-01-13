@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_PayrollTypeVIP()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PayrollTypeVIP(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PayrollTypeVIP(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PayrollTypeVIP (
   INOUT ioId integer,
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PayrollTypeVIP (
      IN inShortName TVarChar,
      IN inPercentPhone TFloat,
      IN inPercentOther TFloat,
+     IN inRate TFloat,
      IN inSession TVarChar
 )
   RETURNS integer AS
@@ -38,10 +39,12 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_PayrollTypeVIP_ShortName(), ioId, inShortName);
 
-   -- Процент от базы
+   -- Процент от заказов, которые принимают в телеф.режиме
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_PayrollTypeVIP_PercentPhone(), ioId, inPercentPhone);
-   -- % ночной
+   -- Процент от остальных заказов
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_PayrollTypeVIP_PercentOther(), ioId, inPercentOther);
+   -- Ставка
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_PayrollTypeVIP_Rate(), ioId, inRate);
 
    -- Мин сумма начисления
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

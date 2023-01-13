@@ -50,6 +50,8 @@ type
     cxLabel4: TcxLabel;
     dsdUpdateDataSet: TdsdUpdateDataSet;
     actRefreshCorrectMinAmount: TdsdExecStoredProc;
+    ceRate: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

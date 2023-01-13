@@ -1332,10 +1332,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_User_PhotosOnSite() RETURNS Integer 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(), 'zc_ObjectBoolean_User_PhotosOnSite', 'Фото на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_PhotosOnSite');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_ShoresSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_ShoresSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_ShoresSUN', 'Берега отдельно по СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_ShoresSUN');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 13.01.23                                                                                                          * zc_ObjectBoolean_CashSettings_ShoresSUN
  27.10.22                                                                                                          * zc_ObjectBoolean_User_PhotosOnSite
  05.10.22                                                                                                          * zc_ObjectBoolean_Goods_StealthBonuses, zc_ObjectBoolean_BarCode_StealthBonuses
  05.10.22                                                                                                          * zc_ObjectBoolean_Unit_ReplaceSte2ListDif

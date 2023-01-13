@@ -24,14 +24,10 @@ RETURNS TABLE (OperDate TDateTime
              , SummPhone TFloat
              , SummSale TFloat
              , SummNP TFloat
-             , SummTotal TFloat
-             , SummCalc TFloat
 
              , TotalSummPhone TFloat
              , TotalSummSale TFloat
              , TotalSummNP TFloat
-             , TotalSummTotal TFloat
-             , TotalSummCalc TFloat
              )
 
 AS
@@ -149,6 +145,7 @@ BEGIN
     RETURN QUERY      
     WITH tmpHoursWorkDay AS (SELECT tmpEmployeeScheduleVIP.OperDate
                                   , SUM(tmpEmployeeScheduleVIP.HoursWork)::TFloat  AS HoursWorkDay
+                                  , COUNT(*)                                       AS CountUser  
                              FROM tmpEmployeeScheduleVIP
                              GROUP BY tmpEmployeeScheduleVIP.OperDate)
        , tmpTotalSum AS (SELECT SUM(tmpCalcMonthSum.SummPhone)::TFloat AS TotalSummPhone  
@@ -171,28 +168,36 @@ BEGIN
          , tmpEmployeeScheduleVIP.HoursWork
          , tmpHoursWorkDay.HoursWorkDay
          
-         , ROUND(CASE WHEN tmpCalcMonthSum.SummCalc > 1090 
-                      THEN tmpCalcMonthSum.SummCalc 
-                      ELSE 1090 END * tmpEmployeeScheduleVIP.HoursWork / tmpHoursWorkDay.HoursWorkDay, 2)::TFloat AS AmountAccrued
+         , ROUND(CASE WHEN COALESCE (ObjectFloat_Rate.ValueData, 0) > 0 AND
+                            ROUND(COALESCE(tmpCalcMonthSum.SummPhone * ObjectFloat_PercentOther.ValueData / 100, 0) +
+                                  COALESCE(tmpCalcMonthSum.SummSale * ObjectFloat_PercentOther.ValueData / 100, 0) +
+                                  COALESCE(tmpCalcMonthSum.SummNP * ObjectFloat_PercentPhone.ValueData / 100, 0), 2) < ObjectFloat_Rate.ValueData 
+                      THEN ObjectFloat_Rate.ValueData / tmpHoursWorkDay.CountUser
+                      ELSE (COALESCE(tmpCalcMonthSum.SummPhone * ObjectFloat_PercentOther.ValueData / 100, 0) +
+                            COALESCE(tmpCalcMonthSum.SummSale * ObjectFloat_PercentOther.ValueData / 100, 0) +
+                            COALESCE(tmpCalcMonthSum.SummNP * ObjectFloat_PercentPhone.ValueData / 100, 0)) * 
+                            tmpEmployeeScheduleVIP.HoursWork / tmpHoursWorkDay.HoursWorkDay END, 2)::TFloat AS AmountAccrued
          , tmpUserReferals.ApplicationAward
          
          
-         , (ROUND(CASE WHEN tmpCalcMonthSum.SummCalc > 1090 
-                      THEN tmpCalcMonthSum.SummCalc 
-                      ELSE 1090 END * tmpEmployeeScheduleVIP.HoursWork / tmpHoursWorkDay.HoursWorkDay, 2)::TFloat +
+         , (ROUND(CASE WHEN COALESCE (ObjectFloat_Rate.ValueData, 0) > 0 AND
+                            ROUND(COALESCE(tmpCalcMonthSum.SummPhone * ObjectFloat_PercentOther.ValueData / 100, 0) +
+                                  COALESCE(tmpCalcMonthSum.SummSale * ObjectFloat_PercentOther.ValueData / 100, 0) +
+                                  COALESCE(tmpCalcMonthSum.SummNP * ObjectFloat_PercentPhone.ValueData / 100, 0), 2) < ObjectFloat_Rate.ValueData 
+                      THEN ObjectFloat_Rate.ValueData / tmpHoursWorkDay.CountUser
+                      ELSE (COALESCE(tmpCalcMonthSum.SummPhone * ObjectFloat_PercentOther.ValueData / 100, 0) +
+                            COALESCE(tmpCalcMonthSum.SummSale * ObjectFloat_PercentOther.ValueData / 100, 0) +
+                            COALESCE(tmpCalcMonthSum.SummNP * ObjectFloat_PercentPhone.ValueData / 100, 0)) * 
+                            tmpEmployeeScheduleVIP.HoursWork / tmpHoursWorkDay.HoursWorkDay END, 2)::TFloat +
            COALESCE(tmpUserReferals.ApplicationAward, 0))::TFloat AS TotalAmount
 
          , tmpCalcMonthSum.SummPhone
          , tmpCalcMonthSum.SummSale
          , tmpCalcMonthSum.SummNP
-         , tmpCalcMonthSum.SummTotal   
-         , tmpCalcMonthSum.SummCalc   
 
          , tmpTotalSum.TotalSummPhone
          , tmpTotalSum.TotalSummSale
          , tmpTotalSum.TotalSummNP
-         , tmpTotalSum.TotalSummTotal   
-         , tmpTotalSum.TotalSummCalc   
 
     FROM tmpEmployeeScheduleVIP
     
@@ -206,6 +211,16 @@ BEGIN
          LEFT JOIN Object AS Object_User ON Object_User.Id =  tmpEmployeeScheduleVIP.UserId
 
          LEFT JOIN Object AS Object_PayrollTypeVIP ON Object_PayrollTypeVIP.Id =  tmpEmployeeScheduleVIP.PayrollTypeVIPID
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_PercentPhone
+                               ON ObjectFloat_PercentPhone.ObjectId = Object_PayrollTypeVIP.Id
+                              AND ObjectFloat_PercentPhone.DescId = zc_ObjectFloat_PayrollTypeVIP_PercentPhone()
+         LEFT JOIN ObjectFloat AS ObjectFloat_PercentOther
+                               ON ObjectFloat_PercentOther.ObjectId = Object_PayrollTypeVIP.Id
+                              AND ObjectFloat_PercentOther.DescId = zc_ObjectFloat_PayrollTypeVIP_PercentOther()
+         LEFT JOIN ObjectFloat AS ObjectFloat_Rate
+                               ON ObjectFloat_Rate.ObjectId = Object_PayrollTypeVIP.Id
+                              AND ObjectFloat_Rate.DescId = zc_ObjectFloat_PayrollTypeVIP_Rate()
          
          LEFT JOIN tmpTotalSum ON 1 = 1
                   

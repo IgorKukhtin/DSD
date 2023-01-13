@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_WagesVIP_PayrollTypeVIP(
 RETURNS TABLE (Id Integer
              , Code Integer, Name TVarChar
              , ShortName TVarChar
-             , PercentPhone TFloat, PercentOther TFloat
+             , PercentPhone TFloat, PercentOther TFloat, Rate TFloat
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -25,6 +25,7 @@ $BODY$BEGIN
 
         , ObjectFloat_PercentPhone.ValueData             AS PercentPhone
         , ObjectFloat_PercentOther.ValueData             AS PercentOther 
+        , ObjectFloat_Rate.ValueData                     AS Rate 
 
         , Object_PayrollTypeVIP.isErased       AS isErased
    FROM Object AS Object_PayrollTypeVIP
@@ -40,6 +41,10 @@ $BODY$BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_PercentOther
                               ON ObjectFloat_PercentOther.ObjectId = Object_PayrollTypeVIP.Id
                              AND ObjectFloat_PercentOther.DescId = zc_ObjectFloat_PayrollTypeVIP_PercentOther()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_Rate
+                              ON ObjectFloat_Rate.ObjectId = Object_PayrollTypeVIP.Id
+                             AND ObjectFloat_Rate.DescId = zc_ObjectFloat_PayrollTypeVIP_Rate()
                                  
    WHERE Object_PayrollTypeVIP.DescId = zc_Object_PayrollTypeVIP()
      AND Object_PayrollTypeVIP.ObjectCode IN (1, 2);
