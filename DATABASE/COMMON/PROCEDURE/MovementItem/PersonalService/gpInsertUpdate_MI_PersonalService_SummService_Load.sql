@@ -65,7 +65,20 @@ BEGIN
      -- проверка если не нашли должность
      IF COALESCE (vbPositionId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.У <%> не найдена <Должность> в справочнике.', inFIO, inPositionName;
+         RAISE EXCEPTION 'Ошибка.У <%> не найдена <Должность> = <%> в справочнике.', inFIO, inPositionName;
+     END IF;
+
+     -- проверка
+     IF 1 < (SELECT COUNT(*)
+             FROM Object
+                  INNER JOIN ObjectLink AS ObjectLink_Personal_Position
+                                        ON ObjectLink_Personal_Position.ObjectId      = Object.Id
+                                       AND ObjectLink_Personal_Position.DescId        = zc_ObjectLink_Personal_Position()
+                                       AND ObjectLink_Personal_Position.ChildObjectId = vbPositionId
+             WHERE Object.DescId = zc_Object_Personal() AND Object.ObjectCode = inPersonalCode AND Object.isErased = FALSE
+            )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Код сотрудника <%> и должность <%> не уникальны в справочнике сотрудников.', inPersonalCode, lfGet_Object_ValueData_sh (vbPositionId);
      END IF;
 
      -- поиск сотрудника по коду и должности
@@ -75,8 +88,10 @@ BEGIN
                                                  ON ObjectLink_Personal_Position.ObjectId = Object.Id
                                                 AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
                                                 AND ObjectLink_Personal_Position.ChildObjectId = vbPositionId
-                      WHERE Object.DescId = zc_Object_Personal()
-                        AND Object.ObjectCode = inPersonalCode);
+                      WHERE Object.DescId     = zc_Object_Personal()
+                        AND Object.ObjectCode = inPersonalCode
+                        AND Object.isErased   = FALSE
+                     );
      
      /*vbPersonalId:= (WITH tmpPersonal AS (SELECT ObjectLink_Personal_Member.ObjectId AS PersonalId
                                                , ROW_NUMBER() OVER (PARTITION BY ObjectString_INN.ValueData
