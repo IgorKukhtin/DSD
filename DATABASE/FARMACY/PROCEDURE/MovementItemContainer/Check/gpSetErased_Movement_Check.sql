@@ -67,7 +67,8 @@ BEGIN
                                     AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
       WHERE Id = inMovementId;
       
-      IF COALESCE (vbCheckSourceKindId, 0) <> zc_Enum_CheckSourceKind_Liki24() AND 
+      IF COALESCE (vbCancelReason, 0) = 0 AND (      
+        COALESCE (vbCheckSourceKindId, 0) <> zc_Enum_CheckSourceKind_Liki24() AND 
         ((NOT (vbCashRegisterId = 0 OR
                vbFiscalCheckNumber = '-5' OR
                vbJackdawsChecksId <> 0)
@@ -80,7 +81,7 @@ BEGIN
           OR vbInvNumberOrder <> '' 
           OR vbCheckSourceKindId = zc_Enum_CheckSourceKind_Tabletki() AND vbCancelReason = 0
           OR vbCheckSourceKindId <> 0 AND vbCheckSourceKindId <> zc_Enum_CheckSourceKind_Tabletki())
-          OR vbisDiscountCommit = TRUE
+          OR vbisDiscountCommit = TRUE)
       THEN
         RAISE EXCEPTION 'Ошибка. Удаление чеков вам запрещено.';     
       END IF;

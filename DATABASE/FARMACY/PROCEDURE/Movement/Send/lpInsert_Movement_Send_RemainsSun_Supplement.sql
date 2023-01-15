@@ -50,8 +50,8 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isClose b
               )
 AS
 $BODY$
-   DECLARE vbObjectId Integer;
-   DECLARE vbDOW_curr   TVarChar;
+   DECLARE vbObjectId   Integer;
+   DECLARE vbDOW_curr   Integer;
    DECLARE vbDate_6     TDateTime;
    DECLARE vbDate_3     TDateTime;
    DECLARE vbDate_1     TDateTime;
@@ -67,6 +67,7 @@ $BODY$
    DECLARE vbNeed TFloat;
    DECLARE vbKoeffSUN TFloat;
    DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbisShoresSUN Boolean;
 BEGIN
      --
      --
@@ -75,14 +76,18 @@ BEGIN
      -- день недели
      vbDOW_curr:= (SELECT CASE WHEN tmp.RetV = 0 THEN 7 ELSE tmp.RetV END
                    FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
-                  ) :: TVarChar;
+                  );
 
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN
+          , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
+                                  ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -206,6 +211,8 @@ BEGIN
      DELETE FROM _tmpResult_Supplement;
      DELETE FROM _tmpUnit_SunExclusion_Supplement;
 
+--raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+
      -- все Подразделения для схемы SUN
      INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1, isSUN_Supplement_in, isSUN_Supplement_out, isSUN_Supplement_Priority, SalesRatio, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa)
         SELECT Object_Unit.Id
@@ -248,23 +255,28 @@ BEGIN
              LEFT JOIN ObjectDate AS ObjectDate_FirstCheck
                                   ON ObjectDate_FirstCheck.ObjectId = Object_Unit.Id
                                  AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
-             LEFT JOIN ObjectString  AS OS_LL  ON OS_LL.ObjectId  = Object_Unit.Id AND OS_LL.DescId  = zc_ObjectString_Unit_SUN_v1_Lock()
-                                    
+             LEFT JOIN ObjectString  AS OS_LL  ON OS_LL.ObjectId  = Object_Unit.Id AND OS_LL.DescId  = zc_ObjectString_Unit_SUN_v1_Lock()                                    
              -- !!!только для этого водителя!!!
-             /*INNER JOIN ObjectLink AS ObjectLink_Unit_Driver
-                                   ON ObjectLink_Unit_Driver.ObjectId      = Object_Unit.Id
-                                  AND ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
-                                  AND ObjectLink_Unit_Driver.ChildObjectId = inDriverId*/
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Driver
+                                  ON ObjectLink_Unit_Driver.ObjectId      = Object_Unit.Id
+                                 AND ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
+             LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = ObjectLink_Unit_Driver.ChildObjectId
         WHERE Object_Unit.DescId = zc_Object_Unit()
           -- если указан день недели - проверим его
-          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
+          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr::TVarChar || '%' AND vbisShoresSUN = False OR
+               OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 4 OR
+               OS_ListDaySUN.ValueData ILIKE '%' || CASE WHEN vbDOW_curr - 1 = 0 THEN 7 ELSE vbDOW_curr - 1 END::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 3)
+
           AND ((COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE) = TRUE 
             OR COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) = TRUE) 
             AND COALESCE (ObjectBoolean_SUN.ValueData, FALSE) = TRUE
-            OR Object_Unit.ID IN (SELECT DISTINCT Object_Goods_Main.UnitSupplementSUN1InId FROM Object_Goods_Main WHERE Object_Goods_Main.UnitSupplementSUN1InId IS NOT NULL))         
+            --OR Object_Unit.ID IN (SELECT DISTINCT Object_Goods_Main.UnitSupplementSUN1InId FROM Object_Goods_Main WHERE Object_Goods_Main.UnitSupplementSUN1InId IS NOT NULL)
+            )         
        ;
        
      ANALYSE _tmpUnit_SUN_Supplement;
+
+--raise notice 'Value 2: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpUnit_SUN_Supplement);
 
      -- Товары дисконтных проектов
      
@@ -306,6 +318,7 @@ BEGIN
              
       ANALYSE _tmpGoods_DiscountExternal_Supplement;
 
+--raise notice 'Value 3: %', CLOCK_TIMESTAMP();
 
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      WITH
@@ -347,6 +360,8 @@ BEGIN
      
      ANALYSE _tmpGoods_TP_exception_Supplement;
 
+--raise notice 'Value 4: %', CLOCK_TIMESTAMP();
+
      -- Уже использовано в текущем СУН
      WITH
           tmpSUN AS (SELECT MovementLinkObject_From.ObjectId AS UnitId
@@ -377,6 +392,8 @@ BEGIN
         
      ANALYSE _tmpGoods_Sun_exception_Supplement;
         
+--raise notice 'Value 5: %', CLOCK_TIMESTAMP();
+
      -- Что приходило по СУН и не отдаем
      WITH
      tmpUnit AS (SELECT Object_Unit.Id AS UnitId
@@ -421,6 +438,8 @@ BEGIN
      
      ANALYSE _tmpSUN_Send_Supplement;
           
+--raise notice 'Value 6: %', CLOCK_TIMESTAMP();
+
      -- Что приходило по СУН и не отдаем
      WITH
      tmpUnit AS (SELECT Object_Unit.Id AS UnitId
@@ -465,6 +484,8 @@ BEGIN
      
      ANALYSE _tmpSUN_Send_SupplementAll;
 
+--raise notice 'Value 7: %', CLOCK_TIMESTAMP();
+
      -- исключаем такие перемещения
      INSERT INTO _tmpUnit_SunExclusion_Supplement (UnitId_from, UnitId_to)
         SELECT COALESCE (ObjectLink_From.ChildObjectId, 0) AS UnitId_from
@@ -492,6 +513,8 @@ BEGIN
            
         ANALYSE _tmpUnit_SunExclusion_Supplement;
            
+--raise notice 'Value 9: %', CLOCK_TIMESTAMP();
+
          -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
          INSERT INTO _tmpGoods_SUN_PairSun_Supplement (GoodsId, GoodsId_PairSun, PairSunAmount)
             SELECT OL_GoodsPairSun.ObjectId      AS GoodsId
@@ -563,6 +586,8 @@ BEGIN
                
         ANALYSE _tmpGoods_SUN_Supplement;
 
+--raise notice 'Value 10: %', CLOCK_TIMESTAMP();
+
 /*     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId, UnitOut2Id)
         SELECT Object_Goods_Retail.ID
              , Object_Goods_Retail.KoeffSUN_Supplementv1
@@ -590,8 +615,16 @@ BEGIN
      
      ANALYSE _tmpGoodsUnit_SUN_Supplement;
               
-     -- Выкладки
-     WITH tmpLayoutMovement AS (SELECT Movement.Id                                                   AS Id
+--raise notice 'Value 11: %', CLOCK_TIMESTAMP();
+
+      -- Выкладки
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpLayoutMovement'))
+     THEN
+       DROP TABLE tmpLayoutMovement;
+     END IF;
+
+     CREATE TEMP TABLE tmpLayoutMovement ON COMMIT DROP AS
+                               (SELECT Movement.Id                                                  AS Id
                                      , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE)      AS isPharmacyItem
                                      , COALESCE(MovementBoolean_NotMoveRemainder6.ValueData, FALSE) AS isNotMoveRemainder6
                                 FROM Movement
@@ -603,8 +636,11 @@ BEGIN
                                                               AND MovementBoolean_NotMoveRemainder6.DescId = zc_MovementBoolean_NotMoveRemainder6()
                                 WHERE Movement.DescId = zc_Movement_Layout()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
-                               )
-        , tmpLayout AS (SELECT Movement.ID                        AS Id
+                               );
+     ANALYSE tmpLayoutMovement;
+
+     -- Выкладки
+     WITH tmpLayout AS (SELECT Movement.ID                        AS Id
                              , MovementItem.ObjectId              AS GoodsId
                              , MovementItem.Amount                AS Amount
                              , Movement.isPharmacyItem            AS isPharmacyItem
@@ -664,6 +700,8 @@ BEGIN
              
      ANALYSE _tmpGoodsLayout_SUN_Supplement;
       
+--raise notice 'Value 12: %', CLOCK_TIMESTAMP();
+
      -- Маркетинговый план для точек
       WITH tmpUserUnit AS (SELECT COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) AS UnitId
                                 , Count(*)                                                                   AS CountUser
@@ -710,7 +748,9 @@ BEGIN
       
      ANALYSE _tmpGoods_PromoUnit_Supplement;
      
- --raise notice 'Value 05: %', (select Count(*) from _tmpGoods_PromoUnit_Supplement);      
+--raise notice 'Value 13: %', CLOCK_TIMESTAMP();
+
+ ----raise notice 'Value 05: %', (select Count(*) from _tmpGoods_PromoUnit_Supplement);      
 
      -- 1. все остатки
      --
@@ -911,6 +951,7 @@ BEGIN
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
         , tmpUnitSupplementSUN1In AS ((SELECT DISTINCT Object_Goods_Main.UnitSupplementSUN1InId AS UnitId FROM Object_Goods_Main WHERE Object_Goods_Main.UnitSupplementSUN1InId IS NOT NULL))
+        
      -- 1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains_all_Supplement (UnitId, GoodsId, Price, MCS, Layout, AmountRemains, AmountNotSend, AmountSalesDay, AmountSalesMonth, 
                                               MinExpirationDate, isCloseMCS, SupplementMin)
@@ -982,6 +1023,8 @@ BEGIN
        
      ANALYSE _tmpRemains_all_Supplement;
                                      
+--raise notice 'Value 14: %', CLOCK_TIMESTAMP();
+
      IF EXISTS (SELECT 1
                 FROM _tmpGoods_SUN_Supplement 
                      INNER JOIN _tmpGoodsUnit_SUN_Supplement ON _tmpGoodsUnit_SUN_Supplement.GoodsId = _tmpGoods_SUN_Supplement.GoodsId
@@ -1011,7 +1054,7 @@ BEGIN
        WHERE _tmpGoods_SUN_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
          AND COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0)  = _tmpRemains_all_Supplement.UnitId;
 
-/*       raise notice 'Value 05: % % %', 
+/*       --raise notice 'Value 05: % % %', 
                     (SELECT count(*) FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.GiveAway > 0),
                     (SELECT count(*) FROM _tmpGoodsUnit_SUN_Supplement WHERE _tmpGoodsUnit_SUN_Supplement.GoodsId = 15982622),
                     (SELECT FLOOR(tmpRemains.AmountRemains - tmpRemains.MCS
@@ -1141,6 +1184,8 @@ BEGIN
        
        ANALYSE _tmpStockRatio_all_Supplement;
 
+--raise notice 'Value 15: %', CLOCK_TIMESTAMP();
+
      -- 2.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      UPDATE _tmpRemains_all_Supplement SET AverageSalesMonth =(COALESCE (_tmpRemains_all_Supplement.AmountSalesMonth, 0) / extract('DAY' from CURRENT_DATE -
                                                               (CURRENT_DATE - (T1.MonthSupplSun1::TVarChar ||' MONTH') :: INTERVAL)))
@@ -1162,7 +1207,8 @@ BEGIN
      WHERE _tmpRemains_all_Supplement.GoodsId = T1.GoodsId
        AND _tmpRemains_all_Supplement.UnitId = T1.UnitId;
        
-     raise notice 'Value 05: %', (SELECT COUNT(*) FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.GoodsId = 34996 and _tmpRemains_all_Supplement.Need < 0);
+--raise notice 'Value 16: %', CLOCK_TIMESTAMP();
+
        
      -- 2.2. Подправили места по размазке не менее
      IF EXISTS(SELECT 1 FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0)
@@ -1207,23 +1253,12 @@ BEGIN
      END IF;
               
 
-/* raise notice 'Value 05: % %', 
-    (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) < 0), 
-    (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 50);*/
+--raise notice 'Value 17: %', CLOCK_TIMESTAMP();
+
              
      -- 2.2. Подправили места где передача после округление больше чем остаток
      UPDATE _tmpRemains_all_Supplement SET Need = - floor(_tmpRemains_all_Supplement.AmountRemains)
      WHERE (_tmpRemains_all_Supplement.AmountRemains + _tmpRemains_all_Supplement.Need) < 0;
-
-     /*raise notice 'Value 05: %',
-                 (SELECT COUNT(*)
-                  FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.GoodsId = 35755 AND _tmpRemains_all_Supplement.GiveAway < 0);*/
-                  
-/*     raise notice 'Value 05: %',
-                 (SELECT COALESCE(_tmpRemains_all_Supplement.AmountRemains, 0)::TVArChar||'  '||
-                         COALESCE(_tmpRemains_all_Supplement.Need, 0)::TVArChar||'  '||
-                         COALESCE(_tmpRemains_all_Supplement.GiveAway, 0)::TVArChar 
-                  FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.GoodsId = 5215530 AND _tmpRemains_all_Supplement.UnitId = 9951517);*/
                   
                   
     -- 2.3 Запишем сколько отдаем
@@ -1438,6 +1473,9 @@ BEGIN
       AND _tmpRemains_all_Supplement.GoodsId = T1.GoodsId 
        ;
         
+--raise notice 'Value 18: %', CLOCK_TIMESTAMP();
+
+       
     -- 2.4 Запишем сколько надо
                      
     UPDATE _tmpRemains_all_Supplement SET NeedCalc = T1.Need
@@ -1570,9 +1608,7 @@ BEGIN
       AND _tmpRemains_all_Supplement.GoodsId = T1.GoodsId
       AND COALESCE (_tmpRemains_all_Supplement.SurplusCalc, 0) = 0;
                   
-    raise notice 'Value 05: % %', 
-      (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SurplusCalc, 0) > 0), 
-      (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.NeedCalc, 0) > 0);
+--raise notice 'Value 19: %', CLOCK_TIMESTAMP();
     
                       
      -- 3. распределяем
@@ -1649,6 +1685,8 @@ BEGIN
      
      ANALYSE _tmpResult_Supplement;
 
+--raise notice 'Value 20: %', CLOCK_TIMESTAMP();
+
      -- !!! Добавили парные, после распределения ...
      WITH -- Товар к которому нужна пара
           tmpResult_Partion AS (SELECT _tmpResult_Supplement.*, _tmpGoods_SUN_PairSun_Supplement.GoodsId_PairSun, _tmpGoods_SUN_PairSun_Supplement.PairSunAmount
@@ -1694,6 +1732,8 @@ BEGIN
              ) AS tmpItem;
              
      ANALYSE _tmpResult_Supplement;
+
+--raise notice 'Value 21: %', CLOCK_TIMESTAMP();
 
      -- Результат
      RETURN QUERY
@@ -1787,6 +1827,8 @@ BEGIN
               , Object_Unit_From.ValueData
               , Object_Unit_To.ValueData
        ;
+
+--raise notice 'Value 22: %', CLOCK_TIMESTAMP();
 
 END;
 $BODY$

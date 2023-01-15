@@ -3,25 +3,27 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 614
   ClientWidth = 1442
   PopupMenu = PopupMenu
-  ExplicitWidth = 1458
-  ExplicitHeight = 653
+  ExplicitWidth = 1460
+  ExplicitHeight = 661
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 30
     Width = 1442
-    Height = 588
+    Height = 584
+    ExplicitTop = 30
     ExplicitWidth = 1442
-    ExplicitHeight = 588
-    ClientRectBottom = 588
+    ExplicitHeight = 584
+    ClientRectBottom = 584
     ClientRectRight = 1442
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1442
-      ExplicitHeight = 588
+      ExplicitHeight = 584
       inherited cxGrid: TcxGrid
         Width = 1442
-        Height = 588
+        Height = 584
         ExplicitWidth = 1442
-        ExplicitHeight = 588
+        ExplicitHeight = 584
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -1120,6 +1122,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object isDividePartionDate: TcxGridDBColumn
+            Caption = #1056#1072#1079#1073#1080#1074#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
+            DataBinding.FieldName = 'isDividePartionDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
           end
         end
       end
@@ -4407,7 +4417,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     inherited Bar: TdxBar
       ItemLinks = <

@@ -11,11 +11,48 @@ AS
 $BODY$
    DECLARE vbUserId     Integer;
    DECLARE vbObjectId   Integer;
+   DECLARE vbisShoresSUN Boolean;
+   DECLARE vbDOW_curr    Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
      vbUserId := inSession;
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+
+     SELECT COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
+     INTO vbisShoresSUN
+     FROM Object AS Object_CashSettings
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
+                                  ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
+     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+     LIMIT 1;
+     
+     IF vbisShoresSUN = TRUE
+     THEN
+       -- день недели
+       vbDOW_curr:= (SELECT CASE WHEN tmp.RetV = 0 THEN 7 ELSE tmp.RetV END
+                     FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
+                    );
+                    
+       IF NOT EXISTS(SELECT Object_Unit.Id
+                     FROM Object AS Object_Unit
+                         LEFT JOIN ObjectString  AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = Object_Unit.Id AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
+                         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_V2_in
+                                                 ON ObjectBoolean_SUN_v2_Supplement_V2_in.ObjectId = Object_Unit.Id
+                                                AND ObjectBoolean_SUN_v2_Supplement_V2_in.DescId = zc_ObjectBoolean_Unit_SUN_v2_Supplement_in()
+                         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_V2_out
+                                                 ON ObjectBoolean_SUN_v2_Supplement_V2_out.ObjectId = Object_Unit.Id
+                                                AND ObjectBoolean_SUN_v2_Supplement_V2_out.DescId = zc_ObjectBoolean_Unit_SUN_v2_Supplement_out()                                    
+                     WHERE Object_Unit.DescId = zc_Object_Unit()
+                       -- если указан день недели - проверим его
+                       AND OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr::TVarChar || '%' 
+                       AND (COALESCE (ObjectBoolean_SUN_v2_Supplement_V2_in.ValueData, FALSE) = TRUE 
+                         OR COALESCE (ObjectBoolean_SUN_v2_Supplement_V2_out.ValueData, FALSE) = TRUE)   )
+       THEN 
+         vbisShoresSUN := FALSE;
+       END IF;
+     END IF;
 
      -- все Подразделения для схемы SUN Supplement_V2
      CREATE TEMP TABLE _tmpUnit_SUN_Supplement_V2 (UnitId Integer, DeySupplOut Integer, DeySupplIn Integer, isSUN_Supplement_V2_in Boolean, isSUN_Supplement_V2_out Boolean, isSUN_Supplement_V2_Priority Boolean, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean, isLock_CheckMa Boolean) ON COMMIT DROP;
@@ -130,7 +167,8 @@ BEGIN
           ) AS tmp;
 
      -- Частим товары
-     IF EXISTS(SELECT _tmpResult_Supplement_V2.MovementId FROM _tmpResult_Supplement_V2 WHERE _tmpResult_Supplement_V2.MovementId > 0)
+     IF EXISTS(SELECT _tmpResult_Supplement_V2.MovementId FROM _tmpResult_Supplement_V2 WHERE _tmpResult_Supplement_V2.MovementId > 0) AND 
+        vbisShoresSUN = False
      THEN
        
        PERFORM gpUpdate_Goods_inSupplementSUN2_Revert(inGoodsMainId       := Object_Goods_Main.Id 
@@ -140,8 +178,8 @@ BEGIN
        WHERE Object_Goods_Main.isSupplementSUN2 = True;
      END IF;
              
-   /*  raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement_V2 WHERE _tmpResult_Supplement_V2.MovementId > 0);      
-     RAISE EXCEPTION '<ok>';*/
+   --  raise notice 'Value 05: % %', (select Count(*) from _tmpResult_Supplement_V2 WHERE _tmpResult_Supplement_V2.MovementId > 0), vbisShoresSUN;      
+   --  RAISE EXCEPTION '<ok>';
 
 END;
 $BODY$
@@ -153,4 +191,4 @@ $BODY$
  18.07.19                                        *
 */
 
--- тест SELECT * FROM gpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- тест SELECT * FROM gpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
