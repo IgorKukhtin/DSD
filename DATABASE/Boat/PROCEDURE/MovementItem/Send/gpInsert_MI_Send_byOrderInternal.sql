@@ -102,6 +102,8 @@ BEGIN
           , tmpMI_Child.Amount
      FROM tmpMI_Child
      WHERE tmpMI_Child.Amount >= 0
+       -- !!!только целые кол-во!!!
+       AND tmpMI_Child.Amount :: Integer = tmpMI_Child.Amount
     ;
 
     -- test

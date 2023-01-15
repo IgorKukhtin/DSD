@@ -134,6 +134,8 @@ BEGIN
           ) AS tmpMI_Child
      -- !! осталось что Перемещать!!!
      WHERE tmpMI_Child.Amount >= 0
+       -- !!!только целые кол-во!!!
+       AND tmpMI_Child.Amount :: Integer = tmpMI_Child.Amount
     ;
 
     -- test
