@@ -148,6 +148,7 @@ BEGIN
          -- таблица - элементы документа, Шаблон сборка Лодки
          CREATE TEMP TABLE _tmpItem_Child (MovementItemId Integer
                                          , ObjectId_parent_find Integer, ObjectId_parent Integer, ObjectDescId Integer
+                                         , ReceiptGoodsId_find Integer
                                          , ProdOptionsId Integer
                                            --
                                          , OperCount TFloat, ForCount TFloat
@@ -195,6 +196,7 @@ BEGIN
                    -- либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure /либо ПУСТО
                  , lpSelect.ObjectId
                    --
+                 , COALESCE (lpSelect.ReceiptGoodsId, 0) AS ReceiptGoodsId
                  , COALESCE (lpSelect.ReceiptLevelId, 0) AS ReceiptLevelId
                    --
                  , lpSelect.GoodsId_child
@@ -447,6 +449,8 @@ BEGIN
                               , CASE WHEN lpSelect.ObjectId_parent = lpSelect.ObjectId THEN lpSelect.ObjectId_parent ELSE 0 END AS ObjectId_parent_find
                                 -- Узел/Товар из шаблона
                               , lpSelect.ObjectId_parent               AS ObjectId_parent
+                                -- шаблона
+                              , lpSelect.ReceiptGoodsId                AS ReceiptGoodsId
 
                                 -- здесь нет опции
                               , 0                                      AS ProdOptionsId
@@ -473,6 +477,8 @@ BEGIN
                               , CASE WHEN lpSelect.GoodsId > 0 THEN lpSelect.GoodsId ELSE lpSelect.ProdOptionsId END AS ObjectId_parent
                                 -- Goods
                               , CASE WHEN lpSelect.GoodsId > 0 THEN lpSelect.GoodsId ELSE lpSelect.ProdOptionsId END AS ObjectId
+                                -- шаблона
+                              , 0 AS ReceiptGoodsId
 
                                 -- Опция
                               , lpSelect.ProdOptionsId
@@ -488,11 +494,13 @@ BEGIN
                          --AND lpSelect.GoodsId > 0
                         )
          -- Результат - Шаблон сборка Лодки
-         INSERT INTO _tmpItem_Child (MovementItemId, ObjectId_parent_find, ObjectId_parent, ObjectDescId, ProdOptionsId, OperCount, ForCount, OperPrice)
+         INSERT INTO _tmpItem_Child (MovementItemId, ObjectId_parent_find, ObjectId_parent, ObjectDescId, ReceiptGoodsId_find, ProdOptionsId, OperCount, ForCount, OperPrice)
             SELECT 0 AS MovementItemId
                  , tmpRes.ObjectId_parent_find
                  , tmpRes.ObjectId_parent
                  , COALESCE (Object_Object.DescId, 0) AS ObjectDescId
+                   --
+                 , tmpRes.ReceiptGoodsId
                    --
                  , tmpRes.ProdOptionsId
                    --
@@ -607,6 +615,7 @@ BEGIN
 
          -- Находим ObjectId_parent для Boat Structure
          UPDATE _tmpItem_Child SET ObjectId_parent_find = _tmpItem_find.ObjectId_parent_find
+                                 , ReceiptGoodsId_find  = _tmpItem_find.ReceiptGoodsId
          FROM (WITH -- существующий список
                     tmpList_from AS (SELECT DISTINCT
                                             _tmpItem.ColorPatternId
@@ -621,12 +630,15 @@ BEGIN
                                             _tmpReceiptItems_Key.ColorPatternId
                                           , _tmpReceiptItems_Key.ObjectId_parent
                                           , _tmpReceiptItems_Key.Key_Id
+                                          ,  _tmpReceiptItems_Key.ReceiptGoodsId
                                      FROM _tmpReceiptItems_Key
                                     )
                -- Результат
                SELECT tmpList_from.ObjectId_parent
                       -- здесь нашли узел с такой структурой
                     , COALESCE (tmpList_to.ObjectId_parent, 0) AS ObjectId_parent_find
+                      -- 
+                    , COALESCE (tmpList_to.ReceiptGoodsId, 0)  AS ReceiptGoodsId
                FROM tmpList_from
                     LEFT JOIN tmpList_to ON tmpList_to.ColorPatternId = tmpList_from.ColorPatternId
                                         AND tmpList_to.Key_Id         = tmpList_from.Key_Id
@@ -1267,7 +1279,9 @@ BEGIN
 
        -- Перенесли новый Узел
         UPDATE _tmpItem_Child SET ObjectId_parent_find = _tmpReceiptItems_new.ObjectId_parent
-        FROM (SELECT DISTINCT _tmpReceiptItems_new.ObjectId_parent_old, _tmpReceiptItems_new.ObjectId_parent FROM _tmpReceiptItems_new
+                                , ReceiptGoodsId_find  = _tmpReceiptItems_new.ReceiptGoodsId
+        FROM (SELECT DISTINCT _tmpReceiptItems_new.ObjectId_parent_old, _tmpReceiptItems_new.ObjectId_parent, _tmpReceiptItems_new.ReceiptGoodsId
+              FROM _tmpReceiptItems_new
              ) AS _tmpReceiptItems_new
         WHERE _tmpItem_Child.ObjectId_parent    = _tmpReceiptItems_new.ObjectId_parent_old
         --AND _tmpItem_Child.ObjectId           = _tmpReceiptItems_new.ObjectId
@@ -1345,6 +1359,7 @@ BEGIN
                                                                        , inMovementId          := inMovementId
                                                                        , inObjectId            := _tmpItem.ObjectId_parent_find
                                                                        , inGoodsId_Basis       := _tmpItem.ObjectId_Basis
+                                                                       , inReceiptGoodsId      := _tmpItem.ReceiptGoodsId_find
                                                                        , inAmount              := _tmpItem.OperCount
                                                                        , inAmountPartner       := 0 -- !!!временно!!!
                                                                                                   -- CASE WHEN _tmpItem.ObjectId_parent > 0 THEN 0 ELSE _tmpItem.OperCount END
@@ -1357,6 +1372,7 @@ BEGIN
                                                                         )
         FROM (-- Собрали Узлы
               SELECT _tmpItem.ObjectId_parent_find
+                   , _tmpItem.ReceiptGoodsId_find
                      -- если была замена, какой узел был в ReceiptProdModel
                    , CASE WHEN _tmpItem.ObjectId_parent_find <> _tmpItem.ObjectId_parent THEN _tmpItem.ObjectId_parent ELSE 0 END AS ObjectId_Basis
                    , _tmpItem.OperCount

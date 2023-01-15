@@ -34,7 +34,7 @@ BEGIN
      CREATE TEMP TABLE _tmpItem (DescId_mi Integer
                                , MovementItemId Integer, ParentId Integer, PartionId Integer
                                , UnitId Integer, PartnerId Integer
-                               , GoodsId Integer, ObjectId Integer, ObjectId_basis Integer, ReceiptLevelId Integer
+                               , GoodsId Integer, ObjectId Integer, ObjectId_basis Integer, ReceiptGoodsId Integer, ReceiptLevelId Integer
                                , ProdOptionsId Integer
                                , ColorPatternId Integer
                                , ProdColorPatternId  Integer
@@ -47,7 +47,7 @@ BEGIN
                                 ) ON COMMIT DROP;
      -- элементы документа
      INSERT INTO _tmpItem (DescId_mi, MovementItemId, ParentId, PartionId, UnitId, PartnerId
-                         , GoodsId, ObjectId, ObjectId_basis, ReceiptLevelId, ProdOptionsId, ColorPatternId, ProdColorPatternId
+                         , GoodsId, ObjectId, ObjectId_basis, ReceiptGoodsId, ReceiptLevelId, ProdOptionsId, ColorPatternId, ProdColorPatternId
                          , Amount, AmountPartner, ForCount, OperPrice, OperPricePartner, isErased)
         SELECT MovementItem.DescId                                                 AS DescId_mi
              , MovementItem.Id                                                     AS MovementItemId
@@ -65,6 +65,8 @@ BEGIN
              , COALESCE (MILinkObject_Goods_basis.ObjectId, 0)                     AS ObjectId_basis
            --, COALESCE (MILinkObject_Goods_basis.ObjectId, MovementItem.ObjectId) AS ObjectId_basis
 
+               -- только для zc_MI_Child
+             , COALESCE (MILinkObject_ReceiptGoods.ObjectId, 0)                    AS ReceiptGoodsId
                -- только для zc_MI_Detail
              , COALESCE (MILinkObject_ReceiptLevel.ObjectId, 0)                    AS ReceiptLevelId
 
@@ -111,6 +113,10 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdColorPattern
                                               ON MILinkObject_ProdColorPattern.MovementItemId = MovementItem.Id
                                              AND MILinkObject_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptGoods
+                                              ON MILinkObject_ReceiptGoods.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_ReceiptGoods.DescId         = zc_MILinkObject_ReceiptGoods()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptLevel
                                               ON MILinkObject_ReceiptLevel.MovementItemId = MovementItem.Id
                                              AND MILinkObject_ReceiptLevel.DescId         = zc_MILinkObject_ReceiptLevel()
@@ -265,6 +271,10 @@ BEGIN
            , Object_Object_basis.ValueData            AS GoodsName_basis
            , ObjectString_Article_basis.ValueData     AS Article_basis
 
+           , Object_ReceiptGoods.Id                   AS ReceiptGoodsId
+           , Object_ReceiptGoods.ObjectCode           AS ReceiptGoodsCode
+           , Object_ReceiptGoods.ValueData            AS ReceiptGoodsName
+
            , 0 :: Integer                             AS UnitId
            , tmpSumm.UnitName :: TVarChar             AS UnitName
            , Object_Partner.Id                        AS PartnerId
@@ -339,6 +349,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_Comment
                                    ON ObjectString_Goods_Comment.ObjectId = Object_Object.Id
                                   AND ObjectString_Goods_Comment.DescId   = zc_ObjectString_Goods_Comment()
+
+            LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = _tmpItem.ReceiptGoodsId
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = _tmpItem.UnitId
 

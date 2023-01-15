@@ -38,18 +38,22 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumbe
              , DescName  TVarChar
              , Comment_goods  TVarChar
 
-             , GoodsId_basis  Integer
-             , GoodsCode_basis Integer
+             , GoodsId_basis    Integer
+             , GoodsCode_basis  Integer
              , GoodsName_basis  TVarChar
-             , Article_basis TVarChar
+             , Article_basis    TVarChar
 
-             , PartnerId   Integer
-             , PartnerName  TVarChar
-             , Amount_basis TFloat
-             , Value_service TFloat
-             , Amount_partner TFloat
-             , isErased Boolean             
-             )
+             , ReceiptGoodsId   Integer
+             , ReceiptGoodsCode Integer
+             , ReceiptGoodsName TVarChar
+
+             , PartnerId        Integer
+             , PartnerName      TVarChar
+             , Amount_basis     TFloat
+             , Value_service    TFloat
+             , Amount_partner   TFloat
+             , isErased         Boolean             
+              )
 
 AS
 $BODY$
@@ -175,9 +179,9 @@ BEGIN
                     , MILinkObject_Unit.ObjectId                                          AS UnitId
                     , MILinkObject_Partner.ObjectId                                       AS PartnerId
                                                                                           
-                      -- какой Узел собирается
+                      -- 
                     , COALESCE (MILinkObject_Goods.ObjectId, 0)                           AS GoodsId
-                      -- Комплектующие
+                      -- какой Узел собирается
                     , MovementItem.ObjectId                                               AS ObjectId
        
                       -- какой узел был в ReceiptProdModel или какой "Виртуальный" Узел собирается
@@ -243,6 +247,53 @@ BEGIN
                WHERE (MILinkObject_ProdOptions.ObjectId IS NULL AND tmpMI_group.GoodsId > 0 AND inIsChildOnly = TRUE)
                   OR inIsChildOnly = FALSE
               )
+
+   , tmpReceiptGoods AS (SELECT tmpItem.ObjectId         AS GoodsId
+                              , Object_ReceiptGoods.Id   AS ReceiptGoodsId
+                         FROM tmpItem
+                              -- нашли его в сборке узлов
+                              INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
+                                                    ON ObjectLink_ReceiptGoods_Object.ChildObjectId = tmpItem.ObjectId
+                                                   AND ObjectLink_ReceiptGoods_Object.DescId        = zc_ObjectLink_ReceiptGoods_Object()
+                              -- не удален
+                              INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = ObjectLink_ReceiptGoods_Object.ObjectId
+                                                                      AND Object_ReceiptGoods.isErased = FALSE
+                              -- это главный шаблон сборки узлов
+                              INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                       ON ObjectBoolean_Main.ObjectId  = ObjectLink_ReceiptGoods_Object.ObjectId
+                                                      AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_ReceiptGoods_Main()
+                                                      AND ObjectBoolean_Main.ValueData = TRUE
+                        UNION
+                         SELECT DISTINCT
+                                ObjectLink_GoodsChild.ChildObjectId AS GoodsId
+                              , Object_ReceiptGoods.Id              AS ReceiptGoodsId
+                         FROM Object AS Object_ReceiptGoods
+                              -- это главный шаблон сборки узлов
+                              INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                       ON ObjectBoolean_Main.ObjectId  = Object_ReceiptGoods.Id
+                                                      AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_ReceiptGoods_Main()
+                                                      AND ObjectBoolean_Main.ValueData = TRUE
+
+                              -- из чего состоит
+                              INNER JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_ReceiptGoods
+                                                    ON ObjectLink_ReceiptGoodsChild_ReceiptGoods.ChildObjectId = Object_ReceiptGoods.Id
+                                                   AND ObjectLink_ReceiptGoodsChild_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                              -- не удален
+                              INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                                           AND Object_ReceiptGoodsChild.isErased = FALSE
+                              -- GoodsChild
+                              INNER JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                    ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
+                                                   AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                              -- значение в сборке
+                              LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                    ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
+                                                   AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
+
+                         WHERE Object_ReceiptGoods.DescId   = zc_Object_ReceiptGoods()
+                           -- не удален
+                           AND Object_ReceiptGoods.isErased = FALSE
+                        )
         -- Результат
         SELECT Movement_OrderClient.Id
              , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) AS InvNumber
@@ -306,6 +357,10 @@ BEGIN
            , Object_Object_basis.ObjectCode           AS GoodsCode_basis
            , Object_Object_basis.ValueData            AS GoodsName_basis
            , ObjectString_Article_basis.ValueData     AS Article_basis
+
+           , Object_ReceiptGoods.Id                   AS ReceiptGoodsId
+           , Object_ReceiptGoods.ObjectCode           AS ReceiptGoodsCode
+           , Object_ReceiptGoods.ValueData            AS ReceiptGoodsName
 
            , Object_Partner.Id                        AS PartnerId
            , Object_Partner.ValueData                 AS PartnerName
@@ -402,6 +457,9 @@ BEGIN
              --- строки
              INNER JOIN tmpItem  ON tmpItem.MovementId = Movement_OrderClient.Id
              LEFT JOIN Object AS Object_Object ON Object_Object.Id = tmpItem.ObjectId
+             
+             LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = tmpItem.ObjectId
+             LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = tmpReceiptGoods.ReceiptGoodsId
  
             LEFT JOIN ObjectString AS ObjectString_Article_object
                                    ON ObjectString_Article_object.ObjectId = Object_Object.Id

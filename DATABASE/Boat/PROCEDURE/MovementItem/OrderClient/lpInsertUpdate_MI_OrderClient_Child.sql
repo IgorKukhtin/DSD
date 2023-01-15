@@ -7,12 +7,14 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, I
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderClient_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inObjectId            Integer   , -- Комплектующие / Работы/Услуги
     IN inGoodsId_Basis       Integer   , -- Комплектующие - если была замена, какой узел был в ReceiptProdModel
+    IN inReceiptGoodsId      Integer   , -- шаблон сборки узла
     IN inAmount              TFloat    , -- Количество резерв
     IN inAmountPartner       TFloat    , -- Количество заказ поставщику
     IN inForCount            TFloat    , -- Для кол-во
@@ -68,6 +70,8 @@ BEGIN
      -- сохранили свойство <Цена за кол.>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
      
+     -- сохранили связь с <Шаблон сборки узла>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptGoods(), ioId, inReceiptGoodsId);
      
      -- сохранили связь с <Комплектующие> - если была замена, какой узел был в ReceiptProdModel
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsBasis(), ioId, inGoodsId_Basis);

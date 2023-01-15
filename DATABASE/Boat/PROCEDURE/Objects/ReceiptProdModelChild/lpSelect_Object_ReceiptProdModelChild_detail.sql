@@ -22,7 +22,7 @@ RETURNS TABLE (ModelId Integer, ModelName TVarChar
              , Value_orig TFloat
              , ForCount   TFloat
                --
-             , ReceiptGoodsChildId Integer
+             , ReceiptGoodsId Integer, ReceiptGoodsChildId Integer
                -- Boat Structure
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
@@ -128,6 +128,8 @@ BEGIN
                                        , tmpReceiptProdModelChild.ReceiptProdModelId       AS ReceiptProdModelId
                                        , tmpReceiptProdModelChild.ReceiptProdModelChildId  AS ReceiptProdModelChildId
                                        , tmpReceiptProdModelChild.ObjectId                 AS ObjectId_parent
+                                         --
+                                       , Object_ReceiptGoods.Id                            AS ReceiptGoodsId
                                        , Object_ReceiptGoodsChild.Id                       AS ReceiptGoodsChildId
                                          -- всегда ÷вет - у ReceiptGoodsChild
                                        , Object_ReceiptGoodsChild.ValueData                AS Comment
@@ -156,6 +158,9 @@ BEGIN
                                        INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
                                                              ON ObjectLink_ReceiptGoods_Object.ChildObjectId = tmpReceiptProdModelChild.ObjectId
                                                             AND ObjectLink_ReceiptGoods_Object.DescId        = zc_ObjectLink_ReceiptGoods_Object()
+                                       -- не удален
+                                       INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = ObjectLink_ReceiptGoods_Object.ObjectId
+                                                                               AND Object_ReceiptGoods.isErased = FALSE
                                        -- это главный шаблон сборки узлов
                                        INNER JOIN ObjectBoolean AS ObjectBoolean_Main
                                                                 ON ObjectBoolean_Main.ObjectId  = ObjectLink_ReceiptGoods_Object.ObjectId
@@ -223,6 +228,7 @@ BEGIN
                                            , tmpReceiptGoodsChild.Value_orig AS Value_orig
                                            , tmpReceiptGoodsChild.ForCount   AS ForCount
                                              --
+                                           , 0 AS ReceiptGoodsId
                                            , 0 AS ReceiptGoodsChildId
                                            , 0 AS ProdColorPatternId
                                            , 0 AS MaterialOptionsId
@@ -258,6 +264,7 @@ BEGIN
                                            , (tmpReceiptGoodsChild.ForCount)   AS ForCount
 
                                              --
+                                           , (tmpReceiptGoodsChild.ReceiptGoodsId)      AS ReceiptGoodsId
                                            , (tmpReceiptGoodsChild.ReceiptGoodsChildId) AS ReceiptGoodsChildId
                                            , tmpReceiptGoodsChild.ProdColorPatternId
                                            , tmpReceiptGoodsChild.MaterialOptionsId
@@ -291,6 +298,7 @@ BEGIN
                                            , SUM (tmpReceiptGoodsChild.Value_orig) AS Value_orig
                                            , MAX (tmpReceiptGoodsChild.ForCount)   AS ForCount
                                              --
+                                           , MAX (tmpReceiptGoodsChild.ReceiptGoodsId)      AS ReceiptGoodsId
                                            , MAX (tmpReceiptGoodsChild.ReceiptGoodsChildId) AS ReceiptGoodsChildId
                                            , tmpReceiptGoodsChild.ProdColorPatternId
                                            , tmpReceiptGoodsChild.MaterialOptionsId
@@ -340,7 +348,8 @@ BEGIN
             , COALESCE (tmpRes.Value_orig, 0) :: TFloat         AS Value_orig
             , COALESCE (tmpRes.ForCount, 0)   :: TFloat         AS ForCount
               --
-            , tmpRes.ReceiptGoodsChildId
+            , tmpRes.ReceiptGoodsId                  :: Integer AS ReceiptGoodsId
+            , tmpRes.ReceiptGoodsChildId             :: Integer AS ReceiptGoodsChildId
 
             , Object_ProdColorGroup.Id AS ProdColorGroupId, Object_ProdColorGroup.ValueData AS ProdColorGroupName
               -- Boat Structure
