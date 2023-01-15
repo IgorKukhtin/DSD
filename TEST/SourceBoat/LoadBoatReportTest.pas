@@ -61,7 +61,7 @@ var
 begin
 
     LoadReportFromFile('PrintMovement_ProductionUnion', ReportPath + '\PrintMovement_ProductionUnion.fr3');
-    exit;
+    //exit;
     {
     LoadReportFromFile('PrintMovement_OrderInternal', ReportPath + '\PrintMovement_OrderInternal.fr3');
     exit;

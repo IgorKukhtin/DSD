@@ -157,7 +157,7 @@ OPEN Cursor1 FOR
             , Object_Goods.ValueData    AS GoodsName
             , Object_GoodsGroup.ValueData               AS GoodsGroupName
             , ObjectString_Article.ValueData            AS Article
-            , Object_ReceiptLevel.ValueData :: TVarChar AS ReceiptLevelName
+            --, Object_ReceiptLevel.ValueData :: TVarChar AS ReceiptLevelName
             , tmpOrderClient.MovementId_order
             , tmpOrderClient.OperDate
             , tmpOrderClient.InvNumber_order
@@ -191,10 +191,10 @@ OPEN Cursor1 FOR
              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
             -- получаем ReceiptLevel
-            LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModelChild_Object
+           /* LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModelChild_Object
                                  ON ObjectLink_ReceiptProdModelChild_Object.ChildObjectId = MovementItem.GoodsId
                                 AND ObjectLink_ReceiptProdModelChild_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
-            ---берем не удаленные
+             ---берем не удаленные
             LEFT JOIN Object AS Object_ReceiptProdModelChild ON Object_ReceiptProdModelChild.Id = ObjectLink_ReceiptProdModelChild_Object.ObjectId
                                                              AND Object_ReceiptProdModelChild.IsErased = FALSE
             -- ReceiptProdModel по лодке
@@ -207,10 +207,10 @@ OPEN Cursor1 FOR
                                  ON ObjectLink_ReceiptProdModelChild_ReceiptLevel.ObjectId = ObjectLink_ReceiptProdModelChild_Object.ObjectId
                                 AND ObjectLink_ReceiptProdModelChild_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
             LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptProdModelChild_ReceiptLevel.ChildObjectId
-
+               */
        ORDER BY tmpOrderClient.OperDate
               , tmpOrderClient.InvNumber_order
-              , Object_ReceiptLevel.ValueData
+            --  , Object_ReceiptLevel.ValueData
               , Object_GoodsGroup.ValueData
               , Object_Goods.ValueData
        
