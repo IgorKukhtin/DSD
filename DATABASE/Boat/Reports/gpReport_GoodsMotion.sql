@@ -497,7 +497,7 @@ BEGIN
 
                               LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMIContainer_group.PartionId
                                                            AND Object_PartionGoods.ObjectId       = tmpMIContainer_group.GoodsId
-                                                           AND Object_PartionGoods.isErased       = FALSE
+                                                         --AND Object_PartionGoods.isErased       = FALSE
                                -- цена из Прайс-листа
                               LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = tmpMIContainer_group.GoodsId
                          ) AS tmpDataAll

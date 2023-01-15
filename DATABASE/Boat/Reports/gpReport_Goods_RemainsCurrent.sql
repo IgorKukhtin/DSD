@@ -225,11 +225,10 @@ BEGIN
                            , ROW_NUMBER() OVER (PARTITION BY Container.PartionId ORDER BY CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
 
                       FROM tmpContainer_All AS Container
-                           INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
-                                                         AND Object_PartionGoods.ObjectId       = Container.ObjectId
-                                                         AND (Object_PartionGoods.isErased      = FALSE
-                                                           OR Object_PartionGoods.Amount        > 0
-                                                             )
+                           LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
+                                                        AND Object_PartionGoods.ObjectId       = Container.ObjectId
+                                                      --AND Object_PartionGoods.isErased       = FALSE
+
                            LEFT JOIN tmpContainer_Summ ON tmpContainer_Summ.ContainerId_Count = Container.Id
                                                       AND tmpContainer_Summ.PartionId = Container.PartionId
                                                       AND tmpContainer_Summ.ObjectId = Container.ObjectId
