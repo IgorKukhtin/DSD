@@ -44,7 +44,9 @@ RETURNS TABLE  (LocationDescName TVarChar, LocationCode Integer, LocationName TV
               , TotalSummPriceList_in  TFloat -- —умма по прайсу -
               , Summ_Cost              TFloat
               , TotalSummPrice_cost_in TFloat
-              , tmpDate TDateTime             -- надо вернуть дату, тогда в гриде не будет кривых данных
+              , tmpDate TDateTime             -- надо вернуть дату, тогда в гриде не будет кривых данных  
+              
+              , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar
               )
 AS
 $BODY$
@@ -344,6 +346,33 @@ BEGIN
                       AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                     )
 
+  , tmpMIFloat_OrderClient AS (SELECT MIFloat_MovementId.MovementItemId   
+                                    , MIFloat_MovementId.ValueData ::Integer
+                                    , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+                                    , Object_From.ValueData                                     AS FromName
+                                    , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
+                                    , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN  
+                               FROM MovementItemFloat AS MIFloat_MovementId
+                                    LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MIFloat_MovementId.ValueData ::Integer
+
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                 ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
+                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                    LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                                                 ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
+                                                                AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                                    LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+
+                                    LEFT JOIN ObjectString AS ObjectString_CIN
+                                                           ON ObjectString_CIN.ObjectId = Object_Product.Id
+                                                          AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+
+                               WHERE MIFloat_MovementId.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.PartionId FROM tmpMIContainer_group)
+                                 AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                               )
+
    -- –≈«”Ћ№“ј“
   , tmpDataAll AS (SELECT tmpDataAll.LocationDescName
                         , tmpDataAll.LocationCode
@@ -386,7 +415,12 @@ BEGIN
                         , SUM (zfCalc_SummPriceList (tmpDataAll.AmountIn, tmpDataAll.CostPrice))                         AS TotalSumm_cost_in
                         , SUM (zfCalc_SummPriceList (tmpDataAll.AmountIn, tmpDataAll.OperPrice_cost))                    AS TotalSummPrice_cost_in
 
-                        , STRING_AGG (MIString_PartNumber.ValueData, '; ') AS PartNumber
+                        , STRING_AGG (MIString_PartNumber.ValueData, '; ') AS PartNumber 
+                        --OrderClient
+                        , MIFloat_MovementId.InvNumberFull_OrderClient
+                        , MIFloat_MovementId.FromName    AS FromName_OrderClient
+                        , MIFloat_MovementId.ProductName AS ProductName_OrderClient
+                        , MIFloat_MovementId.CIN         AS CIN_OrderClient
 
                    FROM (SELECT ObjectDesc.ItemName            AS LocationDescName
                               , Object_Location.ObjectCode     AS LocationCode
@@ -470,6 +504,10 @@ BEGIN
                      LEFT JOIN tmpMIString AS MIString_PartNumber
                                            ON MIString_PartNumber.MovementItemId = tmpDataAll.PartionId
                                           AND COALESCE (MIString_PartNumber.ValueData,'') <> ''
+
+                     LEFT JOIN tmpMIFloat_OrderClient AS MIFloat_MovementId
+                                                      ON MIFloat_MovementId.MovementItemId = tmpDataAll.PartionId
+                                                     AND COALESCE (MIFloat_MovementId.ValueData,0) <> 0
                    GROUP BY tmpDataAll.LocationDescName
                           , tmpDataAll.LocationCode
                           , tmpDataAll.LocationName
@@ -487,6 +525,10 @@ BEGIN
                           , tmpDataAll.OperPriceList
                           , tmpDataAll.PartnerId
                           , CASE WHEN inisPartNumber = TRUE THEN MIString_PartNumber.ValueData ELSE '' END
+                          , MIFloat_MovementId.InvNumberFull_OrderClient
+                          , MIFloat_MovementId.FromName
+                          , MIFloat_MovementId.ProductName
+                          , MIFloat_MovementId.CIN
                    HAVING SUM (tmpDataAll.AmountStart) <> 0
                        OR SUM (tmpDataAll.AmountIn)    <> 0
                        OR SUM (tmpDataAll.AmountOut)   <> 0
@@ -557,6 +599,10 @@ BEGIN
           -- надо вернуть дату, тогда в гриде не будет кривых данных
         , CURRENT_TIMESTAMP :: TDateTime   AS tmpDate
 
+        , tmpDataAll.InvNumberFull_OrderClient   ::TVarChar
+        , tmpDataAll.FromName_OrderClient        ::TVarChar
+        , tmpDataAll.ProductName_OrderClient     ::TVarChar
+        , tmpDataAll.CIN_OrderClient             ::TVarChar
    FROM tmpDataAll
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpDataAll.PartnerId
             INNER JOIN Object AS Object_Goods  ON Object_Goods.Id   = tmpDataAll.GoodsId

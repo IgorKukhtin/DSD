@@ -61,7 +61,8 @@ RETURNS TABLE (MovementItemId       Integer
              , Comment_in       TVarChar
              , DiscountTax_in   TFloat
              , VATPercent_in    TFloat
-           
+             
+             , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar
               ) 
 AS
 $BODY$
@@ -263,6 +264,34 @@ BEGIN
                            AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                          )
 
+       , tmpMIFloat_OrderClient AS (SELECT MIFloat_MovementId.MovementItemId   
+                                         , MIFloat_MovementId.ValueData ::Integer
+                                         , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+                                         , Object_From.ValueData                                     AS FromName
+                                         , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
+                                         , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN  
+                                    FROM MovementItemFloat AS MIFloat_MovementId
+                                         LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MIFloat_MovementId.ValueData ::Integer
+     
+                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                      ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
+                                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                         LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+     
+                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                                                      ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
+                                                                     AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                                         LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+     
+                                         LEFT JOIN ObjectString AS ObjectString_CIN
+                                                                ON ObjectString_CIN.ObjectId = Object_Product.Id
+                                                               AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+     
+                                    WHERE MIFloat_MovementId.MovementItemId IN (SELECT DISTINCT tmpContainer.MovementItemId FROM tmpContainer)
+                                      AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                    )
+
+
        , tmpData_All AS (SELECT tmpContainer.UnitId
                               , tmpContainer.GoodsId
                               , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementItemId   ELSE 0  END AS MovementItemId
@@ -298,7 +327,11 @@ BEGIN
                               , COALESCE (MF_DiscountTax.ValueData, 0)      AS DiscountTax_in
                               , COALESCE (MF_VATPercent.ValueData, 0)       AS VATPercent_in
                               , STRING_AGG (MIString_PartNumber.ValueData, ' ;') ::TVarChar AS PartNumber
-
+                              --OrderClient
+                              , MIFloat_MovementId.InvNumberFull_OrderClient
+                              , MIFloat_MovementId.FromName    AS FromName_OrderClient
+                              , MIFloat_MovementId.ProductName AS ProductName_OrderClient
+                              , MIFloat_MovementId.CIN         AS CIN_OrderClient
                          FROM tmpContainer
                               LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpContainer.MovementId
                               LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
@@ -316,7 +349,11 @@ BEGIN
                                                         AND MF_VATPercent.DescId     = zc_MovementFloat_VATPercent()
                                                         AND inisPartion            = TRUE
                               LEFT JOIN tmpMIString AS MIString_PartNumber
-                                                    ON MIString_PartNumber.MovementItemId = tmpContainer.MovementItemId
+                                                    ON MIString_PartNumber.MovementItemId = tmpContainer.MovementItemId      
+
+                              LEFT JOIN tmpMIFloat_OrderClient AS MIFloat_MovementId
+                                                               ON MIFloat_MovementId.MovementItemId = tmpContainer.MovementItemId
+                                                              AND COALESCE (MIFloat_MovementId.ValueData,0) <> 0
                          GROUP BY tmpContainer.UnitId
                                 , tmpContainer.GoodsId
                                 , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementItemId   ELSE 0 END
@@ -338,7 +375,11 @@ BEGIN
                                 , tmpContainer.UnitId_in
                                 , MF_DiscountTax.ValueData
                                 , MF_VATPercent.ValueData
-                                , tmpContainer.CountForPrice
+                                , tmpContainer.CountForPrice 
+                                , MIFloat_MovementId.InvNumberFull_OrderClient
+                                , MIFloat_MovementId.FromName
+                                , MIFloat_MovementId.ProductName
+                                , MIFloat_MovementId.CIN
                   )
 
        , tmpData AS (SELECT tmpData_All.UnitId
@@ -359,6 +400,11 @@ BEGIN
                           , tmpData_All.ProdColorId
                           , tmpData_All.TaxKindId
                           , tmpData_All.PartNumber
+                          
+                          , tmpData_All.InvNumberFull_OrderClient   ::TVarChar
+                          , tmpData_All.FromName_OrderClient        ::TVarChar
+                          , tmpData_All.ProductName_OrderClient     ::TVarChar
+                          , tmpData_All.CIN_OrderClient             ::TVarChar
                           
                           , tmpData_All.OperPriceList
                           , SUM (tmpData_All.CostPrice_summ) AS CostPrice_summ
@@ -402,7 +448,11 @@ BEGIN
                             , tmpData_All.DiscountTax_in
                             , tmpData_All.VATPercent_in
                             , tmpData_All.PartNumber
-                            , tmpData_All.CountForPrice
+                            , tmpData_All.CountForPrice 
+                            , tmpData_All.InvNumberFull_OrderClient
+                            , tmpData_All.FromName_OrderClient
+                            , tmpData_All.ProductName_OrderClient
+                            , tmpData_All.CIN_OrderClient
               )
                                                   
         -- Результат
@@ -495,6 +545,10 @@ BEGIN
            , tmpData.DiscountTax_in   :: TFloat
            , tmpData.VATPercent_in    :: TFloat
 
+           , tmpData.InvNumberFull_OrderClient   ::TVarChar
+           , tmpData.FromName_OrderClient        ::TVarChar
+           , tmpData.ProductName_OrderClient     ::TVarChar
+           , tmpData.CIN_OrderClient             ::TVarChar
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
             LEFT JOIN Object AS Object_Unit_in ON Object_Unit_in.Id = tmpData.UnitId_in
@@ -561,4 +615,4 @@ $BODY$
       WHERE Movement.DescId = zc_Movement_OrderClient()
     AND Movement.StatusId = zc_Enum_Status_Complete()
     
-    */
+    */ 

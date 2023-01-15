@@ -23,6 +23,7 @@ $BODY$
    DECLARE vbFineSubjectId Integer;
    DECLARE vbUnitFineSubjectId Integer; 
    DECLARE vbCodePersonal Integer;
+   DECLARE vbMemberId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
@@ -62,7 +63,7 @@ BEGIN
      -- проверка должности
      IF 1 < (SELECT COUNT(*)
              FROM Object
-             WHERE Object.DescId = zc_Object_Position() AND TRIM (Object.ValueData) ILIKE TRIM (inPositionName) AND Object.isErased = FALSE
+             WHERE Object.DescId = zc_Object_Position() AND TRIM (Object.ValueData) LIKE TRIM (inPositionName) AND Object.isErased = FALSE
             )
             AND 1=1
      THEN
@@ -70,7 +71,10 @@ BEGIN
      END IF;
 
      -- поиск должности
-     vbPositionId := (SELECT MAX (Object.Id) FROM Object WHERE Object.DescId = zc_Object_Position() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inPositionName));
+     vbPositionId := (SELECT MAX (Object.Id) FROM Object 
+                      WHERE Object.DescId = zc_Object_Position() 
+                        AND Object.isErased = FALSE
+                        AND REPLACE(REPLACE(TRIM (Object.ValueData),'''',''),'`','') LIKE REPLACE(REPLACE(TRIM (inPositionName),'''',''),'`',''));
 
      -- проверка если не нашли должность
      IF COALESCE (vbPositionId, 0) = 0
@@ -104,7 +108,23 @@ BEGIN
                         AND Object.ObjectCode = inPersonalCode
                         AND Object.isErased   = FALSE
                      );
-     
+     --если не нашли по должности и коду,   найти физ лицо, а по нему сотрудника с основным местом работы
+     IF COALESCE (vbPersonalId,0) = 0
+     THEN
+         vbMemberId := (SELECT Object.Id
+                        FROM Object 
+                        WHERE Object.DescId = zc_Object_Member() 
+                          AND Object.isErased = FALSE
+                          AND REPLACE(TRIM (Object.ValueData),'''','') ILIKE REPLACE (TRIM (inFIO),'''','')
+                        );   
+         --
+         vbPersonalId := (SELECT lfSelect.PersonalId
+                          FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                          WHERE lfSelect.Ord = 1
+                            AND lfSelect.MemberId = vbMemberId
+                          );
+     END IF;
+
      /*vbPersonalId:= (WITH tmpPersonal AS (SELECT ObjectLink_Personal_Member.ObjectId AS PersonalId
                                                , ROW_NUMBER() OVER (PARTITION BY ObjectString_INN.ValueData
                                                                     -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
@@ -140,6 +160,8 @@ BEGIN
                     );
      */
      
+    
+    
      
      -- проверка
      IF COALESCE (vbPersonalId, 0) = 0

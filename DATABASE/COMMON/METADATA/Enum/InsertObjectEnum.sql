@@ -6063,7 +6063,7 @@ END $$;
 
 
 
---ЗП Загрузка начислений из файла
+--ЗП Загрузка начислений из файла    -- Выкуп продукции
 DO $$
 DECLARE vbImportTypeId Integer;
 DECLARE vbImportTypeCode Integer;
