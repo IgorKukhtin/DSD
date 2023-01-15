@@ -104,7 +104,6 @@ BEGIN
             --
             INSERT INTO MovementItem (Id, DescId, ObjectId, PartionId, MovementId, Amount, ParentId)
                               VALUES (ioId, inDescId, inObjectId, inPartionId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
-
          END IF;
  
          -- Проверка
@@ -114,6 +113,7 @@ BEGIN
          END IF;
 
      END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

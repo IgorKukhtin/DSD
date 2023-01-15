@@ -1,8 +1,16 @@
 -- Function: lpInsertUpdate_Object_PartionGoods
 
+DROP FUNCTION IF EXISTS public.lpinsertupdate_object_partiongoods(integer, integer, integer, integer, tdatetime, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, integer, tfloat, integer);
+DROP FUNCTION IF EXISTS public.lpinsertupdate_object_partiongoods(integer, integer, integer, integer, tdatetime, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, integer, integer, integer, integer, integer, integer, integer, tfloat, integer);
+
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer
                                                           , TDateTime, Integer
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , Integer, TFloat, Integer
+                                                           );
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer
+                                                          , TDateTime, Integer
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , Integer, TFloat, Integer
                                                            );
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionGoods(
@@ -13,12 +21,15 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionGoods(
     IN inOperDate               TDateTime,     -- Дата прихода
     IN inObjectId               Integer,       -- Комплектующие или Лодка
     IN inAmount                 TFloat,        -- Кол-во приход
-    IN inEKPrice                TFloat,        -- Цена вх. без НДС, с учетом скидки
-  --IN inEKPrice_orig           TFloat,        -- Цена вх. без НДС, БЕЗ учета скидки
-  --IN inCostPrice              TFloat,        -- Цена затрат без НДС, !!!это значенеи будет формироваться не здесь!!!
+    
+    IN inEKPrice                TFloat,        -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка = inEKPrice_discount + inCostPrice
+    IN inEKPrice_orig           TFloat,        -- Цена вх. без НДС, с учетом ТОЛЬКО скидки по элементу
+    IN inEKPrice_discount       TFloat,        -- Цена вх. без НДС, с учетом ВСЕХ скидок (затрат здесь нет)
+    IN inCostPrice              TFloat,        -- Цена затрат без НДС (затраты + расходы: Почтовые + Упаковка + Страховка)
     IN inCountForPrice          TFloat,        -- Цена за количество
+
     IN inEmpfPrice              TFloat,        -- Цена рекоменд. без НДС
-    IN inOperPriceList          TFloat,        -- Цена продажи, !!!грн!!!
+    IN inOperPriceList          TFloat,        -- Цена продажи, если = 0, тогда lpGet_ObjectHistory_PriceListItem
     IN inOperPriceList_old      TFloat,        -- Цена продажи, ДО изменения строки
     IN inTaxKindId              Integer,       -- Тип НДС (!информативно!)
     IN inTaxKindValue           TFloat,        -- Значение НДС (!информативно!)
@@ -48,6 +59,12 @@ BEGIN
      IF COALESCE (inOperPriceList, 0) = 0
      THEN
          inOperPriceList:= COALESCE ((SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (inOperDate:= inOperDate, inPriceListId:= zc_PriceList_Basis(), inGoodsId:= inObjectId) AS lpGet), 0);
+         -- заменили
+         IF COALESCE (inEmpfPrice, 0) = 0
+         THEN
+             inEmpfPrice:= inOperPriceList;
+         END IF;
+
      END IF;
      
 
@@ -290,8 +307,8 @@ AND 1=0
               , ObjectId             = inObjectId
             --, Amount               = inAmount
               , EKPrice              = inEKPrice
-              , EKPrice_orig         = inEKPrice
-              , EKPrice_discount     = inEKPrice
+              , EKPrice_orig         = inEKPrice_orig
+              , EKPrice_discount     = inEKPrice_discount
               , CountForPrice        = inCountForPrice
             --, CostPrice            = inCostPrice
               , EmpfPrice            = COALESCE (inEmpfPrice, 0)
@@ -322,7 +339,7 @@ AND 1=0
                                        , GoodsGroupId, GoodsTagId, GoodsTypeId, GoodsSizeId, ProdColorId, MeasureId, TaxKindId, TaxValue
                                        , isErased, isArc)
                                  VALUES (inMovementItemId, inMovementId, vbMovementDescId, inFromId, inUnitId, inOperDate, inObjectId
-                                       , 0 /*inAmount*/, inEKPrice, inEKPrice, inEKPrice, inCountForPrice, 0, COALESCE (inEmpfPrice, 0)
+                                       , 0 /*inAmount*/, inEKPrice, inEKPrice_orig, inEKPrice_discount, inCountForPrice, 0, COALESCE (inEmpfPrice, 0)
                                          -- "сложно" получили цену
                                        , COALESCE (inOperPriceList, 0)
                                                            /*CASE WHEN vbRePrice_exists = TRUE

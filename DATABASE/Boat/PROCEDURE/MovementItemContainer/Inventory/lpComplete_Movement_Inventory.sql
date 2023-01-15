@@ -425,11 +425,17 @@ BEGIN
                                                , inOperDate          := vbOperDate                           -- Дата прихода
                                                , inObjectId          := _tmpItem_Child.GoodsId               -- Комплектующие или Лодка
                                                , inAmount            := _tmpItem_Child.OperCount             -- Кол-во приход
-                                               , inEKPrice           := _tmpItem.OperPrice                   -- Цена вх. без НДС, !!!с учетом скидки!!!
+                                                 --
+                                               , inEKPrice           := _tmpItem.OperPrice                   -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка = inEKPrice_discount + inCostPrice
+                                               , inEKPrice_orig      := _tmpItem.OperPrice                   -- Цена вх. без НДС, с учетом ТОЛЬКО скидки по элементу
+                                               , inEKPrice_discount  := _tmpItem.OperPrice                   -- Цена вх. без НДС, с учетом ВСЕХ скидок (затрат здесь нет)
+                                               , inCostPrice         := 0                                    -- Цена затрат без НДС (затраты + расходы: Почтовые + Упаковка + Страховка)
                                                , inCountForPrice     := 1                                    -- Цена за количество
+                                                 --
                                                , inEmpfPrice         := _tmpItem.EmpfPrice                   -- Цена рекоменд. без НДС
                                                , inOperPriceList     := _tmpItem.EmpfPrice                   -- Цена продажи
                                                , inOperPriceList_old := 0                                    -- Цена продажи, ДО изменения строки
+                                                 --
                                                , inTaxKindId         := 0                                    -- Тип НДС (!информативно!)
                                                , inTaxKindValue      := 0                                    -- Значение НДС (!информативно!)
                                                , inUserId            := inUserId                             --

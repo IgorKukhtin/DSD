@@ -167,17 +167,17 @@ BEGIN
                                                    , inOperDate          := inOperDate
                                                    , inObjectId          := vbGoodsId
                                                    , inAmount            := inAmount
-                                                   , inEKPrice           := inPrice
+                                                     -- 
+                                                   , inEKPrice           := inPrice             -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка = inEKPrice_discount + inCostPrice
+                                                   , inEKPrice_orig      := inPrice             -- Цена вх. без НДС, с учетом ТОЛЬКО скидки по элементу
+                                                   , inEKPrice_discount  := inPrice             -- Цена вх. без НДС, с учетом ВСЕХ скидок (затрат здесь нет)
+                                                   , inCostPrice         := 0                   -- Цена затрат без НДС (затраты + расходы: Почтовые + Упаковка + Страховка)
                                                    , inCountForPrice     := 1
+                                                     --
                                                    , inEmpfPrice         := inEmpfPrice
                                                    , inOperPriceList     := inOperPriceList
                                                    , inOperPriceList_old := 0
-                                                   , inGoodsGroupId      := ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                                   , inGoodsTagId        := ObjectLink_Goods_GoodsTag.ChildObjectId
-                                                   , inGoodsTypeId       := ObjectLink_Goods_GoodsType.ChildObjectId
-                                                   , inGoodsSizeId       := ObjectLink_Goods_GoodsSize.ChildObjectId
-                                                   , inProdColorId       := ObjectLink_Goods_ProdColor.ChildObjectId
-                                                   , inMeasureId         := ObjectLink_Goods_Measure.ChildObjectId
+                                                     --
                                                    , inTaxKindId         := COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, 0)
                                                    , inTaxKindValue      := COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0)
                                                    , inUserId            := vbUserId

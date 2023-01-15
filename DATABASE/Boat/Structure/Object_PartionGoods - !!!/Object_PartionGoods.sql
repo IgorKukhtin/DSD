@@ -18,7 +18,7 @@ CREATE TABLE Object_PartionGoods(
    ObjectId            Integer NOT NULL, -- Комплектующие или Лодка
    Amount              TFloat  NOT NULL, -- Кол-во Приход
    EKPrice	       TFloat  NOT NULL, -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка
-   EKPrice_orig	       TFloat  NOT NULL, -- Цена вх. без НДС, с учетом скидки по элементу
+   EKPrice_orig	       TFloat  NOT NULL, -- Цена вх. без НДС, с учетом ТОЛЬКО скидки по элементу
    EKPrice_discount    TFloat  NOT NULL, -- Цена вх. без НДС, с учетом ВСЕХ скидок (затрат здесь нет)
    CountForPrice       TFloat  NOT NULL DEFAULT 1, -- для Цены вх. без НДС
    CostPrice	       TFloat  NOT NULL, -- Цена затрат без НДС (затраты + расходы: Почтовые + Упаковка + Страховка)

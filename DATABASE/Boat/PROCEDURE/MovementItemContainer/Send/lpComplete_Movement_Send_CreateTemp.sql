@@ -21,18 +21,23 @@ BEGIN
          -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
          CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                    , GoodsId Integer
-                                   , OperCount TFloat
+                                   , Amount TFloat
+                                   , PartNumber TVarChar
                                    , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                   , MovementId_order Integer
                                     ) ON COMMIT DROP;
-         -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+         -- таблица - партии
          CREATE TEMP TABLE _tmpItem_Child (MovementItemId Integer, ParentId Integer
                                          , GoodsId Integer, PartionId Integer
-                                         , OperCount TFloat
+                                         , ContainerId_SummFrom Integer, ContainerId_GoodsFrom Integer
+                                         , ContainerId_SummTo   Integer, ContainerId_GoodsTo   Integer
+                                         , AccountId_From Integer, AccountId_To Integer
+                                         , Amount TFloat
                                          , MovementId_order Integer
                                           ) ON COMMIT DROP;
 
          -- таблица - сколько осталось переместить из резервов для Заказов клиента
-         CREATE TEMP TABLE _tmpReserveDiff (MovementId_order Integer, OperDate_order TDateTime
+       /*CREATE TEMP TABLE _tmpReserveDiff (MovementId_order Integer, OperDate_order TDateTime
                                           , GoodsId Integer, PartionId Integer
                                           , Amount TFloat
                                            ) ON COMMIT DROP;
@@ -44,7 +49,7 @@ BEGIN
                                          , AccountId_From Integer, AccountId_To Integer
                                          , Amount TFloat
                                          , MovementId_order Integer
-                                          ) ON COMMIT DROP;
+                                          ) ON COMMIT DROP;*/
      END IF;
 
 END;$BODY$

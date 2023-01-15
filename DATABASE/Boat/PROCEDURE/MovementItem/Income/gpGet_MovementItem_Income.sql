@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MovementItem_Income(
     IN inId             Integer  , -- ключ 
@@ -137,4 +137,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MovementItem_Income (inId:= 52387, inGoodsId:= 1, inSession:= '5');
+-- SELECT * FROM gpGet_MovementItem_Income (inId:= 52387, inMaskId:= 0, inGoodsId:= 1, inSession:= '5');

@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_Income()
 
-
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , TVarChar, TVarChar, TVarChar
@@ -114,26 +113,33 @@ BEGIN
                                   , vbUserId
                                    ) AS lpUpdate;
      -- сохранили партию
-     PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId    := ioId                 ::Integer       -- Ключ партии
-                                               , inMovementId        := inMovementId         ::Integer       -- Ключ Документа
-                                               , inFromId            := vbFromId             ::Integer       -- Поставщик или Подразделение (место сборки)
-                                               , inUnitId            := vbToId               ::Integer       -- Подразделение(прихода)
-                                               , inOperDate          := vbOperDate           ::TDateTime     -- Дата прихода
-                                               , inObjectId          := inGoodsId            ::Integer       -- Комплектующие или Лодка
-                                               , inAmount            := inAmount             ::TFloat        -- Кол-во приход
-                                               , inEKPrice           := ioOperPrice          ::TFloat        -- Цена вх. без НДС, !!!с учетом скидки!!!
-                                               , inCountForPrice     := inCountForPrice      ::TFloat        -- Цена за количество
-                                               , inEmpfPrice         := inEmpfPrice          ::TFloat        -- Цена рекоменд. без НДС
-                                               , inOperPriceList     := inOperPriceList      ::TFloat        -- Цена продажи
-                                               , inOperPriceList_old := vbOperPriceList_old  ::TFloat        -- Цена продажи, ДО изменения строки
-                                               , inTaxKindId         := vbTaxKindId          ::Integer       -- Тип НДС (!информативно!)
-                                               , inTaxKindValue      := vbTaxKindValue       ::TFloat        -- Значение НДС (!информативно!)
-                                               , inUserId            := vbUserId             ::Integer       --
+     PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId    := ioId                    -- Ключ партии
+                                               , inMovementId        := inMovementId            -- Ключ Документа
+                                               , inFromId            := vbFromId                -- Поставщик или Подразделение (место сборки)
+                                               , inUnitId            := vbToId                  -- Подразделение(прихода)
+                                               , inOperDate          := vbOperDate              -- Дата прихода
+                                               , inObjectId          := inGoodsId               -- Комплектующие или Лодка
+                                               , inAmount            := inAmount                -- Кол-во приход
+                                                 --
+                                               , inEKPrice           := ioOperPrice             -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка = inEKPrice_discount + inCostPrice
+                                               , inEKPrice_orig      := ioOperPrice             -- Цена вх. без НДС, с учетом ТОЛЬКО скидки по элементу
+                                               , inEKPrice_discount  := ioOperPrice             -- Цена вх. без НДС, с учетом ВСЕХ скидок (затрат здесь нет)
+                                               , inCostPrice         := 0                       -- Цена затрат без НДС (затраты + расходы: Почтовые + Упаковка + Страховка)
+                                               , inCountForPrice     := inCountForPrice         -- Цена за количество
+                                                 --
+                                               , inEmpfPrice         := inEmpfPrice             -- Цена рекоменд. без НДС
+                                               , inOperPriceList     := inOperPriceList         -- Цена продажи
+                                               , inOperPriceList_old := vbOperPriceList_old     -- Цена продажи, ДО изменения строки
+                                                 --
+                                               , inTaxKindId         := vbTaxKindId             -- Тип НДС (!информативно!)
+                                               , inTaxKindValue      := vbTaxKindValue          -- Значение НДС (!информативно!)
+                                               , inUserId            := vbUserId                --
                                                 );
 
      -- дописали партию
      UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId;
 
+  
      -- по ВСЕМ товарам исправили OperPriceList
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), MovementItem.Id, inOperPriceList)
      FROM MovementItem
