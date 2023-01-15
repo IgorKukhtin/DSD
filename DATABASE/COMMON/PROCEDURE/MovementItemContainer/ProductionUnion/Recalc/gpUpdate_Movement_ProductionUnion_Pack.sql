@@ -147,4 +147,4 @@ where ParentId = 226604711
 
 */
 -- тест
--- SELECT * FROM gpUpdate_Movement_ProductionUnion_Pack (inStartDate:= '01.10.2016', inEndDate:= '01.10.2016', inUnitId:= 8451, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar) -- ÷ех ”паковки
+-- SELECT * FROM gpUpdate_Movement_ProductionUnion_Pack (inStartDate:= '10.12.2022', inEndDate:= '10.12.2022', inUnitId:= 8451, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar) -- ÷ех ”паковки
