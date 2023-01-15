@@ -72,6 +72,8 @@ type
     FieldFilter_Article: TdsdFieldFilter;
     bblbSearchArticle: TdxBarControlContainerItem;
     bbedSearchArticle: TdxBarControlContainerItem;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public
