@@ -2493,6 +2493,31 @@ object ProductionUnionForm: TProductionUnionForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptGoodsCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end

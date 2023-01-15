@@ -210,7 +210,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1090' '#1082#1086#1075#1086
-        Width = 120
+        Width = 100
       end
       object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
@@ -454,6 +454,26 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderHint = #1059#1079#1077#1083' ('#1073#1072#1079#1086#1074#1099#1081')'
         Options.Editing = False
         Width = 80
+      end
+      object ReceiptGoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1096#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080')'
+        DataBinding.FieldName = 'ReceiptGoodsCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072
+        Options.Editing = False
+        Width = 100
+      end
+      object ReceiptGoodsName: TcxGridDBColumn
+        Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080
+        DataBinding.FieldName = 'ReceiptGoodsName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072
+        Options.Editing = False
+        Width = 100
       end
       object Article_basis_ch3: TcxGridDBColumn
         Caption = '***Artikel Nr'
@@ -1065,6 +1085,28 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'CIN'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptGoodsId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReceiptGoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptGoodsCode'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReceiptGoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptGoodsName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReceiptGoodsName'
           DataType = ftString
           MultiSelectSeparator = ','
         end

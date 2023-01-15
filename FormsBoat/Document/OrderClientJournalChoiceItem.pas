@@ -103,6 +103,8 @@ type
     EngineNum: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
     Comment_goods: TcxGridDBColumn;
+    ReceiptGoodsName: TcxGridDBColumn;
+    ReceiptGoodsCode: TcxGridDBColumn;
   private
   public
   end;

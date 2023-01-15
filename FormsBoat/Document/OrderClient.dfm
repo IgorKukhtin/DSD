@@ -26,8 +26,6 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -24
-    ExplicitTop = 5
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -1622,6 +1620,26 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 45
           end
+          object ReceiptGoodsCode_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1096#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080')'
+            DataBinding.FieldName = 'ReceiptGoodsCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072
+            Options.Editing = False
+            Width = 100
+          end
+          object ReceiptGoodsName_ch3: TcxGridDBColumn
+            Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080
+            DataBinding.FieldName = 'ReceiptGoodsName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072
+            Options.Editing = False
+            Width = 100
+          end
           object GoodsCode_basis_ch3: TcxGridDBColumn
             Caption = '***Interne Nr'
             DataBinding.FieldName = 'GoodsCode_basis'
@@ -2342,6 +2360,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2399,6 +2420,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -5999,7 +6023,7 @@ object OrderClientForm: TOrderClientForm
   end
   object DBViewAddOnChildLevel: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableViewChildLevel
+    View = cxGridDBTableViewChild
     OnDblClickActionList = <
       item
       end
