@@ -93,7 +93,7 @@ $BODY$
    DECLARE curRemains        refcursor;
    DECLARE curResult_partion refcursor;
 
-   DECLARE vbDOW_curr        TVarChar;
+   DECLARE vbDOW_curr        Integer;
 
    DECLARE vbDate_balance_partion TDateTime;
    DECLARE vbSumm_balance_partion TFloat;
@@ -110,6 +110,8 @@ $BODY$
    DECLARE vbisEliminateColdSUN Boolean;
    DECLARE vbisNotSold100  Boolean;
    DECLARE vbisNotSoldIn Boolean;
+   
+   DECLARE vbisShoresSUN Boolean;
 
 BEGIN
      --
@@ -140,11 +142,15 @@ BEGIN
                     END;
 
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN
+          , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
+                                  ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -201,7 +207,9 @@ BEGIN
      -- день недели
      vbDOW_curr:= (SELECT CASE WHEN tmp.RetV = 0 THEN 7 ELSE tmp.RetV END
                    FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
-                  ) :: TVarChar;
+                  );
+
+--raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
      -- все Подразделения для схемы SUN
      INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa, isOnlyTimingSUN)
@@ -232,21 +240,31 @@ BEGIN
              LEFT JOIN ObjectString  AS OS_LL            ON OS_LL.ObjectId            = OB.ObjectId AND OS_LL.DescId            = zc_ObjectString_Unit_SUN_v1_Lock()
              LEFT JOIN ObjectBoolean AS OB_OnlyTimingSUN ON OB_OnlyTimingSUN.ObjectId = OB.ObjectId AND OB_OnlyTimingSUN.DescId = zc_ObjectBoolean_Unit_SUN_OnlyTiming()
              -- !!!только для этого водителя!!!
-             /*INNER JOIN ObjectLink AS ObjectLink_Unit_Driver
-                                   ON ObjectLink_Unit_Driver.ObjectId      = OB.ObjectId
-                                  AND ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
-                                  AND ObjectLink_Unit_Driver.ChildObjectId = inDriverId*/
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Driver
+                                  ON ObjectLink_Unit_Driver.ObjectId      = OB.ObjectId
+                                 AND ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
+             LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = ObjectLink_Unit_Driver.ChildObjectId
         WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
           -- если указан день недели - проверим его
-          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = ''
+          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr::TVarChar || '%' AND vbisShoresSUN = FALSE OR
+               OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 4 OR
+               OS_ListDaySUN.ValueData ILIKE '%' || CASE WHEN vbDOW_curr - 1 = 0 THEN 7 ELSE vbDOW_curr - 1 END::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 3
         --  OR inUserId = 3 -- Админ - отладка
               )
        ;
        
      ANALYSE _tmpUnit_SUN;  
 
-     -- Выкладки
-     WITH tmpLayoutMovement AS (SELECT Movement.Id                                                   AS Id
+--raise notice 'Value 2: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpUnit_SUN);
+
+      -- Выкладки
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpLayoutMovement'))
+     THEN
+       DROP TABLE tmpLayoutMovement;
+     END IF;
+
+     CREATE TEMP TABLE tmpLayoutMovement ON COMMIT DROP AS
+                               (SELECT Movement.Id                                                   AS Id
                                      , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE)      AS isPharmacyItem
                                      , COALESCE(MovementBoolean_NotMoveRemainder6.ValueData, FALSE) AS isNotMoveRemainder6
                                 FROM Movement
@@ -258,8 +276,11 @@ BEGIN
                                                               AND MovementBoolean_NotMoveRemainder6.DescId = zc_MovementBoolean_NotMoveRemainder6()
                                 WHERE Movement.DescId = zc_Movement_Layout()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
-                               )
-        , tmpLayout AS (SELECT Movement.ID                        AS Id
+                               );
+     ANALYSE tmpLayoutMovement;
+                               
+     WITH 
+          tmpLayout AS (SELECT Movement.ID                        AS Id
                              , MovementItem.ObjectId              AS GoodsId
                              , MovementItem.Amount                AS Amount
                              , Movement.isPharmacyItem            AS isPharmacyItem
@@ -319,6 +340,8 @@ BEGIN
              
      ANALYSE _tmpGoods_Layout;
 
+--raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+
      -- Маркетинговый план для точек
       WITH tmpUserUnit AS (SELECT COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) AS UnitId
                                 , Count(*)                                                                   AS CountUser
@@ -361,6 +384,8 @@ BEGIN
       ;
       
       ANALYSE _tmpGoods_PromoUnit;
+
+--raise notice 'Value 4: %', CLOCK_TIMESTAMP();
         
      -- Товары дисконтных проектов
      
@@ -401,6 +426,9 @@ BEGIN
              , tmpUnitDiscount.UnitId;
              
       ANALYSE _tmpGoods_DiscountExternal;
+
+--raise notice 'Value 5: %', CLOCK_TIMESTAMP();
+
                 
      -- находим максимальный
      vbDayIncome_max := (SELECT MAX (_tmpUnit_SUN.DayIncome)  FROM _tmpUnit_SUN);
@@ -422,6 +450,9 @@ BEGIN
            ;
          
          ANALYSE _tmpGoods_SUN;
+
+--raise notice 'Value 6: %', CLOCK_TIMESTAMP();
+
          
          -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
          INSERT INTO _tmpGoods_SUN_PairSun (GoodsId, GoodsId_PairSun, PairSunAmount)
@@ -438,6 +469,8 @@ BEGIN
            ;
            
          ANALYSE _tmpGoods_SUN_PairSun;
+
+--raise notice 'Value 7: %', CLOCK_TIMESTAMP();
 
      END IF;
 
@@ -481,6 +514,8 @@ BEGIN
      
      ANALYSE _tmpGoods_TP_exception;
 
+--raise notice 'Value 8: %', CLOCK_TIMESTAMP();
+
      -- исключаем такие перемещения
      INSERT INTO _tmpUnit_SunExclusion (UnitId_from, UnitId_to)
         SELECT COALESCE (ObjectLink_From.ChildObjectId, _tmpUnit_SUN_From.UnitId) AS UnitId_from
@@ -507,6 +542,8 @@ BEGIN
            ;
            
      ANALYSE _tmpUnit_SunExclusion;
+
+--raise notice 'Value 9: %', CLOCK_TIMESTAMP();
 
      IF inStep = 1
      THEN
@@ -558,6 +595,8 @@ BEGIN
                 ;
                 
          ANALYSE _tmpUnit_SUN_balance;
+
+--raise notice 'Value 10: %', CLOCK_TIMESTAMP();
 
          -- баланс-2 накопительно по Аптекам - только по срокам
          WITH -- SUN - за 30 дней
@@ -659,6 +698,8 @@ BEGIN
      END IF;
      
      ANALYSE _tmpUnit_SUN_balance_partion;
+
+--raise notice 'Value 11: %', CLOCK_TIMESTAMP();
 
 
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
@@ -1092,6 +1133,8 @@ BEGIN
        
      ANALYSE _tmpRemains_all;
 
+--raise notice 'Value 12: %', CLOCK_TIMESTAMP();
+
      -- 1.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
         SELECT _tmpRemains_all.UnitId, _tmpRemains_all.GoodsId, _tmpRemains_all.Price, _tmpRemains_all.MCS, _tmpRemains_all.AmountResult, _tmpRemains_all.AmountRemains, _tmpRemains_all.AmountIncome, _tmpRemains_all.AmountSend_in, _tmpRemains_all.AmountSend_out, _tmpRemains_all.AmountOrderExternal, _tmpRemains_all.AmountReserve
@@ -1116,6 +1159,9 @@ BEGIN
        ;
        
      ANALYSE _tmpRemains_all;
+
+--raise notice 'Value 13: %', CLOCK_TIMESTAMP();
+
 
 /*     raise notice 'Ошибка. % % %',
                      (SELECT count(*) FROM _tmpRemains),
@@ -1166,6 +1212,9 @@ BEGIN
        
       ANALYSE _tmpSale;
 
+--raise notice 'Value 14: %', CLOCK_TIMESTAMP();
+
+
      -- Уже использовано в текущем СУН
      WITH
           tmpSUN AS (SELECT MovementLinkObject_From.ObjectId AS UnitId
@@ -1196,17 +1245,22 @@ BEGIN
         
      ANALYSE _tmpGoods_Sun_exception;
 
+--raise notice 'Value 15: %', CLOCK_TIMESTAMP();
+
+
      -- значения для разделения по срокам
      SELECT Date_6, Date_3, Date_1, Date_0
      INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
      FROM lpSelect_PartionDateKind_SetDate ();
 
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpContainer'))
+     THEN
+       DROP TABLE tmpContainer;
+     END IF;
 
-
-     -- 3.1. все остатки ОТПРАВИТЕЛЯ, СРОК + ...
-     INSERT INTO _tmpRemains_Partion_all (ContainerDescId, UnitId, ContainerId_Parent, ContainerId, GoodsId, Amount, PartionDateKindId, ExpirationDate, Amount_sun, Amount_notSold, Amount_6Month, isNotSold100)
-        WITH -- список для NotSold
-             tmpContainer AS (SELECT Container.DescId           AS ContainerDescId
+     -- Остатки - оптимизация
+     CREATE TEMP TABLE tmpContainer ON COMMIT DROP AS
+                             (SELECT Container.DescId           AS ContainerDescId
                                    , Container.Id               AS ContainerId
                                    , Container.WhereObjectId    AS UnitId
                                    , Container.ObjectId         AS GoodsId
@@ -1223,9 +1277,218 @@ BEGIN
                                                           AND OB_SUN_NotSold.ValueData = TRUE
                               -- !!!
                               WHERE OB_SUN_NotSold.ObjectId IS NULL
-                             )
+                             );
+                             
+     ANALYSE tmpContainer;
+
+--raise notice 'Value 15_1: %', CLOCK_TIMESTAMP();
+
+     -- Income - за X дней - если приходило, 100дней без продаж уходить уже не может
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpIncome'))
+     THEN
+       DROP TABLE tmpIncome;
+     END IF;
+
+     CREATE TEMP TABLE tmpIncome ON COMMIT DROP AS
+                               (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
+                                     , MovementItem.ObjectId            AS GoodsId
+                                FROM MovementDate AS MovementDate_Branch
+                                     INNER JOIN Movement ON Movement.Id       = MovementDate_Branch.MovementId
+                                                        AND Movement.DescId   = zc_Movement_Income()
+                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                                            AND MovementItem.Amount     > 0
+
+                                     -- отсечем ненужные подразделения
+
+                                     INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
+                                                            AND _tmpUnit_SUN.DayIncome > 0
+
+                                WHERE MovementDate_Branch.DescId     = zc_MovementDate_Branch()
+                                  AND MovementDate_Branch.ValueData BETWEEN inOperDate - (vbDayIncome_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+
+                                GROUP BY MovementLinkObject_To.ObjectId
+                                       , MovementItem.ObjectId
+                                HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DayIncome :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                                      THEN MovementItem.Amount
+                                                 ELSE 0
+                                            END) > 0
+                               );
+                               
+     ANALYSE tmpIncome;
+
+--raise notice 'Value 15_2: %', CLOCK_TIMESTAMP();
+
+             -- для SUN-1 - Сроки - zc_Movement_Send за X дней - если приходило, уходить уже не может
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpSUN_Send'))
+     THEN
+       DROP TABLE tmpSUN_Send;
+     END IF;
+
+     CREATE TEMP TABLE tmpSUN_Send ON COMMIT DROP AS
+                            (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
+                                  , MovementItem.ObjectId            AS GoodsId
+                             FROM Movement
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                ON MovementLinkObject_To.MovementId = Movement.Id
+                                                               AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                  -- !!!только для таких Аптек!!!
+                                  -- INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
+                                  --
+                                  INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                             ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                            AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                                            AND MovementBoolean_SUN.ValueData  = TRUE
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.isErased   = FALSE
+                                                         AND MovementItem.Amount     > 0
+
+                                  LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
+
+                             WHERE Movement.OperDate BETWEEN inOperDate - (vbDaySendSUN_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                               AND Movement.DescId   = zc_Movement_Send()
+                               AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                             GROUP BY MovementLinkObject_To.ObjectId
+                                    , MovementItem.ObjectId
+                             HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DaySendSUN :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                                   THEN MovementItem.Amount
+                                              ELSE 0
+                                         END) > 0
+                            );
+                               
+     ANALYSE tmpSUN_Send;
+
+--raise notice 'Value 15_3: %', CLOCK_TIMESTAMP();
+
+             -- для SUN- всех - Сроки - zc_Movement_Send за X дней - если приходило, уходить уже не может
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpSUN_SendAll'))
+     THEN
+       DROP TABLE tmpSUN_SendAll;
+     END IF;
+
+     CREATE TEMP TABLE tmpSUN_SendAll ON COMMIT DROP AS
+                               (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
+                                     , MovementItem.ObjectId            AS GoodsId
+                                FROM Movement
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                     -- !!!только для таких Аптек!!!
+                                     -- INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
+                                     --
+                                                           
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                                            AND MovementItem.Amount     > 0
+
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                                                ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                               AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+
+                                     LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
+
+                                WHERE Movement.OperDate BETWEEN inOperDate - (vbDaySendSUNAll_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                  AND Movement.DescId   = zc_Movement_Send()
+                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                  AND COALESCE (MovementBoolean_SUN.ValueData, FALSE)  = FALSE
+                                GROUP BY MovementLinkObject_To.ObjectId
+                                       , MovementItem.ObjectId
+                                HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DaySendSUNAll :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                                      THEN MovementItem.Amount
+                                                 ELSE 0
+                                            END) > 0
+                            );
+
+
+     ANALYSE tmpSUN_SendAll;
+
+--raise notice 'Value 15_4: %', CLOCK_TIMESTAMP();
+
+           -- Остатки по SUN-1 - Сроки
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpRes_SUN_1'))
+     THEN
+       DROP TABLE tmpRes_SUN_1;
+     END IF;
+
+     CREATE TEMP TABLE tmpRes_SUN_1 ON COMMIT DROP AS
+                           (SELECT Container.DescId                                           AS ContainerDescId
+                                 , Container.WhereObjectId                                    AS UnitId
+                                 , Container.ParentId                                         AS ContainerId_Parent
+                                 , Container.Id                                               AS ContainerId
+                                 , Container.ObjectId                                         AS GoodsId
+                                 , Container.Amount                                           AS Amount
+                            FROM Container
+                                 -- !!!только для таких Аптек!!!
+                                 INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = Container.WhereObjectId
+                                 -- !!!SUN - за X дней - если приходило, уходить уже не может!!!
+                                 LEFT JOIN tmpSUN_Send ON tmpSUN_Send.UnitId_to = Container.WhereObjectId
+                                                      AND tmpSUN_Send.GoodsId   = Container.ObjectId
+                                 -- !!!SUN всех - за X дней - если приходило, уходить уже не может!!!
+                                 LEFT JOIN tmpSUN_SendAll ON tmpSUN_SendAll.UnitId_to = Container.WhereObjectId
+                                                         AND tmpSUN_SendAll.GoodsId   = Container.ObjectId
+
+                            WHERE Container.DescId = zc_Container_CountPartionDate()
+                              AND Container.Amount <> 0
+                              -- !!!
+                              AND tmpSUN_Send.GoodsId IS NULL
+                              AND tmpSUN_SendAll.GoodsId IS NULL
+                           );
+
+     ANALYSE tmpRes_SUN_1;
+
+--raise notice 'Value 15_5: %', CLOCK_TIMESTAMP();
+
+               -- IncomeSUN - за X дней - если приходило, SUN уходить уже не может
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpIncomeSUN'))
+     THEN
+       DROP TABLE tmpIncomeSUN;
+     END IF;
+
+     CREATE TEMP TABLE tmpIncomeSUN ON COMMIT DROP AS
+                               (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
+                                     , MovementItem.ObjectId            AS GoodsId
+                                FROM MovementDate AS MovementDate_Branch
+                                     INNER JOIN Movement ON Movement.Id       = MovementDate_Branch.MovementId
+                                                        AND Movement.DescId   = zc_Movement_Income()
+                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                                            AND MovementItem.Amount     > 0
+                                     -- !!!только для таких!!!
+                                     INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
+                                                            AND _tmpUnit_SUN.DayIncome > 0
+
+                                WHERE MovementDate_Branch.DescId     = zc_MovementDate_Branch()
+                                  AND MovementDate_Branch.ValueData BETWEEN inOperDate - (vbDayIncome_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                GROUP BY MovementLinkObject_To.ObjectId
+                                       , MovementItem.ObjectId
+                                HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DayIncome :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                                      THEN MovementItem.Amount
+                                                 ELSE 0
+                                            END) > 0
+                               );
+
+     ANALYSE tmpIncomeSUN;
+
+--raise notice 'Value 15_6: %', CLOCK_TIMESTAMP();
+
+     -- 3.1. все остатки ОТПРАВИТЕЛЯ, СРОК + ...
+     INSERT INTO _tmpRemains_Partion_all (ContainerDescId, UnitId, ContainerId_Parent, ContainerId, GoodsId, Amount, PartionDateKindId, ExpirationDate, Amount_sun, Amount_notSold, Amount_6Month, isNotSold100)
+        WITH -- список для NotSold
              -- так можно определить NotSold - без продаж 100дн.
-           , tmpNotSold_all_all AS (SELECT tmpContainer.ContainerDescId
+             tmpNotSold_all_all AS (SELECT tmpContainer.ContainerDescId
                                          , tmpContainer.ContainerId
                                          , tmpContainer.UnitID
                                          , tmpContainer.GoodsID
@@ -1321,40 +1584,6 @@ BEGIN
                                      , tmpNotSold_all.GoodsID
                                 FROM tmpNotSold_all
                                )
-                  -- Income - за X дней - если приходило, 100дней без продаж уходить уже не может
-                , tmpIncome AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
-                                     , MovementItem.ObjectId            AS GoodsId
-                                FROM MovementDate AS MovementDate_Branch
-                                     INNER JOIN Movement ON Movement.Id       = MovementDate_Branch.MovementId
-                                                        AND Movement.DescId   = zc_Movement_Income()
-                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                     -- отсечем ненужные подразделения
-                                     INNER JOIN (SELECT DISTINCT tmpNotSold_list.UnitId FROM tmpNotSold_list) AS tmp ON tmp.UnitId  = MovementLinkObject_To.ObjectId
-
-                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                            AND MovementItem.DescId     = zc_MI_Master()
-                                                            AND MovementItem.isErased   = FALSE
-                                                            AND MovementItem.Amount     > 0
-                                     -- !!!только для таких!!!
-                                     INNER JOIN tmpNotSold_list ON tmpNotSold_list.UnitId  = MovementLinkObject_To.ObjectId
-                                                               AND tmpNotSold_list.GoodsId = MovementItem.ObjectId
-
-                                     INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
-                                                            AND _tmpUnit_SUN.DayIncome > 0
-
-                                WHERE MovementDate_Branch.DescId     = zc_MovementDate_Branch()
-                                  AND MovementDate_Branch.ValueData BETWEEN inOperDate - (vbDayIncome_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
-
-                                GROUP BY MovementLinkObject_To.ObjectId
-                                       , MovementItem.ObjectId
-                                HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DayIncome :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
-                                                      THEN MovementItem.Amount
-                                                 ELSE 0
-                                            END) > 0
-                               )
                  -- все что остается для NotSold
                , tmpNotSold AS (SELECT tmpNotSold_all.ContainerDescId
                                      , tmpNotSold_all.ContainerId
@@ -1389,96 +1618,6 @@ BEGIN
                                       )
                                )
 
-             -- для SUN-1 - Сроки - zc_Movement_Send за X дней - если приходило, уходить уже не может
-           , tmpSUN_Send AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
-                                  , MovementItem.ObjectId            AS GoodsId
-                             FROM Movement
-                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                ON MovementLinkObject_To.MovementId = Movement.Id
-                                                               AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                  -- !!!только для таких Аптек!!!
-                                  -- INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
-                                  --
-                                  INNER JOIN MovementBoolean AS MovementBoolean_SUN
-                                                             ON MovementBoolean_SUN.MovementId = Movement.Id
-                                                            AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
-                                                            AND MovementBoolean_SUN.ValueData  = TRUE
-                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                         AND MovementItem.DescId     = zc_MI_Master()
-                                                         AND MovementItem.isErased   = FALSE
-                                                         AND MovementItem.Amount     > 0
-
-                                  LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
-
-                             WHERE Movement.OperDate BETWEEN inOperDate - (vbDaySendSUN_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
-                               AND Movement.DescId   = zc_Movement_Send()
-                               AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
-                             GROUP BY MovementLinkObject_To.ObjectId
-                                    , MovementItem.ObjectId
-                             HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DaySendSUN :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
-                                                   THEN MovementItem.Amount
-                                              ELSE 0
-                                         END) > 0
-                            )
-             -- для SUN- всех - Сроки - zc_Movement_Send за X дней - если приходило, уходить уже не может
-           , tmpSUN_SendAll AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
-                                     , MovementItem.ObjectId            AS GoodsId
-                                FROM Movement
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                     -- !!!только для таких Аптек!!!
-                                     -- INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
-                                     --
-                                                           
-                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                            AND MovementItem.DescId     = zc_MI_Master()
-                                                            AND MovementItem.isErased   = FALSE
-                                                            AND MovementItem.Amount     > 0
-
-                                     LEFT JOIN MovementBoolean AS MovementBoolean_SUN
-                                                                ON MovementBoolean_SUN.MovementId = Movement.Id
-                                                               AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
-
-                                     LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
-
-                                WHERE Movement.OperDate BETWEEN inOperDate - (vbDaySendSUNAll_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
-                                  AND Movement.DescId   = zc_Movement_Send()
-                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
-                                  AND COALESCE (MovementBoolean_SUN.ValueData, FALSE)  = FALSE
-                                GROUP BY MovementLinkObject_To.ObjectId
-                                       , MovementItem.ObjectId
-                                HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DaySendSUNAll :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
-                                                      THEN MovementItem.Amount
-                                                 ELSE 0
-                                            END) > 0
-                            )
-           -- Остатки по SUN-1 - Сроки
-         , tmpRes_SUN_1 AS (SELECT Container.DescId                                           AS ContainerDescId
-                                 , CLO_Unit.ObjectId                                          AS UnitId
-                                 , Container.ParentId                                         AS ContainerId_Parent
-                                 , Container.Id                                               AS ContainerId
-                                 , Container.ObjectId                                         AS GoodsId
-                                 , Container.Amount                                           AS Amount
-                            FROM Container
-                                 INNER JOIN ContainerLinkObject AS CLO_Unit
-                                                                ON CLO_Unit.ContainerId = Container.Id
-                                                               AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                 -- !!!только для таких Аптек!!!
-                                 INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = CLO_Unit.ObjectId
-                                 -- !!!SUN - за X дней - если приходило, уходить уже не может!!!
-                                 LEFT JOIN tmpSUN_Send ON tmpSUN_Send.UnitId_to = CLO_Unit.ObjectId
-                                                      AND tmpSUN_Send.GoodsId   = Container.ObjectId
-                                 -- !!!SUN всех - за X дней - если приходило, уходить уже не может!!!
-                                 LEFT JOIN tmpSUN_SendAll ON tmpSUN_SendAll.UnitId_to = CLO_Unit.ObjectId
-                                                         AND tmpSUN_SendAll.GoodsId   = Container.ObjectId
-
-                            WHERE Container.DescId = zc_Container_CountPartionDate()
-                              AND Container.Amount <> 0
-                              -- !!!
-                              AND tmpSUN_Send.GoodsId IS NULL
-                              AND tmpSUN_SendAll.GoodsId IS NULL
-                           )
            , tmpCLO_PartionGoods AS (SELECT *
                                      FROM ContainerLinkObject
                                      WHERE ContainerLinkObject.ContainerId IN (SELECT DISTINCT tmpRes_SUN_1.ContainerId FROM tmpRes_SUN_1)
@@ -1556,45 +1695,7 @@ BEGIN
                             --!!!
                             WHERE tmpRes_SUN_all.GoodsId IS NULL
                            )
-         -- для SUN-1 - Cроки - находим list
-       , tmpIncomeSUN_list AS (SELECT DISTINCT
-                                       tmpRes_SUN.UnitID
-                                     , tmpRes_SUN.GoodsID
-                                FROM tmpRes_SUN
-                               )
-               -- IncomeSUN - за X дней - если приходило, SUN уходить уже не может
-             , tmpIncomeSUN AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
-                                     , MovementItem.ObjectId            AS GoodsId
-                                FROM MovementDate AS MovementDate_Branch
-                                     INNER JOIN Movement ON Movement.Id       = MovementDate_Branch.MovementId
-                                                        AND Movement.DescId   = zc_Movement_Income()
-                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                     -- отсечем ненужные подразделения
-                                     INNER JOIN (SELECT DISTINCT tmpIncomeSUN_list.UnitId FROM tmpIncomeSUN_list) AS tmp ON tmp.UnitId  = MovementLinkObject_To.ObjectId
-
-                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                            AND MovementItem.DescId     = zc_MI_Master()
-                                                            AND MovementItem.isErased   = FALSE
-                                                            AND MovementItem.Amount     > 0
-                                     -- !!!только для таких!!!
-                                     INNER JOIN tmpIncomeSUN_list ON tmpIncomeSUN_list.UnitId  = MovementLinkObject_To.ObjectId
-                                                                 AND tmpIncomeSUN_list.GoodsId = MovementItem.ObjectId
-
-                                     INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
-                                                            AND _tmpUnit_SUN.DayIncome > 0
-
-                                WHERE MovementDate_Branch.DescId     = zc_MovementDate_Branch()
-                                  AND MovementDate_Branch.ValueData BETWEEN inOperDate - (vbDayIncome_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
-                                GROUP BY MovementLinkObject_To.ObjectId
-                                       , MovementItem.ObjectId
-                                HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DayIncome :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
-                                                      THEN MovementItem.Amount
-                                                 ELSE 0
-                                            END) > 0
-                               )
+                               
         -- Результат - SUN-1 - Cроки
         SELECT tmpRes_SUN.ContainerDescId
              , tmpRes_SUN.UnitId
@@ -1698,6 +1799,8 @@ BEGIN
        ;
        
      ANALYSE _tmpRemains_Partion_all;
+
+--raise notice 'Value 16: %', CLOCK_TIMESTAMP();
 
 
      -- 3.2. остатки у ОТПРАВИТЕЛЯ, SUN-1 - для распределения
@@ -2043,6 +2146,9 @@ BEGIN
           
       ANALYSE _tmpRemains_Partion;
 
+--raise notice 'Value 17: %', CLOCK_TIMESTAMP();
+
+
  /*RAISE EXCEPTION 'Ошибка.<%> <%> ', (select count(*) FROM _tmpRemains_Partion WHERE _tmpRemains_Partion.GoodsId in (42364)),
                                (SELECT tmpGoods.GoodsID AS ObjectId
                               FROM (SELECT DISTINCT _tmpRemains_Partion_all.GoodsId FROM _tmpRemains_Partion_all) AS tmpGoods
@@ -2122,6 +2228,9 @@ BEGIN
         
      ANALYSE _tmpRemains_calc;
 
+--raise notice 'Value 18: %', CLOCK_TIMESTAMP();
+
+
      -- 5. из каких аптек остатки со сроками "максимально" закрывают АВТОЗАКАЗ
      -- CREATE TEMP TABLE _tmpSumm_limit (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
      --
@@ -2174,6 +2283,8 @@ BEGIN
        ;
        
      ANALYSE _tmpSumm_limit;
+
+--raise notice 'Value 19: %', CLOCK_TIMESTAMP();
 
 
      -- 6.1.1. распределяем-1 остатки со сроками - по всем аптекам - здесь только >= vbSumm_limit
@@ -2275,7 +2386,7 @@ BEGIN
 
         /* IF vbGoodsId = 17674567
          THEN
-           raise notice 'Value 05: % % %', vbUnitId_from, vbGoodsId, vbAmount;
+           --raise notice 'Value 05: % % %', vbUnitId_from, vbGoodsId, vbAmount;
          END IF;*/
 
          -- курсор2. - Автозаказ МИНУС сколько уже распределили для vbGoodsId
@@ -2500,7 +2611,9 @@ BEGIN
      
      ANALYSE _tmpResult_Partion;
 
-     -- raise notice 'Value 01: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
+--raise notice 'Value 20: %', CLOCK_TIMESTAMP();
+
+     -- --raise notice 'Value 01: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
 
      -- 6.1.2. распределяем-2 остатки со сроками - по всем аптекам - здесь только !!!все что осталось!!!
      --
@@ -2552,7 +2665,7 @@ BEGIN
 
          /*IF vbGoodsId = 17674567
          THEN
-           raise notice 'Value 10: % % %', vbUnitId_from, vbGoodsId, vbAmount;
+           --raise notice 'Value 10: % % %', vbUnitId_from, vbGoodsId, vbAmount;
          END IF;*/
 
          -- курсор2. - Автозаказ МИНУС сколько уже распределили для vbGoodsId
@@ -2794,7 +2907,9 @@ BEGIN
      
      ANALYSE _tmpResult_Partion;
 
-     --raise notice 'Value 02: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
+--raise notice 'Value 21: %', CLOCK_TIMESTAMP();
+
+     ----raise notice 'Value 02: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
 
      -- !!!Удаляем НЕ получившиеся пары!!!
 /*     DELETE FROM _tmpResult_Partion
@@ -2940,6 +3055,7 @@ BEGIN
      
     ANALYSE _tmpResult_Partion;
 
+--raise notice 'Value 23: %', CLOCK_TIMESTAMP();
 
      -- Добавили парные согласно наличия
 
@@ -3013,6 +3129,8 @@ BEGIN
              ) AS tmpItem;
              
      ANALYSE _tmpResult_Partion; 
+
+--raise notice 'Value 24: %', CLOCK_TIMESTAMP();
 
 /*     IF inUserId = '3'
      THEN
@@ -3130,6 +3248,7 @@ BEGIN
 
      END IF;
 
+--raise notice 'Value 25: %', CLOCK_TIMESTAMP();
 
      IF inStep = 2
      THEN
@@ -3210,6 +3329,7 @@ BEGIN
      END LOOP; -- финиш цикла по курсору1 - перемещения
      CLOSE curResult_partion; -- закрыли курсор1 - перемещения
 
+--raise notice 'Value 26: %', CLOCK_TIMESTAMP();
 
 /*
 !!!
@@ -3455,6 +3575,7 @@ BEGIN
 --      ;
 -- end if;
 
+--raise notice 'Value 27: %', CLOCK_TIMESTAMP();
 
 END;
 $BODY$
@@ -3526,4 +3647,4 @@ WHERE Movement.OperDate  >= '01.01.2019'
  SELECT * FROM lpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 */
 
-select * from gpReport_Movement_Send_RemainsSun(inOperDate := ('02.01.2023')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun(inOperDate := ('17.01.2023')::TDateTime ,  inSession := '3');

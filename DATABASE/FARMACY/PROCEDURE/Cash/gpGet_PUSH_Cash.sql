@@ -623,7 +623,8 @@ BEGIN
         , Movement.ID::TVarChar
         , True
         , True
-   FROM gpSelect_Movement_Check_ConfirmByPhone (inUnitId:= vbUnitId, inSession:= inSession) AS Movement;
+   FROM gpSelect_Movement_Check_ConfirmByPhone (inUnitId:= vbUnitId, inSession:= inSession) AS Movement
+   WHERE Movement.OperDate >= '13.01.2023';
 
      -- Обработка просрочки
    INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad) 

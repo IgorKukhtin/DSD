@@ -505,6 +505,7 @@ type
     mactUpdate_isReplaceSte2ListDif: TMultiAction;
     actUpdate_isReplaceSte2ListDif: TdsdExecStoredProc;
     dxBarButton40: TdxBarButton;
+    isDividePartionDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

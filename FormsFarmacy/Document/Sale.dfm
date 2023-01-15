@@ -140,7 +140,7 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentVert = vaCenter
           end
           object Summ: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
+            Caption = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1082#1083#1080#1077#1085#1090#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'

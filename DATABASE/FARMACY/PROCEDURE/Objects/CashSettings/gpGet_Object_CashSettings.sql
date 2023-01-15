@@ -50,6 +50,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserUpdateMarketingName TVarChar
              , LimitCash TFloat
              , AddMarkupTabletki TFloat
+             , isShoresSUN Boolean
              ) AS
 $BODY$
 BEGIN
@@ -105,6 +106,7 @@ BEGIN
         , Object_UserUpdateMarketing.ValueData                                     AS UserUpdateMarketingName
         , ObjectFloat_CashSettings_LimitCash.ValueData                             AS LimitCash
         , ObjectFloat_CashSettings_AddMarkupTabletki.ValueData                     AS AddMarkupTabletki
+        , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE)          AS isShoresSUN
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -183,6 +185,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_WagesCheckTesting
                                 ON ObjectBoolean_CashSettings_WagesCheckTesting.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_WagesCheckTesting.DescId = zc_ObjectBoolean_CashSettings_WagesCheckTesting()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
+                                ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
 
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_MethodsAssortment
                ON ObjectLink_CashSettings_MethodsAssortment.ObjectId = Object_CashSettings.Id

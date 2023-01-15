@@ -415,7 +415,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
     ParentShowHint = False
     ShowHint = True
     TabOrder = 55
-    Width = 338
+    Width = 158
   end
   object ceTurnoverMoreSUN2: TcxCurrencyEdit
     Left = 404
@@ -589,6 +589,16 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Top = 576
     Hint = #1044#1086#1087' '#1085#1072#1094#1077#1085#1082#1072' '#1085#1072' '#1058#1072#1073#1083#1077#1090#1082#1080' '#1085#1072' '#1087#1086#1079' '#1087#1086' '#1074#1099#1089#1090#1072#1074#1083#1077#1085#1085#1099#1084' '#1085#1072#1094#1077#1085#1082#1072#1084
     Caption = #1044#1086#1087' '#1085#1072#1094#1077#1085#1082#1072' '#1085#1072' '#1058#1072#1073#1083#1077#1090#1082#1080' '#1085#1072' '#1087#1086#1079' '#1087#1086' '#1074#1099#1089#1090#1072#1074#1083#1077#1085#1085#1099#1084' '#1085#1072#1094#1077#1085#1082#1072#1084
+  end
+  object cbShoresSUN: TcxCheckBox
+    Left = 695
+    Top = 137
+    Hint = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
+    Caption = #1041#1077#1088#1077#1075#1072' '#1086#1090#1076#1077#1083#1100#1085#1086' '#1087#1086' '#1057#1059#1053
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 79
+    Width = 158
   end
   object ActionList: TActionList
     Left = 344
@@ -952,6 +962,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShoresSUN'
+        Value = Null
+        Component = cbShoresSUN
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1259,6 +1277,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         Component = ceAddMarkupTabletki
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isShoresSUN'
+        Value = Null
+        Component = cbShoresSUN
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

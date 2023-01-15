@@ -86,8 +86,9 @@ $BODY$
    DECLARE curRemains        refcursor;
    DECLARE curResult_partion refcursor;
 
-   DECLARE vbDOW_curr        TVarChar;
+   DECLARE vbDOW_curr        Integer;
    DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbisShoresSUN Boolean;
 
 BEGIN
      --
@@ -102,11 +103,15 @@ BEGIN
                     END;
 
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN
+          , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
+                                  ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -149,8 +154,9 @@ BEGIN
      -- день недели
      vbDOW_curr:= (SELECT CASE WHEN tmp.RetV = 0 THEN 7 ELSE tmp.RetV END
                    FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
-                  ) :: TVarChar;
+                  );
 
+raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
      -- все Подразделения для схемы SUN-v3
      INSERT INTO _tmpUnit_SUN (UnitId, isSUN_out, isSUN_in)
@@ -172,11 +178,23 @@ BEGIN
                                      ON OB_Unit_SUN_in.ObjectId  =  OB.ObjectId 
                                     AND OB_Unit_SUN_in.DescId    = zc_ObjectBoolean_Unit_SUN_v3_in()
                                     
+             -- !!!только для этого водителя!!!
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Driver
+                                  ON ObjectLink_Unit_Driver.ObjectId      = OB.ObjectId 
+                                 AND ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
+             LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = ObjectLink_Unit_Driver.ChildObjectId
+
         WHERE (OB.ValueData = TRUE) AND (OB_Unit_SUN_out.ValueData = TRUE OR OB_Unit_SUN_in.ValueData = TRUE)
           AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v3()          
           -- если указан день недели - проверим его
-          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
+          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' AND vbisShoresSUN = False  OR
+               OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 4 OR
+               OS_ListDaySUN.ValueData ILIKE '%' || CASE WHEN vbDOW_curr - 1 = 0 THEN 7 ELSE vbDOW_curr - 1 END::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 3)
                  ;
+                 
+     ANALYSE _tmpUnit_SUN;
+
+raise notice 'Value 2: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpUnit_SUN);
 
      -- Товары дисконтных проектов
      
@@ -215,6 +233,11 @@ BEGIN
         AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
       GROUP BY ObjectLink_BarCode_Goods.ChildObjectId
              , tmpUnitDiscount.UnitId;
+             
+     ANALYSE _tmpGoods_DiscountExternal;
+
+raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+
 
       -- товары для Кратность
       INSERT INTO _tmpGoods_express (GoodsId, KoeffSUN)
@@ -224,6 +247,10 @@ BEGIN
          WHERE OF_KoeffSUN.DescId    = zc_ObjectFloat_Goods_KoeffSUN_v1()
            AND OF_KoeffSUN.ValueData > 0
         ;
+        
+      ANALYSE _tmpGoods_express;
+
+raise notice 'Value 4: %', CLOCK_TIMESTAMP();
 
      -- Выкладки
      WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
@@ -287,6 +314,11 @@ BEGIN
       FROM tmpLayoutAll      
       GROUP BY tmpLayoutAll.GoodsId
              , tmpLayoutAll.UnitId;
+             
+     ANALYSE _tmpGoods_Layout;
+
+raise notice 'Value 5: %', CLOCK_TIMESTAMP();
+
 
      -- Маркетинговый план для точек
       WITH tmpUserUnit AS (SELECT COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) AS UnitId
@@ -328,6 +360,10 @@ BEGIN
                                                           
            INNER JOIN tmpUserUnit ON tmpUserUnit.UnitId = MI_Goods.UnitId           
       ;
+      
+     ANALYSE _tmpGoods_PromoUnit;
+
+raise notice 'Value 6: %', CLOCK_TIMESTAMP();
 
      -- 1.1. вся статистика продаж
      INSERT INTO _tmpSale_express (UnitId, GoodsId, Amount, Summ)
@@ -346,6 +382,10 @@ BEGIN
                , MIContainer.WhereObjectId_analyzer
         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
        ;
+       
+     ANALYSE _tmpSale_express;
+
+raise notice 'Value 7: %', CLOCK_TIMESTAMP();
 
 
      -- 2.1. все остатки, продажи => расчет кол-ва ПОТРЕБНОСТЬ у получателя
@@ -695,6 +735,11 @@ BEGIN
            tmpConditionsKeep.ObjectId IS NULL
  
        ;
+     
+  ANALYSE _tmpRemains_all;
+       
+raise notice 'Value 8: %', CLOCK_TIMESTAMP();
+
        
      -- 2.2. Результат: все остатки, продажи => получаем кол-ва ПОТРЕБНОСТЬ у получателя
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, AmountResult)
@@ -703,6 +748,10 @@ BEGIN
         -- !!!только с таким AmountResult!!!
         WHERE _tmpRemains_all.AmountResult_in > 0.0
        ;
+       
+     ANALYSE _tmpRemains;
+
+raise notice 'Value 9: %', CLOCK_TIMESTAMP();
 
 
      -- 3.1. остатки, EXPRESS (можно отдать с учетом кратности) - для распределения
@@ -787,8 +836,10 @@ BEGIN
           -- маленькое кол-во не распределяем
           WHERE tmpExpress.AmountResult_out > 0
          ;
+         
+       ANALYSE _tmpRemains_Partion;
 
-
+raise notice 'Value 10: %', CLOCK_TIMESTAMP();
 
      -- 5. из каких аптек остатки EXPRESS "максимально" закрывают ПОТРЕБНОСТЬ
      INSERT INTO _tmpSumm_limit (UnitId_from, UnitId_to, Summ)
@@ -812,6 +863,10 @@ BEGIN
         GROUP BY _tmpRemains_Partion.UnitId
                , _tmpRemains.UnitId
        ;
+       
+     ANALYSE _tmpSumm_limit;
+
+raise notice 'Value 11: %', CLOCK_TIMESTAMP();
 
      -- 6.1.1. распределяем-1 остатки EXPRESS (Сверх запас) - по всем аптекам
      -- курсор1 - все остатки, EXPRESS (Сверх запас) + EXPRESS (Сверх запас) без корректировки
@@ -937,6 +992,8 @@ BEGIN
 
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion; -- закрыли курсор1
+
+raise notice 'Value 12: %', CLOCK_TIMESTAMP();
 
 
      -- Результат
@@ -1089,6 +1146,7 @@ BEGIN
 
     -- RAISE EXCEPTION '<ok>';
 
+raise notice 'Value 13: %', CLOCK_TIMESTAMP();
 
 
 END;
@@ -1140,3 +1198,5 @@ WHERE Movement.OperDate  >= '01.01.2019'
 
  SELECT * FROM lpInsert_Movement_Send_RemainsSun_express (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 */
+
+select * from gpReport_Movement_Send_RemainsSun_express(inOperDate := ('16.01.2023')::TDateTime ,  inSession := '3');
