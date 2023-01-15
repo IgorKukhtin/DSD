@@ -890,7 +890,7 @@
       Width = 210
     end
     object cbPapty: TcxCheckBox
-      Left = 938
+      Left = 1018
       Top = 6
       Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
       Properties.ReadOnly = False
@@ -923,6 +923,16 @@
       Left = 729
       Top = 31
       Caption = 'Artikel Nr'
+    end
+    object cbPartNumber: TcxCheckBox
+      Left = 886
+      Top = 5
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' S/N ('#1044#1072'/'#1053#1077#1090')'
+      Caption = 'S/N'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 15
+      Width = 46
     end
   end
   object lbSearchArticle: TcxLabel [2]
@@ -1156,6 +1166,14 @@
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartNumber'
+          Value = Null
+          Component = cbPartNumber
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1296,6 +1314,14 @@
         Value = Null
         Component = GuidesPartion
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartNumber'
+        Value = Null
+        Component = cbPartNumber
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

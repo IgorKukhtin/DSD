@@ -86,6 +86,7 @@ type
     FieldFilter_Article: TdsdFieldFilter;
     bbedSearchArticle: TdxBarControlContainerItem;
     bblbSearchArticle: TdxBarControlContainerItem;
+    cbPartNumber: TcxCheckBox;
   private
     { Private declarations }
   public

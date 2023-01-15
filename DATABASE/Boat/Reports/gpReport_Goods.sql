@@ -1,14 +1,16 @@
 -- Function: gpReport_Goods ()
 
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods (
-    IN inStartDate    TDateTime ,
-    IN inEndDate      TDateTime ,
-    IN inUnitGroupId  Integer   ,
-    IN inGoodsId      Integer   ,
-    IN inPartionId    Integer   ,
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inStartDate        TDateTime ,
+    IN inEndDate          TDateTime ,
+    IN inUnitGroupId      Integer   ,
+    IN inGoodsId          Integer   ,
+    IN inPartionId        Integer   , 
+    IN inisPartNumber     Boolean  ,  -- по серийным номерам
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
               , MovementDescName TVarChar, MovementDescName_order TVarChar
@@ -504,10 +506,10 @@ BEGIN
                         , STRING_AGG (MIString_PartNumber.ValueData, ' ;') ::TVarChar AS PartNumber
 
                         --OrderClient
-                        , MIFloat_MovementId.InvNumberFull_OrderClient
-                        , MIFloat_MovementId.FromName    AS FromName_OrderClient
-                        , MIFloat_MovementId.ProductName AS ProductName_OrderClient
-                        , MIFloat_MovementId.CIN         AS CIN_OrderClient
+                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.InvNumberFull_OrderClient ELSE '' END AS InvNumberFull_OrderClient
+                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.FromName ELSE '' END        AS FromName_OrderClient
+                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.ProductName ELSE '' END     AS ProductName_OrderClient
+                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.CIN ELSE '' END             AS CIN_OrderClient
                    FROM (SELECT Movement.Id AS MovementId
                         , Movement.InvNumber
                         , Movement.OperDate
@@ -716,7 +718,7 @@ BEGIN
                           , tmpDataAll.TaxKindValue
                           , tmpDataAll.OperPriceList
                           , tmpDataAll.PartnerId
-
+                          , CASE WHEN inisPartNumber = TRUE THEN MIString_PartNumber.ValueData ELSE '' END
                           , MIFloat_MovementId.InvNumberFull_OrderClient
                           , MIFloat_MovementId.FromName
                           , MIFloat_MovementId.ProductName
@@ -837,4 +839,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inUnitGroupId := 0 , inGoodsId := 3780 , inPartionId := 28494, inSession := '5');
+--select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inUnitGroupId := 0 , inGoodsId := 3780 , inPartionId := 28494, inisPartNumber := 'False', inSession := '5');

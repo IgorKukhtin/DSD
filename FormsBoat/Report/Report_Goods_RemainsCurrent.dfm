@@ -74,8 +74,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 200
     end
     object cbPartion: TcxCheckBox
-      Left = 632
-      Top = 6
+      Left = 634
+      Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
       ParentShowHint = False
@@ -122,8 +122,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 94
     end
     object cbPartNumber: TcxCheckBox
-      Left = 869
-      Top = 6
+      Left = 864
+      Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' S/N ('#1044#1072'/'#1053#1077#1090')'
       Caption = 'S/N'
       ParentShowHint = False
@@ -413,7 +413,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 45
           end
-                    object InvNumberFull_OrderClient: TcxGridDBColumn
+          object InvNumberFull_OrderClient: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'InvNumberFull_OrderClient'
             HeaderAlignmentHorz = taCenter

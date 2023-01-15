@@ -66,7 +66,7 @@
   end
   object edUnitGroup: TcxButtonEdit
     Left = 11
-    Top = 79
+    Top = 81
     Properties.Buttons = <
       item
         Default = True
@@ -74,11 +74,11 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 440
+    Width = 385
   end
   object cxLabel3: TcxLabel
     Left = 11
-    Top = 59
+    Top = 58
     Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
   end
   object cxLabel2: TcxLabel
@@ -111,7 +111,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 244
+    Width = 249
   end
   object Код: TcxLabel
     Left = 11
@@ -138,6 +138,16 @@
     Left = 107
     Top = 117
     Caption = 'Artikel Nr'
+  end
+  object cbPartNumber: TcxCheckBox
+    Left = 410
+    Top = 81
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' S/N ('#1044#1072'/'#1053#1077#1090')'
+    Caption = 'S/N'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 16
+    Width = 46
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -246,6 +256,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartNumber'
+        Value = Null
+        Component = cbPartNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 178
@@ -322,8 +340,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 56
+    Left = 168
+    Top = 112
   end
   object GuidesPartion: TdsdGuides
     KeyField = 'Id'

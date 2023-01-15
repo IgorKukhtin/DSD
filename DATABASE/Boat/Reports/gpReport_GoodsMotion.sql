@@ -417,10 +417,10 @@ BEGIN
 
                         , STRING_AGG (MIString_PartNumber.ValueData, '; ') AS PartNumber 
                         --OrderClient
-                        , MIFloat_MovementId.InvNumberFull_OrderClient
-                        , MIFloat_MovementId.FromName    AS FromName_OrderClient
-                        , MIFloat_MovementId.ProductName AS ProductName_OrderClient
-                        , MIFloat_MovementId.CIN         AS CIN_OrderClient
+                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.InvNumberFull_OrderClient ELSE '' END AS InvNumberFull_OrderClient
+                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.FromName ELSE '' END        AS FromName_OrderClient
+                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.ProductName ELSE '' END     AS ProductName_OrderClient
+                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.CIN ELSE '' END             AS CIN_OrderClient
 
                    FROM (SELECT ObjectDesc.ItemName            AS LocationDescName
                               , Object_Location.ObjectCode     AS LocationCode
@@ -525,10 +525,10 @@ BEGIN
                           , tmpDataAll.OperPriceList
                           , tmpDataAll.PartnerId
                           , CASE WHEN inisPartNumber = TRUE THEN MIString_PartNumber.ValueData ELSE '' END
-                          , MIFloat_MovementId.InvNumberFull_OrderClient
-                          , MIFloat_MovementId.FromName
-                          , MIFloat_MovementId.ProductName
-                          , MIFloat_MovementId.CIN
+                          , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.InvNumberFull_OrderClient ELSE '' END
+                          , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.FromName ELSE '' END
+                          , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.ProductName ELSE '' END
+                          , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.CIN ELSE '' END
                    HAVING SUM (tmpDataAll.AmountStart) <> 0
                        OR SUM (tmpDataAll.AmountIn)    <> 0
                        OR SUM (tmpDataAll.AmountOut)   <> 0
