@@ -3,8 +3,8 @@ inherited SendJournalForm: TSendJournalForm
   ClientHeight = 535
   ClientWidth = 968
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 984
-  ExplicitHeight = 574
+  ExplicitWidth = 986
+  ExplicitHeight = 582
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1539,6 +1539,54 @@ inherited SendJournalForm: TSendJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrinlFilter: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      BeforeAction = actDataToJson
+      StoredProc = spSelectPrintFilter
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintFilter
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074#1089#1077#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074#1089#1077#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'Id;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ReportNameParam.Value = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1649,6 +1697,14 @@ inherited SendJournalForm: TSendJournalForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrinlFilter'
         end
         item
           Visible = True
@@ -1856,6 +1912,10 @@ inherited SendJournalForm: TSendJournalForm
       Category = 0
       ImageIndex = 20
     end
+    object bbPrinlFilter: TdxBarButton
+      Action = actPrinlFilter
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -2054,8 +2114,8 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 535
-    Top = 248
+    Left = 511
+    Top = 240
   end
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
@@ -2464,5 +2524,26 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 728
     Top = 155
+  end
+  object spSelectPrintFilter: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Send_PrintFilter'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inDataJson'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JsonId'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 511
+    Top = 296
   end
 end

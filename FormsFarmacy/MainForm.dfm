@@ -3,8 +3,8 @@
   ClientHeight = 145
   ClientWidth = 730
   KeyPreview = True
-  ExplicitWidth = 746
-  ExplicitHeight = 204
+  ExplicitWidth = 748
+  ExplicitHeight = 217
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -5379,6 +5379,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actCheckErrorInsertDate: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1063#1077#1082#1080' '#1089' '#1076#1072#1090#1086#1081' '#1089#1086#1079#1076#1072#1085#1080#1077' '#1085#1077' '#1088#1072#1074#1085#1086#1081' '#1076#1072#1090#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      FormName = 'TCheckErrorInsertDateForm'
+      FormNameParam.Value = 'TCheckErrorInsertDateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6803,6 +6814,9 @@
         end
         object N340: TMenuItem
           Action = actCheckRed
+        end
+        object N371: TMenuItem
+          Action = actCheckErrorInsertDate
         end
         object N182: TMenuItem
           Action = actGoodsInventory

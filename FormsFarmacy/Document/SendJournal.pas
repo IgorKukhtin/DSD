@@ -132,6 +132,9 @@ type
     spGet_Options: TdsdStoredProc;
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
+    actPrinlFilter: TdsdPrintAction;
+    spSelectPrintFilter: TdsdStoredProc;
+    bbPrinlFilter: TdxBarButton;
   private
     { Private declarations }
   public
