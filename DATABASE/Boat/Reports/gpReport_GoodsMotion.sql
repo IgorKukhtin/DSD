@@ -636,4 +636,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_GoodsMotion(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2022')::TDateTime , inUnitGroupId := 0 , inGoodsId := 5609 , inPartionId := 0, inisPartNumber:=False, inSession := '5');
+-- SELECT * FROM gpReport_GoodsMotion(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2022')::TDateTime , inUnitGroupId := 0 , inGoodsId := 5609 , inPartionId := 0, inisPartNumber:=False, inSession := '5');

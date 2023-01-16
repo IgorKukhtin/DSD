@@ -319,4 +319,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_Send(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inFromId := 0, inToId:=0, inGoodsId := 0 , inSession := '5');
+-- SELECT * FROM gpReport_Send(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inFromId := 0, inToId:=0, inGoodsId := 0 , inSession := '5');

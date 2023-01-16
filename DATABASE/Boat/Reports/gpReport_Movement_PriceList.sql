@@ -367,4 +367,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_Movement_PriceList(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('02.01.2022')::TDateTime , inPartnerId := 0 , inGoodsId := 16248 , inSession := '5');
+-- SELECT * FROM gpReport_Movement_PriceList(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('02.01.2022')::TDateTime , inPartnerId := 0 , inGoodsId := 16248 , inSession := '5');

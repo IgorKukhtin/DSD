@@ -228,4 +228,4 @@ $BODY$
  10.01.23         *
 */
 -- тест
---select * from gpSelect_Movement_SendMaster_Print(inMovementId := 3897397 ,  inSession := '3');     FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_SendMaster_Print(inMovementId := 3897397 ,  inSession := '3'); -- FETCH ALL "<unnamed portal 1>";

@@ -406,4 +406,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_OrderInternal(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inGoodsId := 253246 , inSession := '5');
+-- SELECT * FROM gpReport_OrderInternal(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inGoodsId := 253246 , inSession := '5');

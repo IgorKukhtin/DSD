@@ -601,4 +601,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_OrderClient(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2021')::TDateTime , inPartnerId := 0 , inGoodsId := 0 , inIsEmpty := FALSE, inSession := '5');
+-- SELECT * FROM gpReport_OrderClient(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2021')::TDateTime , inPartnerId := 0 , inGoodsId := 0 , inIsEmpty := FALSE, inSession := '5');

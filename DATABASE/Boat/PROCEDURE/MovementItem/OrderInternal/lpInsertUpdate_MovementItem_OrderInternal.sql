@@ -20,7 +20,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, NULL, inMovementId, inAmount, NULL,inUserId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, NULL, inMovementId, CASE WHEN vbIsInsert = TRUE AND inAmount = 0 THEN 1 ELSE inAmount END, NULL,inUserId);
 
      -- сохранили свойство <Заказ Клиента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_OrderClient ::TFloat);

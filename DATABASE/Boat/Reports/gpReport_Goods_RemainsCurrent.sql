@@ -583,35 +583,6 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531,  inPartnerId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inIsRemains:= FALSE, inSession:= zfCalc_UserAdmin())
--- select * from gpReport_Goods_RemainsCurrent (inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'True' , inIsPartner := 'False', inIsRemains := 'False' ,  inSession := '2');
-
---select * from Object_PartionGoods limit 10
---select * from gpReport_Goods_RemainsCurrent(inUnitId := 35139 , inPartnerId := 2934 , inGoodsGroupId := 0 , inIsPartion := 'True' , inIsPartner := 'False' , inIsRemains := 'False' , inisPartNumber := 'False' ,  inSession := '5');
-
-
-/*
-
-        SELECT MovementItem.PartionId                    AS PartionId
-             , MILinkObject_Unit.ObjectId                AS UnitId
-             , COALESCE (MILinkObject_Goods.ObjectId, 0) AS GoodsId
-             , MovementItem.ObjectId                     AS ObjectId
-
-             , MovementItem.Amount                       AS Amount
---, CASE WHEN Object_Object.DescId = zc_Object_ReceiptService() THEN 0 ELSE MovementItem.Amount  END :: TFloat AS Amount_unit        -- Количество резерв
-        FROM Movement
-             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                    AND MovementItem.DescId     = zc_MI_Child()
-                                    AND MovementItem.isErased   = FALSE
-                                    AND COALESCE (MovementItem.Amount,0) > 0
-                                    AND MovementItem.ParentId > 0
-         
-              LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
-      WHERE Movement.DescId = zc_Movement_OrderClient()
-    AND Movement.StatusId = zc_Enum_Status_Complete()
-    
-    */ 
+-- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'True' , inIsPartner := 'False', inIsRemains := 'False' ,  inSession := '2');
+-- SELECT * FROM Object_PartionGoods limit 10
+-- SELECT * FROM gpReport_Goods_RemainsCurrent(inUnitId := 35139 , inPartnerId := 2934 , inGoodsGroupId := 0 , inIsPartion := 'True' , inIsPartner := 'False' , inIsRemains := 'False' , inisPartNumber := 'False' ,  inSession := '5');

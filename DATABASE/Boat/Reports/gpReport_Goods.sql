@@ -839,4 +839,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inUnitGroupId := 0 , inGoodsId := 3780 , inPartionId := 28494, inisPartNumber := 'False', inSession := '5');
+-- SELECT * FROM gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inUnitGroupId := 0 , inGoodsId := 3780 , inPartionId := 28494, inisPartNumber := 'False', inSession := '5');
