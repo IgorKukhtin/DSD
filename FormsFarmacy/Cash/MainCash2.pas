@@ -6532,11 +6532,8 @@ begin
            spSelectCheckId.ParamByName('inMovementId').Value := spPullGoodsCheck.ParamByName('outMovementId').Value;
            spSelectCheckId.Execute;
            spSelectCheck.Execute;
-           FormParams.ParamByName('DiscountExternalId').Value := DiscountExternalId;
-           FormParams.ParamByName('DiscountExternalName').Value := DiscountExternalName;
-           FormParams.ParamByName('DiscountCardNumber').Value := DiscountCardNumber;
            LoadVIPCheck;
-           Exit;
+           DiscountServiceForm.pGetDiscountExternal (DiscountExternalId, DiscountCardNumber);
          end else Exit;
       end;
     end else
@@ -6567,7 +6564,6 @@ begin
       Next;
     end;
   end;
-
 
   FormParams.ParamByName('DiscountExternalId').Value := DiscountExternalId;
   FormParams.ParamByName('DiscountExternalName').Value := DiscountExternalName;

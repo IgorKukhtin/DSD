@@ -157,6 +157,7 @@ type
     FCountAllO : Integer;
     FCountYes : Integer;
     FCountFixedPercent : Integer;
+    FFixedPercent : Currency;
     FStyle : TcxStyle;
 
     FUnitCalck : Integer;
@@ -451,7 +452,7 @@ begin
   if not ClientDataSet.Active then Exit;
 
   if FCountYes <> 0 then
-    Dataset['TotalExecutionLine'] := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100 + FCountFixedPercent
+    Dataset['TotalExecutionLine'] := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100 + FCountFixedPercent * FFixedPercent
   else Dataset['TotalExecutionLine'] := 0;
 
   if FCountYes <> 0 then
@@ -489,6 +490,7 @@ begin
         nCount := cdsUnit.FieldByName('FactOfManDays').AsInteger;
         FUnitCategoryID := cdsUnit.FieldByName('UnitCategoryId').AsInteger;
         FUnitId := cdsUnit.FieldByName('UnitId').AsInteger;
+        FFixedPercent := cdsUnit.FieldByName('FixedPercent').AsCurrency;
         FUnitCalck := cdsUnit.RecNo - 1;
       end;
       cdsUnit.Next;
@@ -581,7 +583,7 @@ begin
     if not ClientDataSet.Active then Exit;
 
     if FCountYes <> 0 then
-      cdsResult.FieldByName('TotalExecutionLine').AsCurrency := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100 + FCountFixedPercent
+      cdsResult.FieldByName('TotalExecutionLine').AsCurrency := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100 + FCountFixedPercent * FFixedPercent
     else cdsResult.FieldByName('TotalExecutionLine').AsCurrency := 0;
 
     if FCountYes <> 0 then
@@ -919,6 +921,7 @@ begin
   FCountAllO := 0;
   FUnitCalck := 0;
   FCountFixedPercent := 0;
+  FFixedPercent := 1;
   FAmountPlan := Nil;
   FAmountPlanAward := Nil;
   UserSettingsStorageAddOn.LoadUserSettings;

@@ -51,6 +51,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , LimitCash TFloat
              , AddMarkupTabletki TFloat
              , isShoresSUN Boolean
+             , FixedPercent TFloat
              ) AS
 $BODY$
 BEGIN
@@ -107,6 +108,7 @@ BEGIN
         , ObjectFloat_CashSettings_LimitCash.ValueData                             AS LimitCash
         , ObjectFloat_CashSettings_AddMarkupTabletki.ValueData                     AS AddMarkupTabletki
         , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE)          AS isShoresSUN
+        , ObjectFloat_CashSettings_FixedPercent.ValueData                          AS FixedPercent
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -250,6 +252,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AddMarkupTabletki
                               ON ObjectFloat_CashSettings_AddMarkupTabletki.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_AddMarkupTabletki.DescId = zc_ObjectFloat_CashSettings_AddMarkupTabletki()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_FixedPercent
+                              ON ObjectFloat_CashSettings_FixedPercent.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_FixedPercent.DescId = zc_ObjectFloat_CashSettings_FixedPercent()
 
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_UserUpdateMarketing
                ON ObjectLink_CashSettings_UserUpdateMarketing.ObjectId = Object_CashSettings.Id
