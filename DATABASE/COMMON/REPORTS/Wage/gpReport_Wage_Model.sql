@@ -1059,6 +1059,7 @@ AS  (SELECT
              -- , Movement.Id :: TVarChar AS UnitName
              , Object_PersonalDriver.Id AS PersonalId, Object_PersonalDriver.ObjectCode AS PersonalCode, Object_PersonalDriver.ValueData AS PersonalName
              , Object_Position.Id AS PositionId, Object_Position.ObjectCode AS PositionCode, Object_Position.ValueData AS PositionName
+             , Object_PositionLevel.Id AS PositionLevelId, Object_PositionLevel.ObjectCode AS PositionLevelCode, Object_PositionLevel.ValueData AS PositionLevelName
                -- Подразделение - Автомобиль
              , OL_Car_Unit.ChildObjectId AS UnitId_car
                -- HoursWork
@@ -1085,14 +1086,21 @@ AS  (SELECT
                                           ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                          AND MovementLinkObject_PersonalDriver.DescId     = zc_MovementLinkObject_PersonalDriver()
              LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+
              LEFT JOIN ObjectLink AS OL_Personal_Position
                                   ON OL_Personal_Position.ObjectId = Object_PersonalDriver.Id
                                  AND OL_Personal_Position.DescId   = zc_ObjectLink_Personal_Position()
              LEFT JOIN Object AS Object_Position ON Object_Position.Id = OL_Personal_Position.ChildObjectId
+
              LEFT JOIN ObjectLink AS OL_Personal_Unit
                                   ON OL_Personal_Unit.ObjectId = Object_PersonalDriver.Id
                                  AND OL_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = OL_Personal_Unit.ChildObjectId
+
+             LEFT JOIN ObjectLink AS OL_Personal_PositionLevel
+                                  ON OL_Personal_PositionLevel.ObjectId = Object_PersonalDriver.Id
+                                 AND OL_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
+             LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = OL_Personal_PositionLevel.ChildObjectId
 
              LEFT JOIN MovementFloat AS MovementFloat_HoursWork
                                      ON MovementFloat_HoursWork.MovementId =  Movement.Id
@@ -1136,6 +1144,7 @@ AS  (SELECT
              -- , Movement.Id :: TVarChar AS UnitName
              , Object_PersonalDriver.Id AS PersonalId, Object_PersonalDriver.ObjectCode AS PersonalCode, Object_PersonalDriver.ValueData AS PersonalName
              , Object_Position.Id AS PositionId, Object_Position.ObjectCode AS PositionCode, Object_Position.ValueData AS PositionName
+             , Object_PositionLevel.Id AS PositionLevelId, Object_PositionLevel.ObjectCode AS PositionLevelCode, Object_PositionLevel.ValueData AS PositionLevelName
                -- Подразделение - из накладной реализации
              , MAX (COALESCE (MovementLinkObject_From.ObjectId, 0)) :: Integer AS UnitId_from
                -- Подразделение - Автомобиль
@@ -1152,14 +1161,21 @@ AS  (SELECT
                                           ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                          AND MovementLinkObject_PersonalDriver.DescId     = zc_MovementLinkObject_PersonalDriver()
              LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+
              LEFT JOIN ObjectLink AS OL_Personal_Position
                                   ON OL_Personal_Position.ObjectId = Object_PersonalDriver.Id
                                  AND OL_Personal_Position.DescId   = zc_ObjectLink_Personal_Position()
              LEFT JOIN Object AS Object_Position ON Object_Position.Id = OL_Personal_Position.ChildObjectId
+
              LEFT JOIN ObjectLink AS OL_Personal_Unit
                                   ON OL_Personal_Unit.ObjectId = Object_PersonalDriver.Id
                                  AND OL_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = OL_Personal_Unit.ChildObjectId
+
+             LEFT JOIN ObjectLink AS OL_Personal_PositionLevel
+                                  ON OL_Personal_PositionLevel.ObjectId = Object_PersonalDriver.Id
+                                 AND OL_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
+             LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = OL_Personal_PositionLevel.ChildObjectId
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                           ON MovementLinkObject_Car.MovementId = Movement.Id
@@ -1265,6 +1281,7 @@ AS  (SELECT
              --, Object_Unit.Id, Object_Unit.ObjectCode, Object_Unit.ValueData
                , Object_PersonalDriver.Id, Object_PersonalDriver.ObjectCode, Object_PersonalDriver.ValueData
                , Object_Position.Id, Object_Position.ObjectCode, Object_Position.ValueData
+               , Object_PositionLevel.Id, Object_PositionLevel.ObjectCode, Object_PositionLevel.ValueData
              --, MovementLinkObject_From.ObjectId
                , OL_Car_Unit.ChildObjectId
             -- , Movement.InvNumber
@@ -1457,11 +1474,11 @@ AS  (SELECT
                      -- 2.1.2. по дням табель - НЕ стажер - !!!сначала!!!
                      WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime() AND Movement_Sheet.Tax_Trainee > 0
                       AND tmpList_ModelService_Trainee.ModelServiceId > 0
-                          THEN Movement_Sheet.AmountInDay_andTrainee / NULLIF (Movement_Sheet.Amount_andTrainee, 0) * 100 / Movement_Sheet.Tax_Trainee
+                          THEN Movement_Sheet.AmountInDay_andTrainee / NULLIF (Movement_Sheet.Amount_andTrainee, 0) -- * 100 / Movement_Sheet.Tax_Trainee
 
                      -- 2.2. по дням табель - стажер - !!!сначала!!!
                      WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime() AND Movement_Sheet.Tax_Trainee > 0
-                          THEN Movement_Sheet_Trainee.AmountInDay / NULLIF (Movement_Sheet.Amount_Trainee, 0) * 100 / Movement_Sheet.Tax_Trainee
+                          THEN Movement_Sheet_Trainee.AmountInDay / NULLIF (Movement_Sheet.Amount_Trainee, 0) -- * 100 / Movement_Sheet.Tax_Trainee
 
                      -- 2.3. по дням табель - остальные
                      WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
@@ -1810,6 +1827,9 @@ AS  (SELECT
                                         OR tmpMovement_Reestr.CountMovement <> 0
                                         OR tmpMovement_Reestr.CountPartner  <> 0
                                           )
+                                      AND (COALESCE (tmpMovement_Reestr.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+                                        OR Setting.isPositionLevel_all = TRUE
+                                          )
          LEFT JOIN Object AS Object_Unit_from ON Object_Unit_from.Id = tmpMovement_Reestr.UnitId_from
          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                               ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpMovement_Reestr.PersonalId
@@ -1818,7 +1838,7 @@ AS  (SELECT
                               ON ObjectLink_Personal_PositionLevel.ChildObjectId = tmpMovement_Reestr.PersonalId
                              AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
-         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpMovement_Reestr.PositionLevelId
     WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner())
 
    UNION ALL
@@ -1890,6 +1910,9 @@ AS  (SELECT
                                           ON tmpMovement_PersonalComplete.UnitId_car = Setting.UnitId
                                          AND tmpMovement_PersonalComplete.PositionId = Setting.PositionId
                                          AND tmpMovement_PersonalComplete.HoursWork  <> 0
+                                         AND (COALESCE (tmpMovement_PersonalComplete.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+                                           OR Setting.isPositionLevel_all = TRUE
+                                             )
          LEFT JOIN Object AS Object_Unit_car ON Object_Unit_car.Id = tmpMovement_PersonalComplete.UnitId_car
          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                               ON ObjectLink_Personal_PersonalGroup.ObjectId = tmpMovement_PersonalComplete.PersonalId
@@ -1898,12 +1921,12 @@ AS  (SELECT
                               ON ObjectLink_Personal_PositionLevel.ObjectId = tmpMovement_PersonalComplete.PersonalId
                              AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
-         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpMovement_PersonalComplete.PositionLevelId
 
     WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MovementTransportHours())
-      AND (COALESCE (Setting.PositionLevelId, 0) = COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0)
-        OR Setting.isPositionLevel_all = TRUE
-          )
+    --AND (COALESCE (Setting.PositionLevelId, 0) = COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0)
+    --  OR Setting.isPositionLevel_all = TRUE
+    --    )
    ;
 
 END;
