@@ -65,7 +65,9 @@ $BODY$
   DECLARE vbTotalSummHospOthRecalc    TFloat;
   DECLARE vbTotalSummCompensation       TFloat;
   DECLARE vbTotalSummCompensationRecalc TFloat;
-
+  DECLARE vbTotalSummAvance            TFloat;
+  DECLARE vbTotalSummAvanceRecalc      TFloat;
+  
   DECLARE vbTotalSummTransport        TFloat;
   DECLARE vbTotalSummTransportAdd     TFloat;
   DECLARE vbTotalSummTransportAddLong TFloat;
@@ -347,6 +349,8 @@ BEGIN
           , OperSumm_HouseAdd
           , OperSumm_NalogRet
           , OperSumm_NalogRetRecalc
+          , OperSumm_Avance
+          , OperSumm_AvanceRecalc
           , OperSumm_AddOth
           , OperSumm_AddOthRecalc
           , OperSumm_Fine
@@ -369,7 +373,7 @@ BEGIN
                , vbTotalSummCardRecalc, vbTotalSummCardSecondRecalc, vbTotalSummCardSecondCash, vbTotalSummNalogRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd
                , vbTotalSummChild, vbTotalSummChildRecalc, vbTotalSummMinusExt, vbTotalSummMinusExtRecalc
                , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone, vbTotalSummHouseAdd
-               , vbTotalSummNalogRet, vbTotalSummNalogRetRecalc
+               , vbTotalSummNalogRet, vbTotalSummNalogRetRecalc, vbTotalSummAvance, vbTotalSummAvanceRecalc
                , vbTotalSummAddOth, vbTotalSummAddOthRecalc
                , vbTotalSummFine, vbTotalSummHosp, vbTotalSummFineOth, vbTotalSummHospOth, vbTotalSummFineOthRecalc, vbTotalSummHospOthRecalc
                , vbTotalSummCompensation, vbTotalSummCompensationRecalc
@@ -483,6 +487,9 @@ BEGIN
 
                                , SUM (COALESCE (MIFloat_SummNalogRet.ValueData, 0))           AS OperSumm_NalogRet
                                , SUM (COALESCE (MIFloat_SummNalogRetRecalc.ValueData, 0))     AS OperSumm_NalogRetRecalc
+                               
+                               , SUM (COALESCE (MIFloat_SummAvance.ValueData, 0))             AS OperSumm_Avance
+                               , SUM (COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0))       AS OperSumm_AvanceRecalc
 
                                , SUM (COALESCE (MIFloat_AmountTax_calc.ValueData, 0))         AS AmountTax_calc
                                , SUM (COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0))       AS SummTaxDiff_calc
@@ -650,6 +657,15 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
                                                            ON MIFloat_SummNalogRetRecalc.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummNalogRetRecalc.DescId = zc_MIFloat_SummNalogRetRecalc()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummAvance
+                                                           ON MIFloat_SummAvance.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummAvance.DescId = zc_MIFloat_SummAvance()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummAvanceRecalc
+                                                           ON MIFloat_SummAvanceRecalc.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummAvanceRecalc.DescId = zc_MIFloat_SummAvanceRecalc()
                                                           AND Movement.DescId = zc_Movement_PersonalService()
 
                                LEFT JOIN MovementItemFloat AS MIFloat_SummAddOth
@@ -952,7 +968,9 @@ BEGIN
                 , OperSumm_Phone
                 , OperSumm_HouseAdd
                 , OperSumm_NalogRet
-                , OperSumm_NalogRetRecalc
+                , OperSumm_NalogRetRecalc  
+                , OperSumm_Avance
+                , OperSumm_AvanceRecalc
                 , OperSumm_AddOth
                 , OperSumm_AddOthRecalc
                 , OperSumm_Fine
@@ -1113,6 +1131,8 @@ BEGIN
                       , SUM (tmpMI.OperSumm_HouseAdd)         AS OperSumm_HouseAdd
                       , SUM (tmpMI.OperSumm_NalogRet)         AS OperSumm_NalogRet
                       , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
+                      , SUM (tmpMI.OperSumm_Avance)           AS OperSumm_Avance
+                      , SUM (tmpMI.OperSumm_AvanceRecalc)     AS OperSumm_AvanceRecalc
                       , SUM (tmpMI.OperSumm_AddOth)           AS OperSumm_AddOth
                       , SUM (tmpMI.OperSumm_AddOthRecalc)     AS OperSumm_AddOthRecalc
                       , SUM (tmpMI.OperSumm_Fine)             AS OperSumm_Fine
@@ -1246,6 +1266,8 @@ BEGIN
                             , tmpMI.OperSumm_HouseAdd
                             , tmpMI.OperSumm_NalogRet
                             , tmpMI.OperSumm_NalogRetRecalc
+                            , tmpMI.OperSumm_Avance
+                            , tmpMI.OperSumm_AvanceRecalc
 
                             , tmpMI.OperSumm_AddOth
                             , tmpMI.OperSumm_AddOthRecalc
@@ -1350,6 +1372,9 @@ BEGIN
 
                                    , tmpMI.OperSumm_NalogRet
                                    , tmpMI.OperSumm_NalogRetRecalc
+
+                                   , tmpMI.OperSumm_Avance
+                                   , tmpMI.OperSumm_AvanceRecalc
 
                                    , tmpMI.OperSumm_AddOth
                                    , tmpMI.OperSumm_AddOthRecalc
@@ -1498,6 +1523,9 @@ BEGIN
                                    , tmpMI.OperSumm_NalogRet
                                    , tmpMI.OperSumm_NalogRetRecalc
 
+                                   , tmpMI.OperSumm_Avance
+                                   , tmpMI.OperSumm_AvanceRecalc
+
                                    , tmpMI.OperSumm_AddOth
                                    , tmpMI.OperSumm_AddOthRecalc
 
@@ -1583,6 +1611,9 @@ BEGIN
 
                                    , tmpMI.OperSumm_NalogRet
                                    , tmpMI.OperSumm_NalogRetRecalc
+
+                                   , tmpMI.OperSumm_Avance
+                                   , tmpMI.OperSumm_AvanceRecalc
 
                                    , tmpMI.OperSumm_AddOth
                                    , tmpMI.OperSumm_AddOthRecalc
@@ -1714,6 +1745,11 @@ BEGIN
          -- Сохранили свойство <Налоги - возмещение к ЗП (ввод)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummNalogRetRecalc(), inMovementId, vbTotalSummNalogRetRecalc);
 
+         -- Сохранили свойство <Аванс>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalAvance(), inMovementId, vbTotalSummAvance);
+         -- Сохранили свойство <Аванс (ввод)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalAvanceRecalc(), inMovementId, vbTotalSummAvanceRecalc);
+
          -- Сохранили свойство <Премия (распределено)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAddOth(), inMovementId, vbTotalSummAddOth);
          -- Сохранили свойство <Премия (ввод для распределения)>
@@ -1814,6 +1850,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.01.22         * zc_MIFloat_SummAvance, zc_MIFloat_SummAvanceRecalc
  25.04.22         * zc_MovementFloat_TotalSummTare
  18.11.21         *
  25.03.20         *

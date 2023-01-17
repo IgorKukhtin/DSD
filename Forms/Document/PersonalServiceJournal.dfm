@@ -4,6 +4,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -112
   ExplicitWidth = 1237
   ExplicitHeight = 744
   PixelsPerInch = 96
@@ -229,6 +230,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummHouseAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAvance
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAvanceRecalc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -430,6 +441,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummHouseAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAvance
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAvanceRecalc
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -674,6 +695,24 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           object TotalSummChildRecalc: TcxGridDBColumn
             Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077' ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'TotalSummChildRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSummAvance: TcxGridDBColumn
+            Caption = #1040#1074#1072#1085#1089' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            DataBinding.FieldName = 'TotalSummAvance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSummAvanceRecalc: TcxGridDBColumn
+            Caption = #1040#1074#1072#1085#1089' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'TotalSummAvanceRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
@@ -1310,8 +1349,20 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Category = 'Export'
       MoveParams = <>
       dsdStoredProcName = spSelectExport
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       FileExt = '.txt'
-      FilenamePrefix = 'Vostok_'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefix = 'Vostok_'
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
       Left = 1192
       Top = 216
     end
@@ -1517,7 +1568,19 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Category = 'Export_file'
       MoveParams = <>
       dsdStoredProcName = spSelect_Export
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       FileExt = '.xml'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
       Left = 1072
       Top = 240
     end

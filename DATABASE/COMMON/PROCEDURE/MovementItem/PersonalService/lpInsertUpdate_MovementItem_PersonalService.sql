@@ -25,8 +25,14 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);*/
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, TVarChar
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);*/
+
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, TVarChar
                                                                    , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
@@ -66,7 +72,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inSummCompensationRecalc TFloat    , -- Компенсация ввод (ввод)
     IN inSummAuditAdd           TFloat    , -- Сумма доплата за аудит
     IN inSummHouseAdd           TFloat    , -- Сумма Компенсация жилья 
-
+    IN inSummAvanceRecalc       TFloat    , -- сумма аванса
+    
     IN inNumber                 TVarChar  , -- № исполнительного листа
     IN inComment                TVarChar  , --
     IN inInfoMoneyId            Integer   , -- Статьи назначения
@@ -351,6 +358,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHosp(), ioId, inSummHosp);
      -- сохранили свойство <больничный (ввод для распределения)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHospOthRecalc(), ioId, inSummHospOthRecalc);
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAvanceRecalc(), ioId, inSummAvanceRecalc);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Number(), ioId, inNumber);

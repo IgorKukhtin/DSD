@@ -142,12 +142,29 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
+          object ItemName_from: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1086#1090' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'ItemName_from'
+            Visible = False
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
+          end
+          object ItemName_to: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1082#1086#1084#1091')'
+            DataBinding.FieldName = 'ItemName_to'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
