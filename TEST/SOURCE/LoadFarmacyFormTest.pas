@@ -478,6 +478,9 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckErrorInsertDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckErrorInsertDateForm');
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckRedForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckRedForm');
