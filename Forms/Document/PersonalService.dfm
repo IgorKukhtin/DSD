@@ -1,25 +1,25 @@
 inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 749
-  ClientWidth = 1042
-  ExplicitWidth = 1058
+  ClientWidth = 1034
+  ExplicitWidth = 1050
   ExplicitHeight = 788
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 1042
+    Width = 1034
     Height = 634
     ExplicitTop = 115
     ExplicitWidth = 1042
     ExplicitHeight = 634
     ClientRectBottom = 634
-    ClientRectRight = 1042
+    ClientRectRight = 1034
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1042
       ExplicitHeight = 610
       inherited cxGrid: TcxGrid
-        Width = 1042
+        Width = 1034
         Height = 215
         ExplicitWidth = 1042
         ExplicitHeight = 215
@@ -1400,11 +1400,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 220
-        Width = 1042
+        Width = 1034
         Height = 161
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 1042
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDs
@@ -1773,20 +1774,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxSplitterChild: TcxSplitter
         Left = 0
         Top = 215
-        Width = 1042
+        Width = 1034
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 1042
       end
       object cxGrid2: TcxGrid
         Left = 0
         Top = 387
-        Width = 1042
+        Width = 1034
         Height = 138
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 3
         Visible = False
+        ExplicitWidth = 1042
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MessageDS
@@ -1928,22 +1931,24 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 381
-        Width = 1042
+        Width = 1034
         Height = 6
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid2
         Visible = False
+        ExplicitWidth = 1042
       end
       object ExportXmlGrid: TcxGrid
         Left = 0
         Top = 525
-        Width = 1042
+        Width = 1034
         Height = 85
         Align = alBottom
         TabOrder = 5
         Visible = False
+        ExplicitWidth = 1042
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1975,14 +1980,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitWidth = 1042
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1042
+        Width = 1034
         Height = 610
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitWidth = 1042
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -2068,14 +2075,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
+      ExplicitWidth = 1042
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
-        Width = 1042
+        Width = 1034
         Height = 610
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 1042
         object cxGridDBTableViewChild_all: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_all
@@ -2399,7 +2408,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1042
+    Width = 1034
     Height = 89
     TabOrder = 3
     ExplicitWidth = 1042
@@ -2627,7 +2636,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actRefresh_Message: TdsdDataSetRefresh [1]
+    object actGetImportSettingAvance: TdsdExecStoredProc [1]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingAvance
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingAvance
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actRefresh_Message: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectMIMessage
@@ -2641,7 +2661,23 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actExportToFileZpDate: TdsdStoredProcExportToFile [2]
+    object actDoLoad_Avance: TExecuteImportSettingsAction [3]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actExportToFileZpDate: TdsdStoredProcExportToFile [4]
       Category = 'Export'
       MoveParams = <>
       dsdStoredProcName = spSelectExportDate
@@ -2662,7 +2698,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Left = 1216
       Top = 168
     end
-    object actRefresh_Sign: TdsdDataSetRefresh [3]
+    object actRefresh_Sign: TdsdDataSetRefresh [5]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -2679,7 +2715,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actGetImportSettingSS: TdsdExecStoredProc [4]
+    object actGetImportSettingSS: TdsdExecStoredProc [6]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2690,7 +2726,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actGetImportSetting'
     end
-    object actDoLoad_SS: TExecuteImportSettingsAction [5]
+    object actDoLoad_SS: TExecuteImportSettingsAction [7]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ImportSettingsId.Value = Null
@@ -2706,7 +2742,27 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actExportZPDate: TMultiAction [6]
+    object macLoad_Avance: TMultiAction [8]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingAvance
+        end
+        item
+          Action = actDoLoad_Avance
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1040#1074#1072#1085#1089' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1040#1074#1072#1085#1089#1072' '#1080#1079' '#1092#1072#1081#1083#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1040#1074#1072#1085#1089
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1040#1074#1072#1085#1089
+      ImageIndex = 81
+      WithoutNext = True
+    end
+    object actExportZPDate: TMultiAction [9]
       Category = 'Export'
       MoveParams = <>
       ActionList = <
@@ -2724,7 +2780,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058#1055'"'
       ImageIndex = 67
     end
-    object actGetImportSetting_SMER: TdsdExecStoredProc [7]
+    object actGetImportSetting_SMER: TdsdExecStoredProc [10]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2735,7 +2791,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actGetImportSetting'
     end
-    object actRefreshGet: TdsdDataSetRefresh [8]
+    object actRefreshGet: TdsdDataSetRefresh [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -2749,7 +2805,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object macStartLoad_SMER: TMultiAction [9]
+    object macStartLoad_SMER: TMultiAction [12]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -2769,7 +2825,21 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 82
       WithoutNext = True
     end
-    object macStartLoad_SS: TMultiAction [10]
+    object actGetImportSetting: TdsdExecStoredProc [13]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SetNULL
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SetNULL
+        end
+        item
+          StoredProc = spGetImportSetting
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object macStartLoad_SS: TMultiAction [14]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -2789,7 +2859,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 50
       WithoutNext = True
     end
-    object actGridToExcel_Child_all: TdsdGridToExcel [11]
+    object actGridToExcel_Child_all: TdsdGridToExcel [15]
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
@@ -2800,7 +2870,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actRefreshMaster: TdsdDataSetRefresh [12]
+    object actRefreshMaster: TdsdDataSetRefresh [16]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -2865,7 +2935,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spSelectChild
         end>
     end
-    object actUpdateIsMain: TdsdExecStoredProc [20]
+    object actUpdateIsMain: TdsdExecStoredProc [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2884,7 +2954,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
-    object actPrint_Detail: TdsdPrintAction [22]
+    object actPrint_Detail: TdsdPrintAction [26]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintDetail
@@ -2925,7 +2995,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [23]
+    object actPrint_All: TdsdPrintAction [27]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_All
@@ -3025,7 +3095,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [31]
+    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [35]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3052,7 +3122,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [34]
+    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [38]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3435,20 +3505,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-    end
-    object actGetImportSetting: TdsdExecStoredProc
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_SetNULL
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_SetNULL
-        end
-        item
-          StoredProc = spGetImportSetting
-        end>
-      Caption = 'actGetImportSetting'
     end
     object actLoadExcel: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -4076,14 +4132,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
-          ItemName = 'bbLoadExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbUpdateCardSecondCash'
         end
         item
@@ -4116,27 +4164,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
-          ItemName = 'bbmacInsertUpdate_byMemberMinus'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoad_mm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoad_SMER'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoad_SS'
+          ItemName = 'bbLoad'
         end
         item
           Visible = True
@@ -4334,6 +4362,41 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbStartLoad_SS: TdxBarButton
       Action = macStartLoad_SS
+      Category = 0
+    end
+    object bbLoad: TdxBarSubItem
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbLoadExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmacInsertUpdate_byMemberMinus'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_mm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_SMER'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_SS'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoad_Avance'
+        end>
+    end
+    object bbLoad_Avance: TdxBarButton
+      Action = macLoad_Avance
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1040#1074#1072#1085#1089#1072' '#1080#1079' '#1092#1072#1081#1083#1072
       Category = 0
     end
   end
@@ -6674,5 +6737,39 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 976
     Top = 432
+  end
+  object spGetImportSettingAvance: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TPersonalServiceForm;zc_Object_ImportSetting_PersonalServiceSumm' +
+          'Avance'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 248
   end
 end

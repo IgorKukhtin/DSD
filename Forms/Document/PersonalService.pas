@@ -276,6 +276,12 @@ type
     macStartLoad_SS: TMultiAction;
     bbStartLoad_SS: TdxBarButton;
     actDoLoad_SS: TExecuteImportSettingsAction;
+    bbLoad: TdxBarSubItem;
+    spGetImportSettingAvance: TdsdStoredProc;
+    actGetImportSettingAvance: TdsdExecStoredProc;
+    actDoLoad_Avance: TExecuteImportSettingsAction;
+    macLoad_Avance: TMultiAction;
+    bbLoad_Avance: TdxBarButton;
   private
     { Private declarations }
   public

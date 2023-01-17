@@ -17,10 +17,16 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Intege
                                                                         , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                         , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                         , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);*/
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean
+                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                        , TVarChar, TVarChar
+                                                                        , Integer, Integer, Integer, Integer, Integer, Integer);*/
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean
                                                                         , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                         , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                         , TVarChar, TVarChar
                                                                         , Integer, Integer, Integer, Integer, Integer, Integer);
 
@@ -54,6 +60,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
     IN inSummCompensationRecalc TFloat , -- компенсация (ввод)
     IN inSummAuditAdd           TFloat , -- Сумма доплата за аудит
     IN inSummHouseAdd           TFloat , -- Сумма доплата за жилье
+    IN inSummAvanceRecalc       TFloat , -- авнс
 
     IN inNumber              TVarChar  , -- № исполнительного листа
     IN inComment             TVarChar  , -- 
@@ -95,6 +102,7 @@ BEGIN
                                                      , inSummCompensationRecalc := inSummCompensationRecalc
                                                      , inSummAuditAdd           := inSummAuditAdd
                                                      , inSummHouseAdd           := inSummHouseAdd
+                                                     , inSummAvanceRecalc       := inSummAvanceRecalc
                                                      , inNumber                 := inNumber
                                                      , inComment                := inComment
                                                      , inInfoMoneyId            := inInfoMoneyId
