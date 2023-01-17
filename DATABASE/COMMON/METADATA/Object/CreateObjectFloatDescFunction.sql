@@ -2355,10 +2355,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PayrollTypeVIP_Rate() RETURNS Integer 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PayrollTypeVIP(), 'zc_ObjectFloat_PayrollTypeVIP_Rate', 'Ставка' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PayrollTypeVIP_Rate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_FixedPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_FixedPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_FixedPercent', 'Фиксированный процент выполнения плана' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_FixedPercent');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 17.01.23                                                                                      * zc_ObjectFloat_CashSettings_FixedPercent
  12.01.23                                                                                      * zc_ObjectFloat_PayrollTypeVIP_Rate
  02.01.23                                                                                      * zc_ObjectFloat_CashSettings_AddMarkupTabletki
  25.11.22                                                                                      * zc_ObjectFloat_CashSettings_LimitCash

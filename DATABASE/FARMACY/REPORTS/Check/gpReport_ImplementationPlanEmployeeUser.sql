@@ -35,6 +35,7 @@ $BODY$
    DECLARE vbQueryText Text;
    DECLARE curUnit CURSOR FOR SELECT UnitID FROM tmpImplementation GROUP BY UnitCategoryId, UnitID ORDER BY UnitCategoryId, UnitID;
    DECLARE vbUnitID Integer;
+   DECLARE vbFixedPercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
@@ -47,6 +48,18 @@ BEGIN
 
     vbDateStart := date_trunc('month', inStartDate);
     vbDateEnd := date_trunc('month', vbDateStart + INTERVAL '1 month');
+    
+    SELECT COALESCE(ObjectFloat_CashSettings_FixedPercent.ValueData, 1)
+    INTO vbFixedPercent
+    FROM Object AS Object_CashSettings
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_FixedPercent
+                               ON ObjectFloat_CashSettings_FixedPercent.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_FixedPercent.DescId = zc_ObjectFloat_CashSettings_FixedPercent()
+
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;
+    
 
       -- Отработано по календарю
     CREATE TEMP TABLE tmpUserUnitDayTable (
@@ -570,7 +583,7 @@ BEGIN
        -- Собираем Общий % выполнения построчный:
      UPDATE tmpResult SET
           TotalExecutionLine = ROUND(CASE WHEN Implementation.CountConsider <> 0 THEN 1.0 * Implementation.CountAmount / Implementation.CountConsider * 100 ELSE 0 END+ 
-                                               COALESCE (Implementation.CountFixedPercent, 0), 2)
+                                               COALESCE (Implementation.CountFixedPercent * vbFixedPercent, 0), 2)
         , CountAmount   = Implementation.CountAmount
         , CountConsider = Implementation.CountConsider
         , CountRecord   = Implementation.CountRecord

@@ -50,6 +50,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inLimitCash                  TFloat    ,     -- Ограничение при покупки наличными
     IN inAddMarkupTabletki          TFloat    ,     -- Доп наценка на Таблетки на поз по выставленным наценкам
     IN inisShoresSUN                Boolean   ,     -- Берега отдельно по СУН
+    IN inFixedPercent               TFloat    ,     -- Фиксированный процент выполнения плана
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -173,6 +174,9 @@ BEGIN
    
     -- Доп наценка на Таблетки на поз по выставленным наценкам
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AddMarkupTabletki(), vbID, inAddMarkupTabletki);
+   
+    -- Фиксированный процент выполнения плана
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_FixedPercent(), vbID, inFixedPercent);
 
    -- Контроль сдачи экзамен при выдача зарплаты
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_WagesCheckTesting(), vbID, inisWagesCheckTesting);
