@@ -72,12 +72,12 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<Debugger_RunParams>Scale_EXP.ini ves=5.123</Debugger_RunParams>
+			<Debugger_RunParams>Scale_OBV.ini ves=5.123</Debugger_RunParams>
 			<Icon_MainIcon>0203.ico</Icon_MainIcon>
 			<VerInfo_Release>5</VerInfo_Release>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.5.124;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>124</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.5.127;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>127</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -285,6 +285,13 @@
 			<DCCReference Include="..\Scale\Util\frx\frxClass.pas"/>
 			<DCCReference Include="..\Scale\Util\frx\frxPreview.pas">
 				<Form>frxPreviewForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\GoogleOTP.pas"/>
+			<DCCReference Include="..\SOURCE\GoogleOTPDialogPsw.pas">
+				<Form>GoogleOTPDialogPswForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\GoogleOTPRegistration.pas">
+				<Form>GoogleOTPRegistrationForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
