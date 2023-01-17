@@ -591,10 +591,16 @@ BEGIN
 
 
      -- формируются Партии товара для Master(ПРИХОД)-элементы, ЕСЛИ надо ...
-     UPDATE _tmpItem_pr SET PartionGoodsId = CASE WHEN vbOperDate >= zc_DateStart_PartionGoods()
+     UPDATE _tmpItem_pr SET PartionGoodsId = CASE -- Спецодежда
+                                                  WHEN _tmpItem_pr.InfoMoneyId = zc_Enum_InfoMoney_20202()
+                                                       THEN lpInsertFind_Object_PartionGoods (inValue       := _tmpItem_pr.PartionGoods
+                                                                                            , inOperDate    := zc_DateStart()
+                                                                                            , inInfoMoneyId := zc_Enum_InfoMoney_20202()
+                                                                                             )
+                                               WHEN vbOperDate >= zc_DateStart_PartionGoods()
                                                 AND vbAccountDirectionId_To = zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                 AND (_tmpItem_pr.isPartionCount = TRUE OR _tmpItem_pr.isPartionSumm = TRUE)
-                                                   THEN lpInsertFind_Object_PartionGoods (_tmpItem_pr.PartionGoods)
+                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem_pr.PartionGoods)
 
                                                -- Упаковка Мяса (тоже ПФ-ГП)
                                                WHEN vbIsPartionDate_Unit_To      = TRUE

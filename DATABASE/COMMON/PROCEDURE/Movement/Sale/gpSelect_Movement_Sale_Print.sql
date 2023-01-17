@@ -716,6 +716,7 @@ BEGIN
              ) :: TVarChar            AS PartnerAddressAll_To
            , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
            , COALESCE (Object_ArticleLoss.ValueData, OH_JuridicalDetails_To.FullName) AS JuridicalName_To
+           , Object_Juridical.ValueData                 AS JuridicalName_short_To
            , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
            , OH_JuridicalDetails_To.OKPO                AS OKPO_To
            , OH_JuridicalDetails_To.INN                 AS INN_To
@@ -1021,6 +1022,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
 
             LEFT JOIN ObjectString AS ObjectString_Partner_GLNCode
                                    ON ObjectString_Partner_GLNCode.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)

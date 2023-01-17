@@ -49,8 +49,11 @@ BEGIN
          -- сохранили <Полное значение партии>
          vbPartionGoodsId := lpInsertUpdate_Object (vbPartionGoodsId, zc_Object_PartionGoods(), 0, inValue);
 
-         -- сохранили <Дата партии>
-         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, inOperDate);
+         IF inOperDate > zc_DateStart()
+         THEN
+             -- сохранили <Дата партии>
+             PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, inOperDate);
+         END IF;
 
      END IF;
 

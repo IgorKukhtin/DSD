@@ -659,8 +659,8 @@ BEGIN
              , tmpFix.OperSumm
         FROM tmpFix
         ;
-
-/*if vbUserId = 5
+/*
+if inUserId = 5
 then
     RAISE EXCEPTION '<%>   %  % %'
     , (select sum (_tmpItemSumm.OperSumm) from _tmpItemSumm)
@@ -671,8 +671,8 @@ then
 -- WHERE _tmpItemChild.isCalculated = true
     )
    ;
-end if;*/
-
+end if;
+*/
 
 
      -- После распределения группируем итоговые суммы по Факту для Child(приход)-элементы документа
