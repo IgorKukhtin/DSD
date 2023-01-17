@@ -479,6 +479,9 @@ BEGIN
             , MIFloat_SummPhone.ValueData             AS SummPhone
             , ( 1 * tmpMIContainer_pay.Amount_avance) :: TFloat AS Amount_avance 
 
+            , MIFloat_SummAvance.ValueData        ::TFloat AS SummAvance
+            , MIFloat_SummAvanceRecalc.ValueData  ::TFloat AS SummAvanceRecalc
+
             , COALESCE (tmpMIChild.Amount, 0)                                                 :: TFloat AS TotalSummChild
             , (COALESCE (tmpMIChild.Amount, 0) - COALESCE (MIFloat_SummService.ValueData, 0)) :: TFloat AS SummDiff
             , COALESCE (tmpMIChild.DayCount, 0)         ::TFloat AS DayCount_child
@@ -489,8 +492,6 @@ BEGIN
             , MIFloat_SummAddOthRecalc.ValueData        AS SummAddOthRecalc
             , MIFloat_SummHouseAdd.ValueData  ::TFloat  AS SummHouseAdd
 
-            , MIFloat_SummAvance.ValueData        ::TFloat AS SummAvance
-            , MIFloat_SummAvanceRecalc.ValueData  ::TFloat AS SummAvanceRecalc
 
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensation.ValueData        ELSE 0 END ::TFloat AS SummCompensation
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensationRecalc.ValueData  ELSE 0 END ::TFloat AS SummCompensationRecalc
