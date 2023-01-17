@@ -112,7 +112,10 @@ uses
   DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
   GuideAsset in '..\ScaleCeh\GuideAsset.pas' {GuideAssetForm},
-  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm};
+  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm},
+  GoogleOTP in '..\SOURCE\GoogleOTP.pas',
+  GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
+  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm};
 
 {$R *.res}
 

@@ -1133,8 +1133,8 @@ var PartionGoods:String;
 begin
         if ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
         //and(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Income)
-        and (Pos('.',Edit.Text) = 0)
-        and (Pos('-',Edit.Text) = 0)
+        //and (Pos('.',Edit.Text) = 0)
+        //and (Pos('-',Edit.Text) = 0)
 
         then Result:=true
 

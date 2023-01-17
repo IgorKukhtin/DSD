@@ -16,6 +16,7 @@ $BODY$
    DECLARE Cursor2 refcursor;
 
    DECLARE vbIsSummIn Boolean;
+   DECLARE vbIs_pl    Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
@@ -225,6 +226,17 @@ BEGIN
    END IF;
 
 
+    -- Если нужен zc_PriceList_ProductionSeparateHist
+    vbIs_pl:= EXISTS (SELECT 1
+                      FROM MovementItem
+                           INNER JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                          ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                         AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                         AND MIBoolean_Calculated.ValueData      = TRUE
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.isErased   = FALSE
+                     );
 
     OPEN Cursor2 FOR
        WITH -- себестоимость 
@@ -237,7 +249,9 @@ BEGIN
                              GROUP BY MIContainer.MovementItemId
                              )
           , tmpPriceSeparateHist AS (SELECT * 
-                                     FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparateHist(), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)))
+                                     FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= CASE WHEN vbIs_pl = TRUE THEN zc_PriceList_ProductionSeparateHist() ELSE zc_PriceList_ProductionSeparate() END
+                                                                              , inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                                               ))
        SELECT
              MovementItem.Id			         AS Id
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum

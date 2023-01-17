@@ -107,7 +107,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
      -- сохранили связь с <Партии товаров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, CASE WHEN TRIM (inPartionGoods) <> '' THEN inPartionGoodsId ELSE inPartionGoodsId END);
 
      IF inGoodsId <> 0
      THEN

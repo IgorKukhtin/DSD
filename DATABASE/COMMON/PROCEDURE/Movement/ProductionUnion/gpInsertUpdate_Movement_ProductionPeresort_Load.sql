@@ -62,10 +62,10 @@ BEGIN
          INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
                                       AND MovementLinkObject.ObjectId   = vbMemberId
                                       AND MovementLinkObject.DescId     = zc_MovementLinkObject_From()
-          INNER JOIN MovementBoolean AS MovementBoolean_Peresort
-                                     ON MovementBoolean_Peresort.MovementId = Movement.Id
-                                    AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
-                                    AND MovementBoolean_Peresort.ValueData = TRUE
+         INNER JOIN MovementBoolean AS MovementBoolean_Peresort
+                                    ON MovementBoolean_Peresort.MovementId = Movement.Id
+                                   AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                                   AND MovementBoolean_Peresort.ValueData = TRUE
     WHERE Movement.OperDate = inOperDate
       AND Movement.DescId = zc_Movement_ProductionUnion()
       AND Movement.StatusId = zc_Enum_Status_UnComplete();
@@ -92,18 +92,18 @@ BEGIN
                           AND MovementItemChild.ParentId   = MovementItem.Id
                           AND MovementItemChild.DescId     = zc_MI_Child()
                           AND MovementItemChild.isErased   = FALSE
-                          AND MovementItemChild.ObjectId    = vbGoodsId
+                          AND MovementItemChild.ObjectId   = vbGoodsId
 
-         INNER JOIN MovementItemString AS MIString_PartionGoodsChild
-                                       ON MIString_PartionGoodsChild.DescId = zc_MIString_PartionGoods()
-                                      AND MIString_PartionGoodsChild.MovementItemId =  MovementItemChild.Id
-                                      AND MIString_PartionGoodsChild.ValueData = TRIM (inPartionGoods)
+         LEFT JOIN MovementItemString AS MIString_PartionGoodsChild
+                                       ON MIString_PartionGoodsChild.MovementItemId = MovementItem.Id
+                                      AND MIString_PartionGoodsChild.DescId         = zc_MIString_PartionGoods()
 
     WHERE MovementItem.MovementId = vbMovementId
       AND MovementItem.DescId = zc_MI_Master()
       AND MovementItem.isErased = FALSE
       AND MovementItem.ObjectId = vbGoodsId
-      ;
+      AND COALESCE (MIString_PartionGoodsChild.ValueData, '') = TRIM (inPartionGoods)
+     ;
     
     PERFORM lpInsertUpdate_MI_ProductionPeresort (ioId                     := COALESCE (vbMovementItemId,0)
                                                 , inMovementId             := vbMovementId
@@ -115,8 +115,8 @@ BEGIN
                                                 , inGoodsKindId_Complete_child:= Null ::Integer
                                                 , inAmount                 := inAmount
                                                 , inAmount_child           := inAmount
-                                                , inPartionGoods           := Null ::TVarChar
-                                                , inPartionGoods_child     := inPartionGoods
+                                                , inPartionGoods           := inPartionGoods
+                                                , inPartionGoods_child     := Null ::TVarChar
                                                 , inPartionGoodsDate       := Null ::TDateTime
                                                 , inPartionGoodsDate_child := Null ::TDateTime
                                                 , inUserId                 := vbUserId

@@ -117,7 +117,10 @@ uses
   GuideMovementTransport in '..\Scale\GuideMovementTransport.pas' {GuideMovementTransportForm},
   GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm},
   frxClass in '..\Scale\Util\frx\frxClass.pas',
-  frxPreview in '..\Scale\Util\frx\frxPreview.pas' {frxPreviewForm};
+  frxPreview in '..\Scale\Util\frx\frxPreview.pas' {frxPreviewForm},
+  GoogleOTP in '..\SOURCE\GoogleOTP.pas',
+  GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
+  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm};
 
 {$R *.res}
 

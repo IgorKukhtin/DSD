@@ -21,7 +21,7 @@ BEGIN
                                    , OperCount TFloat, OperCountCount TFloat
                                    , AccountDirectionId_From Integer, AccountDirectionId_To Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                    , JuridicalId_basis_To Integer, BusinessId_To Integer
-                                   , StorageId_Item Integer, PartionGoodsId_Item Integer
+                                   , StorageId_mi Integer, PartionGoodsId_mi Integer
                                    , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate_From Boolean, isPartionDate_To Boolean, isPartionGoodsKind_From Boolean, isPartionGoodsKind_To Boolean
                                    , PartionGoodsId_From Integer, PartionGoodsId_To Integer
                                    , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, UnitId_ProfitLoss Integer, BranchId_ProfitLoss Integer, BusinessId_ProfitLoss Integer
