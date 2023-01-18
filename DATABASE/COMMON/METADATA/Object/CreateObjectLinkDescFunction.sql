@@ -2884,9 +2884,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_CashSettings_UserUpdateMarketing() RETU
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_CashSettings_UserUpdateMarketing', 'Сотрудник для редактирование в ЗП суммы Маркетинга', zc_Object_CashSettings(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_UserUpdateMarketing');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PartionDateWages_PartionDateKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartionDateWages_PartionDateKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_PartionDateWages_PartionDateKind', 'Типы срок/не срок', zc_Object_PartionDateWages(), zc_Object_PartionDateKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartionDateWages_PartionDateKind');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.01.23                                                                                      * zc_ObjectLink_PartionDateWages_PartionDateKind
  20.12.22         * zc_ObjectLink_GoodsByGoodsKind_GoodsKindNew
  14.11.22         * zc_ObjectLink_MemberReport_From
                     zc_ObjectLink_MemberReport_To

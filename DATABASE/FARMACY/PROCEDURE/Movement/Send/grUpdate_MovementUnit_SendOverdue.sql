@@ -142,26 +142,27 @@
 
     FROM tmpMovement AS Movement
          LEFT JOIN tmpContainer AS Container ON Movement.ContainerId = Container.Id;
+         
+         
+    ANALYSE tmpContainerOverdue;
 
       -- Востанавливаем все удаленные записи
-    PERFORM gpMovementItem_Send_SetUnerased (inMovementItemId        := MovementItem.Id,
-                                             inSession               := inSession)
-    FROM MovementItem
+    UPDATE MovementItem SET isErased = FALSE 
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.IsErased = TRUE;
 
       -- Востанавливаем удаленные записи с остатком MIChildId
-    PERFORM gpMovementItem_Send_SetUnerased (inMovementItemId        := MovementItem.Id,
-                                             inSession               := inSession)
+    UPDATE MovementItem SET isErased = FALSE WHERE Id in 
+    (SELECT MovementItem.Id
     FROM tmpContainerOverdue
          INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                 AND MovementItem.ID = tmpContainerOverdue.MIChildId
                                 AND MovementItem.IsErased = TRUE
-    WHERE COALESCE(tmpContainerOverdue.Amount) > 0;
+    WHERE COALESCE(tmpContainerOverdue.Amount) > 0);
 
       -- Востанавливаем удаленные записи с остатком мастера
-    PERFORM gpMovementItem_Send_SetUnerased (inMovementItemId        := MovementItemMaster.Id,
-                                             inSession               := inSession)
+    UPDATE MovementItem SET isErased = FALSE WHERE Id in 
+    (SELECT MovementItemMaster.Id
     FROM MovementItem AS MovementItemMaster
 
          INNER JOIN (SELECT DISTINCT MovementItemChild.ParentId
@@ -173,7 +174,7 @@
 
     WHERE MovementItemMaster.MovementId = inMovementId
       AND MovementItemMaster.DescId = zc_MI_Master()
-      AND MovementItemMaster.IsErased = TRUE;
+      AND MovementItemMaster.IsErased = TRUE);
 
       -- Правим данные мастера
     PERFORM lpInsertUpdate_MovementItem_Send (ioId                   := tmpContainerOverdue.MIMasterID,
@@ -205,14 +206,13 @@
     WHERE COALESCE(tmpContainerOverdue.Amount, 0) <> MovementItem.Amount;
 
       -- Отмечаем удаленным проданое Child
-    PERFORM gpMovementItem_Send_SetErased (inMovementItemId        := tmpContainerOverdue.MIChildId,
-                                           inSession               := inSession)
-    FROM tmpContainerOverdue
-    WHERE COALESCE(tmpContainerOverdue.Amount, 0) <= 0;
+    UPDATE MovementItem SET isErased = TRUE 
+    WHERE MovementItem.MovementId = inMovementId
+      AND COALESCE(MovementItem.Amount, 0) <= 0;
 
       -- Отмечаем удаленным проданое мастеры
-    PERFORM gpMovementItem_Send_SetErased (inMovementItemId        := MovementItemMaster.ID,
-                                           inSession               := inSession)
+    UPDATE MovementItem SET isErased = TRUE WHERE Id in 
+    (SELECT MovementItemMaster.ID
     FROM MovementItem AS MovementItemMaster
 
          LEFT JOIN MovementItem AS MovementItemChild
@@ -225,7 +225,17 @@
       AND MovementItemMaster.DescId = zc_MI_Master()
       AND MovementItemMaster.IsErased = FALSE
     GROUP BY MovementItemMaster.ID
-    HAVING COALESCE(SUM(MovementItemChild.Amount), 0) = 0;
+    HAVING COALESCE(SUM(MovementItemChild.Amount), 0) = 0);
+
+    -- пересчитали Итоговые суммы по накладной
+    PERFORM lpInsertUpdate_MovementFloat_TotalSummSend (inMovementID);
+    
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    /*IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%>', inSession;
+    END IF;*/
+    
 
   END;
   $BODY$
@@ -237,4 +247,4 @@
  18.06.19                                                         *
    */
 
--- тест SELECT * FROM grUpdate_MovementUnit_SendOverdue (inMovementID := 7784783  , inSession:= '3')
+-- тест select * from grUpdate_MovementUnit_SendOverdue(inMovementID := 24847865 ,  inSession := '3');

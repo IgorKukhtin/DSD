@@ -134,6 +134,7 @@ type
     actUpdate_User_PhotosOnSite: TdsdExecStoredProc;
     mactUpdate_User_PhotosOnSite: TMultiAction;
     PharmUserPhotoDS: TDataSource;
+    cxGridPharmOrderProducts_pharm_quantity: TcxGridDBColumn;
     procedure btnAllClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -328,8 +329,6 @@ procedure TMainForm.actDoExecute(Sender: TObject);
 begin
   try
 
-    if not UpdateOrdersSiteCDS.FieldByName('DateComing').IsNull then Exit;
-
     // Содержимое заказа с сайта
     if not actPharmOrderProducts.Execute then Exit;
 
@@ -357,11 +356,13 @@ begin
       UpdateOrdersSiteMICDS.Locate('GoodsId', PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger, []);
       if (PharmOrderProductsCDS.FieldByName('type_order').AsString = 'at_provider') or
         (PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger = UpdateOrdersSiteMICDS.FieldByName('GoodsId').AsInteger) and
-        (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency <> UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
+        (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency = UpdateOrdersSiteMICDS.FieldByName('AmountOrder').AsCurrency) and
+        (PharmOrderProductsCDS.FieldByName('pharm_quantity').AsCurrency <> UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
       begin
 
         if (PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger = UpdateOrdersSiteMICDS.FieldByName('GoodsId').AsInteger) and
-          (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency <> UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
+          (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency <> UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) and
+          UpdateOrdersSiteCDS.FieldByName('DateComing').IsNull  then
         begin
           S := 'update pharm_orders set ext_changed = 1 where pharmacy_order_id = ' + UpdateOrdersSiteCDS.FieldByName('id').AsString;
           Add_Log('SQL ' + S);
@@ -369,20 +370,28 @@ begin
           actUpdatePharmOrderProducts.Execute;
         end;
 
-        S := 'update pharm_order_products set type_order = ''in_site''';
+        if (PharmOrderProductsCDS.FieldByName('type_order').AsString = 'at_provider') and
+           UpdateOrdersSiteCDS.FieldByName('DateComing').IsNull  then
+          S := 'update pharm_order_products set type_order = ''in_site'''
+        else S := '';
 
         if (PharmOrderProductsCDS.FieldByName('postgres_drug_id').AsInteger = UpdateOrdersSiteMICDS.FieldByName('GoodsId').AsInteger) and
-          (PharmOrderProductsCDS.FieldByName('quantity').AsCurrency <> UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
+          (PharmOrderProductsCDS.FieldByName('pharm_quantity').AsCurrency <> UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency) then
         begin
-          S := S + ', quantity = ' + CurrToStr(UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency, FormatSettings) +
-                   ', old_quantity = ' + CurrToStr(UpdateOrdersSiteMICDS.FieldByName('AmountOrder').AsCurrency, FormatSettings) +
-                   ', amount = ' + CurrToStr(RoundTo(UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency * PharmOrderProductsCDS.FieldByName('price').AsCurrency, -2), FormatSettings);
+          if S = '' then S := S + 'update pharm_order_products set '
+          else S := S + ',';
+
+          S := S + ' pharm_quantity = ' + CurrToStr(UpdateOrdersSiteMICDS.FieldByName('Amount').AsCurrency, FormatSettings) +
+                   ', old_quantity = ' + CurrToStr(UpdateOrdersSiteMICDS.FieldByName('AmountOrder').AsCurrency, FormatSettings);
         end;
 
-        S := S + ' where id = ' + PharmOrderProductsCDS.FieldByName('id').AsString;
-        Add_Log('SQL ' + S);
-        actUpdatePharmOrderProducts.SQLParam.Value := S;
-        actUpdatePharmOrderProducts.Execute;
+        if S <> '' then
+        begin
+          S := S + ' where id = ' + PharmOrderProductsCDS.FieldByName('id').AsString;
+          Add_Log('SQL ' + S);
+          actUpdatePharmOrderProducts.SQLParam.Value := S;
+          actUpdatePharmOrderProducts.Execute;
+        end;
       end;
       PharmOrderProductsCDS.Next;
     end;
