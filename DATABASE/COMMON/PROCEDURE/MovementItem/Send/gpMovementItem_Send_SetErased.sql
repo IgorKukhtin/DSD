@@ -29,7 +29,7 @@ BEGIN
   -- определяем <Статус>
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
-  IF vbStatusId <> zc_Enum_Status_UnComplete() AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+  IF vbStatusId <> zc_Enum_Status_UnComplete() -- AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
   THEN
       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;
